@@ -143,9 +143,11 @@ BOOST_FIXTURE_TEST_CASE(regtest_assumeutxo_commitments_match_chainstate, TestCha
     auto check_commitment = [this](int height) {
         ChainstateManager& chainman{*Assert(m_node.chainman)};
         chainman.ActiveChainstate().ForceFlushStateToDisk(/*wipe_cache=*/false);
+        const CCoinsViewDB& coins_db{
+            WITH_LOCK(cs_main, return chainman.ActiveChainstate().CoinsDB())};
         const auto stats{kernel::ComputeUTXOStats(
             kernel::CoinStatsHashType::HASH_SERIALIZED,
-            chainman.ActiveChainstate().CoinsDB(),
+            coins_db,
             chainman.m_blockman)};
         BOOST_REQUIRE(stats);
         BOOST_REQUIRE_EQUAL(stats->nHeight, height);
