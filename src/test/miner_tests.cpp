@@ -136,7 +136,6 @@ static std::unique_ptr<CBlockIndex> CreateBlockIndex(int nHeight, CBlockIndex* a
 // to allow reusing the blockchain created in CreateNewBlock_validity.
 void MinerTestingSetup::TestPackageSelection(const CScript& scriptPubKey, const std::vector<CTransactionRef>& txFirst)
 {
-    m_node.validation_signals->SyncWithValidationInterfaceQueue();
     CTxMemPool& tx_mempool{MakeMempool()};
     auto mining{MakeMining()};
     BlockCreateOptions options{
@@ -978,19 +977,29 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
         }
     }
 
-    LOCK(cs_main);
+    {
+        LOCK(cs_main);
 
-    TestBasicMining(scriptPubKey, txFirst, baseheight);
+        TestBasicMining(scriptPubKey, txFirst, baseheight);
 
-    m_node.chainman->ActiveChain().Tip()->nHeight--;
+        m_node.chainman->ActiveChain().Tip()->nHeight--;
+    }
 
-    TestPackageSelection(scriptPubKey, txFirst);
+    // Drain validation callbacks before replacing the mempool, without
+    // holding cs_main (SyncWithValidationInterfaceQueue requires this).
+    m_node.validation_signals->SyncWithValidationInterfaceQueue();
 
-    m_node.chainman->ActiveChain().Tip()->nHeight--;
+    {
+        LOCK(cs_main);
 
-    TestPrioritisedMining(scriptPubKey, txFirst);
+        TestPackageSelection(scriptPubKey, txFirst);
 
-    TestSigOpsAdjustedWeightChunkLimit(scriptPubKey, txFirst);
+        m_node.chainman->ActiveChain().Tip()->nHeight--;
+
+        TestPrioritisedMining(scriptPubKey, txFirst);
+
+        TestSigOpsAdjustedWeightChunkLimit(scriptPubKey, txFirst);
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

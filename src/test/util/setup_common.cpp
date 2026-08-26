@@ -579,25 +579,39 @@ CMutableTransaction TestChain100Setup::CreateValidMempoolTransaction(CTransactio
 std::vector<CTransactionRef> TestChain100Setup::PopulateMempool(FastRandomContext& det_rand, size_t num_transactions, bool submit)
 {
     std::vector<CTransactionRef> mempool_transactions;
-    std::deque<std::pair<COutPoint, CAmount>> unspent_prevouts, undo_info;
+    std::deque<std::pair<COutPoint, CAmount>> unspent_prevouts, selected_prevouts;
     std::transform(m_coinbase_txns.begin(), m_coinbase_txns.end(), std::back_inserter(unspent_prevouts),
         [](const auto& tx){ return std::make_pair(COutPoint(tx->GetHash(), 0), tx->vout[0].nValue); });
+    Assert(!unspent_prevouts.empty());
+    const size_t requested_num_transactions{num_transactions};
+
+    // Keep the generated transaction graph independent of a chain's monetary
+    // precision and block subsidy. For Bitcoin's original 50 BTC test subsidy,
+    // these ratios reproduce the historical 100-satoshi fee increment and
+    // 3,000-satoshi recyclable-output threshold. Scaling both values prevents
+    // higher-precision chains from creating much deeper graphs that eventually
+    // contain only transactions rejected by cluster policy.
+    constexpr CAmount FEE_UNIT_DIVISOR{50'000'000};
+    const CAmount fee_unit{std::max<CAmount>(1, unspent_prevouts.front().second / FEE_UNIT_DIVISOR)};
+    const CAmount min_recyclable_output{30 * fee_unit};
+
+    bool force_single_input{false};
     while (num_transactions > 0 && !unspent_prevouts.empty()) {
         // The number of inputs and outputs are randomly chosen, between 1-5
         // and 1-25 respectively.
         CMutableTransaction mtx = CMutableTransaction();
-        const size_t num_inputs = det_rand.randrange(5) + 1;
+        const size_t num_inputs = force_single_input ? 1 : det_rand.randrange(5) + 1;
         CAmount total_in{0};
         for (size_t n{0}; n < num_inputs; ++n) {
             if (unspent_prevouts.empty()) break;
             const auto& [prevout, amount] = unspent_prevouts.front();
-            undo_info.emplace_back(prevout, amount);
+            selected_prevouts.emplace_back(prevout, amount);
             mtx.vin.emplace_back(prevout, CScript());
             total_in += amount;
             unspent_prevouts.pop_front();
         }
         const size_t num_outputs = det_rand.randrange(25) + 1;
-        const CAmount fee = 100 * det_rand.randrange(30);
+        const CAmount fee = fee_unit * static_cast<CAmount>(det_rand.randrange(30));
         const CAmount amount_per_output = (total_in - fee) / num_outputs;
         for (size_t n{0}; n < num_outputs; ++n) {
             CScript spk = CScript() << CScriptNum(num_transactions + n);
@@ -615,18 +629,33 @@ std::vector<CTransactionRef> TestChain100Setup::PopulateMempool(FastRandomContex
             if (changeset->CheckMemPoolPolicyLimits()) {
                 changeset->Apply();
                 --num_transactions;
+                force_single_input = false;
             } else {
                 success = false;
-                // Add the inputs back to unspent prevouts
-                for (const auto& [prevout, amount] : undo_info) {
-                    unspent_prevouts.emplace_back(prevout, amount);
-                    std::swap(unspent_prevouts.back(), unspent_prevouts[det_rand.randrange(unspent_prevouts.size())]);
+                if (!force_single_input && selected_prevouts.size() > 1) {
+                    // A random merge can be rejected even though its inputs are
+                    // individually usable. Put them back and test one input on
+                    // the next iteration. If that single input is also rejected,
+                    // it is retired from this generator's candidate pool. Thus,
+                    // every two iterations either add a transaction or discard
+                    // a provably unusable candidate, guaranteeing progress.
+                    for (auto it = selected_prevouts.rbegin(); it != selected_prevouts.rend(); ++it) {
+                        unspent_prevouts.emplace_front(*it);
+                    }
+                    force_single_input = true;
+                } else {
+                    // The actual mempool coin remains unspent and untouched; it
+                    // is only no longer considered by this graph generator.
+                    force_single_input = false;
                 }
             }
+        } else {
+            --num_transactions;
+            force_single_input = false;
         }
         if (success) {
             mempool_transactions.push_back(ptx);
-            if (amount_per_output > 3000) {
+            if (amount_per_output > min_recyclable_output) {
                 // If the value is high enough to fund another transaction + fees, keep track of it so
                 // it can be used to build a more complex transaction graph. Insert randomly into
                 // unspent_prevouts for extra randomness in the resulting structures.
@@ -636,8 +665,10 @@ std::vector<CTransactionRef> TestChain100Setup::PopulateMempool(FastRandomContex
                 }
             }
         }
-        undo_info.clear();
+        selected_prevouts.clear();
     }
+    Assert(num_transactions == 0);
+    Assert(mempool_transactions.size() == requested_num_transactions);
     return mempool_transactions;
 }
 

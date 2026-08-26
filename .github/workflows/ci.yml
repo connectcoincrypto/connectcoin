@@ -14,7 +14,7 @@ on:
       - '**'
 
 concurrency:
-  group: ${{ github.event_name != 'pull_request' && github.run_id || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -196,6 +196,7 @@ jobs:
   windows-native-dll:
     name: ${{ matrix.job-name }}
     runs-on: windows-2025-vs2026
+    timeout-minutes: 180
 
     if: ${{ vars.SKIP_BRANCH_PUSH != 'true' || github.event_name == 'pull_request' }}
 
@@ -307,6 +308,7 @@ jobs:
     name: 'Windows-cross to x86_64, ${{ matrix.crt }}'
     needs: record-frozen-commit
     runs-on: ubuntu-latest
+    timeout-minutes: 180
     if: ${{ vars.SKIP_BRANCH_PUSH != 'true' || github.event_name == 'pull_request' }}
 
     strategy:
@@ -371,6 +373,7 @@ jobs:
     name: 'Windows, ${{ matrix.crt }}, test cross-built'
     runs-on: windows-2022
     needs: [windows-cross, record-frozen-commit]
+    timeout-minutes: 180
 
     strategy:
       fail-fast: false

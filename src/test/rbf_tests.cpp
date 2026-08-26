@@ -152,8 +152,15 @@ BOOST_FIXTURE_TEST_CASE(rbf_helper_functions, TestChain100Setup)
     BOOST_CHECK(PaysForRBF(high_fee, high_fee + 1, 10, incremental_relay_feerate, unused_txid) == std::nullopt);
     BOOST_CHECK(PaysForRBF(high_fee, high_fee + 2, 11, higher_relay_feerate, unused_txid).has_value());
     BOOST_CHECK(PaysForRBF(high_fee, high_fee + 4, 20, higher_relay_feerate, unused_txid) == std::nullopt);
-    BOOST_CHECK(PaysForRBF(low_fee, high_fee, COIN - 1, incremental_relay_feerate, unused_txid).has_value());
-    BOOST_CHECK(PaysForRBF(low_fee, high_fee + COIN - 1, COIN - 1, incremental_relay_feerate, unused_txid) == std::nullopt);
+    // Keep the large-vsize arithmetic test within both 32-bit size_t and CFeeRate's int32_t range.
+    // Its size is deliberately large enough that high_fee - low_fee does not cover the relay fee.
+    constexpr size_t large_replacement_vsize{1'000'000'000};
+    const CAmount large_replacement_relay_fee{incremental_relay_feerate.GetFee(large_replacement_vsize)};
+    BOOST_CHECK(PaysForRBF(low_fee, high_fee, large_replacement_vsize,
+                           incremental_relay_feerate, unused_txid).has_value());
+    BOOST_CHECK(PaysForRBF(low_fee, high_fee + large_replacement_relay_fee,
+                           large_replacement_vsize, incremental_relay_feerate,
+                           unused_txid) == std::nullopt);
 }
 
 BOOST_FIXTURE_TEST_CASE(rbf_conflicts_calculator, TestChain100Setup)

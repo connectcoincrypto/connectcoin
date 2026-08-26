@@ -62,10 +62,20 @@ if [[ "${RUN_IWYU}" == true ]]; then
   git commit -m "dummy CI ./src init for IWYU"
 fi
 
+QA_ASSETS_COMMIT="$(<"${BASE_ROOT_DIR}/ci/qa-assets-commit.txt")"
+
 if [ "$RUN_FUZZ_TESTS" = "true" ]; then
   export DIR_FUZZ_IN=${DIR_QA_ASSETS}/fuzz_corpora/
-  if [ ! -d "$DIR_FUZZ_IN" ]; then
-    ${CI_RETRY_EXE} git clone --depth=1 https://github.com/bitcoin-core/qa-assets "${DIR_QA_ASSETS}"
+  if [ ! -d "${DIR_QA_ASSETS}/.git" ]; then
+    if [ -e "${DIR_QA_ASSETS}" ]; then
+      echo "QA assets path exists but is not a git checkout: ${DIR_QA_ASSETS}"
+      exit 1
+    fi
+    ${CI_RETRY_EXE} git clone --filter=blob:none --no-checkout https://github.com/bitcoin-core/qa-assets "${DIR_QA_ASSETS}"
+  fi
+  if [ "$(git -C "${DIR_QA_ASSETS}" rev-parse HEAD 2>/dev/null || true)" != "${QA_ASSETS_COMMIT}" ]; then
+    ${CI_RETRY_EXE} git -C "${DIR_QA_ASSETS}" fetch --depth=1 origin "${QA_ASSETS_COMMIT}"
+    git -C "${DIR_QA_ASSETS}" checkout --detach "${QA_ASSETS_COMMIT}"
   fi
   (
     cd "${DIR_QA_ASSETS}"
@@ -74,10 +84,8 @@ if [ "$RUN_FUZZ_TESTS" = "true" ]; then
   )
 elif [ "$RUN_UNIT_TESTS" = "true" ]; then
   export DIR_UNIT_TEST_DATA=${DIR_QA_ASSETS}/unit_test_data/
-  if [ ! -d "$DIR_UNIT_TEST_DATA" ]; then
-    mkdir -p "$DIR_UNIT_TEST_DATA"
-    ${CI_RETRY_EXE} curl --location --fail https://github.com/bitcoin-core/qa-assets/raw/main/unit_test_data/script_assets_test.json -o "${DIR_UNIT_TEST_DATA}/script_assets_test.json"
-  fi
+  mkdir -p "$DIR_UNIT_TEST_DATA"
+  ${CI_RETRY_EXE} curl --location --fail "https://raw.githubusercontent.com/bitcoin-core/qa-assets/${QA_ASSETS_COMMIT}/unit_test_data/script_assets_test.json" -o "${DIR_UNIT_TEST_DATA}/script_assets_test.json"
 fi
 
 # Make sure default datadir does not exist and is never read by creating a dummy file

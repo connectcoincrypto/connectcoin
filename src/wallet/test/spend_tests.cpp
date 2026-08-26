@@ -32,6 +32,29 @@ BOOST_AUTO_TEST_CASE(max_signed_input_size_uses_external_outpoint)
     BOOST_CHECK_EQUAL(high_r, low_r + 1);
 }
 
+BOOST_AUTO_TEST_CASE(rejects_amounts_above_money_range)
+{
+    const CTxDestination destination{PubKeyDestination({})};
+    CCoinControl coin_control;
+
+    // Each recipient is individually valid, but their sum is not.
+    auto result{CreateTransaction(m_wallet,
+                                  {{destination, MAX_MONEY, /*subtract_fee=*/false},
+                                   {destination, COIN, /*subtract_fee=*/false}},
+                                  /*change_pos=*/std::nullopt, coin_control)};
+    BOOST_REQUIRE(!result);
+    BOOST_CHECK_EQUAL(util::ErrorString(result).original, "Transaction too large");
+
+    // The recipient amount fits exactly, but adding a non-zero fee does not.
+    coin_control.m_feerate.emplace(COIN);
+    coin_control.fOverrideFeeRate = true;
+    auto result_with_fee{CreateTransaction(m_wallet,
+                                           {{destination, MAX_MONEY, /*subtract_fee=*/false}},
+                                           /*change_pos=*/std::nullopt, coin_control)};
+    BOOST_REQUIRE(!result_with_fee);
+    BOOST_CHECK_EQUAL(util::ErrorString(result_with_fee).original, "Transaction too large");
+}
+
 BOOST_FIXTURE_TEST_CASE(SubtractFee, TestChain100Setup)
 {
     CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));

@@ -129,20 +129,24 @@ def check_manifests(ci_type):
 
 def prepare_tests(ci_type):
     workspace = Path.cwd()
+    qa_assets_commit = (workspace / "ci" / "qa-assets-commit.txt").read_text(encoding="utf8").strip()
     if ci_type == "standard":
         run([sys.executable, "-m", "pip", "install", "pyzmq"])
         dest = workspace / "unit_test_data"
-        download_script_assets(dest)
+        download_script_assets(dest, qa_assets_commit)
     elif ci_type == "fuzz":
         repo_dir = str(workspace / "qa-assets")
         clone_cmd = [
             "git",
             "clone",
-            "--depth=1",
+            "--filter=blob:none",
+            "--no-checkout",
             "https://github.com/bitcoin-core/qa-assets",
             repo_dir,
         ]
         run(clone_cmd)
+        run(["git", "-C", repo_dir, "fetch", "--depth=1", "origin", qa_assets_commit])
+        run(["git", "-C", repo_dir, "checkout", "--detach", qa_assets_commit])
         print("Using qa-assets repo from commit ...")
         run(["git", "-C", repo_dir, "log", "-1"])
 

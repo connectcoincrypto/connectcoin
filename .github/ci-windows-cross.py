@@ -76,6 +76,7 @@ def check_manifests():
 
 def prepare_tests():
     workspace = Path.cwd()
+    qa_assets_commit = (workspace / "ci" / "qa-assets-commit.txt").read_text(encoding="utf8").strip()
     config_path = workspace / "test" / "config.ini"
     rpcauth_path = workspace / "share" / "rpcauth" / "rpcauth.py"
     replacements = {
@@ -95,7 +96,7 @@ def prepare_tests():
     run([sys.executable, "-m", "pip", "install", "pyzmq"])
 
     dest = workspace / "unit_test_data"
-    download_script_assets(dest)
+    download_script_assets(dest, qa_assets_commit)
 
 
 def run_functional_tests():

@@ -49,10 +49,10 @@ def download_from_url(url, archive):
     print('\n', flush=True, end="") # Flush to avoid error output on the same line.
 
 
-def download_script_assets(script_assets_dir):
+def download_script_assets(script_assets_dir, qa_assets_commit):
     script_assets_dir.mkdir(parents=True, exist_ok=True)
     script_assets = script_assets_dir / "script_assets_test.json"
-    url = "https://github.com/bitcoin-core/qa-assets/raw/main/unit_test_data/script_assets_test.json"
+    url = f"https://raw.githubusercontent.com/bitcoin-core/qa-assets/{qa_assets_commit}/unit_test_data/script_assets_test.json"
     try:
         download_from_url(url, script_assets)
     except Exception as e:

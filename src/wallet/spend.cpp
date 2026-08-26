@@ -1096,6 +1096,9 @@ static util::Result<CreatedTransactionResult> CreateTransactionInternal(
 
         // Include the fee cost for outputs.
         coin_selection_params.tx_noinputs_size += GetSerializeSizeForRecipient(recipient);
+        if (!MoneyRange(recipient.nAmount) || !MoneyRange(recipients_sum + recipient.nAmount)) {
+            return util::Error{_("Transaction too large")};
+        }
         recipients_sum += recipient.nAmount;
 
         if (recipient.fSubtractFeeFromAmount) {
@@ -1193,6 +1196,9 @@ static util::Result<CreatedTransactionResult> CreateTransactionInternal(
 
     // Include the fees for things that aren't inputs, excluding the change output
     const CAmount not_input_fees = coin_selection_params.m_effective_feerate.GetFee(coin_selection_params.m_subtract_fee_outputs ? 0 : coin_selection_params.tx_noinputs_size);
+    if (!MoneyRange(not_input_fees) || !MoneyRange(recipients_sum + not_input_fees)) {
+        return util::Error{_("Transaction too large")};
+    }
     CAmount selection_target = recipients_sum + not_input_fees;
 
     // This can only happen if feerate is 0, and requested destinations are value of 0 (e.g. OP_RETURN)
