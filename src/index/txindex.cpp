@@ -7,6 +7,7 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <common/args.h>
+#include <consensus/params.h>
 #include <crypto/siphash.h>
 #include <dbwrapper.h>
 #include <flatfile.h>

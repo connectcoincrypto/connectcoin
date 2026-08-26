@@ -10,6 +10,7 @@
 #include <coins.h>
 #include <common/args.h>
 #include <consensus/amount.h>
+#include <consensus/params.h>
 #include <crypto/muhash.h>
 #include <dbwrapper.h>
 #include <index/base.h>
