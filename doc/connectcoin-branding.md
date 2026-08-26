@@ -97,13 +97,36 @@ external applications must not assume global ownership of it.
 
 ## Network separation
 
+The development monetary policy caps individual monetary values at
+`100,000,000 CC`. On mainnet, testnet3, testnet4, and signet, the recurring
+block subsidy begins at `100 CC` and halves every 450,000 blocks. Their separate
+spendable genesis output allocates `10,000,000 CC` to the development fund. If
+every available subsidy is claimed, integer rounding produces a maximum
+mainnet issuance of
+`99,999,899.9994150000 CC`. One CC is subdivided into `10,000,000,000`
+connects, so wallet and RPC amounts use up to ten decimal places. Regtest keeps
+its 150-block halving interval.
+
+The largest atomic amount is `10^18` connects, which is greater than the largest
+integer (`2^53 - 1`) represented exactly by an IEEE-754 binary64 value such as a
+JavaScript `Number`. RPC integrations must parse returned amount tokens with an
+arbitrary-precision decimal type and should submit amounts as decimal strings;
+converting monetary values through binary floating point can lose connects.
+
+The public networks use a valid compressed P2PK development-fund key whose
+private key is deliberately absent from the source tree. Regtest alone uses a
+deterministic key with published private material so automated tests can spend
+its genesis allocation. The public-network private key requires offline backup
+and production-grade custody before launch; changing it requires regenerating
+the four public genesis blocks.
+
 | Network | RPC port | P2P port | Onion bind | Message start | Genesis hash |
 | --- | ---: | ---: | ---: | --- | --- |
-| Mainnet | 48172 | 48173 | 48174 | `d9 51 a5 e2` | `0000013b2ab367b4745451e36501c24bc0e908b3641ec8fcc551ab084726cbd0` |
-| Testnet3 | 48175 | 48176 | 48177 | `03 84 8e 59` | `000000b6ac175a41f70addde5441b040ee42ef04ff2ba5d1b9c792d8610e8a15` |
-| Testnet4 | 48178 | 48179 | 48180 | `bb 51 f5 e7` | `000001909cf4d403a0312503a9e91a18642d495d72be4c44489884f69122777d` |
-| Signet | 48181 | 48182 | 48183 | `54 d2 6f bd` (default `OP_TRUE` challenge) | `0000016a949240132c535c4e452628985670b26485319ec2c32603b66f56ccc2` |
-| Regtest | 48184 | 48185 | 48186 | `a5 4f c7 d5` | `79e876886fc96349e9979c0024589376c85a4a65a5b111ab85f7623ab9c72727` |
+| Mainnet | 48172 | 48173 | 48174 | `d9 51 a5 e2` | `0000004b461aae33a4be0ee95ae8461155f2c48130bc8dd521adb71ec0d3e9a2` |
+| Testnet3 | 48175 | 48176 | 48177 | `03 84 8e 59` | `000001c906bb16924aaa92ab23ba23616d7916ecfdc3a256c060dbe9ead948f3` |
+| Testnet4 | 48178 | 48179 | 48180 | `bb 51 f5 e7` | `000001218f2321c9ccd0f18fe8603865e9a97ea644d8ab62c434cc39928377f1` |
+| Signet | 48181 | 48182 | 48183 | `54 d2 6f bd` (default `OP_TRUE` challenge) | `000000850a5c90845788b6f2688e27976da0ef181258378d39764f85baa64780` |
+| Regtest | 48184 | 48185 | 48186 | `a5 4f c7 d5` | `197dd70fa5df793d1b9e4684f3c9608afcdae4b86f935c04e8187a48def347f6` |
 
 Fixed seeds are intentionally absent during development. The inherited Bitcoin
 peer snapshots were removed from `contrib/seeds`, and the generated seed header

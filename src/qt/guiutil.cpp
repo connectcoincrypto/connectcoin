@@ -186,7 +186,8 @@ bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
         {
             if(!i->second.isEmpty())
             {
-                if (!BitcoinUnits::parse(BitcoinUnit::BTC, i->second, &rv.amount)) {
+                if (!BitcoinUnits::parse(BitcoinUnit::BTC, i->second, &rv.amount) ||
+                    rv.amount < 0 || rv.amount > BitcoinUnits::maxMoney()) {
                     return false;
                 }
             }

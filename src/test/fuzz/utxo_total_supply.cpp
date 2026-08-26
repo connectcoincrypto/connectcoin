@@ -76,7 +76,9 @@ FUZZ_TARGET(utxo_total_supply)
     /** The utxo stats at the chain tip */
     kernel::CCoinsStats utxo_stats;
     /** The total amount of coins in the utxo set */
-    CAmount circulation{0};
+    // The ConnectCoin genesis allocation is part of the UTXO set. Start the
+    // model with its actual value before adding subsidies from mined blocks.
+    CAmount circulation{chainman.GetParams().GenesisBlock().vtx.front()->GetValueOut()};
 
 
     // Store the tx out in the txo map

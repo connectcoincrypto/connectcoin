@@ -174,9 +174,10 @@ class RawTransactionsTest(BitcoinTestFramework):
             self.nodes[n].reconsiderblock(block1)
             assert_equal(self.nodes[n].getbestblockhash(), block2)
 
-        self.log.info("Test getrawtransaction on genesis block coinbase returns an error")
+        self.log.info("Test getrawtransaction returns the spendable genesis coinbase")
         block = self.nodes[0].getblock(self.nodes[0].getblockhash(0))
-        assert_raises_rpc_error(-5, "The genesis block coinbase is not considered an ordinary transaction", self.nodes[0].getrawtransaction, block['merkleroot'])
+        genesis_tx = self.nodes[0].getrawtransaction(block['merkleroot'], True)
+        assert_equal(genesis_tx['txid'], block['merkleroot'])
 
     def getrawtransaction_verbosity_tests(self):
         tx = self.wallet.send_self_transfer(from_node=self.nodes[1])['txid']
@@ -409,21 +410,21 @@ class RawTransactionsTest(BitcoinTestFramework):
         fee_exceeds_max = "Fee exceeds maximum configured by user (e.g. -maxtxfee, maxfeerate)"
 
         # Test a transaction with a small fee.
-        # Fee rate is 0.00100000 CC/kvB
-        tx = self.wallet.create_self_transfer(fee_rate=Decimal('0.00100000'))
+        # Fee rate is 0.00001000 CC/kvB
+        tx = self.wallet.create_self_transfer(fee_rate=Decimal('0.00001000'))
         # Thus, testmempoolaccept should reject
-        testres = self.nodes[2].testmempoolaccept([tx['hex']], 0.00001000)[0]
+        testres = self.nodes[2].testmempoolaccept([tx['hex']], 0.00000010)[0]
         assert_equal(testres['allowed'], False)
         assert_equal(testres['reject-reason'], 'max-fee-exceeded')
         # and sendrawtransaction should throw
-        assert_raises_rpc_error(-25, fee_exceeds_max, self.nodes[2].sendrawtransaction, tx['hex'], 0.00001000)
+        assert_raises_rpc_error(-25, fee_exceeds_max, self.nodes[2].sendrawtransaction, tx['hex'], 0.00000010)
         # and the following calls should both succeed
         testres = self.nodes[2].testmempoolaccept(rawtxs=[tx['hex']])[0]
         assert_equal(testres['allowed'], True)
         self.nodes[2].sendrawtransaction(hexstring=tx['hex'])
 
         # Test a transaction with a large fee.
-        # Fee rate is 0.20000000 CC/kvB
+        # Fee rate is 0.20000000 CC/kvB, above the default 0.1 CC/kvB limit.
         tx = self.wallet.create_self_transfer(fee_rate=Decimal("0.20000000"))
         # Thus, testmempoolaccept should reject
         testres = self.nodes[2].testmempoolaccept([tx['hex']])[0]
@@ -449,12 +450,12 @@ class RawTransactionsTest(BitcoinTestFramework):
         # witness transaction
         encrawtx = "010000000001010000000000000072c1a6a246ae63f74f931e8365e15a089c68d61900000000000000000000ffffffff0100e1f50500000000000102616100000000"
         decrawtx = self.nodes[0].decoderawtransaction(encrawtx, True)  # decode as witness transaction
-        assert_equal(decrawtx['vout'][0]['value'], Decimal('1.00000000'))
+        assert_equal(decrawtx['vout'][0]['value'], Decimal('0.0100000000'))
         assert_raises_rpc_error(-22, 'TX decode failed', self.nodes[0].decoderawtransaction, encrawtx, False) # force decode as non-witness transaction
         # non-witness transaction
         encrawtx = "01000000010000000000000072c1a6a246ae63f74f931e8365e15a089c68d61900000000000000000000ffffffff0100e1f505000000000000000000"
         decrawtx = self.nodes[0].decoderawtransaction(encrawtx, False)  # decode as non-witness transaction
-        assert_equal(decrawtx['vout'][0]['value'], Decimal('1.00000000'))
+        assert_equal(decrawtx['vout'][0]['value'], Decimal('0.0100000000'))
         # known ambiguous transaction in the chain (see https://github.com/bitcoin/bitcoin/issues/20579)
         coinbase = "03c68708046ff8415c622f4254432e434f4d2ffabe6d6de1965d02c68f928e5b244ab1965115a36f56eb997633c7f690124bbf43644e23080000000ca3d3af6d005a65ff0200fd00000000"
         encrawtx = f"020000000001010000000000000000000000000000000000000000000000000000000000000000ffffffff4b{coinbase}" \

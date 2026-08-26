@@ -1,12 +1,12 @@
 {
   "chain": "testnet4",
   "test_chain": true,
-  "genesis": "7d772291f6849848444cbe725d492d64181ae9a9032531a003d4f49c90010000",
-  "subsidy_halving_interval": 210000,
+  "genesis": "f177839239cc34c462abd844a67ea9e9653860e88ff1d0ccc921238f21010000",
+  "subsidy_halving_interval": 450000,
   "pow": {
     "limit": "000001ffff000000000000000000000000000000000000000000000000000000",
-    "target_spacing": 600,
-    "difficulty_retarget_interval": 2016,
+    "target_spacing": 60,
+    "difficulty_retarget_interval": 1440,
     "mindiff_blocks": "bip94"
   },
   "net": {

@@ -675,9 +675,9 @@ class PSBTTest(BitcoinTestFramework):
         utxo1 = self.nodes[0].listunspent()[0]
         assert_raises_rpc_error(-4, "The preselected coins total amount does not cover the transaction target. "
                                     "Please allow other inputs to be automatically selected or include more coins manually",
-                                self.nodes[0].walletcreatefundedpsbt, [{"txid": utxo1['txid'], "vout": utxo1['vout']}], {self.nodes[2].getnewaddress():90})
+                                self.nodes[0].walletcreatefundedpsbt, [{"txid": utxo1['txid'], "vout": utxo1['vout']}], {self.nodes[2].getnewaddress():190})
 
-        psbtx1 = self.nodes[0].walletcreatefundedpsbt([{"txid": utxo1['txid'], "vout": utxo1['vout']}], {self.nodes[2].getnewaddress():90}, 0, {"add_inputs": True})['psbt']
+        psbtx1 = self.nodes[0].walletcreatefundedpsbt([{"txid": utxo1['txid'], "vout": utxo1['vout']}], {self.nodes[2].getnewaddress():190}, 0, {"add_inputs": True})['psbt']
         assert_equal(len(self.nodes[0].decodepsbt(psbtx1)['inputs']), 2)
 
         # Inputs argument can be null
@@ -793,24 +793,24 @@ class PSBTTest(BitcoinTestFramework):
         assert_equal(walletprocesspsbt_out['complete'], True)
         self.nodes[1].sendrawtransaction(walletprocesspsbt_out['hex'])
 
-        self.log.info("Test walletcreatefundedpsbt fee rate of 10000 con/vB and 0.1 CC/kvB produces a total fee at or slightly below -maxtxfee (~0.05290000)")
+        self.log.info("Test equivalent fee rates expressed in con/vB and CC/kvB")
         res1 = self.nodes[1].walletcreatefundedpsbt(inputs, outputs, 0, {"fee_rate": 10000, "add_inputs": True})
-        assert_approx(res1["fee"], 0.055, 0.005)
-        res2 = self.nodes[1].walletcreatefundedpsbt(inputs, outputs, 0, {"feeRate": "0.1", "add_inputs": True})
-        assert_approx(res2["fee"], 0.055, 0.005)
+        assert_approx(res1["fee"], 0.0004, 0.0001)
+        res2 = self.nodes[1].walletcreatefundedpsbt(inputs, outputs, 0, {"feeRate": "0.001", "add_inputs": True})
+        assert_equal(res2["fee"], res1["fee"])
 
         self.log.info("Test min fee rate checks with walletcreatefundedpsbt are bypassed, e.g. a fee_rate under 1 con/vB is allowed")
         res3 = self.nodes[1].walletcreatefundedpsbt(inputs, outputs, 0, {"fee_rate": "0.999", "add_inputs": True})
-        assert_approx(res3["fee"], 0.00000381, 0.0000001)
-        res4 = self.nodes[1].walletcreatefundedpsbt(inputs, outputs, 0, {"feeRate": 0.00000999, "add_inputs": True})
-        assert_approx(res4["fee"], 0.00000381, 0.0000001)
+        assert_approx(res3["fee"], 0.0000000381, 0.000000001)
+        res4 = self.nodes[1].walletcreatefundedpsbt(inputs, outputs, 0, {"feeRate": 0.0000000999, "add_inputs": True})
+        assert_approx(res4["fee"], 0.0000000381, 0.000000001)
 
         self.log.info("Test min fee rate checks with walletcreatefundedpsbt are bypassed and that funding non-standard 'zero-fee' transactions is valid")
         for param, zero_value in product(["fee_rate", "feeRate"], [0, 0.000, 0.00000000, "0", "0.000", "0.00000000"]):
             assert_equal(0, self.nodes[1].walletcreatefundedpsbt(inputs, outputs, 0, {param: zero_value, "add_inputs": True})["fee"])
 
         self.log.info("Test invalid fee rate settings")
-        for param, value in {("fee_rate", 100000), ("feeRate", 1)}:
+        for param, value in {("fee_rate", 10000000), ("feeRate", 1)}:
             assert_raises_rpc_error(-4, "Fee exceeds maximum configured by user (e.g. -maxtxfee, maxfeerate)",
                 self.nodes[1].walletcreatefundedpsbt, inputs, outputs, 0, {param: value, "add_inputs": True})
             assert_raises_rpc_error(-3, "Amount out of range",
@@ -818,9 +818,12 @@ class PSBTTest(BitcoinTestFramework):
             assert_raises_rpc_error(-3, "Amount is not a number or string",
                 self.nodes[1].walletcreatefundedpsbt, inputs, outputs, 0, {param: {"foo": "bar"}, "add_inputs": True})
             # Test fee rate values that don't pass fixed-point parsing checks.
-            for invalid_value in ["", 0.000000001, 1e-09, 1.111111111, 1111111111111111, "31.999999999999999999999"]:
+            for invalid_value in ["", 0.00000000001, 1e-11, 1.11111111111, "31.999999999999999999999"]:
                 assert_raises_rpc_error(-3, "Invalid amount",
                     self.nodes[1].walletcreatefundedpsbt, inputs, outputs, 0, {param: invalid_value, "add_inputs": True})
+            large_value_error = "Amount out of range" if param == "fee_rate" else "Invalid amount"
+            assert_raises_rpc_error(-3, large_value_error,
+                self.nodes[1].walletcreatefundedpsbt, inputs, outputs, 0, {param: 1111111111111111, "add_inputs": True})
         # Test fee_rate values that cannot be represented in con/vB.
         for invalid_value in [0.0001, 0.00000001, 0.00099999, 31.99999999]:
             assert_raises_rpc_error(-3, "Invalid amount",
@@ -866,7 +869,7 @@ class PSBTTest(BitcoinTestFramework):
         # previously this was silently capped at -maxtxfee
         for bool_add, outputs_array in {True: outputs, False: [{self.nodes[1].getnewaddress(): 1}]}.items():
             msg = "Fee exceeds maximum configured by user (e.g. -maxtxfee, maxfeerate)"
-            assert_raises_rpc_error(-4, msg, self.nodes[1].walletcreatefundedpsbt, inputs, outputs_array, 0, {"fee_rate": 1000000, "add_inputs": bool_add})
+            assert_raises_rpc_error(-4, msg, self.nodes[1].walletcreatefundedpsbt, inputs, outputs_array, 0, {"fee_rate": 10000000, "add_inputs": bool_add})
             assert_raises_rpc_error(-4, msg, self.nodes[1].walletcreatefundedpsbt, inputs, outputs_array, 0, {"feeRate": 1, "add_inputs": bool_add})
 
         self.log.info("Test various PSBT operations")
@@ -1204,7 +1207,7 @@ class PSBTTest(BitcoinTestFramework):
         # Check fee and size things
         assert_equal(analyzed['fee'], Decimal('0.001'))
         assert_equal(analyzed['estimated_vsize'], 134)
-        assert_equal(analyzed['estimated_feerate'], Decimal('0.00746268'))
+        assert_equal(analyzed['estimated_feerate'], Decimal('0.0074626865'))
 
         # After signing and finalizing, needs extracting
         signed = self.nodes[1].walletprocesspsbt(updated)['psbt']
@@ -1219,7 +1222,7 @@ class PSBTTest(BitcoinTestFramework):
         assert_equal(analysis['error'], 'PSBT is not valid. Input 0 spends unspendable output')
 
         self.log.info("PSBT with invalid values should have error message and Creator as next")
-        analysis = self.nodes[0].analyzepsbt('cHNidP8BAHECAAAAAfA00BFgAm6tp86RowwH6BMImQNL5zXUcTT97XoLGz0BAAAAAAD/////AgD5ApUAAAAAFgAUKNw0x8HRctAgmvoevm4u1SbN7XL87QKVAAAAABYAFPck4gF7iL4NL4wtfRAKgQbghiTUAAAAAAABAR8AgIFq49AHABYAFJUDtxf2PHo641HEOBOAIvFMNTr2AAAA')
+        analysis = self.nodes[0].analyzepsbt('cHNidP8BAHECAAAAAfA00BFgAm6tp86RowwH6BMImQNL5zXUcTT97XoLGz0BAAAAAAD/////AgD5ApUAAAAAFgAUKNw0x8HRctAgmvoevm4u1SbN7XL87QKVAAAAABYAFPck4gF7iL4NL4wtfRAKgQbghiTUAAAAAAABAR8BAGSns7bgDRYAFJUDtxf2PHo641HEOBOAIvFMNTr2AAAA')
         assert_equal(analysis['next'], 'creator')
         assert_equal(analysis['error'], 'PSBT is not valid. Input 0 has invalid value')
 
@@ -1227,7 +1230,7 @@ class PSBTTest(BitcoinTestFramework):
         analysis = self.nodes[0].analyzepsbt('cHNidP8BAHECAAAAAZYezcxdnbXoQCmrD79t/LzDgtUo9ERqixk8wgioAobrAAAAAAD9////AlDDAAAAAAAAFgAUy/UxxZuzZswcmFnN/E9DGSiHLUsuGPUFAAAAABYAFLsH5o0R38wXx+X2cCosTMCZnQ4baAAAAAABAR8A4fUFAAAAABYAFOBI2h5thf3+Lflb2LGCsVSZwsltIgIC/i4dtVARCRWtROG0HHoGcaVklzJUcwo5homgGkSNAnJHMEQCIGx7zKcMIGr7cEES9BR4Kdt/pzPTK3fKWcGyCJXb7MVnAiALOBgqlMH4GbC1HDh/HmylmO54fyEy4lKde7/BT/PWxwEBAwQBAAAAIgYC/i4dtVARCRWtROG0HHoGcaVklzJUcwo5homgGkSNAnIYDwVpQ1QAAIABAACAAAAAgAAAAAAAAAAAAAAiAgL+CIiB59NSCssOJRGiMYQK1chahgAaaJpIXE41Cyir+xgPBWlDVAAAgAEAAIAAAACAAQAAAAAAAAAA')
         assert_equal(analysis['next'], 'finalizer')
 
-        analysis = self.nodes[0].analyzepsbt('cHNidP8BAHECAAAAAfA00BFgAm6tp86RowwH6BMImQNL5zXUcTT97XoLGz0BAAAAAAD/////AgCAgWrj0AcAFgAUKNw0x8HRctAgmvoevm4u1SbN7XL87QKVAAAAABYAFPck4gF7iL4NL4wtfRAKgQbghiTUAAAAAAABAR8A8gUqAQAAABYAFJUDtxf2PHo641HEOBOAIvFMNTr2AAAA')
+        analysis = self.nodes[0].analyzepsbt('cHNidP8BAHECAAAAAfA00BFgAm6tp86RowwH6BMImQNL5zXUcTT97XoLGz0BAAAAAAD/////AgEAZKeztuANFgAUKNw0x8HRctAgmvoevm4u1SbN7XL87QKVAAAAABYAFPck4gF7iL4NL4wtfRAKgQbghiTUAAAAAAABAR8A8gUqAQAAABYAFJUDtxf2PHo641HEOBOAIvFMNTr2AAAA')
         assert_equal(analysis['next'], 'creator')
         assert_equal(analysis['error'], 'PSBT is not valid. Output amount invalid')
 

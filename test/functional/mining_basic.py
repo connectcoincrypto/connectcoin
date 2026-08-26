@@ -154,7 +154,7 @@ class MiningTest(BitcoinTestFramework):
             if blockmintxfee_sat_kvb == DEFAULT_BLOCK_MIN_TX_FEE:
                 self.log.info(f"-> Default -blockmintxfee setting ({blockmintxfee_sat_kvb} con/kvB)...")
             else:
-                blockmintxfee_parameter = f"-blockmintxfee={blockmintxfee_btc_kvb:.8f}"
+                blockmintxfee_parameter = f"-blockmintxfee={blockmintxfee_btc_kvb:.10f}"
                 self.log.info(f"-> Test {blockmintxfee_parameter} ({blockmintxfee_sat_kvb} con/kvB)...")
                 self.restart_node(0, extra_args=[blockmintxfee_parameter, '-minrelaytxfee=0', '-persistmempool=0'])
             assert_equal(node.getmininginfo()['blockmintxfee'], blockmintxfee_btc_kvb)

@@ -27,7 +27,7 @@ std::string FormatMoney(const CAmount n)
         quotient = -quotient;
         remainder = -remainder;
     }
-    std::string str = strprintf("%d.%08d", quotient, remainder);
+    std::string str = strprintf("%d.%010d", quotient, remainder);
 
     // Right-trim excess zeros before the decimal point:
     int nTrim = 0;
@@ -82,6 +82,9 @@ std::optional<CAmount> ParseMoney(const std::string& money_string)
     if (nUnits < 0 || nUnits > COIN)
         return std::nullopt;
     int64_t nWhole = LocaleIndependentAtoi<int64_t>(strWhole);
+    if (nWhole > MAX_MONEY / COIN) {
+        return std::nullopt;
+    }
     CAmount value = nWhole * COIN + nUnits;
 
     if (!MoneyRange(value)) {

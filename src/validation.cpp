@@ -1848,8 +1848,8 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
     if (halvings >= 64)
         return 0;
 
-    CAmount nSubsidy = 50 * COIN;
-    // Subsidy is cut in half every 210,000 blocks which will occur approximately every 4 years.
+    CAmount nSubsidy = 100 * COIN;
+    // Subsidy is cut in half according to the interval configured for the selected network.
     nSubsidy >>= halvings;
     return nSubsidy;
 }
@@ -2162,10 +2162,12 @@ int ApplyTxInUndo(Coin&& undo, CCoinsViewCache& view, const COutPoint& out)
 
     if (view.HaveCoin(out)) fClean = false; // overwriting transaction output
 
-    if (undo.nHeight == 0) {
+    if (undo.nHeight == 0 && !undo.fCoinBase) {
         // Missing undo metadata (height and coinbase). Older versions included this
         // information only in undo records for the last spend of a transactions'
-        // outputs. This implies that it must be present for some other output of the same tx.
+        // outputs. A height-zero coinbase is complete metadata for a spendable
+        // genesis output and must not take this legacy reconstruction path.
+        // Otherwise, the metadata must be present for some other output of the same tx.
         const Coin& alternate = AccessByTxid(view, out.hash);
         if (!alternate.IsSpent()) {
             undo.nHeight = alternate.nHeight;
@@ -2344,9 +2346,16 @@ bool Chainstate::ConnectBlock(const CBlock& block, BlockValidationState& state, 
 
     m_chainman.num_blocks_total++;
 
-    // Special case for the genesis block, skipping connection of its transactions
-    // (its coinbase is unspendable)
+    // Genesis is hardcoded, so its transactions do not need the contextual checks
+    // below. Connect its coinbase explicitly on networks that use the genesis
+    // output as an initial allocation.
     if (block_hash == params.GetConsensus().hashGenesisBlock) {
+        if (params.GetConsensus().genesis_coinbase_spendable) {
+            assert(block.vtx.size() == 1);
+            assert(block.vtx.front()->IsCoinBase());
+            CTxUndo undo_dummy;
+            UpdateCoins(*block.vtx.front(), view, undo_dummy, pindex->nHeight);
+        }
         if (!fJustCheck)
             view.SetBestBlock(pindex->GetBlockHash());
         return true;

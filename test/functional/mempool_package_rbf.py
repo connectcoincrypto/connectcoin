@@ -148,10 +148,10 @@ class PackageRBFTest(BitcoinTestFramework):
         self.assert_mempool_contents(expected=package_txns1)
 
         PACKAGE_FEE = DEFAULT_FEE + DEFAULT_CHILD_FEE
-        PACKAGE_FEE_MINUS_ONE = PACKAGE_FEE - Decimal("0.00000001")
+        PACKAGE_FEE_MINUS_ONE = PACKAGE_FEE - Decimal("0.0000000001")
 
         # Package 2 has a higher feerate but lower absolute fee
-        package_hex2, package_txns2 = self.create_simple_package(coin, parent_fee=DEFAULT_FEE, child_fee=DEFAULT_CHILD_FEE - Decimal("0.00000001"))
+        package_hex2, package_txns2 = self.create_simple_package(coin, parent_fee=DEFAULT_FEE, child_fee=DEFAULT_CHILD_FEE - Decimal("0.0000000001"))
         pkg_results2 = node.submitpackage(package_hex2)
         assert_equal(f"package RBF failed: insufficient anti-DoS fees, rejecting replacement {package_txns2[1].txid_hex}, less fees than conflicting txs; {PACKAGE_FEE_MINUS_ONE} < {PACKAGE_FEE}", pkg_results2["package_msg"])
         self.assert_mempool_contents(expected=package_txns1)
@@ -159,13 +159,13 @@ class PackageRBFTest(BitcoinTestFramework):
         self.log.info("Check replacement pays for incremental bandwidth")
         _, placeholder_txns3 = self.create_simple_package(coin)
         package_3_size = sum([tx.get_vsize() for tx in placeholder_txns3])
-        incremental_sats_required = (Decimal(package_3_size * 0.1) / COIN).quantize(Decimal("0.00000001"))
-        incremental_sats_short = incremental_sats_required - Decimal("0.00000005")
+        incremental_sats_required = (Decimal(package_3_size * 0.1) / COIN).quantize(Decimal("0.0000000001"))
+        incremental_sats_short = incremental_sats_required - Decimal("0.0000000005")
         # Recreate the package with slightly higher fee once we know the size of the new package, but still short of required fee
         failure_package_hex3, failure_package_txns3 = self.create_simple_package(coin, parent_fee=DEFAULT_FEE, child_fee=DEFAULT_CHILD_FEE + incremental_sats_short)
         assert_equal(package_3_size, sum([tx.get_vsize() for tx in failure_package_txns3]))
         pkg_results3 = node.submitpackage(failure_package_hex3)
-        assert_equal(f"package RBF failed: insufficient anti-DoS fees, rejecting replacement {failure_package_txns3[1].txid_hex}, not enough additional fees to relay; {incremental_sats_short:.8f} < {incremental_sats_required:.8f}", pkg_results3["package_msg"])
+        assert_equal(f"package RBF failed: insufficient anti-DoS fees, rejecting replacement {failure_package_txns3[1].txid_hex}, not enough additional fees to relay; {incremental_sats_short:.10f} < {incremental_sats_required:.10f}", pkg_results3["package_msg"])
         self.assert_mempool_contents(expected=package_txns1)
 
         success_package_hex3, success_package_txns3 = self.create_simple_package(coin, parent_fee=DEFAULT_FEE, child_fee=DEFAULT_CHILD_FEE + incremental_sats_required)
@@ -183,7 +183,7 @@ class PackageRBFTest(BitcoinTestFramework):
         assert 'package RBF failed: package feerate is less than or equal to parent feerate' in pkg_results5["package_msg"]
         self.assert_mempool_contents(expected=package_txns4)
 
-        package_hex5_1, package_txns5_1 = self.create_simple_package(coin, parent_fee=DEFAULT_CHILD_FEE, child_fee=DEFAULT_CHILD_FEE + Decimal("0.00000001"))
+        package_hex5_1, package_txns5_1 = self.create_simple_package(coin, parent_fee=DEFAULT_CHILD_FEE, child_fee=DEFAULT_CHILD_FEE + Decimal("0.0000000001"))
         node.submitpackage(package_hex5_1)
         self.assert_mempool_contents(expected=package_txns5_1)
         self.generate(node, 1)
@@ -349,7 +349,7 @@ class PackageRBFTest(BitcoinTestFramework):
 
         # Package 2 feerate is below the feerate of directly conflicted parent, so it fails even though
         # total fees are higher than the original package
-        package_hex2, _package_txns2 = self.create_simple_package(coin, parent_fee=DEFAULT_CHILD_FEE - Decimal("0.00000001"), child_fee=DEFAULT_CHILD_FEE)
+        package_hex2, _package_txns2 = self.create_simple_package(coin, parent_fee=DEFAULT_CHILD_FEE - Decimal("0.0000000001"), child_fee=DEFAULT_CHILD_FEE)
         pkg_results2 = node.submitpackage(package_hex2)
         assert_equal(pkg_results2["package_msg"], 'package RBF failed: insufficient feerate: does not improve feerate diagram')
         self.assert_mempool_contents(expected=package_txns1)

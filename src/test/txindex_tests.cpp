@@ -133,6 +133,19 @@ BOOST_AUTO_TEST_CASE(txindex_hash_prefix)
         0xc67d87b08cULL);
 }
 
+BOOST_FIXTURE_TEST_CASE(txindex_includes_spendable_mainnet_genesis, TestingSetup)
+{
+    TxIndex txindex(interfaces::MakeChain(m_node), /*n_cache_size=*/1_MiB, /*f_memory=*/true);
+    BOOST_REQUIRE(txindex.Init());
+    txindex.Sync();
+
+    const CBlock& genesis{Params().GenesisBlock()};
+    BOOST_REQUIRE_EQUAL(genesis.vtx.size(), 1U);
+    BOOST_CHECK(LookupTx(txindex, genesis.vtx.front()->GetHash()) == genesis.GetHash());
+
+    txindex.Stop();
+}
+
 BOOST_FIXTURE_TEST_CASE(txindex_initial_sync, TestChain100Setup)
 {
     TxIndex txindex(interfaces::MakeChain(m_node), /*n_cache_size=*/1_MiB, /*f_memory=*/true);
@@ -148,10 +161,10 @@ BOOST_FIXTURE_TEST_CASE(txindex_initial_sync, TestChain100Setup)
 
     txindex.Sync();
 
-    // Check that txindex excludes genesis block transactions.
+    // Check that txindex includes the spendable genesis transaction.
     const CBlock& genesis_block = Params().GenesisBlock();
     for (const auto& txn : genesis_block.vtx) {
-        BOOST_CHECK(!txindex.FindTx(txn->GetHash()));
+        BOOST_CHECK(LookupTx(txindex, txn->GetHash()) == genesis_block.GetHash());
     }
 
     // Check that txindex has all txs that were in the chain before it started.
@@ -218,7 +231,8 @@ BOOST_FIXTURE_TEST_CASE(txindex_collision_scan_path, TestChain100Setup)
     // confirm the lookup misses even though the legacy row exists.
     // BlockTxPosition offsets are from the block start (header included), while
     // the legacy CDiskTxPos.nTxOffset is measured after the header.
-    const CDiskTxPos fake_physical{BlockFilePos(*m_node.chainman, fake_pos.block_seq + 1), fake_pos.tx_offset_in_block - txindex::BLOCK_HEADER_SIZE};
+    // Genesis is indexed, so block sequence numbers align with chain heights.
+    const CDiskTxPos fake_physical{BlockFilePos(*m_node.chainman, fake_pos.block_seq), fake_pos.tx_offset_in_block - txindex::BLOCK_HEADER_SIZE};
     db.Erase(txindex::DBKey{fake_prefix, fake_pos});
     db.Write(txindex::LegacyTxKey(fake_txid), fake_physical);
     BOOST_CHECK(!txindex.FindTx(fake_txid));

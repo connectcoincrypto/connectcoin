@@ -237,7 +237,7 @@ class ListSinceBlockTest(BitcoinTestFramework):
         self.split_network()
 
         # send from nodes[1] using utxo to nodes[0]
-        change = '%.8f' % (float(utxo['amount']) - 1.0003)
+        change = '%.10f' % (float(utxo['amount']) - 1.0003)
         recipient_dict = {
             self.nodes[0].getnewaddress(): 1,
             self.nodes[1].getnewaddress(): change,
@@ -313,7 +313,7 @@ class ListSinceBlockTest(BitcoinTestFramework):
         # create and sign a transaction
         utxos = self.nodes[2].listunspent()
         utxo = utxos[0]
-        change = '%.8f' % (float(utxo['amount']) - 1.0003)
+        change = '%.10f' % (float(utxo['amount']) - 1.0003)
         recipient_dict = {
             self.nodes[0].getnewaddress(): 1,
             self.nodes[2].getnewaddress(): change,

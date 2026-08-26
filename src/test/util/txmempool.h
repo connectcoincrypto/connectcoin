@@ -74,7 +74,7 @@ void TryAddToMempool(CTxMemPool& tx_pool, const CTxMemPoolEntry& entry);
  *
  * @param target_feerate    The new mempool minimum feerate after this function returns.
  *                          Must be above max(incremental feerate, min relay feerate),
- *                          or 1sat/vB with default settings.
+ *                          or 1 con/vB with default settings.
  * @param mempool           The mempool to mock the minimum feerate for. Must be empty
  *                          when called.
  */

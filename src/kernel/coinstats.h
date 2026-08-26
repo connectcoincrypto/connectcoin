@@ -50,7 +50,7 @@ struct CCoinsStats {
 
     //! Total cumulative amount of block subsidies up to and including this block
     CAmount total_subsidy{0};
-    //! The unspendable coinbase amount from the genesis block
+    //! Genesis coinbase amount excluded as unspendable (zero when spendable)
     CAmount total_unspendables_genesis_block{0};
     //! The two unspendable coinbase outputs total amount caused by BIP30
     CAmount total_unspendables_bip30{0};

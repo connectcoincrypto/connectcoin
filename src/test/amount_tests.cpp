@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(GetFeeTest)
     BOOST_CHECK(CFeeRate(CAmount(0), 1000) == CFeeRate(0));
     BOOST_CHECK(CFeeRate(CAmount(1), 1000) == CFeeRate(1));
     // Previously, precision was limited to three decimal digits
-    // due to only supporting satoshis per kB, so CFeeRate(CAmount(1), 1001) was equal to CFeeRate(0)
+    // due to only supporting connects per kB, so CFeeRate(CAmount(1), 1001) was equal to CFeeRate(0)
     // Since #32750, higher precision is maintained.
     BOOST_CHECK(CFeeRate(CAmount(1), 1001) > CFeeRate(0));
     BOOST_CHECK(CFeeRate(CAmount(1), 1001) < CFeeRate(1));
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(BinaryOperatorTest)
     BOOST_CHECK(a <= a);
     BOOST_CHECK(b >= a);
     BOOST_CHECK(b >= b);
-    // a should be 0.00000002 BTC/kvB now
+    // a should be 0.0000000002 CC/kvB now
     a += a;
     BOOST_CHECK(a == b);
 }
@@ -141,8 +141,8 @@ BOOST_AUTO_TEST_CASE(ToStringTest)
 {
     CFeeRate feeRate;
     feeRate = CFeeRate(1);
-    BOOST_CHECK_EQUAL(feeRate.ToString(), "0.00000001 CC/kvB");
-    BOOST_CHECK_EQUAL(feeRate.ToString(FeeRateFormat::COIN_KVB), "0.00000001 CC/kvB");
+    BOOST_CHECK_EQUAL(feeRate.ToString(), "0.0000000001 CC/kvB");
+    BOOST_CHECK_EQUAL(feeRate.ToString(FeeRateFormat::COIN_KVB), "0.0000000001 CC/kvB");
     BOOST_CHECK_EQUAL(feeRate.ToString(FeeRateFormat::ATOM_VB), "0.001 con/vB");
 }
 

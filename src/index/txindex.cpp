@@ -5,6 +5,7 @@
 #include <index/txindex.h>
 
 #include <chain.h>
+#include <chainparams.h>
 #include <common/args.h>
 #include <crypto/siphash.h>
 #include <dbwrapper.h>
@@ -146,8 +147,9 @@ TxIndex::~TxIndex() = default;
 
 bool TxIndex::CustomAppend(const interfaces::BlockInfo& block)
 {
-    // Exclude genesis block transaction because outputs are not spendable.
-    if (block.height == 0) return true;
+    // Exclude the genesis transaction only on networks where its outputs are
+    // deliberately omitted from the UTXO set.
+    if (block.height == 0 && !Params().GetConsensus().genesis_coinbase_spendable) return true;
 
     assert(block.data);
     m_db->WriteTxs(block);

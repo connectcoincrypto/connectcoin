@@ -30,7 +30,7 @@ class SendallTest(BitcoinTestFramework):
         self.skip_if_no_wallet()
 
     def set_test_params(self):
-        getcontext().prec=10
+        getcontext().prec=28
         self.num_nodes = 1
         self.setup_clean_chain = True
 
@@ -157,11 +157,11 @@ class SendallTest(BitcoinTestFramework):
         assert_raises_rpc_error(-6, "Insufficient funds for fees after creating specified outputs.", self.wallet.sendall,
                 [{self.recipient: pre_sendall_balance}, self.remainder_target])
         assert_raises_rpc_error(-8, "Specified output amount to {} is below dust threshold".format(self.recipient),
-                self.wallet.sendall, [{self.recipient: 0.00000001}, self.remainder_target])
+                self.wallet.sendall, [{self.recipient: 0.0000000001}, self.remainder_target])
         assert_raises_rpc_error(-6, "Dynamically assigned remainder results in dust output.", self.wallet.sendall,
                 [{self.recipient: pre_sendall_balance - fee}, self.remainder_target])
         assert_raises_rpc_error(-6, "Dynamically assigned remainder results in dust output.", self.wallet.sendall,
-                [{self.recipient: pre_sendall_balance - fee - Decimal(0.00000010)}, self.remainder_target])
+                [{self.recipient: pre_sendall_balance - fee - Decimal("0.0000000010")}, self.remainder_target])
 
     # @cleanup not needed because different wallet used
     def sendall_negative_effective_value(self):
@@ -170,8 +170,8 @@ class SendallTest(BitcoinTestFramework):
         self.nodes[0].createwallet("dustwallet")
         dust_wallet = self.nodes[0].get_wallet_rpc("dustwallet")
 
-        self.def_wallet.sendtoaddress(dust_wallet.getnewaddress(), 0.00000400)
-        self.def_wallet.sendtoaddress(dust_wallet.getnewaddress(), 0.00000300)
+        self.def_wallet.sendtoaddress(dust_wallet.getnewaddress(), 0.0000000400)
+        self.def_wallet.sendtoaddress(dust_wallet.getnewaddress(), 0.0000000300)
         self.generate(self.nodes[0], 1)
         assert_greater_than(dust_wallet.getbalances()["mine"]["trusted"], 0)
 
@@ -184,7 +184,7 @@ class SendallTest(BitcoinTestFramework):
     @cleanup
     def sendall_with_send_max(self):
         self.log.info("Check that `send_max` option causes negative value UTXOs to be left behind")
-        self.add_utxos([0.00000400, 0.00000300, 1])
+        self.add_utxos([Decimal("0.0000000400"), Decimal("0.0000000300"), 1])
 
         # sendall with send_max
         sendall_tx_receipt = self.wallet.sendall(recipients=[self.remainder_target], fee_rate=300, send_max=True)
@@ -192,7 +192,7 @@ class SendallTest(BitcoinTestFramework):
 
         assert_equal(len(tx_from_wallet["decoded"]["vin"]), 1)
         self.assert_tx_has_outputs(tx_from_wallet, [{"address": self.remainder_target, "value": 1 + tx_from_wallet["fee"]}])
-        assert_equal(self.wallet.getbalances()["mine"]["trusted"], Decimal("0.00000700"))
+        assert_equal(self.wallet.getbalances()["mine"]["trusted"], Decimal("0.0000000700"))
 
         self.def_wallet.sendtoaddress(self.wallet.getnewaddress(), 1)
         self.generate(self.nodes[0], 1)
@@ -279,7 +279,7 @@ class SendallTest(BitcoinTestFramework):
                 "Fee exceeds maximum configured by user",
                 self.wallet.sendall,
                 recipients=[self.remainder_target],
-                fee_rate=100000)
+                fee_rate=10000000)
 
     @cleanup
     def sendall_fails_on_low_fee(self):

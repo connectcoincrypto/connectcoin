@@ -119,10 +119,10 @@ int ParseVerbosity(const UniValue& arg, int default_verbosity, bool allow_bool);
  * Validate and return a CAmount from a UniValue number or string.
  *
  * @param[in] value     UniValue number or string to parse.
- * @param[in] decimals  Number of significant digits (default: 8).
+ * @param[in] decimals  Number of significant digits (default: 10).
  * @returns a CAmount if the various checks pass.
  */
-CAmount AmountFromValue(const UniValue& value, int decimals = 8);
+CAmount AmountFromValue(const UniValue& value, int decimals = 10);
 /**
  * Parse a JSON number or string, denoting CC/kvB, into a CFeeRate (con/kvB).
  * Reject negative values or rates larger than 1 CC/kvB.

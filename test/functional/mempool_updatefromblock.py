@@ -134,7 +134,7 @@ class MempoolUpdateFromBlockTest(BitcoinTestFramework):
         aggregate_serialized_size = 0
         while aggregate_serialized_size < MAX_DISCONNECTED_TX_POOL_BYTES:
             # Mine parents in FIFO order via fee ordering
-            large_std_txs.append(wallet.create_self_transfer(target_vsize=parent_target_vsize, fee=Decimal("0.00400000") - (Decimal("0.00001000") * len(large_std_txs))))
+            large_std_txs.append(wallet.create_self_transfer(target_vsize=parent_target_vsize, fee=Decimal("0.0000400000") - (Decimal("0.0000001000") * len(large_std_txs))))
             small_child_txs.append(wallet.create_self_transfer(utxo_to_spend=large_std_txs[-1]['new_utxo']))
             # Slight underestimate of dynamic cost, so we'll be over during reorg
             aggregate_serialized_size += len(large_std_txs[-1]["tx"].serialize())

@@ -7,20 +7,25 @@
 #include <coins.h>
 #include <consensus/amount.h>
 #include <consensus/validation.h>
+#include <kernel/coinstats.h>
+#include <key.h>
 #include <node/blockstorage.h>
 #include <node/kernel_notifications.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <random.h>
 #include <script/script.h>
+#include <script/solver.h>
 #include <sync.h>
 #include <test/util/chainstate.h>
 #include <test/util/coins.h>
 #include <test/util/common.h>
+#include <test/util/mining.h>
 #include <test/util/setup_common.h>
 #include <tinyformat.h>
 #include <uint256.h>
 #include <util/check.h>
+#include <util/strencodings.h>
 #include <validation.h>
 
 #include <boost/test/unit_test.hpp>
@@ -31,7 +36,156 @@
 
 class CTxMemPool;
 
+class RegtestTestingSetup : public TestingSetup
+{
+public:
+    RegtestTestingSetup() : TestingSetup{ChainType::REGTEST} {}
+};
+
 BOOST_FIXTURE_TEST_SUITE(validation_chainstate_tests, ChainTestingSetup)
+
+BOOST_AUTO_TEST_CASE(all_networks_have_spendable_genesis_coinbase)
+{
+    const auto public_params{CreateChainParams(m_args, ChainType::MAIN)};
+    const auto regtest_params{CreateChainParams(m_args, ChainType::REGTEST)};
+    const CScript& public_script{public_params->GenesisBlock().vtx.front()->vout.front().scriptPubKey};
+    const CScript& regtest_script{regtest_params->GenesisBlock().vtx.front()->vout.front().scriptPubKey};
+
+    // A known private key is intentionally available for regtest. Public
+    // networks must never reuse its output script.
+    BOOST_CHECK(public_script != regtest_script);
+    BOOST_CHECK_EQUAL(public_script.size(), 35U);
+    BOOST_CHECK_EQUAL(regtest_script.size(), 67U);
+    std::vector<std::vector<unsigned char>> public_solutions;
+    BOOST_REQUIRE(Solver(public_script, public_solutions) == TxoutType::PUBKEY);
+    BOOST_REQUIRE_EQUAL(public_solutions.size(), 1U);
+    BOOST_CHECK(CPubKey{public_solutions.front()}.IsFullyValid());
+
+    for (const ChainType chain_type : {ChainType::MAIN, ChainType::TESTNET, ChainType::TESTNET4, ChainType::SIGNET, ChainType::REGTEST}) {
+        const auto params{CreateChainParams(m_args, chain_type)};
+        BOOST_CHECK(params->GetConsensus().genesis_coinbase_spendable);
+        BOOST_REQUIRE_EQUAL(params->GenesisBlock().vtx.size(), 1U);
+        BOOST_REQUIRE_EQUAL(params->GenesisBlock().vtx.front()->vout.size(), 1U);
+        BOOST_CHECK_EQUAL(params->GenesisBlock().vtx.front()->vout.front().nValue, 10'000'000 * COIN);
+        if (chain_type != ChainType::REGTEST) {
+            BOOST_CHECK(params->GenesisBlock().vtx.front()->vout.front().scriptPubKey == public_script);
+        }
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(mainnet_genesis_coinbase_is_spendable, TestingSetup)
+{
+    const CBlock& genesis{Params().GenesisBlock()};
+    BOOST_REQUIRE_EQUAL(genesis.vtx.size(), 1U);
+    BOOST_REQUIRE_EQUAL(genesis.vtx.front()->vout.size(), 1U);
+
+    const COutPoint genesis_outpoint{genesis.vtx.front()->GetHash(), 0};
+    LOCK(cs_main);
+    const Coin& coin{Assert(m_node.chainman)->ActiveChainstate().CoinsTip().AccessCoin(genesis_outpoint)};
+    BOOST_REQUIRE(!coin.IsSpent());
+    BOOST_CHECK(coin.IsCoinBase());
+    BOOST_CHECK_EQUAL(coin.nHeight, 0);
+    BOOST_CHECK_EQUAL(coin.out.nValue, genesis.vtx.front()->vout.front().nValue);
+    BOOST_CHECK(coin.out.scriptPubKey == genesis.vtx.front()->vout.front().scriptPubKey);
+}
+
+BOOST_FIXTURE_TEST_CASE(regtest_genesis_coinbase_can_be_spent, TestChain100Setup)
+{
+    const CBlock& genesis{Params().GenesisBlock()};
+    const auto secret{ParseHex("bc4470438702a7aa1c7696ff857e0439657583f87e3d889abea285771604891d")};
+    CKey genesis_key;
+    genesis_key.Set(secret.begin(), secret.end(), /*fCompressedIn=*/false);
+    BOOST_REQUIRE(genesis_key.IsValid());
+    BOOST_REQUIRE(GetScriptForRawPubKey(genesis_key.GetPubKey()) == genesis.vtx.front()->vout.front().scriptPubKey);
+
+    const COutPoint genesis_outpoint{genesis.vtx.front()->GetHash(), 0};
+    const CMutableTransaction spend{CreateValidMempoolTransaction(
+        genesis.vtx.front(),
+        /*input_vout=*/0,
+        /*input_height=*/0,
+        genesis_key,
+        CScript{} << OP_TRUE,
+        /*output_amount=*/9'999'999 * COIN,
+        /*submit=*/false)};
+    const CBlock block{CreateAndProcessBlock({spend}, CScript{} << OP_TRUE)};
+
+    Chainstate& chainstate{Assert(m_node.chainman)->ActiveChainstate()};
+    const COutPoint spend_outpoint{spend.GetHash(), 0};
+    {
+        LOCK(cs_main);
+        BOOST_REQUIRE_EQUAL(chainstate.m_chain.Tip()->GetBlockHash(), block.GetHash());
+        BOOST_CHECK(!chainstate.CoinsTip().HaveCoin(genesis_outpoint));
+        BOOST_CHECK(chainstate.CoinsTip().HaveCoin(spend_outpoint));
+    }
+
+    // A reorg must restore the development-fund allocation from the undo data.
+    // Reconnecting the same block must then consume it again without changing
+    // the monetary state.
+    BlockValidationState state;
+    {
+        LOCK2(Assert(m_node.chainman)->GetMutex(), chainstate.MempoolMutex());
+        BOOST_REQUIRE(chainstate.DisconnectTip(state, nullptr));
+        BOOST_CHECK(chainstate.CoinsTip().HaveCoin(genesis_outpoint));
+        BOOST_CHECK(!chainstate.CoinsTip().HaveCoin(spend_outpoint));
+    }
+
+    BOOST_REQUIRE(chainstate.ActivateBestChain(state, nullptr));
+    {
+        LOCK(cs_main);
+        BOOST_REQUIRE_EQUAL(chainstate.m_chain.Tip()->GetBlockHash(), block.GetHash());
+        BOOST_CHECK(!chainstate.CoinsTip().HaveCoin(genesis_outpoint));
+        BOOST_CHECK(chainstate.CoinsTip().HaveCoin(spend_outpoint));
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(regtest_assumeutxo_commitments_match_chainstate, TestChain100Setup)
+{
+    auto check_commitment = [this](int height) {
+        ChainstateManager& chainman{*Assert(m_node.chainman)};
+        chainman.ActiveChainstate().ForceFlushStateToDisk(/*wipe_cache=*/false);
+        const auto stats{kernel::ComputeUTXOStats(
+            kernel::CoinStatsHashType::HASH_SERIALIZED,
+            chainman.ActiveChainstate().CoinsDB(),
+            chainman.m_blockman)};
+        BOOST_REQUIRE(stats);
+        BOOST_REQUIRE_EQUAL(stats->nHeight, height);
+
+        const auto assumeutxo{Params().AssumeutxoForHeight(height)};
+        BOOST_REQUIRE(assumeutxo);
+        BOOST_CHECK_EQUAL(stats->hashBlock.ToString(), assumeutxo->blockhash.ToString());
+        BOOST_CHECK_EQUAL(stats->hashSerialized.ToString(), assumeutxo->hash_serialized.ToString());
+        BOOST_CHECK_EQUAL(stats->coins_count, static_cast<uint64_t>(height + 1));
+    };
+
+    mineBlocks(10);
+    check_commitment(110);
+}
+
+BOOST_FIXTURE_TEST_CASE(regtest_fuzz_assumeutxo_commitment_matches_chainstate, RegtestTestingSetup)
+{
+    const auto chain{CreateBlockChain(2 * COINBASE_MATURITY, Params())};
+    for (auto& block : chain) {
+        BOOST_REQUIRE(!ProcessBlock(m_node, block).IsNull());
+    }
+
+    LOCK(cs_main);
+    ChainstateManager& chainman{*Assert(m_node.chainman)};
+    Chainstate& chainstate{chainman.ActiveChainstate()};
+    chainstate.ForceFlushStateToDisk(/*wipe_cache=*/false);
+    const auto stats{kernel::ComputeUTXOStats(
+        kernel::CoinStatsHashType::HASH_SERIALIZED,
+        chainstate.CoinsDB(),
+        chainman.m_blockman)};
+    BOOST_REQUIRE(stats);
+
+    const auto assumeutxo{Params().AssumeutxoForHeight(2 * COINBASE_MATURITY)};
+    BOOST_REQUIRE(assumeutxo);
+    BOOST_CHECK_EQUAL(stats->nHeight, assumeutxo->height);
+    BOOST_CHECK_EQUAL(stats->hashBlock.ToString(), assumeutxo->blockhash.ToString());
+    BOOST_CHECK_EQUAL(stats->hashSerialized.ToString(), assumeutxo->hash_serialized.ToString());
+    BOOST_CHECK_EQUAL(stats->nTransactions, assumeutxo->m_chain_tx_count);
+    BOOST_CHECK_EQUAL(stats->coins_count, chain.size() + 1); // Includes spendable genesis.
+}
 
 //! Test resizing coins-related Chainstate caches during runtime.
 //!

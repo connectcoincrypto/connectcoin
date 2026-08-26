@@ -46,6 +46,7 @@ from test_framework.messages import (
     CTransaction,
     CTxIn,
     CTxOut,
+    COIN,
     msg_block,
     msg_headers,
 )
@@ -112,7 +113,7 @@ class AssumeValidTest(BitcoinTestFramework):
         # Create a transaction spending the coinbase output with an invalid (null) signature
         tx = CTransaction()
         tx.vin.append(CTxIn(COutPoint(self.block1.vtx[0].txid_int, 0), scriptSig=b""))
-        tx.vout.append(CTxOut(49 * 100000000, CScript([OP_TRUE])))
+        tx.vout.append(CTxOut(49 * COIN, CScript([OP_TRUE])))
 
         block102 = create_block(self.tip, height=height, ntime=self.block_time, txlist=[tx])
         self.block_time += 1

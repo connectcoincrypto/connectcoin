@@ -717,10 +717,10 @@ BOOST_AUTO_TEST_CASE(cck_block_header_tests)
     BOOST_CHECK_EQUAL(header.Version(), 4);
     BOOST_CHECK_EQUAL(header.Timestamp(), 1787596782);
     BOOST_CHECK_EQUAL(header.Bits(), 0x1e01ffff);
-    BOOST_CHECK_EQUAL(header.Nonce(), 15197266);
-    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(header.Hash().ToBytes()), "0000002b09d34a41a1c794cd8c07f0f8082d5387ee58b0d2c1486cdc59288ccd");
+    BOOST_CHECK_EQUAL(header.Nonce(), 360070);
+    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(header.Hash().ToBytes()), "000001fdb917994e21826d48debd3245978e43e95d09014417e771dc02cd2b8b");
     auto prev_hash = header.PrevHash();
-    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(prev_hash.ToBytes()), "0000013b2ab367b4745451e36501c24bc0e908b3641ec8fcc551ab084726cbd0");
+    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(prev_hash.ToBytes()), "0000004b461aae33a4be0ee95ae8461155f2c48130bc8dd521adb71ec0d3e9a2");
 
     // Test round-trip serialization of block header
     auto header_roundtrip{BlockHeader{header.ToBytes()}};
@@ -732,8 +732,8 @@ BOOST_AUTO_TEST_CASE(cck_block_header_tests)
     BOOST_CHECK_EQUAL(block_header.Version(), 4);
     BOOST_CHECK_EQUAL(block_header.Timestamp(), 1787596782);
     BOOST_CHECK_EQUAL(block_header.Bits(), 0x1e01ffff);
-    BOOST_CHECK_EQUAL(block_header.Nonce(), 15197266);
-    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(block_header.Hash().ToBytes()), "0000002b09d34a41a1c794cd8c07f0f8082d5387ee58b0d2c1486cdc59288ccd");
+    BOOST_CHECK_EQUAL(block_header.Nonce(), 360070);
+    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(block_header.Hash().ToBytes()), "000001fdb917994e21826d48debd3245978e43e95d09014417e771dc02cd2b8b");
 
     // Verify header from block serializes to first 80 bytes of raw block
     auto block_header_bytes = block_header.ToBytes();
@@ -918,11 +918,11 @@ void chainman_mainnet_validation_test(TestDirectory& test_directory)
     Block block{raw_block};
     BlockHeader header{block.GetHeader()};
     TransactionView tx{block.GetTransaction(block.CountTransactions() - 1)};
-    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(tx.Txid().ToBytes()), "115ea27a0806bcb0235ca8f9446bd3fc62f94c1caba361310a6001b65d29d08c");
+    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(tx.Txid().ToBytes()), "62af4303df8fc7431d17100880d32f303d8b123eb9f246eec06e4c2157ff00b3");
     BOOST_CHECK_EQUAL(header.Version(), 4);
     BOOST_CHECK_EQUAL(header.Timestamp(), 1787596782);
     BOOST_CHECK_EQUAL(header.Bits(), 0x1e01ffff);
-    BOOST_CHECK_EQUAL(header.Nonce(), 15197266);
+    BOOST_CHECK_EQUAL(header.Nonce(), 360070);
     BOOST_CHECK_EQUAL(tx.CountInputs(), 1);
     Transaction tx2 = tx;
     BOOST_CHECK_EQUAL(tx2.CountInputs(), 1);
@@ -1383,7 +1383,7 @@ BOOST_AUTO_TEST_CASE(cck_transaction_check_tests)
         "000000006e493046022100e1eadba00d9296c743cb6ecc703fd9ddc9b3cd12906176a226ae"
         "4c18d6b00796022100a71aef7d2874deff681ba6080f1b278bac7bb99c61b08a85f4311970"
         "ffe7f63f012321030c0588dc44d92bdcbf8e72093466766fdc265ead8db64517b0c542275b"
-        "70fffbacffffffff010140075af0750700015100000000");
+        "70fffbacffffffff01010064a7b3b6e00d015100000000");
 
     // MAX_MONEY output + 1 output: sum exceeds MAX_MONEY (BADTX)
     expect_invalid(
@@ -1391,7 +1391,7 @@ BOOST_AUTO_TEST_CASE(cck_transaction_check_tests)
         "000000006d483045022027deccc14aa6668e78a8c9da3484fbcd4f9dcc9bb7d1b85146314b"
         "21b9ae4d86022100d0b43dece8cfb07348de0ca8bc5b86276fa88f7f2138381128b7c36ab2"
         "e42264012321029bb13463ddd5d2cc05da6e84e37536cb9525703cfd8f43afdb414988987a"
-        "92f6acffffffff020040075af075070001510001000000000000015100000000");
+        "92f6acffffffff02000064a7b3b6e00d0151000100000000000000015100000000");
 
     // Duplicate inputs (BADTX)
     expect_invalid(

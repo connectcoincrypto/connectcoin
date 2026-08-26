@@ -564,7 +564,10 @@ BOOST_AUTO_TEST_CASE(knapsack_solver_test)
     }
 
     // test with many inputs
-    for (CAmount amt=1500; amt < COIN; amt*=10) {
+    // Keep the raw-value proportions of this test stable when COIN's precision changes.
+    constexpr CAmount unit_scale{COIN / 100'000'000};
+    constexpr CAmount target{2'000 * unit_scale};
+    for (CAmount amt=1'500 * unit_scale; amt < COIN; amt*=10) {
         available_coins = {};
         // Create 676 inputs (=  (old MAX_STANDARD_TX_SIZE == 100000)  / 148 bytes per input)
         for (uint16_t j = 0; j < 676; j++)
@@ -572,12 +575,12 @@ BOOST_AUTO_TEST_CASE(knapsack_solver_test)
 
         // We only create the wallet once to save time, but we still run the coin selection RUN_TESTS times.
         for (int i = 0; i < RUN_TESTS; i++) {
-            const auto result24 = KnapsackSolver(KnapsackGroupOutputs(available_coins, *wallet, filter_confirmed), 2000, CENT);
+            const auto result24 = KnapsackSolver(KnapsackGroupOutputs(available_coins, *wallet, filter_confirmed), target, CENT);
             BOOST_CHECK(result24);
 
-            if (amt - 2000 < CENT) {
+            if (amt - target < CENT) {
                 // needs more than one input:
-                uint16_t returnSize = std::ceil((2000.0 + CENT)/amt);
+                uint16_t returnSize = std::ceil((static_cast<double>(target) + CENT)/amt);
                 CAmount returnValue = amt * returnSize;
                 BOOST_CHECK_EQUAL(result24->GetSelectedValue(), returnValue);
                 BOOST_CHECK_EQUAL(result24->GetInputSet().size(), returnSize);

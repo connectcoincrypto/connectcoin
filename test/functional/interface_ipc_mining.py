@@ -381,12 +381,12 @@ class IPCMiningTest(BitcoinTestFramework):
         """Verify that waitNext() preserves the mining policy from -blockmintxfee
         instead of falling back to defaults."""
         self.log.info("Running waitNext mining policy test")
-        block_min_tx_fee = Decimal("0.00002000")
-        below_block_min_tx_fee = Decimal("0.00001000")
-        above_block_min_tx_fee = Decimal("0.00003000")
+        block_min_tx_fee = Decimal("0.0000002000")
+        below_block_min_tx_fee = Decimal("0.0000001000")
+        above_block_min_tx_fee = Decimal("0.0000003000")
 
         self.restart_node(0, extra_args=[
-            f"-blockmintxfee={block_min_tx_fee:.8f}",
+            f"-blockmintxfee={block_min_tx_fee:.10f}",
             "-minrelaytxfee=0",
             "-persistmempool=0",
         ])

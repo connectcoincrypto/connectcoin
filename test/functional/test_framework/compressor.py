@@ -5,7 +5,7 @@
 """Routines for compressing transaction output amounts and scripts."""
 import unittest
 
-from .messages import COIN
+from .messages import COIN, MAX_MONEY
 
 
 def compress_amount(n):
@@ -52,7 +52,8 @@ class TestFrameworkCompressor(unittest.TestCase):
         # test cases from compress_tests.cpp:compress_amounts
         check_amount(0, 0x0)
         check_amount(1, 0x1)
-        check_amount(1000000, 0x7)
-        check_amount(COIN, 0x9)
-        check_amount(50*COIN, 0x32)
-        check_amount(21000000*COIN, 0x1406f40)
+        check_amount(COIN // 100, 0x9)
+        check_amount(COIN, 0x64)
+        check_amount(50*COIN, 0x1388)
+        check_amount(21000000*COIN, 0x7d2b7500)
+        check_amount(MAX_MONEY, 0x2540be400)

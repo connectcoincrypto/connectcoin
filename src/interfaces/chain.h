@@ -213,10 +213,10 @@ public:
     virtual void getTransactionAncestry(const Txid& txid, size_t& ancestors, size_t& cluster_count, size_t* ancestorsize = nullptr, CAmount* ancestorfees = nullptr) = 0;
 
     //! For each outpoint, calculate the fee-bumping cost to spend this outpoint at the specified
-    //  feerate, including bumping its ancestors. For example, if the target feerate is 10sat/vbyte
-    //  and this outpoint refers to a mempool transaction at 3sat/vbyte, the bump fee includes the
-    //  cost to bump the mempool transaction to 10sat/vbyte (i.e. 7 * mempooltx.vsize). If that
-    //  transaction also has, say, an unconfirmed parent with a feerate of 1sat/vbyte, the bump fee
+    //  feerate, including bumping its ancestors. For example, if the target feerate is 10 con/vB
+    //  and this outpoint refers to a mempool transaction at 3 con/vB, the bump fee includes the
+    //  cost to bump the mempool transaction to 10 con/vB (i.e. 7 * mempooltx.vsize). If that
+    //  transaction also has, say, an unconfirmed parent with a feerate of 1 con/vB, the bump fee
     //  includes the cost to bump the parent (i.e. 9 * parentmempooltx.vsize).
     //
     //  If the outpoint comes from an unconfirmed transaction that is already above the target

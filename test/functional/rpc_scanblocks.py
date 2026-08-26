@@ -5,6 +5,7 @@
 """Test the scanblocks RPC call."""
 from test_framework.address import address_to_scriptpubkey
 from test_framework.blockfilter import (
+    REGTEST_GENESIS_BASIC_FILTER_FALSE_POSITIVE,
     bip158_basic_element_hash,
     bip158_relevant_scriptpubkeys,
 )
@@ -90,7 +91,7 @@ class ScanblocksTest(BitcoinTestFramework):
         genesis_spks = bip158_relevant_scriptpubkeys(node, genesis_blockhash)
         assert_equal(len(genesis_spks), 1)
         genesis_coinbase_spk = list(genesis_spks)[0]
-        false_positive_spk = bytes.fromhex("001400000000000000000000000000000000000d459a")
+        false_positive_spk = REGTEST_GENESIS_BASIC_FILTER_FALSE_POSITIVE
 
         genesis_coinbase_hash = bip158_basic_element_hash(genesis_coinbase_spk, 1, genesis_blockhash)
         false_positive_hash = bip158_basic_element_hash(false_positive_spk, 1, genesis_blockhash)

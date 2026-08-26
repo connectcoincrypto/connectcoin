@@ -62,7 +62,8 @@ void sanity_check_snapshot()
     const auto stats{*Assert(kernel::ComputeUTXOStats(kernel::CoinStatsHashType::HASH_SERIALIZED, cs.CoinsDB(), node.chainman->m_blockman))};
     const auto cp_au_data{*Assert(node.chainman->GetParams().AssumeutxoForHeight(2 * COINBASE_MATURITY))};
     Assert(stats.nHeight == cp_au_data.height);
-    Assert(stats.nTransactions + 1 == cp_au_data.m_chain_tx_count); // +1 for the genesis tx.
+    // The spendable ConnectCoin genesis transaction is represented in the UTXO set.
+    Assert(stats.nTransactions == cp_au_data.m_chain_tx_count);
     Assert(stats.hashBlock == cp_au_data.blockhash);
     Assert(AssumeutxoHash{stats.hashSerialized} == cp_au_data.hash_serialized);
 }
@@ -132,6 +133,12 @@ void utxo_snapshot_fuzz(FuzzBufferType buffer)
             std::vector<uint8_t> file_data{ConsumeRandomLengthByteVector(fuzzed_data_provider)};
             outfile << std::span{file_data};
         } else {
+            const auto& genesis_coinbase{chainman.GetParams().GenesisBlock().vtx.at(0)};
+            outfile << genesis_coinbase->GetHash();
+            WriteCompactSize(outfile, 1); // number of coins for the hash
+            WriteCompactSize(outfile, 0); // index of coin
+            outfile << Coin(genesis_coinbase->vout[0], /*nHeightIn=*/0, /*fCoinBaseIn=*/true);
+
             int height{1};
             for (const auto& block : *g_chain) {
                 auto coinbase{block->vtx.at(0)};
@@ -185,6 +192,8 @@ void utxo_snapshot_fuzz(FuzzBufferType buffer)
         LOCK(::cs_main);
         Assert(!chainman.ActiveChainstate().m_from_snapshot_blockhash->IsNull());
         const auto& coinscache{chainman.ActiveChainstate().CoinsTip()};
+        const auto& genesis_coinbase{chainman.GetParams().GenesisBlock().vtx.at(0)};
+        Assert(coinscache.HaveCoin(COutPoint{genesis_coinbase->GetHash(), 0}));
         for (const auto& block : *g_chain) {
             Assert(coinscache.HaveCoin(COutPoint{block->vtx.at(0)->GetHash(), 0}));
             const auto* index{chainman.m_blockman.LookupBlockIndex(block->GetHash())};
@@ -198,7 +207,7 @@ void utxo_snapshot_fuzz(FuzzBufferType buffer)
                 Assert(index->m_chain_tx_count == 0);
             }
         }
-        Assert(g_chain->size() == coinscache.GetCacheSize());
+        Assert(g_chain->size() + 1 == coinscache.GetCacheSize());
         dirty_chainman = true;
     } else {
         Assert(!chainman.ActiveChainstate().m_from_snapshot_blockhash);

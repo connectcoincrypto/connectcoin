@@ -129,8 +129,8 @@ class MempoolAcceptanceTest(BitcoinTestFramework):
         )
 
         self.log.info('A transaction not in the mempool')
-        fee = Decimal('0.000007')
-        utxo_to_spend = self.wallet.get_utxo(txid=txid_in_block)  # use 0.3 BTC UTXO
+        fee = Decimal('0.00000007')
+        utxo_to_spend = self.wallet.get_utxo(txid=txid_in_block)  # use 0.3 CC UTXO
         tx = self.wallet.create_self_transfer(utxo_to_spend=utxo_to_spend, sequence=MAX_BIP125_RBF_SEQUENCE)['tx']
         tx.vout[0].nValue = int((Decimal('0.3') - fee) * COIN)
         raw_tx_0 = tx.serialize().hex()
@@ -149,7 +149,7 @@ class MempoolAcceptanceTest(BitcoinTestFramework):
         tx.vout[0].nValue = int(output_amount * COIN)
         raw_tx_final = tx.serialize().hex()
         tx = tx_from_hex(raw_tx_final)
-        fee_expected = Decimal('50.0') - output_amount
+        fee_expected = Decimal('100.0') - output_amount
         self.check_mempool_result(
             result_expected=[{'txid': tx.txid_hex, 'allowed': True, 'vsize_adjusted': tx.get_vsize(), 'vsize': tx.get_vsize(), 'vsize_bip141': tx.get_vsize(), 'fees': {'base': fee_expected}}],
             rawtxs=[tx.serialize().hex()],
@@ -366,7 +366,7 @@ class MempoolAcceptanceTest(BitcoinTestFramework):
         tx.vout[0].scriptPubKey = CScript([OP_RETURN, b'\xff'])
         tx.vout = [tx.vout[0]] * op_return_count
         self.check_mempool_result(
-            result_expected=[{"txid": tx.txid_hex, "allowed": True, "vsize_adjusted": tx.get_vsize(), "vsize": tx.get_vsize(), 'vsize_bip141': tx.get_vsize(), "fees": {"base": Decimal("0.05000026")}}],
+            result_expected=[{"txid": tx.txid_hex, "allowed": True, "vsize_adjusted": tx.get_vsize(), "vsize": tx.get_vsize(), 'vsize_bip141': tx.get_vsize(), "fees": {"base": Decimal("0.0500000038")}}],
             rawtxs=[tx.serialize().hex()],
         )
 
@@ -430,7 +430,7 @@ class MempoolAcceptanceTest(BitcoinTestFramework):
         tx.vout[0] = CTxOut(COIN - 1000, DUMMY_MIN_OP_RETURN_SCRIPT)
         assert_equal(len(tx.serialize_without_witness()), MIN_STANDARD_TX_NONWITNESS_SIZE)
         self.check_mempool_result(
-            result_expected=[{'txid': tx.txid_hex, 'allowed': True, 'vsize_adjusted': tx.get_vsize(), 'vsize': tx.get_vsize(), 'vsize_bip141': tx.get_vsize(), 'fees': { 'base': Decimal('0.00001000')}}],
+            result_expected=[{'txid': tx.txid_hex, 'allowed': True, 'vsize_adjusted': tx.get_vsize(), 'vsize': tx.get_vsize(), 'vsize_bip141': tx.get_vsize(), 'fees': { 'base': Decimal('0.0000001000')}}],
             rawtxs=[tx.serialize().hex()],
             maxfeerate=0,
         )
@@ -468,7 +468,7 @@ class MempoolAcceptanceTest(BitcoinTestFramework):
         assert_equal(anchor_spend.txid_hex, anchor_spend.wtxid_hex)
 
         self.check_mempool_result(
-            result_expected=[{'txid': anchor_spend.txid_hex, 'allowed': True, 'vsize_adjusted': anchor_spend.get_vsize(), 'vsize': anchor_spend.get_vsize(), 'vsize_bip141': anchor_spend.get_vsize(), 'fees': { 'base': Decimal('0.00000700')}}],
+            result_expected=[{'txid': anchor_spend.txid_hex, 'allowed': True, 'vsize_adjusted': anchor_spend.get_vsize(), 'vsize': anchor_spend.get_vsize(), 'vsize_bip141': anchor_spend.get_vsize(), 'fees': { 'base': Decimal('0.0000000700')}}],
             rawtxs=[anchor_spend.serialize().hex()],
             maxfeerate=0,
         )
@@ -503,7 +503,7 @@ class MempoolAcceptanceTest(BitcoinTestFramework):
         sign_input_legacy(tx_spend, 0, tx.vout[0].scriptPubKey, privkey, sighash_type=SIGHASH_ALL)
         tx_spend.vin[0].scriptSig = bytes(CScript([OP_0])) + tx_spend.vin[0].scriptSig
         self.check_mempool_result(
-            result_expected=[{'txid': tx_spend.txid_hex, 'allowed': True, 'vsize_adjusted': tx_spend.get_vsize(), 'vsize': tx_spend.get_vsize(), 'vsize_bip141': tx_spend.get_vsize(), 'fees': { 'base': Decimal('0.00000700')}}],
+            result_expected=[{'txid': tx_spend.txid_hex, 'allowed': True, 'vsize_adjusted': tx_spend.get_vsize(), 'vsize': tx_spend.get_vsize(), 'vsize_bip141': tx_spend.get_vsize(), 'fees': { 'base': Decimal('0.0000000700')}}],
             rawtxs=[tx_spend.serialize().hex()],
             maxfeerate=0,
         )

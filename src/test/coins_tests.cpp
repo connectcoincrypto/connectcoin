@@ -5,6 +5,7 @@
 #include <addresstype.h>
 #include <clientversion.h>
 #include <coins.h>
+#include <consensus/amount.h>
 #include <streams.h>
 #include <test/util/coins.h>
 #include <test/util/common.h>
@@ -17,6 +18,7 @@
 #include <util/byte_units.h>
 #include <util/check.h>
 #include <util/strencodings.h>
+#include <validation.h>
 
 #include <map>
 #include <string>
@@ -298,6 +300,21 @@ BOOST_FIXTURE_TEST_CASE(coins_cache_dbbase_simulation_test, CacheTest)
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(coins_tests, BasicTestingSetup)
+
+BOOST_AUTO_TEST_CASE(apply_txinundo_restores_height_zero_coinbase)
+{
+    CCoinsViewTest base{m_rng};
+    CCoinsViewCacheTest cache{&base};
+    const COutPoint outpoint{Txid::FromUint256(m_rng.rand256()), 0};
+    Coin genesis_coin{CTxOut{50 * COIN, CScript{} << OP_TRUE}, /*nHeightIn=*/0, /*fCoinBaseIn=*/true};
+
+    BOOST_CHECK_EQUAL(ApplyTxInUndo(std::move(genesis_coin), cache, outpoint), DISCONNECT_OK);
+    const Coin& restored{cache.AccessCoin(outpoint)};
+    BOOST_REQUIRE(!restored.IsSpent());
+    BOOST_CHECK(restored.IsCoinBase());
+    BOOST_CHECK_EQUAL(restored.nHeight, 0);
+    BOOST_CHECK_EQUAL(restored.out.nValue, 50 * COIN);
+}
 
 struct UpdateTest : BasicTestingSetup {
 // Store of all necessary tx and undo data for next test

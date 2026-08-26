@@ -3,6 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <chain.h>
+#include <chainparams.h>
 #include <index/coinstatsindex.h>
 #include <interfaces/chain.h>
 #include <kernel/coinstats.h>
@@ -23,6 +24,28 @@
 #include <vector>
 
 BOOST_AUTO_TEST_SUITE(coinstatsindex_tests)
+
+BOOST_FIXTURE_TEST_CASE(coinstatsindex_counts_spendable_mainnet_genesis, TestingSetup)
+{
+    CoinStatsIndex coin_stats_index{interfaces::MakeChain(m_node), 1_MiB, true};
+    BOOST_REQUIRE(coin_stats_index.Init());
+    coin_stats_index.Sync();
+
+    const CBlockIndex* genesis_block_index;
+    {
+        LOCK(cs_main);
+        genesis_block_index = Assert(m_node.chainman)->ActiveChain().Genesis();
+    }
+
+    const auto stats{coin_stats_index.LookUpStats(*Assert(genesis_block_index))};
+    BOOST_REQUIRE(stats);
+    BOOST_REQUIRE(stats->total_amount);
+    BOOST_CHECK_EQUAL(*stats->total_amount, Params().GenesisBlock().vtx.front()->vout.front().nValue);
+    BOOST_CHECK_EQUAL(stats->nTransactionOutputs, 1U);
+    BOOST_CHECK_EQUAL(stats->total_unspendables_genesis_block, 0);
+
+    coin_stats_index.Stop();
+}
 
 BOOST_FIXTURE_TEST_CASE(coinstatsindex_initial_sync, TestChain100Setup)
 {
@@ -50,7 +73,12 @@ BOOST_FIXTURE_TEST_CASE(coinstatsindex_initial_sync, TestChain100Setup)
         LOCK(cs_main);
         genesis_block_index = m_node.chainman->ActiveChain().Genesis();
     }
-    BOOST_CHECK(coin_stats_index.LookUpStats(*genesis_block_index));
+    const auto genesis_stats{coin_stats_index.LookUpStats(*genesis_block_index)};
+    BOOST_REQUIRE(genesis_stats);
+    BOOST_REQUIRE(genesis_stats->total_amount);
+    BOOST_CHECK_EQUAL(*genesis_stats->total_amount, Params().GenesisBlock().vtx.front()->vout.front().nValue);
+    BOOST_CHECK_EQUAL(genesis_stats->nTransactionOutputs, 1U);
+    BOOST_CHECK_EQUAL(genesis_stats->total_unspendables_genesis_block, 0);
 
     // Check that CoinStatsIndex updates with new blocks.
     BOOST_CHECK(coin_stats_index.LookUpStats(*block_index));

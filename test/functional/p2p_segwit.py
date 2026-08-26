@@ -21,6 +21,7 @@ from test_framework.messages import (
     CTxInWitness,
     CTxOut,
     CTxWitness,
+    COIN,
     MAX_BLOCK_WEIGHT,
     MSG_BLOCK,
     MSG_TX,
@@ -310,7 +311,7 @@ class SegWitTest(BitcoinTestFramework):
         # Create a transaction that spends the coinbase
         tx = CTransaction()
         tx.vin.append(CTxIn(COutPoint(txid, 0), b""))
-        tx.vout.append(CTxOut(49 * 100000000, CScript([OP_TRUE, OP_DROP] * 15 + [OP_TRUE])))
+        tx.vout.append(CTxOut(49 * COIN, CScript([OP_TRUE, OP_DROP] * 15 + [OP_TRUE])))
 
         # Check that serializing it with or without witness is the same
         # This is a sanity check of our testing framework.
@@ -319,7 +320,7 @@ class SegWitTest(BitcoinTestFramework):
         self.test_node.send_and_ping(msg_tx(tx))  # make sure the block was processed
         assert tx.txid_hex in self.nodes[0].getrawmempool()
         # Save this transaction for later
-        self.utxo.append(UTXO(tx.txid_int, 0, 49 * 100000000))
+        self.utxo.append(UTXO(tx.txid_int, 0, 49 * COIN))
         self.generate(self.nodes[0], 1)
 
     @subtest
@@ -619,7 +620,7 @@ class SegWitTest(BitcoinTestFramework):
                     'vsize': tx3.get_vsize(),
                     'vsize_bip141': tx3.get_vsize(),
                     'fees': {
-                        'base': Decimal('0.00001000'),
+                        'base': Decimal('0.0000001000'),
                     },
                 }],
             )
@@ -639,7 +640,7 @@ class SegWitTest(BitcoinTestFramework):
                     'vsize': tx3.get_vsize(),
                     'vsize_bip141': tx3.get_vsize(),
                     'fees': {
-                        'base': Decimal('0.00011000'),
+                        'base': Decimal('0.0000011000'),
                     },
                 }],
             )

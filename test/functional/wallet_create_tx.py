@@ -4,6 +4,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 from test_framework.messages import (
+    COIN,
     tx_from_hex,
 )
 from test_framework.test_framework import BitcoinTestFramework
@@ -70,9 +71,9 @@ class CreateTxWalletTest(BitcoinTestFramework):
             )
 
         # Hit maxtxfee with explicit fee rate
-        self.log.info('Check maxtxfee in combination with explicit fee_rate=1000 con/vB')
+        self.log.info('Check maxtxfee in combination with explicit fee_rate=100000 con/vB')
 
-        fee_rate_sats_per_vb = Decimal('0.01') * Decimal(1e8) / 1000  # Convert 0.01 CC/kvB to con/vB
+        fee_rate_sats_per_vb = Decimal('0.01') * COIN / 1000  # Convert 0.01 CC/kvB to con/vB
 
         assert_raises_rpc_error(
             -6,

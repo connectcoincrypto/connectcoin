@@ -17,6 +17,7 @@ from test_framework.messages import (
     CTxIn,
     CTxInWitness,
     CTxOut,
+    COIN,
     SEQUENCE_FINAL,
     tx_from_hex,
     TX_MAX_STANDARD_VERSION,
@@ -1498,20 +1499,20 @@ class TaprootTest(BitcoinTestFramework):
             # Add the 50 highest-value inputs
             unspents = self.nodesigner.listunspent()
             random.shuffle(unspents)
-            unspents.sort(key=lambda x: int(x["amount"] * 100000000), reverse=True)
+            unspents.sort(key=lambda x: int(x["amount"] * COIN), reverse=True)
             if len(unspents) > 50:
                 unspents = unspents[:50]
             random.shuffle(unspents)
             balance = 0
             for unspent in unspents:
-                balance += int(unspent["amount"] * 100000000)
+                balance += int(unspent["amount"] * COIN)
                 txid = int(unspent["txid"], 16)
                 fund_tx.vin.append(CTxIn(COutPoint(txid, int(unspent["vout"])), CScript()))
             # Add outputs
             cur_progress = done / len(spenders)
             next_progress = (done + count_this_tx) / len(spenders)
             change_goal = (1.0 - 0.6 * next_progress) / (1.0 - 0.6 * cur_progress) * balance
-            self.log.debug("Create %i UTXOs in a transaction spending %i inputs worth %.8f (sending ~%.8f to change)" % (count_this_tx, len(unspents), balance * 0.00000001, change_goal * 0.00000001))
+            self.log.debug("Create %i UTXOs in a transaction spending %i inputs worth %.10f (sending ~%.10f to change)" % (count_this_tx, len(unspents), balance / COIN, change_goal / COIN))
             for i in range(count_this_tx):
                 avg = (balance - change_goal) / (count_this_tx - i)
                 amount = int(random.randrange(int(avg*0.85 + 0.5), int(avg*1.15 + 0.5)) + 0.5)

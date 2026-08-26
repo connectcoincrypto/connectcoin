@@ -1,15 +1,15 @@
 {
   "chain": "signet",
   "test_chain": true,
-  "genesis": "c2cc566fb60326c3c29e318564b27056982826454e5c532c134092946a010000",
-  "subsidy_halving_interval": 210000,
+  "genesis": "8047a6ba854f76398d37581218efa06d97278e68f2b6885784905c0a85000000",
+  "subsidy_halving_interval": 450000,
   "signet": {
     "challenge": "512102f7561d208dd9ae99bf497273e16f389bdbd6c4742ddb8e6b216e64fa2928ad8f51ae"
   },
   "pow": {
     "limit": "00000377ae000000000000000000000000000000000000000000000000000000",
-    "target_spacing": 600,
-    "difficulty_retarget_interval": 2016,
+    "target_spacing": 60,
+    "difficulty_retarget_interval": 1440,
     "mindiff_blocks": "no"
   },
   "net": {

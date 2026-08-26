@@ -5,10 +5,14 @@
 """Test running connectcoind with -reindex and -reindex-chainstate options.
 
 - Start a single node and generate 3 blocks.
-- Stop the node and restart it with -reindex. Verify that the node has reindexed up to block 3.
-- Stop the node and restart it with -reindex-chainstate. Verify that the node has reindexed up to block 3.
+- Stop the node and restart it with -reindex. Verify that the node has reindexed up to block 3
+  without losing the spendable genesis allocation.
+- Stop the node and restart it with -reindex-chainstate. Verify that the node has reindexed up to
+  block 3 without changing the UTXO set or monetary supply.
 - Verify that out-of-order blocks are correctly processed, see LoadExternalBlockFile()
 """
+
+from decimal import Decimal
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.messages import MAGIC_BYTES
@@ -24,13 +28,34 @@ class ReindexTest(BitcoinTestFramework):
         self.setup_clean_chain = True
         self.num_nodes = 1
 
+    def genesis_distribution(self):
+        """Return the monetary state that must survive every kind of reindex."""
+        node = self.nodes[0]
+        genesis = node.getblock(node.getblockhash(0), 2)
+        genesis_txout = node.gettxout(genesis["tx"][0]["txid"], 0)
+        assert genesis_txout is not None
+        assert_equal(genesis_txout["value"], Decimal("10000000.0000000000"))
+        assert_equal(genesis_txout["coinbase"], True)
+
+        txoutset = node.gettxoutsetinfo()
+        return {
+            "bestblock": txoutset["bestblock"],
+            "hash_serialized_3": txoutset["hash_serialized_3"],
+            "height": txoutset["height"],
+            "total_amount": txoutset["total_amount"],
+            "transactions": txoutset["transactions"],
+            "txouts": txoutset["txouts"],
+        }
+
     def reindex(self, justchainstate=False):
         self.generatetoaddress(self.nodes[0], 3, self.nodes[0].get_deterministic_priv_key().address)
         blockcount = self.nodes[0].getblockcount()
+        distribution = self.genesis_distribution()
         self.stop_nodes()
         extra_args = [["-reindex-chainstate" if justchainstate else "-reindex"]]
         self.start_nodes(extra_args)
         assert_equal(self.nodes[0].getblockcount(), blockcount)  # start_node is blocking on reindex
+        assert_equal(self.genesis_distribution(), distribution)
         self.log.info("Success")
 
     # Check that blocks can be processed out of order

@@ -5,6 +5,7 @@
 
 from decimal import Decimal, getcontext
 
+from test_framework.messages import COIN
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_greater_than_or_equal,
@@ -30,12 +31,12 @@ class UnconfirmedInputTest(BitcoinTestFramework):
         self.skip_if_no_wallet()
 
     def calc_fee_rate(self, tx):
-        fee = Decimal(-1e8) * tx["fee"]
+        fee = -COIN * tx["fee"]
         vsize = tx["decoded"]["vsize"]
         return fee / vsize
 
     def calc_set_fee_rate(self, txs):
-        fees = Decimal(-1e8) * sum([tx["fee"] for tx in txs]) # fee is negative!
+        fees = -COIN * sum([tx["fee"] for tx in txs]) # fee is negative!
         vsizes = sum([tx["decoded"]["vsize"] for tx in txs])
         return fees / vsizes
 

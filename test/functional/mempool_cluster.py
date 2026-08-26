@@ -101,7 +101,7 @@ class MempoolClusterTest(BitcoinTestFramework):
 
         # It should also limit cluster sizes during replacement
         utxo_to_double_spend = self.wallet.get_utxo(confirmed_only=True)
-        fee = Decimal("0.000001")
+        fee = Decimal("0.00000001")
         tx_to_replace = self.wallet.create_self_transfer(utxo_to_spend=utxo_to_double_spend, fee=fee)
         node.sendrawtransaction(tx_to_replace["hex"])
 
@@ -385,7 +385,7 @@ class MempoolClusterTest(BitcoinTestFramework):
         # If we prioritise the last transaction it can join the second transaction's chunk.
         node.prioritisetransaction(third_chunk_tx["txid"], 0, int(third_chunk_tx["fee"]*COIN) + 1)
         first_chunk_info = node.getmempoolcluster(first_chunk_tx["txid"])
-        assert_equal(first_chunk_info, {'clusterweight': first_chunkweight + second_chunkweight + third_chunkweight, 'txcount': 3, 'chunks': [{'chunkfee': first_chunk_tx["fee"], 'chunkweight': first_chunkweight, 'txs': [first_chunk_tx["txid"]]}, {'chunkfee': second_chunk_tx["fee"] + 2*third_chunk_tx["fee"] + Decimal("0.00000001"), 'chunkweight': second_chunkweight + third_chunkweight, 'txs': [second_chunk_tx["txid"], third_chunk_tx["txid"]]}]})
+        assert_equal(first_chunk_info, {'clusterweight': first_chunkweight + second_chunkweight + third_chunkweight, 'txcount': 3, 'chunks': [{'chunkfee': first_chunk_tx["fee"], 'chunkweight': first_chunkweight, 'txs': [first_chunk_tx["txid"]]}, {'chunkfee': second_chunk_tx["fee"] + 2*third_chunk_tx["fee"] + Decimal("0.0000000001"), 'chunkweight': second_chunkweight + third_chunkweight, 'txs': [second_chunk_tx["txid"], third_chunk_tx["txid"]]}]})
 
     def run_test(self):
         node = self.nodes[0]

@@ -10,7 +10,7 @@
 
 #include <cassert>
 
-static constexpr auto MAX_DIGITS_BTC = 16;
+static constexpr auto MAX_DIGITS_BTC = 19;
 
 BitcoinUnits::BitcoinUnits(QObject *parent):
         QAbstractListModel(parent),
@@ -56,7 +56,7 @@ QString BitcoinUnits::description(Unit unit)
     case Unit::BTC: return QString("ConnectCoins");
     case Unit::mBTC: return QString("Milli-ConnectCoins (1 / 1" THIN_SP_UTF8 "000)");
     case Unit::uBTC: return QString("Micro-ConnectCoins (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-    case Unit::SAT: return QString("connect (con) (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+    case Unit::SAT: return QString("connect (con) (1 / 10" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
     } // no default case, so the compiler can warn about missing cases
     assert(false);
 }
@@ -64,9 +64,9 @@ QString BitcoinUnits::description(Unit unit)
 qint64 BitcoinUnits::factor(Unit unit)
 {
     switch (unit) {
-    case Unit::BTC: return 100'000'000;
-    case Unit::mBTC: return 100'000;
-    case Unit::uBTC: return 100;
+    case Unit::BTC: return COIN;
+    case Unit::mBTC: return COIN / 1'000;
+    case Unit::uBTC: return COIN / 1'000'000;
     case Unit::SAT: return 1;
     } // no default case, so the compiler can warn about missing cases
     assert(false);
@@ -75,9 +75,9 @@ qint64 BitcoinUnits::factor(Unit unit)
 int BitcoinUnits::decimals(Unit unit)
 {
     switch (unit) {
-    case Unit::BTC: return 8;
-    case Unit::mBTC: return 5;
-    case Unit::uBTC: return 2;
+    case Unit::BTC: return 10;
+    case Unit::mBTC: return 7;
+    case Unit::uBTC: return 4;
     case Unit::SAT: return 0;
     } // no default case, so the compiler can warn about missing cases
     assert(false);
@@ -180,7 +180,7 @@ bool BitcoinUnits::parse(Unit unit, const QString& value, CAmount* val_out)
     bool ok = false;
     QString str = whole + decimals.leftJustified(num_decimals, '0');
 
-    if(str.size() > 18)
+    if(str.size() > 19)
     {
         return false; // Longer numbers will exceed 63 bits
     }

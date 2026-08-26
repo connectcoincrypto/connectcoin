@@ -152,8 +152,8 @@ BOOST_FIXTURE_TEST_CASE(rbf_helper_functions, TestChain100Setup)
     BOOST_CHECK(PaysForRBF(high_fee, high_fee + 1, 10, incremental_relay_feerate, unused_txid) == std::nullopt);
     BOOST_CHECK(PaysForRBF(high_fee, high_fee + 2, 11, higher_relay_feerate, unused_txid).has_value());
     BOOST_CHECK(PaysForRBF(high_fee, high_fee + 4, 20, higher_relay_feerate, unused_txid) == std::nullopt);
-    BOOST_CHECK(PaysForRBF(low_fee, high_fee, 99999999, incremental_relay_feerate, unused_txid).has_value());
-    BOOST_CHECK(PaysForRBF(low_fee, high_fee + 99999999, 99999999, incremental_relay_feerate, unused_txid) == std::nullopt);
+    BOOST_CHECK(PaysForRBF(low_fee, high_fee, COIN - 1, incremental_relay_feerate, unused_txid).has_value());
+    BOOST_CHECK(PaysForRBF(low_fee, high_fee + COIN - 1, COIN - 1, incremental_relay_feerate, unused_txid) == std::nullopt);
 }
 
 BOOST_FIXTURE_TEST_CASE(rbf_conflicts_calculator, TestChain100Setup)
@@ -279,7 +279,7 @@ BOOST_FIXTURE_TEST_CASE(improves_feerate, TestChain100Setup)
     BOOST_CHECK(res1.value().first == DiagramCheckError::FAILURE);
     BOOST_CHECK(res1.value().second == "insufficient feerate: does not improve feerate diagram");
 
-    // With one more satoshi it does
+    // With one more connect it does
     changeset.reset();
     changeset = pool.GetChangeSet();
     changeset->StageRemoval(entry1);

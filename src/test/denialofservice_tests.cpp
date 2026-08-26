@@ -154,7 +154,7 @@ BOOST_FIXTURE_TEST_CASE(stale_tip_peer_management, OutboundTest)
 
     const auto time_init{Now<NodeSeconds>()};
     FakeNodeClock clock{time_init};
-    const auto delta{3 * std::chrono::seconds{m_node.chainman->GetConsensus().nPowTargetSpacing} + 1s};
+    const auto delta{std::max(3 * std::chrono::seconds{m_node.chainman->GetConsensus().nPowTargetSpacing} + 1s, std::chrono::seconds{11min})};
     connman->Init(options);
     std::vector<CNode *> vNodes;
 

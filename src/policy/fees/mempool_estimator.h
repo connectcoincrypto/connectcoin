@@ -87,7 +87,7 @@ private:
 class MemPoolFeeRateEstimator
 {
 public:
-    // Block percentiles fee rate (in sat/vB).
+    // Block percentiles fee rate (in con/vB).
     struct Percentiles {
         FeePerVSize p50;
         FeePerVSize p75;

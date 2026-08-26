@@ -13,6 +13,7 @@
 #include <util/chaintype.h>
 #include <validation.h>
 
+#include <algorithm>
 #include <string>
 
 #include <test/util/setup_common.h>
@@ -24,7 +25,7 @@ BOOST_FIXTURE_TEST_SUITE(validation_tests, BasicTestingSetup)
 static void TestBlockSubsidyHalvings(const Consensus::Params& consensusParams)
 {
     int maxHalvings = 64;
-    CAmount nInitialSubsidy = 50 * COIN;
+    CAmount nInitialSubsidy = 100 * COIN;
 
     CAmount nPreviousSubsidy = nInitialSubsidy * 2; // for height == 0
     BOOST_CHECK_EQUAL(nPreviousSubsidy, nInitialSubsidy * 2);
@@ -59,11 +60,54 @@ BOOST_AUTO_TEST_CASE(subsidy_limit_test)
     CAmount nSum = 0;
     for (int nHeight = 0; nHeight < 14000000; nHeight += 1000) {
         CAmount nSubsidy = GetBlockSubsidy(nHeight, chainParams->GetConsensus());
-        BOOST_CHECK(nSubsidy <= 50 * COIN);
+        BOOST_CHECK(nSubsidy <= 100 * COIN);
         nSum += nSubsidy * 1000;
         BOOST_CHECK(MoneyRange(nSum));
     }
-    BOOST_CHECK_EQUAL(nSum, CAmount{2099999997690000});
+    BOOST_CHECK_EQUAL(nSum, CAmount{899'999'999'601'150'000});
+}
+
+static CAmount MaximumSupply(const CChainParams& chain_params)
+{
+    const auto& consensus = chain_params.GetConsensus();
+    CAmount total{chain_params.GenesisBlock().vtx.front()->vout.front().nValue};
+
+    for (int halving = 0; halving < 64; ++halving) {
+        const int era_start = std::max(1, halving * consensus.nSubsidyHalvingInterval);
+        const int era_end = (halving + 1) * consensus.nSubsidyHalvingInterval;
+        total += GetBlockSubsidy(era_start, consensus) * (era_end - era_start);
+        BOOST_CHECK(MoneyRange(total));
+    }
+    return total;
+}
+
+BOOST_AUTO_TEST_CASE(maximum_network_supply_test)
+{
+    for (const ChainType chain_type : {ChainType::MAIN, ChainType::TESTNET, ChainType::TESTNET4, ChainType::SIGNET}) {
+        const auto chain_params = CreateChainParams(*m_node.args, chain_type);
+        const auto& consensus = chain_params->GetConsensus();
+        const CAmount total{MaximumSupply(*chain_params)};
+
+        // Height 0 is the 10 million CC genesis output, not a regular 100 CC
+        // subsidy. The remaining blocks and integer rounding leave 100.000585
+        // CC below MAX_MONEY on every public network.
+        BOOST_CHECK_EQUAL(chain_params->GenesisBlock().vtx.front()->GetValueOut(), 10'000'000 * COIN);
+        BOOST_CHECK_EQUAL(GetBlockSubsidy(1, consensus), 100 * COIN);
+        BOOST_CHECK_EQUAL(GetBlockSubsidy(39 * consensus.nSubsidyHalvingInterval, consensus), 1);
+        BOOST_CHECK_EQUAL(GetBlockSubsidy(40 * consensus.nSubsidyHalvingInterval, consensus), 0);
+        BOOST_CHECK_EQUAL(total, CAmount{999'998'999'994'150'000});
+        BOOST_CHECK_EQUAL(MAX_MONEY - total, CAmount{1'000'005'850'000});
+    }
+
+    // Regtest deliberately halves every 150 blocks to make subsidy transitions
+    // practical to test. Its theoretical supply is therefore much smaller.
+    const auto regtest_params = CreateChainParams(*m_node.args, ChainType::REGTEST);
+    const auto& regtest_consensus = regtest_params->GetConsensus();
+    BOOST_CHECK_EQUAL(regtest_params->GenesisBlock().vtx.front()->GetValueOut(), 10'000'000 * COIN);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(1, regtest_consensus), 100 * COIN);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(39 * regtest_consensus.nSubsidyHalvingInterval, regtest_consensus), 1);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(40 * regtest_consensus.nSubsidyHalvingInterval, regtest_consensus), 0);
+    BOOST_CHECK_EQUAL(MaximumSupply(*regtest_params), CAmount{100'298'999'999'998'050});
 }
 
 BOOST_AUTO_TEST_CASE(signet_parse_tests)
@@ -142,11 +186,11 @@ BOOST_AUTO_TEST_CASE(test_assumeutxo)
     }
 
     const auto out110 = *params->AssumeutxoForHeight(110);
-    BOOST_CHECK_EQUAL(out110.hash_serialized.ToString(), "86e9a1205b418b16dde3a18a78c730e30137e28466bda5dbf6b33ab8fc05447c");
+    BOOST_CHECK_EQUAL(out110.hash_serialized.ToString(), "cc524f6f2a786c23ada8f047c6cf72b99da1430a62949dfacdcdad9fc94e4721");
     BOOST_CHECK_EQUAL(out110.m_chain_tx_count, 111U);
 
-    const auto out110_2 = *params->AssumeutxoForBlockhash(uint256{"381253f7e314ec2fc8020a0fc7be39fde931161929df5fea49520c6fe342b999"});
-    BOOST_CHECK_EQUAL(out110_2.hash_serialized.ToString(), "86e9a1205b418b16dde3a18a78c730e30137e28466bda5dbf6b33ab8fc05447c");
+    const auto out110_2 = *params->AssumeutxoForBlockhash(uint256{"734c0ba8aa3d36e9b9e357b6752592b07154f0cb2830782e0415ccf3b461ce9d"});
+    BOOST_CHECK_EQUAL(out110_2.hash_serialized.ToString(), "cc524f6f2a786c23ada8f047c6cf72b99da1430a62949dfacdcdad9fc94e4721");
     BOOST_CHECK_EQUAL(out110_2.m_chain_tx_count, 111U);
 }
 

@@ -53,7 +53,7 @@ class AssumeutxoTest(BitcoinTestFramework):
         return wrpc.importdescriptors(import_request)
 
     def validate_snapshot_import(self, node, loaded, base_hash):
-        assert_equal(loaded['coins_loaded'], SNAPSHOT_BASE_HEIGHT)
+        assert_equal(loaded['coins_loaded'], SNAPSHOT_BASE_HEIGHT + 1)
         assert_equal(loaded['base_height'], SNAPSHOT_BASE_HEIGHT)
 
         normal, snapshot = node.getchainstates()["chainstates"]
@@ -172,7 +172,7 @@ class AssumeutxoTest(BitcoinTestFramework):
 
         assert_equal(
             dump_output['txoutset_hash'],
-            "106b2c56233e378a824cf0d5ff2be42ed32c72f1605c9be288d00942908a40ac")
+            "f08765d5aac8a793b35d644120aadc280317e0c1118f3f3ee7eaf8c958e854aa")
         assert_equal(dump_output["nchaintx"], 334)
         assert_equal(n0.getblockchaininfo()["blocks"], SNAPSHOT_BASE_HEIGHT)
 

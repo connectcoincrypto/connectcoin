@@ -9,6 +9,7 @@ from itertools import product
 
 from test_framework.descriptors import descsum_create
 from test_framework.extendedkey import ExtendedPrivateKey
+from test_framework.messages import COIN
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_not_equal,
@@ -33,7 +34,7 @@ class WalletSendTest(BitcoinTestFramework):
         self.noban_tx_relay = True
         self.supports_cli = False
         self.extra_args = [["-datacarriersize=16"]] * self.num_nodes
-        getcontext().prec = 8 # Satoshi precision for Decimal
+        getcontext().prec = 10 # Connect precision for Decimal
 
     def skip_test_if_missing_module(self):
         self.skip_if_no_wallet()
@@ -292,20 +293,20 @@ class WalletSendTest(BitcoinTestFramework):
 
         res = self.test_send(from_wallet=w0, to_wallet=w1, amount=1, fee_rate=7, add_to_wallet=False)
         fee = self.nodes[1].decodepsbt(res["psbt"])["fee"]
-        assert_fee_amount(fee, count_bytes(res["hex"]), Decimal("0.00007"))
+        assert_fee_amount(fee, count_bytes(res["hex"]), Decimal("0.0000007"))
 
         # "unset" and None are treated the same for estimate_mode
         res = self.test_send(from_wallet=w0, to_wallet=w1, amount=1, fee_rate=2, estimate_mode="unset", add_to_wallet=False)
         fee = self.nodes[1].decodepsbt(res["psbt"])["fee"]
-        assert_fee_amount(fee, count_bytes(res["hex"]), Decimal("0.00002"))
+        assert_fee_amount(fee, count_bytes(res["hex"]), Decimal("0.0000002"))
 
         res = self.test_send(from_wallet=w0, to_wallet=w1, amount=1, arg_fee_rate=4.531, add_to_wallet=False)
         fee = self.nodes[1].decodepsbt(res["psbt"])["fee"]
-        assert_fee_amount(fee, count_bytes(res["hex"]), Decimal("0.00004531"))
+        assert_fee_amount(fee, count_bytes(res["hex"]), Decimal("0.0000004531"))
 
         res = self.test_send(from_wallet=w0, to_wallet=w1, amount=1, arg_fee_rate=3, add_to_wallet=False)
         fee = self.nodes[1].decodepsbt(res["psbt"])["fee"]
-        assert_fee_amount(fee, count_bytes(res["hex"]), Decimal("0.00003"))
+        assert_fee_amount(fee, count_bytes(res["hex"]), Decimal("0.0000003"))
 
         # Test that passing fee_rate as both an argument and an option raises.
         self.test_send(from_wallet=w0, to_wallet=w1, amount=1, arg_fee_rate=1, fee_rate=1, add_to_wallet=False,
@@ -345,9 +346,11 @@ class WalletSendTest(BitcoinTestFramework):
             self.test_send(from_wallet=w0, to_wallet=w1, amount=1, arg_fee_rate=zero_value, expect_error=(-4, msg))
         msg = "Invalid amount"
         # Test fee_rate values that don't pass fixed-point parsing checks.
-        for invalid_value in ["", 0.000000001, 1e-09, 1.111111111, 1111111111111111, "31.999999999999999999999"]:
+        for invalid_value in ["", 0.00000000001, 1e-11, 1.11111111111, "31.999999999999999999999"]:
             self.test_send(from_wallet=w0, to_wallet=w1, amount=1, fee_rate=invalid_value, expect_error=(-3, msg))
             self.test_send(from_wallet=w0, to_wallet=w1, amount=1, arg_fee_rate=invalid_value, expect_error=(-3, msg))
+        self.test_send(from_wallet=w0, to_wallet=w1, amount=1, fee_rate=1111111111111111, expect_error=(-3, "Amount out of range"))
+        self.test_send(from_wallet=w0, to_wallet=w1, amount=1, arg_fee_rate=1111111111111111, expect_error=(-3, "Amount out of range"))
         # Test fee_rate values that cannot be represented in con/vB.
         for invalid_value in [0.0001, 0.00000001, 0.00099999, 31.99999999]:
             self.test_send(from_wallet=w0, to_wallet=w1, amount=1, fee_rate=invalid_value, expect_error=(-3, msg))
@@ -372,17 +375,17 @@ class WalletSendTest(BitcoinTestFramework):
         # assert_fee_amount(fee, Decimal(len(res["hex"]) / 2), Decimal("0.000001"))
 
         self.log.info("If inputs are specified, do not automatically add more...")
-        res = self.test_send(from_wallet=w0, to_wallet=w1, amount=51, inputs=[], add_to_wallet=False)
+        res = self.test_send(from_wallet=w0, to_wallet=w1, amount=101, inputs=[], add_to_wallet=False)
         assert res["complete"]
         utxo1 = w0.listunspent()[0]
-        assert_equal(utxo1["amount"], 50)
+        assert_equal(utxo1["amount"], 100)
         ERR_NOT_ENOUGH_PRESET_INPUTS = "The preselected coins total amount does not cover the transaction target. " \
                                        "Please allow other inputs to be automatically selected or include more coins manually"
-        self.test_send(from_wallet=w0, to_wallet=w1, amount=51, inputs=[utxo1],
+        self.test_send(from_wallet=w0, to_wallet=w1, amount=101, inputs=[utxo1],
                        expect_error=(-4, ERR_NOT_ENOUGH_PRESET_INPUTS))
-        self.test_send(from_wallet=w0, to_wallet=w1, amount=51, inputs=[utxo1], add_inputs=False,
+        self.test_send(from_wallet=w0, to_wallet=w1, amount=101, inputs=[utxo1], add_inputs=False,
                        expect_error=(-4, ERR_NOT_ENOUGH_PRESET_INPUTS))
-        res = self.test_send(from_wallet=w0, to_wallet=w1, amount=51, inputs=[utxo1], add_inputs=True, add_to_wallet=False)
+        res = self.test_send(from_wallet=w0, to_wallet=w1, amount=101, inputs=[utxo1], add_inputs=True, add_to_wallet=False)
         assert res["complete"]
 
         self.log.info("Manual change address and position...")
@@ -520,7 +523,7 @@ class WalletSendTest(BitcoinTestFramework):
         assert signed["complete"]
         testres = self.nodes[0].testmempoolaccept([signed["hex"]])[0]
         assert_equal(testres["allowed"], True)
-        actual_fee_rate_sat_vb = Decimal(testres["fees"]["base"]) * Decimal(1e8) / Decimal(testres["vsize"])
+        actual_fee_rate_sat_vb = Decimal(testres["fees"]["base"]) * COIN / Decimal(testres["vsize"])
         # Due to ECDSA signatures not always being the same length, the actual fee rate may be slightly different
         # but rounded to nearest integer, it should be the same as the target fee rate
         assert_equal(round(actual_fee_rate_sat_vb), target_fee_rate_sat_vb)

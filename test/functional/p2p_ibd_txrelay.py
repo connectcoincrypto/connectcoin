@@ -38,8 +38,8 @@ class P2PIBDTxRelayTest(BitcoinTestFramework):
         self.setup_clean_chain = True
         self.num_nodes = 2
         self.extra_args = [
-            ["-minrelaytxfee={:.8f}".format(NORMAL_FEE_FILTER)],
-            ["-minrelaytxfee={:.8f}".format(NORMAL_FEE_FILTER)],
+            ["-minrelaytxfee={:.10f}".format(NORMAL_FEE_FILTER)],
+            ["-minrelaytxfee={:.10f}".format(NORMAL_FEE_FILTER)],
         ]
 
     def run_test(self):

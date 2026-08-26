@@ -1053,7 +1053,7 @@ static RPCMethod gettxoutsetinfo()
                             {RPCResult::Type::STR_AMOUNT, "unspendable", "Total amount of unspendable outputs created in this block"},
                             {RPCResult::Type::OBJ, "unspendables", "Detailed view of the unspendable categories",
                             {
-                                {RPCResult::Type::STR_AMOUNT, "genesis_block", "The unspendable amount of the Genesis block subsidy"},
+                                {RPCResult::Type::STR_AMOUNT, "genesis_block", "Amount excluded because the Genesis block subsidy is unspendable (zero when the genesis allocation is spendable)"},
                                 {RPCResult::Type::STR_AMOUNT, "bip30", "Transactions overridden by duplicates (no longer possible with BIP30)"},
                                 {RPCResult::Type::STR_AMOUNT, "scripts", "Amounts sent to scripts that are unspendable (for example OP_RETURN outputs)"},
                                 {RPCResult::Type::STR_AMOUNT, "unclaimed_rewards", "Fee rewards that miners did not claim in their coinbase transaction"},
@@ -2089,9 +2089,10 @@ static RPCMethod getblockstats()
                 uint64_t out_size{GetSerializeSize(out) + PER_UTXO_OVERHEAD};
                 utxo_size_inc += out_size;
 
-                // The Genesis block and the repeated BIP30 block coinbases don't change the UTXO
-                // set counts, so they have to be excluded from the statistics
-                if (pindex.nHeight == 0 || (IsBIP30Repeat(pindex) && tx->IsCoinBase())) continue;
+                // Exclude genesis only on networks where its coinbase is not
+                // connected, and always exclude repeated BIP30 coinbases.
+                if ((pindex.nHeight == 0 && !chainman.GetConsensus().genesis_coinbase_spendable) ||
+                    (IsBIP30Repeat(pindex) && tx->IsCoinBase())) continue;
                 // Skip unspendable outputs since they are not included in the UTXO set
                 if (out.scriptPubKey.IsUnspendable()) continue;
 
@@ -2172,7 +2173,7 @@ static RPCMethod getblockstats()
 
     UniValue ret_all(UniValue::VOBJ);
     ret_all.pushKV("avgfee", (block.vtx.size() > 1) ? totalfee / (block.vtx.size() - 1) : 0);
-    ret_all.pushKV("avgfeerate", total_weight ? (totalfee * WITNESS_SCALE_FACTOR) / total_weight : 0); // Unit: sat/vbyte
+    ret_all.pushKV("avgfeerate", total_weight ? (totalfee * WITNESS_SCALE_FACTOR) / total_weight : 0); // Unit: con/vB
     ret_all.pushKV("avgtxsize", (block.vtx.size() > 1) ? total_size / (block.vtx.size() - 1) : 0);
     ret_all.pushKV("blockhash", pindex.GetBlockHash().GetHex());
     ret_all.pushKV("feerate_percentiles", std::move(feerates_res));
@@ -2188,7 +2189,10 @@ static RPCMethod getblockstats()
     ret_all.pushKV("minfeerate", (minfeerate == MAX_MONEY) ? 0 : minfeerate);
     ret_all.pushKV("mintxsize", mintxsize == MAX_BLOCK_SERIALIZED_SIZE ? 0 : mintxsize);
     ret_all.pushKV("outs", outputs);
-    ret_all.pushKV("subsidy", GetBlockSubsidy(pindex.nHeight, chainman.GetParams().GetConsensus()));
+    const CAmount block_subsidy{pindex.nHeight == 0 && chainman.GetConsensus().genesis_coinbase_spendable
+            ? block.vtx.front()->GetValueOut()
+            : GetBlockSubsidy(pindex.nHeight, chainman.GetParams().GetConsensus())};
+    ret_all.pushKV("subsidy", block_subsidy);
     ret_all.pushKV("swtotal_size", swtotal_size);
     ret_all.pushKV("swtotal_weight", swtotal_weight);
     ret_all.pushKV("swtxs", swtxs);

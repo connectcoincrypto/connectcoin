@@ -87,6 +87,8 @@ struct BIP9Deployment {
  */
 struct Params {
     uint256 hashGenesisBlock;
+    /** Whether the genesis block coinbase is added to the UTXO set. */
+    bool genesis_coinbase_spendable{false};
     int nSubsidyHalvingInterval;
     /**
      * Hashes of blocks that

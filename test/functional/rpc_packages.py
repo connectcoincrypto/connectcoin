@@ -444,7 +444,7 @@ class RPCPackagesTest(BitcoinTestFramework):
         chained_txns = self.wallet.create_self_transfer_chain(chain_length=2)
         minrate_btc_kvb = min([chained_txn["fee"] / chained_txn["tx"].get_vsize() * 1000 for chained_txn in chained_txns])
         chain_hex = [t["hex"] for t in chained_txns]
-        pkg_result = node.submitpackage(chain_hex, maxfeerate=minrate_btc_kvb - Decimal("0.00000001"))
+        pkg_result = node.submitpackage(chain_hex, maxfeerate=minrate_btc_kvb - Decimal("0.0000000001"))
 
         # First tx failed in single transaction evaluation, so package message is generic
         assert_equal(pkg_result["package_msg"], "transaction failed")
@@ -474,7 +474,7 @@ class RPCPackagesTest(BitcoinTestFramework):
             utxo_to_spend=parent["new_utxo"],
         )
 
-        pkg_result = node.submitpackage([parent["hex"], child["hex"]], maxfeerate=DEFAULT_FEE - Decimal("0.00000001"))
+        pkg_result = node.submitpackage([parent["hex"], child["hex"]], maxfeerate=DEFAULT_FEE - Decimal("0.0000000001"))
 
         # Child is connected even though parent is invalid and still reports fee exceeded
         # this implies sub-package evaluation of both entries together.
@@ -506,7 +506,7 @@ class RPCPackagesTest(BitcoinTestFramework):
         tx.vout[-1].scriptPubKey = b'a' * 10001 # scriptPubKey bigger than 10k IsUnspendable
         chained_burn_hex = [chained_burn_hex[0], tx.serialize().hex()]
         # burn test is run before any package evaluation; nothing makes it in and we get broader exception
-        assert_raises_rpc_error(-25, "Unspendable output exceeds maximum configured by user", node.submitpackage, chained_burn_hex, 0, chained_txns_burn[1]["new_utxo"]["value"] - Decimal("0.00000001"))
+        assert_raises_rpc_error(-25, "Unspendable output exceeds maximum configured by user", node.submitpackage, chained_burn_hex, 0, chained_txns_burn[1]["new_utxo"]["value"] - Decimal("0.0000000001"))
         assert_equal(node.getrawmempool(), [])
 
         minrate_btc_kvb_burn = min([chained_txn_burn["fee"] / chained_txn_burn["tx"].get_vsize() * 1000 for chained_txn_burn in chained_txns_burn])

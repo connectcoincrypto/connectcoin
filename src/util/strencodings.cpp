@@ -240,15 +240,8 @@ std::string FormatParagraph(std::string_view in, size_t width, size_t indent)
     return out.str();
 }
 
-/** Upper bound for mantissa.
- * 10^18-1 is the largest arbitrary decimal that will fit in a signed 64-bit integer.
- * Larger integers cannot consist of arbitrary combinations of 0-9:
- *
- *   999999999999999999  1^18-1
- *  9223372036854775807  (1<<63)-1  (max int64_t)
- *  9999999999999999999  1^19-1     (would overflow)
- */
-static const int64_t UPPER_BOUND = 1000000000000000000LL - 1LL;
+/** Upper bound for a positive mantissa. */
+static constexpr int64_t UPPER_BOUND{std::numeric_limits<int64_t>::max()};
 
 /** Helper function for ParseFixedPoint */
 static inline bool ProcessMantissaDigit(char ch, int64_t &mantissa, int &mantissa_tzeros)
@@ -256,12 +249,15 @@ static inline bool ProcessMantissaDigit(char ch, int64_t &mantissa, int &mantiss
     if(ch == '0')
         ++mantissa_tzeros;
     else {
-        for (int i=0; i<=mantissa_tzeros; ++i) {
+        for (int i = 0; i < mantissa_tzeros; ++i) {
             if (mantissa > (UPPER_BOUND / 10LL))
                 return false; /* overflow */
             mantissa *= 10;
         }
-        mantissa += ch - '0';
+        const int digit{ch - '0'};
+        if (mantissa > (UPPER_BOUND - digit) / 10LL)
+            return false; /* overflow */
+        mantissa = mantissa * 10 + digit;
         mantissa_tzeros = 0;
     }
     return true;
@@ -342,8 +338,8 @@ bool ParseFixedPoint(std::string_view val, int decimals, int64_t *amount_out)
     exponent += decimals;
     if (exponent < 0)
         return false; /* cannot represent values smaller than 10^-decimals */
-    if (exponent >= 18)
-        return false; /* cannot represent values larger than or equal to 10^(18-decimals) */
+    if (exponent > 18)
+        return false; /* cannot represent values larger than 10^(18-decimals) */
 
     for (int i=0; i < exponent; ++i) {
         if (mantissa > (UPPER_BOUND / 10LL) || mantissa < -(UPPER_BOUND / 10LL))

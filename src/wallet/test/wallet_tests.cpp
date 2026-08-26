@@ -21,6 +21,7 @@
 #include <test/util/logging.h>
 #include <test/util/random.h>
 #include <test/util/setup_common.h>
+#include <util/strencodings.h>
 #include <util/translation.h>
 #include <validation.h>
 #include <validationinterface.h>
@@ -69,6 +70,40 @@ static void AddKey(CWallet& wallet, const CKey& key)
     auto& desc = descs.at(0);
     WalletDescriptor w_desc(std::move(desc), 0, 0, 1, 1);
     Assert(wallet.AddWalletDescriptor(w_desc, provider, "", false));
+}
+
+BOOST_FIXTURE_TEST_CASE(scan_spendable_regtest_genesis, TestChain100Setup)
+{
+    CWallet wallet(m_node.chain.get(), "", CreateMockableWalletDatabase());
+    {
+        LOCK(wallet.cs_wallet);
+        LOCK(Assert(m_node.chainman)->GetMutex());
+        wallet.SetWalletFlag(WALLET_FLAG_DESCRIPTORS);
+        wallet.SetLastBlockProcessed(m_node.chainman->ActiveChain().Height(), m_node.chainman->ActiveChain().Tip()->GetBlockHash());
+    }
+
+    const auto secret{ParseHex("bc4470438702a7aa1c7696ff857e0439657583f87e3d889abea285771604891d")};
+    CKey genesis_key;
+    genesis_key.Set(secret.begin(), secret.end(), /*fCompressedIn=*/false);
+    BOOST_REQUIRE(genesis_key.IsValid());
+    AddKey(wallet, genesis_key);
+
+    WalletRescanReserver reserver(wallet);
+    BOOST_REQUIRE(reserver.reserve());
+    const CWallet::ScanResult result{wallet.ScanForWalletTransactions(
+        Params().GenesisBlock().GetHash(), /*start_height=*/0, /*max_height=*/{}, reserver, /*save_progress=*/false)};
+    BOOST_REQUIRE(result.status == CWallet::ScanResult::SUCCESS);
+    BOOST_REQUIRE(result.last_scanned_height);
+    BOOST_CHECK_EQUAL(*result.last_scanned_height, 100);
+
+    const CTransactionRef& genesis_coinbase{Params().GenesisBlock().vtx.front()};
+    {
+        LOCK(wallet.cs_wallet);
+        BOOST_REQUIRE(wallet.GetWalletTx(genesis_coinbase->GetHash()));
+    }
+    const Balance balance{GetBalance(wallet)};
+    BOOST_CHECK_EQUAL(balance.m_mine_trusted, 10'000'000 * COIN);
+    BOOST_CHECK_EQUAL(balance.m_mine_immature, 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(update_non_range_descriptor, TestingSetup)
@@ -146,7 +181,7 @@ BOOST_FIXTURE_TEST_CASE(scan_for_wallet_transactions, TestChain100Setup)
         BOOST_CHECK(result.last_failed_block.IsNull());
         BOOST_CHECK_EQUAL(result.last_scanned_block, newTip->GetBlockHash());
         BOOST_CHECK_EQUAL(*result.last_scanned_height, newTip->nHeight);
-        BOOST_CHECK_EQUAL(GetBalance(wallet).m_mine_immature, 100 * COIN);
+        BOOST_CHECK_EQUAL(GetBalance(wallet).m_mine_immature, 200 * COIN);
 
         {
             CBlockLocator locator;
@@ -183,7 +218,7 @@ BOOST_FIXTURE_TEST_CASE(scan_for_wallet_transactions, TestChain100Setup)
         BOOST_CHECK_EQUAL(result.last_failed_block, oldTip->GetBlockHash());
         BOOST_CHECK_EQUAL(result.last_scanned_block, newTip->GetBlockHash());
         BOOST_CHECK_EQUAL(*result.last_scanned_height, newTip->nHeight);
-        BOOST_CHECK_EQUAL(GetBalance(wallet).m_mine_immature, 50 * COIN);
+        BOOST_CHECK_EQUAL(GetBalance(wallet).m_mine_immature, 100 * COIN);
     }
 
     // Prune the remaining block file.
@@ -440,7 +475,7 @@ BOOST_FIXTURE_TEST_CASE(ListCoinsTest, ListCoinsTestingSetup)
     BOOST_CHECK_EQUAL(list.begin()->second.size(), 1U);
 
     // Check initial balance from one mature coinbase transaction.
-    BOOST_CHECK_EQUAL(50 * COIN, WITH_LOCK(wallet->cs_wallet, return AvailableCoins(*wallet).GetTotalAmount()));
+    BOOST_CHECK_EQUAL(100 * COIN, WITH_LOCK(wallet->cs_wallet, return AvailableCoins(*wallet).GetTotalAmount()));
 
     // Add a transaction creating a change address, and confirm ListCoins still
     // returns the coin associated with the change address underneath the

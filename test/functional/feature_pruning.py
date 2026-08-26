@@ -9,6 +9,7 @@ This test uses 4GB of disk space.
 """
 import os
 
+from test_framework.blockfilter import REGTEST_GENESIS_BASIC_FILTER_FALSE_POSITIVE
 from test_framework.blocktools import (
     MIN_BLOCKS_TO_KEEP,
     create_block,
@@ -491,7 +492,7 @@ class PruneTest(BitcoinTestFramework):
     def test_scanblocks_pruned(self):
         node = self.nodes[5]
         genesis_blockhash = node.getblockhash(0)
-        false_positive_spk = bytes.fromhex("001400000000000000000000000000000000000cadcb")
+        false_positive_spk = REGTEST_GENESIS_BASIC_FILTER_FALSE_POSITIVE
 
         assert genesis_blockhash in node.scanblocks(
             "start", [{"desc": f"raw({false_positive_spk.hex()})"}], 0, 0)['relevant_blocks']

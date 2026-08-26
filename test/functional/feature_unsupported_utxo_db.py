@@ -9,7 +9,7 @@ Previous releases are required by this test, see test/README.md.
 
 import shutil
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import BitcoinTestFramework, SkipTest
 from test_framework.util import assert_equal
 
 
@@ -19,7 +19,11 @@ class UnsupportedUtxoDbTest(BitcoinTestFramework):
         self.num_nodes = 2
 
     def skip_test_if_missing_module(self):
-        self.skip_if_no_previous_releases()
+        raise SkipTest(
+            "The Bitcoin Core v0.14.3 chainstate fixture uses Bitcoin's genesis "
+            "and 50 BTC subsidy and cannot be reindexed as ConnectCoin. Regenerate "
+            "this test from a compatible ConnectCoin release before enabling it."
+        )
 
     def setup_network(self):
         self.add_nodes(

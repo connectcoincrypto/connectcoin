@@ -115,7 +115,7 @@ first node.
 
 ```
 >>> test.nodes[0].getbalance()
-Decimal('50.00000000')
+Decimal('100.0000000000')
 ```
 
 We can also log custom events to the logger.

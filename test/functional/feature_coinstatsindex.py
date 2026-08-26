@@ -35,6 +35,7 @@ from test_framework.wallet import (
     MiniWallet,
     getnewdestination,
 )
+from test_framework.wallet_util import bytes_to_wif
 
 
 class CoinStatsIndexTest(BitcoinTestFramework):
@@ -53,9 +54,9 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         self._test_reorg_index()
         self._test_index_rejects_hash_serialized()
         self._test_init_index_after_reorg()
+        self._test_genesis_spend_reorg()
 
-    def block_sanity_check(self, block_info):
-        block_subsidy = 50
+    def block_sanity_check(self, block_info, block_subsidy=100):
         assert_equal(
             block_info['prevout_spent'] + block_subsidy,
             block_info['new_outputs_ex_coinbase'] + block_info['coinbase'] + block_info['unspendable']
@@ -114,31 +115,31 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         self.log.info("Test gettxoutsetinfo() with index and verbose flag")
 
         for hash_option in index_hash_options:
-            # Genesis block is unspendable
+            # The genesis allocation is a spendable UTXO.
             res4 = index_node.gettxoutsetinfo(hash_option, 0)
-            assert_equal(res4['total_unspendable_amount'], 50)
+            assert_equal(res4['total_unspendable_amount'], 0)
             assert_equal(res4['block_info'], {
-                'unspendable': 50,
+                'unspendable': 0,
                 'prevout_spent': 0,
                 'new_outputs_ex_coinbase': 0,
-                'coinbase': 0,
+                'coinbase': 10_000_000,
                 'unspendables': {
-                    'genesis_block': 50,
+                    'genesis_block': 0,
                     'bip30': 0,
                     'scripts': 0,
                     'unclaimed_rewards': 0
                 }
             })
-            self.block_sanity_check(res4['block_info'])
+            self.block_sanity_check(res4['block_info'], block_subsidy=10_000_000)
 
             # Test an older block height that included a normal tx
             res5 = index_node.gettxoutsetinfo(hash_option, 102)
-            assert_equal(res5['total_unspendable_amount'], 50)
+            assert_equal(res5['total_unspendable_amount'], 0)
             assert_equal(res5['block_info'], {
                 'unspendable': 0,
-                'prevout_spent': 50,
-                'new_outputs_ex_coinbase': Decimal('49.99968800'),
-                'coinbase': Decimal('50.00031200'),
+                'prevout_spent': 100,
+                'new_outputs_ex_coinbase': Decimal('99.9999968800'),
+                'coinbase': Decimal('100.0000031200'),
                 'unspendables': {
                     'genesis_block': 0,
                     'bip30': 0,
@@ -171,16 +172,16 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         for hash_option in index_hash_options:
             # Check all amounts were registered correctly
             res6 = index_node.gettxoutsetinfo(hash_option, 108)
-            assert_equal(res6['total_unspendable_amount'], Decimal('70.99000000'))
+            assert_equal(res6['total_unspendable_amount'], Decimal('20.9900000000'))
             assert_equal(res6['block_info'], {
-                'unspendable': Decimal('20.99000000'),
-                'prevout_spent': 71,
-                'new_outputs_ex_coinbase': Decimal('49.99999000'),
-                'coinbase': Decimal('50.01001000'),
+                'unspendable': Decimal('20.9900000000'),
+                'prevout_spent': 121,
+                'new_outputs_ex_coinbase': Decimal('99.9999999000'),
+                'coinbase': Decimal('100.0100001000'),
                 'unspendables': {
                     'genesis_block': 0,
                     'bip30': 0,
-                    'scripts': Decimal('20.99000000'),
+                    'scripts': Decimal('20.9900000000'),
                     'unclaimed_rewards': 0,
                 }
             })
@@ -201,9 +202,9 @@ class CoinStatsIndexTest(BitcoinTestFramework):
 
         for hash_option in index_hash_options:
             res7 = index_node.gettxoutsetinfo(hash_option, 109)
-            assert_equal(res7['total_unspendable_amount'], Decimal('80.99000000'))
+            assert_equal(res7['total_unspendable_amount'], Decimal('80.9900000000'))
             assert_equal(res7['block_info'], {
-                'unspendable': 10,
+                'unspendable': 60,
                 'prevout_spent': 0,
                 'new_outputs_ex_coinbase': 0,
                 'coinbase': 40,
@@ -211,7 +212,7 @@ class CoinStatsIndexTest(BitcoinTestFramework):
                     'genesis_block': 0,
                     'bip30': 0,
                     'scripts': 0,
-                    'unclaimed_rewards': 10
+                    'unclaimed_rewards': 60
                 }
             })
             self.block_sanity_check(res7['block_info'])
@@ -335,6 +336,52 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         self.sync_index_node()
         # Because of the unclean shutdown above, indexes reset to the point we last committed them to disk.
         assert_equal(index_node.getindexinfo()['coinstatsindex']['best_block_height'], committed_height)
+
+    def _test_genesis_spend_reorg(self):
+        self.log.info("Test index accounting when the spendable genesis allocation is reorganized")
+        index_node = self.nodes[1]
+        self.sync_index_node()
+
+        genesis_tx = index_node.getblock(index_node.getblockhash(0), 2)['tx'][0]
+        genesis_outpoint = {
+            'txid': genesis_tx['txid'],
+            'vout': 0,
+            'scriptPubKey': genesis_tx['vout'][0]['scriptPubKey']['hex'],
+            'amount': genesis_tx['vout'][0]['value'],
+        }
+        assert_equal(genesis_outpoint['amount'], Decimal('10000000.0000000000'))
+        assert index_node.gettxout(genesis_outpoint['txid'], 0, False) is not None
+
+        # This private key is deliberately published for the regtest genesis only.
+        genesis_wif = bytes_to_wif(
+            bytes.fromhex('bc4470438702a7aa1c7696ff857e0439657583f87e3d889abea285771604891d'),
+            compressed=False,
+        )
+        raw_tx = index_node.createrawtransaction(
+            [{'txid': genesis_outpoint['txid'], 'vout': 0}],
+            {getnewdestination()[2]: Decimal('9999999.9999900000')},
+        )
+        signed_tx = index_node.signrawtransactionwithkey(raw_tx, [genesis_wif], [genesis_outpoint])
+        assert_equal(signed_tx['complete'], True)
+        index_node.sendrawtransaction(signed_tx['hex'])
+
+        before_spend = index_node.gettxoutsetinfo('muhash')
+        spend_block = self.generate(index_node, 1, sync_fun=self.no_op)[0]
+        self.sync_index_node()
+        after_spend = index_node.gettxoutsetinfo('muhash')
+        assert index_node.gettxout(genesis_outpoint['txid'], 0, False) is None
+        assert_equal(after_spend['total_amount'], before_spend['total_amount'] + Decimal('100.0000000000'))
+
+        index_node.invalidateblock(spend_block)
+        self.sync_index_node()
+        after_disconnect = index_node.gettxoutsetinfo('muhash')
+        assert_equal(after_disconnect, before_spend)
+        assert index_node.gettxout(genesis_outpoint['txid'], 0, False) is not None
+
+        index_node.reconsiderblock(spend_block)
+        self.sync_index_node()
+        assert_equal(index_node.gettxoutsetinfo('muhash'), after_spend)
+        assert index_node.gettxout(genesis_outpoint['txid'], 0, False) is None
 
 
 if __name__ == '__main__':

@@ -151,7 +151,9 @@ public:
 
 private:
     BitcoinUnit currentUnit{BitcoinUnit::BTC};
-    CAmount singleStep{CAmount(100000)}; // connects
+    // Keep the default arrow-key step at 0.001 CC even if the number of
+    // decimal places in one coin changes.
+    CAmount singleStep{COIN / 1000};
     mutable QSize cachedMinimumSizeHint;
     bool m_allow_empty{true};
     CAmount m_min_amount{CAmount(0)};

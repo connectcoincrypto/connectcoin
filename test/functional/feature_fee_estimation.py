@@ -487,8 +487,10 @@ class EstimateFeeTest(BitcoinTestFramework):
             )
 
     def test_estimation_modes(self):
-        low_feerate = Decimal("0.001")
-        high_feerate = Decimal("0.005")
+        # Preserve the original raw connects/vB after increasing COIN precision
+        # from 8 to 10 decimal places.
+        low_feerate = Decimal("0.00001")
+        high_feerate = Decimal("0.00005")
         # Broadcast and mine high fee transactions for the first 12 blocks.
         self.broadcast_and_maybe_mine(self.nodes[1], high_feerate, TXS_COUNT, 12, self.nodes[2])
         check_fee_estimates_btw_modes(self.nodes[0], high_feerate, high_feerate)
@@ -518,14 +520,14 @@ class EstimateFeeTest(BitcoinTestFramework):
         verify_estimate_response(estimate_after_restart, None, [BLOCK_POLICY_ESTIMATOR_ERROR])
         self.log.info("Populate block policy estimator with high-feerate history")
         # Generate high-feerate transactions and mine them over 6 blocks to give block policy data.
-        high_feerate = Decimal("0.004")
+        high_feerate = Decimal("0.00004")
         self.broadcast_and_maybe_mine(node0, high_feerate, TXS_COUNT, 6, miner)
         self.log.info("Test estimatesmartfee returns block policy estimator estimate when mempool is higher")
         # Add 10 large insane-feerate transactions enough to generate a block template
         num_txs = 10
         target_vsize = int(((MAX_BLOCK_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT) / WITNESS_SCALE_FACTOR) / num_txs)
         utxos = [self.wallet.get_utxo(confirmed_only=True) for _ in range(num_txs)]
-        insane_feerate = Decimal("0.01")
+        insane_feerate = Decimal("0.0001")
         self.send_transactions(utxos, insane_feerate, target_vsize)
         estimate_after_spike = node0.estimatesmartfee(1, "economical", {"verbosity": 2, "fee_rate_estimator": "none"})
         assert_equal(len(estimate_after_spike["mempool_health_statistics"]), 6)
@@ -544,7 +546,7 @@ class EstimateFeeTest(BitcoinTestFramework):
         # transactions so the mempool estimate is now the lower of the two.
         self.generate(node0, 1, sync_fun=lambda: None)
         assert_equal(node0.getmempoolinfo()['size'], 0)
-        low_feerate = Decimal("0.00004")
+        low_feerate = Decimal("0.0000004")
         low_utxos = [self.wallet.get_utxo(confirmed_only=True) for _ in range(num_txs)]
         self.send_transactions(low_utxos, low_feerate, target_vsize)
         lower_estimate = node0.estimatesmartfee(1, "economical", {"fee_rate_estimator": "none"})
@@ -578,7 +580,7 @@ class EstimateFeeTest(BitcoinTestFramework):
         node0 = self.nodes[0]
         miner = self.nodes[1]
         mempool_policy_dat = node0.chain_path / "fees/mempool_policy_estimator.dat"
-        healthy_feerate = Decimal("0.004")
+        healthy_feerate = Decimal("0.00004")
         self.connect_nodes(0, 1)
         self.connect_nodes(0, 2)
         self.sync_all()

@@ -18,69 +18,71 @@ BOOST_FIXTURE_TEST_SUITE(pow_tests, BasicTestingSetup)
 BOOST_AUTO_TEST_CASE(get_next_work)
 {
     const auto chainParams = CreateChainParams(*m_node.args, ChainType::MAIN);
-    int64_t nLastRetargetTime = 1261130161; // Block #30240
+    const auto& consensus = chainParams->GetConsensus();
     CBlockIndex pindexLast;
-    pindexLast.nHeight = 32255;
-    pindexLast.nTime = 1262152739;  // Block #32255
+    pindexLast.nHeight = consensus.DifficultyAdjustmentInterval() - 1;
+    pindexLast.nTime = 1262152739;
     pindexLast.nBits = 0x1d00ffff;
+    int64_t nLastRetargetTime = pindexLast.nTime - 12 * 60 * 60;
 
     // Here (and below): expected_nbits is calculated in
     // CalculateNextWorkRequired(); redoing the calculation here would be just
     // reimplementing the same code that is written in pow.cpp. Rather than
     // copy that code, we just hardcode the expected result.
-    unsigned int expected_nbits = 0x1d00d86aU;
-    BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, nLastRetargetTime, chainParams->GetConsensus()), expected_nbits);
-    BOOST_CHECK(PermittedDifficultyTransition(chainParams->GetConsensus(), pindexLast.nHeight+1, pindexLast.nBits, expected_nbits));
+    unsigned int expected_nbits = 0x1c7fff80U;
+    BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, nLastRetargetTime, consensus), expected_nbits);
+    BOOST_CHECK(PermittedDifficultyTransition(consensus, pindexLast.nHeight+1, pindexLast.nBits, expected_nbits));
 }
 
 /* Test the constraint on the upper bound for next work */
 BOOST_AUTO_TEST_CASE(get_next_work_pow_limit)
 {
     const auto chainParams = CreateChainParams(*m_node.args, ChainType::MAIN);
-    int64_t nLastRetargetTime = 1231006505; // Block #0
+    const auto& consensus = chainParams->GetConsensus();
     CBlockIndex pindexLast;
-    pindexLast.nHeight = 2015;
-    pindexLast.nTime = 1233061996;  // Block #2015
-    pindexLast.nBits = 0x1d00ffff;
-    // ConnectCoin's intentionally easier initial pow limit does not clamp
-    // this historical Bitcoin retarget calculation.
-    unsigned int expected_nbits = 0x1d01b304U;
-    BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, nLastRetargetTime, chainParams->GetConsensus()), expected_nbits);
-    BOOST_CHECK(PermittedDifficultyTransition(chainParams->GetConsensus(), pindexLast.nHeight+1, pindexLast.nBits, expected_nbits));
+    pindexLast.nHeight = consensus.DifficultyAdjustmentInterval() - 1;
+    pindexLast.nTime = 1233061996;
+    pindexLast.nBits = UintToArith256(consensus.powLimit).GetCompact();
+    int64_t nLastRetargetTime = pindexLast.nTime - 10 * consensus.nPowTargetTimespan;
+    unsigned int expected_nbits = pindexLast.nBits;
+    BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, nLastRetargetTime, consensus), expected_nbits);
+    BOOST_CHECK(PermittedDifficultyTransition(consensus, pindexLast.nHeight+1, pindexLast.nBits, expected_nbits));
 }
 
 /* Test the constraint on the lower bound for actual time taken */
 BOOST_AUTO_TEST_CASE(get_next_work_lower_limit_actual)
 {
     const auto chainParams = CreateChainParams(*m_node.args, ChainType::MAIN);
-    int64_t nLastRetargetTime = 1279008237; // Block #66528
+    const auto& consensus = chainParams->GetConsensus();
     CBlockIndex pindexLast;
-    pindexLast.nHeight = 68543;
-    pindexLast.nTime = 1279297671;  // Block #68543
+    pindexLast.nHeight = consensus.DifficultyAdjustmentInterval() - 1;
+    pindexLast.nTime = 1279297671;
     pindexLast.nBits = 0x1c05a3f4;
+    int64_t nLastRetargetTime = pindexLast.nTime - 1;
     unsigned int expected_nbits = 0x1c0168fdU;
-    BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, nLastRetargetTime, chainParams->GetConsensus()), expected_nbits);
-    BOOST_CHECK(PermittedDifficultyTransition(chainParams->GetConsensus(), pindexLast.nHeight+1, pindexLast.nBits, expected_nbits));
+    BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, nLastRetargetTime, consensus), expected_nbits);
+    BOOST_CHECK(PermittedDifficultyTransition(consensus, pindexLast.nHeight+1, pindexLast.nBits, expected_nbits));
     // Test that reducing nbits further would not be a PermittedDifficultyTransition.
     unsigned int invalid_nbits = expected_nbits-1;
-    BOOST_CHECK(!PermittedDifficultyTransition(chainParams->GetConsensus(), pindexLast.nHeight+1, pindexLast.nBits, invalid_nbits));
+    BOOST_CHECK(!PermittedDifficultyTransition(consensus, pindexLast.nHeight+1, pindexLast.nBits, invalid_nbits));
 }
 
 /* Test the constraint on the upper bound for actual time taken */
 BOOST_AUTO_TEST_CASE(get_next_work_upper_limit_actual)
 {
     const auto chainParams = CreateChainParams(*m_node.args, ChainType::MAIN);
-    int64_t nLastRetargetTime = 1263163443; // NOTE: Not an actual block time
+    const auto& consensus = chainParams->GetConsensus();
     CBlockIndex pindexLast;
-    pindexLast.nHeight = 46367;
-    pindexLast.nTime = 1269211443;  // Block #46367
+    pindexLast.nHeight = consensus.DifficultyAdjustmentInterval() - 1;
+    pindexLast.nTime = 1269211443;
     pindexLast.nBits = 0x1c387f6f;
+    int64_t nLastRetargetTime = pindexLast.nTime - 10 * consensus.nPowTargetTimespan;
     unsigned int expected_nbits = 0x1d00e1fdU;
-    BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, nLastRetargetTime, chainParams->GetConsensus()), expected_nbits);
-    BOOST_CHECK(PermittedDifficultyTransition(chainParams->GetConsensus(), pindexLast.nHeight+1, pindexLast.nBits, expected_nbits));
+    BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, nLastRetargetTime, consensus), expected_nbits);
+    BOOST_CHECK(PermittedDifficultyTransition(consensus, pindexLast.nHeight+1, pindexLast.nBits, expected_nbits));
     // Test that increasing nbits further would not be a PermittedDifficultyTransition.
     unsigned int invalid_nbits = expected_nbits+1;
-    BOOST_CHECK(!PermittedDifficultyTransition(chainParams->GetConsensus(), pindexLast.nHeight+1, pindexLast.nBits, invalid_nbits));
+    BOOST_CHECK(!PermittedDifficultyTransition(consensus, pindexLast.nHeight+1, pindexLast.nBits, invalid_nbits));
 }
 
 BOOST_AUTO_TEST_CASE(CheckProofOfWork_test_negative_target)

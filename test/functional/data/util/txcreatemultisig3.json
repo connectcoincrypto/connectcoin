@@ -1,6 +1,6 @@
 {
-    "txid": "ccc552220b46a3b5140048b03395987ce4f0fa1ddf8c635bba1fa44e0f8c1d7f",
-    "hash": "ccc552220b46a3b5140048b03395987ce4f0fa1ddf8c635bba1fa44e0f8c1d7f",
+    "txid": "37519fa8835b7d5e2cf2d8ae19d2f9c0dc3f783a0f33ce3212cb8ae5093d08dc",
+    "hash": "37519fa8835b7d5e2cf2d8ae19d2f9c0dc3f783a0f33ce3212cb8ae5093d08dc",
     "version": 1,
     "size": 53,
     "vsize": 53,
@@ -10,7 +10,7 @@
     ],
     "vout": [
         {
-            "value": 1.00000000,
+            "value": 1.0000000000,
             "n": 0,
             "scriptPubKey": {
                 "asm": "0 e15a86a23178f433d514dbbce042e87d72662b8b5edcacfd2e37ab7a2d135f05",
@@ -21,5 +21,5 @@
             }
         }
     ],
-    "hex": "01000000000100e1f50500000000220020e15a86a23178f433d514dbbce042e87d72662b8b5edcacfd2e37ab7a2d135f0500000000"
+    "hex": "01000000000100e40b5402000000220020e15a86a23178f433d514dbbce042e87d72662b8b5edcacfd2e37ab7a2d135f0500000000"
 }

@@ -107,16 +107,24 @@ CoinStatsIndex::CoinStatsIndex(std::unique_ptr<interfaces::Chain> chain, size_t 
 
 bool CoinStatsIndex::CustomAppend(const interfaces::BlockInfo& block)
 {
-    const CAmount block_subsidy{GetBlockSubsidy(block.height, Params().GetConsensus())};
+    const bool spendable_genesis{block.height == 0 && Params().GetConsensus().genesis_coinbase_spendable};
+    // A spendable genesis allocation is defined by the hardcoded block itself
+    // and may intentionally differ from the recurring block subsidy schedule.
+    const CAmount block_subsidy{spendable_genesis
+            ? Assert(block.data)->vtx.front()->GetValueOut()
+            : GetBlockSubsidy(block.height, Params().GetConsensus())};
     m_total_subsidy += block_subsidy;
 
-    // Ignore genesis block
-    if (block.height > 0) {
-        uint256 expected_block_hash{*Assert(block.prev_hash)};
-        if (m_current_block_hash != expected_block_hash) {
-            LogError("previous block header belongs to unexpected block %s; expected %s",
-                      m_current_block_hash.ToString(), expected_block_hash.ToString());
-            return false;
+    const bool process_outputs{block.height > 0 || spendable_genesis};
+    if (process_outputs) {
+        // The genesis block has no predecessor.
+        if (block.height > 0) {
+            uint256 expected_block_hash{*Assert(block.prev_hash)};
+            if (m_current_block_hash != expected_block_hash) {
+                LogError("previous block header belongs to unexpected block %s; expected %s",
+                          m_current_block_hash.ToString(), expected_block_hash.ToString());
+                return false;
+            }
         }
 
         // Add the new utxos created from the block
@@ -174,7 +182,7 @@ bool CoinStatsIndex::CustomAppend(const interfaces::BlockInfo& block)
             }
         }
     } else {
-        // genesis block
+        // Genesis coinbase is unspendable on this network.
         m_total_unspendables_genesis_block += block_subsidy;
     }
 

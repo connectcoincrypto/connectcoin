@@ -44,7 +44,7 @@ class RawTransactionsTest(BitcoinTestFramework):
     def set_test_params(self):
         self.num_nodes = 4
         self.extra_args = [[
-            "-minrelaytxfee=0.00001000",
+            "-minrelaytxfee=0.0000001000",
         ] for i in range(self.num_nodes)]
 
         self.setup_clean_chain = True
@@ -101,7 +101,7 @@ class RawTransactionsTest(BitcoinTestFramework):
         self.min_relay_tx_fee = self.nodes[0].getnetworkinfo()['relayfee']
         # This test is not meant to test fee estimation and we'd like
         # to be sure all txs are sent at a consistent desired feerate
-        self.fee_rate_sats_per_vb = self.min_relay_tx_fee * Decimal(1e8) / 1000
+        self.fee_rate_sats_per_vb = self.min_relay_tx_fee * COIN / 1000
 
         # if the fee's positive delta is higher than this value tests will fail,
         # neg. delta always fail the tests.
@@ -187,7 +187,7 @@ class RawTransactionsTest(BitcoinTestFramework):
     def test_change_position(self):
         """Ensure setting changePosition in fundraw with an exact match is handled properly."""
         self.log.info("Test fundrawtxn changePosition option")
-        rawmatch = self.nodes[2].createrawtransaction([], {self.nodes[2].getnewaddress():50})
+        rawmatch = self.nodes[2].createrawtransaction([], {self.nodes[2].getnewaddress():100})
         rawmatch = self.nodes[2].fundrawtransaction(rawmatch, changePosition=1, subtractFeeFromOutputs=[0], fee_rate=self.fee_rate_sats_per_vb)
         assert_equal(rawmatch["changepos"], -1)
 
@@ -670,7 +670,7 @@ class RawTransactionsTest(BitcoinTestFramework):
             self.generate(self.nodes[1], 1)
 
             # Make sure funds are received at node1.
-            assert_equal(oldBalance+Decimal('51.10000000'), self.nodes[0].getbalance())
+            assert_equal(oldBalance+Decimal('101.1000000000'), self.nodes[0].getbalance())
 
             # Restore pre-test wallet state
             wallet.sendall(recipients=[df_wallet.getnewaddress(), df_wallet.getnewaddress(), df_wallet.getnewaddress()], fee_rate=self.fee_rate_sats_per_vb)
@@ -725,7 +725,7 @@ class RawTransactionsTest(BitcoinTestFramework):
         fundedAndSignedTx = self.nodes[1].signrawtransactionwithwallet(fundedTx['hex'])
         self.nodes[1].sendrawtransaction(fundedAndSignedTx['hex'])
         self.generate(self.nodes[1], 1)
-        assert_equal(oldBalance+Decimal('50.19000000'), self.nodes[0].getbalance()) #0.19+block reward
+        assert_equal(oldBalance+Decimal('100.1900000000'), self.nodes[0].getbalance()) # 0.19 CC + block reward
 
     def test_op_return(self):
         self.log.info("Test fundrawtxn with OP_RETURN and no vin")
@@ -811,10 +811,10 @@ class RawTransactionsTest(BitcoinTestFramework):
         rawtx = node.createrawtransaction(inputs, outputs)
 
         result = node.fundrawtransaction(rawtx, fee_rate=self.fee_rate_sats_per_vb)  # uses self.min_relay_tx_fee (set by fee_rate in con/vB)
-        btc_kvb_to_sat_vb = 100000  # (1e5)
-        result1 = node.fundrawtransaction(rawtx, fee_rate=str(2 * btc_kvb_to_sat_vb * self.min_relay_tx_fee))
+        cc_kvb_to_con_vb = Decimal(COIN) / 1000
+        result1 = node.fundrawtransaction(rawtx, fee_rate=str(2 * cc_kvb_to_con_vb * self.min_relay_tx_fee))
         result2 = node.fundrawtransaction(rawtx, feeRate=2 * self.min_relay_tx_fee)
-        result3 = node.fundrawtransaction(rawtx, fee_rate=10 * btc_kvb_to_sat_vb * self.min_relay_tx_fee)
+        result3 = node.fundrawtransaction(rawtx, fee_rate=10 * cc_kvb_to_con_vb * self.min_relay_tx_fee)
         result4 = node.fundrawtransaction(rawtx, feeRate=str(10 * self.min_relay_tx_fee))
 
         result_fee_rate = result['fee'] * 1000 / count_bytes(result['hex'])
@@ -828,10 +828,10 @@ class RawTransactionsTest(BitcoinTestFramework):
             assert_equal(self.nodes[3].fundrawtransaction(rawtx, {param: zero_value})["fee"], 0)
 
         # With no arguments passed, expect fee of 141 satoshis.
-        assert_approx(node.fundrawtransaction(rawtx, fee_rate=self.fee_rate_sats_per_vb)["fee"], vexp=0.00000141, vspan=0.00000001)
+        assert_approx(node.fundrawtransaction(rawtx, fee_rate=self.fee_rate_sats_per_vb)["fee"], vexp=0.0000000141, vspan=0.0000000001)
         # Expect fee to be 10,000x higher when an explicit fee rate 10,000x greater is specified.
         result = node.fundrawtransaction(rawtx, fee_rate=10000)
-        assert_approx(result["fee"], vexp=0.0141, vspan=0.0001)
+        assert_approx(result["fee"], vexp=0.000141, vspan=0.000001)
 
         self.log.info("Test fundrawtxn with invalid estimate_mode settings")
         for k, v in {"number": 42, "object": {"foo": "bar"}}.items():
@@ -852,7 +852,7 @@ class RawTransactionsTest(BitcoinTestFramework):
                     node.fundrawtransaction, rawtx, estimate_mode=mode, conf_target=n, add_inputs=True)
 
         self.log.info("Test invalid fee rate settings")
-        for param, value in {("fee_rate", 100000), ("feeRate", 1.000)}:
+        for param, value in {("fee_rate", 10000000), ("feeRate", 1.000)}:
             assert_raises_rpc_error(-4, "Fee exceeds maximum configured by user (e.g. -maxtxfee, maxfeerate)",
                 node.fundrawtransaction, rawtx, add_inputs=True, **{param: value})
             assert_raises_rpc_error(-3, "Amount out of range",
@@ -860,8 +860,10 @@ class RawTransactionsTest(BitcoinTestFramework):
             assert_raises_rpc_error(-3, "Amount is not a number or string",
                 node.fundrawtransaction, rawtx, add_inputs=True, **{param: {"foo": "bar"}})
             # Test fee rate values that don't pass fixed-point parsing checks.
-            for invalid_value in ["", 0.000000001, 1e-09, 1.111111111, 1111111111111111, "31.999999999999999999999"]:
+            for invalid_value in ["", 0.00000000001, 1e-11, 1.11111111111, "31.999999999999999999999"]:
                 assert_raises_rpc_error(-3, "Invalid amount", node.fundrawtransaction, rawtx, add_inputs=True, **{param: invalid_value})
+            large_value_error = "Amount out of range" if param == "fee_rate" else "Invalid amount"
+            assert_raises_rpc_error(-3, large_value_error, node.fundrawtransaction, rawtx, add_inputs=True, **{param: 1111111111111111})
         # Test fee_rate values that cannot be represented in con/vB.
         for invalid_value in [0.0001, 0.00000001, 0.00099999, 31.99999999]:
             assert_raises_rpc_error(-3, "Invalid amount",
@@ -869,7 +871,7 @@ class RawTransactionsTest(BitcoinTestFramework):
 
         self.log.info("Test min fee rate checks are bypassed with fundrawtxn, e.g. a fee_rate under 1 con/vB is allowed")
         node.fundrawtransaction(rawtx, fee_rate=0.999, add_inputs=True)
-        node.fundrawtransaction(rawtx, feeRate=0.00000999, add_inputs=True)
+        node.fundrawtransaction(rawtx, feeRate=0.0000000999, add_inputs=True)
 
         self.log.info("- raises RPC error if both feeRate and fee_rate are passed")
         assert_raises_rpc_error(-8, "Cannot specify both fee_rate (con/vB) and feeRate (CC/kvB)",
@@ -1104,7 +1106,7 @@ class RawTransactionsTest(BitcoinTestFramework):
         input_add_weight = high_input_weight - (41 * 4)
         tx4_weight = wallet.decoderawtransaction(funded_tx4["hex"])["weight"] + input_add_weight
         tx4_vsize = int(ceil(tx4_weight / 4))
-        assert_fee_amount(funded_tx4["fee"], tx4_vsize, Decimal(0.0001))
+        assert_fee_amount(funded_tx4["fee"], tx4_vsize, Decimal(0.000001))
 
         # Funding with weight at csuint boundaries should not cause problems
         funded_tx = wallet.fundrawtransaction(raw_tx, input_weights=[{"txid": ext_utxo["txid"], "vout": ext_utxo["vout"], "weight": 255}], fee_rate=2)
@@ -1424,8 +1426,8 @@ class RawTransactionsTest(BitcoinTestFramework):
 
         # We want to choose more value than is available in 2 inputs when considering the fee,
         # but not enough to need 3 inputs when not considering the fee.
-        # So the target value must be at least 2.00000001 - fee.
-        lower_bound = Decimal("2.00000001") - fees
+        # So the target value must be at least one connect above 2 CC minus the fee.
+        lower_bound = Decimal("2.0000000001") - fees
         # The target value must be at most 2 - cost_of_change - not_input_fees - min_change (these are all
         # included in the target before ApproximateBestSubset).
         upper_bound = Decimal("2.0") - cost_of_change - overhead_fees - Decimal("0.01")
@@ -1457,8 +1459,8 @@ class RawTransactionsTest(BitcoinTestFramework):
         # In the former case, the calculated needed fee is higher than the actual fee being paid, so an assertion is reached
         # To test this does not happen, we subtract 202 sats from the input value. If working correctly, this should
         # fail with insufficient funds rather than connectcoind asserting.
-        rawtx = w.createrawtransaction(inputs=[], outputs=[{self.nodes[0].getnewaddress(address_type="bech32"): 1 - 0.00000202}])
-        expected_err_msg = "The total exceeds your balance when the 0.00000078 transaction fee is included."
+        rawtx = w.createrawtransaction(inputs=[], outputs=[{self.nodes[0].getnewaddress(address_type="bech32"): 1 - 0.0000000202}])
+        expected_err_msg = "The total exceeds your balance when the 0.0000000078 transaction fee is included."
         assert_raises_rpc_error(-4, expected_err_msg, w.fundrawtransaction, rawtx, fee_rate=1.85)
 
     def test_input_confs_control(self):
@@ -1562,7 +1564,7 @@ class RawTransactionsTest(BitcoinTestFramework):
         self.log.info("Test without preselected inputs")
         self.log.info("Attempt to send 0.45 BTC without SFFO")
         rawtx = wallet.createrawtransaction(inputs=[], outputs=[{default_wallet.getnewaddress(): 0.45}])
-        assert_raises_rpc_error(-4, amount_with_fee_err_msg.format("0.00000042"), wallet.fundrawtransaction, rawtx, options={"fee_rate":1})
+        assert_raises_rpc_error(-4, amount_with_fee_err_msg.format("0.0000000042"), wallet.fundrawtransaction, rawtx, options={"fee_rate":1})
 
         self.log.info("Send 0.45 BTC with SFFO")
         wallet.fundrawtransaction(rawtx, options={"subtractFeeFromOutputs":[0]})
@@ -1573,7 +1575,7 @@ class RawTransactionsTest(BitcoinTestFramework):
         self.log.info("Test with preselected inputs")
         self.log.info("Attempt to send 0.45 BTC preselecting 0.15 BTC utxo")
         rawtx = wallet.createrawtransaction(inputs=[{"txid": txid2, "vout": vout2}], outputs=[{default_wallet.getnewaddress(): 0.45}])
-        assert_raises_rpc_error(-4, amount_with_fee_err_msg.format("0.00000042"), wallet.fundrawtransaction, rawtx, options={"fee_rate":1})
+        assert_raises_rpc_error(-4, amount_with_fee_err_msg.format("0.0000000042"), wallet.fundrawtransaction, rawtx, options={"fee_rate":1})
 
         self.log.info("Send 0.45 BTC preselecting 0.15 BTC utxo with SFFO")
         wallet.fundrawtransaction(hexstring=rawtx, options={"subtractFeeFromOutputs":[0]})

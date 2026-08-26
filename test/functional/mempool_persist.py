@@ -87,7 +87,7 @@ class MempoolPersistTest(BitcoinTestFramework):
         assert_equal(fees['base'], fees['modified'])
         self.nodes[0].prioritisetransaction(txid=last_txid, fee_delta=1000)
         fees = self.nodes[0].getmempoolentry(txid=last_txid)['fees']
-        assert_equal(fees['base'] + Decimal('0.00001000'), fees['modified'])
+        assert_equal(fees['base'] + Decimal('0.0000001000'), fees['modified'])
 
         self.log.info('Check the total base fee is unchanged after prioritisetransaction')
         assert_equal(total_fee_old, self.nodes[0].getmempoolinfo()['total_fee'])
@@ -125,14 +125,14 @@ class MempoolPersistTest(BitcoinTestFramework):
 
         self.log.debug('Verify prioritization is loaded correctly')
         fees = self.nodes[0].getmempoolentry(txid=last_txid)['fees']
-        assert_equal(fees['base'] + Decimal('0.00001000'), fees['modified'])
+        assert_equal(fees['base'] + Decimal('0.0000001000'), fees['modified'])
 
         self.log.debug('Verify all fields are loaded correctly')
         new_entry = self.nodes[0].getmempoolentry(txid=last_txid)
         assert_equal({**last_entry, "clusterid": None}, {**new_entry, "clusterid": None})
         self.nodes[0].sendrawtransaction(tx_prioritised_not_submitted['hex'])
         entry_prioritised_before_restart = self.nodes[0].getmempoolentry(txid=tx_prioritised_not_submitted['txid'])
-        assert_equal(entry_prioritised_before_restart['fees']['base'] + Decimal('0.00009999'), entry_prioritised_before_restart['fees']['modified'])
+        assert_equal(entry_prioritised_before_restart['fees']['base'] + Decimal('0.0000009999'), entry_prioritised_before_restart['fees']['modified'])
 
         # Verify accounting of mempool transactions after restart is correct
         if self.is_wallet_compiled():
@@ -165,7 +165,7 @@ class MempoolPersistTest(BitcoinTestFramework):
         assert_equal({}, self.nodes[0].importmempool(mempooldat0, {"apply_fee_delta_priority": True, "apply_unbroadcast_set": True}))
         assert_equal(2, self.nodes[0].getmempoolinfo()["unbroadcastcount"])
         fees = self.nodes[0].getmempoolentry(txid=last_txid)["fees"]
-        assert_equal(fees["base"] + Decimal("0.00001000"), fees["modified"])
+        assert_equal(fees["base"] + Decimal("0.0000001000"), fees["modified"])
 
         self.log.debug("Stop-start node0. Verify that it has the transactions in its mempool.")
         self.stop_nodes()

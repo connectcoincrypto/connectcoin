@@ -62,7 +62,7 @@ class WalletFallbackFeeTest(BitcoinTestFramework):
         self.stop_node(0, expected_stderr='')
 
         # Starting a node with a large fallback fee set...
-        excessive_fallback = HIGH_TX_FEE_PER_KB + Decimal('0.00000001')
+        excessive_fallback = HIGH_TX_FEE_PER_KB + Decimal('0.0000000001')
         self.start_node(0, extra_args=[f"-fallbackfee={excessive_fallback}"])
         # ...works...
         self.sending_succeeds(node)

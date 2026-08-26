@@ -4,6 +4,7 @@
 
 #include <qt/test/uritests.h>
 
+#include <qt/bitcoinunits.h>
 #include <qt/guiutil.h>
 #include <qt/walletmodel.h>
 
@@ -32,19 +33,30 @@ void URITests::uriTests()
     QVERIFY(GUIUtil::parseBitcoinURI(uri, &rv));
     QVERIFY(rv.address == QString("CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF"));
     QVERIFY(rv.label == QString());
-    QVERIFY(rv.amount == 100000);
+    QVERIFY(rv.amount == 10000000);
 
     uri.setUrl(QString("connectcoin:CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF?amount=1.001"));
     QVERIFY(GUIUtil::parseBitcoinURI(uri, &rv));
     QVERIFY(rv.address == QString("CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF"));
     QVERIFY(rv.label == QString());
-    QVERIFY(rv.amount == 100100000);
+    QVERIFY(rv.amount == 10010000000LL);
 
     uri.setUrl(QString("connectcoin:CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF?amount=100&label=Wikipedia Example"));
     QVERIFY(GUIUtil::parseBitcoinURI(uri, &rv));
     QVERIFY(rv.address == QString("CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF"));
-    QVERIFY(rv.amount == 10000000000LL);
+    QVERIFY(rv.amount == 1000000000000LL);
     QVERIFY(rv.label == QString("Wikipedia Example"));
+
+    // Monetary boundaries use ConnectCoin's 10-decimal precision and 100-million-CC limit.
+    uri.setUrl(QString("connectcoin:CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF?amount=100000000.0000000000"));
+    QVERIFY(GUIUtil::parseBitcoinURI(uri, &rv));
+    QVERIFY(rv.amount == BitcoinUnits::maxMoney());
+
+    uri.setUrl(QString("connectcoin:CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF?amount=100000000.0000000001"));
+    QVERIFY(!GUIUtil::parseBitcoinURI(uri, &rv));
+
+    uri.setUrl(QString("connectcoin:CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF?amount=-0.0000000001"));
+    QVERIFY(!GUIUtil::parseBitcoinURI(uri, &rv));
 
     uri.setUrl(QString("connectcoin:CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF?message=Wikipedia Example Address"));
     QVERIFY(GUIUtil::parseBitcoinURI(uri, &rv));
@@ -69,7 +81,7 @@ void URITests::uriTests()
     uri.setUrl(QString("connectcoin:CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF?amount=100&amount=200&label=Wikipedia Example"));
     QVERIFY(GUIUtil::parseBitcoinURI(uri, &rv));
     QVERIFY(rv.address == QString("CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF"));
-    QVERIFY(rv.amount == 20000000000LL);
+    QVERIFY(rv.amount == 2000000000000LL);
     QVERIFY(rv.label == QString("Wikipedia Example"));
 
     // The first amount value is correct. However, the second amount value is not valid. Hence, the URI is not valid.
@@ -80,13 +92,13 @@ void URITests::uriTests()
     uri.setUrl(QString("connectcoin:CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF?amount=100&label=?"));
     QVERIFY(GUIUtil::parseBitcoinURI(uri, &rv));
     QVERIFY(rv.address == QString("CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF"));
-    QVERIFY(rv.amount == 10000000000LL);
+    QVERIFY(rv.amount == 1000000000000LL);
     QVERIFY(rv.label == QString("?"));
 
     // Escape sequences are not supported.
     uri.setUrl(QString("connectcoin:CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF?amount=100&label=%3F"));
     QVERIFY(GUIUtil::parseBitcoinURI(uri, &rv));
     QVERIFY(rv.address == QString("CNYn5rwCC4QeGuBVFhRnESsB8Y52RTR2uF"));
-    QVERIFY(rv.amount == 10000000000LL);
+    QVERIFY(rv.amount == 1000000000000LL);
     QVERIFY(rv.label == QString("%3F"));
 }

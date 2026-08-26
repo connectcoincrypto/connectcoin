@@ -306,7 +306,7 @@ FUZZ_TARGET(tx_pool_standard, .init = initialize_tx_pool)
     outpoints_rbf = outpoints_supply;
 
     // The sum of the values of all spendable outpoints
-    constexpr CAmount SUPPLY_TOTAL{COINBASE_MATURITY * 50 * COIN};
+    constexpr CAmount SUPPLY_TOTAL{COINBASE_MATURITY * 100 * COIN};
 
     SetMempoolConstraints(*node.args, fuzzed_data_provider);
     auto tx_pool_{MakeMempool(fuzzed_data_provider, node)};

@@ -8,6 +8,7 @@
 #
 
 from test_framework.blocktools import COINBASE_MATURITY
+from test_framework.messages import COIN
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
@@ -174,11 +175,12 @@ class GetblockstatsTest(BitcoinTestFramework):
 
         self.log.info('Test block height 0')
         genesis_stats = self.nodes[0].getblockstats(0)
-        assert_equal(genesis_stats["blockhash"], "79e876886fc96349e9979c0024589376c85a4a65a5b111ab85f7623ab9c72727")
+        assert_equal(genesis_stats["blockhash"], "197dd70fa5df793d1b9e4684f3c9608afcdae4b86f935c04e8187a48def347f6")
         assert_equal(genesis_stats["utxo_increase"], 1)
         assert_equal(genesis_stats["utxo_size_inc"], 116)
-        assert_equal(genesis_stats["utxo_increase_actual"], 0)
-        assert_equal(genesis_stats["utxo_size_inc_actual"], 0)
+        assert_equal(genesis_stats["utxo_increase_actual"], 1)
+        assert_equal(genesis_stats["utxo_size_inc_actual"], 116)
+        assert_equal(genesis_stats["subsidy"], 10_000_000 * COIN)
 
         self.log.info('Test tip including OP_RETURN')
         tip_stats = self.nodes[0].getblockstats(tip)

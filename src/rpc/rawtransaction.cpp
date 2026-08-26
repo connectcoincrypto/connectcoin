@@ -278,7 +278,8 @@ static RPCMethod getrawtransaction()
     auto txid{Txid::FromUint256(ParseHashV(request.params[0], "parameter 1"))};
     const CBlockIndex* blockindex = nullptr;
 
-    if (txid.ToUint256() == chainman.GetParams().GenesisBlock().hashMerkleRoot) {
+    if (!chainman.GetConsensus().genesis_coinbase_spendable &&
+        txid.ToUint256() == chainman.GetParams().GenesisBlock().hashMerkleRoot) {
         // Special exception for the genesis block coinbase transaction
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "The genesis block coinbase is not considered an ordinary transaction and cannot be retrieved");
     }

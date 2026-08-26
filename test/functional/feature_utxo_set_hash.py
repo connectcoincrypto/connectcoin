@@ -38,15 +38,16 @@ class UTXOSetHashTest(BitcoinTestFramework):
         tx_block = self.generateblock(node, output=wallet.get_address(), transactions=[txid])
         blocks.append(from_hex(CBlock(), node.getblock(tx_block['hash'], False)))
 
+        genesis = from_hex(CBlock(), node.getblock(node.getblockhash(0), False))
+        blocks_with_heights = [(0, genesis)] + list(enumerate(blocks, start=2))
+
         # Serialize the outputs that should be in the UTXO set and add them to
         # a MuHash object
         muhash = MuHash3072()
 
-        for height, block in enumerate(blocks):
-            # The Genesis block coinbase is not part of the UTXO set and we
-            # spent the first mined block
-            height += 2
-
+        for height, block in blocks_with_heights:
+            # The spendable genesis output remains, while the first mined
+            # coinbase (height 1) was spent above.
             for tx in block.vtx:
                 for n, tx_out in enumerate(tx.vout):
                     coinbase = 1 if not tx.vin[0].prevout.hash else 0
@@ -67,8 +68,8 @@ class UTXOSetHashTest(BitcoinTestFramework):
         assert_equal(finalized[::-1].hex(), node_muhash)
 
         self.log.info("Test deterministic UTXO set hash results")
-        assert_equal(node.gettxoutsetinfo()['hash_serialized_3'], "396058cfd7f3b4c05dcdfaf360be9986d859d2c8315082d3aadda6d2d16add25")
-        assert_equal(node.gettxoutsetinfo("muhash")['muhash'], "97f341d4226cb4451dd9da2856759fb97659cfc238a0b8d5452e64af6032bd3d")
+        assert_equal(node.gettxoutsetinfo()['hash_serialized_3'], "172a96523515c38f2038fab538eb9dcb01f3c1f3a2c1017e2098210139d54ed2")
+        assert_equal(node.gettxoutsetinfo("muhash")['muhash'], "5d1e8d293b1d1d0f26451f71f6fa68ca0faf0c5aa034021d7d2d8507ff770cb1")
 
     def run_test(self):
         self.test_muhash_implementation()

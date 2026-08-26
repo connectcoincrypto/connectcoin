@@ -1,12 +1,12 @@
 {
   "chain": "main",
   "test_chain": false,
-  "genesis": "d0cb264708ab51c5fcc81e64b308e9c04bc20165e3515474b467b32a3b010000",
-  "subsidy_halving_interval": 210000,
+  "genesis": "a2e9d3c01eb7ad21d58dbc3081c4f2551146e85ae90ebea433ae1a464b000000",
+  "subsidy_halving_interval": 450000,
   "pow": {
     "limit": "000001ffff000000000000000000000000000000000000000000000000000000",
-    "target_spacing": 600,
-    "difficulty_retarget_interval": 2016,
+    "target_spacing": 60,
+    "difficulty_retarget_interval": 1440,
     "mindiff_blocks": "no"
   },
   "net": {

@@ -25,11 +25,11 @@ class WalletGroupTest(BitcoinTestFramework):
             [],
             [],
             ["-avoidpartialspends"],
-            ["-maxapsfee=0.00002719"],
-            ["-maxapsfee=0.00002720"],
+            ["-maxapsfee=0.0000002719"],
+            ["-maxapsfee=0.0000002720"],
         ]
 
-        self.fee_rate = 20  # apply feerate of 20 sats/vB across all nodes
+        self.fee_rate = 20  # apply feerate of 20 connects/vB across all nodes
 
         self.rpc_timeout = 480
 
@@ -92,7 +92,7 @@ class WalletGroupTest(BitcoinTestFramework):
         # - D ~0.3
         assert_approx(self.nodes[1].getbalance(), vexp=4.3, vspan=0.0001)
         assert_approx(self.nodes[2].getbalance(), vexp=4.3, vspan=0.0001)
-        # Sending 1.4 btc should pick one 1.0 + one more. For node #1,
+        # Sending 1.4 CC should pick one 1.0 + one more. For node #1,
         # this could be (A / B0 / C0) + (B1 / C1 / D). We ensure that it is
         # B0 + B1 or C0 + C1, because this avoids partial spends while not being
         # detrimental to transaction cost
@@ -142,7 +142,7 @@ class WalletGroupTest(BitcoinTestFramework):
         assert_equal(2, len(tx5["vout"]))
 
         # Test wallet option maxapsfee with node 4, which sets maxapsfee
-        # 1 sat higher, crossing the threshold from non-grouped to grouped.
+        # 1 connect higher, crossing the threshold from non-grouped to grouped.
         self.log.info("Test wallet option maxapsfee threshold from non-grouped to grouped")
         addr_aps3 = self.nodes[4].getnewaddress()
         [self.nodes[0].sendtoaddress(addr_aps3, 1.0, fee_rate=self.fee_rate) for _ in range(5)]

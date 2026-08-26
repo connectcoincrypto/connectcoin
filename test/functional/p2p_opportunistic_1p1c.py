@@ -52,7 +52,7 @@ from test_framework.wallet import (
 )
 
 # 1con/vB feerate denominated in CC/KvB
-FEERATE_1SAT_VB = Decimal("0.00001000")
+FEERATE_1CON_VB = Decimal("0.00000010")
 # Number of seconds to wait to ensure no getdata is received
 GETDATA_WAIT = 60
 
@@ -95,7 +95,7 @@ class PackageRelayTest(BitcoinTestFramework):
         node.setmocktime(int(time.time()))
 
         low_fee_parent = self.create_tx_below_mempoolminfee(self.wallet)
-        high_fee_child = self.wallet.create_self_transfer(utxo_to_spend=low_fee_parent["new_utxo"], fee_rate=20*FEERATE_1SAT_VB)
+        high_fee_child = self.wallet.create_self_transfer(utxo_to_spend=low_fee_parent["new_utxo"], fee_rate=20*FEERATE_1CON_VB)
 
         peer_sender = node.add_p2p_connection(P2PInterface())
 
@@ -126,7 +126,7 @@ class PackageRelayTest(BitcoinTestFramework):
         node = self.nodes[0]
         node.setmocktime(int(time.time()))
         low_fee_parent = self.create_tx_below_mempoolminfee(wallet)
-        high_fee_child = wallet.create_self_transfer(utxo_to_spend=low_fee_parent["new_utxo"], fee_rate=20*FEERATE_1SAT_VB)
+        high_fee_child = wallet.create_self_transfer(utxo_to_spend=low_fee_parent["new_utxo"], fee_rate=20*FEERATE_1CON_VB)
 
         peer_sender = node.add_outbound_p2p_connection(P2PInterface(), p2p_idx=1, connection_type="outbound-full-relay")
         peer_ignored = node.add_outbound_p2p_connection(P2PInterface(), p2p_idx=2, connection_type="outbound-full-relay")
@@ -170,7 +170,7 @@ class PackageRelayTest(BitcoinTestFramework):
         # This feerate is above mempoolminfee, but not enough to also bump the low feerate parent.
         feerate_just_above = node.getmempoolinfo()["mempoolminfee"]
         med_fee_child = wallet.create_self_transfer(utxo_to_spend=low_fee_parent["new_utxo"], fee_rate=feerate_just_above)
-        high_fee_child = wallet.create_self_transfer(utxo_to_spend=low_fee_parent["new_utxo"], fee_rate=999*FEERATE_1SAT_VB)
+        high_fee_child = wallet.create_self_transfer(utxo_to_spend=low_fee_parent["new_utxo"], fee_rate=999*FEERATE_1CON_VB)
 
         peer_sender = node.add_outbound_p2p_connection(P2PInterface(), p2p_idx=1, connection_type="outbound-full-relay")
         peer_ignored = node.add_outbound_p2p_connection(P2PInterface(), p2p_idx=2, connection_type="outbound-full-relay")
@@ -290,7 +290,7 @@ class PackageRelayTest(BitcoinTestFramework):
         node.setmocktime(int(time.time()))
 
         low_fee_parent = self.create_tx_below_mempoolminfee(self.wallet)
-        high_fee_child = self.wallet.create_self_transfer(utxo_to_spend=low_fee_parent["new_utxo"], fee_rate=999*FEERATE_1SAT_VB)
+        high_fee_child = self.wallet.create_self_transfer(utxo_to_spend=low_fee_parent["new_utxo"], fee_rate=999*FEERATE_1CON_VB)
 
         # Create invalid version of parent with a bad signature.
         tx_parent_bad_wit = tx_from_hex(low_fee_parent["hex"])
@@ -377,12 +377,12 @@ class PackageRelayTest(BitcoinTestFramework):
         node.setmocktime(int(time.time()))
 
         # Grandparent will enter mempool by itself
-        grandparent_high = self.wallet.create_self_transfer(fee_rate=FEERATE_1SAT_VB*10, confirmed_only=True)
+        grandparent_high = self.wallet.create_self_transfer(fee_rate=FEERATE_1CON_VB*10, confirmed_only=True)
 
         # This parent needs CPFP
         parent_low = self.create_tx_below_mempoolminfee(self.wallet, utxo_to_spend=grandparent_high["new_utxo"])
         # This parent does not need CPFP and can be submitted alone ahead of time
-        parent_high = self.wallet.create_self_transfer(fee_rate=FEERATE_1SAT_VB*10, confirmed_only=True)
+        parent_high = self.wallet.create_self_transfer(fee_rate=FEERATE_1CON_VB*10, confirmed_only=True)
         child = self.wallet.create_self_transfer_multi(
             utxos_to_spend=[parent_high["new_utxo"], parent_low["new_utxo"]],
             fee_per_output=999*parent_low["tx"].get_vsize(),
@@ -463,7 +463,7 @@ class PackageRelayTest(BitcoinTestFramework):
         low_fee_parent = self.create_tx_below_mempoolminfee(self.wallet)
         high_fee_child = self.wallet.create_self_transfer(
             utxo_to_spend=low_fee_parent["new_utxo"],
-            fee_rate=200*FEERATE_1SAT_VB,
+            fee_rate=200*FEERATE_1CON_VB,
             target_vsize=100000
         )
 
@@ -525,7 +525,7 @@ class PackageRelayTest(BitcoinTestFramework):
         low_fee_parent = self.create_tx_below_mempoolminfee(self.wallet)
         high_fee_child = self.wallet.create_self_transfer(
             utxo_to_spend=low_fee_parent["new_utxo"],
-            fee_rate=200*FEERATE_1SAT_VB,
+            fee_rate=200*FEERATE_1CON_VB,
         )
 
         # Announce
@@ -571,10 +571,10 @@ class PackageRelayTest(BitcoinTestFramework):
 
         # Prep 2 generations of 1p1c packages to be relayed
         low_fee_great_grandparent = self.create_tx_below_mempoolminfee(self.wallet)
-        high_fee_grandparent = self.wallet.create_self_transfer(utxo_to_spend=low_fee_great_grandparent["new_utxo"], fee_rate=20*FEERATE_1SAT_VB)
+        high_fee_grandparent = self.wallet.create_self_transfer(utxo_to_spend=low_fee_great_grandparent["new_utxo"], fee_rate=20*FEERATE_1CON_VB)
 
         low_fee_parent = self.create_tx_below_mempoolminfee(self.wallet, utxo_to_spend=high_fee_grandparent["new_utxo"])
-        high_fee_child = self.wallet.create_self_transfer(utxo_to_spend=low_fee_parent["new_utxo"], fee_rate=20*FEERATE_1SAT_VB)
+        high_fee_child = self.wallet.create_self_transfer(utxo_to_spend=low_fee_parent["new_utxo"], fee_rate=20*FEERATE_1CON_VB)
 
         peer_sender = node.add_p2p_connection(P2PInterface())
 

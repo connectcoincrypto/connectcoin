@@ -66,7 +66,7 @@ public:
     static QString shortName(Unit unit);
     //! Longer description
     static QString description(Unit unit);
-    //! Number of connects (1e-8 CC) per unit.
+    //! Number of connects (1e-10 CC) per unit.
     static qint64 factor(Unit unit);
     //! Number of decimals left
     static int decimals(Unit unit);

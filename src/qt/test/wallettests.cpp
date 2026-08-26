@@ -34,6 +34,7 @@
 #include <memory>
 
 #include <QAbstractButton>
+#include <QAbstractSpinBox>
 #include <QAction>
 #include <QApplication>
 #include <QCheckBox>
@@ -260,6 +261,15 @@ public:
 //     QT_QPA_PLATFORM=cocoa   build/bin/connectcoin-test-qt  # macOS
 void TestGUI(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet)
 {
+    // The default amount-field step is a fraction of a coin, not a fixed
+    // number of atomic units. This guards the 10-decimal denomination.
+    BitcoinAmountField amount_field;
+    amount_field.setValue(0);
+    auto* amount_spin_box = amount_field.findChild<QAbstractSpinBox*>();
+    QVERIFY(amount_spin_box);
+    QTest::keyClick(amount_spin_box, Qt::Key_Up);
+    QCOMPARE(amount_field.value(), COIN / 1000);
+
     // Create widgets for sending coins and listing transactions.
     std::unique_ptr<const PlatformStyle> platformStyle(PlatformStyle::instantiate("other"));
     MiniGUI mini_gui(node, platformStyle.get());
@@ -331,9 +341,9 @@ void TestGUI(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet)
             address = receiveRequestDialog->QObject::findChild<QLabel*>("address_content")->text();
             QVERIFY(!address.isEmpty());
 
-            QCOMPARE(uri.count("amount=0.00000001"), 2);
+            QCOMPARE(uri.count("amount=0.0000000001"), 2);
             QCOMPARE(receiveRequestDialog->QObject::findChild<QLabel*>("amount_tag")->text(), QString("Amount:"));
-            QCOMPARE(receiveRequestDialog->QObject::findChild<QLabel*>("amount_content")->text(), QString::fromStdString("0.00000001 " + CURRENCY_UNIT));
+            QCOMPARE(receiveRequestDialog->QObject::findChild<QLabel*>("amount_content")->text(), QString::fromStdString("0.0000000001 " + CURRENCY_UNIT));
 
             QCOMPARE(uri.count("label=TEST_LABEL_1"), 2);
             QCOMPARE(receiveRequestDialog->QObject::findChild<QLabel*>("label_tag")->text(), QString("Label:"));

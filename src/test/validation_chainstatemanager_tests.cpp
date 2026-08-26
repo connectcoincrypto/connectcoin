@@ -245,14 +245,16 @@ struct SnapshotTestSetup : TestChain100Setup {
         }
 
         size_t initial_size;
-        size_t initial_total_coins{100};
+        const COutPoint genesis_outpoint{Params().GenesisBlock().vtx.front()->GetHash(), 0};
+        size_t initial_total_coins{101};
 
         // Make some initial assertions about the contents of the chainstate.
         {
             LOCK(::cs_main);
             CCoinsViewCache& ibd_coinscache = chainman.ActiveChainstate().CoinsTip();
             initial_size = ibd_coinscache.GetCacheSize();
-            size_t total_coins{0};
+            BOOST_CHECK(ibd_coinscache.HaveCoin(genesis_outpoint));
+            size_t total_coins{1};
 
             for (CTransactionRef& txn : m_coinbase_txns) {
                 COutPoint op{txn->GetHash(), 0};
@@ -357,7 +359,8 @@ struct SnapshotTestSetup : TestChain100Setup {
                 // Both caches will be empty initially.
                 BOOST_CHECK_EQUAL((unsigned int)0, coinscache.GetCacheSize());
 
-                size_t total_coins{0};
+                BOOST_CHECK(coinscache.HaveCoin(genesis_outpoint));
+                size_t total_coins{1};
 
                 for (CTransactionRef& txn : m_coinbase_txns) {
                     COutPoint op{txn->GetHash(), 0};
@@ -379,14 +382,15 @@ struct SnapshotTestSetup : TestChain100Setup {
 
         {
             LOCK(::cs_main);
-            size_t coins_in_active{0};
-            size_t coins_in_background{0};
+            size_t coins_in_active{1};
+            size_t coins_in_background{1};
             size_t coins_missing_from_background{0};
 
             for (const auto& chainstate : chainman.m_chainstates) {
                 BOOST_TEST_MESSAGE("Checking coins in " << chainstate->ToString());
                 CCoinsViewCache& coinscache = chainstate->CoinsTip();
                 bool is_background = chainstate.get() != &chainman.ActiveChainstate();
+                BOOST_CHECK(coinscache.HaveCoin(genesis_outpoint));
 
                 for (CTransactionRef& txn : m_coinbase_txns) {
                     COutPoint op{txn->GetHash(), 0};
