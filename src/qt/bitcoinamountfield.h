@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_BITCOINAMOUNTFIELD_H
-#define BITCOIN_QT_BITCOINAMOUNTFIELD_H
+#ifndef CONNECTCOIN_QT_BITCOINAMOUNTFIELD_H
+#define CONNECTCOIN_QT_BITCOINAMOUNTFIELD_H
 
 #include <consensus/amount.h>
 #include <qt/bitcoinunits.h>
@@ -16,7 +16,7 @@ QT_BEGIN_NAMESPACE
 class QValueComboBox;
 QT_END_NAMESPACE
 
-/** Widget for entering bitcoin amounts.
+/** Widget for entering ConnectCoin amounts.
   */
 class BitcoinAmountField: public QWidget
 {
@@ -35,13 +35,13 @@ public:
     /** If allow empty is set to false the field will be set to the minimum allowed value if left empty. **/
     void SetAllowEmpty(bool allow);
 
-    /** Set the minimum value in satoshis **/
+    /** Set the minimum value in connects. **/
     void SetMinValue(const CAmount& value);
 
-    /** Set the maximum value in satoshis **/
+    /** Set the maximum value in connects. **/
     void SetMaxValue(const CAmount& value);
 
-    /** Set single step in satoshis **/
+    /** Set single step in connects. **/
     void setSingleStep(const CAmount& step);
 
     /** Make read-only **/
@@ -82,4 +82,4 @@ private Q_SLOTS:
 
 };
 
-#endif // BITCOIN_QT_BITCOINAMOUNTFIELD_H
+#endif // CONNECTCOIN_QT_BITCOINAMOUNTFIELD_H

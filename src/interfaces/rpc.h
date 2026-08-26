@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_INTERFACES_RPC_H
-#define BITCOIN_INTERFACES_RPC_H
+#ifndef CONNECTCOIN_INTERFACES_RPC_H
+#define CONNECTCOIN_INTERFACES_RPC_H
 
 #include <memory>
 #include <string>
@@ -28,4 +28,4 @@ std::unique_ptr<Rpc> MakeRpc(node::NodeContext& node);
 
 } // namespace interfaces
 
-#endif // BITCOIN_INTERFACES_RPC_H
+#endif // CONNECTCOIN_INTERFACES_RPC_H

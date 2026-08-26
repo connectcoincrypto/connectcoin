@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SCRIPT_MINISCRIPT_H
-#define BITCOIN_SCRIPT_MINISCRIPT_H
+#ifndef CONNECTCOIN_SCRIPT_MINISCRIPT_H
+#define CONNECTCOIN_SCRIPT_MINISCRIPT_H
 
 #include <consensus/consensus.h>
 #include <crypto/hex_base.h>
@@ -2704,4 +2704,4 @@ inline std::optional<Node<typename Ctx::Key>> FromScript(const CScript& script, 
 
 } // namespace miniscript
 
-#endif // BITCOIN_SCRIPT_MINISCRIPT_H
+#endif // CONNECTCOIN_SCRIPT_MINISCRIPT_H

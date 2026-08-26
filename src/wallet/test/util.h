@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_WALLET_TEST_UTIL_H
-#define BITCOIN_WALLET_TEST_UTIL_H
+#ifndef CONNECTCOIN_WALLET_TEST_UTIL_H
+#define CONNECTCOIN_WALLET_TEST_UTIL_H
 
 #include <addresstype.h>
 #include <wallet/db.h>
@@ -29,7 +29,7 @@ inline constexpr DatabaseFormat DATABASE_FORMATS[] = {
        DatabaseFormat::SQLITE,
 };
 
-inline const std::string ADDRESS_BCRT1_UNSPENDABLE = "bcrt1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq3xueyj";
+inline const std::string ADDRESS_BCRT1_UNSPENDABLE = "ccrt1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqdwpa3f";
 
 std::unique_ptr<CWallet> CreateSyncedWallet(interfaces::Chain& chain, CChain& cchain, const CKey& key);
 
@@ -74,4 +74,4 @@ MockableSQLiteDatabase& GetMockableDatabase(CWallet& wallet);
 DescriptorScriptPubKeyMan* CreateDescriptor(CWallet& keystore, const std::string& desc_str, bool success);
 } // namespace wallet
 
-#endif // BITCOIN_WALLET_TEST_UTIL_H
+#endif // CONNECTCOIN_WALLET_TEST_UTIL_H

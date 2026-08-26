@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_NODE_TRANSACTION_H
-#define BITCOIN_NODE_TRANSACTION_H
+#ifndef CONNECTCOIN_NODE_TRANSACTION_H
+#define CONNECTCOIN_NODE_TRANSACTION_H
 
 #include <common/messages.h>
 #include <node/types.h>
@@ -73,4 +73,4 @@ inline constexpr CAmount DEFAULT_MAX_BURN_AMOUNT{0};
 CTransactionRef GetTransaction(const CBlockIndex* block_index, const CTxMemPool* mempool, const Txid& hash, const BlockManager& blockman, uint256& hashBlock);
 } // namespace node
 
-#endif // BITCOIN_NODE_TRANSACTION_H
+#endif // CONNECTCOIN_NODE_TRANSACTION_H

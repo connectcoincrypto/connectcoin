@@ -564,13 +564,13 @@ class ImportDescriptorsTest(BitcoinTestFramework):
         # Make sure ranged imports import keys in order
         w1 = self.nodes[1].get_wallet_rpc('w1')
         self.log.info('Key ranges should be imported in order')
-        xpub = "tpubDAXcJ7s7ZwicqjprRaEWdPoHKrCS215qxGYxpusRLLmJuT69ZSicuGdSfyvyKpvUNYBW1s2U3NSrT6vrCYB9e6nZUEvrqnwXPF8ArTCRXMY"
+        xpub = "tcubNGAWyooSz1gEzZ7bjuoShQ5oatED57KoWcMwkZZAgtZnnFwYdmT1pJLjeYY6b6NxGeJEk26pMrEKZCQ2uBCWKNSAyz8hn4yVJsRUMwWodtC"
         addresses = [
-            'bcrt1qtmp74ayg7p24uslctssvjm06q5phz4yrxucgnv', # m/0'/0'/0
-            'bcrt1q8vprchan07gzagd5e6v9wd7azyucksq2xc76k8', # m/0'/0'/1
-            'bcrt1qtuqdtha7zmqgcrr26n2rqxztv5y8rafjp9lulu', # m/0'/0'/2
-            'bcrt1qau64272ymawq26t90md6an0ps99qkrse58m640', # m/0'/0'/3
-            'bcrt1qsg97266hrh6cpmutqen8s4s962aryy77jp0fg0', # m/0'/0'/4
+            'ccrt1qtmp74ayg7p24uslctssvjm06q5phz4yrn755vf', # m/0'/0'/0
+            'ccrt1q8vprchan07gzagd5e6v9wd7azyucksq2n6jxfz', # m/0'/0'/1
+            'ccrt1qtuqdtha7zmqgcrr26n2rqxztv5y8rafj58nqqe', # m/0'/0'/2
+            'ccrt1qau64272ymawq26t90md6an0ps99qkrsep9hx22', # m/0'/0'/3
+            'ccrt1qsg97266hrh6cpmutqen8s4s962aryy778rr4h2', # m/0'/0'/4
         ]
 
         self.test_importdesc({'desc': descsum_create('wpkh([80002067/0h/0h]' + xpub + '/*)'),
@@ -643,7 +643,7 @@ class ImportDescriptorsTest(BitcoinTestFramework):
                               },
                              success=True)
         address = w1.getrawchangeaddress('legacy')
-        assert_equal(address, "mpA2Wh9dvZT7yfELq1UnrUmAoc5qCkMetg")
+        assert_equal(address, "TJcHDhSPGG8pMipMhiA8YiEyrQESXbX7kK")
 
         self.log.info('Check can deactivate active descriptor')
         self.test_importdesc({'desc': descsum_create('pkh([12345678]' + xpub + '/*)'),
@@ -661,8 +661,8 @@ class ImportDescriptorsTest(BitcoinTestFramework):
         assert_raises_rpc_error(-4, 'This wallet has no available keys', w1.getrawchangeaddress, 'legacy')
 
         # # Test importing a descriptor containing a WIF private key
-        wif_priv = "cTe1f5rdT8A8DFgVWTjyPwACsDPJM9ff4QngFxUixCSvvbg1x6sh"
-        address = "2MuhcG52uHPknxDgmGPsV18jSHFBnnRgjPg"
+        wif_priv = "TSGYnEskmkGjmgsdmqfVqKPVgi8WRd8K8Tnj8FLx11UWkQXFawR9"
+        address = "t9NzKaU2HwnLXK4naStVYUx9rSQhkCDzdj"
         desc = "sh(wpkh(" + wif_priv + "))"
         self.log.info("Should import a descriptor with a WIF private key as spendable")
         self.test_importdesc({"desc": descsum_create(desc),
@@ -997,7 +997,7 @@ class ImportDescriptorsTest(BitcoinTestFramework):
 
         encrypted_wallet.walletpassphrase("passphrase", 99999)
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as thread:
-            with self.nodes[0].assert_debug_log(expected_msgs=["Rescan started from block 0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206... (slow variant inspecting all blocks)"], timeout=10):
+            with self.nodes[0].assert_debug_log(expected_msgs=["Rescan started from block 79e876886fc96349e9979c0024589376c85a4a65a5b111ab85f7623ab9c72727... (slow variant inspecting all blocks)"], timeout=10):
                 importing = thread.submit(encrypted_wallet.importdescriptors, requests=[descriptor])
 
             # Set the passphrase timeout to 1 to test that the wallet remains unlocked during the rescan

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_TEST_UTIL_COINS_H
-#define BITCOIN_TEST_UTIL_COINS_H
+#ifndef CONNECTCOIN_TEST_UTIL_COINS_H
+#define CONNECTCOIN_TEST_UTIL_COINS_H
 
 #include <coins.h>
 #include <crypto/hex_base.h>
@@ -35,4 +35,4 @@ inline std::ostream& operator<<(std::ostream& os, const Coin& coin)
                            coin.IsSpent(), coin.fCoinBase, coin.nHeight, coin.out.nValue, HexStr(coin.out.scriptPubKey));
 }
 
-#endif // BITCOIN_TEST_UTIL_COINS_H
+#endif // CONNECTCOIN_TEST_UTIL_COINS_H

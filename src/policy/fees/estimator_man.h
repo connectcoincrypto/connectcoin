@@ -2,8 +2,8 @@
 // Distributed under the MIT software license. See the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_POLICY_FEES_ESTIMATOR_MAN_H
-#define BITCOIN_POLICY_FEES_ESTIMATOR_MAN_H
+#ifndef CONNECTCOIN_POLICY_FEES_ESTIMATOR_MAN_H
+#define CONNECTCOIN_POLICY_FEES_ESTIMATOR_MAN_H
 
 #include <policy/fees/block_policy_estimator.h>
 #include <policy/fees/mempool_estimator.h>
@@ -99,4 +99,4 @@ private:
     std::unique_ptr<MemPoolFeeRateEstimator> m_mempool_estimator;
 };
 
-#endif // BITCOIN_POLICY_FEES_ESTIMATOR_MAN_H
+#endif // CONNECTCOIN_POLICY_FEES_ESTIMATOR_MAN_H

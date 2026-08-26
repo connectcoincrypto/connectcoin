@@ -29,10 +29,10 @@ Pull requests that appear in violation of this can be closed without notice.
 If you wish to include context from an interaction with AI in your comments, it must be disclosed as such.
 It must be accompanied by human commentary explaining the relevance and implications of the context.
 
-Questions or proposed changes to this policy can be discussed in [bitcoin-core/meta].
+Questions or proposed changes to this policy should be discussed in the issue
+or pull-request facilities of the repository hosting this ConnectCoin tree.
 
 This policy was adapted from [ripgrep's AI policy], which was adapted from [uv's AI policy].
 
-[bitcoin-core/meta]: https://github.com/bitcoin-core/meta
 [ripgrep's ai policy]: https://github.com/BurntSushi/ripgrep/blob/f0cec341ab95c25c691ad3d5754d4bd9eedde21f/AI_POLICY.md
 [uv's ai policy]: https://github.com/astral-sh/.github/blob/c5187e200db51bfe11d56e13053d29bd3793fdd8/AI_POLICY.md

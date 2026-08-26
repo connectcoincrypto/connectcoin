@@ -6,8 +6,8 @@
 /**
  * Utilities for converting data from/to strings.
  */
-#ifndef BITCOIN_UTIL_STRENCODINGS_H
-#define BITCOIN_UTIL_STRENCODINGS_H
+#ifndef CONNECTCOIN_UTIL_STRENCODINGS_H
+#define CONNECTCOIN_UTIL_STRENCODINGS_H
 
 #include <span.h>
 #include <util/string.h>
@@ -400,4 +400,4 @@ inline auto operator""_hex_v_u8() { return std::vector<uint8_t>{UCharCast(str.by
 } // inline namespace hex_literals
 } // namespace util
 
-#endif // BITCOIN_UTIL_STRENCODINGS_H
+#endif // CONNECTCOIN_UTIL_STRENCODINGS_H

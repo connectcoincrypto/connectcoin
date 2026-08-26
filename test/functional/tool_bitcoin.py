@@ -2,17 +2,15 @@
 # Copyright (c) The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-"""Test the bitcoin wrapper tool."""
+"""Test the ConnectCoin wrapper tool."""
 from test_framework.test_framework import (
     BitcoinTestFramework,
-    SkipTest,
 )
 from test_framework.util import (
     append_config,
     assert_equal,
 )
 
-import platform
 import re
 
 
@@ -20,15 +18,6 @@ class ToolBitcoinTest(BitcoinTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1
-
-    def skip_test_if_missing_module(self):
-        # Skip test on windows because currently when `bitcoin node -version` is
-        # run on windows, python doesn't capture output from the child
-        # `bitcoind` and `bitcoin-node` process started with _wexecvp, and
-        # stdout/stderr are always empty. See
-        # https://github.com/bitcoin/bitcoin/pull/33229#issuecomment-3265524908
-        if platform.system() == "Windows":
-            raise SkipTest("Test does not currently work on windows")
 
     def setup_network(self):
         """Set up nodes normally, but save a copy of their arguments before starting them."""
@@ -39,10 +28,10 @@ class ToolBitcoinTest(BitcoinTestFramework):
             assert_equal(node.args[:len(node_argv)], node_argv)
 
     def set_cmd_args(self, node, args):
-        """Set up node so it will be started through bitcoin wrapper command with specified arguments."""
-        # Manually construct the `bitcoin node` command, similar to Binaries::node_argv()
-        bitcoin_cmd = node.binaries.valgrind_cmd + [node.binaries.paths.bitcoin_bin]
-        node.args = bitcoin_cmd + args + ["node"] + self.node_options[node.index]
+        """Set up node so it will be started through the ConnectCoin wrapper command."""
+        # Manually construct the `connectcoin node` command, similar to Binaries::node_argv()
+        connectcoin_cmd = node.binaries.valgrind_cmd + [node.binaries.paths.connectcoin]
+        node.args = connectcoin_cmd + args + ["node"] + self.node_options[node.index]
 
     def test_args(self, cmd_args, node_args, expect_exe=None, expect_error=None):
         node = self.nodes[0]
@@ -63,28 +52,28 @@ class ToolBitcoinTest(BitcoinTestFramework):
     def run_test(self):
         node = self.nodes[0]
 
-        self.log.info("Ensure bitcoin node command invokes bitcoind by default")
-        self.test_args([], [], expect_exe="bitcoind")
+        self.log.info("Ensure connectcoin node command invokes connectcoind by default")
+        self.test_args([], [], expect_exe="connectcoind")
 
-        self.log.info("Ensure bitcoin -M invokes bitcoind")
-        self.test_args(["-M"], [], expect_exe="bitcoind")
+        self.log.info("Ensure connectcoin -M invokes connectcoind")
+        self.test_args(["-M"], [], expect_exe="connectcoind")
 
-        self.log.info("Ensure bitcoin -M does not accept -ipcbind")
+        self.log.info("Ensure connectcoin -M does not accept -ipcbind")
         self.test_args(["-M"], ["-ipcbind=unix"], expect_error='Error: Error parsing command line arguments: Invalid parameter -ipcbind=unix')
 
         if self.is_ipc_compiled():
-            self.log.info("Ensure bitcoin -m invokes bitcoin-node")
-            self.test_args(["-m"], [], expect_exe="bitcoin-node")
+            self.log.info("Ensure connectcoin -m invokes connectcoin-node")
+            self.test_args(["-m"], [], expect_exe="connectcoin-node")
 
-            self.log.info("Ensure bitcoin -m does accept -ipcbind")
-            self.test_args(["-m"], ["-ipcbind=unix"], expect_exe="bitcoin-node")
+            self.log.info("Ensure connectcoin -m does accept -ipcbind")
+            self.test_args(["-m"], ["-ipcbind=unix"], expect_exe="connectcoin-node")
 
-            self.log.info("Ensure bitcoin accepts -ipcbind by default")
-            self.test_args([], ["-ipcbind=unix"], expect_exe="bitcoin-node")
+            self.log.info("Ensure connectcoin accepts -ipcbind by default")
+            self.test_args([], ["-ipcbind=unix"], expect_exe="connectcoin-node")
 
-            self.log.info("Ensure bitcoin recognizes -ipcbind in config file")
+            self.log.info("Ensure connectcoin recognizes -ipcbind in config file")
             append_config(node.datadir_path, ["ipcbind=unix"])
-            self.test_args([], [], expect_exe="bitcoin-node")
+            self.test_args([], [], expect_exe="connectcoin-node")
 
 
 def get_node_output(node):

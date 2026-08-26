@@ -3,7 +3,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-""" Example logging Bitcoin Core mempool events using the mempool:added,
+""" Example logging ConnectCoin Core mempool events using the mempool:added,
     mempool:removed, mempool:replaced, and mempool:rejected tracepoints. """
 
 import curses
@@ -121,16 +121,16 @@ int trace_replaced(struct pt_regs *ctx) {
 
 
 def main(pid):
-    print(f"Hooking into bitcoind with pid {pid}")
-    bitcoind_with_usdts = USDT(pid=int(pid))
+    print(f"Hooking into connectcoind with pid {pid}")
+    connectcoind_with_usdts = USDT(pid=int(pid))
 
     # attaching the trace functions defined in the BPF program
     # to the tracepoints
-    bitcoind_with_usdts.enable_probe(probe="mempool:added", fn_name="trace_added")
-    bitcoind_with_usdts.enable_probe(probe="mempool:removed", fn_name="trace_removed")
-    bitcoind_with_usdts.enable_probe(probe="mempool:replaced", fn_name="trace_replaced")
-    bitcoind_with_usdts.enable_probe(probe="mempool:rejected", fn_name="trace_rejected")
-    bpf = BPF(text=PROGRAM, usdt_contexts=[bitcoind_with_usdts])
+    connectcoind_with_usdts.enable_probe(probe="mempool:added", fn_name="trace_added")
+    connectcoind_with_usdts.enable_probe(probe="mempool:removed", fn_name="trace_removed")
+    connectcoind_with_usdts.enable_probe(probe="mempool:replaced", fn_name="trace_replaced")
+    connectcoind_with_usdts.enable_probe(probe="mempool:rejected", fn_name="trace_rejected")
+    bpf = BPF(text=PROGRAM, usdt_contexts=[connectcoind_with_usdts])
 
     events = []
 
@@ -332,15 +332,15 @@ class Dashboard:
         if type_ == "added":
             return (
                 f"{ts} added {bytes(data.hash)[::-1].hex()}"
-                f" with feerate {data.fee/data.vsize:.2f} sat/vB"
-                f" ({data.fee} sat, {data.vsize} vbytes)"
+                f" with feerate {data.fee/data.vsize:.2f} con/vB"
+                f" ({data.fee} con, {data.vsize} vbytes)"
             )
 
         if type_ == "removed":
             return (
                 f"{ts} removed {bytes(data.hash)[::-1].hex()}"
-                f" with feerate {data.fee/data.vsize:.2f} sat/vB"
-                f" ({data.fee} sat, {data.vsize} vbytes)"
+                f" with feerate {data.fee/data.vsize:.2f} con/vB"
+                f" ({data.fee} con, {data.vsize} vbytes)"
                 f" received {ts_dt.timestamp()-data.entry_time:.1f} seconds ago"
                 f": {data.reason.decode('UTF-8')}"
             )
@@ -354,12 +354,12 @@ class Dashboard:
         if type_ == "replaced":
             return (
                 f"{ts} replaced {bytes(data.replaced_hash)[::-1].hex()}"
-                f" with feerate {data.replaced_fee/data.replaced_vsize:.2f} sat/vB"
+                f" with feerate {data.replaced_fee/data.replaced_vsize:.2f} con/vB"
                 f" received {ts_dt.timestamp()-data.replaced_entry_time:.1f} seconds ago"
-                f" ({data.replaced_fee} sat, {data.replaced_vsize} vbytes)"
+                f" ({data.replaced_fee} con, {data.replaced_vsize} vbytes)"
                 f" with {bytes(data.replacement_hash)[::-1].hex()}"
-                f" with feerate {data.replacement_fee/data.replacement_vsize:.2f} sat/vB"
-                f" ({data.replacement_fee} sat, {data.replacement_vsize} vbytes)"
+                f" with feerate {data.replacement_fee/data.replacement_vsize:.2f} con/vB"
+                f" ({data.replacement_fee} con, {data.replacement_vsize} vbytes)"
             )
 
         raise NotImplementedError("Unsupported event type: {type_}")
@@ -372,7 +372,7 @@ class Dashboard:
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("USAGE: ", sys.argv[0], "<pid of bitcoind>")
+        print("USAGE: ", sys.argv[0], "<pid of connectcoind>")
         exit(1)
 
     pid = sys.argv[1]

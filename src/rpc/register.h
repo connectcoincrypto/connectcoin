@@ -2,10 +2,10 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_RPC_REGISTER_H
-#define BITCOIN_RPC_REGISTER_H
+#ifndef CONNECTCOIN_RPC_REGISTER_H
+#define CONNECTCOIN_RPC_REGISTER_H
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 /** These are in one header file to avoid creating tons of single-function
  * headers for everything under src/rpc/ */
@@ -40,4 +40,4 @@ static inline void RegisterAllCoreRPCCommands(CRPCTable &t)
     RegisterTxoutProofRPCCommands(t);
 }
 
-#endif // BITCOIN_RPC_REGISTER_H
+#endif // CONNECTCOIN_RPC_REGISTER_H

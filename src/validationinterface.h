@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_VALIDATIONINTERFACE_H
-#define BITCOIN_VALIDATIONINTERFACE_H
+#ifndef CONNECTCOIN_VALIDATIONINTERFACE_H
+#define CONNECTCOIN_VALIDATIONINTERFACE_H
 
 #include <kernel/cs_main.h>
 #include <primitives/transaction.h>
@@ -233,4 +233,4 @@ public:
     void NewPoWValidBlock(const CBlockIndex *, const std::shared_ptr<const CBlock>&);
 };
 
-#endif // BITCOIN_VALIDATIONINTERFACE_H
+#endif // CONNECTCOIN_VALIDATIONINTERFACE_H

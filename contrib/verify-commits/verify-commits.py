@@ -2,7 +2,7 @@
 # Copyright (c) 2018-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-"""Verify commits against a trusted keys list."""
+"""Verify commits against a trusted keys list when project trust is configured."""
 import argparse
 import hashlib
 import logging
@@ -97,8 +97,16 @@ def main():
     parser.add_argument('commit', nargs='?', default='HEAD', help='Check clean merge up to commit <commit>')
     args = parser.parse_args()
 
-    # get directory of this program and read data files
+    # Get the directory of this program and refuse to apply inherited trust
+    # data as though it were a ConnectCoin policy.
     dirname = Path(__file__).absolute().parent
+    disabled_path = dirname / "connectcoin-policy-disabled"
+    if disabled_path.exists():
+        print(disabled_path.read_text(encoding="utf-8").strip(), file=sys.stderr)
+        sys.exit(1)
+
+    # Read project-owned trust data only after the explicit disable marker has
+    # been removed as part of establishing a ConnectCoin signing policy.
     print(f"Using verify-commits data from {dirname}")
     verified_root = (dirname / "trusted-git-root").read_text().splitlines()[0]
     verified_sha512_root = (dirname / "trusted-sha512-root-commit").read_text().splitlines()[0]
@@ -143,7 +151,7 @@ def main():
                 no_sha1 = False
 
 
-        os.environ['BITCOIN_VERIFY_COMMITS_ALLOW_SHA1'] = "0" if no_sha1 else "1"
+        os.environ['CONNECTCOIN_VERIFY_COMMITS_ALLOW_SHA1'] = "0" if no_sha1 else "1"
         allow_revsig = current_commit in revsig_allowed
 
         # Check that the commit (and parents) was signed with a trusted key

@@ -22,7 +22,7 @@ import sys
 import tempfile
 import time
 
-from .address import create_deterministic_address_bcrt1_p2tr_op_true
+from .address import create_deterministic_address_ccrt1_p2tr_op_true
 from . import coverage
 from .messages import CAddress
 from .p2p import NetworkThread
@@ -54,7 +54,7 @@ TEST_EXIT_PASSED = 0
 TEST_EXIT_FAILED = 1
 TEST_EXIT_SKIPPED = 77
 
-TMPDIR_PREFIX = "bitcoin_func_test_"
+TMPDIR_PREFIX = "connectcoin_func_test_"
 
 
 class SkipTest(Exception):
@@ -85,9 +85,9 @@ class BitcoinTestMetaClass(type):
 
 
 class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
-    """Base class for a bitcoin test script.
+    """Base class for a ConnectCoin test script.
 
-    Individual bitcoin test scripts should subclass this class and override the set_test_params() and run_test() methods.
+    Individual ConnectCoin test scripts should subclass this class and override the set_test_params() and run_test() methods.
 
     Individual tests can also override the following methods to customize the test setup:
 
@@ -170,7 +170,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
         previous_releases_path = os.getenv("PREVIOUS_RELEASES_DIR") or os.getcwd() + "/releases"
         parser = argparse.ArgumentParser(usage="%(prog)s [options]")
         parser.add_argument("--nocleanup", dest="nocleanup", default=False, action="store_true",
-                            help="Leave bitcoinds and test.* datadir on exit or error")
+                            help="Leave connectcoinds and test.* datadir on exit or error")
         parser.add_argument("--cachedir", dest="cachedir", default=os.path.abspath(os.path.dirname(test_file) + "/../cache"),
                             help="Directory for caching pregenerated datadirs (default: %(default)s)")
         parser.add_argument("--tmpdir", dest="tmpdir", help="Root directory for datadirs (must not exist)")
@@ -181,8 +181,8 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
         parser.add_argument("--portseed", dest="port_seed", default=os.getpid(), type=int,
                             help="The seed to use for assigning port numbers (default: current process id)")
         parser.add_argument("--previous-releases", dest="prev_releases", action="store_true",
-                            default=os.path.isdir(previous_releases_path) and bool(os.listdir(previous_releases_path)),
-                            help="Force test of previous releases (default: %(default)s). Previous releases binaries can be downloaded via `test/get_previous_releases.py`.")
+                            default=False,
+                            help="Enable previous-release compatibility tests explicitly (default: %(default)s). Do not use inherited Bitcoin Core binaries as ConnectCoin compatibility targets.")
         parser.add_argument("--coveragedir", dest="coveragedir",
                             help="Write tested RPC commands into this directory")
         parser.add_argument("--configfile", dest="configfile",
@@ -191,7 +191,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
         parser.add_argument("--pdbonfailure", dest="pdbonfailure", default=False, action="store_true",
                             help="Attach a python debugger if test fails")
         parser.add_argument("--usecli", dest="usecli", default=False, action="store_true",
-                            help="use bitcoin-cli instead of RPC for all commands")
+                            help="use connectcoin-cli instead of RPC for all commands")
         parser.add_argument("--valgrind", dest="valgrind", default=False, action="store_true",
                             help="Run binaries under the valgrind memory error detector: Expect at least a ~10x slowdown. Does not apply to previous release binaries.")
         parser.add_argument("--randomseed", type=int,
@@ -491,7 +491,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
                 test_node_i.replace_in_config([('[regtest]', '')])
 
     def start_node(self, i, *args, **kwargs):
-        """Start a bitcoind"""
+        """Start a connectcoind"""
 
         node = self.nodes[i]
 
@@ -502,7 +502,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
             coverage.write_all_rpc_commands(self.options.coveragedir, node._rpc)
 
     def start_nodes(self, extra_args=None, *args, **kwargs):
-        """Start multiple bitcoinds"""
+        """Start multiple connectcoinds"""
 
         if extra_args is None:
             extra_args = [None] * self.num_nodes
@@ -517,11 +517,11 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
                 coverage.write_all_rpc_commands(self.options.coveragedir, node._rpc)
 
     def stop_node(self, i, expected_stderr='', wait=0):
-        """Stop a bitcoind test node"""
+        """Stop a connectcoind test node"""
         self.nodes[i].stop_node(expected_stderr, wait=wait)
 
     def stop_nodes(self, wait=0):
-        """Stop multiple bitcoind test nodes"""
+        """Stop multiple connectcoind test nodes"""
         for node in self.nodes:
             # Issue RPC to stop nodes
             node.stop_node(wait=wait, wait_until_stopped=False)
@@ -678,7 +678,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
         return blocks
 
     def create_outpoints(self, node, *, outputs):
-        """Send funds to a given list of `{address: amount}` targets using the bitcoind
+        """Send funds to a given list of `{address: amount}` targets using the connectcoind
         wallet and return the corresponding outpoints as a list of dictionaries
         `[{"txid": txid, "vout": vout1}, {"txid": txid, "vout": vout2}, ...]`.
         The result can be used to specify inputs for RPCs like `createrawtransaction`,
@@ -880,7 +880,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
         ll = int(self.options.loglevel) if self.options.loglevel.isdigit() else self.options.loglevel.upper()
         ch.setLevel(ll)
 
-        # Format logs the same as bitcoind's debug.log with microprecision (so log files can be concatenated and sorted)
+        # Format logs the same as connectcoind's debug.log with microprecision (so log files can be concatenated and sorted)
         class MicrosecondFormatter(logging.Formatter):
             def formatTime(self, record, _=None):
                 dt = datetime.fromtimestamp(record.created, timezone.utc)
@@ -946,7 +946,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
             # block in the cache does not age too much (have an old tip age).
             # This is needed so that we are out of IBD when the test starts,
             # see the tip age check in IsInitialBlockDownload().
-            gen_addresses = [k.address for k in TestNode.PRIV_KEYS][:3] + [create_deterministic_address_bcrt1_p2tr_op_true()[0]]
+            gen_addresses = [k.address for k in TestNode.PRIV_KEYS][:3] + [create_deterministic_address_ccrt1_p2tr_op_true()[0]]
             assert_equal(len(gen_addresses), 4)
             for i in range(8):
                 self.generatetoaddress(
@@ -974,7 +974,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
             self.log.debug("Copy cache directory {} to node {}".format(cache_node_dir, i))
             to_dir = get_datadir_path(self.options.tmpdir, i)
             shutil.copytree(cache_node_dir, to_dir)
-            initialize_datadir(self.options.tmpdir, i, self.chain, self.disable_autoconnect)  # Overwrite port/rpcport in bitcoin.conf
+            initialize_datadir(self.options.tmpdir, i, self.chain, self.disable_autoconnect)  # Overwrite port/rpcport in connectcoin.conf
 
     def _initialize_chain_clean(self):
         """Initialize empty blockchain for use by the test.
@@ -1012,10 +1012,10 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
         except ImportError:
             raise SkipTest("bcc python module not available")
 
-    def skip_if_no_bitcoind_tracepoints(self):
-        """Skip the running test if bitcoind has not been compiled with USDT tracepoint support."""
+    def skip_if_no_connectcoind_tracepoints(self):
+        """Skip the running test if connectcoind has not been compiled with USDT tracepoint support."""
         if not self.is_usdt_compiled():
-            raise SkipTest("bitcoind has not been built with USDT tracepoints enabled.")
+            raise SkipTest("connectcoind has not been built with USDT tracepoints enabled.")
 
     def skip_if_no_bpf_permissions(self):
         """Skip the running test if we don't have permissions to do BPF syscalls and load BPF maps."""
@@ -1038,10 +1038,10 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
         if os.name != 'posix':
             raise SkipTest("not on a POSIX system")
 
-    def skip_if_no_bitcoind_zmq(self):
-        """Skip the running test if bitcoind has not been compiled with zmq support."""
+    def skip_if_no_connectcoind_zmq(self):
+        """Skip the running test if connectcoind has not been compiled with zmq support."""
         if not self.is_zmq_compiled():
-            raise SkipTest("bitcoind has not been built with zmq enabled.")
+            raise SkipTest("connectcoind has not been built with zmq enabled.")
 
     def skip_if_no_wallet(self):
         """Skip the running test if wallet has not been compiled."""
@@ -1050,34 +1050,34 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
             raise SkipTest("wallet has not been compiled.")
 
     def skip_if_no_wallet_tool(self):
-        """Skip the running test if bitcoin-wallet has not been compiled."""
+        """Skip the running test if connectcoin-wallet has not been compiled."""
         if not self.is_wallet_tool_compiled():
-            raise SkipTest("bitcoin-wallet has not been compiled")
+            raise SkipTest("connectcoin-wallet has not been compiled")
 
-    def skip_if_no_bitcoin_tx(self):
-        """Skip the running test if bitcoin-tx has not been compiled."""
-        if not self.is_bitcoin_tx_compiled():
-            raise SkipTest("bitcoin-tx has not been compiled")
+    def skip_if_no_connectcoin_tx(self):
+        """Skip the running test if connectcoin-tx has not been compiled."""
+        if not self.is_connectcoin_tx_compiled():
+            raise SkipTest("connectcoin-tx has not been compiled")
 
-    def skip_if_no_bitcoin_util(self):
-        """Skip the running test if bitcoin-util has not been compiled."""
-        if not self.is_bitcoin_util_compiled():
-            raise SkipTest("bitcoin-util has not been compiled")
+    def skip_if_no_connectcoin_util(self):
+        """Skip the running test if connectcoin-util has not been compiled."""
+        if not self.is_connectcoin_util_compiled():
+            raise SkipTest("connectcoin-util has not been compiled")
 
-    def skip_if_no_bitcoin_chainstate(self):
-        """Skip the running test if bitcoin-chainstate has not been compiled."""
-        if not self.is_bitcoin_chainstate_compiled():
-            raise SkipTest("bitcoin-chainstate has not been compiled")
+    def skip_if_no_connectcoin_chainstate(self):
+        """Skip the running test if connectcoin-chainstate has not been compiled."""
+        if not self.is_connectcoin_chainstate_compiled():
+            raise SkipTest("connectcoin-chainstate has not been compiled")
 
-    def skip_if_no_bitcoin_bench(self):
-        """Skip the running test if bench_bitcoin has not been compiled."""
+    def skip_if_no_connectcoin_bench(self):
+        """Skip the running test if connectcoin-bench has not been compiled."""
         if not self.is_bench_compiled():
-            raise SkipTest("bench_bitcoin has not been compiled")
+            raise SkipTest("connectcoin-bench has not been compiled")
 
     def skip_if_no_cli(self):
-        """Skip the running test if bitcoin-cli has not been compiled."""
+        """Skip the running test if connectcoin-cli has not been compiled."""
         if not self.is_cli_compiled():
-            raise SkipTest("bitcoin-cli has not been compiled.")
+            raise SkipTest("connectcoin-cli has not been compiled.")
 
     def skip_if_no_ipc(self):
         """Skip the running test if ipc is not compiled."""
@@ -1110,7 +1110,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
         if not os.path.isdir(self.options.previous_releases_path):
             if self.options.prev_releases:
                 raise AssertionError(f"Force test of previous releases but releases missing: {self.options.previous_releases_path}\n"
-                                     "Previous releases binaries can be downloaded via `test/get_previous_releases.py`.")
+                                     "Only project-owned ConnectCoin release binaries are valid compatibility targets.")
         return self.options.prev_releases
 
     def skip_if_no_external_signer(self):
@@ -1124,11 +1124,11 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
             raise SkipTest("This test is not compatible with Valgrind.")
 
     def is_bench_compiled(self):
-        """Checks whether bench_bitcoin was compiled."""
+        """Checks whether connectcoin-bench was compiled."""
         return self.config.getboolean("components", "BUILD_BENCH")
 
     def is_cli_compiled(self):
-        """Checks whether bitcoin-cli was compiled."""
+        """Checks whether connectcoin-cli was compiled."""
         return self.config.getboolean("components", "ENABLE_CLI")
 
     def is_external_signer_compiled(self):
@@ -1140,20 +1140,20 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
         return self.config.getboolean("components", "ENABLE_WALLET")
 
     def is_wallet_tool_compiled(self):
-        """Checks whether bitcoin-wallet was compiled."""
+        """Checks whether connectcoin-wallet was compiled."""
         return self.config.getboolean("components", "ENABLE_WALLET_TOOL")
 
-    def is_bitcoin_tx_compiled(self):
-        """Checks whether bitcoin-tx was compiled."""
-        return self.config.getboolean("components", "BUILD_BITCOIN_TX")
+    def is_connectcoin_tx_compiled(self):
+        """Checks whether connectcoin-tx was compiled."""
+        return self.config.getboolean("components", "BUILD_CONNECTCOIN_TX")
 
-    def is_bitcoin_util_compiled(self):
-        """Checks whether bitcoin-util was compiled."""
-        return self.config.getboolean("components", "ENABLE_BITCOIN_UTIL")
+    def is_connectcoin_util_compiled(self):
+        """Checks whether connectcoin-util was compiled."""
+        return self.config.getboolean("components", "ENABLE_CONNECTCOIN_UTIL")
 
-    def is_bitcoin_chainstate_compiled(self):
-        """Checks whether bitcoin-chainstate was compiled."""
-        return self.config.getboolean("components", "ENABLE_BITCOIN_CHAINSTATE")
+    def is_connectcoin_chainstate_compiled(self):
+        """Checks whether connectcoin-chainstate was compiled."""
+        return self.config.getboolean("components", "ENABLE_CONNECTCOIN_CHAINSTATE")
 
     def is_zmq_compiled(self):
         """Checks whether the zmq module was compiled."""

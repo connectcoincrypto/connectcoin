@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_VALIDATION_H
-#define BITCOIN_VALIDATION_H
+#ifndef CONNECTCOIN_VALIDATION_H
+#define CONNECTCOIN_VALIDATION_H
 
 #include <arith_uint256.h>
 #include <attributes.h>
@@ -149,7 +149,7 @@ struct MempoolAcceptResult {
     const std::list<CTransactionRef> m_replaced_transactions;
     /** Virtual size as used by the mempool, calculated using serialized size and sigops. */
     const std::optional<int64_t> m_vsize;
-    /** Raw base fees in satoshis. */
+    /** Raw base fees in connects. */
     const std::optional<CAmount> m_base_fees;
     /** The feerate at which this transaction was considered. This includes any fee delta added
      * using prioritisetransaction (i.e. modified fees). If this transaction was submitted as a
@@ -1419,4 +1419,4 @@ bool IsBIP30Unspendable(const uint256& block_hash, int block_height);
 // Returns the script flags which should be checked for a given block
 script_verify_flags GetBlockScriptFlags(const CBlockIndex& block_index, const ChainstateManager& chainman);
 
-#endif // BITCOIN_VALIDATION_H
+#endif // CONNECTCOIN_VALIDATION_H

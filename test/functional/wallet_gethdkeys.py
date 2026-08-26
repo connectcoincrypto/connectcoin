@@ -111,7 +111,7 @@ class WalletGetHDKeyTest(BitcoinTestFramework):
         wallet = self.nodes[0].get_wallet_rpc("lonekey")
 
         assert_equal(wallet.gethdkeys(), [])
-        wallet.importdescriptors([{"desc": descsum_create("wpkh(cTe1f5rdT8A8DFgVWTjyPwACsDPJM9ff4QngFxUixCSvvbg1x6sh)"), "timestamp": "now"}])
+        wallet.importdescriptors([{"desc": descsum_create("wpkh(TSGYnEskmkGjmgsdmqfVqKPVgi8WRd8K8Tnj8FLx11UWkQXFawR9)"), "timestamp": "now"}])
         assert_equal(wallet.gethdkeys(), [])
 
         self.log.info("HD keys of non-ranged descriptors should appear in gethdkeys")

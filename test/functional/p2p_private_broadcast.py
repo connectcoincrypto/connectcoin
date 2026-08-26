@@ -237,9 +237,9 @@ class P2PPrivateBroadcast(BitcoinTestFramework):
         far_observer = tx_receiver.add_p2p_connection(P2PInterface())
 
         self.log.info("Test getprivatebroadcastinfo and abortprivatebroadcast fails if the node is running without -privatebroadcast set")
-        assert_raises_rpc_error(-32601, "Private broadcast is not enabled. Ensure you're running Bitcoin Core with -privatebroadcast=1.",
+        assert_raises_rpc_error(-32601, "Private broadcast is not enabled. Ensure you're running ConnectCoin Core with -privatebroadcast=1.",
             tx_receiver.getprivatebroadcastinfo)
-        assert_raises_rpc_error(-32601, "Private broadcast is not enabled. Ensure you're running Bitcoin Core with -privatebroadcast=1.",
+        assert_raises_rpc_error(-32601, "Private broadcast is not enabled. Ensure you're running ConnectCoin Core with -privatebroadcast=1.",
             tx_receiver.abortprivatebroadcast, "00" * 32)
 
         self.fill_node_addrman(node_index=0, address_types_to_add=[CAddress.NET_IPV4, CAddress.NET_IPV6, CAddress.NET_TORV3, CAddress.NET_I2P, CAddress.NET_CJDNS])
@@ -405,7 +405,7 @@ class P2PPrivateBroadcast(BitcoinTestFramework):
             self.no_relay_peer.wait_for_disconnect()
         assert_equal(self.no_relay_peer.message_count, {"version": 1})
 
-        # Stop the SOCKS5 proxy server to avoid it being upset by the bitcoin
+        # Stop the SOCKS5 proxy server to avoid it being upset by the ConnectCoin
         # node disconnecting in the middle of the SOCKS5 handshake when we
         # restart below.
         self.socks5_server.stop()
@@ -415,7 +415,7 @@ class P2PPrivateBroadcast(BitcoinTestFramework):
             "-privatebroadcast",
             "-v2transport=0",
             # A location where definitely a Tor control is not listening. This would allow
-            # Bitcoin Core to start, hoping/assuming that the location of the Tor proxy
+            # ConnectCoin Core to start, hoping/assuming that the location of the Tor proxy
             # may be retrieved after startup from the Tor control, but it will not be, so
             # the RPC should throw.
             "-torcontrol=127.0.0.1:1",

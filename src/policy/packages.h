@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_POLICY_PACKAGES_H
-#define BITCOIN_POLICY_PACKAGES_H
+#ifndef CONNECTCOIN_POLICY_PACKAGES_H
+#define CONNECTCOIN_POLICY_PACKAGES_H
 
 #include <consensus/consensus.h>
 #include <consensus/validation.h>
@@ -89,4 +89,4 @@ bool IsChildWithParentsTree(const Package& package);
  */
 uint256 GetPackageHash(const std::vector<CTransactionRef>& transactions);
 
-#endif // BITCOIN_POLICY_PACKAGES_H
+#endif // CONNECTCOIN_POLICY_PACKAGES_H

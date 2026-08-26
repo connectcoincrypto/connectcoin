@@ -105,7 +105,7 @@ def main():
         logging.error("Must have fuzz executable built")
         sys.exit(1)
 
-    fuzz_bin=os.getenv("BITCOINFUZZ", default=os.path.join(config["environment"]["BUILDDIR"], 'bin', 'fuzz'))
+    fuzz_bin=os.getenv("CONNECTCOINFUZZ", default=os.path.join(config["environment"]["BUILDDIR"], 'bin', 'fuzz'))
 
     # Build list of tests
     test_list_all = parse_test_list(
@@ -149,7 +149,10 @@ def main():
                     " ".join(test_list_missing_corpus)
                 )
             )
-            logging.info("Please consider adding a fuzz corpus at https://github.com/bitcoin-core/qa-assets")
+            logging.info(
+                "Retain new ConnectCoin-specific corpora with the project issue or "
+                "pull request until a project-owned corpus repository exists"
+            )
 
     print("Check if using libFuzzer ... ", end='')
     help_output = subprocess.run(

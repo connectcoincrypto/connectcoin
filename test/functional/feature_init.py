@@ -14,7 +14,7 @@ import subprocess
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.test_node import (
-    BITCOIN_PID_FILENAME_DEFAULT,
+    CONNECTCOIN_PID_FILENAME_DEFAULT,
     ErrorMatch,
 )
 from test_framework.util import assert_equal
@@ -58,7 +58,7 @@ class InitTest(BitcoinTestFramework):
             if platform.system() == 'Windows':
                 # Don't call Python's terminate() since it calls
                 # TerminateProcess(), which unlike SIGTERM doesn't allow
-                # bitcoind to perform any shutdown logic.
+                # connectcoind to perform any shutdown logic.
                 os.kill(node.process.pid, signal.CTRL_BREAK_EVENT)
             else:
                 node.process.terminate()
@@ -251,22 +251,22 @@ class InitTest(BitcoinTestFramework):
                 shutil.move(node.chain_path / f"{dir}_bak", node.chain_path / dir)
 
     def init_pid_test(self):
-        BITCOIN_PID_FILENAME_CUSTOM = "my_fancy_bitcoin_pid_file.foobar"
+        CONNECTCOIN_PID_FILENAME_CUSTOM = "my_fancy_connectcoin_pid_file.foobar"
 
         self.log.info("Test specifying custom pid file via -pid command line option")
-        custom_pidfile_relative = BITCOIN_PID_FILENAME_CUSTOM
+        custom_pidfile_relative = CONNECTCOIN_PID_FILENAME_CUSTOM
         self.log.info(f"-> path relative to datadir ({custom_pidfile_relative})")
         self.restart_node(0, [f"-pid={custom_pidfile_relative}"])
         datadir = self.nodes[0].chain_path
-        assert not (datadir / BITCOIN_PID_FILENAME_DEFAULT).exists()
+        assert not (datadir / CONNECTCOIN_PID_FILENAME_DEFAULT).exists()
         assert (datadir / custom_pidfile_relative).exists()
         self.stop_node(0)
         assert not (datadir / custom_pidfile_relative).exists()
 
-        custom_pidfile_absolute = Path(self.options.tmpdir) / BITCOIN_PID_FILENAME_CUSTOM
+        custom_pidfile_absolute = Path(self.options.tmpdir) / CONNECTCOIN_PID_FILENAME_CUSTOM
         self.log.info(f"-> absolute path ({custom_pidfile_absolute})")
         self.restart_node(0, [f"-pid={custom_pidfile_absolute}"])
-        assert not (datadir / BITCOIN_PID_FILENAME_DEFAULT).exists()
+        assert not (datadir / CONNECTCOIN_PID_FILENAME_DEFAULT).exists()
         assert custom_pidfile_absolute.exists()
         self.stop_node(0)
         assert not custom_pidfile_absolute.exists()
@@ -346,7 +346,7 @@ class InitTest(BitcoinTestFramework):
             self.log.debug(f"Restored previous RLIMIT_NOFILE limits (soft={soft}, hard={hard})")
 
     def init_rlimit_test(self):
-        """Test that bitcoind starts correctly when the soft RLIMIT_NOFILE limit is RLIM_INFINITY."""
+        """Test that connectcoind starts correctly when the soft RLIMIT_NOFILE limit is RLIM_INFINITY."""
         if self.RLIM_INFINITY is None:
             self.log.info("Skipping: resource module not available")
             return
@@ -355,7 +355,7 @@ class InitTest(BitcoinTestFramework):
         self.restart_node_with_fd_limit(self.RLIM_INFINITY)
 
     def init_rlimit_large_test(self):
-        """Test that bitcoind starts correctly when the soft RLIMIT_NOFILE limit is above INT_MAX."""
+        """Test that connectcoind starts correctly when the soft RLIMIT_NOFILE limit is above INT_MAX."""
         if self.RLIM_INFINITY is None:
             self.log.info("Skipping: resource module not available")
             return

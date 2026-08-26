@@ -35,14 +35,21 @@ def main():
     exit_code = 0
 
     os.chdir(CODE_DIR)
-    files = subprocess.check_output(
-        ['git', 'ls-files', '--', '*.h', '*.cpp'],
-        text=True,
-    ).splitlines()
+    files = [
+        path for path in subprocess.check_output(
+            ['git', 'ls-files', '--cached', '--others', '--exclude-standard', '--', '*.h', '*.cpp'],
+            text=True,
+        ).splitlines()
+        if os.path.isfile(path)
+    ]
 
-    command = [sys.executable, "../contrib/devtools/circular-dependencies.py", *files]
+    # Passing every source path as a command-line argument exceeds the Windows
+    # command-line length limit. The checker accepts "-" to read the list from
+    # standard input, which works consistently on all supported hosts.
+    command = [sys.executable, "../contrib/devtools/circular-dependencies.py", "-"]
     dependencies_output = subprocess.run(
         command,
+        input="\n".join(files),
         stdout=subprocess.PIPE,
         text=True,
     )

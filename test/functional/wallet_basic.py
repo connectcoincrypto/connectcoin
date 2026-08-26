@@ -283,7 +283,7 @@ class WalletTest(BitcoinTestFramework):
         assert_equal(self.nodes[0].getreceivedbyaddress(a0), expected_bal)
         assert_equal(self.nodes[0].getreceivedbyaddress(a1), expected_bal)
 
-        self.log.info("Test sendmany with fee_rate param (explicit fee rate in sat/vB)")
+        self.log.info("Test sendmany with fee_rate param (explicit fee rate in con/vB)")
         fee_rate_sat_vb = 2
         fee_rate_btc_kvb = fee_rate_sat_vb * 1e3 / 1e8
         explicit_fee_rate_btc_kvb = Decimal(fee_rate_btc_kvb) / 1000
@@ -311,19 +311,19 @@ class WalletTest(BitcoinTestFramework):
 
         # Test setting explicit fee rate just below the minimum.
         self.log.info("Test sendmany raises 'fee rate too low' if fee_rate of 0.99999999 is passed")
-        assert_raises_rpc_error(-6, "Fee rate (0.999 sat/vB) is lower than the minimum fee rate setting (1.000 sat/vB)",
+        assert_raises_rpc_error(-6, "Fee rate (0.999 con/vB) is lower than the minimum fee rate setting (1.000 con/vB)",
             self.nodes[2].sendmany, amounts={address: 10}, fee_rate=0.999)
 
         self.log.info("Test sendmany raises if an invalid fee_rate is passed")
         # Test fee_rate with zero values.
-        msg = "Fee rate (0.000 sat/vB) is lower than the minimum fee rate setting (1.000 sat/vB)"
+        msg = "Fee rate (0.000 con/vB) is lower than the minimum fee rate setting (1.000 con/vB)"
         for zero_value in [0, 0.000, 0.00000000, "0", "0.000", "0.00000000"]:
             assert_raises_rpc_error(-6, msg, self.nodes[2].sendmany, amounts={address: 1}, fee_rate=zero_value)
         msg = "Invalid amount"
         # Test fee_rate values that don't pass fixed-point parsing checks.
         for invalid_value in ["", 0.000000001, 1e-09, 1.111111111, 1111111111111111, "31.999999999999999999999"]:
             assert_raises_rpc_error(-3, msg, self.nodes[2].sendmany, amounts={address: 1.0}, fee_rate=invalid_value)
-        # Test fee_rate values that cannot be represented in sat/vB.
+        # Test fee_rate values that cannot be represented in con/vB.
         for invalid_value in [0.0001, 0.00000001, 0.00099999, 31.99999999]:
             assert_raises_rpc_error(-3, msg, self.nodes[2].sendmany, amounts={address: 10}, fee_rate=invalid_value)
         # Test fee_rate out of range (negative number).
@@ -527,9 +527,9 @@ class WalletTest(BitcoinTestFramework):
         assert_equal(total_txs, len(self.nodes[0].listtransactions("*", 99999)))
 
         # Test getaddressinfo on external address. Note that these addresses are taken from disablewallet.py
-        assert_raises_rpc_error(-5, "Invalid or unsupported Base58-encoded address.", self.nodes[0].getaddressinfo, "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy")
-        address_info = self.nodes[0].getaddressinfo("mneYUmWYsuk7kySiURxCi3AGxrAqZxLgPZ")
-        assert_equal(address_info['address'], "mneYUmWYsuk7kySiURxCi3AGxrAqZxLgPZ")
+        assert_raises_rpc_error(-5, "Invalid or unsupported Base58-encoded address.", self.nodes[0].getaddressinfo, "cHrbcuxSTM6tFvCWw7xkd5JE8DvBiR8tDR")
+        address_info = self.nodes[0].getaddressinfo("TH6oBmoJDcRp932jM8dYQGe61eKSou51Qn")
+        assert_equal(address_info['address'], "TH6oBmoJDcRp932jM8dYQGe61eKSou51Qn")
         assert_equal(address_info["scriptPubKey"], "76a9144e3854046c7bd1594ac904e4793b6a45b36dea0988ac")
         assert not address_info["ismine"]
         assert not address_info["isscript"]
@@ -598,8 +598,8 @@ class WalletTest(BitcoinTestFramework):
 
         self.log.info("Testing 'listunspent' outputs the parent descriptor(s) of coins")
         # Create two multisig descriptors, and send a UTxO each.
-        multi_a = descsum_create("wsh(multi(1,tpubD6NzVbkrYhZ4YBNjUo96Jxd1u4XKWgnoc7LsA1jz3Yc2NiDbhtfBhaBtemB73n9V5vtJHwU6FVXwggTbeoJWQ1rzdz8ysDuQkpnaHyvnvzR/*,tpubD6NzVbkrYhZ4YHdDGMAYGaWxMSC1B6tPRTHuU5t3BcfcS3nrF523iFm5waFd1pP3ZvJt4Jr8XmCmsTBNx5suhcSgtzpGjGMASR3tau1hJz4/*))")
-        multi_b = descsum_create("wsh(multi(1,tpubD6NzVbkrYhZ4YHdDGMAYGaWxMSC1B6tPRTHuU5t3BcfcS3nrF523iFm5waFd1pP3ZvJt4Jr8XmCmsTBNx5suhcSgtzpGjGMASR3tau1hJz4/*,tpubD6NzVbkrYhZ4Y2RLiuEzNQkntjmsLpPYDm3LTRBYynUQtDtpzeUKAcb9sYthSFL3YR74cdFgF5mW8yKxv2W2CWuZDFR2dUpE5PF9kbrVXNZ/*))")
+        multi_a = descsum_create("wsh(multi(1,tcubNC1uBHhBxmWggzfUo8i2NxuYA6Z6Zo2mAT9r5fRjQ6QWFX4znDPacbuBdKnEK3bxz31326YSZyKQnmvnMSKs5HWc9jLpoVwNgT5soTJwTTE/*,tcubNC1uBHhBxmWgh6uxagjULaoUcUDnED8Lyo6tPjZnYAU6JreFKPkSdHUNv8rkH5qXU2RcnTvUrEzEyYeZeiuGNt6JQk27fYP8N3MC6UDWSnc/*))")
+        multi_b = descsum_create("wsh(multi(1,tcubNC1uBHhBxmWgh6uxagjULaoUcUDnED8Lyo6tPjZnYAU6JreFKPkSdHUNv8rkH5qXU2RcnTvUrEzEyYeZeiuGNt6JQk27fYP8N3MC6UDWSnc/*,tcubNC1uBHhBxmWggqi63EovSR3K9moePvdVn6rKP4sJLLGtm2kE4yCi5eJSr7VphWnXSXDoLnL2ZZYyF4o9cfXNsnZAizcsZkrC11YTG5a5qBb/*))")
         addr_a = self.nodes[0].deriveaddresses(multi_a, 0)[0]
         addr_b = self.nodes[0].deriveaddresses(multi_b, 0)[0]
         txid_a = self.nodes[0].sendtoaddress(addr_a, 0.01)

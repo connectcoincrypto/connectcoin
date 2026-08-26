@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_NETGROUP_H
-#define BITCOIN_NETGROUP_H
+#ifndef CONNECTCOIN_NETGROUP_H
+#define CONNECTCOIN_NETGROUP_H
 
 #include <netaddress.h>
 #include <uint256.h>
@@ -101,4 +101,4 @@ private:
     }
 };
 
-#endif // BITCOIN_NETGROUP_H
+#endif // CONNECTCOIN_NETGROUP_H

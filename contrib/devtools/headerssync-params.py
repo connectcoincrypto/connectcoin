@@ -5,20 +5,16 @@
 
 """Script to find the optimal parameters for the headerssync module through simulation."""
 
-from datetime import datetime, timedelta
+import argparse
+from datetime import datetime, timedelta, timezone
 from math import log, exp, sqrt
 import random
 
-# Parameters:
-
-# Aim for still working fine at some point in the future. [datetime]
-TIME = datetime(2028, 10, 10)
-
-# Expected block interval. [timedelta]
-BLOCK_INTERVAL = timedelta(seconds=600)
-
-# The number of headers corresponding to the minchainwork parameter. [headers]
-MINCHAINWORK_HEADERS = 938343
+# Network parameters are required on the command line. They must never silently
+# fall back to values inherited from another chain.
+TIME: datetime
+BLOCK_INTERVAL: timedelta
+MINCHAINWORK_HEADERS: int
 
 # Combined processing bandwidth from all attackers to one victim. [bit/s]
 # 6 Gbit/s is approximately the speed at which a single thread of a Ryzen 5950X CPU thread can hash
@@ -117,26 +113,19 @@ HEADER_BATCH_COUNT = 2000
 # Whether or not the offset of which blocks heights get checksummed is randomized.
 RANDOMIZE_OFFSET = True
 
-# Timestamp of the genesis block
-GENESIS_TIME = datetime(2009, 1, 3)
+# Timestamp of the genesis block. Set from the explicit command-line input.
+GENESIS_TIME: datetime
 
 # Derived values:
 
-# What rate of headers worth of RAM attackers are allowed to cause in the victim. [headers/s]
-LIMIT_HEADERRATE = ATTACK_FRACTION / BLOCK_INTERVAL.total_seconds()
-
-# How many headers can attackers (jointly) send a victim per second. [headers/s]
-NET_HEADERRATE = ATTACK_BANDWIDTH / NET_HEADER_SIZE
-
-# What fraction of headers sent by attackers can at most be accepted by a victim [unitless]
-LIMIT_FRACTION = LIMIT_HEADERRATE / NET_HEADERRATE
-
-# How many headers we permit attackers to cause being accepted per attack. [headers/attack]
-ATTACK_HEADERS = LIMIT_FRACTION * MINCHAINWORK_HEADERS
+LIMIT_HEADERRATE: float
+NET_HEADERRATE: float
+LIMIT_FRACTION: float
+ATTACK_HEADERS: float
 
 
 def find_max_headers(when):
-    """Compute the maximum number of headers a valid Bitcoin chain can have at given time."""
+    """Compute the maximum number of headers a valid ConnectCoin chain can have at given time."""
     # When exploiting the timewarp attack, this can be up to 6 per second since genesis.
     return 6 * ((when - GENESIS_TIME) // timedelta(seconds=1))
 
@@ -354,4 +343,65 @@ def analyze(when):
     print(f"  (where each attack costs {attack_volume / 8388608:.3f} MiB bandwidth)")
 
 
-analyze(TIME)
+def positive_int(value: str) -> int:
+    parsed = int(value)
+    if parsed <= 0:
+        raise argparse.ArgumentTypeError("must be greater than zero")
+    return parsed
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Generate headers-sync parameters from explicit ConnectCoin network inputs."
+    )
+    parser.add_argument(
+        "--target-date",
+        required=True,
+        metavar="YYYY-MM-DD",
+        type=lambda value: datetime.strptime(value, "%Y-%m-%d"),
+        help="date through which the generated parameters must remain safe",
+    )
+    parser.add_argument(
+        "--genesis-time",
+        required=True,
+        metavar="UNIX_TIME",
+        type=int,
+        help="network genesis block timestamp as Unix time",
+    )
+    parser.add_argument(
+        "--minchainwork-headers",
+        required=True,
+        type=positive_int,
+        help="number of honest headers corresponding to the release minimum-chain-work value",
+    )
+    parser.add_argument(
+        "--block-interval-seconds",
+        default=600,
+        type=positive_int,
+        help="expected block interval in seconds (default: 600)",
+    )
+    return parser.parse_args()
+
+
+def main():
+    global TIME, BLOCK_INTERVAL, MINCHAINWORK_HEADERS, GENESIS_TIME
+    global LIMIT_HEADERRATE, NET_HEADERRATE, LIMIT_FRACTION, ATTACK_HEADERS
+
+    args = parse_args()
+    TIME = args.target_date
+    BLOCK_INTERVAL = timedelta(seconds=args.block_interval_seconds)
+    MINCHAINWORK_HEADERS = args.minchainwork_headers
+    GENESIS_TIME = datetime.fromtimestamp(args.genesis_time, timezone.utc).replace(tzinfo=None)
+    if TIME <= GENESIS_TIME:
+        raise SystemExit("target date must be later than the genesis timestamp")
+
+    LIMIT_HEADERRATE = ATTACK_FRACTION / BLOCK_INTERVAL.total_seconds()
+    NET_HEADERRATE = ATTACK_BANDWIDTH / NET_HEADER_SIZE
+    LIMIT_FRACTION = LIMIT_HEADERRATE / NET_HEADERRATE
+    ATTACK_HEADERS = LIMIT_FRACTION * MINCHAINWORK_HEADERS
+
+    analyze(TIME)
+
+
+if __name__ == "__main__":
+    main()

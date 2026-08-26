@@ -4,7 +4,7 @@
 
 function(add_libmultiprocess subdir)
   # Set BUILD_TESTING to match BUILD_TESTS. BUILD_TESTING is a standard cmake
-  # option that controls whether enable_testing() is called, but in the bitcoin
+  # option that controls whether enable_testing() is called, but in the ConnectCoin
   # build a BUILD_TESTS option is used instead.
   set(BUILD_TESTING "${BUILD_TESTS}")
   add_subdirectory(${subdir} EXCLUDE_FROM_ALL)

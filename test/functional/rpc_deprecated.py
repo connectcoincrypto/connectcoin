@@ -35,7 +35,7 @@ class DeprecatedRpcTest(BitcoinTestFramework):
 
             self.log.info("Test removeprunedfunds deprecation")
             assert_raises_rpc_error(
-                -32, "Start bitcoind with the `-deprecatedrpc=removeprunedfunds`",
+                -32, "Start connectcoind with the `-deprecatedrpc=removeprunedfunds`",
                 wallet.removeprunedfunds,
                 "fakeargument"
             )

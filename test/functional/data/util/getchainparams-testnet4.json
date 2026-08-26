@@ -1,23 +1,21 @@
 {
   "chain": "testnet4",
   "test_chain": true,
-  "genesis": "43f08bdab050e35b567c864b91f47f50ae725ae2de53bcfbbaf284da00000000",
+  "genesis": "7d772291f6849848444cbe725d492d64181ae9a9032531a003d4f49c90010000",
   "subsidy_halving_interval": 210000,
   "pow": {
-    "limit": "00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "limit": "000001ffff000000000000000000000000000000000000000000000000000000",
     "target_spacing": 600,
     "difficulty_retarget_interval": 2016,
     "mindiff_blocks": "bip94"
   },
   "net": {
-    "default_port": 48333,
-    "magic": "1c163f28",
+    "default_port": 48179,
+    "magic": "bb51f5e7",
     "dns_seeds": [
-      "seed.testnet4.bitcoin.sprovoost.nl.",
-      "seed.testnet4.wiz.biz."
     ]
   },
   "addresses": {
-    "bech32_hrp": "tb"
+    "bech32_hrp": "tcc"
   }
 }

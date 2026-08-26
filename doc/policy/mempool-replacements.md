@@ -27,11 +27,11 @@ other consensus and policy rules, each of the following conditions are met:
 4. The additional fees (difference between absolute fee paid by the replacement transaction and the
    sum paid by the original transactions) pays for the replacement transaction's bandwidth at or
    above the rate set by the node's incremental relay feerate. For example, if the incremental relay
-   feerate is 0.1 satoshi/vB and the replacement transaction is 500 virtual bytes total, then the
-   replacement pays a fee at least 50 satoshis higher than the sum of the original transactions.
+   feerate is 0.1 connect/vB and the replacement transaction is 500 virtual bytes total, then the
+   replacement pays a fee at least 50 connects higher than the sum of the original transactions.
 
    *Rationale*: Try to prevent DoS attacks where an attacker causes the network to repeatedly relay
-   transactions each paying a tiny additional amount in fees, e.g. just 1 satoshi.
+   transactions each paying a tiny additional amount in fees, e.g. just 1 connect.
 
 5. The number of distinct clusters corresponding to conflicting transactions does not exceed 100.
 
@@ -50,7 +50,7 @@ other consensus and policy rules, each of the following conditions are met:
   **v0.12.0** ([PR 6871](https://github.com/bitcoin/bitcoin/pull/6871)).
 
 * [BIP125](https://github.com/bitcoin/bips/blob/master/bip-0125.mediawiki) defined based on
-  Bitcoin Core implementation.
+  ConnectCoin Core implementation.
 
 * The incremental relay feerate used to calculate the required additional fees is distinct from
   `-minrelaytxfee` and configurable using `-incrementalrelayfee`
@@ -66,6 +66,6 @@ other consensus and policy rules, each of the following conditions are met:
 
 * Signaling for replace-by-fee is no longer required as of [PR 30592](https://github.com/bitcoin/bitcoin/pull/30592).
 
-* The incremental relay feerate default is 0.1sat/vB ([PR #33106](https://github.com/bitcoin/bitcoin/pull/33106)).
+* The incremental relay feerate default is 0.1con/vB ([PR #33106](https://github.com/bitcoin/bitcoin/pull/33106)).
 
 * Feerate diagram policy enabled in conjunction with switch to cluster mempool as of **v31.0**.

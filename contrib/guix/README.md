@@ -1,7 +1,7 @@
-# Bootstrappable Bitcoin Core Builds
+# Bootstrappable ConnectCoin development builds
 
-This directory contains the files necessary to perform bootstrappable Bitcoin
-Core builds.
+This directory contains the inherited tooling needed to perform bootstrappable
+ConnectCoin Core builds.
 
 [Bootstrappability][b17e] furthers our binary security guarantees by allowing us
 to _audit and reproduce_ our toolchain instead of blindly _trusting_ binary
@@ -57,7 +57,7 @@ and examples](#common-guix-build-invocation-patterns-and-examples) section below
 before starting a build. For a full list of customization options, see the
 [recognized environment variables][env-vars-list] section.*
 
-To build Bitcoin Core reproducibly with all default options, invoke the
+To build ConnectCoin Core reproducibly with all default options, invoke the
 following from the top of a clean repository:
 
 ```sh
@@ -66,9 +66,16 @@ following from the top of a clean repository:
 
 ## Codesigning build outputs
 
-The `guix-codesign` command attaches codesignatures (produced by codesigners) to
-existing non-codesigned outputs. Please see the [release process
-documentation](/doc/release-process.md#codesigning) for more context.
+> [!WARNING]
+> Release codesigning is disabled by `connectcoin-signing-disabled`. ConnectCoin
+> has no project-owned certificate, Apple signing identity, detached-signature
+> repository, or signing policy. The `guix-build` development-build path remains
+> available, but `guix-codesign` must not authenticate public artifacts yet.
+
+After a project-owned policy is established, the `guix-codesign` command can
+attach codesignatures produced by authorized ConnectCoin codesigners to existing
+non-codesigned outputs. Please see the [release process
+documentation](/doc/release-process.md) for the required controls.
 
 It respects many of the same environment variable flags as `guix-build`, with 2
 crucial differences:
@@ -80,14 +87,14 @@ crucial differences:
     * _**DETACHED_SIGS_REPO**_
 
       Set the directory where detached codesignatures can be found for the current
-      Bitcoin Core version being built.
+      ConnectCoin Core revision being built.
 
       _REQUIRED environment variable_
 
-An invocation with all default options would look like:
+After enablement, an invocation with all default options would look like:
 
 ```
-env DETACHED_SIGS_REPO=<path/to/bitcoin-detached-sigs> ./contrib/guix/guix-codesign
+env DETACHED_SIGS_REPO=<path/to/connectcoin-detached-sigs> ./contrib/guix/guix-codesign
 ```
 
 ## Cleaning intermediate work directories
@@ -118,28 +125,22 @@ source contrib/shell/git-utils.bash && uname -m && find guix-build-$(git_head_ve
 
 ## Attesting to build outputs
 
-Much like how Gitian build outputs are attested to in a `gitian.sigs`
-repository, Guix build outputs are attested to in the [`guix.sigs`
-repository](https://github.com/bitcoin-core/guix.sigs).
-
-After you've cloned the `guix.sigs` repository, to attest to the current
-worktree's commit/tag:
-
-```
-env GUIX_SIGS_REPO=<path/to/guix.sigs> SIGNER=<gpg-key-name> ./contrib/guix/guix-attest
-```
-
-See `./contrib/guix/guix-attest --help` for more information on the various ways
-`guix-attest` can be invoked.
+ConnectCoin does not yet have a project-owned attestation repository or signing
+team, so `guix-attest` refuses to run while the disable marker exists. The
+inherited Bitcoin Core `guix.sigs` repository and its builders do not
+authenticate ConnectCoin artifacts. Do not point this tooling at that upstream
+repository or publish signatures until ConnectCoin defines its own repository,
+authorized signers, quorum, key rotation, and revocation policy.
 
 ## Verifying build output attestations
 
-After at least one other signer has uploaded their signatures to the `guix.sigs`
-repository:
+After a ConnectCoin attestation repository and signing policy exist, independent
+builders will be able to verify its build attestations with `guix-verify`.
+The following is only a future workflow placeholder:
 
 ```
-git -C <path/to/guix.sigs> pull
-env GUIX_SIGS_REPO=<path/to/guix.sigs> ./contrib/guix/guix-verify
+git -C <path/to/connectcoin-attestations> pull
+env GUIX_SIGS_REPO=<path/to/connectcoin-attestations> ./contrib/guix/guix-verify
 ```
 
 

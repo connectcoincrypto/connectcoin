@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_TEST_FUZZ_UTIL_DESCRIPTOR_H
-#define BITCOIN_TEST_FUZZ_UTIL_DESCRIPTOR_H
+#ifndef CONNECTCOIN_TEST_FUZZ_UTIL_DESCRIPTOR_H
+#define CONNECTCOIN_TEST_FUZZ_UTIL_DESCRIPTOR_H
 
 #include <array>
 #include <cinttypes>
@@ -113,4 +113,4 @@ inline bool IsTooExpensive(std::span<const uint8_t> buffer)
 
     return false;
 }
-#endif // BITCOIN_TEST_FUZZ_UTIL_DESCRIPTOR_H
+#endif // CONNECTCOIN_TEST_FUZZ_UTIL_DESCRIPTOR_H

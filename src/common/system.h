@@ -3,10 +3,10 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_COMMON_SYSTEM_H
-#define BITCOIN_COMMON_SYSTEM_H
+#ifndef CONNECTCOIN_COMMON_SYSTEM_H
+#define CONNECTCOIN_COMMON_SYSTEM_H
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <util/time.h>
 
@@ -37,4 +37,4 @@ int GetNumCores();
  */
 std::optional<uint64_t> TryGetTotalRam();
 
-#endif // BITCOIN_COMMON_SYSTEM_H
+#endif // CONNECTCOIN_COMMON_SYSTEM_H

@@ -1,4 +1,4 @@
-This directory contains integration tests that test bitcoind and its
+This directory contains integration tests that test connectcoind and its
 utilities in their entirety. It does not contain unit tests, which
 can be found in [/src/test](/src/test), [/src/wallet/test](/src/wallet/test),
 etc.
@@ -8,7 +8,7 @@ This directory contains the following sets of tests:
 - [fuzz](/test/fuzz) A runner to execute all fuzz targets from
   [/src/test/fuzz](/src/test/fuzz).
 - [functional](/test/functional) which test the functionality of
-bitcoind and bitcoin-qt by interacting with them through the RPC and P2P
+connectcoind and connectcoin-qt by interacting with them through the RPC and P2P
 interfaces.
 - [lint](/test/lint/) which perform various static analysis checks.
 
@@ -17,7 +17,7 @@ tests and lint scripts can be run as explained in the sections below.
 
 # Running tests locally
 
-Before tests can be run locally, Bitcoin Core must be built.  See the [building instructions](/doc#building) for help.
+Before tests can be run locally, ConnectCoin Core must be built. See the [building instructions](/doc#building) for help.
 
 The following examples assume that the build directory is named `build`.
 
@@ -114,13 +114,14 @@ Run all possible tests with
 build/test/functional/test_runner.py --extended
 ```
 
-In order to run backwards compatibility tests, first run:
-
-```
-test/get_previous_releases.py
-```
-
-to download the necessary previous release binaries.
+ConnectCoin does not have published previous releases yet, so backwards
+compatibility tests are skipped. The inherited `test/get_previous_releases.py`
+helper downloads Bitcoin Core binaries and must not be used as ConnectCoin test
+input: those binaries use a different genesis block and network identity. This
+workflow can be re-enabled after ConnectCoin publishes versioned binaries and
+project-owned checksums. Merely placing binaries in a releases directory does
+not enable these tests; future project-owned compatibility runs must opt in
+explicitly with `--previous-releases`.
 
 By default, up to 4 tests will be run in parallel by test_runner. To specify
 how many jobs to run, append `--jobs=n`
@@ -183,29 +184,29 @@ umount /Volumes/ramdisk
 
 ##### Resource contention
 
-The P2P and RPC ports used by the bitcoind nodes-under-test are chosen to make
-conflicts with other processes unlikely. However, if there is another bitcoind
+The P2P and RPC ports used by the connectcoind nodes-under-test are chosen to make
+conflicts with other processes unlikely. However, if there is another connectcoind
 process running on the system (perhaps from a previous test which hasn't successfully
-killed all its bitcoind nodes), then there may be a port conflict which will
+killed all its connectcoind nodes), then there may be a port conflict which will
 cause the test to fail. It is recommended that you run the tests on a system
-where no other bitcoind processes are running.
+where no other connectcoind processes are running.
 
 On linux, the test framework will warn if there is another
-bitcoind process running when the tests are started.
+connectcoind process running when the tests are started.
 
-If there are zombie bitcoind processes after test failure, you can kill them
+If there are zombie connectcoind processes after test failure, you can kill them
 by running the following commands. **Note that these commands will kill all
-bitcoind processes running on the system, so should not be used if any non-test
-bitcoind processes are being run.**
+connectcoind processes running on the system, so should not be used if any non-test
+connectcoind processes are being run.**
 
 ```bash
-killall bitcoind
+killall connectcoind
 ```
 
 or
 
 ```bash
-pkill -9 bitcoind
+pkill -9 connectcoind
 ```
 
 
@@ -216,11 +217,11 @@ functional test is run and is stored in build/test/cache. This speeds up
 test startup times since new blockchains don't need to be generated for
 each test. However, the cache may get into a bad state, in which case
 tests will fail. If this happens, remove the cache directory (and make
-sure bitcoind processes are stopped as above):
+sure connectcoind processes are stopped as above):
 
 ```bash
 rm -rf build/test/cache
-killall bitcoind
+killall connectcoind
 ```
 
 ##### Test logging
@@ -235,7 +236,7 @@ levels using the logger included in the test_framework, e.g.
 - when run directly, *all* logs are written to `test_framework.log` and INFO
   level and above are output to the console.
 - when run by [our CI (Continuous Integration)](/ci/README.md), no logs are output to the console. However, if a test
-  fails, the `test_framework.log` and bitcoind `debug.log`s will all be dumped
+  fails, the `test_framework.log` and connectcoind `debug.log`s will all be dumped
   to the console to help troubleshooting.
 
 These log files can be located under the test data directory (which is always
@@ -250,7 +251,7 @@ e.g. `self.nodes[0]`.
 To change the level of logs output to the console, use the `-l` command line
 argument.
 
-`test_framework.log` and bitcoind `debug.log`s can be combined into a single
+`test_framework.log` and connectcoind `debug.log`s can be combined into a single
 aggregate log by running the `combine_logs.py` script. The output can be plain
 text, colorized text or html. For example:
 
@@ -277,9 +278,9 @@ import pdb; pdb.set_trace()
 ```
 
 anywhere in the test. You will then be able to inspect variables, as well as
-call methods that interact with the bitcoind nodes-under-test.
+call methods that interact with the connectcoind nodes-under-test.
 
-If further introspection of the bitcoind instances themselves becomes
+If further introspection of the connectcoind instances themselves becomes
 necessary, this can be accomplished by first setting a pdb breakpoint
 at an appropriate location, running the test to that point, then using
 `gdb` (or `lldb` on macOS) to attach to the process and debug.
@@ -302,13 +303,13 @@ test run:
 Use the path to find the pid file in the temp folder:
 
 ```bash
-cat /tmp/user/1000/testo9vsdjo3/node1/regtest/bitcoind.pid
+cat /tmp/user/1000/testo9vsdjo3/node1/regtest/connectcoind.pid
 ```
 
 Then you can use the pid to start `gdb`:
 
 ```bash
-gdb /home/example/bitcoind <pid>
+gdb /home/example/connectcoind <pid>
 ```
 
 Note: gdb attach step may require ptrace_scope to be modified, or `sudo` preceding the `gdb`.

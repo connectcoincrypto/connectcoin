@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_RPC_UTIL_H
-#define BITCOIN_RPC_UTIL_H
+#ifndef CONNECTCOIN_RPC_UTIL_H
+#define CONNECTCOIN_RPC_UTIL_H
 
 #include <addresstype.h>
 #include <consensus/amount.h>
@@ -124,8 +124,8 @@ int ParseVerbosity(const UniValue& arg, int default_verbosity, bool allow_bool);
  */
 CAmount AmountFromValue(const UniValue& value, int decimals = 8);
 /**
- * Parse a json number or string, denoting BTC/kvB, into a CFeeRate (sat/kvB).
- * Reject negative values or rates larger than 1BTC/kvB.
+ * Parse a JSON number or string, denoting CC/kvB, into a CFeeRate (con/kvB).
+ * Reject negative values or rates larger than 1 CC/kvB.
  */
 CFeeRate ParseFeeRate(const UniValue& json);
 
@@ -562,4 +562,4 @@ std::vector<RPCResult> ScriptPubKeyDoc();
  */
 uint256 GetTarget(const CBlockIndex& blockindex, uint256 pow_limit);
 
-#endif // BITCOIN_RPC_UTIL_H
+#endif // CONNECTCOIN_RPC_UTIL_H

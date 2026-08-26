@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_POLICY_RBF_H
-#define BITCOIN_POLICY_RBF_H
+#ifndef CONNECTCOIN_POLICY_RBF_H
+#define CONNECTCOIN_POLICY_RBF_H
 
 #include <consensus/amount.h>
 #include <primitives/transaction.h>
@@ -106,4 +106,4 @@ std::optional<std::string> PaysForRBF(CAmount original_fees,
  */
 std::optional<std::pair<DiagramCheckError, std::string>> ImprovesFeerateDiagram(CTxMemPool::ChangeSet& changeset);
 
-#endif // BITCOIN_POLICY_RBF_H
+#endif // CONNECTCOIN_POLICY_RBF_H

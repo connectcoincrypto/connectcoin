@@ -4,6 +4,14 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 export LC_ALL=C
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+SIGNING_DISABLED_FILE="${SCRIPT_DIR}/connectcoin-signing-disabled"
+if [ -f "${SIGNING_DISABLED_FILE}" ]; then
+  cat "${SIGNING_DISABLED_FILE}" >&2
+  exit 1
+fi
+
 if [ -z "$OSSLSIGNCODE" ]; then
   OSSLSIGNCODE=osslsigncode
 fi

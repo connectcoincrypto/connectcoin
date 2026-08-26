@@ -1,22 +1,22 @@
-# Support for signing transactions outside of Bitcoin Core
+# Support for signing transactions outside of ConnectCoin Core
 
-Bitcoin Core can be launched with `-signer=<cmd>` where `<cmd>` is an external tool which can sign transactions and perform other functions. For example, it can be used to communicate with a hardware wallet.
+ConnectCoin Core can be launched with `-signer=<cmd>` where `<cmd>` is an external tool which can sign transactions and perform other functions. For example, it can be used to communicate with a hardware wallet.
 
 Interaction with external signer uses [Partially Signed Bitcoin Transaction (PSBT)](psbt.md).
 
 ## Example usage
 
-The following example is based on the [HWI](https://github.com/bitcoin-core/HWI) tool. Version 2.0 or newer is required. Although this tool is hosted under the Bitcoin Core GitHub organization and maintained by Bitcoin Core developers, it should be used with caution. It is considered experimental and has far less review than Bitcoin Core itself. Be particularly careful when running tools such as these on a computer with private keys on it.
+The following example is based on the upstream [Bitcoin Core HWI](https://github.com/bitcoin-core/HWI) tool. Version 2.0 or newer is required. HWI is hosted under the Bitcoin Core GitHub organization and maintained independently of ConnectCoin. Its compatibility with ConnectCoin's custom address and extended-key prefixes has not been audited, so treat this integration as experimental and test it without valuable private keys first.
 
-When using a hardware wallet, consult the manufacturer website for (alternative) software they recommend. As long as their software conforms to the standard below, it should be able to work with Bitcoin Core.
+When using a hardware wallet, consult the manufacturer website for (alternative) software they recommend. As long as their software conforms to the standard below, it should be able to work with ConnectCoin Core.
 
-Start Bitcoin Core:
+Start ConnectCoin Core:
 
 ```sh
-bitcoind -signer=../HWI/hwi.py
+connectcoind -signer=../HWI/hwi.py
 ```
 
-`bitcoin node` can also be substituted for `bitcoind`.
+`connectcoin node` can also be substituted for `connectcoind`.
 
 ### Device setup
 
@@ -27,7 +27,7 @@ Follow the hardware manufacturers instructions for the initial device setup, as 
 Get a list of signing devices / services:
 
 ```sh
-bitcoin-cli enumeratesigners
+connectcoin-cli enumeratesigners
 ```
 
 ```
@@ -46,18 +46,18 @@ The master key fingerprint is used to identify a device.
 Create a wallet, this automatically imports the public keys:
 
 ```sh
-bitcoin rpc createwallet wallet_name="hww2" disable_private_keys=true descriptors=true external_signer=true
+connectcoin rpc createwallet wallet_name="hww2" disable_private_keys=true descriptors=true external_signer=true
 ```
 
-Creation of the external wallet can be confirmed with `getwalletinfo`, which will report `"external_signer": true`. These commands can also be executed using `bitcoin-qt` Debug Console instead of using `bitcoin rpc` or `bitcoin-cli`.
+Creation of the external wallet can be confirmed with `getwalletinfo`, which will report `"external_signer": true`. These commands can also be executed using `connectcoin-qt` Debug Console instead of using `connectcoin rpc` or `connectcoin-cli`.
 
 ### Verify an address
 
 Display an address on the device:
 
 ```sh
-bitcoin-cli -rpcwallet=<walletname> getnewaddress
-bitcoin-cli -rpcwallet=<walletname> walletdisplayaddress <address>
+connectcoin-cli -rpcwallet=<walletname> getnewaddress
+connectcoin-cli -rpcwallet=<walletname> walletdisplayaddress <address>
 ```
 
 Replace `<address>` with the result of `getnewaddress`.
@@ -67,10 +67,10 @@ Replace `<address>` with the result of `getnewaddress`.
 Under the hood this uses a [PSBT (Partially Signed Bitcoin Transaction)](psbt.md).
 
 ```sh
-bitcoin rpc -rpcwallet=<walletname> send outputs='{"<address>": <amount>}'
+connectcoin rpc -rpcwallet=<walletname> send outputs='{"<address>": <amount>}'
 ```
 
-This constructs a PSBT and prompts your external signer to sign (will fail if it's not connected). If successful, Bitcoin Core finalizes and broadcasts the transaction.
+This constructs a PSBT and prompts your external signer to sign (will fail if it's not connected). If successful, ConnectCoin Core finalizes and broadcasts the transaction.
 
 ```
 {"complete": true, "txid": "<txid>"}
@@ -78,7 +78,7 @@ This constructs a PSBT and prompts your external signer to sign (will fail if it
 
 ## Signer API
 
-In order to be compatible with Bitcoin Core, any signer command should conform to the specification below. This specification is subject to change. Ideally a BIP should propose a standard so that other wallets can also make use of it.
+In order to be compatible with ConnectCoin Core, any signer command should conform to the specification below. This specification is subject to change. Ideally a BIP should propose a standard so that other wallets can also make use of it.
 
 Prerequisite knowledge:
 * [Output Descriptors](descriptors.md)
@@ -88,13 +88,13 @@ Prerequisite knowledge:
 
 With `<name>` one of `main`, `test`, `signet`, `regtest`, `testnet4`.
 
-Bitcoin Core passes this flag to commands that operate on a chain-specific signer, for example `getdescriptors`, `displayaddress` and `signtx`.
+ConnectCoin Core passes this flag to commands that operate on a chain-specific signer, for example `getdescriptors`, `displayaddress` and `signtx`.
 
 ### Flag `--stdin` (required)
 
 Indicate that (sub)command should be received over stdin and results returned in response to that. `--stdin` is a global flag, it is not specific to any subcommand.
 
-Bitcoin Core currently uses this flag for `signtx`.
+ConnectCoin Core currently uses this flag for `signtx`.
 
 All subcommands SHOULD support both
 - being called as commandline arguments; or
@@ -115,7 +115,7 @@ Note: remember that shell-expansion is not available on _stdin_. Consequently, c
 
 With `<fingerprint>` being the hexadecimal 8-symbol identifier for a wallet.
 
-Bitcoin Core passes this flag to commands that operate on a specific external-signer wallet, for example `getdescriptors`, `displayaddress` and `signtx`.
+ConnectCoin Core passes this flag to commands that operate on a specific external-signer wallet, for example `getdescriptors`, `displayaddress` and `signtx`.
 
 ### `enumerate` (required)
 
@@ -171,16 +171,16 @@ Returns descriptors supported by the device. Example:
 ```
 {
   "receive": [
-    "pkh([00000000/44h/0h/0h]xpub6C.../0/*)#fn95jwmg",
-    "sh(wpkh([00000000/49h/0h/0h]xpub6B..../0/*))#j4r9hntt",
-    "wpkh([00000000/84h/0h/0h]xpub6C.../0/*)#qw72dxa9",
-    "tr([00000000/86h/0h/0h]xpub6C.../0/*)#4d8tq2ns"
+    "pkh([00000000/44h/0h/0h]ccpub.../0/*)#fn95jwmg",
+    "sh(wpkh([00000000/49h/0h/0h]ccpub..../0/*))#j4r9hntt",
+    "wpkh([00000000/84h/0h/0h]ccpub.../0/*)#qw72dxa9",
+    "tr([00000000/86h/0h/0h]ccpub.../0/*)#4d8tq2ns"
   ],
   "internal": [
-    "pkh([00000000/44h/0h/0h]xpub6C.../1/*)#c8q40mts",
-    "sh(wpkh([00000000/49h/0h/0h]xpub6B..../1/*))#85dn0v75",
-    "wpkh([00000000/84h/0h/0h]xpub6C..../1/*)#36mtsnda",
-    "tr([00000000/86h/0h/0h]xpub6C.../1/*)#d63h6jpt"
+    "pkh([00000000/44h/0h/0h]ccpub.../1/*)#c8q40mts",
+    "sh(wpkh([00000000/49h/0h/0h]ccpub..../1/*))#85dn0v75",
+    "wpkh([00000000/84h/0h/0h]ccpub..../1/*)#36mtsnda",
+    "tr([00000000/86h/0h/0h]ccpub.../1/*)#d63h6jpt"
   ]
 }
 ```
@@ -195,7 +195,7 @@ Usage:
 Example, display the first native SegWit receive address on Testnet:
 
 ```sh
-<cmd> --fingerprint 00000000 --chain test displayaddress --desc "wpkh([00000000/84h/1h/0h]tpubDDUZ..../0/0)"
+<cmd> --fingerprint 00000000 --chain test displayaddress --desc "wpkh([00000000/84h/1h/0h]tcub..../0/0)"
 ```
 
 The command MUST be able to figure out the address type from the descriptor.
@@ -209,7 +209,7 @@ If `<descriptor>` contains an xpub, the command MUST fail if it does not match t
 
 The command MAY complain if `--chain` is set to a test-network, but the BIP32 coin-type is not `1h` (and vice versa).
 
-## How Bitcoin Core uses the Signer API
+## How ConnectCoin Core uses the Signer API
 
 The `enumeratesigners` RPC calls `<cmd> enumerate`, skips duplicate entries with the same `fingerprint`, and maps the optional `model` field to the RPC `name` field.
 
@@ -223,4 +223,4 @@ It then imports descriptors for all supported address types, in a BIP44/49/84/86
 
 The `walletdisplayaddress` RPC obtains the inferred descriptor for the provided address. It then calls `<cmd> --fingerprint 00000000 --chain <name> displayaddress --desc <descriptor>`.
 
-For external-signer wallets, spending uses `send` or `sendall`, and fee-bumping uses `bumpfee`. Bitcoin Core builds a PSBT, adds key origin information, checks whether any input key origin fingerprint matches the signer, calls `<cmd> --stdin --fingerprint 00000000 --chain <name>`, and sends `signtx <psbt>` over stdin. If signatures are sufficient, it finalizes the transaction and, for broadcasting RPCs, broadcasts it. If signing cannot complete, the call fails with an error. For manual fee-bumping, use `psbtbumpfee` to obtain a PSBT for signing.
+For external-signer wallets, spending uses `send` or `sendall`, and fee-bumping uses `bumpfee`. ConnectCoin Core builds a PSBT, adds key origin information, checks whether any input key origin fingerprint matches the signer, calls `<cmd> --stdin --fingerprint 00000000 --chain <name>`, and sends `signtx <psbt>` over stdin. If signatures are sufficient, it finalizes the transaction and, for broadcasting RPCs, broadcasts it. If signing cannot complete, the call fails with an error. For manual fee-bumping, use `psbtbumpfee` to obtain a PSBT for signing.

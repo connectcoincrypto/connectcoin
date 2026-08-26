@@ -46,10 +46,10 @@ mkdir -p "$DISTSRC"
           -DREDUCE_EXPORTS=ON \
           -DWITH_CCACHE=OFF
 
-    # Build Bitcoin Core
+    # Build ConnectCoin Core
     cmake --build build -j "$JOBS"
 
-    # Install built Bitcoin Core
+    # Install built ConnectCoin Core
     cmake --install build --strip
 )
 

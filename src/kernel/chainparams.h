@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_KERNEL_CHAINPARAMS_H
-#define BITCOIN_KERNEL_CHAINPARAMS_H
+#ifndef CONNECTCOIN_KERNEL_CHAINPARAMS_H
+#define CONNECTCOIN_KERNEL_CHAINPARAMS_H
 
 #include <consensus/params.h>
 #include <kernel/messagestartchars.h>
@@ -204,4 +204,4 @@ protected:
 
 std::optional<ChainType> GetNetworkForMagic(const MessageStartChars& pchMessageStart);
 
-#endif // BITCOIN_KERNEL_CHAINPARAMS_H
+#endif // CONNECTCOIN_KERNEL_CHAINPARAMS_H

@@ -10,13 +10,13 @@ import tempfile
 import argparse
 
 BINARIES = [
-'bin/bitcoin',
-'bin/bitcoind',
-'bin/bitcoin-cli',
-'bin/bitcoin-tx',
-'bin/bitcoin-wallet',
-'bin/bitcoin-util',
-'bin/bitcoin-qt',
+'bin/connectcoin',
+'bin/connectcoind',
+'bin/connectcoin-cli',
+'bin/connectcoin-tx',
+'bin/connectcoin-wallet',
+'bin/connectcoin-util',
+'bin/connectcoin-qt',
 ]
 
 parser = argparse.ArgumentParser(
@@ -51,7 +51,7 @@ versions = []
 for relpath in BINARIES:
     abspath = os.path.join(builddir, relpath)
     # Prevent QT from emitting a localized version string for --version and --help
-    is_qt = relpath == "bin/bitcoin-qt"
+    is_qt = relpath == "bin/connectcoin-qt"
     try:
         cmd_args = ["--version"]
         if is_qt:

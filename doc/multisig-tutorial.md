@@ -1,15 +1,17 @@
 # 1. Multisig Tutorial
 
-Currently, it is possible to create a multisig wallet using Bitcoin Core only.
+Currently, it is possible to create a multisig wallet using ConnectCoin Core only.
 
-Although there is already a brief explanation about the multisig in the [Descriptors documentation](/doc/descriptors.md#multisig), this tutorial proposes to use the signet (instead of regtest), bringing the reader closer to a real environment and explaining some functions in more detail.
+Although there is already a brief explanation of multisig in the
+[Descriptors documentation](/doc/descriptors.md#multisig), this tutorial uses
+regtest so it is reproducible without public peers, DNS seeds, or a faucet.
 
 This tutorial uses [jq](https://github.com/stedolan/jq) JSON processor to process the results from RPC and stores the relevant values in bash variables. This makes the tutorial reproducible and easier to follow step by step.
 
-Before starting this tutorial, start the bitcoin node on the signet network.
+Before starting this tutorial, start the ConnectCoin node on regtest.
 
 ```bash
-./build/bin/bitcoin node -signet -daemon
+./build/bin/connectcoin node -regtest -daemon
 ```
 
 This tutorial also uses the default PKH derivation path to get the xpubs and does not conform to [BIP 45](https://github.com/bitcoin/bips/blob/master/bip-0045.mediawiki) or [BIP 87](https://github.com/bitcoin/bips/blob/master/bip-0087.mediawiki).
@@ -25,7 +27,7 @@ These three wallets should not be used directly for privacy reasons (public key 
 ```bash
 for ((n=1;n<=3;n++))
 do
- ./build/bin/bitcoin rpc -signet createwallet "participant_${n}"
+ ./build/bin/connectcoin rpc -regtest createwallet "participant_${n}"
 done
 ```
 
@@ -38,7 +40,7 @@ declare -A xpubs
 
 for ((n=1;n<=3;n++))
 do
- xpubs["xpub_${n}"]=$(./build/bin/bitcoin rpc -signet -rpcwallet="participant_${n}" derivehdkey "m/44h/1h/0h" | jq -r '.origin + .xpub')
+ xpubs["xpub_${n}"]=$(./build/bin/connectcoin rpc -regtest -rpcwallet="participant_${n}" derivehdkey "m/44h/1h/0h" | jq -r '.origin + .xpub')
 done
 ```
 
@@ -54,12 +56,12 @@ As previously mentioned, this step extracts the `m/44'/1'/0'` account instead of
 
 Define the multisig descriptors.
 
-All RPCs in Bitcoin Core will include the checksum in their output.
+All RPCs in ConnectCoin Core will include the checksum in their output.
 
 ```bash
 desc="wsh(sortedmulti(2,${xpubs["xpub_1"]}/<0;1>/*,${xpubs["xpub_2"]}/<0;1>/*,${xpubs["xpub_3"]}/<0;1>/*))"
 
-desc_sum=$(./build/bin/bitcoin rpc -signet getdescriptorinfo $desc | jq -r '.checksum')
+desc_sum=$(./build/bin/connectcoin rpc -regtest getdescriptorinfo $desc | jq -r '.checksum')
 
 multisig_desc="[{\"desc\": \"$desc#$desc_sum\", \"active\": true, \"timestamp\": \"now\"}]"
 ```
@@ -73,7 +75,7 @@ There are other fields that can be added to the descriptors:
 * `active`: Sets the descriptor to be the active one for the corresponding output type (`wsh`, in this case).
 * `timestamp`: Sets the time from which to start rescanning the blockchain for the descriptor, in UNIX epoch time.
 
-Documentation for these and other parameters can be found by typing `./build/bin/bitcoin rpc -signet help importdescriptors`.
+Documentation for these and other parameters can be found by typing `./build/bin/connectcoin rpc -regtest help importdescriptors`.
 
 `multisig_desc` concatenates the descriptor in a JSON array and then it will be used to create the multisig wallet.
 
@@ -86,11 +88,11 @@ Then import the descriptor created in the previous step using the `importdescrip
 After that, `listdescriptors` can be used to check if the wallet was created successfully.
 
 ```bash
-./build/bin/bitcoin rpc -signet -named createwallet wallet_name="multisig_wallet_01" disable_private_keys=true blank=true
+./build/bin/connectcoin rpc -regtest -named createwallet wallet_name="multisig_wallet_01" disable_private_keys=true blank=true
 
-./build/bin/bitcoin rpc -signet -rpcwallet="multisig_wallet_01" importdescriptors "$multisig_desc"
+./build/bin/connectcoin rpc -regtest -rpcwallet="multisig_wallet_01" importdescriptors "$multisig_desc"
 
-./build/bin/bitcoin rpc -signet -rpcwallet="multisig_wallet_01" listdescriptors
+./build/bin/connectcoin rpc -regtest -rpcwallet="multisig_wallet_01" listdescriptors
 ```
 
 The `<0;1>` notation in `desc` caused the creation of two descriptors. One uses the chain 0 for external addresses, and the other uses chain 1 for internal ones (change).
@@ -98,58 +100,53 @@ The `<0;1>` notation in `desc` caused the creation of two descriptors. One uses 
 Once the wallets have already been created and this tutorial needs to be repeated or resumed, it is not necessary to recreate them, just load them with the command below:
 
 ```bash
-for ((n=1;n<=3;n++)); do ./build/bin/bitcoin rpc -signet loadwallet "participant_${n}"; done
-./build/bin/bitcoin rpc -signet loadwallet "multisig_wallet_01"
+for ((n=1;n<=3;n++)); do ./build/bin/connectcoin rpc -regtest loadwallet "participant_${n}"; done
+./build/bin/connectcoin rpc -regtest loadwallet "multisig_wallet_01"
 ```
 
 ### 1.4 Fund the wallet
 
-The wallet can receive signet coins by generating a new address and passing it as parameters to `getcoins.py` script.
-
-This script will print a captcha in dot-matrix to the terminal, using unicode Braille characters. After solving the captcha, the coins will be sent directly to the address or wallet (according to the parameters).
-
-The url used by the script can also be accessed directly. At time of writing, the url is [`https://signetfaucet.com`](https://signetfaucet.com).
-
-Coins received by the wallet must have at least 1 confirmation before they can be spent. It is necessary to wait for a new block to be mined before continuing.
+Create a miner wallet and generate 101 blocks. Coinbase outputs require 100
+blocks of maturity before they can be spent, so this makes the earliest rewards
+available for the tutorial. Send one coin to the multisig address and mine one
+additional block to confirm it.
 
 ```bash
-receiving_address=$(./build/bin/bitcoin rpc -signet -rpcwallet="multisig_wallet_01" getnewaddress)
+./build/bin/connectcoin rpc -regtest createwallet "miner"
+miner_address=$(./build/bin/connectcoin rpc -regtest -rpcwallet="miner" getnewaddress)
+./build/bin/connectcoin rpc -regtest generatetoaddress 101 "$miner_address"
 
-./contrib/signet/getcoins.py -c ./build/bin/bitcoin-cli -a $receiving_address
-```
-
-To copy the receiving address onto the clipboard, use the following command. This can be useful when getting coins via the signet faucet mentioned above.
-
-```bash
-echo -n "$receiving_address" | xclip -sel clip
+receiving_address=$(./build/bin/connectcoin rpc -regtest -rpcwallet="multisig_wallet_01" getnewaddress)
+./build/bin/connectcoin rpc -regtest -rpcwallet="miner" sendtoaddress "$receiving_address" 1
+./build/bin/connectcoin rpc -regtest generatetoaddress 1 "$miner_address"
 ```
 
 The `getbalances` RPC may be used to check the balance. Coins with `trusted` status can be spent.
 
 ```bash
-./build/bin/bitcoin rpc -signet -rpcwallet="multisig_wallet_01" getbalances
+./build/bin/connectcoin rpc -regtest -rpcwallet="multisig_wallet_01" getbalances
 ```
 
 ### 1.5 Create a PSBT
 
-Unlike singlesig wallets, multisig wallets cannot create and sign transactions directly because they require the signatures of the co-signers. Instead they create a Partially Signed Bitcoin Transaction (PSBT).
+Unlike singlesig wallets, multisig wallets cannot create and sign transactions directly because they require the signatures of the co-signers. Instead they create a Partially Signed ConnectCoin Transaction using the BIP 174 PSBT format.
 
-PSBT is a data format that allows wallets and other tools to exchange information about a Bitcoin transaction and the signatures necessary to complete it. [[source](https://bitcoinops.org/en/topics/psbt/)]
+PSBT is a data format that allows wallets and other tools to exchange information about a ConnectCoin transaction and the signatures necessary to complete it. [[upstream format source](https://bitcoinops.org/en/topics/psbt/)]
 
 The current PSBT version (v0) is defined in [BIP 174](https://github.com/bitcoin/bips/blob/master/bip-0174.mediawiki).
 
-For simplicity, the destination address is taken from the `participant_1` wallet in the code above, but it can be any valid bitcoin address.
+For simplicity, the destination address is taken from the `participant_1` wallet in the code above, but it can be any valid ConnectCoin address.
 
 The `walletcreatefundedpsbt` RPC is used to create and fund a transaction in the PSBT format. It is the first step in creating the PSBT.
 
 ```bash
-balance=$(./build/bin/bitcoin rpc -signet -rpcwallet="multisig_wallet_01" getbalance)
+balance=$(./build/bin/connectcoin rpc -regtest -rpcwallet="multisig_wallet_01" getbalance)
 
 amount=$(echo "$balance * 0.8" | bc -l | sed -e 's/^\./0./' -e 's/^-\./-0./')
 
-destination_addr=$(./build/bin/bitcoin rpc -signet -rpcwallet="participant_1" getnewaddress)
+destination_addr=$(./build/bin/connectcoin rpc -regtest -rpcwallet="participant_1" getnewaddress)
 
-funded_psbt=$(./build/bin/bitcoin rpc -signet -rpcwallet="multisig_wallet_01" walletcreatefundedpsbt outputs="{\"$destination_addr\": $amount}" | jq -r '.psbt')
+funded_psbt=$(./build/bin/connectcoin rpc -regtest -rpcwallet="multisig_wallet_01" walletcreatefundedpsbt outputs="{\"$destination_addr\": $amount}" | jq -r '.psbt')
 ```
 
 There is also the `createpsbt` RPC, which serves the same purpose, but it has no access to the wallet or to the UTXO set. It is functionally the same as `createrawtransaction` and just drops the raw transaction into an otherwise blank PSBT. [[source](https://bitcointalk.org/index.php?topic=5131043.msg50573609#msg50573609)] In most cases, `walletcreatefundedpsbt` solves the problem.
@@ -163,9 +160,9 @@ Optionally, the PSBT can be decoded to a JSON format using `decodepsbt` RPC.
 The `analyzepsbt` RPC analyzes and provides information about the current status of a PSBT and its inputs, e.g. missing signatures.
 
 ```bash
-./build/bin/bitcoin rpc -signet decodepsbt $funded_psbt
+./build/bin/connectcoin rpc -regtest decodepsbt $funded_psbt
 
-./build/bin/bitcoin rpc -signet analyzepsbt $funded_psbt
+./build/bin/connectcoin rpc -regtest analyzepsbt $funded_psbt
 ```
 
 ### 1.7 Update the PSBT
@@ -175,9 +172,9 @@ In the code above, two PSBTs are created. One signed by `participant_1` wallet a
 The `walletprocesspsbt` is used by the wallet to sign a PSBT.
 
 ```bash
-psbt_1=$(./build/bin/bitcoin rpc -signet -rpcwallet="participant_1" walletprocesspsbt $funded_psbt | jq '.psbt')
+psbt_1=$(./build/bin/connectcoin rpc -regtest -rpcwallet="participant_1" walletprocesspsbt $funded_psbt | jq '.psbt')
 
-psbt_2=$(./build/bin/bitcoin rpc -signet -rpcwallet="participant_2" walletprocesspsbt $funded_psbt | jq '.psbt')
+psbt_2=$(./build/bin/connectcoin rpc -regtest -rpcwallet="participant_2" walletprocesspsbt $funded_psbt | jq '.psbt')
 ```
 
 ### 1.8 Combine the PSBT
@@ -185,7 +182,7 @@ psbt_2=$(./build/bin/bitcoin rpc -signet -rpcwallet="participant_2" walletproces
 The PSBT, if signed separately by the co-signers, must be combined into one transaction before being finalized. This is done by `combinepsbt` RPC.
 
 ```bash
-combined_psbt=$(./build/bin/bitcoin rpc -signet combinepsbt txs="[$psbt_1, $psbt_2]")
+combined_psbt=$(./build/bin/connectcoin rpc -regtest combinepsbt txs="[$psbt_1, $psbt_2]")
 ```
 
 There is an RPC called `joinpsbts`, but it has a different purpose than `combinepsbt`. `joinpsbts` joins the inputs from multiple distinct PSBTs into one PSBT.
@@ -199,9 +196,9 @@ The `finalizepsbt` RPC is used to produce a network serialized transaction which
 It checks that all inputs have complete scriptSigs and scriptWitnesses and, if so, encodes them into network serialized transactions.
 
 ```bash
-finalized_psbt_hex=$(./build/bin/bitcoin rpc -signet finalizepsbt $combined_psbt | jq -r '.hex')
+finalized_psbt_hex=$(./build/bin/connectcoin rpc -regtest finalizepsbt $combined_psbt | jq -r '.hex')
 
-./build/bin/bitcoin rpc -signet sendrawtransaction $finalized_psbt_hex
+./build/bin/connectcoin rpc -regtest sendrawtransaction $finalized_psbt_hex
 ```
 
 ### 1.10 Alternative Workflow (PSBT sequential signatures)
@@ -211,11 +208,11 @@ Instead of each wallet signing the original PSBT and combining them later, the w
 After that, the rest of the process is the same: the PSBT is finalized and transmitted to the network.
 
 ```bash
-psbt_1=$(./build/bin/bitcoin rpc -signet -rpcwallet="participant_1" walletprocesspsbt $funded_psbt | jq -r '.psbt')
+psbt_1=$(./build/bin/connectcoin rpc -regtest -rpcwallet="participant_1" walletprocesspsbt $funded_psbt | jq -r '.psbt')
 
-psbt_2=$(./build/bin/bitcoin rpc -signet -rpcwallet="participant_2" walletprocesspsbt $psbt_1 | jq -r '.psbt')
+psbt_2=$(./build/bin/connectcoin rpc -regtest -rpcwallet="participant_2" walletprocesspsbt $psbt_1 | jq -r '.psbt')
 
-finalized_psbt_hex=$(./build/bin/bitcoin rpc -signet finalizepsbt $psbt_2 | jq -r '.hex')
+finalized_psbt_hex=$(./build/bin/connectcoin rpc -regtest finalizepsbt $psbt_2 | jq -r '.hex')
 
-./build/bin/bitcoin rpc -signet sendrawtransaction $finalized_psbt_hex
+./build/bin/connectcoin rpc -regtest sendrawtransaction $finalized_psbt_hex
 ```

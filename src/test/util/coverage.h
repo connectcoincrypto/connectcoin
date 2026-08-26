@@ -2,9 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_TEST_UTIL_COVERAGE_H
-#define BITCOIN_TEST_UTIL_COVERAGE_H
+#ifndef CONNECTCOIN_TEST_UTIL_COVERAGE_H
+#define CONNECTCOIN_TEST_UTIL_COVERAGE_H
 
 void ResetCoverageCounters();
 
-#endif // BITCOIN_TEST_UTIL_COVERAGE_H
+#endif // CONNECTCOIN_TEST_UTIL_COVERAGE_H

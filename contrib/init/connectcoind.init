@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+#
+#  connectcoind The connectcoin core server.
+#
+#
+# chkconfig: 345 80 20
+# description: connectcoind
+# processname: connectcoind
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+# you can override defaults in /etc/sysconfig/connectcoind, see below
+if [ -f /etc/sysconfig/connectcoind ]; then
+        . /etc/sysconfig/connectcoind
+fi
+
+RETVAL=0
+
+prog=connectcoind
+# you can override the lockfile via CONNECTCOIND_LOCKFILE in /etc/sysconfig/connectcoind
+lockfile=${CONNECTCOIND_LOCKFILE-/var/lock/subsys/connectcoind}
+
+# connectcoind defaults to /usr/bin/connectcoind, override with CONNECTCOIND_BIN
+connectcoind=${CONNECTCOIND_BIN-/usr/bin/connectcoind}
+
+# Explicit service paths, overridable from /etc/sysconfig/connectcoind.
+connectcoind_configfile=${CONNECTCOIND_CONFIGFILE-/etc/connectcoin/connectcoin.conf}
+connectcoind_datadir=${CONNECTCOIND_DATADIR-/var/lib/connectcoind}
+connectcoind_pidfile=${CONNECTCOIND_PIDFILE-/var/run/connectcoind/connectcoind.pid}
+
+# Never run the node as root by default. Override with CONNECTCOIND_USER in
+# /etc/sysconfig/connectcoind when the package uses a different service account.
+connectcoind_user=${CONNECTCOIND_USER-connectcoin}
+connectcoind_group=${CONNECTCOIND_GROUP-connectcoin}
+
+# connectcoind opts default to -disablewallet, override with CONNECTCOIND_OPTS
+connectcoind_opts=${CONNECTCOIND_OPTS--disablewallet}
+
+start() {
+    echo -n $"Starting $prog: "
+    connectcoind_configdir="$(dirname "$connectcoind_configfile")"
+    if [ -L "$connectcoind_configdir" ]; then
+        echo $"Configuration directory must not be a symlink: $connectcoind_configdir"
+        return 1
+    fi
+    mkdir -p "$connectcoind_configdir" \
+        "$(dirname "$connectcoind_pidfile")" \
+        "$connectcoind_datadir"
+    chown "root:$connectcoind_group" "$connectcoind_configdir"
+    chmod 0750 "$connectcoind_configdir"
+    if [ -L "$connectcoind_configfile" ] || \
+       { [ -e "$connectcoind_configfile" ] && [ ! -f "$connectcoind_configfile" ]; }; then
+        echo $"Configuration path must be a regular file, not a symlink: $connectcoind_configfile"
+        return 1
+    fi
+    if [ ! -e "$connectcoind_configfile" ]; then
+        umask 0027
+        : > "$connectcoind_configfile"
+    fi
+    chown "$connectcoind_user:$connectcoind_group" "$connectcoind_datadir"
+    chown "$connectcoind_user:$connectcoind_group" "$(dirname "$connectcoind_pidfile")"
+    chown "root:$connectcoind_group" "$connectcoind_configfile"
+    chmod 0750 "$connectcoind_datadir"
+    chmod 0755 "$(dirname "$connectcoind_pidfile")"
+    chmod 0640 "$connectcoind_configfile"
+
+    daemon --user "$connectcoind_user" $DAEMONOPTS "$connectcoind" $connectcoind_opts \
+        -conf="$connectcoind_configfile" \
+        -datadir="$connectcoind_datadir" \
+        -pid="$connectcoind_pidfile" \
+        -daemon
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch $lockfile
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc $prog -t600
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && rm -f $lockfile
+    return $RETVAL
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status $prog
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: service $prog {start|stop|status|restart}"
+        exit 1
+        ;;
+esac

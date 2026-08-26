@@ -44,6 +44,25 @@ function(import_plugins target)
   endif()
 endfunction()
 
+# Dynamically linked Qt builds need runtime plugins beside the executable.
+# vcpkg copies the regular Qt DLLs automatically, but it does not deploy
+# plugins from Qt6/plugins.
+function(deploy_windows_qt_plugin target plugin subdirectory)
+  if(WIN32 AND NOT qt_lib_type STREQUAL "STATIC_LIBRARY")
+    if(NOT TARGET ${plugin})
+      message(FATAL_ERROR "Required Qt plugin target is unavailable: ${plugin}")
+    endif()
+    add_custom_command(TARGET ${target} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E make_directory
+        "$<TARGET_FILE_DIR:${target}>/${subdirectory}"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "$<TARGET_FILE:${plugin}>"
+        "$<TARGET_FILE_DIR:${target}>/${subdirectory}/$<TARGET_FILE_NAME:${plugin}>"
+      VERBATIM
+    )
+  endif()
+endfunction()
+
 # For Qt-specific commands and variables, please consult:
 #  - https://cmake.org/cmake/help/latest/manual/cmake-qt.7.html
 #  - https://doc.qt.io/qt-5/cmake-manual.html
@@ -55,18 +74,18 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS forms)
 
 set(CMAKE_AUTORCC OFF)
 configure_file(bitcoin_locale.qrc bitcoin_locale.qrc USE_SOURCE_PERMISSIONS COPYONLY)
-qt6_add_resources(BITCOIN_QRC bitcoin.qrc)
-qt6_add_resources(BITCOIN_LOCALE_QRC ${CMAKE_CURRENT_BINARY_DIR}/bitcoin_locale.qrc)
+qt6_add_resources(CONNECTCOIN_QRC bitcoin.qrc)
+qt6_add_resources(CONNECTCOIN_LOCALE_QRC ${CMAKE_CURRENT_BINARY_DIR}/bitcoin_locale.qrc)
 # See: https://bugreports.qt.io/browse/QTBUG-141858.
 get_target_property(warn_flags warn_interface INTERFACE_COMPILE_OPTIONS)
 if("-Wtrailing-whitespace=any" IN_LIST warn_flags)
-  set_source_files_properties(${BITCOIN_QRC} ${BITCOIN_LOCALE_QRC} PROPERTIES COMPILE_OPTIONS -Wno-trailing-whitespace)
+  set_source_files_properties(${CONNECTCOIN_QRC} ${CONNECTCOIN_LOCALE_QRC} PROPERTIES COMPILE_OPTIONS -Wno-trailing-whitespace)
 endif()
 unset(warn_flags)
 
-# The bitcoinqt sources have to include headers in
+# The connectcoin_qt sources have to include headers in
 # order to parse them to collect translatable strings.
-add_library(bitcoinqt STATIC EXCLUDE_FROM_ALL
+add_library(connectcoin_qt STATIC EXCLUDE_FROM_ALL
   bantablemodel.cpp
   bantablemodel.h
   bitcoin.cpp
@@ -127,15 +146,15 @@ add_library(bitcoinqt STATIC EXCLUDE_FROM_ALL
   utilitydialog.h
   $<$<PLATFORM_ID:Windows>:winshutdownmonitor.cpp>
   $<$<PLATFORM_ID:Windows>:winshutdownmonitor.h>
-  ${BITCOIN_QRC}
-  ${BITCOIN_LOCALE_QRC}
+  ${CONNECTCOIN_QRC}
+  ${CONNECTCOIN_LOCALE_QRC}
 )
-target_compile_definitions(bitcoinqt
+target_compile_definitions(connectcoin_qt
   PUBLIC
     QT_NO_KEYWORDS
     QT_USE_QSTRINGBUILDER
 )
-target_include_directories(bitcoinqt
+target_include_directories(connectcoin_qt
   PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
 )
@@ -143,12 +162,12 @@ set_property(SOURCE macnotificationhandler.mm
   # Ignore warnings "'NSUserNotificationCenter' is deprecated: first deprecated in macOS 11.0".
   APPEND PROPERTY COMPILE_OPTIONS -Wno-deprecated-declarations
 )
-target_link_libraries(bitcoinqt
+target_link_libraries(connectcoin_qt
   PUBLIC
     Qt6::Widgets
   PRIVATE
     core_interface
-    bitcoin_cli
+    connectcoin_cli
     leveldb
     Boost::headers
     $<TARGET_NAME_IF_EXISTS:QRencode::QRencode>
@@ -157,7 +176,7 @@ target_link_libraries(bitcoinqt
 )
 
 if(ENABLE_WALLET)
-  target_sources(bitcoinqt
+  target_sources(connectcoin_qt
     PRIVATE
       addressbookpage.cpp
       addressbookpage.h
@@ -220,21 +239,21 @@ if(ENABLE_WALLET)
       walletview.cpp
       walletview.h
   )
-  target_link_libraries(bitcoinqt
+  target_link_libraries(connectcoin_qt
     PRIVATE
-      bitcoin_wallet
+      connectcoin_wallet
       Qt6::Network
   )
 endif()
 
 if(WITH_DBUS)
-  target_link_libraries(bitcoinqt PRIVATE Qt6::DBus)
+  target_link_libraries(connectcoin_qt PRIVATE Qt6::DBus)
 endif()
 
 if(qt_lib_type STREQUAL "STATIC_LIBRARY")
   # We want to define static plugins to link ourselves, thus preventing
   # automatic linking against a "sane" set of default static plugins.
-  qt6_import_plugins(bitcoinqt
+  qt6_import_plugins(connectcoin_qt
     EXCLUDE_BY_TYPE
       accessiblebridge
       platforms
@@ -255,36 +274,49 @@ endif()
 
 add_subdirectory(locale)
 
-add_executable(bitcoin-qt WIN32
+add_executable(connectcoin-qt WIN32
   main.cpp
   res/bitcoin-qt-res.rc
   ../init/bitcoin-qt.cpp
 )
+add_windows_application_manifest(connectcoin-qt)
 
-add_windows_application_manifest(bitcoin-qt)
-
-target_link_libraries(bitcoin-qt
+target_link_libraries(connectcoin-qt
   core_interface
-  bitcoinqt
-  bitcoin_node
+  connectcoin_qt
+  connectcoin_node
 )
 
-import_plugins(bitcoin-qt)
-install_binary_component(bitcoin-qt HAS_MANPAGE)
+import_plugins(connectcoin-qt)
+deploy_windows_qt_plugin(connectcoin-qt Qt6::QWindowsIntegrationPlugin platforms)
+deploy_windows_qt_plugin(connectcoin-qt Qt6::QModernWindowsStylePlugin styles)
+install_binary_component(connectcoin-qt HAS_MANPAGE)
+if(WIN32 AND NOT qt_lib_type STREQUAL "STATIC_LIBRARY")
+  install(FILES "$<TARGET_FILE:Qt6::QWindowsIntegrationPlugin>"
+    DESTINATION "${CMAKE_INSTALL_BINDIR}/platforms"
+    COMPONENT connectcoin-qt
+  )
+  install(FILES "$<TARGET_FILE:Qt6::QModernWindowsStylePlugin>"
+    DESTINATION "${CMAKE_INSTALL_BINDIR}/styles"
+    COMPONENT connectcoin-qt
+  )
+endif()
 
 if(ENABLE_IPC)
-  add_executable(bitcoin-gui WIN32
+  add_executable(connectcoin-gui WIN32
     main.cpp
     ../init/bitcoin-gui.cpp
   )
-  target_link_libraries(bitcoin-gui
+  target_link_libraries(connectcoin-gui
     core_interface
-    bitcoinqt
-    bitcoin_node
-    bitcoin_ipc
+    connectcoin_qt
+    connectcoin_node
+    connectcoin_ipc
   )
-  import_plugins(bitcoin-gui)
-  install_binary_component(bitcoin-gui INTERNAL)
+  import_plugins(connectcoin-gui)
+  deploy_windows_qt_plugin(connectcoin-gui Qt6::QWindowsIntegrationPlugin platforms)
+  deploy_windows_qt_plugin(connectcoin-gui Qt6::QModernWindowsStylePlugin styles)
+  install_binary_component(connectcoin-gui INTERNAL)
 endif()
 
 if(BUILD_GUI_TESTS)

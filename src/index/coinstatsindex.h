@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_INDEX_COINSTATSINDEX_H
-#define BITCOIN_INDEX_COINSTATSINDEX_H
+#ifndef CONNECTCOIN_INDEX_COINSTATSINDEX_H
+#define CONNECTCOIN_INDEX_COINSTATSINDEX_H
 
 #include <arith_uint256.h>
 #include <consensus/amount.h>
@@ -75,4 +75,4 @@ public:
 /// The global UTXO set hash object.
 extern std::unique_ptr<CoinStatsIndex> g_coin_stats_index;
 
-#endif // BITCOIN_INDEX_COINSTATSINDEX_H
+#endif // CONNECTCOIN_INDEX_COINSTATSINDEX_H

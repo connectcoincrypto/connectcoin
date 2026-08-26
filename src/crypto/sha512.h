@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CRYPTO_SHA512_H
-#define BITCOIN_CRYPTO_SHA512_H
+#ifndef CONNECTCOIN_CRYPTO_SHA512_H
+#define CONNECTCOIN_CRYPTO_SHA512_H
 
 #include <cstdint>
 #include <cstdlib>
@@ -26,4 +26,4 @@ public:
     uint64_t Size() const { return bytes; }
 };
 
-#endif // BITCOIN_CRYPTO_SHA512_H
+#endif // CONNECTCOIN_CRYPTO_SHA512_H

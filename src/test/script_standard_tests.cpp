@@ -5,6 +5,8 @@
 #include <test/data/bip341_wallet_vectors.json.h>
 
 #include <addresstype.h>
+#include <bech32.h>
+#include <chainparams.h>
 #include <key.h>
 #include <key_io.h>
 #include <script/script.h>
@@ -453,7 +455,7 @@ BOOST_AUTO_TEST_CASE(script_standard_taproot_builder)
     builder.Finalize(key_inner);
     BOOST_CHECK(builder.IsValid());
     BOOST_CHECK(builder.IsComplete());
-    BOOST_CHECK_EQUAL(EncodeDestination(builder.GetOutput()), "bc1pj6gaw944fy0xpmzzu45ugqde4rz7mqj5kj0tg8kmr5f0pjq8vnaqgynnge");
+    BOOST_CHECK_EQUAL(EncodeDestination(builder.GetOutput()), "cc1pj6gaw944fy0xpmzzu45ugqde4rz7mqj5kj0tg8kmr5f0pjq8vnaqfv7j7t");
 }
 
 BOOST_AUTO_TEST_CASE(bip341_spk_test_vectors)
@@ -484,7 +486,9 @@ BOOST_AUTO_TEST_CASE(bip341_spk_test_vectors)
         parse_tree(vec["given"]["scriptTree"], 0);
         spktest.Finalize(XOnlyPubKey(ParseHex(vec["given"]["internalPubkey"].get_str())));
         BOOST_CHECK_EQUAL(HexStr(GetScriptForDestination(spktest.GetOutput())), vec["expected"]["scriptPubKey"].get_str());
-        BOOST_CHECK_EQUAL(EncodeDestination(spktest.GetOutput()), vec["expected"]["bip350Address"].get_str());
+        const auto bip350_address = bech32::Decode(vec["expected"]["bip350Address"].get_str());
+        BOOST_REQUIRE(bip350_address.encoding != bech32::Encoding::INVALID);
+        BOOST_CHECK_EQUAL(EncodeDestination(spktest.GetOutput()), bech32::Encode(bip350_address.encoding, Params().Bech32HRP(), bip350_address.data));
         auto spend_data = spktest.GetSpendData();
         BOOST_CHECK_EQUAL(vec["intermediary"]["merkleRoot"].isNull(), spend_data.merkle_root.IsNull());
         if (!spend_data.merkle_root.IsNull()) {

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_BITCOINUNITS_H
-#define BITCOIN_QT_BITCOINUNITS_H
+#ifndef CONNECTCOIN_QT_BITCOINUNITS_H
+#define CONNECTCOIN_QT_BITCOINUNITS_H
 
 #include <consensus/amount.h>
 
@@ -66,7 +66,7 @@ public:
     static QString shortName(Unit unit);
     //! Longer description
     static QString description(Unit unit);
-    //! Number of Satoshis (1e-8) per unit
+    //! Number of connects (1e-8 CC) per unit.
     static qint64 factor(Unit unit);
     //! Number of decimals left
     static int decimals(Unit unit);
@@ -102,7 +102,7 @@ public:
         return text;
     }
 
-    //! Return maximum number of base units (Satoshis)
+    //! Return maximum number of base units (connects).
     static CAmount maxMoney();
 
 private:
@@ -113,4 +113,4 @@ typedef BitcoinUnits::Unit BitcoinUnit;
 QDataStream& operator<<(QDataStream& out, const BitcoinUnit& unit);
 QDataStream& operator>>(QDataStream& in, BitcoinUnit& unit);
 
-#endif // BITCOIN_QT_BITCOINUNITS_H
+#endif // CONNECTCOIN_QT_BITCOINUNITS_H

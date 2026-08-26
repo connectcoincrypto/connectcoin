@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CONSENSUS_CONSENSUS_H
-#define BITCOIN_CONSENSUS_CONSENSUS_H
+#ifndef CONNECTCOIN_CONSENSUS_CONSENSUS_H
+#define CONNECTCOIN_CONSENSUS_CONSENSUS_H
 
 #include <cstddef>
 #include <cstdint>
@@ -34,4 +34,4 @@ inline constexpr unsigned int LOCKTIME_VERIFY_SEQUENCE = (1 << 0);
  */
 inline constexpr int64_t MAX_TIMEWARP = 600;
 
-#endif // BITCOIN_CONSENSUS_CONSENSUS_H
+#endif // CONNECTCOIN_CONSENSUS_CONSENSUS_H

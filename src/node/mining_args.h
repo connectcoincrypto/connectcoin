@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_NODE_MINING_ARGS_H
-#define BITCOIN_NODE_MINING_ARGS_H
+#ifndef CONNECTCOIN_NODE_MINING_ARGS_H
+#define CONNECTCOIN_NODE_MINING_ARGS_H
 
 #include <node/mining_types.h>
 #include <util/result.h>
@@ -34,4 +34,4 @@ inline constexpr bool DEFAULT_PRINT_MODIFIED_FEE = false;
 
 } // namespace node
 
-#endif // BITCOIN_NODE_MINING_ARGS_H
+#endif // CONNECTCOIN_NODE_MINING_ARGS_H

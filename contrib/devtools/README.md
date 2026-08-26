@@ -78,18 +78,26 @@ BUILDDIR=$PWD/my-build-dir contrib/devtools/gen-manpages.py
 headerssync-params.py
 =====================
 
-A script to generate optimal parameters for the headerssync module (stored in src/kernel/chainparams.cpp). It takes no command-line
-options, as all its configuration is set at the top of the file. It runs many times faster inside PyPy. Invocation:
+A script to generate optimal parameters for the headerssync module (stored in
+`src/kernel/chainparams.cpp`). Network-dependent values are mandatory so the
+tool cannot silently reuse another chain's genesis or minimum-chain-work data.
+It runs many times faster inside PyPy. Example invocation for the current
+development mainnet parameters (review the target date and chain-work policy
+before using generated values in a release):
 
 ```bash
-pypy3 contrib/devtools/headerssync-params.py
+pypy3 contrib/devtools/headerssync-params.py \
+  --target-date 2031-08-25 \
+  --genesis-time 1787596781 \
+  --minchainwork-headers 1 \
+  --block-interval-seconds 600
 ```
 
-gen-bitcoin-conf.sh
+gen-connectcoin-conf.sh
 ===================
 
-Generates a bitcoin.conf file in `share/examples/` by parsing the output from `bitcoind --help`. This script is run during the
-release process to include a bitcoin.conf with the release binaries and can also be run by users to generate a file locally.
+Generates a connectcoin.conf file in `share/examples/` by parsing the output from `connectcoind --help`. This script is run during the
+release process to include a connectcoin.conf with the release binaries and can also be run by users to generate a file locally.
 When generating a file as part of the release process, make sure to commit the changes after running the script.
 
 This script assumes a build directory named `build` as suggested by example build documentation.
@@ -97,7 +105,7 @@ To use it with a different build directory, set `BUILDDIR`.
 For example:
 
 ```bash
-BUILDDIR=$PWD/my-build-dir contrib/devtools/gen-bitcoin-conf.sh
+BUILDDIR=$PWD/my-build-dir contrib/devtools/gen-connectcoin-conf.sh
 ```
 
 circular-dependencies.py

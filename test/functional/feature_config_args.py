@@ -43,7 +43,7 @@ class ConfArgsTest(BitcoinTestFramework):
 
     def test_dir_config(self):
         self.log.info('Error should be emitted if config file is a directory')
-        conf_path = self.nodes[0].datadir_path / 'bitcoin.conf'
+        conf_path = self.nodes[0].datadir_path / 'connectcoin.conf'
         os.rename(conf_path, conf_path.with_suffix('.confbkp'))
         conf_path.mkdir()
         self.stop_node(0)
@@ -67,7 +67,7 @@ class ConfArgsTest(BitcoinTestFramework):
     def test_negated_config(self):
         self.log.info('Disabling configuration via -noconf')
 
-        conf_path = self.nodes[0].datadir_path / 'bitcoin.conf'
+        conf_path = self.nodes[0].datadir_path / 'connectcoin.conf'
         with open(conf_path) as conf:
             settings = [f'-{line.rstrip()}' for line in conf if len(line) > 1 and line[0] != '[']
         os.rename(conf_path, conf_path.with_suffix('.confbkp'))
@@ -82,7 +82,7 @@ class ConfArgsTest(BitcoinTestFramework):
 
         self.log.debug('Verifying that disabling of the config file means garbage inside of it does ' \
             'not prevent the node from starting, and message about existing config file is logged')
-        ignored_file_message = [f'Data directory "{self.nodes[0].datadir_path}" contains a "bitcoin.conf" file which is explicitly ignored using -noconf.']
+        ignored_file_message = [f'Data directory "{self.nodes[0].datadir_path}" contains a "connectcoin.conf" file which is explicitly ignored using -noconf.']
         with self.nodes[0].assert_debug_log(expected_msgs=ignored_file_message):
             self.start_node(0, extra_args=settings + ['-noconf'])
         self.stop_node(0)
@@ -98,7 +98,7 @@ class ConfArgsTest(BitcoinTestFramework):
     def test_config_file_parser(self):
         self.log.info('Test config file parser')
 
-        # Check that startup fails if conf= is set in bitcoin.conf or in an included conf file
+        # Check that startup fails if conf= is set in connectcoin.conf or in an included conf file
         bad_conf_file_path = self.nodes[0].datadir_path / "bitcoin_bad.conf"
         util.write_config(bad_conf_file_path, n=0, chain='', extra_config='conf=some.conf\n')
         conf_in_config_file_err = 'Error: Error reading configuration file: conf cannot be set in the configuration file; use includeconf= if you want to include additional config files'
@@ -107,7 +107,7 @@ class ConfArgsTest(BitcoinTestFramework):
             expected_msg=conf_in_config_file_err,
         )
         inc_conf_file_path = self.nodes[0].datadir_path / 'include.conf'
-        with open(self.nodes[0].datadir_path / 'bitcoin.conf', 'a') as conf:
+        with open(self.nodes[0].datadir_path / 'connectcoin.conf', 'a') as conf:
             conf.write(f'includeconf={inc_conf_file_path}\n')
         with open(inc_conf_file_path, 'w') as conf:
             conf.write('conf=some.conf\n')
@@ -165,7 +165,7 @@ class ConfArgsTest(BitcoinTestFramework):
         self.nodes[0].assert_start_raises_init_error(expected_msg='Error: Error reading configuration file: parse error on line 4, using # in rpcpassword can be ambiguous and should be avoided')
 
         inc_conf_file2_path = self.nodes[0].datadir_path / 'include2.conf'
-        with open(self.nodes[0].datadir_path / 'bitcoin.conf', 'a') as conf:
+        with open(self.nodes[0].datadir_path / 'connectcoin.conf', 'a') as conf:
             conf.write(f'includeconf={inc_conf_file2_path}\n')
 
         with open(inc_conf_file_path, 'w') as conf:
@@ -189,15 +189,15 @@ class ConfArgsTest(BitcoinTestFramework):
         self.log.info('Test that correct configuration path is changed when configuration file changes the datadir')
 
         # Create a temporary directory that will be treated as the default data
-        # directory by bitcoind.
+        # directory by connectcoind.
         env, default_datadir = util.get_temp_default_datadir(Path(self.options.tmpdir, "test_config_file_log"))
         default_datadir.mkdir(parents=True)
 
-        # Write a bitcoin.conf file in the default data directory containing a
+        # Write a connectcoin.conf file in the default data directory containing a
         # datadir= line pointing at the node datadir.
         node = self.nodes[0]
-        conf_text = node.bitcoinconf.read_text()
-        conf_path = default_datadir / "bitcoin.conf"
+        conf_text = node.connectcoinconf.read_text()
+        conf_path = default_datadir / "connectcoin.conf"
         conf_path.write_text(f"datadir={node.datadir_path}\n{conf_text}")
 
         # Drop the node -datadir= argument during this test, because if it is
@@ -207,7 +207,7 @@ class ConfArgsTest(BitcoinTestFramework):
         node.args = [arg for arg in node.args if not arg.startswith("-datadir=")]
 
         # Check that correct configuration file path is actually logged
-        # (conf_path, not node.bitcoinconf)
+        # (conf_path, not node.connectcoinconf)
         with self.nodes[0].assert_debug_log(expected_msgs=[f"Config file: {conf_path}"]):
             self.start_node(0, ["-allowignoredconf"], env=env)
             self.stop_node(0)
@@ -312,9 +312,8 @@ class ConfArgsTest(BitcoinTestFramework):
         peer_dat = default_data_dir / 'peers.dat'
 
         # No peers.dat exists and -dnsseed=1
-        # We expect the node will use DNS Seeds, but Regtest mode does not have
-        # any valid DNS seeds. So after 60 seconds, the node should fallback to
-        # fixed seeds
+        # ConnectCoin regtest has no DNS or fixed seeds. Advancing mock time
+        # must not make it import inherited Bitcoin peers.
         assert not peer_dat.exists()
         start = int(time.time())
         with self.nodes[0].assert_debug_log(
@@ -327,27 +326,30 @@ class ConfArgsTest(BitcoinTestFramework):
         ):
             self.start_node(0, extra_args=['-dnsseed=1', '-fixedseeds=1', f'-mocktime={start}', UNREACHABLE_PROXY_ARG])
 
-        # Only regtest has no fixed seeds. To avoid connections to random
-        # nodes, regtest is the only network where it is safe to enable
-        # -fixedseeds in tests
+        # Keep this assertion explicit because the test framework must never
+        # exercise a public network while checking empty bootstrap data.
         util.assert_equal(self.nodes[0].getblockchaininfo()['chain'],'regtest')
 
-        with self.nodes[0].assert_debug_log(expected_msgs=[
-                "Adding fixed seeds as 60 seconds have passed and addrman is empty",
-        ], timeout=2):
+        with self.nodes[0].assert_debug_log(
+                expected_msgs=[],
+                unexpected_msgs=["Adding fixed seeds"],
+                timeout=2,
+        ):
             self.nodes[0].setmocktime(start + 65)
         self.stop_node(0)
 
         # No peers.dat exists and -dnsseed=0
-        # We expect the node will fallback immediately to fixed seeds
-        # An empty -addnode value is ignored, so it must not delay the fallback
-        # either.
+        # An empty -addnode value is ignored, and the node must remain without
+        # bootstrap peers because ConnectCoin has no reviewed fixed seeds.
         assert not peer_dat.exists()
-        with self.nodes[0].assert_debug_log(expected_msgs=[
+        with self.nodes[0].assert_debug_log(
+                expected_msgs=[
                 "Loaded 0 addresses from peers.dat",
                 "DNS seeding disabled",
-                "Adding fixed seeds as -dnsseed=0 (or IPv4/IPv6 connections are disabled via -onlynet) and neither -addnode nor -seednode are provided\n",
-        ], timeout=2):
+                ],
+                unexpected_msgs=["Adding fixed seeds"],
+                timeout=2,
+        ):
             self.start_node(0, extra_args=['-dnsseed=0', '-fixedseeds=1', '-addnode='])
         self.stop_node(0)
         self.nodes[0].assert_start_raises_init_error(['-dnsseed=1', '-onlynet=i2p', '-i2psam=127.0.0.1:7656'], "Error: Incompatible options: -dnsseed=1 was explicitly specified, but -onlynet forbids connections to IPv4/IPv6")
@@ -363,8 +365,8 @@ class ConfArgsTest(BitcoinTestFramework):
             self.start_node(0, extra_args=['-dnsseed=0', '-fixedseeds=0'])
         self.stop_node(0)
 
-        # No peers.dat exists and -dnsseed=0, but a -addnode is provided
-        # We expect the node will allow 60 seconds prior to using fixed seeds
+        # No peers.dat exists and -dnsseed=0, but a -addnode is provided. Even
+        # after 60 seconds, there are no fixed seeds to add.
         assert not peer_dat.exists()
         start = int(time.time())
         with self.nodes[0].assert_debug_log(
@@ -376,9 +378,11 @@ class ConfArgsTest(BitcoinTestFramework):
                 timeout=10,
         ):
             self.start_node(0, extra_args=['-dnsseed=0', '-fixedseeds=1', '-addnode=fakenodeaddr', f'-mocktime={start}', UNREACHABLE_PROXY_ARG])
-        with self.nodes[0].assert_debug_log(expected_msgs=[
-                "Adding fixed seeds as 60 seconds have passed and addrman is empty",
-        ], timeout=2):
+        with self.nodes[0].assert_debug_log(
+                expected_msgs=[],
+                unexpected_msgs=["Adding fixed seeds"],
+                timeout=2,
+        ):
             self.nodes[0].setmocktime(start + 65)
         self.stop_node(0)
 
@@ -452,20 +456,20 @@ class ConfArgsTest(BitcoinTestFramework):
             "be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1."))
 
     def test_ignored_conf(self):
-        self.log.info('Test error is triggered when the datadir in use contains a bitcoin.conf file that would be ignored '
+        self.log.info('Test error is triggered when the datadir in use contains a connectcoin.conf file that would be ignored '
                       'because a conflicting -conf file argument is passed.')
         node = self.nodes[0]
         with tempfile.NamedTemporaryFile(dir=self.options.tmpdir, mode="wt", delete=False) as temp_conf:
             temp_conf.write(f"datadir={node.datadir_path}\n")
         node.assert_start_raises_init_error([f"-conf={temp_conf.name}"], re.escape(
-            f'Error: Data directory "{node.datadir_path}" contains a "bitcoin.conf" file which is ignored, because a '
+            f'Error: Data directory "{node.datadir_path}" contains a "connectcoin.conf" file which is ignored, because a '
             f'different configuration file "{temp_conf.name}" from command line argument "-conf={temp_conf.name}" '
             f'is being used instead.') + r"[\s\S]*", match=ErrorMatch.FULL_REGEX)
 
         # Test that passing a redundant -conf command line argument pointing to
-        # the same bitcoin.conf that would be loaded anyway does not trigger an
+        # the same connectcoin.conf that would be loaded anyway does not trigger an
         # error.
-        self.start_node(0, [f'-conf={node.datadir_path}/bitcoin.conf'])
+        self.start_node(0, [f'-conf={node.datadir_path}/connectcoin.conf'])
         self.stop_node(0)
 
     def test_ignored_default_conf(self):
@@ -474,20 +478,20 @@ class ConfArgsTest(BitcoinTestFramework):
         if platform.system() == "Windows":
             return
 
-        self.log.info('Test error is triggered when bitcoin.conf in the default data directory sets another datadir '
-                      'and it contains a different bitcoin.conf file that would be ignored')
+        self.log.info('Test error is triggered when connectcoin.conf in the default data directory sets another datadir '
+                      'and it contains a different connectcoin.conf file that would be ignored')
 
         # Create a temporary directory that will be treated as the default data
-        # directory by bitcoind.
+        # directory by connectcoind.
         env, default_datadir = util.get_temp_default_datadir(Path(self.options.tmpdir, "home"))
         default_datadir.mkdir(parents=True)
 
-        # Write a bitcoin.conf file in the default data directory containing a
+        # Write a connectcoin.conf file in the default data directory containing a
         # datadir= line pointing at the node datadir. This will trigger a
         # startup error because the node datadir contains a different
-        # bitcoin.conf that would be ignored.
+        # connectcoin.conf that would be ignored.
         node = self.nodes[0]
-        (default_datadir / "bitcoin.conf").write_text(f"datadir={node.datadir_path}\n")
+        (default_datadir / "connectcoin.conf").write_text(f"datadir={node.datadir_path}\n")
 
         # Drop the node -datadir= argument during this test, because if it is
         # specified it would take precedence over the datadir setting in the
@@ -495,14 +499,14 @@ class ConfArgsTest(BitcoinTestFramework):
         node_args = node.args
         node.args = [arg for arg in node.args if not arg.startswith("-datadir=")]
         node.assert_start_raises_init_error([], re.escape(
-            f'Error: Data directory "{node.datadir_path}" contains a "bitcoin.conf" file which is ignored, because a '
-            f'different configuration file "{default_datadir}/bitcoin.conf" from data directory "{default_datadir}" '
+            f'Error: Data directory "{node.datadir_path}" contains a "connectcoin.conf" file which is ignored, because a '
+            f'different configuration file "{default_datadir}/connectcoin.conf" from data directory "{default_datadir}" '
             f'is being used instead.') + r"[\s\S]*", env=env, match=ErrorMatch.FULL_REGEX)
         node.args = node_args
 
     def test_acceptstalefeeestimates_arg_support(self):
         self.log.info("Test -acceptstalefeeestimates option support")
-        conf_file = self.nodes[0].datadir_path / "bitcoin.conf"
+        conf_file = self.nodes[0].datadir_path / "connectcoin.conf"
         for chain, chain_name in {("main", ""), ("test", "testnet3"), ("signet", "signet"), ("testnet4", "testnet4")}:
             util.write_config(conf_file, n=0, chain=chain_name, extra_config='acceptstalefeeestimates=1\n')
             self.nodes[0].assert_start_raises_init_error(expected_msg=f'Error: acceptstalefeeestimates is not supported on {chain} chain.')
@@ -561,7 +565,7 @@ class ConfArgsTest(BitcoinTestFramework):
         self.nodes[0].assert_start_raises_init_error([f'-datadir={new_data_dir}'], f'Error: Specified data directory "{new_data_dir}" does not exist.')
 
         # Check that using non-existent datadir in conf file fails
-        conf_file = default_data_dir / "bitcoin.conf"
+        conf_file = default_data_dir / "connectcoin.conf"
 
         # datadir needs to be set before [chain] section
         with open(conf_file) as f:
@@ -573,7 +577,7 @@ class ConfArgsTest(BitcoinTestFramework):
         self.nodes[0].assert_start_raises_init_error([f'-conf={conf_file}'], f'Error: Error reading configuration file: specified data directory "{new_data_dir}" does not exist.')
 
         # Check that an explicitly specified config file that cannot be opened fails
-        none_existent_conf_file = default_data_dir / "none_existent_bitcoin.conf"
+        none_existent_conf_file = default_data_dir / "none_existent_connectcoin.conf"
         self.nodes[0].assert_start_raises_init_error(['-conf=' + f'{none_existent_conf_file}'], 'Error: Error reading configuration file: specified config file "' + f'{none_existent_conf_file}' + '" could not be opened.')
 
         # Create the directory and ensure the config file now works

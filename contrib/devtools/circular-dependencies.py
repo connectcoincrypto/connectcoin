@@ -24,13 +24,17 @@ def module_name(path):
         return path[:-4]
     return None
 
+args = sys.argv[1:]
+if args == ['-']:
+    args = [line for line in sys.stdin.read().splitlines() if line]
+
 files = dict()
 deps: dict[str, set[str]] = dict()
 
 RE = re.compile("^#include <(.*)>")
 
 # Iterate over files, and create list of modules
-for arg in sys.argv[1:]:
+for arg in args:
     module = module_name(arg)
     if module is None:
         print("Ignoring file %s (does not constitute module)\n" % arg)
@@ -42,7 +46,7 @@ for arg in sys.argv[1:]:
 # TODO: implement support for multiple include directories
 for arg in sorted(files.keys()):
     module = files[arg]
-    with open(arg, 'r') as f:
+    with open(arg, 'r', encoding='utf8') as f:
         for line in f:
             match = RE.match(line)
             if match:

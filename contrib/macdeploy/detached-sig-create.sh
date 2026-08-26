@@ -6,13 +6,20 @@
 export LC_ALL=C
 set -e
 
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+SIGNING_DISABLED_FILE="${SCRIPT_DIR}/connectcoin-signing-disabled"
+if [ -f "${SIGNING_DISABLED_FILE}" ]; then
+  cat "${SIGNING_DISABLED_FILE}" >&2
+  exit 1
+fi
+
 SIGNAPPLE=signapple
 TEMPDIR=sign.temp
 
 BUNDLE_ROOT=dist
-BUNDLE_NAME="Bitcoin-Qt.app"
+BUNDLE_NAME="ConnectCoin-Qt.app"
 UNSIGNED_BUNDLE="${BUNDLE_ROOT}/${BUNDLE_NAME}"
-UNSIGNED_BINARY="${UNSIGNED_BUNDLE}/Contents/MacOS/Bitcoin-Qt"
+UNSIGNED_BINARY="${UNSIGNED_BUNDLE}/Contents/MacOS/ConnectCoin-Qt"
 
 ARCH=$(${SIGNAPPLE} info ${UNSIGNED_BINARY} | head -n 1 | cut -d " " -f 1)
 

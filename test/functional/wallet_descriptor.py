@@ -47,7 +47,7 @@ class WalletDescriptorTest(BitcoinTestFramework):
         # First remove the checksum
         desc_verify = parent_desc.split("#")[0]
         # Next extract the xpub
-        desc_verify = re.sub(r"tpub\w+?(?=/)", "", desc_verify)
+        desc_verify = re.sub(r"(?:tpub|tcub)\w+?(?=/)", "", desc_verify)
         # Extract origin info
         origin_match = re.search(r'\[([\da-fh/]+)\]', desc_verify)
         origin_part = origin_match.group(1) if origin_match else ""

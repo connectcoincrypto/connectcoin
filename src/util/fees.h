@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UTIL_FEES_H
-#define BITCOIN_UTIL_FEES_H
+#ifndef CONNECTCOIN_UTIL_FEES_H
+#define CONNECTCOIN_UTIL_FEES_H
 
 #include <attributes.h>
 #include <util/expected.h>
@@ -92,4 +92,4 @@ inline const FeeRateEstimation& FeeRateEstimationRef(const util::Expected<FeeRat
 std::string_view FeeRateEstimatorTypeToString(FeeRateEstimatorType feerate_estimator_type);
 FeeRateEstimatorType FeeRateEstimatorTypeFromString(std::string_view feerate_estimator_type);
 
-#endif // BITCOIN_UTIL_FEES_H
+#endif // CONNECTCOIN_UTIL_FEES_H

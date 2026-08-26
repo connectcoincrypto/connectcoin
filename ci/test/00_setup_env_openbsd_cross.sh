@@ -28,7 +28,7 @@ export DEP_OPTS="NO_QT=1 build_CC=clang build_CXX=clang++ \
  RANLIB=llvm-ranlib-${APT_LLVM_V} \
  STRIP=llvm-strip-${APT_LLVM_V}"
 export GOAL="install"
-export BITCOIN_CONFIG="\
+export CONNECTCOIN_CONFIG="\
  --preset=dev-mode \
  -DBUILD_GUI=OFF \
  -DREDUCE_EXPORTS=ON \

@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_NET_H
-#define BITCOIN_NET_H
+#ifndef CONNECTCOIN_NET_H
+#define CONNECTCOIN_NET_H
 
 #include <bip324.h>
 #include <chainparams.h>
@@ -1536,7 +1536,7 @@ private:
      * Determine whether we're already connected to a given "host:port".
      * Note that for inbound connections, the peer is likely using a random outbound
      * port on their side, so this will likely not match any inbound connections.
-     * @param[in] host String of the form "host[:port]", e.g. "localhost" or "localhost:8333" or "1.2.3.4:8333".
+     * @param[in] host String of the form "host[:port]", e.g. "localhost" or "localhost:48173" or "1.2.3.4:48173".
      * @return true if connected to `host`.
      */
     bool AlreadyConnectedToHost(std::string_view host) const EXCLUSIVE_LOCKS_REQUIRED(!m_nodes_mutex);
@@ -1908,4 +1908,4 @@ extern std::function<void(const CAddress& addr,
                           bool is_incoming)>
     CaptureMessage;
 
-#endif // BITCOIN_NET_H
+#endif // CONNECTCOIN_NET_H

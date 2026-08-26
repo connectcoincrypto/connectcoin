@@ -130,7 +130,9 @@ def check_all_file_permissions(files) -> int:
     for filename, file_meta in files.items():
         if file_meta.permissions == ALLOWED_PERMISSION_EXECUTABLES:
             with open(filename, "rb") as f:
-                shebang = f.readline().rstrip(b"\n")
+                # Git may check out text files with CRLF on Windows. Treat both
+                # line-ending styles identically when validating the shebang.
+                shebang = f.readline().rstrip(b"\r\n")
 
             # For any file with executable permissions the first line must contain a shebang
             if not shebang.startswith(b"#!"):

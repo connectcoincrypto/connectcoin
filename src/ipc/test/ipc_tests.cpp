@@ -158,12 +158,12 @@ void IpcSocketTest(const fs::path& datadir)
     std::unique_ptr<ipc::Process> process{ipc::MakeProcess()};
 
     std::string invalid_bind{"invalid:"};
-    BOOST_CHECK_THROW(process->bind(datadir, "test_bitcoin", invalid_bind), std::invalid_argument);
-    BOOST_CHECK_THROW(process->connect(datadir, "test_bitcoin", invalid_bind), std::invalid_argument);
+    BOOST_CHECK_THROW(process->bind(datadir, "connectcoin-test", invalid_bind), std::invalid_argument);
+    BOOST_CHECK_THROW(process->connect(datadir, "connectcoin-test", invalid_bind), std::invalid_argument);
 
     auto bind_and_listen{[&](const std::string& bind_address) {
         std::string address{bind_address};
-        mp::SocketId serve_fd = process->bind(datadir, "test_bitcoin", address);
+        mp::SocketId serve_fd = process->bind(datadir, "connectcoin-test", address);
         BOOST_CHECK_NE(serve_fd, mp::SocketError);
         BOOST_CHECK_EQUAL(address, bind_address);
         protocol->listen(serve_fd, *init);
@@ -171,7 +171,7 @@ void IpcSocketTest(const fs::path& datadir)
 
     auto connect_and_test{[&](const std::string& connect_address) {
         std::string address{connect_address};
-        mp::SocketId connect_fd{process->connect(datadir, "test_bitcoin", address)};
+        mp::SocketId connect_fd{process->connect(datadir, "connectcoin-test", address)};
         BOOST_CHECK_EQUAL(address, connect_address);
         std::unique_ptr<interfaces::Init> remote_init{protocol->connect(protocol->makeStream(connect_fd))};
         std::unique_ptr<interfaces::Echo> remote_echo{remote_init->makeEcho()};
@@ -181,7 +181,7 @@ void IpcSocketTest(const fs::path& datadir)
     // Need to specify explicit socket addresses outside the data directory, because the data
     // directory path is so long that the default socket address and any other
     // addresses in the data directory would fail with errors like:
-    //   Address 'unix' path '"/tmp/test_common_Bitcoin Core/ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff/test_bitcoin.sock"' exceeded maximum socket path length
+    //   Address 'unix' path '"/tmp/test_common ConnectCoin/ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff/connectcoin-test.sock"' exceeded maximum socket path length
     std::vector<std::string> addresses{
         strprintf("unix:%s", TempPath("bitcoin_sock0_XXXXXX")),
         strprintf("unix:%s", TempPath("bitcoin_sock1_XXXXXX")),
@@ -214,15 +214,15 @@ BOOST_AUTO_TEST_CASE(parse_address_test)
     auto check_notexist{[](const std::system_error& e) { return e.code() == std::errc::no_such_file_or_directory; }};
     auto check_address{[&](std::string address, std::string expect_address, std::string expect_error) {
         if (expect_error.empty()) {
-            BOOST_CHECK_EXCEPTION(process->connect(datadir, "test_bitcoin", address), std::system_error, check_notexist);
+            BOOST_CHECK_EXCEPTION(process->connect(datadir, "connectcoin-test", address), std::system_error, check_notexist);
         } else {
-            BOOST_CHECK_EXCEPTION(process->connect(datadir, "test_bitcoin", address), std::invalid_argument, HasReason(expect_error));
+            BOOST_CHECK_EXCEPTION(process->connect(datadir, "connectcoin-test", address), std::invalid_argument, HasReason(expect_error));
         }
         BOOST_CHECK_EQUAL(address, expect_address);
     }};
     std::string prefix{fs::PathToString(datadir / "")};
-    check_address("unix", "unix:" + prefix + "test_bitcoin.sock", "");
-    check_address("unix:", "unix:" + prefix + "test_bitcoin.sock", "");
+    check_address("unix", "unix:" + prefix + "connectcoin-test.sock", "");
+    check_address("unix:", "unix:" + prefix + "connectcoin-test.sock", "");
     check_address("unix:path.sock", "unix:" + prefix + "path.sock", "");
     check_address("unix:0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.sock",
                   "unix:" + prefix + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.sock",

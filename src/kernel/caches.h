@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_KERNEL_CACHES_H
-#define BITCOIN_KERNEL_CACHES_H
+#ifndef CONNECTCOIN_KERNEL_CACHES_H
+#define CONNECTCOIN_KERNEL_CACHES_H
 
 #include <util/byte_units.h>
 
@@ -42,4 +42,4 @@ struct CacheSizes {
 };
 } // namespace kernel
 
-#endif // BITCOIN_KERNEL_CACHES_H
+#endif // CONNECTCOIN_KERNEL_CACHES_H

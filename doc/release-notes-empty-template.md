@@ -5,20 +5,19 @@ for the process.*
 *version* Release Notes Draft
 ===============================
 
-Bitcoin Core version *version* is now available from:
+ConnectCoin Core version *version* is now available from:
 
-  <https://bitcoincore.org/bin/bitcoin-core-*version*/>
+  `CONNECTCOIN_RELEASE_URL` (replace before publishing)
 
 This release includes new features, various bug fixes and performance
 improvements, as well as updated translations.
 
-Please report bugs using the issue tracker at GitHub:
+Please report bugs using the ConnectCoin issue tracker:
 
-  <https://github.com/bitcoin/bitcoin/issues>
+  `CONNECTCOIN_ISSUE_TRACKER_URL` (replace before publishing)
 
-To receive security and update notifications, please subscribe to:
-
-  <https://bitcoincore.org/en/list/announcements/join/>
+Security reports and update notifications must use the project-owned channels
+listed in `SECURITY.md` (verify those channels before publishing).
 
 With the release of this new major version, versions *version minus 3* and
 older are at "End of Life" and will no longer receive updates.
@@ -34,20 +33,20 @@ How to Upgrade
 
 If you are running an older version, shut it down. Wait until it has completely
 shut down (which might take a few minutes in some cases), then run the
-installer (on Windows) or just copy over `/Applications/Bitcoin-Qt` (on macOS)
-or `bitcoind`/`bitcoin-qt` (on Linux).
+installer (on Windows) or just copy over `/Applications/ConnectCoin-Qt` (on macOS)
+or `connectcoind`/`connectcoin-qt` (on Linux).
 
-Upgrading directly from a version of Bitcoin Core that has reached its EOL is
+Upgrading directly from a version of ConnectCoin Core that has reached its EOL is
 possible, but it might take some time if the data directory needs to be migrated. Old
-wallet versions of Bitcoin Core are generally supported.
+wallet versions of ConnectCoin Core are generally supported.
 
 Compatibility
 ==============
 
-Bitcoin Core is supported and tested on the following operating systems or newer:
-Linux Kernel 3.17, macOS 14, and Windows 10 (version 1903). Bitcoin
+ConnectCoin Core is supported and tested on the following operating systems or newer:
+Linux Kernel 3.17, macOS 14, and Windows 10 (version 1903). ConnectCoin
 Core should also work on most other Unix-like systems but is not as
-frequently tested on them. It is not recommended to use Bitcoin Core on
+frequently tested on them. It is not recommended to use ConnectCoin Core on
 unsupported systems.
 
 Notable changes
@@ -104,5 +103,6 @@ Credits
 Thanks to everyone who directly contributed to this release:
 
 
-As well as to everyone that helped with translations on
-[Transifex](https://explore.transifex.com/bitcoin/bitcoin/).
+Translation credits must be populated from the project-owned translation
+workflow before publishing. Do not reuse the inherited Bitcoin Transifex
+credits or project link.

@@ -1,37 +1,31 @@
-Bitcoin Core integration/staging tree
-=====================================
+ConnectCoin Core development tree
+=================================
 
-https://bitcoincore.org
+ConnectCoin Core is a Bitcoin Core fork under active development. Its goal is a
+UTXO cryptocurrency with native pay-to-connect (P2C) outputs backed by
+independently verifiable TLS 1.3 connection proofs.
 
-For an immediately usable, binary version of the Bitcoin Core software, see
-https://bitcoincore.org/en/download/.
+This repository is not production-ready. The current migration milestone
+separates the product name, binaries, data directory, configuration file, ports,
+network magic, peer discovery, and genesis blocks from Bitcoin Core. Native P2C
+consensus rules and TLS 1.3 connection proofs are planned for later milestones.
 
-What is Bitcoin Core?
----------------------
+The codebase retains Bitcoin Core copyright notices and upstream attribution.
 
-Bitcoin Core connects to the Bitcoin peer-to-peer network to download and fully
-validate blocks and transactions. It also includes a wallet and graphical user
-interface, which can be optionally built.
-
-Further information about Bitcoin Core is available in the [doc folder](/doc).
+The current public identifier inventory and pre-launch registry warnings are in
+[doc/connectcoin-branding.md](doc/connectcoin-branding.md).
 
 License
 -------
 
-Bitcoin Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
+ConnectCoin Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
 information or see https://opensource.org/license/MIT.
 
 Development Process
 -------------------
 
-The `master` branch is regularly built (see `doc/build-*.md` for instructions) and tested, but it is not guaranteed to be
-completely stable. [Tags](https://github.com/bitcoin/bitcoin/tags) are created
-regularly from release branches to indicate new official, stable release versions of Bitcoin Core.
-
-The https://github.com/bitcoin-core/gui repository is used exclusively for the
-development of the GUI. Its master branch is identical in all monotree
-repositories. Release branches and tags do not exist, so please do not fork
-that repository unless it is for development reasons.
+The development branch should be built and tested after every consensus or
+networking change. See `doc/build-*.md` for the inherited build instructions.
 
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md)
 and useful hints for developers can be found in [doc/developer-notes.md](doc/developer-notes.md).
@@ -69,11 +63,7 @@ not straightforward.
 Translations
 ------------
 
-Changes to translations as well as new translations can be submitted to
-[Bitcoin Core's Transifex page](https://explore.transifex.com/bitcoin/bitcoin/).
-
-Translations are periodically pulled from Transifex and merged into the git repository. See the
-[translation process](doc/translation_process.md) for details on how this works.
-
-**Important**: We do not accept translation changes as GitHub pull requests because the next
-pull from Transifex would automatically overwrite them again.
+The translation catalogs are inherited from Bitcoin Core and have not yet been
+reviewed as ConnectCoin translations. New or changed ConnectCoin strings fall
+back to English until this project establishes its own translation workflow.
+See the [branding inventory](doc/connectcoin-branding.md) for this limitation.

@@ -1,0 +1,5 @@
+ConnectCoin commit verification is disabled because no project-owned trusted
+Git root, Tree-SHA512 root, or authorized signer keys have been configured.
+The bundled trust data is inherited from Bitcoin Core and must not be treated
+as ConnectCoin policy. Replace all trust files and document the new policy
+before removing this marker.

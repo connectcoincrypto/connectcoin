@@ -2,16 +2,16 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CLIENTVERSION_H
-#define BITCOIN_CLIENTVERSION_H
+#ifndef CONNECTCOIN_CLIENTVERSION_H
+#define CONNECTCOIN_CLIENTVERSION_H
 
 #include <util/macros.h>
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 // Check that required client information is defined
 #if !defined(CLIENT_VERSION_MAJOR) || !defined(CLIENT_VERSION_MINOR) || !defined(CLIENT_VERSION_BUILD) || !defined(CLIENT_VERSION_IS_RELEASE) || !defined(COPYRIGHT_YEAR)
-#error Client version information missing: version is not defined by bitcoin-build-config.h or in any other way
+#error Client version information missing: version is not defined by connectcoin-build-config.h or in any other way
 #endif
 
 //! Copyright string used in Windows .rc files
@@ -36,4 +36,4 @@ std::string FormatSubVersion(const std::string& name, int nClientVersion, const 
 
 #endif // RC_INVOKED
 
-#endif // BITCOIN_CLIENTVERSION_H
+#endif // CONNECTCOIN_CLIENTVERSION_H

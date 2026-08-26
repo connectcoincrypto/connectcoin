@@ -17,7 +17,7 @@ from subprocess import check_output, CalledProcessError
 from lint_ignore_dirs import SHARED_EXCLUDED_SUBTREES
 
 
-EXCLUDED_DIRS = ["contrib/devtools/bitcoin-tidy/",
+EXCLUDED_DIRS = ["contrib/devtools/connectcoin-tidy/",
                 ] + SHARED_EXCLUDED_SUBTREES
 
 EXPECTED_BOOST_INCLUDES = [
@@ -43,9 +43,12 @@ def get_toplevel():
 def list_files_by_suffix(suffixes):
     exclude_args = [":(exclude)" + dir for dir in EXCLUDED_DIRS]
 
-    files_list = check_output(["git", "ls-files", "src"] + exclude_args, text=True).splitlines()
+    files_list = check_output(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "src"] + exclude_args,
+        text=True,
+    ).splitlines()
 
-    return [file for file in files_list if file.endswith(suffixes)]
+    return [file for file in files_list if os.path.isfile(file) and file.endswith(suffixes)]
 
 
 def find_duplicate_includes(include_list):
@@ -121,7 +124,7 @@ def main():
 
     # Check for duplicate includes
     for filename in list_files_by_suffix((".cpp", ".h")):
-        with open(filename, "r") as file:
+        with open(filename, "r", encoding="utf8") as file:
             include_list = [line.rstrip("\n") for line in file if re.match(r"^#include", line)]
 
         duplicates = find_duplicate_includes(include_list)

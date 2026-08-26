@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UTIL_FEEFRAC_H
-#define BITCOIN_UTIL_FEEFRAC_H
+#ifndef CONNECTCOIN_UTIL_FEEFRAC_H
+#define CONNECTCOIN_UTIL_FEEFRAC_H
 
 #include <util/check.h>
 #include <util/overflow.h>
@@ -200,11 +200,11 @@ struct FeePerUnit : public FeeFrac
     }
 };
 
-// FeePerUnit instance for satoshi / vbyte.
+// FeePerUnit instance for connect / virtual byte.
 struct VSizeTag {};
 using FeePerVSize = FeePerUnit<VSizeTag>;
 
-// FeePerUnit instance for satoshi / WU.
+// FeePerUnit instance for connect / WU.
 struct WeightTag {};
 using FeePerWeight = FeePerUnit<WeightTag>;
 
@@ -311,4 +311,4 @@ public:
     operator const T&() const noexcept { return m_feefrac; }
 };
 
-#endif // BITCOIN_UTIL_FEEFRAC_H
+#endif // CONNECTCOIN_UTIL_FEEFRAC_H

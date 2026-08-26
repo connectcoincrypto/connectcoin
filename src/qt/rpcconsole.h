@@ -2,10 +2,10 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_RPCCONSOLE_H
-#define BITCOIN_QT_RPCCONSOLE_H
+#ifndef CONNECTCOIN_QT_RPCCONSOLE_H
+#define CONNECTCOIN_QT_RPCCONSOLE_H
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <qt/clientmodel.h>
 #include <qt/guiutil.h>
@@ -39,7 +39,7 @@ class QMenu;
 class QItemSelection;
 QT_END_NAMESPACE
 
-/** Local Bitcoin RPC console. */
+/** Local ConnectCoin RPC console. */
 class RPCConsole: public QWidget
 {
     Q_OBJECT
@@ -215,4 +215,4 @@ protected:
     }
 };
 
-#endif // BITCOIN_QT_RPCCONSOLE_H
+#endif // CONNECTCOIN_QT_RPCCONSOLE_H

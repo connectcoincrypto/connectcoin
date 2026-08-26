@@ -32,8 +32,8 @@
 #include <utility>
 #include <variant>
 
-const char * const BITCOIN_CONF_FILENAME = "bitcoin.conf";
-const char * const BITCOIN_SETTINGS_FILENAME = "settings.json";
+const char* const CONNECTCOIN_CONF_FILENAME = "connectcoin.conf";
+const char* const CONNECTCOIN_SETTINGS_FILENAME = "settings.json";
 
 ArgsManager gArgs;
 
@@ -188,7 +188,7 @@ bool ArgsManager::ParseParameters(int argc, const char* const argv[], std::strin
         if (key.starts_with("-psn_")) continue;
 #endif
 
-        if (key == "-") break; //bitcoin-tx using stdin
+        if (key == "-") break; // connectcoin-tx using stdin
         std::optional<std::string> val;
         size_t is_index = key.find('=');
         if (is_index != std::string::npos) {
@@ -435,7 +435,7 @@ bool ArgsManager::IsArgSet(const std::string& strArg) const
 
 bool ArgsManager::GetSettingsPath(fs::path* filepath, bool temp, bool backup) const
 {
-    fs::path settings = GetPathArg("-settings", BITCOIN_SETTINGS_FILENAME);
+    fs::path settings = GetPathArg("-settings", CONNECTCOIN_SETTINGS_FILENAME);
     if (settings.empty()) {
         return false;
     }
@@ -858,19 +858,8 @@ bool HasTestOption(const ArgsManager& args, const std::string& test_option)
 
 fs::path GetDefaultDataDir()
 {
-    // Windows:
-    //   old: C:\Users\Username\AppData\Roaming\Bitcoin
-    //   new: C:\Users\Username\AppData\Local\Bitcoin
-    // macOS: ~/Library/Application Support/Bitcoin
-    // Unix-like: ~/.bitcoin
 #ifdef WIN32
-    // Windows
-    // Check for existence of datadir in old location and keep it there
-    fs::path legacy_path = GetSpecialFolderPath(CSIDL_APPDATA) / "Bitcoin";
-    if (fs::exists(legacy_path)) return legacy_path;
-
-    // Otherwise, fresh installs can start in the new, "proper" location
-    return GetSpecialFolderPath(CSIDL_LOCAL_APPDATA) / "Bitcoin";
+    return GetSpecialFolderPath(CSIDL_LOCAL_APPDATA) / "ConnectCoin";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -880,10 +869,10 @@ fs::path GetDefaultDataDir()
         pathRet = fs::path(pszHome);
 #ifdef __APPLE__
     // macOS
-    return pathRet / "Library/Application Support/Bitcoin";
+    return pathRet / "Library/Application Support/ConnectCoin";
 #else
     // Unix-like
-    return pathRet / ".bitcoin";
+    return pathRet / ".connectcoin";
 #endif
 #endif
 }

@@ -33,11 +33,11 @@ class ScanblocksTest(BitcoinTestFramework):
         _, spk_1, addr_1 = getnewdestination()
         wallet.send_to(from_node=node, scriptPubKey=spk_1, amount=1 * COIN)
 
-        parent_key = "tpubD6NzVbkrYhZ4WaWSyoBvQwbpLkojyoTZPRsgXELWz3Popb3qkjcJyJUGLnL4qHHoQvao8ESaAstxYSnhyswJ76uZPStJRJCTKvosUCJZL5B"
+        parent_key = "tcubNC1uBHhBxmWgfPoCJ8krUwtLbnqX2uhWwmgfSt2GLbCHhPuEq4LhtLBZKLwC6YkHK2hXrPWvVMgReYFtgWxenNZAuC69MaERFZ7AygMKgQd"
         # send 1.0, mempool only
         # childkey 5 of `parent_key`
         wallet.send_to(from_node=node,
-                       scriptPubKey=address_to_scriptpubkey("mkS4HXoTYWRTescLGaUTGbtTTYX5EjJyEE"),
+                       scriptPubKey=address_to_scriptpubkey("TEtJzY6CtD7A2wCM9H9nxqNGWLfga4B4kp"),
                        amount=1 * COIN)
 
         # mine a block and assure that the mined blockhash is in the filterresult
@@ -90,7 +90,7 @@ class ScanblocksTest(BitcoinTestFramework):
         genesis_spks = bip158_relevant_scriptpubkeys(node, genesis_blockhash)
         assert_equal(len(genesis_spks), 1)
         genesis_coinbase_spk = list(genesis_spks)[0]
-        false_positive_spk = bytes.fromhex("001400000000000000000000000000000000000cadcb")
+        false_positive_spk = bytes.fromhex("001400000000000000000000000000000000000d459a")
 
         genesis_coinbase_hash = bip158_basic_element_hash(genesis_coinbase_spk, 1, genesis_blockhash)
         false_positive_hash = bip158_basic_element_hash(false_positive_spk, 1, genesis_blockhash)

@@ -39,7 +39,7 @@ from test_framework.wallet import MiniWallet
 WALLET_PASSPHRASE = "test"
 WALLET_PASSPHRASE_TIMEOUT = 3600
 
-# Fee rates (sat/vB)
+# Fee rates (con/vB)
 INSUFFICIENT =      1
 ECONOMICAL   =     50
 NORMAL       =    100
@@ -141,7 +141,7 @@ class BumpFeeTest(BitcoinTestFramework):
         if not self.options.usecli:
             for invalid_value in ["", 0.000000001, 1e-09, 1.111111111, 1111111111111111, "31.999999999999999999999"]:
                 assert_raises_rpc_error(-3, msg, rbf_node.bumpfee, rbfid, fee_rate=invalid_value)
-        # Test fee_rate values that cannot be represented in sat/vB.
+        # Test fee_rate values that cannot be represented in con/vB.
         for invalid_value in [0.0001, 0.00000001, 0.00099999, 31.99999999]:
             assert_raises_rpc_error(-3, msg, rbf_node.bumpfee, rbfid, fee_rate=invalid_value)
         # Test fee_rate out of range (negative number).
@@ -168,7 +168,7 @@ class BumpFeeTest(BitcoinTestFramework):
             for k, v in {"number": 42, "object": {"foo": "bar"}}.items():
                 assert_raises_rpc_error(-3, f"JSON value of type {k} for field estimate_mode is not of expected type string",
                     rbf_node.bumpfee, rbfid, estimate_mode=v)
-        for mode in ["foo", Decimal("3.1415"), "sat/B", "BTC/kB"]:
+        for mode in ["foo", Decimal("3.1415"), "sat/B", "CC/kB"]:
             assert_raises_rpc_error(-8, 'Invalid estimate_mode parameter, must be one of: "unset", "economical", "conservative"',
                 rbf_node.bumpfee, rbfid, estimate_mode=mode)
 
@@ -519,7 +519,7 @@ def test_dust_to_fee(self, rbf_node, dest_address):
     # boundary. Thus expected transaction size (p2wpkh, 1 input, 2 outputs) is 140-141 vbytes, usually 141.
     if not 140 <= fulltx["vsize"] <= 141:
         raise AssertionError("Invalid tx vsize of {} (140-141 expected), full tx: {}".format(fulltx["vsize"], fulltx))
-    # Bump with fee_rate of 250 sat/vB. The leftover change is below the dust
+    # Bump with fee_rate of 250 con/vB. The leftover change is below the dust
     # threshold, so it is dropped and folded into the fee.
     # Target fee is 141 vbytes * 0.00250000 BTC / 1000 vbytes = 0.00035250 BTC (20 sat change left),
     # or occasionally 140 vbytes * 0.00250000 BTC / 1000 vbytes = 0.00035000 BTC (270 sat change left).

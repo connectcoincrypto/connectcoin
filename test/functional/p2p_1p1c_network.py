@@ -70,7 +70,7 @@ class PackageRelayTest(BitcoinTestFramework):
         return [parent1["hex"], parent2["hex"], child["hex"]], parent1["tx"], parent2["tx"], child["tx"]
 
     def create_packages(self):
-        # 1: Basic 1-parent-1-child package, parent 0sat/vB, child 999sat/vB
+        # 1: Basic 1-parent-1-child package, parent 0con/vB, child 999con/vB
         package_hex_1, parent_1, child_1 = self.create_basic_1p1c(self.wallet)
 
         # 2: same as 1, parent's txid is the same as its wtxid.

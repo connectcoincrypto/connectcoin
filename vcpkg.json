@@ -31,7 +31,7 @@
       ]
     },
     "tests": {
-      "description": "Build test_bitcoin.exe executable",
+      "description": "Provide Boost.Test for ConnectCoin unit and kernel test executables",
       "dependencies": [
         "boost-test"
       ]

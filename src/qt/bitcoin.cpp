@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <qt/bitcoin.h>
 
@@ -195,7 +195,7 @@ void DebugMessageHandler(QtMsgType type, const QMessageLogContext& context, cons
 }
 
 static int qt_argc = 1;
-static const char* qt_argv = "bitcoin-qt";
+static const char* qt_argv = "connectcoin-qt";
 
 BitcoinApplication::BitcoinApplication()
     : QApplication(qt_argc, const_cast<char**>(&qt_argv))
@@ -417,7 +417,7 @@ void BitcoinApplication::initializeResult(bool success, interfaces::BlockAndHead
 
 #ifdef ENABLE_WALLET
     // Now that initialization/startup is done, process any command-line
-    // bitcoin: URIs or payment requests:
+    // connectcoin: URIs or payment requests:
     if (paymentServer) {
         connect(paymentServer, &PaymentServer::receivedPaymentRequest, window, &BitcoinGUI::handlePaymentRequest);
         connect(window, &BitcoinGUI::receivedURI, paymentServer, &PaymentServer::handleURIOrFile);
@@ -525,7 +525,7 @@ int GuiMain(int argc, char* argv[])
         QString arg(argv[i]);
         bool invalid_token = !arg.startsWith("-");
 #ifdef ENABLE_WALLET
-        if (arg.startsWith(BITCOIN_IPC_PREFIX, Qt::CaseInsensitive)) {
+        if (arg.startsWith(CONNECTCOIN_IPC_PREFIX, Qt::CaseInsensitive)) {
             invalid_token &= false;
             payment_server_token_seen = true;
         }
@@ -538,10 +538,10 @@ int GuiMain(int argc, char* argv[])
             return EXIT_FAILURE;
         }
         if (invalid_token) {
-            InitError(Untranslated(strprintf("Command line contains unexpected token '%s', see bitcoin-qt -h for a list of options.", argv[i])));
+            InitError(Untranslated(strprintf("Command line contains unexpected token '%s', see connectcoin-qt -h for a list of options.", argv[i])));
             QMessageBox::critical(nullptr, CLIENT_NAME,
                                   // message cannot be translated because translations have not been initialized
-                                  QString::fromStdString("Command line contains unexpected token '%1', see bitcoin-qt -h for a list of options.").arg(QString::fromStdString(argv[i])));
+                                  QString::fromStdString("Command line contains unexpected token '%1', see connectcoin-qt -h for a list of options.").arg(QString::fromStdString(argv[i])));
             return EXIT_FAILURE;
         }
     }
@@ -579,7 +579,7 @@ int GuiMain(int argc, char* argv[])
     // Gracefully exit if the user cancels
     if (!Intro::showIfNeeded(did_show_intro, prune_MiB)) return EXIT_SUCCESS;
 
-    /// 6-7. Parse bitcoin.conf, determine network, switch to network specific
+    /// 6-7. Parse connectcoin.conf, determine network, switch to network specific
     /// options, and create datadir and settings.json.
     // - Do not call gArgs.GetDataDirNet() before this step finishes
     // - Do not call Params() before this step
@@ -621,7 +621,7 @@ int GuiMain(int argc, char* argv[])
         exit(EXIT_SUCCESS);
 
     // Start up the payment server early, too, so impatient users that click on
-    // bitcoin: links repeatedly have their payment requests routed to this process:
+    // connectcoin: links repeatedly have their payment requests routed to this process:
     if (WalletModel::isWalletEnabled()) {
         app.createPaymentServer();
     }

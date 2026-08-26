@@ -141,9 +141,9 @@ BOOST_AUTO_TEST_CASE(ToStringTest)
 {
     CFeeRate feeRate;
     feeRate = CFeeRate(1);
-    BOOST_CHECK_EQUAL(feeRate.ToString(), "0.00000001 BTC/kvB");
-    BOOST_CHECK_EQUAL(feeRate.ToString(FeeRateFormat::BTC_KVB), "0.00000001 BTC/kvB");
-    BOOST_CHECK_EQUAL(feeRate.ToString(FeeRateFormat::SAT_VB), "0.001 sat/vB");
+    BOOST_CHECK_EQUAL(feeRate.ToString(), "0.00000001 CC/kvB");
+    BOOST_CHECK_EQUAL(feeRate.ToString(FeeRateFormat::COIN_KVB), "0.00000001 CC/kvB");
+    BOOST_CHECK_EQUAL(feeRate.ToString(FeeRateFormat::ATOM_VB), "0.001 con/vB");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -18,9 +18,8 @@ ${CI_RETRY_EXE} apt-get update
 # - cargo (used to run the lint tests)
 # - curl/xz-utils (to install shellcheck)
 # - git (used in many lint scripts)
-# - gpg (used by verify-commits)
 # - moreutils (used by scripted-diff)
-${CI_RETRY_EXE} apt-get install -y cargo curl xz-utils git gpg moreutils
+${CI_RETRY_EXE} apt-get install -y cargo curl xz-utils git moreutils
 
 # Install Python and create venv using uv (reads version from .python-version)
 uv venv /python_env

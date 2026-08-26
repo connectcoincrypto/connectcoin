@@ -683,7 +683,7 @@ class HTTPBasicsTest (BitcoinTestFramework):
 
             # The waiting connection gets processed
             delayed_response = waiting_request.result(timeout=5)
-            assert "0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206" in delayed_response.decode()
+            assert "79e876886fc96349e9979c0024589376c85a4a65a5b111ab85f7623ab9c72727" in delayed_response.decode()
 
             # Close all remaining connections for clean up
             for client in connections:

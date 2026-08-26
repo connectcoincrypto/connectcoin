@@ -168,13 +168,13 @@ class WalletExportedWatchOnly(BitcoinTestFramework):
                 # A single key, non-ranged
                 {"desc": descsum_create(f"pkh({generate_keypair(wif=True)[0]})"), "timestamp": "now"},
                 # hardened derivation
-                {"desc": descsum_create("sh(wpkh(tprv8ZgxMBicQKsPeuVhWwi6wuMQGfPKi9Li5GtX35jVNknACgqe3CY4g5xgkfDDJcmtF7o1QnxWDRYw4H5P26PXq7sbcUkEqeR4fg3Kxp2tigg/0'/*'))"), "timestamp": "now", "active": True},
+                {"desc": descsum_create("sh(wpkh(tcprHuVh8FbViZHtaqT1fFfECsmpAKWxv6gK64c1WTMKFFtTUewgzFNoQrVRE2BhEYaWf61mVs8kM5WocdpFerABBrwZqr3nrPas98YWnSQG91u/0'/*'))"), "timestamp": "now", "active": True},
                 # multisig
-                {"desc": descsum_create("wsh(multi(1,tpubD6NzVbkrYhZ4WaWSyoBvQwbpLkojyoTZPRsgXELWz3Popb3qkjcJyJUGLnL4qHHoQvao8ESaAstxYSnhyswJ76uZPStJRJCTKvosUCJZL5B/*,tprv8ZgxMBicQKsPeuVhWwi6wuMQGfPKi9Li5GtX35jVNknACgqe3CY4g5xgkfDDJcmtF7o1QnxWDRYw4H5P26PXq7sbcUkEqeR4fg3Kxp2tigg/*))"), "timestamp": "now", "active": True, "internal": True},
+                {"desc": descsum_create("wsh(multi(1,tcubNC1uBHhBxmWgfPoCJ8krUwtLbnqX2uhWwmgfSt2GLbCHhPuEq4LhtLBZKLwC6YkHK2hXrPWvVMgReYFtgWxenNZAuC69MaERFZ7AygMKgQd/*,tcprHuVh8FbViZHtaqT1fFfECsmpAKWxv6gK64c1WTMKFFtTUewgzFNoQrVRE2BhEYaWf61mVs8kM5WocdpFerABBrwZqr3nrPas98YWnSQG91u/*))"), "timestamp": "now", "active": True, "internal": True},
                 # taproot multi scripts
-                {"desc": descsum_create(f"tr({H_POINT},{{pk(tpubD6NzVbkrYhZ4WaWSyoBvQwbpLkojyoTZPRsgXELWz3Popb3qkjcJyJUGLnL4qHHoQvao8ESaAstxYSnhyswJ76uZPStJRJCTKvosUCJZL5B/*),pk(tprv8ZgxMBicQKsPeuVhWwi6wuMQGfPKi9Li5GtX35jVNknACgqe3CY4g5xgkfDDJcmtF7o1QnxWDRYw4H5P26PXq7sbcUkEqeR4fg3Kxp2tigg/0h/*)}})"), "timestamp": "now", "active": True},
+                {"desc": descsum_create(f"tr({H_POINT},{{pk(tcubNC1uBHhBxmWgfPoCJ8krUwtLbnqX2uhWwmgfSt2GLbCHhPuEq4LhtLBZKLwC6YkHK2hXrPWvVMgReYFtgWxenNZAuC69MaERFZ7AygMKgQd/*),pk(tcprHuVh8FbViZHtaqT1fFfECsmpAKWxv6gK64c1WTMKFFtTUewgzFNoQrVRE2BhEYaWf61mVs8kM5WocdpFerABBrwZqr3nrPas98YWnSQG91u/0h/*)}})"), "timestamp": "now", "active": True},
                 # miniscript
-                {"desc": descsum_create(f"tr({H_POINT},or_b(pk(tpubD6NzVbkrYhZ4WaWSyoBvQwbpLkojyoTZPRsgXELWz3Popb3qkjcJyJUGLnL4qHHoQvao8ESaAstxYSnhyswJ76uZPStJRJCTKvosUCJZL5B/1/2/*),s:pk(tprv8ZgxMBicQKsPeuVhWwi6wuMQGfPKi9Li5GtX35jVNknACgqe3CY4g5xgkfDDJcmtF7o1QnxWDRYw4H5P26PXq7sbcUkEqeR4fg3Kxp2tigg/1h/2/*)))"), "timestamp": "now", "active": True, "internal": True},
+                {"desc": descsum_create(f"tr({H_POINT},or_b(pk(tcubNC1uBHhBxmWgfPoCJ8krUwtLbnqX2uhWwmgfSt2GLbCHhPuEq4LhtLBZKLwC6YkHK2hXrPWvVMgReYFtgWxenNZAuC69MaERFZ7AygMKgQd/1/2/*),s:pk(tcprHuVh8FbViZHtaqT1fFfECsmpAKWxv6gK64c1WTMKFFtTUewgzFNoQrVRE2BhEYaWf61mVs8kM5WocdpFerABBrwZqr3nrPas98YWnSQG91u/1h/2/*)))"), "timestamp": "now", "active": True, "internal": True},
             ]
         )
         assert_equal(all([r["success"] for r in import_res]), True)

@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <arith_uint256.h>
 #include <chain.h>
@@ -55,16 +55,16 @@ static int AppInitUtil(ArgsManager& args, int argc, char* argv[])
 
     if (HelpRequested(args) || args.GetBoolArg("-version", false)) {
         // First part of help message is specific to this utility
-        std::string strUsage = CLIENT_NAME " bitcoin-util utility version " + FormatFullVersion() + "\n";
+        std::string strUsage = CLIENT_NAME " connectcoin-util utility version " + FormatFullVersion() + "\n";
 
         if (args.GetBoolArg("-version", false)) {
             strUsage += FormatParagraph(LicenseInfo());
         } else {
             strUsage += "\n"
-                "The bitcoin-util tool provides bitcoin related functionality that does not rely on the ability to access a running node. Available [commands] are listed below.\n"
+                "The connectcoin-util tool provides ConnectCoin-related functionality that does not rely on the ability to access a running node. Available [commands] are listed below.\n"
                 "\n"
-                "Usage:  bitcoin-util [options] [command]\n"
-                "or:     bitcoin-util [options] grind <hex-block-header>\n";
+                "Usage:  connectcoin-util [options] [command]\n"
+                "or:     connectcoin-util [options] grind <hex-block-header>\n";
             strUsage += "\n" + args.GetHelpMessage();
         }
 

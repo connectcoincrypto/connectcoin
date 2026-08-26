@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_OPTIONSMODEL_H
-#define BITCOIN_QT_OPTIONSMODEL_H
+#ifndef CONNECTCOIN_QT_OPTIONSMODEL_H
+#define CONNECTCOIN_QT_OPTIONSMODEL_H
 
 #include <cstdint>
 #include <qt/bitcoinunits.h>
@@ -34,7 +34,7 @@ static inline int PruneMiBtoGB(int64_t mib) { return (mib * 1_MiB + GB_BYTES - 1
  */
 static inline int64_t PruneGBtoMiB(int gb) { return gb * GB_BYTES / 1_MiB; }
 
-/** Interface from Qt to configuration data structure for Bitcoin client.
+/** Interface from Qt to configuration data structure for the ConnectCoin client.
    To Qt, the options are presented as a list with the different options
    laid out vertically.
    This can be changed to a tree once the settings become sufficiently
@@ -157,4 +157,4 @@ Q_SIGNALS:
 
 Q_DECLARE_METATYPE(OptionsModel::FontChoice)
 
-#endif // BITCOIN_QT_OPTIONSMODEL_H
+#endif // CONNECTCOIN_QT_OPTIONSMODEL_H

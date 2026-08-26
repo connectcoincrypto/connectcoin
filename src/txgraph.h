@@ -12,8 +12,8 @@
 
 #include <util/feefrac.h>
 
-#ifndef BITCOIN_TXGRAPH_H
-#define BITCOIN_TXGRAPH_H
+#ifndef CONNECTCOIN_TXGRAPH_H
+#define CONNECTCOIN_TXGRAPH_H
 
 inline constexpr unsigned MAX_CLUSTER_COUNT_LIMIT{64};
 
@@ -270,4 +270,4 @@ std::unique_ptr<TxGraph> MakeTxGraph(
     const std::function<std::strong_ordering(const TxGraph::Ref&, const TxGraph::Ref&)>& fallback_order
 ) noexcept;
 
-#endif // BITCOIN_TXGRAPH_H
+#endif // CONNECTCOIN_TXGRAPH_H

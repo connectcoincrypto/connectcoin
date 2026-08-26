@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UTIL_OBFUSCATION_H
-#define BITCOIN_UTIL_OBFUSCATION_H
+#ifndef CONNECTCOIN_UTIL_OBFUSCATION_H
+#define CONNECTCOIN_UTIL_OBFUSCATION_H
 
 #include <crypto/hex_base.h>
 #include <span.h>
@@ -113,4 +113,4 @@ private:
     }
 };
 
-#endif // BITCOIN_UTIL_OBFUSCATION_H
+#endif // CONNECTCOIN_UTIL_OBFUSCATION_H

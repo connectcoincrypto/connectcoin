@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SCRIPT_PARSING_H
-#define BITCOIN_SCRIPT_PARSING_H
+#ifndef CONNECTCOIN_SCRIPT_PARSING_H
+#define CONNECTCOIN_SCRIPT_PARSING_H
 
 #include <span>
 #include <string>
@@ -36,4 +36,4 @@ std::span<const char> Expr(std::span<const char>& sp);
 
 } // namespace script
 
-#endif // BITCOIN_SCRIPT_PARSING_H
+#endif // CONNECTCOIN_SCRIPT_PARSING_H

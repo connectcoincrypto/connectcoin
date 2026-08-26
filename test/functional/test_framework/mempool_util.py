@@ -29,9 +29,9 @@ from .wallet import (
     MiniWallet,
 )
 
-# Default for -minrelaytxfee in sat/kvB
+# Default for -minrelaytxfee in con/kvB
 DEFAULT_MIN_RELAY_TX_FEE = 100
-# Default for -incrementalrelayfee in sat/kvB
+# Default for -incrementalrelayfee in con/kvB
 DEFAULT_INCREMENTAL_RELAY_FEE = 100
 DEFAULT_CLUSTER_LIMIT = 64
 DEFAULT_CLUSTER_SIZE_LIMIT_KVB = 101

@@ -22,6 +22,7 @@
 namespace {
 
 struct BIP324Test : BasicTestingSetup {
+static constexpr MessageStartChars BITCOIN_MAINNET_MAGIC{0xf9, 0xbe, 0xb4, 0xd9};
 void TestBIP324PacketVector(
     uint32_t in_idx,
     const std::string& in_priv_ours_hex,
@@ -60,7 +61,7 @@ void TestBIP324PacketVector(
     BIP324Cipher cipher(key, ellswift_ours);
     BOOST_CHECK(!cipher);
     BOOST_CHECK(cipher.GetOurPubKey() == ellswift_ours);
-    cipher.Initialize(ellswift_theirs, in_initiating);
+    cipher.Initialize(ellswift_theirs, in_initiating, /*self_decrypt=*/false, &BITCOIN_MAINNET_MAGIC);
     BOOST_CHECK(cipher);
 
     // Compare session variables.
@@ -107,7 +108,7 @@ void TestBIP324PacketVector(
         BIP324Cipher dec_cipher(key, ellswift_ours);
         BOOST_CHECK(!dec_cipher);
         BOOST_CHECK(dec_cipher.GetOurPubKey() == ellswift_ours);
-        dec_cipher.Initialize(ellswift_theirs, (error == 1) ^ in_initiating, /*self_decrypt=*/true);
+        dec_cipher.Initialize(ellswift_theirs, (error == 1) ^ in_initiating, /*self_decrypt=*/true, &BITCOIN_MAINNET_MAGIC);
         BOOST_CHECK(dec_cipher);
 
         // Compare session variables.

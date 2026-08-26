@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UTIL_TIME_H
-#define BITCOIN_UTIL_TIME_H
+#ifndef CONNECTCOIN_UTIL_TIME_H
+#define CONNECTCOIN_UTIL_TIME_H
 
 // The `util/time.h` header is designed to be a drop-in replacement for `chrono`.
 #include <chrono> // IWYU pragma: export
@@ -159,4 +159,4 @@ struct timeval MillisToTimeval(int64_t nTimeout);
  */
 struct timeval MillisToTimeval(std::chrono::milliseconds ms);
 
-#endif // BITCOIN_UTIL_TIME_H
+#endif // CONNECTCOIN_UTIL_TIME_H

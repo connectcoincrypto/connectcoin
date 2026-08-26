@@ -1,0 +1,4 @@
+ConnectCoin Windows signing is disabled. The inherited Bitcoin Core certificate
+was removed because it cannot authenticate ConnectCoin binaries. Add a
+project-owned certificate and document the release-signing policy before
+removing this marker.

@@ -20,7 +20,7 @@ from test_framework.util import (
     dumb_sync_blocks,
 )
 
-# Wallet version constants from ancient Bitcoin Core (pre-0.15)
+# Wallet version constants from ancient ConnectCoin Core (pre-0.15)
 FEATURE_COMPRPUBKEY = 60000  # Non-HD wallet version
 FEATURE_HD = 130000          # Single-chain HD wallet version (pre-v0.15)
 WALLET_PASSPHRASE = "test_passphrase"

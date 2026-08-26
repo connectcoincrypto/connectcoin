@@ -3,21 +3,21 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CONSENSUS_AMOUNT_H
-#define BITCOIN_CONSENSUS_AMOUNT_H
+#ifndef CONNECTCOIN_CONSENSUS_AMOUNT_H
+#define CONNECTCOIN_CONSENSUS_AMOUNT_H
 
 #include <cstdint>
 
-/** Amount in satoshis (Can be negative) */
+/** Amount in connects (can be negative). */
 typedef int64_t CAmount;
 
-/** The amount of satoshis in one BTC. */
+/** The amount of connects in one CC. */
 inline constexpr CAmount COIN{100'000'000};
 
-/** No amount larger than this (in satoshi) is valid.
+/** No amount larger than this (in connects) is valid.
  *
  * Note that this constant is *not* the total money supply, which in Bitcoin
- * currently happens to be less than 21,000,000 BTC for various reasons, but
+ * currently happens to be less than 21,000,000 CC for various reasons, but
  * rather a sanity check. As this sanity check is used by consensus-critical
  * validation code, the exact value of the MAX_MONEY constant is consensus
  * critical; in unusual circumstances like a(nother) overflow bug that allowed
@@ -26,4 +26,4 @@ inline constexpr CAmount COIN{100'000'000};
 inline constexpr CAmount MAX_MONEY{21'000'000 * COIN};
 inline bool MoneyRange(const CAmount& nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 
-#endif // BITCOIN_CONSENSUS_AMOUNT_H
+#endif // CONNECTCOIN_CONSENSUS_AMOUNT_H

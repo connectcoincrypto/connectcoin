@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UTIL_BIP32_H
-#define BITCOIN_UTIL_BIP32_H
+#ifndef CONNECTCOIN_UTIL_BIP32_H
+#define CONNECTCOIN_UTIL_BIP32_H
 
 #include <cstdint>
 #include <span>
@@ -39,4 +39,4 @@ std::string FormatHDKeypath(const std::vector<uint32_t>& path, bool apostrophe =
 /** Whether a parsed HD keypath contains at least one hardened derivation step. */
 bool HasHardenedDerivation(std::span<const uint32_t> keypath);
 
-#endif // BITCOIN_UTIL_BIP32_H
+#endif // CONNECTCOIN_UTIL_BIP32_H

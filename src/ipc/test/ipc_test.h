@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_IPC_TEST_IPC_TEST_H
-#define BITCOIN_IPC_TEST_IPC_TEST_H
+#ifndef CONNECTCOIN_IPC_TEST_IPC_TEST_H
+#define CONNECTCOIN_IPC_TEST_IPC_TEST_H
 
 #include <primitives/transaction.h>
 #include <script/script.h>
@@ -24,4 +24,4 @@ public:
     CScript passScript(CScript s) { return s; }
 };
 
-#endif // BITCOIN_IPC_TEST_IPC_TEST_H
+#endif // CONNECTCOIN_IPC_TEST_IPC_TEST_H

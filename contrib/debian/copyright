@@ -1,14 +1,26 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: Bitcoin
-Upstream-Contact: Satoshi Nakamoto <satoshin@gmx.com>
- irc://#bitcoin-core-dev@libera.chat
-Source: https://github.com/bitcoin/bitcoin
+Upstream-Name: ConnectCoin Core
+Upstream-Contact: ConnectCoin maintainers (public contact not yet assigned)
+Source: public ConnectCoin source repository not yet assigned
+Comment: ConnectCoin Core is derived from Bitcoin Core. Replace the source and
+         contact placeholders before publishing Debian packages; upstream
+         Bitcoin Core channels do not support this fork.
 
 Files: *
 Copyright: 2009-2026, Bitcoin Core Developers
 License: Expat
 Comment: The Bitcoin Core Developers encompasses all contributors to the
          project, listed in the release notes or the git log.
+
+Files: src/qt/res/icons/connectcoin.png
+       src/qt/res/icons/connectcoin.ico
+       src/qt/res/icons/connectcoin.icns
+       src/qt/res/icons/connectcoin_signet.ico
+       src/qt/res/icons/connectcoin_testnet.ico
+Copyright: 2026, ConnectCoin contributors
+License: Expat
+Comment: Generated specifically for ConnectCoin with OpenAI image generation;
+         see doc/assets-attribution.md.
 
 Files: debian/*
 Copyright: 2010-2011, Jonas Smedegaard <dr@jones.dk>
@@ -66,13 +78,6 @@ Files: src/qt/res/icons/clock*.png
 Copyright: Stephen Hutchings, Jonas Schnelli
 License: Expat
 Comment: Modifications of Stephen Hutchings' Typicons
-
-Files: src/qt/res/icons/bitcoin.*
-       share/pixmaps/bitcoin*
-       src/qt/res/src/bitcoin.svg
-Copyright: Bitboy, Jonas Schnelli
-License: public-domain
-Comment: Site: https://bitcointalk.org/?topic=1756.0
 
 Files: src/qt/res/icons/proxy.png
        src/qt/res/src/proxy.svg

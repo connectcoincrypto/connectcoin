@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CONSENSUS_MERKLE_H
-#define BITCOIN_CONSENSUS_MERKLE_H
+#ifndef CONNECTCOIN_CONSENSUS_MERKLE_H
+#define CONNECTCOIN_CONSENSUS_MERKLE_H
 
 #include <uint256.h>
 
@@ -40,4 +40,4 @@ uint256 BlockWitnessMerkleRoot(const CBlock& block);
  */
 std::vector<uint256> TransactionMerklePath(const CBlock& block, uint32_t position);
 
-#endif // BITCOIN_CONSENSUS_MERKLE_H
+#endif // CONNECTCOIN_CONSENSUS_MERKLE_H

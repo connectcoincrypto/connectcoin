@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_KERNEL_CHAIN_H
-#define BITCOIN_KERNEL_CHAIN_H
+#ifndef CONNECTCOIN_KERNEL_CHAIN_H
+#define CONNECTCOIN_KERNEL_CHAIN_H
 
 #include <attributes.h>
 
@@ -39,4 +39,4 @@ interfaces::BlockInfo MakeBlockInfo(const CBlockIndex* block_index, const CBlock
 std::ostream& operator<<(std::ostream& os, const ChainstateRole& role);
 } // namespace kernel
 
-#endif // BITCOIN_KERNEL_CHAIN_H
+#endif // CONNECTCOIN_KERNEL_CHAIN_H

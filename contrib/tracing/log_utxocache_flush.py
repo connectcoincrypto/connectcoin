@@ -7,10 +7,10 @@ import sys
 import ctypes
 from bcc import BPF, USDT
 
-"""Example logging Bitcoin Core utxo set cache flushes utilizing
+"""Example logging ConnectCoin Core UTXO set cache flushes utilizing
     the utxocache:flush tracepoint."""
 
-# USAGE:  ./contrib/tracing/log_utxocache_flush.py <pid of bitcoind>
+# USAGE:  ./contrib/tracing/log_utxocache_flush.py <pid of connectcoind>
 
 # BCC: The C program to be compiled to an eBPF program (by BCC) and loaded into
 # a sandboxed Linux kernel VM.
@@ -72,14 +72,14 @@ def print_event(event):
 
 
 def main(pid):
-    print(f"Hooking into bitcoind with pid {pid}")
-    bitcoind_with_usdts = USDT(pid=int(pid))
+    print(f"Hooking into connectcoind with pid {pid}")
+    connectcoind_with_usdts = USDT(pid=int(pid))
 
     # attaching the trace functions defined in the BPF program
     # to the tracepoints
-    bitcoind_with_usdts.enable_probe(
+    connectcoind_with_usdts.enable_probe(
         probe="flush", fn_name="trace_flush")
-    b = BPF(text=program, usdt_contexts=[bitcoind_with_usdts])
+    b = BPF(text=program, usdt_contexts=[connectcoind_with_usdts])
 
     def handle_flush(_, data, size):
         """ Coins Flush handler.
@@ -102,7 +102,7 @@ def main(pid):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("USAGE: ", sys.argv[0], "<pid of bitcoind>")
+        print("USAGE: ", sys.argv[0], "<pid of connectcoind>")
         exit(1)
 
     pid = sys.argv[1]

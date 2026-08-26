@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_TEST_UTIL_TIME_H
-#define BITCOIN_TEST_UTIL_TIME_H
+#ifndef CONNECTCOIN_TEST_UTIL_TIME_H
+#define CONNECTCOIN_TEST_UTIL_TIME_H
 
 #include <util/check.h>
 #include <util/time.h>
@@ -76,4 +76,4 @@ public:
     void operator-=(std::chrono::seconds d) { set(m_t -= d); }
 };
 
-#endif // BITCOIN_TEST_UTIL_TIME_H
+#endif // CONNECTCOIN_TEST_UTIL_TIME_H

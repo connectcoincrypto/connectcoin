@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UTIL_STRING_H
-#define BITCOIN_UTIL_STRING_H
+#ifndef CONNECTCOIN_UTIL_STRING_H
+#define CONNECTCOIN_UTIL_STRING_H
 
 #include <algorithm>
 #include <array>
@@ -306,4 +306,4 @@ public:
 };
 } // namespace util
 
-#endif // BITCOIN_UTIL_STRING_H
+#endif // CONNECTCOIN_UTIL_STRING_H

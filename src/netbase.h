@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_NETBASE_H
-#define BITCOIN_NETBASE_H
+#ifndef CONNECTCOIN_NETBASE_H
+#define CONNECTCOIN_NETBASE_H
 
 #include <compat/compat.h>
 #include <netaddress.h>
@@ -238,7 +238,7 @@ std::optional<CNetAddr> LookupHost(const std::string& name, bool fAllowLookup, D
  * @param name    The string representing a service. Could be a name or a
  *                numerical IP address (IPv6 addresses should be in their
  *                disambiguated bracketed form), optionally followed by a uint16_t port
- *                number. (e.g. example.com:8333 or
+ *                number. (e.g. example.com:48173 or
  *                [2001:db8:85a3:8d3:1319:8a2e:370:7348]:420)
  * @param portDefault The default port for resulting services if not specified
  *                    by the service string.
@@ -373,4 +373,4 @@ CService MaybeFlipIPv6toCJDNS(const CService& service);
 /** Get the bind address for a socket as CService. */
 CService GetBindAddress(const Sock& sock);
 
-#endif // BITCOIN_NETBASE_H
+#endif // CONNECTCOIN_NETBASE_H

@@ -1,0 +1,33 @@
+# /etc/conf.d/connectcoind: config file for /etc/init.d/connectcoind
+
+# Config file location
+#CONNECTCOIND_CONFIGFILE="/etc/connectcoin/connectcoin.conf"
+
+# What directory to write pidfile to?  (created and owned by $CONNECTCOIND_USER)
+#CONNECTCOIND_PIDDIR="/var/run/connectcoind"
+
+# What filename to give the pidfile
+#CONNECTCOIND_PIDFILE="${CONNECTCOIND_PIDDIR}/connectcoind.pid"
+
+# Where to write connectcoind data (be mindful that the blockchain is large)
+#CONNECTCOIND_DATADIR="/var/lib/connectcoind"
+
+# User and group to own connectcoind process
+#CONNECTCOIND_USER="connectcoin"
+#CONNECTCOIND_GROUP="connectcoin"
+
+# Path to connectcoind executable
+#CONNECTCOIND_BIN="/usr/bin/connectcoind"
+
+# Nice value to run connectcoind under
+#CONNECTCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#CONNECTCOIND_OPTS=""
+
+# The timeout in seconds OpenRC will wait for connectcoind to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+CONNECTCOIND_SIGTERM_TIMEOUT=600

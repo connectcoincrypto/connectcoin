@@ -16,7 +16,7 @@ target_link_libraries(test_fuzz
   PRIVATE
     core_interface
     test_util
-    bitcoin_node
+    connectcoin_node
     Boost::headers
 )
 

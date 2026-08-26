@@ -8,8 +8,8 @@
 //! Avoid declaring functions or classes with methods here unless they are
 //! header-only or provided by the util library.
 
-#ifndef BITCOIN_NODE_MINING_TYPES_H
-#define BITCOIN_NODE_MINING_TYPES_H
+#ifndef CONNECTCOIN_NODE_MINING_TYPES_H
+#define CONNECTCOIN_NODE_MINING_TYPES_H
 
 #include <consensus/amount.h>
 #include <policy/feerate.h>
@@ -100,7 +100,7 @@ struct BlockWaitOptions {
 
     /**
      * The wait method will not return a new template unless it has fees at
-     * least fee_threshold sats higher than the current template, or unless
+     * least fee_threshold connects higher than the current template, or unless
      * the chain tip changes and the previous template is no longer valid.
      *
      * A caller may not be interested in templates with higher fees, and
@@ -175,4 +175,4 @@ struct CoinbaseTx {
 
 } // namespace node
 
-#endif // BITCOIN_NODE_MINING_TYPES_H
+#endif // CONNECTCOIN_NODE_MINING_TYPES_H

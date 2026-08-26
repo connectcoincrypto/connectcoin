@@ -7,7 +7,7 @@
 deadlock:sync_tests::potential_deadlock_detected
 
 # Wildcard for all of the gui
-race:bitcoin-qt
+race:connectcoin-qt
 race:src/qt/test/*
 deadlock:src/qt/test/*
 

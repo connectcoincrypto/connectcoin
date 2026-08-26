@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <interfaces/init.h>
 #include <interfaces/node.h>
@@ -27,6 +27,7 @@
 #include <QTest>
 
 #include <functional>
+#include <iostream>
 
 const std::function<std::vector<const char*>()> G_TEST_COMMAND_LINE_ARGUMENTS{};
 
@@ -60,8 +61,14 @@ int main(int argc, char* argv[])
     // Prefer the "minimal" platform for the test instead of the normal default
     // platform ("xcb", "windows", or "cocoa") so tests can't unintentionally
     // interfere with any background GUIs and don't require extra resources.
+    // Dynamic Qt builds provided by vcpkg cannot use the minimal plugin on
+    // Windows, so use the native Windows plugin for that configuration.
 #if defined(WIN32)
+#if defined(CONNECTCOIN_QT_TEST_USE_WINDOWS_PLATFORM)
+    if (getenv("QT_QPA_PLATFORM") == nullptr) _putenv_s("QT_QPA_PLATFORM", "windows");
+#else
     if (getenv("QT_QPA_PLATFORM") == nullptr) _putenv_s("QT_QPA_PLATFORM", "minimal");
+#endif
 #else
     setenv("QT_QPA_PLATFORM", "minimal", 0 /* overwrite */);
 #endif
@@ -78,28 +85,36 @@ int main(int argc, char* argv[])
 
     int num_test_failures{0};
 
+    const auto run_test = [](QObject& test) {
+        const int failures{QTest::qExec(&test)};
+        if (failures != 0) {
+            std::cerr << test.metaObject()->className() << ": " << failures << " failed test(s)\n";
+        }
+        return failures;
+    };
+
     {
         BitcoinApplication app;
         app.createNode(*init);
 
         AppTests app_tests(app);
-        num_test_failures += QTest::qExec(&app_tests);
+        num_test_failures += run_test(app_tests);
 
         OptionTests options_tests(app.node());
-        num_test_failures += QTest::qExec(&options_tests);
+        num_test_failures += run_test(options_tests);
 
         URITests test1;
-        num_test_failures += QTest::qExec(&test1);
+        num_test_failures += run_test(test1);
 
         RPCNestedTests test3(app.node());
-        num_test_failures += QTest::qExec(&test3);
+        num_test_failures += run_test(test3);
 
 #ifdef ENABLE_WALLET
         WalletTests test5(app.node());
-        num_test_failures += QTest::qExec(&test5);
+        num_test_failures += run_test(test5);
 
         AddressBookTests test6(app.node());
-        num_test_failures += QTest::qExec(&test6);
+        num_test_failures += run_test(test6);
 #endif
 
         if (num_test_failures) {

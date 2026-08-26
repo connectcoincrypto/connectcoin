@@ -1,0 +1,4 @@
+ConnectCoin release attestation and codesigning are disabled because no
+project-owned signing team, attestation repository, detached-signature
+repository, or key-rotation policy has been configured. Establish and document
+that trust policy before removing this marker.

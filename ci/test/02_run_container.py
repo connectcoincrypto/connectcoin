@@ -50,16 +50,13 @@ def main():
     if os.getenv("DANGER_RUN_CI_ON_HOST"):
         print("Running on host system without docker wrapper")
         print("Create missing folders")
-        for create_dir in [
-                os.environ["CCACHE_DIR"],
-                os.environ["PREVIOUS_RELEASES_DIR"],
-        ]:
+        for create_dir in [os.environ["CCACHE_DIR"]]:
             Path(create_dir).mkdir(parents=True, exist_ok=True)
 
         # Modify PATH to prepend the retry script, needed for CI_RETRY_EXE
         os.environ["PATH"] = f"{os.environ['BASE_ROOT_DIR']}/ci/retry:{os.environ['PATH']}"
     else:
-        CI_IMAGE_LABEL = "bitcoin-ci-test"
+        CI_IMAGE_LABEL = "connectcoin-ci-test"
 
         # Use buildx unconditionally
         # Using buildx is required to properly load the correct driver, for use with registry caching. Neither build, nor BUILDKIT=1 currently do this properly
@@ -82,13 +79,12 @@ def main():
             time.sleep(3)
             run(cmd_build)
 
-        for suffix in ["ccache", "depends", "depends_sources", "previous_releases"]:
+        for suffix in ["ccache", "depends", "depends_sources"]:
             run(["docker", "volume", "create", f"{os.environ['CONTAINER_NAME']}_{suffix}"], check=False)
 
         CI_CCACHE_MOUNT = f"type=volume,src={os.environ['CONTAINER_NAME']}_ccache,dst={os.environ['CCACHE_DIR']}"
         CI_DEPENDS_MOUNT = f"type=volume,src={os.environ['CONTAINER_NAME']}_depends,dst={os.environ['DEPENDS_DIR']}/built"
         CI_DEPENDS_SOURCES_MOUNT = f"type=volume,src={os.environ['CONTAINER_NAME']}_depends_sources,dst={os.environ['DEPENDS_DIR']}/sources"
-        CI_PREVIOUS_RELEASES_MOUNT = f"type=volume,src={os.environ['CONTAINER_NAME']}_previous_releases,dst={os.environ['PREVIOUS_RELEASES_DIR']}"
         CI_BUILD_MOUNT = []
 
         if os.getenv("DANGER_CI_ON_HOST_FOLDERS"):
@@ -97,7 +93,6 @@ def main():
                     os.environ["CCACHE_DIR"],
                     f"{os.environ['DEPENDS_DIR']}/built",
                     f"{os.environ['DEPENDS_DIR']}/sources",
-                    os.environ["PREVIOUS_RELEASES_DIR"],
                     os.environ["BASE_BUILD_DIR"],  # Unset by default, must be defined externally
             ]:
                 Path(create_dir).mkdir(parents=True, exist_ok=True)
@@ -105,7 +100,6 @@ def main():
             CI_CCACHE_MOUNT = f"type=bind,src={os.environ['CCACHE_DIR']},dst={os.environ['CCACHE_DIR']}"
             CI_DEPENDS_MOUNT = f"type=bind,src={os.environ['DEPENDS_DIR']}/built,dst={os.environ['DEPENDS_DIR']}/built"
             CI_DEPENDS_SOURCES_MOUNT = f"type=bind,src={os.environ['DEPENDS_DIR']}/sources,dst={os.environ['DEPENDS_DIR']}/sources"
-            CI_PREVIOUS_RELEASES_MOUNT = f"type=bind,src={os.environ['PREVIOUS_RELEASES_DIR']},dst={os.environ['PREVIOUS_RELEASES_DIR']}"
             CI_BUILD_MOUNT = [f"--mount=type=bind,src={os.environ['BASE_BUILD_DIR']},dst={os.environ['BASE_BUILD_DIR']}"]
 
         if os.getenv("DANGER_CI_ON_HOST_CCACHE_FOLDER"):
@@ -140,7 +134,6 @@ def main():
             f"--mount={CI_CCACHE_MOUNT}",
             f"--mount={CI_DEPENDS_MOUNT}",
             f"--mount={CI_DEPENDS_SOURCES_MOUNT}",
-            f"--mount={CI_PREVIOUS_RELEASES_MOUNT}",
             *CI_BUILD_MOUNT,
             f"--env-file={env_file}",
             f"--name={os.environ['CONTAINER_NAME']}",

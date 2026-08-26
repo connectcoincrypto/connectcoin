@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UTIL_STDMUTEX_H
-#define BITCOIN_UTIL_STDMUTEX_H
+#ifndef CONNECTCOIN_UTIL_STDMUTEX_H
+#define CONNECTCOIN_UTIL_STDMUTEX_H
 
 // This header declares threading primitives compatible with Clang
 // Thread Safety Analysis and provides appropriate annotation macros.
@@ -38,6 +38,6 @@ public:
 };
 
 // Provide STDLOCK(..) wrapper around StdMutex::Guard that checks the lock is not already held
-#define STDLOCK(cs) StdMutex::Guard BITCOIN_UNIQUE_NAME(criticalblock){StdMutex::CheckNotHeld(cs)}
+#define STDLOCK(cs) StdMutex::Guard CONNECTCOIN_UNIQUE_NAME(criticalblock){StdMutex::CheckNotHeld(cs)}
 
-#endif // BITCOIN_UTIL_STDMUTEX_H
+#endif // CONNECTCOIN_UTIL_STDMUTEX_H

@@ -1,12 +1,12 @@
-Contributing to Bitcoin Core
-============================
+Contributing to ConnectCoin Core
+================================
 
-The Bitcoin Core project operates an open contributor model where anyone is
+The ConnectCoin Core project operates an open contributor model where anyone is
 welcome to contribute towards development in the form of peer review, testing
 and patches. This document explains the practical process and guidelines for
 contributing.
 
-First, in terms of structure, there is no particular concept of "Bitcoin Core
+First, in terms of structure, there is no particular concept of "ConnectCoin Core
 developers" in the sense of privileged people. Open source often naturally
 revolves around a meritocracy where contributors earn trust from the developer
 community over time. Nevertheless, some hierarchy is necessary for practical
@@ -29,30 +29,22 @@ about the code and process than opening pull requests, and may help you uncover
 related issues and follow-ups to contribute code for. Please refer to the [peer
 review](#peer-review) section below.
 
-Before you start contributing, familiarize yourself with the Bitcoin Core build
+Before you start contributing, familiarize yourself with the ConnectCoin Core build
 system and tests. Refer to the documentation in the repository on how to build
-Bitcoin Core and how to run the unit tests, functional tests, and fuzz tests.
+ConnectCoin Core and how to run the unit tests, functional tests, and fuzz tests.
 
-You may also participate in the [Bitcoin Core PR Review Club](https://bitcoincore.reviews/).
+The upstream [Bitcoin Core PR Review Club](https://bitcoincore.reviews/) remains
+a useful source of review practice for inherited code.
 
 Communication Channels
 ----------------------
 
-Most communication about Bitcoin Core development happens on IRC, in the
-`#bitcoin-core-dev` channel on Libera Chat. The easiest way to participate on IRC is
-with the web client, [web.libera.chat](https://web.libera.chat/#bitcoin-core-dev). Chat
-history logs can be found
-on [https://www.erisian.com.au/bitcoin-core-dev/](https://www.erisian.com.au/bitcoin-core-dev/)
-and [https://gnusha.org/bitcoin-core-dev/](https://gnusha.org/bitcoin-core-dev/).
-
-Discussion about codebase improvements happens in GitHub issues and pull
-requests.
-
-The developer
-[mailing list](https://groups.google.com/g/bitcoindev)
-should be used to discuss complicated or controversial consensus or P2P protocol changes before working on
-a patch set.
-Archives can be found on [https://gnusha.org/pi/bitcoindev/](https://gnusha.org/pi/bitcoindev/).
+ConnectCoin does not yet publish official project chat, mailing-list, or security
+contact details. Use the issue and pull-request facilities of the repository
+hosting this tree, or coordinate directly with its maintainer. Do not use
+Bitcoin Core communication channels for ConnectCoin-specific support or reports.
+Upstream Bitcoin Core channels remain appropriate only for issues independently
+reproduced in unmodified upstream Bitcoin Core.
 
 
 Contributor Workflow
@@ -75,25 +67,13 @@ To contribute a patch, the workflow is as follows:
   1. Create topic branch
   1. Commit patches
 
-For GUI-related issues or pull requests, the https://github.com/bitcoin-core/gui repository should be used.
-For all other issues and pull requests, the https://github.com/bitcoin/bitcoin node repository should be used.
+Submit ConnectCoin changes to the repository hosting this tree. The
+`bitcoin/bitcoin` and `bitcoin-core/gui` repositories are upstream projects and
+must only receive reports or patches that apply independently to their code.
 
-The master branch for all monotree repositories is identical.
-
-As a rule of thumb, everything that only modifies `src/qt` is a GUI-only pull
-request. However:
-
-* For global refactoring or other transversal changes the node repository
-  should be used.
-* For GUI-related build system changes, the node repository should be used
-  because the change needs review by the build systems reviewers.
-* Changes in `src/interfaces` need to go to the node repository because they
-  might affect other components like the wallet.
-
-For large GUI changes that include build system and interface changes, it is
-recommended to first open a pull request against the GUI repository. When there
-is agreement to proceed with the changes, a pull request with the build system
-and interfaces changes can be submitted to the node repository.
+ConnectCoin currently keeps node, GUI, build-system, wallet, and interface
+changes in this repository. There is no separate ConnectCoin GUI repository or
+cross-repository branch synchronization policy.
 
 The project coding conventions in the [developer notes](doc/developer-notes.md)
 must be followed.
@@ -135,7 +115,7 @@ the pull request affects. Valid areas are:
 
   - `consensus` for changes to consensus critical code
   - `doc` for changes to the documentation
-  - `qt` or `gui` for changes to bitcoin-qt
+  - `qt` or `gui` for changes to connectcoin-qt
   - `log` for changes to log messages
   - `mining` for changes to the mining code
   - `net` or `p2p` for changes to the peer-to-peer network code
@@ -161,10 +141,9 @@ You should include references to any discussions (for example, other issues or
 mailing list discussions).
 
 The description for a new pull request should not contain any `@` mentions. The
-PR description will be included in the commit message when the PR is merged and
-any users mentioned in the description will be annoyingly notified each time a
-fork of Bitcoin Core copies the merge. Instead, make any username mentions in a
-subsequent comment to the PR.
+PR description may be included in the commit message when the PR is merged,
+causing users to be notified again whenever downstream projects copy that
+commit. Instead, make any username mentions in a subsequent comment to the PR.
 
 ### Translation changes
 
@@ -225,13 +204,14 @@ pull request to pull request.
 
 When a pull request conflicts with the target branch, you may be asked to rebase it on top of the current target branch.
 
-    git fetch https://github.com/bitcoin/bitcoin  # Fetch the latest upstream commit
-    git rebase FETCH_HEAD  # Rebuild commits on top of the new base
+    git fetch <connectcoin-repository-url> <target-branch>
+    git rebase FETCH_HEAD  # Rebuild commits on top of the new ConnectCoin base
 
 This project aims to have a clean git history, where code changes are only made in non-merge commits. This simplifies
-auditability because merge commits can be assumed to not contain arbitrary code changes. Merge commits should be signed,
-and the resulting git tree hash must be deterministic and reproducible. The script in
-[/contrib/verify-commits](/contrib/verify-commits) checks that.
+auditability because merge commits can be assumed to not contain arbitrary code changes. A project-owned signed-merge
+policy has not yet been established. The inherited tool in
+[/contrib/verify-commits](/contrib/verify-commits) is disabled until ConnectCoin defines trusted roots, signer keys, and
+rotation/revocation procedures; it must not be treated as an active security control.
 
 After a rebase, reviewers are encouraged to sign off on the force push. This should be relatively straightforward with
 the `git range-diff` tool explained in the [productivity
@@ -282,11 +262,11 @@ workload on reviewing.
 "Decision Making" Process
 -------------------------
 
-The following applies to code changes to the Bitcoin Core project (and related
-projects such as libsecp256k1), and is not to be confused with overall Bitcoin
-Network Protocol consensus changes.
+The following applies to code changes to the ConnectCoin Core project (and related
+projects such as libsecp256k1), and is not to be confused with overall
+ConnectCoin Network Protocol consensus changes.
 
-Whether a pull request is merged into Bitcoin Core rests with the project merge
+Whether a pull request is merged into ConnectCoin Core rests with the project merge
 maintainers.
 
 Maintainers will take into consideration if a patch is in line with the general
@@ -305,7 +285,7 @@ In general, all pull requests must:
     demonstrating the bug and also proving the fix. This helps prevent regression.
   - Change relevant comments and documentation when behaviour of code changes.
 
-Patches that change Bitcoin consensus rules are considerably more involved than
+Patches that change ConnectCoin consensus rules are considerably more involved than
 normal because they affect the entire ecosystem and so must be preceded by
 extensive mailing list discussions and have a numbered BIP. While each case will
 be different, one should be prepared to expend more time and effort than for
@@ -371,7 +351,7 @@ higher in terms of discussion and peer review requirements, keeping in mind that
 mistakes could be very costly to the wider community. This includes refactoring
 of consensus-critical code.
 
-Where a patch set proposes to change the Bitcoin consensus, it must have been
+Where a patch set proposes to change ConnectCoin consensus, it must have been
 discussed extensively on the mailing list and IRC, be accompanied by a widely
 discussed BIP and have a generally widely perceived technical consensus of being
 a worthwhile change based on the judgement of the maintainers.
@@ -426,7 +406,7 @@ Github-Pull: #<PR number>
 Rebased-From: <commit hash of the original commit>
 ```
 
-Have a look at [an example backport PR](
+For reference, see [an upstream Bitcoin Core backport PR](
 https://github.com/bitcoin/bitcoin/pull/16189).
 
 Also see the [backport.py script](

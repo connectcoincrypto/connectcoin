@@ -1,4 +1,10 @@
-BIPs that are implemented by Bitcoin Core:
+# Inherited Bitcoin Improvement Proposals
+
+ConnectCoin inherits the following BIP implementations from its Bitcoin Core
+base. Version numbers and pull-request links in this file describe upstream
+Bitcoin Core history, not independent ConnectCoin release milestones. Custom
+ConnectCoin encodings, network parameters, and future P2C rules are documented
+separately and must not be inferred from this historical list.
 
 * [`BIP 9`](https://github.com/bitcoin/bips/blob/master/bip-0009.mediawiki): The changes allowing multiple soft-forks to be deployed in parallel have been implemented since **v0.12.1**  ([PR #7575](https://github.com/bitcoin/bitcoin/pull/7575))
 * [`BIP 11`](https://github.com/bitcoin/bips/blob/master/bip-0011.mediawiki): Multisig outputs are standard since **v0.6.0** ([PR #669](https://github.com/bitcoin/bitcoin/pull/669)).

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_TEST_UTIL_CLUSTER_LINEARIZE_H
-#define BITCOIN_TEST_UTIL_CLUSTER_LINEARIZE_H
+#ifndef CONNECTCOIN_TEST_UTIL_CLUSTER_LINEARIZE_H
+#define CONNECTCOIN_TEST_UTIL_CLUSTER_LINEARIZE_H
 
 #include <cluster_linearize.h>
 #include <serialize.h>
@@ -416,4 +416,4 @@ inline uint64_t MaxOptimalLinearizationCost(DepGraphIndex cluster_count)
 
 } // namespace cluster_linearize
 
-#endif // BITCOIN_TEST_UTIL_CLUSTER_LINEARIZE_H
+#endif // CONNECTCOIN_TEST_UTIL_CLUSTER_LINEARIZE_H

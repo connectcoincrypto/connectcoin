@@ -2,12 +2,12 @@
 # Copyright (c) 2022-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-"""Test bitcoin-chainstate tool functionality
+"""Test connectcoin-chainstate tool functionality
 
-Test basic block processing via bitcoin-chainstate tool, including detecting
+Test basic block processing via connectcoin-chainstate tool, including detecting
 duplicates and malformed input.
 
-Test that bitcoin-chainstate can load a datadir initialized with an assumeutxo
+Test that connectcoin-chainstate can load a datadir initialized with an assumeutxo
 snapshot and extend the snapshot chain with new blocks.
 """
 
@@ -20,12 +20,12 @@ from test_framework.wallet import MiniWallet
 START_HEIGHT = 199
 # Hardcoded in regtest chainparams
 SNAPSHOT_BASE_BLOCK_HEIGHT = 299
-SNAPSHOT_BASE_BLOCK_HASH = "0c552ced4721c249a389eb9b08cb8da261cd46f0e7b5f9d064d48f3113406853"
+SNAPSHOT_BASE_BLOCK_HASH = "6bb150493c185678272d23c0773b9e6398dfa3a3112f738c57591d342840ed78"
 
 
 class BitcoinChainstateTest(BitcoinTestFramework):
     def skip_test_if_missing_module(self):
-        self.skip_if_no_bitcoin_chainstate()
+        self.skip_if_no_connectcoin_chainstate()
 
     def set_test_params(self):
         """Use the pregenerated, deterministic chain up to height 199."""
@@ -68,13 +68,25 @@ class BitcoinChainstateTest(BitcoinTestFramework):
         if expected_stdout is not None and expected_stdout not in stdout:
             raise AssertionError(f"Expected stdout output '{expected_stdout}' does not partially match stdout:\n{stdout}")
 
+    def argument_test(self):
+        binary = self.get_binaries().chainstate_argv()
+        cases = (
+            ("--help", "Usage:"),
+            ("--version", "ConnectCoin Core connectcoin-chainstate utility version"),
+        )
+        for option, expected in cases:
+            result = subprocess.run(binary + [option], text=True, capture_output=True, check=False)
+            assert_equal(result.returncode, 0)
+            if expected not in result.stdout:
+                raise AssertionError(f"Expected stdout output '{expected}' does not partially match stdout:\n{result.stdout}")
+
     def basic_test(self):
         n0 = self.nodes[0]
         n1 = self.nodes[1]
         datadir = n1.chain_path
         n1.stop_node()
         block = n0.getblock(n0.getblockhash(START_HEIGHT+1), 0)
-        self.log.info(f"Test bitcoin-chainstate {self.get_binaries().chainstate_argv()} with datadir: {datadir}")
+        self.log.info(f"Test connectcoin-chainstate {self.get_binaries().chainstate_argv()} with datadir: {datadir}")
         self.add_block(datadir, block, expected_stderr="Block has not yet been rejected")
         self.add_block(datadir, block, expected_stderr="duplicate")
         self.add_block(datadir, "00", expected_stderr="Block decode failed")
@@ -93,11 +105,12 @@ class BitcoinChainstateTest(BitcoinTestFramework):
         assert_equal(loaded['base_height'], SNAPSHOT_BASE_BLOCK_HEIGHT)
         datadir = n1.chain_path
         n1.stop_node()
-        self.log.info(f"Test bitcoin-chainstate {self.get_binaries().chainstate_argv()} with an assumeutxo datadir: {datadir}")
+        self.log.info(f"Test connectcoin-chainstate {self.get_binaries().chainstate_argv()} with an assumeutxo datadir: {datadir}")
         new_tip_hash = self.generate(n0, nblocks=1, sync_fun=self.no_op)[0]
         self.add_block(datadir, n0.getblock(new_tip_hash, 0), expected_stdout="Block tip changed")
 
     def run_test(self):
+        self.argument_test()
         dump_output = self.generate_snapshot_chain()
         self.basic_test()
         self.assumeutxo_test(dump_output['path'])

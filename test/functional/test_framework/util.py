@@ -252,7 +252,7 @@ def check_json_precision():
 
 
 class Binaries:
-    """Helper class to provide information about bitcoin binaries
+    """Helper class to provide information about ConnectCoin binaries
 
     Attributes:
         paths: Object returned from get_binary_paths() containing information
@@ -270,61 +270,61 @@ class Binaries:
             "valgrind",
             f"--suppressions={suppressions_file}",
             "--gen-suppressions=all",
-            "--trace-children=yes",  # Needed for 'bitcoin' wrapper
+            "--trace-children=yes",  # Needed for the ConnectCoin wrapper
             "--exit-on-first-error=yes",
             "--error-exitcode=1",
             "--quiet",
         ] if use_valgrind else []
 
     def node_argv(self, **kwargs):
-        "Return argv array that should be used to invoke bitcoind"
-        return self._argv("node", self.paths.bitcoind, **kwargs)
+        "Return argv array that should be used to invoke connectcoind"
+        return self._argv("node", self.paths.connectcoind, **kwargs)
 
     def rpc_argv(self):
-        "Return argv array that should be used to invoke bitcoin-cli"
-        # Add -nonamed because "bitcoin rpc" enables -named by default, but bitcoin-cli doesn't
-        return self._argv("rpc", self.paths.bitcoincli) + ["-nonamed"]
+        "Return argv array that should be used to invoke connectcoin-cli"
+        # Add -nonamed because "connectcoin rpc" enables -named by default, but connectcoin-cli doesn't
+        return self._argv("rpc", self.paths.connectcoin_cli) + ["-nonamed"]
 
     def bench_argv(self):
-        "Return argv array that should be used to invoke bench_bitcoin"
-        return self._argv("bench", self.paths.bitcoin_bench)
+        "Return argv array that should be used to invoke connectcoin-bench"
+        return self._argv("bench", self.paths.connectcoin_bench)
 
     def tx_argv(self):
-        "Return argv array that should be used to invoke bitcoin-tx"
-        return self._argv("tx", self.paths.bitcointx)
+        "Return argv array that should be used to invoke connectcoin-tx"
+        return self._argv("tx", self.paths.connectcoin_tx)
 
     def util_argv(self):
-        "Return argv array that should be used to invoke bitcoin-util"
-        return self._argv("util", self.paths.bitcoinutil)
+        "Return argv array that should be used to invoke connectcoin-util"
+        return self._argv("util", self.paths.connectcoin_util)
 
     def wallet_argv(self):
-        "Return argv array that should be used to invoke bitcoin-wallet"
-        return self._argv("wallet", self.paths.bitcoinwallet)
+        "Return argv array that should be used to invoke connectcoin-wallet"
+        return self._argv("wallet", self.paths.connectcoin_wallet)
 
     def chainstate_argv(self):
-        "Return argv array that should be used to invoke bitcoin-chainstate"
-        return self._argv("chainstate", self.paths.bitcoinchainstate)
+        "Return argv array that should be used to invoke connectcoin-chainstate"
+        return self._argv("chainstate", self.paths.connectcoin_chainstate)
 
     def _argv(self, command, bin_path, *, need_ipc=False, use_gui=False):
         """Return argv array that should be used to invoke the command.
 
-        It either uses the bitcoin wrapper executable (if BITCOIN_CMD, need_ipc,
-        or use_gui are set), or the direct binary path (bitcoind, etc). When
+        It either uses the ConnectCoin wrapper executable (if CONNECTCOIN_CMD, need_ipc,
+        or use_gui are set), or the direct binary path (connectcoind, etc). When
         bin_dir is set (by tests calling binaries from previous releases) it
         always uses the direct path.
 
         The returned args include valgrind, except when bin_dir is set
-        (previous releases). Also, valgrind will only apply to the bitcoin
-        wrapper executable directly, not to the commands that `bitcoin` calls.
+        (previous releases). Also, valgrind will only apply to the ConnectCoin
+        wrapper executable directly, not to the commands that `connectcoin` calls.
         """
         if self.bin_dir is not None:
             return [os.path.join(self.bin_dir, os.path.basename(bin_path))]
-        elif self.paths.bitcoin_cmd is not None or need_ipc or use_gui:
+        elif self.paths.connectcoin_cmd is not None or need_ipc or use_gui:
             # If the current test needs IPC or GUI functionality, use the
-            # bitcoin wrapper binary and add appropriate options.
-            bitcoin_cmd = self.paths.bitcoin_cmd or [self.paths.bitcoin_bin]
+            # ConnectCoin wrapper binary and add appropriate options.
+            connectcoin_cmd = self.paths.connectcoin_cmd or [self.paths.connectcoin]
             subcommand = "gui" if use_gui and command == "node" else command
-            return self.valgrind_cmd + bitcoin_cmd + (["-m"] if need_ipc else []) + [subcommand]
+            return self.valgrind_cmd + connectcoin_cmd + (["-m"] if need_ipc else []) + [subcommand]
         else:
             return self.valgrind_cmd + [bin_path]
 
@@ -334,35 +334,42 @@ def get_binary_paths(config):
 
     paths = types.SimpleNamespace()
     binaries = {
-        "bitcoin": "BITCOIN_BIN",
-        "bitcoind": "BITCOIND",
-        "bench_bitcoin": "BITCOIN_BENCH",
-        "bitcoin-cli": "BITCOINCLI",
-        "bitcoin-util": "BITCOINUTIL",
-        "bitcoin-tx": "BITCOINTX",
-        "bitcoin-chainstate": "BITCOINCHAINSTATE",
-        "bitcoin-wallet": "BITCOINWALLET",
+        "connectcoin": ("CONNECTCOIN_BIN", "connectcoin"),
+        "connectcoind": ("CONNECTCOIND", "connectcoind"),
+        "connectcoin-bench": ("CONNECTCOIN_BENCH", "connectcoin_bench"),
+        "connectcoin-cli": ("CONNECTCOINCLI", "connectcoin_cli"),
+        "connectcoin-util": ("CONNECTCOINUTIL", "connectcoin_util"),
+        "connectcoin-tx": ("CONNECTCOINTX", "connectcoin_tx"),
+        "connectcoin-chainstate": ("CONNECTCOINCHAINSTATE", "connectcoin_chainstate"),
+        "connectcoin-wallet": ("CONNECTCOINWALLET", "connectcoin_wallet"),
     }
-    # Set paths to bitcoin core binaries allowing overrides with environment
+    # Set paths to ConnectCoin binaries allowing overrides with environment
     # variables.
-    for binary, env_variable_name in binaries.items():
-        default_filename = os.path.join(
-            config["environment"]["BUILDDIR"],
-            "bin",
-            binary + config["environment"]["EXEEXT"],
-        )
-        setattr(paths, env_variable_name.lower(), os.getenv(env_variable_name, default=default_filename))
-    # BITCOIN_CMD environment variable can be specified to invoke bitcoin
-    # wrapper binary instead of other executables.
-    paths.bitcoin_cmd = shlex.split(os.getenv("BITCOIN_CMD", "")) or None
+    for binary, (env_variable_name, attribute_name) in binaries.items():
+        bin_dir = os.path.join(config["environment"]["BUILDDIR"], "bin")
+        filename = binary + config["environment"]["EXEEXT"]
+        default_filename = os.path.join(bin_dir, filename)
+        if not os.path.isfile(default_filename):
+            for build_config in ("Release", "RelWithDebInfo", "Debug", "MinSizeRel", "Coverage"):
+                configured_filename = os.path.join(bin_dir, build_config, filename)
+                if os.path.isfile(configured_filename):
+                    default_filename = configured_filename
+                    break
+        setattr(paths, attribute_name, os.getenv(env_variable_name, default=default_filename))
+    # CONNECTCOIN_CMD can invoke the wrapper binary instead of direct executables.
+    paths.connectcoin_cmd = shlex.split(os.getenv("CONNECTCOIN_CMD", "")) or None
     return paths
 
 
 def export_env_build_path(config):
-    os.environ["PATH"] = os.pathsep.join([
-        os.path.join(config["environment"]["BUILDDIR"], "bin"),
-        os.environ["PATH"],
-    ])
+    bin_dir = os.path.join(config["environment"]["BUILDDIR"], "bin")
+    candidate_dirs = [bin_dir]
+    candidate_dirs.extend(
+        os.path.join(bin_dir, build_config)
+        for build_config in ("Release", "RelWithDebInfo", "Debug", "MinSizeRel", "Coverage")
+        if os.path.isdir(os.path.join(bin_dir, build_config))
+    )
+    os.environ["PATH"] = os.pathsep.join(candidate_dirs + [os.environ["PATH"]])
 
 
 def count_bytes(hex_string):
@@ -391,8 +398,8 @@ def random_bitflip(data):
 
 
 def get_fee(tx_size, feerate_btc_kvb):
-    """Calculate the fee in BTC given a feerate is BTC/kvB. Reflects CFeeRate::GetFee"""
-    feerate_sat_kvb = int(feerate_btc_kvb * Decimal(1e8)) # Fee in sat/kvb as an int to avoid float precision errors
+    """Calculate the fee in BTC given a feerate is CC/kvB. Reflects CFeeRate::GetFee"""
+    feerate_sat_kvb = int(feerate_btc_kvb * Decimal(1e8)) # Fee in con/kvb as an int to avoid float precision errors
     target_fee_sat = ceildiv(feerate_sat_kvb * tx_size, 1000) # Round calculated fee up to nearest sat
     return target_fee_sat / Decimal(1e8) # Return result in  BTC
 
@@ -511,7 +518,7 @@ def initialize_datadir(dirname, n, chain, disable_autoconnect=True):
     datadir = get_datadir_path(dirname, n)
     if not os.path.isdir(datadir):
         os.makedirs(datadir)
-    write_config(os.path.join(datadir, "bitcoin.conf"), n=n, chain=chain, disable_autoconnect=disable_autoconnect)
+    write_config(os.path.join(datadir, "connectcoin.conf"), n=n, chain=chain, disable_autoconnect=disable_autoconnect)
     os.makedirs(os.path.join(datadir, 'stderr'), exist_ok=True)
     os.makedirs(os.path.join(datadir, 'stdout'), exist_ok=True)
     return datadir
@@ -525,7 +532,7 @@ def write_config(config_path, *, n, chain, extra_config="", disable_autoconnect=
     else:
         chain_name_conf_arg = chain
         chain_name_conf_section = chain
-    with open(config_path, 'w') as f:
+    with open(config_path, 'w', encoding='utf-8') as f:
         if chain_name_conf_arg:
             f.write("{}=1\n".format(chain_name_conf_arg))
         if chain_name_conf_section:
@@ -582,18 +589,18 @@ def get_temp_default_datadir(temp_dir: pathlib.Path) -> tuple[dict, pathlib.Path
     temp_dir, as well as the complete path it would return."""
     if platform.system() == "Windows":
         env = dict(APPDATA=str(temp_dir))
-        datadir = temp_dir / "Bitcoin"
+        datadir = temp_dir / "ConnectCoin"
     else:
         env = dict(HOME=str(temp_dir))
         if platform.system() == "Darwin":
-            datadir = temp_dir / "Library/Application Support/Bitcoin"
+            datadir = temp_dir / "Library/Application Support/ConnectCoin"
         else:
-            datadir = temp_dir / ".bitcoin"
+            datadir = temp_dir / ".connectcoin"
     return env, datadir
 
 
 def append_config(datadir, options):
-    with open(os.path.join(datadir, "bitcoin.conf"), 'a') as f:
+    with open(os.path.join(datadir, "connectcoin.conf"), 'a', encoding='utf-8') as f:
         for option in options:
             f.write(option + "\n")
 
@@ -601,8 +608,8 @@ def append_config(datadir, options):
 def get_auth_cookie(datadir, chain):
     user = None
     password = None
-    if os.path.isfile(os.path.join(datadir, "bitcoin.conf")):
-        with open(os.path.join(datadir, "bitcoin.conf"), 'r') as f:
+    if os.path.isfile(os.path.join(datadir, "connectcoin.conf")):
+        with open(os.path.join(datadir, "connectcoin.conf"), 'r', encoding='utf-8') as f:
             for line in f:
                 if line.startswith("rpcuser="):
                     assert user is None  # Ensure that there is only one rpcuser line
@@ -611,7 +618,7 @@ def get_auth_cookie(datadir, chain):
                     assert password is None  # Ensure that there is only one rpcpassword line
                     password = line.split("=")[1].strip("\n")
     try:
-        with open(os.path.join(datadir, chain, ".cookie"), 'r') as f:
+        with open(os.path.join(datadir, chain, ".cookie"), 'r', encoding='utf-8') as f:
             userpass = f.read()
             split_userpass = userpass.split(':')
             user = split_userpass[0]

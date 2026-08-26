@@ -1,29 +1,35 @@
-# Seeds
+# ConnectCoin seed generation
 
-Utility to generate the seeds.txt list that is compiled into the client
-(see [src/chainparamsseeds.h](/src/chainparamsseeds.h) and other utilities in [contrib/seeds](/contrib/seeds)).
+This directory contains the inherited tooling used to turn crawler output into
+fixed seed arrays for the client. It does **not** currently contain production
+ConnectCoin seed data, and `src/chainparamsseeds.h` is intentionally absent from
+the build until project-owned seed data is generated and reviewed.
 
-Be sure to update `PATTERN_AGENT` in `makeseeds.py` to include the current version,
-and remove old versions as necessary (at a minimum when SeedsServiceFlags()
-changes its default return value, as those are the services which seeds are added
-to addrman with).
+The Bitcoin Core `nodes_*.txt` lists and the instructions that downloaded data
+from Bitcoin crawlers were deliberately removed during the ConnectCoin rebrand.
+Reusing them would make a fresh ConnectCoin node attempt to discover Bitcoin
+peers, which are on an incompatible network.
 
-Update `MIN_BLOCKS` in  `makeseeds.py` and the `-m`/`--minblocks` arguments below, as needed.
+Until ConnectCoin operates project-owned crawlers and has enough independently
+operated nodes to produce trustworthy snapshots, keep fixed seeds out of the
+build and bootstrap test deployments with explicit `-addnode` entries.
+Do not populate this directory from Bitcoin Core DNS seeds, crawlers, or AS-map
+snapshots and do not publish a release that implies those peers belong to
+ConnectCoin.
 
-The seeds compiled into the release are created from sipa's and achow101's
-DNS seed, virtu's crawler, and asmap community AS map data. Run the following commands
-from the `/contrib/seeds` directory:
+When project-owned seed infrastructure exists, the release process must:
 
-```
-curl https://21.ninja/seeds.txt.gz | gzip -dc > seeds_main.txt
-curl https://mainnet.achownodes.xyz/seeds.txt.gz | gzip -dc >> seeds_main.txt
-curl https://signet.achownodes.xyz/seeds.txt.gz | gzip -dc > seeds_signet.txt
-curl https://testnet.achownodes.xyz/seeds.txt.gz | gzip -dc > seeds_test.txt
-curl https://testnet4.achownodes.xyz/seeds.txt.gz | gzip -dc > seeds_testnet4.txt
-curl https://raw.githubusercontent.com/asmap/asmap-data/main/latest_asmap.dat > asmap-filled.dat
-python3 makeseeds.py -a asmap-filled.dat -s seeds_main.txt > nodes_main.txt
-python3 makeseeds.py -a asmap-filled.dat -s seeds_signet.txt -m 266000 > nodes_signet.txt
-python3 makeseeds.py -a asmap-filled.dat -s seeds_test.txt -m 4650000 > nodes_test.txt
-python3 makeseeds.py -a asmap-filled.dat -s seeds_testnet4.txt -m 100000 > nodes_testnet4.txt
-python3 generate-seeds.py . > ../../src/chainparamsseeds.h
-```
+1. Collect separate crawler snapshots for mainnet, testnet, testnet4, and signet.
+2. Review the eligible service flags, minimum chain heights, freshness, network
+   diversity, and operator ownership.
+3. Run `makeseeds.py` against those ConnectCoin-only snapshots to create the
+   corresponding `nodes_*.txt` files.
+4. Run `generate-seeds.py .` and review the resulting
+   `src/chainparamsseeds.h` diff before committing it.
+5. Test first-start peer discovery from a clean data directory on every network.
+
+`PATTERN_AGENT` in `makeseeds.py` must be reviewed for the ConnectCoin release
+being built. The minimum acceptable chain height has no baked-in default:
+`makeseeds.py` requires an explicit `--minblocks` value so an inherited or stale
+height cannot silently filter the wrong network. The scripts are tooling, not a
+source of authoritative peer data.

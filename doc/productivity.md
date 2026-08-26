@@ -44,10 +44,13 @@ When rebuilding during development, note that running `cmake --build build`, wit
 Obviously, it is important to build and run the tests at appropriate times -- but when you just want a quick compile to check your work, consider picking one or a set of build targets relevant to what you're working on, e.g.:
 
 ```sh
-cmake --build build --target bitcoind bitcoin-cli
-cmake --build build --target bitcoin-qt
-cmake --build build --target bench_bitcoin
+cmake --build build --target connectcoind connectcoin-cli
+cmake --build build --target connectcoin-qt
+cmake --build build --target connectcoin-bench
 ```
+
+The CMake target names match the installed and packaged ConnectCoin executable
+names documented in the main README.
 
 (You can and should combine this with `-j`, as above, for a parallel build.)
 
@@ -141,9 +144,12 @@ When reviewing patches that move code around, try using `git diff --patience com
 ### Fetch commits directly
 
 Before inspecting any remotely created commit locally, it has to be fetched.
-This is possible via `git fetch origin <full_commit_hash>`. Even commits not
-part of any branch or tag can be fetched as long as the remote has not garbage
-collected them.
+This is possible via
+`git fetch <remote-containing-the-commit> <full_commit_hash>`. Do not assume
+`origin` is project-owned: development
+checkouts may retain Bitcoin Core as a fetch-only upstream. Even commits not
+part of any branch or tag can be fetched as long as the selected remote has not
+garbage collected them.
 
 
 ### Reference PRs easily with `refspec`s
@@ -153,7 +159,7 @@ As an alternative to fetching commits directly, when looking at pull requests by
 ```
 [remote "upstream-pull"]
         fetch = +refs/pull/*/head:refs/remotes/upstream-pull/*
-        url = git@github.com:bitcoin/bitcoin.git
+        url = <CONNECTCOIN_GITHUB_REPOSITORY_URL>
 ```
 
 This will add an `upstream-pull` remote to your git repository, which can be fetched using `git fetch --all` or `git fetch upstream-pull`. It will download and store on disk quite a lot of data (all PRs, including merged and closed ones). Afterwards, you can use `upstream-pull/NUMBER/head` in arguments to `git show`, `git checkout` and anywhere a commit id would be acceptable to see the changes from pull request NUMBER.
@@ -173,8 +179,9 @@ git fetch upstream pull/<number>/head:pr-<number> && git switch pr-<number>
 ...from the command line, substituting `<number>` with the PR number you want to fetch/update.
 
 > [!NOTE]
-> The remote named "upstream" here must be the one that the pull request was opened against.
-> e.g. github.com/bitcoin/bitcoin.git or for the GUI github.com/bitcoin-core/gui
+> The remote named "upstream" here must be the ConnectCoin repository against
+> which the pull request was opened. Replace the placeholder URL only after a
+> project-owned repository has been designated.
 
 Make these easier to use by adding aliases to your git config:
 

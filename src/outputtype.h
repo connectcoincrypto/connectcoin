@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_OUTPUTTYPE_H
-#define BITCOIN_OUTPUTTYPE_H
+#ifndef CONNECTCOIN_OUTPUTTYPE_H
+#define CONNECTCOIN_OUTPUTTYPE_H
 
 #include <addresstype.h>
 #include <script/signingprovider.h>
@@ -44,4 +44,4 @@ CTxDestination AddAndGetDestinationForScript(FlatSigningProvider& keystore, cons
 /** Get the OutputType for a CTxDestination */
 std::optional<OutputType> OutputTypeFromDestination(const CTxDestination& dest);
 
-#endif // BITCOIN_OUTPUTTYPE_H
+#endif // CONNECTCOIN_OUTPUTTYPE_H

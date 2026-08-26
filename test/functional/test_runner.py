@@ -55,6 +55,12 @@ except UnicodeDecodeError:
     CROSS = "x "
     CIRCLE = "o "
 
+if os.name == "nt":
+    # The legacy Windows console commonly uses a non-Unicode code page.
+    TICK = "+ "
+    CROSS = "x "
+    CIRCLE = "- "
+
 if platform.system() == 'Windows':
     import ctypes
     kernel32 = ctypes.windll.kernel32  # type: ignore
@@ -437,7 +443,7 @@ def main():
     parser.add_argument('--failfast', '-F', action='store_true', help='stop execution after the first test failure')
     parser.add_argument('--filter', help='filter scripts to run by regular expression')
     parser.add_argument("--nocleanup", dest="nocleanup", default=False, action="store_true",
-                        help="Leave bitcoinds and test.* datadir on exit or error")
+                        help="Leave connectcoinds and test.* datadir on exit or error")
     parser.add_argument('--resultsfile', '-r', help='store test results (as CSV) to the provided file')
 
     args, unknown_args = parser.parse_known_args()
@@ -466,7 +472,7 @@ def main():
     logging.basicConfig(format='%(message)s', level=logging_level)
 
     # Create base test directory
-    tmpdir = "%s/test_runner_₿_🏃_%s" % (args.tmpdirprefix, datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
+    tmpdir = "%s/test_runner_cc_%s" % (args.tmpdirprefix, datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
 
     os.makedirs(tmpdir)
 
@@ -479,9 +485,9 @@ def main():
         assert results_filepath.parent.exists(), "Results file parent directory does not exist"
         logging.debug("Test results will be written to " + str(results_filepath))
 
-    enable_bitcoind = config.getboolean("components", "ENABLE_BITCOIND")
+    enable_connectcoind = config.getboolean("components", "ENABLE_CONNECTCOIND")
 
-    if not enable_bitcoind:
+    if not enable_connectcoind:
         print("No functional tests to run.")
         print("Re-compile with the -DBUILD_DAEMON=ON build option")
         sys.exit(1)
@@ -602,11 +608,11 @@ def run_tests(*, test_list, build_dir, tmpdir, jobs=1, enable_coverage=False, ar
     # functional tests so every child process inherits PYTHON_GIL=1.
     os.environ["PYTHON_GIL"] = "1"
 
-    # Warn if bitcoind is already running
+    # Warn if connectcoind is already running
     try:
         # pgrep exits with code zero when one or more matching processes found
-        if subprocess.run(["pgrep", "-x", "bitcoind"], stdout=subprocess.DEVNULL).returncode == 0:
-            print("%sWARNING!%s There is already a bitcoind process running on this system. Tests may fail unexpectedly due to resource contention!" % (BOLD[1], BOLD[0]))
+        if subprocess.run(["pgrep", "-x", "connectcoind"], stdout=subprocess.DEVNULL).returncode == 0:
+            print("%sWARNING!%s There is already a connectcoind process running on this system. Tests may fail unexpectedly due to resource contention!" % (BOLD[1], BOLD[0]))
     except OSError:
         # pgrep not supported
         pass
@@ -614,7 +620,7 @@ def run_tests(*, test_list, build_dir, tmpdir, jobs=1, enable_coverage=False, ar
     # Warn if there is not enough space on the testing dir
     min_space = MIN_FREE_SPACE + (jobs - 1) * ADDITIONAL_SPACE_PER_JOB
     if shutil.disk_usage(tmpdir).free < min_space:
-        print(f"{BOLD[1]}WARNING!{BOLD[0]} There may be insufficient free space in {tmpdir} to run the Bitcoin functional test suite. "
+        print(f"{BOLD[1]}WARNING!{BOLD[0]} There may be insufficient free space in {tmpdir} to run the ConnectCoin functional test suite. "
               f"Running the test suite with fewer than {min_space // (1024 * 1024)} MB of free space might cause tests to fail.")
 
     tests_dir = f"{build_dir}/test/functional/"
@@ -814,7 +820,7 @@ class TestHandler:
                 (name, start_time, proc, testdir, log_out, log_err) = job.result()
 
                 log_out.seek(0), log_err.seek(0)
-                [stdout, stderr] = [log_file.read().decode('utf-8') for log_file in (log_out, log_err)]
+                [stdout, stderr] = [log_file.read().decode('utf-8', errors='replace') for log_file in (log_out, log_err)]
                 log_out.close(), log_err.close()
                 skip_reason = None
                 if proc.returncode == TEST_EXIT_PASSED and stderr == "":
@@ -903,7 +909,7 @@ class RPCCoverage():
     Coverage calculation works by having each test script subprocess write
     coverage files into a particular directory. These files contain the RPC
     commands invoked during testing, as well as a complete listing of RPC
-    commands per `bitcoin-cli help` (`rpc_interface.txt`).
+    commands per `connectcoin-cli help` (`rpc_interface.txt`).
 
     After all tests complete, the commands run are combined and diff'd against
     the complete list to calculate uncovered RPC commands.

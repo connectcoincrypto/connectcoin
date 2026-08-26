@@ -105,7 +105,7 @@ using node::VerifyLoadedChainstate;
 
 const TranslateFn G_TRANSLATION_FUN{nullptr};
 
-constexpr inline auto TEST_DIR_PATH_ELEMENT{"test_common bitcoin"}; // Includes a space to catch possible path escape issues.
+constexpr inline auto TEST_DIR_PATH_ELEMENT{"test_common connectcoin"}; // Includes a space to catch possible path escape issues.
 /** Random context to get unique temp data dirs. Separate from m_rng, which can be seeded from a const env var */
 static FastRandomContext g_rng_temp_path;
 static const bool g_rng_temp_path_init{[] {
@@ -428,7 +428,7 @@ TestChain100Setup::TestChain100Setup(
         LOCK(::cs_main);
         assert(
             m_node.chainman->ActiveChain().Tip()->GetBlockHash().ToString() ==
-            "0ee6e270d6594249e548110619f7bd690695beb219b915da4a2e84e2b61ed60f");
+            "04fad77695687115d098359eb022c7206fbb4436817efc3040d03f3b3f6cf3fe");
     }
 }
 

@@ -1,27 +1,36 @@
 Tooling for verification of PGP signed commits
 ----------------------------------------------
 
-This is an incomplete work in progress, but currently includes a pre-push hook
-script (`pre-push-hook.sh`) for maintainers to ensure that their own commits
-are PGP signed (nearly always merge commits), as well as a Python 3 script to verify
-commits against a trusted keys list.
+Status: disabled for ConnectCoin
+--------------------------------
+
+ConnectCoin does not yet have a project-owned trusted Git root, Tree-SHA512
+root, or authorized signer-key set. The data files in this directory are
+inherited Bitcoin Core history and are **not** a ConnectCoin trust policy.
+`verify-commits.py` therefore refuses to run while the
+`connectcoin-policy-disabled` marker exists.
+
+Do not remove that marker until the project has selected and independently
+documented its maintainers, signing keys, trusted roots, review process, and
+key rotation/revocation procedure, and every trust file below has been replaced
+with ConnectCoin-owned values.
+
+This directory retains the upstream Python verifier and its supporting data as
+a starting point for a future ConnectCoin policy. It is incomplete and must not
+be treated as an active security control while the disable marker exists.
 
 
-Using verify-commits.py safely
-------------------------------
+Enabling verify-commits.py safely
+---------------------------------
 
 Remember that you can't use an untrusted script to verify itself. This means
 that checking out code, then running `verify-commits.py` against `HEAD` is
 _not_ safe, because the version of `verify-commits.py` that you just ran could
 be backdoored. Instead, you need to use a trusted version of verify-commits
 prior to checkout to make sure you're checking out only code signed by trusted
-keys:
-
- ```sh
- git fetch origin && \
- ./contrib/verify-commits/verify-commits.py origin/master && \
- git checkout origin/master
- ```
+keys. The exact trusted remote and branch must be part of the future ConnectCoin
+policy; the inherited `origin/master` example is deliberately not presented as
+an active command.
 
 Note that the above isn't a good UI/UX yet, and needs significant improvements
 to make it more convenient and reduce the chance of errors; pull-reqs
@@ -41,11 +50,12 @@ Configuration files
 
 Import trusted keys
 -------------------
-In order to check the commit signatures, you must add the trusted PGP keys to your machine. [GnuPG](https://gnupg.org/) may be used to import the trusted keys by running the following command:
+Do not import the current `trusted-keys` entries as ConnectCoin maintainers;
+they are inherited Bitcoin Core trust data. After that file has been replaced
+under an approved ConnectCoin policy, the project documentation should provide
+an authenticated key-distribution and verification procedure. Merely fetching
+fingerprints from a public keyserver is not sufficient to establish trust.
 
-```sh
-gpg --keyserver hkps://keys.openpgp.org --recv-keys $(<contrib/verify-commits/trusted-keys)
-```
 
 Key expiry/revocation
 ---------------------
@@ -57,5 +67,5 @@ file, individual commits which were signed by such a key can be added to the
 `allow-revsig-commits` file. That way, the PGP signatures are still verified
 but no new commits can be signed by any expired/revoked key. To easily build a
 list of commits which need to be added, verify-commits.py can be edited to test
-each commit with BITCOIN_VERIFY_COMMITS_ALLOW_REVSIG set to both 1 and 0, and
+each commit with CONNECTCOIN_VERIFY_COMMITS_ALLOW_REVSIG set to both 1 and 0, and
 those which need it set to 1 printed.

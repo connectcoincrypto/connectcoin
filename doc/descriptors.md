@@ -1,6 +1,6 @@
-# Support for Output Descriptors in Bitcoin Core
+# Support for Output Descriptors in ConnectCoin Core
 
-Many Bitcoin Core RPCs support Output Descriptors. This is a simple language
+Many ConnectCoin Core RPCs support Output Descriptors. This is a simple language
 which can be used to describe collections of output scripts. The wallet code
 internally stores and operates on these descriptors to reason about the sets
 of outputs that belong to the wallet.
@@ -39,16 +39,16 @@ Output descriptors currently support:
 - `sh(sortedmulti(2,03acd484e2f0c7f65309ad178a9f559abde09796974c57e714c35f110dfc27ccbe,022f01e5e15cca351daff3843fb70f3c2f0a1bdd05e5af888a67784ef3e10a2a01))` describes a P2SH *2-of-2* multisig output with keys sorted lexicographically in the resulting redeemScript.
 - `wsh(multi(2,03a0434d9e47f3c86235477c7b1ae6ae5d3442d49b1943c2b752a68e2a47e247c7,03774ae7f858a9411e5ef4246b70c65aac5649980be5c17891bbec17895da008cb,03d01115d548e7561b15c38f004d734633687cf4419620095bc5b0f47070afe85a))` describes a P2WSH *2-of-3* multisig output with keys in the specified order.
 - `sh(wsh(multi(1,03f28773c2d975288bc7d1d205c3748651b075fbc6610e58cddeeddf8f19405aa8,03499fdf9e895e719cfd64e67f07d38e3226aa7b63678949e6e49b241a60e823e4,02d7924d4f7d43ea965a465ae3095ff41131e5946f3c85f79e44adbcf8e27e080e)))` describes a P2SH-P2WSH *1-of-3* multisig output with keys in the specified order.
-- `pk(xpub661MyMwAqRbcFtXgS5sYJABqqG9YLmC4Q1Rdap9gSE8NqtwybGhePY2gZ29ESFjqJoCu1Rupje8YtGqsefD265TMg7usUDFdp6W1EGMcet8)` describes a P2PK output with the public key of the specified xpub.
-- `pkh(xpub68Gmy5EdvgibQVfPdqkBBCHxA5htiqg55crXYuXoQRKfDBFA1WEjWgP6LHhwBZeNK1VTsfTFUHCdrfp1bgwQ9xv5ski8PX9rL2dZXvgGDnw/1/2)` describes a P2PKH output with child key *1/2* of the specified xpub.
-- `pkh([d34db33f/44'/0'/0']xpub6ERApfZwUNrhLCkDtcHTcxd75RbzS1ed54G1LkBUHQVHQKqhMkhgbmJbZRkrgZw4koxb5JaHWkY4ALHY2grBGRjaDMzQLcgJvLJuZZvRcEL/1/*)` describes a set of P2PKH outputs, but additionally specifies that the specified xpub is a child of a master with fingerprint `d34db33f`, and derived using path `44'/0'/0'`.
-- `wsh(multi(1,xpub661MyMwAqRbcFW31YEwpkMuc5THy2PSt5bDMsktWQcFF8syAmRUapSCGu8ED9W6oDMSgv6Zz8idoc4a6mr8BDzTJY47LJhkJ8UB7WEGuduB/1/0/*,xpub69H7F5d8KSRgmmdJg2KhpAK8SR3DjMwAdkxj3ZuxV27CprR9LgpeyGmXUbC6wb7ERfvrnKZjXoUmmDznezpbZb7ap6r1D3tgFxHmwMkQTPH/0/0/*))` describes a set of *1-of-2* P2WSH multisig outputs where the first multisig key is the *1/0/`i`* child of the first specified xpub and the second multisig key is the *0/0/`i`* child of the second specified xpub, and `i` is any number in a configurable range (`0-1000` by default).
-- `wsh(sortedmulti(1,xpub661MyMwAqRbcFW31YEwpkMuc5THy2PSt5bDMsktWQcFF8syAmRUapSCGu8ED9W6oDMSgv6Zz8idoc4a6mr8BDzTJY47LJhkJ8UB7WEGuduB/1/0/*,xpub69H7F5d8KSRgmmdJg2KhpAK8SR3DjMwAdkxj3ZuxV27CprR9LgpeyGmXUbC6wb7ERfvrnKZjXoUmmDznezpbZb7ap6r1D3tgFxHmwMkQTPH/0/0/*))` describes a set of *1-of-2* P2WSH multisig outputs where one multisig key is the *1/0/`i`* child of the first specified xpub and the other multisig key is the *0/0/`i`* child of the second specified xpub, and `i` is any number in a configurable range (`0-1000` by default). The order of public keys in the resulting witnessScripts is determined by the lexicographic order of the public keys at that index.
+- `pk(ccpubKDazFod7ockyt4NZjUvABrxZxRXMz3tsynhhQ6ZKnFvqMPUM8A96Sne1KAxUEwBm5FtuZjQFpQNcXrV1tRWyaodu6zeq6U1DBcmeGiRaKd6)` describes a P2PK output with the public key of the specified xpub.
+- `pkh(ccpubKFrQFWvatssy2fWGwEno4u4gHF5iN8NtfQ8bNBwSkT87ifmXYPgBZvzR6SXAzF6J5UBURxwgZ3ShWFT9qTFMeh6dJdT61muRhYuCaT6D5vW/1/2)` describes a P2PKH output with child key *1/2* of the specified xpub.
+- `pkh([d34db33f/44'/0'/0']ccpubKMzo77FtSa24xNb7C1L5WfPqCayp5JMSeqY5A2b7dSHjupN4te98f1uvKaa6VFNzXGebdc4ibWn7ouvgGTA8m9v7eEjMxsRtHraYc5dxvAr/1/*)` describes a set of P2PKH outputs, but additionally specifies that the specified xpub is a child of a master with fingerprint `d34db33f`, and derived using path `44'/0'/0'`.
+- `wsh(multi(1,ccpubKDazFod7ockysfstqdzSe4gLCcfnfg9hfNVRh3J9ke3heNVYJJv2sgobfH3SxBYiyp8hUQ4RDUssFeDF1cS8iidqxvrHvxVsVzSkYiqTq2C/1/0/*,ccpubKGrjXXK5Hdb4PwUByRNKhs5rZaR3NedzDYEnrrKbq3ufLLwWsaG72XNrEk1LkGZAC8csLd4AcZiqQodvtm8Z4KJ8EyaxqJeFdUZQyvQqvB7/0/0/*))` describes a set of *1-of-2* P2WSH multisig outputs where the first multisig key is the *1/0/`i`* child of the first specified xpub and the second multisig key is the *0/0/`i`* child of the second specified xpub, and `i` is any number in a configurable range (`0-1000` by default).
+- `wsh(sortedmulti(1,ccpubKDazFod7ockysfstqdzSe4gLCcfnfg9hfNVRh3J9ke3heNVYJJv2sgobfH3SxBYiyp8hUQ4RDUssFeDF1cS8iidqxvrHvxVsVzSkYiqTq2C/1/0/*,ccpubKGrjXXK5Hdb4PwUByRNKhs5rZaR3NedzDYEnrrKbq3ufLLwWsaG72XNrEk1LkGZAC8csLd4AcZiqQodvtm8Z4KJ8EyaxqJeFdUZQyvQqvB7/0/0/*))` describes a set of *1-of-2* P2WSH multisig outputs where one multisig key is the *1/0/`i`* child of the first specified xpub and the other multisig key is the *0/0/`i`* child of the second specified xpub, and `i` is any number in a configurable range (`0-1000` by default). The order of public keys in the resulting witnessScripts is determined by the lexicographic order of the public keys at that index.
 - `tr(c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5,{pk(fff97bd5755eeea420453a14355235d382f6472f8568a18b2f057a1460297556),pk(e493dbf1c10d80f3581e4904930b1404cc6c13900ee0758474fa94abe8c4cd13)})` describes a P2TR output with the `c6...` x-only pubkey as internal key, and two script paths.
 - `tr(c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5,sortedmulti_a(2,2f8bde4d1a07209355b4a7250a5c5128e88b84bddc619ab7cba8d569b240efe4,5cbdf0646e5db4eaa398f365f2ea7a0e3d419b7e0330e39ce92bddedcac4f9bc))` describes a P2TR output with the `c6...` x-only pubkey as internal key, and a single `multi_a` script that needs 2 signatures with 2 specified x-only keys, which will be sorted lexicographically.
-- `wsh(sortedmulti(2,[6f53d49c/44h/1h/0h]tpubDDjsCRDQ9YzyaAq9rspCfq8RZFrWoBpYnLxK6sS2hS2yukqSczgcYiur8Scx4Hd5AZatxTuzMtJQJhchufv1FRFanLqUP7JHwusSSpfcEp2/<0;1>/*,[e6807791/44h/1h/0h]tpubDDAfvogaaAxaFJ6c15ht7Tq6ZmiqFYfrSmZsHu7tHXBgnjMZSHAeHSwhvjARNA6Qybon4ksPksjRbPDVp7yXA1KjTjSd5x18KHqbppnXP1s/<0;1>/*,[367c9cfa/44h/1h/0h]tpubDDtPnSgWYk8dDnaDwnof4ehcnjuL5VoUt1eW2MoAed1grPHuXPDnkX1fWMvXfcz3NqFxPbhqNZ3QBdYjLz2hABeM9Z2oqMR1Gt2HHYDoCgh/<0;1>/*))` describes a *2-of-3* multisig with a multipath descriptor specifying both receiving (/0) and change (/1) address derivation paths.
-- `wsh(thresh(4,pk([7258e4f9/44h/1h/0h]tpubDCZrkQoEU3845aFKUu9VQBYWZtrTwxMzcxnBwKFCYXHD6gEXvtFcxddCCLFsEwmxQaG15izcHxj48SXg1QS5FQGMBx5Ak6deXKPAL7wauBU/<0;1>/*),s:pk([c80b1469/44h/1h/0h]tpubDD3UwwHoNUF4F3Vi5PiUVTc3ji1uThuRfFyBexTSHoAcHuWW2z8qEE2YujegcLtgthr3wMp3ZauvNG9eT9xfJyxXCfNty8h6rDBYU8UU1qq/<0;1>/*),s:pk([4e5024fe/44h/1h/0h]tpubDDLrpPymPLSCJyCMLQdmcWxrAWwsqqssm5NdxT2WSdEBPSXNXxwbeKtsHAyXPpLkhUyKovtZgCi47QxVpw9iVkg95UUgeevyAqtJ9dqBqa1/<0;1>/*),s:pk([3b1d1ee9/44h/1h/0h]tpubDCmDTANBWPzf6d8Ap1J5Ku7J1Ay92MpHMrEV7M5muWxCrTBN1g5f1NPcjMEL6dJHxbvEKNZtYCdowaSTN81DAyLsmv6w6xjJHCQNkxrsrfu/<0;1>/*),sln:after(840000),sln:after(1050000),sln:after(1260000)))` describes a Miniscript multisig with spending policy: `thresh(4,pk(key_1),pk(key_2),pk(key_3),pk(key_4),after(t1),after(t2),after(t3))` that starts as 4-of-4 and "decays" to 3-of-4, 2-of-4, and finally 1-of-4 at each future halvening block height. This uses a multipath descriptor specifying both receiving (/0) and change (/1) address derivation paths.
-- `tr(musig(xpub6ERApfZwUNrhLCkDtcHTcxd75RbzS1ed54G1LkBUHQVHQKqhMkhgbmJbZRkrgZw4koxb5JaHWkY4ALHY2grBGRjaDMzQLcgJvLJuZZvRcEL,xpub68NZiKmJWnxxS6aaHmn81bvJeTESw724CRDs6HbuccFQN9Ku14VQrADWgqbhhTHBaohPX4CjNLf9fq9MYo6oDaPPLPxSb7gwQN3ih19Zm4Y)/0/*)` describes a MuSig2 multisig with key derivation. The internal keys are derived at `m/0/*` from the aggregate key computed from the 2 participants.
+- `wsh(sortedmulti(2,[6f53d49c/44h/1h/0h]tcubNKNmt79jZcxbiz7uBDP8jqQwpHtHrJ4WLgmJ2X7n3yqTnZgqhKR1Tkd971E5KZ5Z4fhdgczLgN5sQo5tcJwMvguCJ63KKPLFsYAjxRQ6uwB/<0;1>/*,[e6807791/44h/1h/0h]tcubNJoacVcuzEvCQ7PMKRGpBU7cpokcJeup17NrDYode4zAfYCxWbu3CUezuHmYdRYtshvWnuwk5MWthUggWkzsqGyLyUeU2E36Ev8uLMdNjPZ/<0;1>/*,[367c9cfa/44h/1h/0h]tcubNKXJU8cqxp6FNbryG8Nb8ez93mw78c3SSMTUx1Uv1ApAjC9JbhxBfYixUvXevtSXGwNh7knBh2psHj1v3d43qTHxfJEemdSyCWKao37y4H3/<0;1>/*))` describes a *2-of-3* multisig with a multipath descriptor specifying both receiving (/0) and change (/1) address derivation paths.
+- `wsh(thresh(4,pk([7258e4f9/44h/1h/0h]tcubNJCmS6jZt75gEPY4oEiRUBq2pvtF14bxBJbArxvwu55gyV5w1Cz1sfLVAtrzWDESJgNjot4xcSWXEXzri3TRvfuxhhH1gNfcSwgTqfjGycj/<0;1>/*),s:pk([c80b1469/44h/1h/0h]tcubNJgPddE8nYCgPrnTPjHQZTtZzk3gWp9PDbnAac9BeLy6AiMu7JsE9FjqtJFoscMAnoxnfWtPt4hPUMcq9nz1zFc8iQajuQj4mqUqycvdDad/<0;1>/*),s:pk([4e5024fe/44h/1h/0h]tcubNJymW5v6oQPpTnV6ekChgXFNRYyetx7qKRBct6iFoB2fGFNmcHfzZMcAFjaef5oEbb64Y5xuzgVXDWRgXaB5B2KkbDgXavxw6UBbf6DAXqy/<0;1>/*),s:pk([3b1d1ee9/44h/1h/0h]tcubNJQ88rJWvTxHFSQv8Ls1PuPpGCzv5U4EvC3U2zmXG4kgjG2m5zp3vQ6uhuqTMtkmri2y3XeErgRH3fue4m2ZrEzVHfJn3EmGCphgGRAwD9K/<0;1>/*),sln:after(840000),sln:after(1050000),sln:after(1260000)))` describes a Miniscript multisig with spending policy: `thresh(4,pk(key_1),pk(key_2),pk(key_3),pk(key_4),after(t1),after(t2),after(t3))` that starts as 4-of-4 and "decays" to 3-of-4, 2-of-4, and finally 1-of-4 at each future halvening block height. This uses a multipath descriptor specifying both receiving (/0) and change (/1) address derivation paths.
+- `tr(musig(ccpubKMzo77FtSa24xNb7C1L5WfPqCayp5JMSeqY5A2b7dSHjupN4te98f1uvKaa6VFNzXGebdc4ibWn7ouvgGTA8m9v7eEjMxsRtHraYc5dxvAr,ccpubKFxBzmTFUz8L4GRTbApjuJh2mccGaPisnCVvua1Yxe3rsdrGXwvruQpqSzQwW8j7MGPQ5MhAT6uDKQnVnZQkiJZvmGhQDNSWmtKMjZo7fRK)/0/*)` describes a MuSig2 multisig with key derivation. The internal keys are derived at `m/0/*` from the aggregate key computed from the 2 participants.
 
 ## Reference
 
@@ -82,7 +82,7 @@ Descriptors consist of several types of expressions. The top level expression is
     - Inside `wpkh` and `wsh`, only compressed public keys are permitted.
     - Inside `tr` and `rawtr`, x-only pubkeys are also permitted (64 hex characters).
   - [WIF](https://en.bitcoin.it/wiki/Wallet_import_format) encoded private keys may be specified instead of the corresponding public key, with the same meaning.
-  - `xpub` encoded extended public key or `xprv` encoded extended private key (as defined in [BIP 32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)).
+  - A BIP32-encoded extended public or private key (as defined in [BIP 32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)). ConnectCoin mainnet keys start with `ccpub`/`ccprv`; test-network keys start with `tcub`/`tcpr`. The generic terms *xpub* and *xprv* below refer to these network-specific encodings.
     - Followed by zero or more `/NUM` unhardened and `/NUM'` hardened BIP32 derivation steps.
       - No more than one of these derivation steps may be of the form `<NUM;NUM;...;NUM>` (including hardened indicators with either or both `NUM`). If such specifiers are included, the descriptor will be parsed as multiple descriptors where the first descriptor uses all of the first `NUM` in the pair, and the second descriptor uses the second `NUM` in the pair for all `KEY` expressions, and so on. Defined in [BIP 389](https://github.com/bitcoin/bips/blob/master/bip-0389.mediawiki).
     - Optionally followed by a single `/*` or `/*'` final step to denote all (direct) unhardened or hardened children.
@@ -96,9 +96,9 @@ Descriptors consist of several types of expressions. The top level expression is
 - An open brace `{`, a `TREE` expression, a comma `,`, a `TREE` expression, and a closing brace `}`
 
 `ADDR` expressions are any type of supported address, defined in [BIP 385](https://github.com/bitcoin/bips/blob/master/bip-0385.mediawiki):
-- P2PKH addresses (base58, of the form `1...` for mainnet or `[nm]...` for testnet). Note that P2PKH addresses in descriptors cannot be used for P2PK outputs (use the `pk` function instead).
-- P2SH addresses (base58, of the form `3...` for mainnet or `2...` for testnet, defined in [BIP 13](https://github.com/bitcoin/bips/blob/master/bip-0013.mediawiki)).
-- Segwit addresses (bech32 and bech32m, of the form `bc1...` for mainnet or `tb1...` for testnet, defined in [BIP 173](https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki) and [BIP 350](https://github.com/bitcoin/bips/blob/master/bip-0350.mediawiki)).
+- P2PKH addresses (base58, of the form `C...` for mainnet or `T...` for test networks). Note that P2PKH addresses in descriptors cannot be used for P2PK outputs (use the `pk` function instead).
+- P2SH addresses (base58, of the form `c...` for mainnet or `t...` for test networks, defined in [BIP 13](https://github.com/bitcoin/bips/blob/master/bip-0013.mediawiki)).
+- Segwit addresses (bech32 and bech32m, of the form `cc1...` for mainnet, `tcc1...` for testnet3/testnet4/signet, or `ccrt1...` for regtest, defined in [BIP 173](https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki) and [BIP 350](https://github.com/bitcoin/bips/blob/master/bip-0350.mediawiki)).
 
 ## Explanation
 
@@ -119,7 +119,7 @@ not contain "p2" for brevity.
 ### Multisig
 
 Several pieces of software use multi-signature (multisig) scripts based
-on Bitcoin's OP_CHECKMULTISIG opcode. To support these, we introduce the
+on the inherited OP_CHECKMULTISIG opcode. To support these, we introduce the
 `multi(k,key_1,key_2,...,key_n)` and `sortedmulti(k,key_1,key_2,...,key_n)`
 functions. They represent a *k-of-n*
 multisig policy, where any *k* out of the *n* provided `KEY` expressions must
@@ -146,7 +146,7 @@ wallets and PSBTs, as well as a signing flow, see [this functional test](/test/f
 Disclaimers: It is important to note that this example serves as a quick-start and is kept basic for readability. A downside of the approach
 outlined here is that each participant must maintain (and backup) two separate wallets: a signer and the corresponding multisig.
 It should also be noted that privacy best-practices are not "by default" here - participants should take care to only use the signer to sign
-transactions related to the multisig. Lastly, it is not recommended to use anything other than a Bitcoin Core descriptor wallet to serve as your
+transactions related to the multisig. Lastly, it is not recommended to use anything other than a ConnectCoin Core descriptor wallet to serve as your
 signer(s). Other wallets, whether hardware or software, likely impose additional checks and safeguards to prevent users from signing transactions that
 could lead to loss of funds, or are deemed security hazards. Conforming to various 3rd-party checks and verifications is not in the scope of this example.
 
@@ -247,7 +247,7 @@ For example, after importing the following 2-of-3 multisig descriptor
 into a wallet, one could use `signrawtransactionwithwallet`
 to sign a transaction with the first key:
 ```
-sh(multi(2,xprv.../84'/0'/0'/0/0,xpub1...,xpub2...))
+sh(multi(2,ccprv.../84'/0'/0'/0/0,ccpub1...,ccpub2...))
 ```
 Note how the first key is an xprv private key with a specific derivation path,
 while the other two are public keys.
@@ -280,7 +280,7 @@ first descriptor for receiving addresses and the second descriptor for change ad
 ### Compatibility with old wallets
 
 In order to easily represent the sets of scripts currently supported by
-existing Bitcoin Core wallets, a convenience function `combo` is
+existing ConnectCoin Core wallets, a convenience function `combo` is
 provided, which takes as input a public key, and describes a set of P2PK,
 P2PKH, P2WPKH, and P2SH-P2WPKH scripts for that key. In case the key is
 uncompressed, the set only includes P2PK and P2PKH scripts.
@@ -297,7 +297,7 @@ be detected in descriptors up to 501 characters, and up to 3 errors in longer
 ones. For larger numbers of errors, or other types of errors, there is a
 roughly 1 in a trillion chance of not detecting the errors.
 
-All RPCs in Bitcoin Core will include the checksum in their output. Only
+All RPCs in ConnectCoin Core will include the checksum in their output. Only
 certain RPCs require checksums on input, including `deriveaddresses` and
 `importdescriptors`. The checksum for a descriptor without one can be computed
 using the `getdescriptorinfo` RPC.

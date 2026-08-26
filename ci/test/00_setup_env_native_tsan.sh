@@ -17,7 +17,7 @@ export DEP_OPTS="CC=clang CXX=clang++ CXXFLAGS='${LIBCXX_FLAGS}' NO_QT=1"
 export GOAL="install"
 export CI_LIMIT_STACK_SIZE=1
 # Disable fortification with -U_FORTIFY_SOURCE to work around https://github.com/bitcoin/bitcoin/issues/30586
-export BITCOIN_CONFIG="\
+export CONNECTCOIN_CONFIG="\
   --preset=dev-mode \
   -DBUILD_GUI=OFF \
   -DSANITIZERS=thread \

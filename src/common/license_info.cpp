@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://opensource.org/license/mit/.
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <common/license_info.h>
 
@@ -25,16 +25,20 @@ std::string CopyrightHolders(const std::string& strPrefix)
 
 std::string LicenseInfo()
 {
-    const std::string URL_SOURCE_CODE = "<https://github.com/bitcoin/bitcoin>";
+    const bool has_project_url{!std::string{CLIENT_URL}.empty()};
+    const std::string project_info = !has_project_url
+        ? strprintf(_("Please contribute if you find %s useful."), CLIENT_NAME).translated
+        : strprintf(_("Please contribute if you find %s useful. Visit %s for further information about the software."),
+                    CLIENT_NAME, "<" CLIENT_URL ">").translated;
+    const std::string source_info = !has_project_url
+        ? std::string{_("No project-owned public source URL is configured for this development build.")}
+        : strprintf(_("The source code is available from %s."), "<" CLIENT_URL ">").translated;
 
     return CopyrightHolders(strprintf(_("Copyright (C) %i-%i"), 2009, COPYRIGHT_YEAR).translated + " ") + "\n" +
            "\n" +
-           strprintf(_("Please contribute if you find %s useful. "
-                       "Visit %s for further information about the software."),
-                     CLIENT_NAME, "<" CLIENT_URL ">")
-               .translated +
+           project_info +
            "\n" +
-           strprintf(_("The source code is available from %s."), URL_SOURCE_CODE).translated +
+           source_info +
            "\n" +
            "\n" +
            _("This is experimental software.") + "\n" +

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_TEST_UTIL_NET_H
-#define BITCOIN_TEST_UTIL_NET_H
+#ifndef CONNECTCOIN_TEST_UTIL_NET_H
+#define CONNECTCOIN_TEST_UTIL_NET_H
 
 #include <attributes.h>
 #include <compat/compat.h>
@@ -393,4 +393,4 @@ void DynSock::Pipe::PushNetMsg(const std::string& type, Args&&... payload)
 
 std::vector<NodeEvictionCandidate> GetRandomNodeEvictionCandidates(int n_candidates, FastRandomContext& random_context);
 
-#endif // BITCOIN_TEST_UTIL_NET_H
+#endif // CONNECTCOIN_TEST_UTIL_NET_H

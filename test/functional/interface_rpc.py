@@ -119,7 +119,7 @@ class RPCInterfaceTest(BitcoinTestFramework):
         results = [
             {"result": 0},
             {"error": {"code": RPC_METHOD_NOT_FOUND, "message": "Method not found"}},
-            {"result": "0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206"},
+            {"result": "79e876886fc96349e9979c0024589376c85a4a65a5b111ab85f7623ab9c72727"},
             {"error": {"code": RPC_INVALID_REQUEST, "message": "Missing method"}},
         ]
 
@@ -217,7 +217,7 @@ class RPCInterfaceTest(BitcoinTestFramework):
         expect_http_rpc_status(200, None,                   self.nodes[0], "getblockcount", [],  2, False)
         block_count = self.nodes[0].getblockcount()
         # Notification response status code: HTTP_NO_CONTENT
-        expect_http_rpc_status(204, None,                   self.nodes[0], "generatetoaddress", [1, "bcrt1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqdku202"],  2, True)
+        expect_http_rpc_status(204, None,                   self.nodes[0], "generatetoaddress", [1, "ccrt1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqc5sks0"],  2, True)
         # The command worked even though there was no response
         assert_equal(block_count + 1, self.nodes[0].getblockcount())
         # No error response for notifications even if they are invalid

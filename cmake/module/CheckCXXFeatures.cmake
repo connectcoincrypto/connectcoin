@@ -4,7 +4,7 @@
 
 include_guard(GLOBAL)
 
-# Checks for C++ features required to compile Bitcoin Core.
+# Checks for C++ features required to compile ConnectCoin Core.
 
 include(CheckCXXSourceCompiles)
 

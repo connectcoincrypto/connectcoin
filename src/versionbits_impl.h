@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_VERSIONBITS_IMPL_H
-#define BITCOIN_VERSIONBITS_IMPL_H
+#ifndef CONNECTCOIN_VERSIONBITS_IMPL_H
+#define CONNECTCOIN_VERSIONBITS_IMPL_H
 
 #include <chain.h>
 #include <sync.h>
@@ -82,4 +82,4 @@ public:
     }
 };
 
-#endif // BITCOIN_VERSIONBITS_IMPL_H
+#endif // CONNECTCOIN_VERSIONBITS_IMPL_H

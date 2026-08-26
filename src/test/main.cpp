@@ -7,7 +7,7 @@
  */
 // Boost.Test's SIGSTKSZ alternate stack can be smaller than Linux requires on musl.
 #define BOOST_TEST_DISABLE_ALT_STACK
-#define BOOST_TEST_MODULE Bitcoin Core Test Suite
+#define BOOST_TEST_MODULE ConnectCoin Core Test Suite
 
 #include <boost/test/included/unit_test.hpp>
 
@@ -19,7 +19,7 @@
 /**
  * Retrieve the command line arguments from boost.
  * Allows usage like:
- * `test_bitcoin --run_test="net_tests/cnode_listen_port" -- -checkaddrman=1 -printtoconsole=1`
+ * `connectcoin-test --run_test="net_tests/cnode_listen_port" -- -checkaddrman=1 -printtoconsole=1`
  * which would return `["-checkaddrman=1", "-printtoconsole=1"]`.
  */
 const std::function<std::vector<const char*>()> G_TEST_COMMAND_LINE_ARGUMENTS = []() {

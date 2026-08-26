@@ -74,6 +74,7 @@
 #include <exception>
 #include <fstream>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #if defined(Q_OS_MACOS)
@@ -111,15 +112,15 @@ static std::string DummyAddress(const CChainParams &params)
     std::string addr;
     switch (params.GetChainType()) {
     case ChainType::MAIN:
-        addr = "bc1p35yvjel7srp783ztf8v6jdra7dhfzk5jaun8xz2qp6ws7z80n4tq2jku9f";
+        addr = "cc1p35yvjel7srp783ztf8v6jdra7dhfzk5jaun8xz2qp6ws7z80n4tq2jku9f";
         break;
     case ChainType::SIGNET:
     case ChainType::TESTNET:
     case ChainType::TESTNET4:
-        addr = "tb1p35yvjel7srp783ztf8v6jdra7dhfzk5jaun8xz2qp6ws7z80n4tqa6qnlg";
+        addr = "tcc1p35yvjel7srp783ztf8v6jdra7dhfzk5jaun8xz2qp6ws7z80n4tqa6qnlg";
         break;
     case ChainType::REGTEST:
-        addr = "bcrt1p35yvjel7srp783ztf8v6jdra7dhfzk5jaun8xz2qp6ws7z80n4tqsr2427";
+        addr = "ccrt1p35yvjel7srp783ztf8v6jdra7dhfzk5jaun8xz2qp6ws7z80n4tqsr2427";
         break;
     } // no default case, so the compiler can warn about missing cases
     assert(!addr.empty());
@@ -135,7 +136,7 @@ void setupAddressWidget(QValidatedLineEdit *widget, QWidget *parent)
     widget->setFont(fixedPitchFont());
     // We don't want translators to use own addresses in translations
     // and this is the only place, where this address is supplied.
-    widget->setPlaceholderText(QObject::tr("Enter a Bitcoin address (e.g. %1)").arg(
+    widget->setPlaceholderText(QObject::tr("Enter a ConnectCoin address (e.g. %1)").arg(
         QString::fromStdString(DummyAddress(Params()))));
     widget->setValidator(new BitcoinAddressEntryValidator(parent));
     widget->setCheckValidator(new BitcoinAddressCheckValidator(parent));
@@ -148,8 +149,8 @@ void AddButtonShortcut(QAbstractButton* button, const QKeySequence& shortcut)
 
 bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
 {
-    // return if URI is not valid or is no bitcoin: URI
-    if(!uri.isValid() || uri.scheme() != QString("bitcoin"))
+    // Return if URI is invalid or does not use the connectcoin: scheme.
+    if(!uri.isValid() || uri.scheme() != QString("connectcoin"))
         return false;
 
     SendCoinsRecipient rv;
@@ -212,7 +213,7 @@ QString formatBitcoinURI(const SendCoinsRecipient &info)
 {
     bool bech_32 = info.address.startsWith(QString::fromStdString(Params().Bech32HRP() + "1"));
 
-    QString ret = QString("bitcoin:%1").arg(bech_32 ? info.address.toUpper() : info.address);
+    QString ret = QString("connectcoin:%1").arg(bech_32 ? info.address.toUpper() : info.address);
     int paramCount = 0;
 
     if (info.amount)
@@ -449,7 +450,7 @@ bool openBitcoinConf()
 
     configFile.close();
 
-    /* Open bitcoin.conf with the associated application */
+    /* Open connectcoin.conf with the associated application */
     bool res = QDesktopServices::openUrl(QUrl::fromLocalFile(PathToQString(pathConfig)));
 #ifdef Q_OS_MACOS
     // Workaround for macOS-specific behavior; see #15409.
@@ -513,15 +514,15 @@ fs::path static StartupShortcutPath()
 {
     ChainType chain = gArgs.GetChainType();
     if (chain == ChainType::MAIN)
-        return GetSpecialFolderPath(CSIDL_STARTUP) / "Bitcoin.lnk";
+        return GetSpecialFolderPath(CSIDL_STARTUP) / "ConnectCoin.lnk";
     if (chain == ChainType::TESTNET) // Remove this special case when testnet CBaseChainParams::DataDir() is incremented to "testnet4"
-        return GetSpecialFolderPath(CSIDL_STARTUP) / "Bitcoin (testnet).lnk";
-    return GetSpecialFolderPath(CSIDL_STARTUP) / fs::u8path(strprintf("Bitcoin (%s).lnk", ChainTypeToString(chain)));
+        return GetSpecialFolderPath(CSIDL_STARTUP) / "ConnectCoin (testnet).lnk";
+    return GetSpecialFolderPath(CSIDL_STARTUP) / fs::u8path(strprintf("ConnectCoin (%s).lnk", ChainTypeToString(chain)));
 }
 
 bool GetStartOnSystemStartup()
 {
-    // check for Bitcoin*.lnk
+    // Check for the ConnectCoin startup shortcut.
     return fs::exists(StartupShortcutPath());
 }
 
@@ -594,15 +595,44 @@ fs::path static GetAutostartDir()
 
 fs::path static GetAutostartFilePath()
 {
+    const fs::path autostart_dir{GetAutostartDir()};
+    if (autostart_dir.empty()) return {};
+
     ChainType chain = gArgs.GetChainType();
     if (chain == ChainType::MAIN)
-        return GetAutostartDir() / "bitcoin.desktop";
-    return GetAutostartDir() / fs::u8path(strprintf("bitcoin-%s.desktop", ChainTypeToString(chain)));
+        return autostart_dir / "connectcoin.desktop";
+    return autostart_dir / fs::u8path(strprintf("connectcoin-%s.desktop", ChainTypeToString(chain)));
+}
+
+static std::string EscapeDesktopExecPath(std::string_view path)
+{
+    // Desktop Entry values and quoted Exec arguments each process backslash
+    // escapes. Keep both layers explicit and prevent '%' from being treated as
+    // a field code. See the Desktop Entry Specification, section "The Exec key".
+    std::string escaped;
+    escaped.reserve(path.size());
+    for (const char ch : path) {
+        switch (ch) {
+        case '\\': escaped += "\\\\\\\\"; break;
+        case '"':
+        case '`':
+        case '$': escaped += "\\\\"; escaped += ch; break;
+        case '%': escaped += "%%"; break;
+        case '\n': escaped += "\\n"; break;
+        case '\r': escaped += "\\r"; break;
+        case '\t': escaped += "\\t"; break;
+        default: escaped += ch;
+        }
+    }
+    return escaped;
 }
 
 bool GetStartOnSystemStartup()
 {
-    std::ifstream optionFile{GetAutostartFilePath().std_path()};
+    const fs::path autostart_file{GetAutostartFilePath()};
+    if (autostart_file.empty()) return false;
+
+    std::ifstream optionFile{autostart_file.std_path()};
     if (!optionFile.good())
         return false;
     // Scan through file for "Hidden=true":
@@ -621,8 +651,11 @@ bool GetStartOnSystemStartup()
 
 bool SetStartOnSystemStartup(bool fAutoStart)
 {
+    const fs::path autostart_file{GetAutostartFilePath()};
+    if (autostart_file.empty()) return false;
+
     if (!fAutoStart)
-        fs::remove(GetAutostartFilePath());
+        fs::remove(autostart_file);
     else
     {
         char pszExePath[MAX_PATH+1];
@@ -631,21 +664,26 @@ bool SetStartOnSystemStartup(bool fAutoStart)
             return false;
         }
         pszExePath[r] = '\0';
+        const std::string exe_path{pszExePath};
+        // The Desktop Entry specification cannot represent '=' in an
+        // executable name or path.
+        if (exe_path.find('=') != std::string::npos) return false;
 
-        fs::create_directories(GetAutostartDir());
+        fs::create_directories(autostart_file.parent_path());
 
-        std::ofstream optionFile{GetAutostartFilePath().std_path(), std::ios_base::out | std::ios_base::trunc};
+        std::ofstream optionFile{autostart_file.std_path(), std::ios_base::out | std::ios_base::trunc};
         if (!optionFile.good())
             return false;
         ChainType chain = gArgs.GetChainType();
-        // Write a bitcoin.desktop file to the autostart directory:
+        // Write a connectcoin.desktop file to the autostart directory:
         optionFile << "[Desktop Entry]\n";
         optionFile << "Type=Application\n";
         if (chain == ChainType::MAIN)
-            optionFile << "Name=Bitcoin\n";
+            optionFile << "Name=ConnectCoin\n";
         else
-            optionFile << strprintf("Name=Bitcoin (%s)\n", ChainTypeToString(chain));
-        optionFile << "Exec=" << pszExePath << strprintf(" -min -chain=%s\n", ChainTypeToString(chain));
+            optionFile << strprintf("Name=ConnectCoin (%s)\n", ChainTypeToString(chain));
+        optionFile << "Exec=\"" << EscapeDesktopExecPath(exe_path)
+                   << strprintf("\" -min -chain=%s\n", ChainTypeToString(chain));
         optionFile << "Terminal=false\n";
         optionFile << "Hidden=false\n";
         optionFile.close();

@@ -1,14 +1,14 @@
-add_executable(test_kernel
+add_executable(connectcoin-test-kernel
     test_kernel.cpp
 )
 
-target_link_libraries(test_kernel
+target_link_libraries(connectcoin-test-kernel
   PRIVATE
     core_interface
-    bitcoinkernel
+    connectcoinkernel
     Boost::headers
 )
 
-add_windows_application_manifest(test_kernel)
+add_windows_application_manifest(connectcoin-test-kernel)
 
-add_test(NAME test_kernel COMMAND test_kernel)
+add_test(NAME connectcoin-test-kernel COMMAND connectcoin-test-kernel)

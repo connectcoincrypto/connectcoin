@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_WALLET_EXPORT_H
-#define BITCOIN_WALLET_EXPORT_H
+#ifndef CONNECTCOIN_WALLET_EXPORT_H
+#define CONNECTCOIN_WALLET_EXPORT_H
 
 #include <threadsafety.h>
 #include <util/expected.h>
@@ -33,4 +33,4 @@ util::Expected<std::vector<WalletDescInfo>, std::string> ExportDescriptors(const
 util::Result<std::string> ExportWatchOnlyWallet(const CWallet& wallet, const fs::path& destination, WalletContext& context) EXCLUSIVE_LOCKS_REQUIRED(wallet.cs_wallet);
 } // namespace wallet
 
-#endif // BITCOIN_WALLET_EXPORT_H
+#endif // CONNECTCOIN_WALLET_EXPORT_H

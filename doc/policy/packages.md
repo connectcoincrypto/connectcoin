@@ -92,7 +92,7 @@ If any transactions in the package are already in the mempool, they are not subm
 To meet the dynamic mempool minimum feerate, i.e., the feerate determined by the transactions
 evicted when the mempool reaches capacity (not the static minimum relay feerate), the total package
 feerate instead of individual feerate can be used. For example, if the mempool minimum feerate is
-5sat/vB and a 1sat/vB parent transaction has a high-feerate child, it may be accepted if
+5con/vB and a 1con/vB parent transaction has a high-feerate child, it may be accepted if
 submitted as a package.
 
 *Rationale*: This can be thought of as "CPFP within a package," solving the issue of a presigned

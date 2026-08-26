@@ -282,7 +282,7 @@ QString TransactionDesc::toHTML(interfaces::Node& node, interfaces::Wallet& wall
     strHTML += "<b>" + tr("Transaction virtual size") + ":</b> " + QString::number(GetVirtualTransactionSize(*wtx.tx)) + " bytes<br>";
     strHTML += "<b>" + tr("Output index") + ":</b> " + QString::number(rec->getOutputIndex()) + "<br>";
 
-    // Message from normal bitcoin:URI (bitcoin:123...?message=example)
+    // Message from normal connectcoin: URI (connectcoin:address...?message=example)
     for (const std::string& msg : messages) {
         strHTML += "<br><b>" + tr("Message") + ":</b><br>" + GUIUtil::HtmlEscape(msg, true) + "<br>";
     }

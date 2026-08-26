@@ -2,7 +2,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
 
-add_executable(bench_bitcoin
+add_executable(connectcoin-bench
   bench_bitcoin.cpp
   bench.cpp
   nanobench.cpp
@@ -56,27 +56,26 @@ add_executable(bench_bitcoin
   util_time.cpp
   verify_script.cpp
 )
-
-add_windows_application_manifest(bench_bitcoin)
+add_windows_application_manifest(connectcoin-bench)
 
 include(TargetDataSources)
-target_raw_data_sources(bench_bitcoin NAMESPACE benchmark::data
+target_raw_data_sources(connectcoin-bench NAMESPACE benchmark::data
   data/block413567.raw
 )
 
-target_link_libraries(bench_bitcoin
+target_link_libraries(connectcoin-bench
   core_interface
   test_util
-  bitcoin_node
+  connectcoin_node
   Boost::headers
 )
 
 if(WITH_EMBEDDED_ASMAP)
-  target_sources(bench_bitcoin PRIVATE asmap.cpp)
+  target_sources(connectcoin-bench PRIVATE asmap.cpp)
 endif()
 
 if(ENABLE_WALLET)
-  target_sources(bench_bitcoin
+  target_sources(connectcoin-bench
     PRIVATE
       coin_selection.cpp
       wallet_balance.cpp
@@ -87,7 +86,7 @@ if(ENABLE_WALLET)
       wallet_ismine.cpp
       wallet_migration.cpp
   )
-  target_link_libraries(bench_bitcoin bitcoin_wallet)
+  target_link_libraries(connectcoin-bench connectcoin_wallet)
 endif()
 
-install_binary_component(bench_bitcoin INTERNAL)
+install_binary_component(connectcoin-bench INTERNAL)

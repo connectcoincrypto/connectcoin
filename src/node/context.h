@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_NODE_CONTEXT_H
-#define BITCOIN_NODE_CONTEXT_H
+#ifndef CONNECTCOIN_NODE_CONTEXT_H
+#define CONNECTCOIN_NODE_CONTEXT_H
 
 #include <node/mining_types.h>
 
@@ -57,7 +57,7 @@ class Warnings;
 //! any member functions. It should just be a collection of references that can
 //! be used without pulling in unwanted dependencies or functionality.
 struct NodeContext {
-    //! libbitcoin_kernel context
+    //! libconnectcoin_kernel context
     std::unique_ptr<kernel::Context> kernel;
     std::unique_ptr<ECC_Context> ecc_context;
     //! Init interface for initializing current process and connecting to other processes.
@@ -108,4 +108,4 @@ struct NodeContext {
 };
 } // namespace node
 
-#endif // BITCOIN_NODE_CONTEXT_H
+#endif // CONNECTCOIN_NODE_CONTEXT_H

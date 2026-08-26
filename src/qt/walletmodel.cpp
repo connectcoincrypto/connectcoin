@@ -170,7 +170,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
     {
         if (rcp.fSubtractFeeFromAmount)
             fSubtractFeeFromAmount = true;
-        {   // User-entered bitcoin address / amount:
+        {   // User-entered ConnectCoin address / amount:
             if(!validateAddress(rcp.address))
             {
                 return InvalidAddress;
@@ -241,7 +241,7 @@ void WalletModel::sendCoins(WalletModelTransaction& transaction)
         std::vector<std::string> messages;
         for (const SendCoinsRecipient &rcp : transaction.getRecipients())
         {
-            if (!rcp.message.isEmpty()) { // Message from normal bitcoin:URI (bitcoin:123...?message=example)
+            if (!rcp.message.isEmpty()) { // Message from normal connectcoin: URI.
                 messages.emplace_back(rcp.message.toStdString());
             }
         }

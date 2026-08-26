@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(valid_keys)
                 "02F9308A019258C31049344F85F89D5229B531C845836F99B08601F113BCE036F9"
             },
             .expected_aggregate_pubkey = "0354240c76b8f2999143301a99c7f721ee57eee0bce401df3afeaa9ae218c70f23",
-            .expected_aggregate_xpub = "xpub661MyMwAqRbcFt6tk3uaczE1y6EvM1TqXvawXcYmFEWijEM4PDBnuCXwwXEKGEouzXE6QLLRxjatMcLLzJ5LV5Nib1BN7vJg6yp45yHHRbm"
+            .expected_aggregate_xpub = "ccpubKDazFod7ockyt3wn3SxCWgzk6FcjzJAf7hs1LtxQbGKBEisRv6dExT9Ghg3Z4vFqkyv6xdps3Vpx1ByVE4PHyoZG1svKkB4FUW5h8WawoHp"
         },
         // Test vector 1
         {
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(valid_keys)
                 "023590A94E768F8E1815C2F24B4D80A8E3149316C3518CE7B7AD338368D038CA66"
             },
             .expected_aggregate_pubkey = "0290539eede565f5d054f32cc0c220126889ed1e5d193baf15aef344fe59d4610c",
-            .expected_aggregate_xpub = "xpub661MyMwAqRbcFt6tk3uaczE1y6EvM1TqXvawXcYmFEWijEM4PDBnuCXwwVk5TFJk8Tw5WAdV3DhrGfbFA216sE9BsQQiSFTdudkETnKdg8k"
+            .expected_aggregate_xpub = "ccpubKDazFod7ockyt3wn3SxCWgzk6FcjzJAf7hs1LtxQbGKBEisRv6dExT9GheZKFvkftvd64U7v7ywuvFEPPnK4MxKjJH9g4WDDHA1sWLjTt3w"
         },
         // Test vector 2
         {
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(valid_keys)
                 "03935F972DA013F80AE011890FA89B67A27B7BE6CCB24D3274D18B2D4067F261A9"
             },
             .expected_aggregate_pubkey = "022479f134cdb266141dab1a023cbba30a870f8995b95a91fc8464e56a7d41f8ea",
-            .expected_aggregate_xpub = "xpub661MyMwAqRbcFt6tk3uaczE1y6EvM1TqXvawXcYmFEWijEM4PDBnuCXwwUvaZYpysLX4wN59tjwU5pBuDjNrPEJbfxjLwn7ruzbXTcUTHkZ"
+            .expected_aggregate_xpub = "ccpubKDazFod7ockyt3wn3SxCWgzk6FcjzJAf7hs1LtxQbGKBEisRv6dExT9GhdjpNEGudoD5VfZayWBXjPq3TVgosxV96qUJa2sSHWsAW9hRmkv"
         }
     };
 

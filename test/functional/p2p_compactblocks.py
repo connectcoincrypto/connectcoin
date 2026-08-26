@@ -66,7 +66,7 @@ from test_framework.util import (
 from test_framework.wallet import MiniWallet
 
 
-# TestP2PConn: A peer we use to send messages to bitcoind, and store responses.
+# TestP2PConn: A peer we use to send messages to connectcoind, and store responses.
 class TestP2PConn(P2PInterface):
     def __init__(self):
         super().__init__()
@@ -301,7 +301,7 @@ class CompactBlocksTest(BitcoinTestFramework):
         with node.assert_debug_log(['invalid sendcmpct announce field']):
             bad_peer.send_await_disconnect(msg)
 
-    # This test actually causes bitcoind to (reasonably!) disconnect us, so do this last.
+    # This test actually causes connectcoind to (reasonably!) disconnect us, so do this last.
     # Note, these are not consensus-invalid blocks, but improperly constructed cmpctblock messages.
     def test_invalid_cmpctblock_message(self):
         # Make a high-bandwidth peer
@@ -336,7 +336,7 @@ class CompactBlocksTest(BitcoinTestFramework):
         assert_equal(int(self.nodes[0].getbestblockhash(), 16), block.hashPrevBlock)
 
     # Compare the generated shortids to what we expect based on BIP 152, given
-    # bitcoind's choice of nonce.
+    # connectcoind's choice of nonce.
     def test_compactblock_construction(self, test_node):
         node = self.nodes[0]
         # Generate a bunch of transactions.
@@ -426,7 +426,7 @@ class CompactBlocksTest(BitcoinTestFramework):
                 header_and_shortids.shortids.pop(0)
             index += 1
 
-    # Test that bitcoind requests compact blocks when we announce new blocks
+    # Test that connectcoind requests compact blocks when we announce new blocks
     # via header or inv, and that responding to getblocktxn causes the block
     # to be successfully reconstructed.
     def test_compactblock_requests(self, test_node):
@@ -586,7 +586,7 @@ class CompactBlocksTest(BitcoinTestFramework):
         self.getblocktxn_expected(test_node, block.hash_int, expected_indices)
 
         # Now give an incorrect response.
-        # Note that it's possible for bitcoind to be smart enough to know we're
+        # Note that it's possible for connectcoind to be smart enough to know we're
         # lying, since it could check to see if the shortid matches what we're
         # sending, and eg disconnect us for misbehavior.  If that behavior
         # change was made, we could just modify this test by having a
@@ -646,7 +646,7 @@ class CompactBlocksTest(BitcoinTestFramework):
 
     def test_getblocktxn_handler(self, test_node):
         node = self.nodes[0]
-        # bitcoind will not send blocktxn responses for blocks whose height is
+        # connectcoind will not send blocktxn responses for blocks whose height is
         # more than 10 blocks deep.
         MAX_GETBLOCKTXN_DEPTH = 10
         chain_height = node.getblockcount()

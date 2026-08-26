@@ -2,10 +2,10 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_IPC_TEST_FUZZ_IPC_FUZZ_TYPES_H
-#define BITCOIN_IPC_TEST_FUZZ_IPC_FUZZ_TYPES_H
+#ifndef CONNECTCOIN_IPC_TEST_FUZZ_IPC_FUZZ_TYPES_H
+#define CONNECTCOIN_IPC_TEST_FUZZ_IPC_FUZZ_TYPES_H
 
 #include <ipc/capnp/common-types.h>
 #include <ipc/test/fuzz/ipc_fuzz.capnp.h>
 
-#endif // BITCOIN_IPC_TEST_FUZZ_IPC_FUZZ_TYPES_H
+#endif // CONNECTCOIN_IPC_TEST_FUZZ_IPC_FUZZ_TYPES_H

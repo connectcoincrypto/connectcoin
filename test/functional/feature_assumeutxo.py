@@ -4,7 +4,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test for assumeutxo, a means of quickly bootstrapping a node using
 a serialized version of the UTXO set at a certain height, which corresponds
-to a hash that has been compiled into bitcoind.
+to a hash that has been compiled into connectcoind.
 
 The assumeutxo value generated and used here is committed to in
 `CRegTestParams::m_assumeutxo_data` in `src/kernel/chainparams.cpp`.
@@ -168,7 +168,7 @@ class AssumeutxoTest(BitcoinTestFramework):
 
     def test_headers_not_synced(self, valid_snapshot_path):
         for node in self.nodes[1:]:
-            msg = "Unable to load UTXO snapshot: The base block header (0c552ced4721c249a389eb9b08cb8da261cd46f0e7b5f9d064d48f3113406853) must appear in the headers chain. Make sure all headers are syncing, and call loadtxoutset again."
+            msg = "Unable to load UTXO snapshot: The base block header (6bb150493c185678272d23c0773b9e6398dfa3a3112f738c57591d342840ed78) must appear in the headers chain. Make sure all headers are syncing, and call loadtxoutset again."
             assert_raises_rpc_error(-32603, msg, node.loadtxoutset, valid_snapshot_path)
 
     def test_invalid_chainstate_scenarios(self):
@@ -195,7 +195,7 @@ class AssumeutxoTest(BitcoinTestFramework):
         self.start_node(0)
 
     def test_invalid_mempool_state(self, dump_output_path):
-        self.log.info("Test bitcoind should fail when mempool not empty.")
+        self.log.info("Test connectcoind should fail when mempool not empty.")
         node=self.nodes[2]
         tx = MiniWallet(node).send_self_transfer(from_node=node)
 
@@ -208,13 +208,13 @@ class AssumeutxoTest(BitcoinTestFramework):
         self.restart_node(2, extra_args=self.extra_args[2])
 
     def test_invalid_file_path(self):
-        self.log.info("Test bitcoind should fail when file path is invalid.")
+        self.log.info("Test connectcoind should fail when file path is invalid.")
         node = self.nodes[0]
         path = node.datadir_path / node.chain / "invalid" / "path"
         assert_raises_rpc_error(-8, "Couldn't open file {} for reading.".format(path), node.loadtxoutset, path)
 
     def test_snapshot_with_less_work(self, dump_output_path):
-        self.log.info("Test bitcoind should fail when snapshot has less accumulated work than this node.")
+        self.log.info("Test connectcoind should fail when snapshot has less accumulated work than this node.")
         node = self.nodes[0]
         msg = "Unable to load UTXO snapshot: Population failed: Work does not exceed active chainstate."
         assert_raises_rpc_error(-32603, msg, node.loadtxoutset, dump_output_path)
@@ -228,7 +228,7 @@ class AssumeutxoTest(BitcoinTestFramework):
             block_hash = node.getblockhash(height)
             node.invalidateblock(block_hash)
             assert_equal(node.getblockcount(), height - 1)
-            msg = "Unable to load UTXO snapshot: The base block header (0c552ced4721c249a389eb9b08cb8da261cd46f0e7b5f9d064d48f3113406853) is part of an invalid chain."
+            msg = "Unable to load UTXO snapshot: The base block header (6bb150493c185678272d23c0773b9e6398dfa3a3112f738c57591d342840ed78) is part of an invalid chain."
             assert_raises_rpc_error(-32603, msg, node.loadtxoutset, dump_output_path)
             node.reconsiderblock(block_hash)
 

@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_PRIMITIVES_TRANSACTION_H
-#define BITCOIN_PRIMITIVES_TRANSACTION_H
+#ifndef CONNECTCOIN_PRIMITIVES_TRANSACTION_H
+#define CONNECTCOIN_PRIMITIVES_TRANSACTION_H
 
 #include <attributes.h>
 #include <consensus/amount.h>
@@ -415,4 +415,4 @@ struct hash<CTransactionRef> {
 };
 } // namespace std
 
-#endif // BITCOIN_PRIMITIVES_TRANSACTION_H
+#endif // CONNECTCOIN_PRIMITIVES_TRANSACTION_H

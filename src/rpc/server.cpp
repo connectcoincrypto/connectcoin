@@ -3,7 +3,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <rpc/server.h>
 
@@ -316,7 +316,7 @@ void ApplyTypeStrOverride(UniValue& schema, const RPCArg& arg)
         schema = UniValue{UniValue::VOBJ};
         schema.pushKV("oneOf", std::move(one_of));
     } else {
-        schema.pushKV("x-bitcoin-type-override", type_label);
+        schema.pushKV("x-connectcoin-type-override", type_label);
     }
 }
 
@@ -324,7 +324,7 @@ void ApplyArgFallback(UniValue& schema, const RPCArg& arg)
 {
     std::visit(util::Overloaded{
                    [&](const RPCArg::Default& def) { schema.pushKV("default", def); },
-                   [&](const RPCArg::DefaultHint& hint) { schema.pushKV("x-bitcoin-default-hint", hint); },
+                   [&](const RPCArg::DefaultHint& hint) { schema.pushKV("x-connectcoin-default-hint", hint); },
                    [](const RPCArg::Optional&) {},
                },
                arg.m_fallback);
@@ -400,8 +400,8 @@ UniValue OpenRPCArgSchema(const RPCArg& arg, bool include_hidden, bool in_skip_t
             if (!include_hidden && inner.m_opts.hidden) continue;
             UniValue prop{OpenRPCArgSchema(inner, include_hidden, in_skip_type_check)};
             if (!inner.m_description.empty()) prop.pushKV("description", inner.m_description);
-            if (inner.m_opts.placeholder) prop.pushKV("x-bitcoin-placeholder", true);
-            if (inner.m_opts.also_positional) prop.pushKV("x-bitcoin-also-positional", true);
+            if (inner.m_opts.placeholder) prop.pushKV("x-connectcoin-placeholder", true);
+            if (inner.m_opts.also_positional) prop.pushKV("x-connectcoin-also-positional", true);
             properties.pushKV(inner.GetFirstName(), std::move(prop));
             if (!inner.IsOptional()) required.push_back(inner.GetFirstName());
         }
@@ -454,7 +454,7 @@ UniValue OpenRPCResultSchema(const RPCResult& result)
     case RPCResult::Type::STR:
         return MakeObject({{"type", "string"}});
     case RPCResult::Type::STR_AMOUNT:
-        return MakeObject({{"type", "number"}, {"x-bitcoin-unit", "amount"}});
+        return MakeObject({{"type", "number"}, {"x-connectcoin-unit", "amount"}});
     case RPCResult::Type::STR_HEX:
         return MakeObject({{"type", "string"}, {"pattern", "^[0-9a-fA-F]+$"}});
     case RPCResult::Type::NUM:
@@ -462,7 +462,7 @@ UniValue OpenRPCResultSchema(const RPCResult& result)
     case RPCResult::Type::NUM_TIME: {
         UniValue schema{UniValue::VOBJ};
         schema.pushKV("type", "number");
-        schema.pushKV("x-bitcoin-unit", "unix-time");
+        schema.pushKV("x-connectcoin-unit", "unix-time");
         return schema;
     }
     case RPCResult::Type::BOOL:
@@ -532,7 +532,7 @@ static RPCResult OpenRPCDocResult()
             {RPCResult::Type::OBJ, "info", "Metadata about this JSON-RPC interface.",
                 {
                     {RPCResult::Type::STR, "title", "API title."},
-                    {RPCResult::Type::STR, "version", "Bitcoin Core version string."},
+                    {RPCResult::Type::STR, "version", "ConnectCoin Core version string."},
                     {RPCResult::Type::STR, "description", "API description."},
                 }},
             {RPCResult::Type::ARR, "methods", "Documented RPC methods.",
@@ -547,17 +547,17 @@ static RPCResult OpenRPCDocResult()
                                     {RPCResult::Type::BOOL, "required", "Whether the parameter is required."},
                                     {RPCResult::Type::ANY, "schema", "JSON Schema for the parameter."},
                                     {RPCResult::Type::STR, "description", /*optional=*/true, "Parameter description."},
-                                    {RPCResult::Type::ARR, "x-bitcoin-aliases", /*optional=*/true, "Alternative parameter names.",
+                                    {RPCResult::Type::ARR, "x-connectcoin-aliases", /*optional=*/true, "Alternative parameter names.",
                                         {{RPCResult::Type::STR, "", "An alias."}}},
-                                    {RPCResult::Type::BOOL, "x-bitcoin-placeholder", /*optional=*/true, "Whether the parameter is retained only for compatibility."},
-                                    {RPCResult::Type::BOOL, "x-bitcoin-also-positional", /*optional=*/true, "Whether the parameter can also be passed positionally."},
+                                    {RPCResult::Type::BOOL, "x-connectcoin-placeholder", /*optional=*/true, "Whether the parameter is retained only for compatibility."},
+                                    {RPCResult::Type::BOOL, "x-connectcoin-also-positional", /*optional=*/true, "Whether the parameter can also be passed positionally."},
                                 }}}},
                         {RPCResult::Type::OBJ, "result", "Method result.",
                             {
                                 {RPCResult::Type::STR, "name", "Result name."},
                                 {RPCResult::Type::ANY, "schema", "JSON Schema for the result."},
                             }},
-                        {RPCResult::Type::STR, "x-bitcoin-category", "RPC category."},
+                        {RPCResult::Type::STR, "x-connectcoin-category", "RPC category."},
                     }}}},
         },
         {.skip_type_check = true}};
@@ -924,10 +924,10 @@ UniValue CRPCTable::buildOpenRPCDoc(bool include_hidden) const
             if (names.size() > 1) {
                 UniValue aliases{UniValue::VARR};
                 for (size_t i{1}; i < names.size(); ++i) aliases.push_back(names[i]);
-                param.pushKV("x-bitcoin-aliases", std::move(aliases));
+                param.pushKV("x-connectcoin-aliases", std::move(aliases));
             }
-            if (arg.m_opts.placeholder) param.pushKV("x-bitcoin-placeholder", true);
-            if (arg.m_opts.also_positional) param.pushKV("x-bitcoin-also-positional", true);
+            if (arg.m_opts.placeholder) param.pushKV("x-connectcoin-placeholder", true);
+            if (arg.m_opts.also_positional) param.pushKV("x-connectcoin-also-positional", true);
             if (!arg.m_description.empty()) param.pushKV("description", arg.m_description);
             params.push_back(std::move(param));
         }
@@ -959,7 +959,7 @@ UniValue CRPCTable::buildOpenRPCDoc(bool include_hidden) const
         result.pushKV("name", "result");
         result.pushKV("schema", std::move(result_schema));
         method.pushKV("result", std::move(result));
-        method.pushKV("x-bitcoin-category", cmd->category);
+        method.pushKV("x-connectcoin-category", cmd->category);
         methods.push_back(std::move(method));
     }
 

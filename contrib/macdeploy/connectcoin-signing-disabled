@@ -1,0 +1,3 @@
+ConnectCoin macOS signing and notarization are disabled because no
+project-owned Apple signing identity, notarization account, or release policy
+has been configured. Establish and document them before removing this marker.

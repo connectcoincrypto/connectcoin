@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SYNC_H
-#define BITCOIN_SYNC_H
+#ifndef CONNECTCOIN_SYNC_H
+#define CONNECTCOIN_SYNC_H
 
 // This header declares threading primitives compatible with Clang
 // Thread Safety Analysis and provides appropriate annotation macros.
@@ -251,7 +251,7 @@ public:
 // it is not possible to use the lock's copy of the mutex for that purpose.
 // Instead, the original mutex needs to be passed back to the reverse_lock for
 // the sake of thread-safety analysis, but it is not actually used otherwise.
-#define REVERSE_LOCK(g, cs) typename std::decay<decltype(g)>::type::reverse_lock BITCOIN_UNIQUE_NAME(revlock)(g, cs, #cs, __FILE__, __LINE__)
+#define REVERSE_LOCK(g, cs) typename std::decay<decltype(g)>::type::reverse_lock CONNECTCOIN_UNIQUE_NAME(revlock)(g, cs, #cs, __FILE__, __LINE__)
 
 // When locking a Mutex, require negative capability to ensure the lock
 // is not already held
@@ -265,7 +265,7 @@ inline MutexType& MaybeCheckNotHeld(MutexType& m) LOCKS_EXCLUDED(m) LOCK_RETURNE
 template <typename MutexType>
 inline MutexType* MaybeCheckNotHeld(MutexType* m) LOCKS_EXCLUDED(m) LOCK_RETURNED(m) { return m; }
 
-#define LOCK(cs) UniqueLock BITCOIN_UNIQUE_NAME(criticalblock)(MaybeCheckNotHeld(cs), #cs, __FILE__, __LINE__)
+#define LOCK(cs) UniqueLock CONNECTCOIN_UNIQUE_NAME(criticalblock)(MaybeCheckNotHeld(cs), #cs, __FILE__, __LINE__)
 #define LOCK2(cs1, cs2)                                               \
     UniqueLock criticalblock1(MaybeCheckNotHeld(cs1), #cs1, __FILE__, __LINE__); \
     UniqueLock criticalblock2(MaybeCheckNotHeld(cs2), #cs2, __FILE__, __LINE__)
@@ -298,4 +298,4 @@ inline MutexType* MaybeCheckNotHeld(MutexType* m) LOCKS_EXCLUDED(m) LOCK_RETURNE
 //! gcc and the -Wreturn-stack-address flag in clang, both enabled by default.
 #define WITH_LOCK(cs, code) (MaybeCheckNotHeld(cs), [&]() -> decltype(auto) { LOCK(cs); code; }())
 
-#endif // BITCOIN_SYNC_H
+#endif // CONNECTCOIN_SYNC_H

@@ -1,6 +1,6 @@
 - Logging and RPC
 
-  - Bitcoin Core now reports a debug message explaining why transaction inputs are non-standard.
+  - ConnectCoin Core now reports a debug message explaining why transaction inputs are non-standard.
 
   - This information is now returned in the responses of the transaction-sending RPCs `submitpackage`,
    `sendrawtransaction`, and `testmempoolaccept`, and is also logged to `debug.log` (if `mempoolrej`

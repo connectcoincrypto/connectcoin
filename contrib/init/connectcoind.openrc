@@ -1,0 +1,84 @@
+#!/sbin/openrc-run
+
+# backward compatibility for existing gentoo layout
+#
+if [ -d "/var/lib/connectcoin/.connectcoin" ]; then
+	CONNECTCOIND_DEFAULT_DATADIR="/var/lib/connectcoin/.connectcoin"
+else
+	CONNECTCOIND_DEFAULT_DATADIR="/var/lib/connectcoind"
+fi
+
+CONNECTCOIND_CONFIGFILE=${CONNECTCOIND_CONFIGFILE:-/etc/connectcoin/connectcoin.conf}
+CONNECTCOIND_PIDDIR=${CONNECTCOIND_PIDDIR:-/var/run/connectcoind}
+CONNECTCOIND_PIDFILE=${CONNECTCOIND_PIDFILE:-${CONNECTCOIND_PIDDIR}/connectcoind.pid}
+CONNECTCOIND_DATADIR=${CONNECTCOIND_DATADIR:-${CONNECTCOIND_DEFAULT_DATADIR}}
+CONNECTCOIND_USER=${CONNECTCOIND_USER:-${CONNECTCOIN_USER:-connectcoin}}
+CONNECTCOIND_GROUP=${CONNECTCOIND_GROUP:-connectcoin}
+CONNECTCOIND_BIN=${CONNECTCOIND_BIN:-/usr/bin/connectcoind}
+CONNECTCOIND_NICE=${CONNECTCOIND_NICE:-${NICELEVEL:-0}}
+CONNECTCOIND_OPTS="${CONNECTCOIND_OPTS:-${CONNECTCOIN_OPTS}}"
+
+name="ConnectCoin Daemon"
+description="ConnectCoin cryptocurrency P2P network daemon"
+
+command="${CONNECTCOIND_BIN}"
+command_args="-pid=\"${CONNECTCOIND_PIDFILE}\" \
+		-conf=\"${CONNECTCOIND_CONFIGFILE}\" \
+		-datadir=\"${CONNECTCOIND_DATADIR}\" \
+		-daemon \
+		${CONNECTCOIND_OPTS}"
+
+start_stop_daemon_args="-u ${CONNECTCOIND_USER} \
+			-N ${CONNECTCOIND_NICE} -w 2000"
+pidfile="${CONNECTCOIND_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${CONNECTCOIND_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	configdir="$(dirname "${CONNECTCOIND_CONFIGFILE}")"
+
+	if [ -L "${configdir}" ]; then
+		eerror "Configuration directory must not be a symlink: ${configdir}"
+		return 1
+	fi
+
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "root:${CONNECTCOIND_GROUP}" \
+	"${configdir}"
+
+	if [ -L "${CONNECTCOIND_CONFIGFILE}" ] || \
+	   { [ -e "${CONNECTCOIND_CONFIGFILE}" ] && [ ! -f "${CONNECTCOIND_CONFIGFILE}" ]; }; then
+		eerror "Configuration path must be a regular file, not a symlink: ${CONNECTCOIND_CONFIGFILE}"
+		return 1
+	fi
+
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${CONNECTCOIND_USER}:${CONNECTCOIND_GROUP}" \
+	"${CONNECTCOIND_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${CONNECTCOIND_USER}:${CONNECTCOIND_GROUP}" \
+	"${CONNECTCOIND_PIDDIR}"
+
+	checkpath -f \
+	-o "root:${CONNECTCOIND_GROUP}" \
+	-m 0640 \
+	"${CONNECTCOIND_CONFIGFILE}"
+}

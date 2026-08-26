@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CONSENSUS_VALIDATION_H
-#define BITCOIN_CONSENSUS_VALIDATION_H
+#ifndef CONNECTCOIN_CONSENSUS_VALIDATION_H
+#define CONNECTCOIN_CONSENSUS_VALIDATION_H
 
 #include <consensus/consensus.h>
 #include <primitives/block.h>
@@ -172,4 +172,4 @@ inline int GetWitnessCommitmentIndex(const CBlock& block)
     return commitpos;
 }
 
-#endif // BITCOIN_CONSENSUS_VALIDATION_H
+#endif // CONNECTCOIN_CONSENSUS_VALIDATION_H

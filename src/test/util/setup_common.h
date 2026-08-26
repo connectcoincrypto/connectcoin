@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_TEST_UTIL_SETUP_COMMON_H
-#define BITCOIN_TEST_UTIL_SETUP_COMMON_H
+#ifndef CONNECTCOIN_TEST_UTIL_SETUP_COMMON_H
+#define CONNECTCOIN_TEST_UTIL_SETUP_COMMON_H
 
 #include <common/args.h> // IWYU pragma: export
 #include <consensus/amount.h>
@@ -280,4 +280,4 @@ private:
 
 CBlock getBlock13b8a();
 
-#endif // BITCOIN_TEST_UTIL_SETUP_COMMON_H
+#endif // CONNECTCOIN_TEST_UTIL_SETUP_COMMON_H

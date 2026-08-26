@@ -25,12 +25,12 @@ BIP32_HARDENED = 0x80000000
 def get_version(private=False, mainnet=False):
     if mainnet:
         if private:
-            return bytes.fromhex("0488ADE4")
-        return bytes.fromhex("0488B21E")
+            return bytes.fromhex("A7C73B9F")
+        return bytes.fromhex("A7C73FD9")
 
     if private:
-        return bytes.fromhex("04358394")
-    return bytes.fromhex("043587CF")
+        return bytes.fromhex("04313316")
+    return bytes.fromhex("04313A97")
 
 def hardened(index):
     assert 0 <= index < BIP32_HARDENED
@@ -164,23 +164,23 @@ class TestFrameworkExtendedKey(unittest.TestCase):
             [
                 "000102030405060708090a0b0c0d0e0f",
                 [
-                    ["m", "xprv9s21ZrQH143K3QTDL4LXw2F7HEK3wJUD2nW2nRk4stbPy6cq3jPPqjiChkVvvNKmPGJxWUtg6LnF5kejMRNNU3TGtRBeJgk33yuGBxrMPHi", "xpub661MyMwAqRbcFtXgS5sYJABqqG9YLmC4Q1Rdap9gSE8NqtwybGhePY2gZ29ESFjqJoCu1Rupje8YtGqsefD265TMg7usUDFdp6W1EGMcet8"],
-                    ["m/0h", "xprv9uHRZZhk6KAJC1avXpDAp4MDc3sQKNxDiPvvkX8Br5ngLNv1TxvUxt4cV1rGL5hj6KCesnDYUhd7oWgT11eZG7XnxHrnYeSvkzY7d2bhkJ7", "xpub68Gmy5EdvgibQVfPdqkBBCHxA5htiqg55crXYuXoQRKfDBFA1WEjWgP6LHhwBZeNK1VTsfTFUHCdrfp1bgwQ9xv5ski8PX9rL2dZXvgGDnw"],
-                    ["m/0h/1", "xprv9wTYmMFdV23N2TdNG573QoEsfRrWKQgWeibmLntzniatZvR9BmLnvSxqu53Kw1UmYPxLgboyZQaXwTCg8MSY3H2EU4pWcQDnRnrVA1xe8fs", "xpub6ASuArnXKPbfEwhqN6e3mwBcDTgzisQN1wXN9BJcM47sSikHjJf3UFHKkNAWbWMiGj7Wf5uMash7SyYq527Hqck2AxYysAA7xmALppuCkwQ"],
-                    ["m/0h/1/2h", "xprv9z4pot5VBttmtdRTWfWQmoH1taj2axGVzFqSb8C9xaxKymcFzXBDptWmT7FwuEzG3ryjH4ktypQSAewRiNMjANTtpgP4mLTj34bhnZX7UiM", "xpub6D4BDPcP2GT577Vvch3R8wDkScZWzQzMMUm3PWbmWvVJrZwQY4VUNgqFJPMM3No2dFDFGTsxxpG5uJh7n7epu4trkrX7x7DogT5Uv6fcLW5"],
-                    ["m/0h/1/2h/2", "xprvA2JDeKCSNNZky6uBCviVfJSKyQ1mDYahRjijr5idH2WwLsEd4Hsb2Tyh8RfQMuPh7f7RtyzTtdrbdqqsunu5Mm3wDvUAKRHSC34sJ7in334", "xpub6FHa3pjLCk84BayeJxFW2SP4XRrFd1JYnxeLeU8EqN3vDfZmbqBqaGJAyiLjTAwm6ZLRQUMv1ZACTj37sR62cfN7fe5JnJ7dh8zL4fiyLHV"],
-                    ["m/0h/1/2h/2/1000000000", "xprvA41z7zogVVwxVSgdKUHDy1SKmdb533PjDz7J6N6mV6uS3ze1ai8FHa8kmHScGpWmj4WggLyQjgPie1rFSruoUihUZREPSL39UNdE3BBDu76", "xpub6H1LXWLaKsWFhvm6RVpEL9P4KfRZSW7abD2ttkWP3SSQvnyA8FSVqNTEcYFgJS2UaFcxupHiYkro49S8yGasTvXEYBVPamhGW6cFJodrTHy"],
+                    ["m", "ccprvNzbdrJ6DyFCgfaJ6dTP9pj1qQPgsabB2cZn6bi9iDvPrUb9CacpqtzKXTuKAj3mh9izy4nP7B72JjLHsbBgKxmdpKHvbvwVcRWAuENGPUNf", "ccpubKDazFod7ockyt4NZjUvABrxZxRXMz3tsynhhQ6ZKnFvqMPUM8A96Sne1KAxUEwBm5FtuZjQFpQNcXrV1tRWyaodu6zeq6U1DBcmeGiRaKd6"],
+                    ["m/0h", "ccprvP2s3r1Ph4WKfpBRoqDFnhm7wjDFDxff3JBCzZoXqC7b8qsSNzrMw28fwFAfW8m9ermtfS5hyZTsBT6KbEmxWkqiLPAbkAuCW8WokfbMdsPT", "ccpubKFrQFWvatssy2fWGwEno4u4gHF5iN8NtfQ8bNBwSkT87ifmXYPgBZvzR6SXAzF6J5UBURxwgZ3ShWFT9qTFMeh6dJdT61muRhYuCaT6D5vW"],
+                    ["m/0h/1", "ccprvP53B3nwaTDCjedUFZU9fJW1bnbEKxhPLEVsqA5Je8kPM5QwWienEyhaAfDrZjgvhJreMEuJQeApbb2qpN7kVY1CmtwZUEeyMoK88CTTDSpM", "ccpubKJ2XTJUUHam2s7YifVgffdxLLd4pNA7BbioRxTiFh5vKxDGfGC6VXVteWWykQBoe3BoXDPPnfdwB6ZByJnRFLLvZbqHwVQuhLHRysHoinzj"],
+                    ["m/0h/1/2h", "ccprvP7eT6KmSA649WoGLp4Z2fW3k1k6rEEyKa37WQQboJcknVG8dXQcft986DG5BhvSBpKfjqNFL4aeVpEaZx8fgf6eSFZ82PbDJQasLq5VBbgu", "ccpubKLdoVqJKzTcSjHLov6632dzUZmwLdhhAwG37Co1QrxHmN4Tn4wvvRwSa4YAar4ExPhuFpmNQ3aW9YtLG1sxnPo5QBjG5aMyP3yM7xXT9kbU"],
+                    ["m/0h/1/2h/2", "ccprvP9sqvktPLZj8bGk4WKm7Z1D46ZParqHX1WzofN8Gd4KPrMkzbBK35ib1taUeAaqct7oSTHUtyQ6fHRV29ZD2rVEUeoD7wg31ZZLWLbLadwB", "ccpubKNsCLGRHAwHRokpXcMJ7v99nebE5GJ1NNjvQTkXtBPrNjA698idHdWuVjs9yFrPgs22RxmrM6KQG7JgG7BPz7PYf6WpGQYsD4fFy79k6Z8i"],
+                    ["m/0h/1/2h/2/1000000000", "ccprvPBbcQSVdTh7L7cXWcsKqriD3tnxtgL6YomPMueWQq8htZVAP7bZhLpk5XSFr5VxhVXChEeTqpSdnHbVPgdDkySt1zHyM4aniqtts5jHnxiy", "ccpubKQaxox2XJ4fdL6byitrrDr9nSpoP5npQAzJxi2v2PUEsSHVXf8swtd4ZNh4v77UQLiJyU7n9dX6rhj5HD2tpxehmy4EMD2SqscstMPzk7r3"],
                 ]
             ],
             [
                 "fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542",
                 [
-                    ["m", "xprv9s21ZrQH143K31xYSDQpPDxsXRTUcvj2iNHm5NUtrGiGG5e2DtALGdso3pGz6ssrdK4PFmM8NSpSBHNqPqm55Qn3LqFtT2emdEXVYsCzC2U", "xpub661MyMwAqRbcFW31YEwpkMuc5THy2PSt5bDMsktWQcFF8syAmRUapSCGu8ED9W6oDMSgv6Zz8idoc4a6mr8BDzTJY47LJhkJ8UB7WEGuduB"],
-                    ["m/0", "xprv9vHkqa6EV4sPZHYqZznhT2NPtPCjKuDKGY38FBWLvgaDx45zo9WQRUT3dKYnjwih2yJD9mkrocEZXo1ex8G81dwSM1fwqWpWkeS3v86pgKt", "xpub69H7F5d8KSRgmmdJg2KhpAK8SR3DjMwAdkxj3ZuxV27CprR9LgpeyGmXUbC6wb7ERfvrnKZjXoUmmDznezpbZb7ap6r1D3tgFxHmwMkQTPH"],
-                    ["m/0/2147483647h", "xprv9wSp6B7kry3Vj9m1zSnLvN3xH8RdsPP1Mh7fAaR7aRLcQMKTR2vidYEeEg2mUCTAwCd6vnxVrcjfy2kRgVsFawNzmjuHc2YmYRmagcEPdU9", "xpub6ASAVgeehLbnwdqV6UKMHVzgqAG8Gr6riv3Fxxpj8ksbH9ebxaEyBLZ85ySDhKiLDBrQSARLq1uNRts8RuJiHjaDMBU4Zn9h8LZNnBC5y4a"],
-                    ["m/0/2147483647h/1", "xprv9zFnWC6h2cLgpmSA46vutJzBcfJ8yaJGg8cX1e5StJh45BBciYTRXSd25UEPVuesF9yog62tGAQtHjXajPPdbRCHuWS6T8XA2ECKADdw4Ef", "xpub6DF8uhdarytz3FWdA8TvFSvvAh8dP3283MY7p2V4SeE2wyWmG5mg5EwVvmdMVCQcoNJxGoWaU9DCWh89LojfZ537wTfunKau47EL2dhHKon"],
-                    ["m/0/2147483647h/1/2147483646h", "xprvA1RpRA33e1JQ7ifknakTFpgNXPmW2YvmhqLQYMmrj4xJXXWYpDPS3xz7iAxn8L39njGVyuoseXzU6rcxFLJ8HFsTjSyQbLYnMpCqE2VbFWc", "xpub6ERApfZwUNrhLCkDtcHTcxd75RbzS1ed54G1LkBUHQVHQKqhMkhgbmJbZRkrgZw4koxb5JaHWkY4ALHY2grBGRjaDMzQLcgJvLJuZZvRcEL"],
-                    ["m/0/2147483647h/1/2147483646h/2", "xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j", "xpub6FnCn6nSzZAw5Tw7cgR9bi15UV96gLZhjDstkXXxvCLsUXBGXPdSnLFbdpq8p9HmGsApME5hQTZ3emM2rnY5agb9rXpVGyy3bdW6EEgAtqt"]
+                    ["m", "ccprvNzbdrJ6DyFCgfBoRjcTSGvjbeaqJGDRrJ9ZptetYCJWimaAPkmbnKtV7oy6DuZKnPmkPp4qZTD4Vps1ydc52a8xamhzr5HQLzko8bQDpJfC", "ccpubKDazFod7ockysfstqdzSe4gLCcfnfg9hfNVRh3J9ke3heNVYJJv2sgobfH3SxBYiyp8hUQ4RDUssFeDF1cS8iidqxvrHvxVsVzSkYiqTq2C"],
+                    ["m/0", "ccprvP3sP81nBTG2mBTPisPqKLj981YaYyBv8rKKC4TuzGiNgTYcNL2wrUj4NPUN2YdAcoRzDi5FHtNUdBNeoBta5WN7ymtQuTma68AhgxfkfqEQ", "ccpubKGrjXXK5Hdb4PwUByRNKhs5rZaR3NedzDYEnrrKbq3ufLLwWsaG72XNrEk1LkGZAC8csLd4AcZiqQodvtm8Z4KJ8EyaxqJeFdUZQyvQqvB7"],
+                    ["m/0/2147483647h", "ccprvP52SNcohqACsMKbuHqpxp4pgQHoTWg5pwUPiyrpkvT94uqqpwvNAgnqxzpr1Gsu6hfK7V6SvwNyjccPZvGBD5fZYCceFEHJLux3Dj47AFT2", "ccpubKJ1nn8LbfXmAZogNPsMyBCmQxKdwv8ogJhKKnFENUng3neAyVTgREbASr8FTW1AFyeYQzTumun9S5UWGffcfnTkkn4D2C2uGVrq1pg2YCvu"],
+                    ["m/0/2147483647h/1", "ccprvP7qQndndzoW4SwH3MVyXn1kujpfxcs16FutapvV6ELVWafhzFRtsahELqd3dJb6o1cfpEPXKLvewwKAiy9hb69NqLPB45PGjPkTxCnAKa5z", "ccpubKLpmC9KXqB4MfRMWTXWY99heHrWT2Kiwd8pBdJthng2VTU38nyD88VYpgvSbHsrYZpzxq711YuTGAGmHaa3d3oDfNLQsQaLURdVy55AKKaY"],
+                    ["m/0/2147483647h/1/2147483646h", "ccprvP91ShbizcCTmjtWe5yo59XT6eZ9KfqdbHccUMeBW56km322vM6pt7DbSUKn1w1V5ZBxWYDJJjJEXkSG6V6c5mz41AKiNDbJMjLUUGZax3ys", "ccpubKMzo77FtSa24xNb7C1L5WfPqCayp5JMSeqY5A2b7dSHjupN4te98f1uvKaa6VFNzXGebdc4ibWn7ouvgGTA8m9v7eEjMxsRtHraYc5dxvAr"],
+                    ["m/0/2147483647h/1/2147483646h/2", "ccprvPANUf2wW8Nn1V9hXp3vm8Gq53cgRvAYfwnEMmRXzhtcM7DNVWjkeHnYSYjT262a9bVpEpxw8BQ5Dnz9cDQyJpxniyBDsH1S5Rhp2M64vrWW", "ccpubKPMq4YUPxkLJhdmzv5TmVQmobeWvKdGXK19xZowcGE9Kz1he4H4tqarvPyeNcpjh3KrpuXa8VDo7JLzB6Yr35QmhHQZSuEicy9mjGfrpSUa"]
                 ]
             ]
         ]

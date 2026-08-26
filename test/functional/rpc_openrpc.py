@@ -75,7 +75,7 @@ class OpenRPCDocTest(BitcoinTestFramework):
         self.log.info("Checking relaxed schemas for unchecked RPC types")
         createrawtransaction = find_method(openrpc, "createrawtransaction")
         outputs = find_param(createrawtransaction, "outputs")
-        address_description = "A key-value pair. The key (string) is the bitcoin address, the value (float or string) is the amount in BTC"
+        address_description = "A key-value pair. The key (string) is the ConnectCoin address, the value (float or string) is the amount in CC"
         address_obj = {"type": "object", "additionalProperties": {"oneOf": [{"type": "number"},{"type": "string"}]}, "description": address_description}
         data_description = "A key-value pair. The key must be \"data\", the value is hex-encoded data that becomes a part of an OP_RETURN output"
         data_obj = {"type": "object", "properties": { "data": {"type": "string", "pattern": "^[0-9a-fA-F]+$", "description": data_description}}, "additionalProperties": False, "required": ["data"]}
@@ -96,14 +96,14 @@ class OpenRPCDocTest(BitcoinTestFramework):
         verbosity = find_param(getblock, "verbosity")
         assert_equal(verbosity["schema"]["default"], 1)
         stats = find_param(getblockstats, "stats")
-        assert_equal(stats["schema"]["x-bitcoin-default-hint"], "all values")
+        assert_equal(stats["schema"]["x-connectcoin-default-hint"], "all values")
 
         self.log.info("Checking numeric amount result annotations")
         analyzepsbt = find_method(openrpc, "analyzepsbt")
         result_schema = analyzepsbt["result"]["schema"]
         estimated_feerate = result_schema["properties"]["estimated_feerate"]
         assert_equal(estimated_feerate["type"], "number")
-        assert_equal(estimated_feerate["x-bitcoin-unit"], "amount")
+        assert_equal(estimated_feerate["x-connectcoin-unit"], "amount")
 
 
 if __name__ == "__main__":

@@ -1,12 +1,12 @@
-# Fuzzing Bitcoin Core using libFuzzer
+# Fuzzing ConnectCoin Core using libFuzzer
 
 ## Quickstart guide
 
-To quickly get started fuzzing Bitcoin Core using [libFuzzer](https://llvm.org/docs/LibFuzzer.html):
+To quickly get started fuzzing ConnectCoin Core using [libFuzzer](https://llvm.org/docs/LibFuzzer.html):
 
 ```sh
-$ git clone https://github.com/bitcoin/bitcoin
-$ cd bitcoin/
+$ git clone YOUR_CONNECTCOIN_REPOSITORY_URL connectcoin
+$ cd connectcoin/
 $ cmake --preset=libfuzzer
 $ cmake --build build_fuzz
 $ FUZZ=process_message build_fuzz/bin/fuzz
@@ -26,9 +26,9 @@ For source-based coverage reports, see [developer notes](/doc/developer-notes.md
 macOS users: We recommend fuzzing on Linux, see [macOS notes](#macos-notes) for
 more information.
 
-## Overview of Bitcoin Core fuzzing
+## Overview of ConnectCoin Core fuzzing
 
-[Google](https://github.com/google/fuzzing/) has a good overview of fuzzing in general, with contributions from key architects of some of the most-used fuzzers. [This paper](https://agroce.github.io/bitcoin_report.pdf) includes an external overview of the status of Bitcoin Core fuzzing, as of summer 2021.  [John Regehr](https://blog.regehr.org/archives/1687) provides good advice on writing code that assists fuzzers in finding bugs, which is useful for developers to keep in mind.
+[Google](https://github.com/google/fuzzing/) has a good overview of fuzzing in general, with contributions from key architects of some of the most-used fuzzers. [This paper](https://agroce.github.io/bitcoin_report.pdf) includes an external overview of the status of ConnectCoin Core fuzzing, as of summer 2021.  [John Regehr](https://blog.regehr.org/archives/1687) provides good advice on writing code that assists fuzzers in finding bugs, which is useful for developers to keep in mind.
 
 ## Fuzzing harnesses and output
 
@@ -78,7 +78,7 @@ block^@M-^?M-^?M-^?M-^?M-^?nM-^?M-^?
 
 In this case the fuzzer managed to create a `block` message which when passed to `ProcessMessage(...)` increased coverage.
 
-It is possible to specify `bitcoind` arguments to the `fuzz` executable.
+It is possible to specify `connectcoind` arguments to the `fuzz` executable.
 Depending on the test, they may be ignored or consumed and alter the behavior
 of the test. Just make sure to use double-dash to distinguish them from the
 fuzzer's own arguments:
@@ -89,7 +89,10 @@ $ FUZZ=address_deserialize build_fuzz/bin/fuzz -runs=1 fuzz_corpora/address_dese
 
 ## Fuzzing corpora
 
-The project's collection of seed corpora is found in the [`bitcoin-core/qa-assets`](https://github.com/bitcoin-core/qa-assets) repo.
+ConnectCoin CI currently uses the inherited seed corpora from the upstream
+[`bitcoin-core/qa-assets`](https://github.com/bitcoin-core/qa-assets) repository
+as a baseline. That repository is not owned by ConnectCoin and is not the home
+for ConnectCoin-specific P2C or network inputs.
 
 To fuzz `process_message` using the [`bitcoin-core/qa-assets`](https://github.com/bitcoin-core/qa-assets) seed corpus:
 
@@ -111,8 +114,8 @@ INFO: seed corpus: files: 991 min: 1b max: 1858b total: 288291b rss: 150Mb
 MSan [requires](https://clang.llvm.org/docs/MemorySanitizer.html#handling-external-code)
 that all linked code be instrumented. The exact steps to achieve this may vary
 but involve compiling `clang` from source, using the built `clang` to compile
-an instrumentalized libc++, then using it to build [Bitcoin Core dependencies
-from source](../depends/README.md) and finally the Bitcoin Core fuzz binary
+an instrumentalized libc++, then using it to build [ConnectCoin Core dependencies
+from source](../depends/README.md) and finally the ConnectCoin Core fuzz binary
 itself. One can use the MSan CI job as an example for how to perform these
 steps.
 
@@ -151,9 +154,15 @@ Patience is useful; even with improved throughput, libFuzzer may need days and
 
 ## Submit improved coverage
 
-If you find coverage increasing inputs when fuzzing you are highly encouraged to submit them for inclusion in the [`bitcoin-core/qa-assets`](https://github.com/bitcoin-core/qa-assets) repo.
+ConnectCoin does not yet have a project-owned corpus repository. Attach
+ConnectCoin-specific coverage-increasing inputs to the issue or pull request in
+the repository hosting this tree, without private data, until such a corpus is
+established. Submit an input to `bitcoin-core/qa-assets` only when it also
+applies to unmodified Bitcoin Core and follows that upstream project's rules.
 
-Every single pull request submitted against the Bitcoin Core repo is automatically tested against all inputs in the [`bitcoin-core/qa-assets`](https://github.com/bitcoin-core/qa-assets) repo. Contributing new coverage increasing inputs is an easy way to help make Bitcoin Core more robust.
+The current CI tests ConnectCoin against the inherited upstream corpus. A
+project-owned corpus location and retention policy should be configured before
+CI claims coverage for ConnectCoin-specific protocol features.
 
 ## Building and debugging fuzz tests
 
@@ -195,15 +204,15 @@ best results. On macOS this can be done within Docker or a virtual machine.
 Reproducing and debugging fuzz testcases on macOS is supported, by building the
 fuzz binary without support for any specific fuzzing engine.
 
-# Fuzzing Bitcoin Core using afl++
+# Fuzzing ConnectCoin Core using afl++
 
 ## Quickstart guide
 
-To quickly get started fuzzing Bitcoin Core using [afl++](https://github.com/AFLplusplus/AFLplusplus):
+To quickly get started fuzzing ConnectCoin Core using [afl++](https://github.com/AFLplusplus/AFLplusplus):
 
 ```sh
-$ git clone https://github.com/bitcoin/bitcoin
-$ cd bitcoin/
+$ git clone YOUR_CONNECTCOIN_REPOSITORY_URL connectcoin
+$ cd connectcoin/
 $ git clone https://github.com/AFLplusplus/AFLplusplus
 $ make -C AFLplusplus/ source-only
 # If afl-clang-lto is not available, see
@@ -222,15 +231,15 @@ $ FUZZ=bech32 ./AFLplusplus/afl-fuzz -i inputs/ -o outputs/ -- build_fuzz/bin/fu
 
 Read the [afl++ documentation](https://github.com/AFLplusplus/AFLplusplus) for more information.
 
-# Fuzzing Bitcoin Core using Honggfuzz
+# Fuzzing ConnectCoin Core using Honggfuzz
 
 ## Quickstart guide
 
-To quickly get started fuzzing Bitcoin Core using [Honggfuzz](https://github.com/google/honggfuzz):
+To quickly get started fuzzing ConnectCoin Core using [Honggfuzz](https://github.com/google/honggfuzz):
 
 ```sh
-$ git clone https://github.com/bitcoin/bitcoin
-$ cd bitcoin/
+$ git clone YOUR_CONNECTCOIN_REPOSITORY_URL connectcoin
+$ cd connectcoin/
 $ git clone https://github.com/google/honggfuzz
 $ cd honggfuzz/
 $ make
@@ -249,12 +258,9 @@ Read the [Honggfuzz documentation](https://github.com/google/honggfuzz/blob/mast
 
 # OSS-Fuzz
 
-Bitcoin Core participates in Google's [OSS-Fuzz](https://github.com/google/oss-fuzz/tree/master/projects/bitcoin-core)
-program, which includes a dashboard of [publicly disclosed vulnerabilities](https://issues.oss-fuzz.com/issues?q=bitcoin-core%20status:open).
-
-Bitcoin Core follows its [security disclosure policy](https://bitcoincore.org/en/security-advisories/),
-which may differ from Google's standard
-[90-day disclosure window](https://google.github.io/oss-fuzz/getting-started/bug-disclosure-guidelines/)
-.
-
-OSS-Fuzz also produces [a fuzzing coverage report](https://oss-fuzz.com/coverage-report/job/libfuzzer_asan_bitcoin-core/latest).
+ConnectCoin is not currently enrolled as its own project in Google's OSS-Fuzz.
+The upstream [Bitcoin Core OSS-Fuzz integration](https://github.com/google/oss-fuzz/tree/master/projects/bitcoin-core)
+does not test this fork's branding, network parameters, or future P2C changes.
+Before a public release, ConnectCoin should add a project-owned continuous
+fuzzing integration and publish its own coverage status. Security findings must
+follow the local [security policy](../SECURITY.md).

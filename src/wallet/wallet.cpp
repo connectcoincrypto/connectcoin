@@ -5,7 +5,7 @@
 
 #include <wallet/wallet.h>
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <addresstype.h>
 #include <blockfilter.h>
@@ -1184,7 +1184,7 @@ bool CWallet::LoadToWallet(CWalletTx&& wtx_in)
     if (!ins.second) {
         return false;
     }
-    // If wallet doesn't have a chain (e.g when using bitcoin-wallet tool),
+    // If wallet doesn't have a chain (e.g. when using connectcoin-wallet),
     // don't bother to update txn.
     if (HaveChain()) {
       wtx.updateState(chain());
@@ -3221,7 +3221,7 @@ bool CWallet::AttachChain(const std::shared_ptr<CWallet>& walletInstance, interf
             // Wallet is assumed to be from another chain, if genesis block in the active
             // chain differs from the genesis block known to the wallet.
             if (chain.getBlockHash(0) != locator.vHave.back()) {
-                error = Untranslated("Wallet files should not be reused across chains. Restart bitcoind with -walletcrosschain to override.");
+                error = Untranslated("Wallet files should not be reused across chains. Restart connectcoind with -walletcrosschain to override.");
                 return false;
             }
         }

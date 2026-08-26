@@ -287,7 +287,7 @@ class AddrTest(BitcoinTestFramework):
         block_relay_peer.send_and_ping(msg_headers([tip_header]))
 
         feeler_peer = self.nodes[0].add_outbound_p2p_connection(AddrReceiver(), p2p_idx=2, connection_type="feeler")
-        # bitcoind closes feeler connections as soon as it receives a version message
+        # connectcoind closes feeler connections as soon as it receives a version message
         assert_equal(feeler_peer.is_connected, False)
         assert_equal(feeler_peer.getaddr_received(), False)
 

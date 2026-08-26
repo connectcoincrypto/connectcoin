@@ -6,11 +6,17 @@ export LC_ALL=C.UTF-8
 set -o errexit -o pipefail
 
 # Source the common prelude, which:
-#   1. Checks if we're at the top directory of the Bitcoin Core repository
+#   1. Checks if we're at the top directory of the ConnectCoin Core repository
 #   2. Defines a few common functions and variables
 #
 # shellcheck source=libexec/prelude.bash
 source "$(dirname "${BASH_SOURCE[0]}")/libexec/prelude.bash"
+
+SIGNING_DISABLED_FILE="$(dirname "${BASH_SOURCE[0]}")/connectcoin-signing-disabled"
+if [[ -f "${SIGNING_DISABLED_FILE}" ]]; then
+    cat "${SIGNING_DISABLED_FILE}" >&2
+    exit 1
+fi
 
 
 ###################
@@ -42,27 +48,27 @@ cmd_usage() {
 cat <<EOF
 Synopsis:
 
-    env GUIX_SIGS_REPO=<path/to/guix.sigs> \\
+    env GUIX_SIGS_REPO=<path/to/connectcoin-attestations> \\
         SIGNER=GPG_KEY_NAME[=SIGNER_NAME] \\
         [ NO_SIGN=1 ]
       ./contrib/guix/guix-attest
 
 Example w/o overriding signing name:
 
-    env GUIX_SIGS_REPO=/home/achow101/guix.sigs \\
-        SIGNER=achow101 \\
+    env GUIX_SIGS_REPO=/path/to/connectcoin-attestations \\
+        SIGNER=<authorized-key> \\
       ./contrib/guix/guix-attest
 
 Example overriding signing name:
 
-    env GUIX_SIGS_REPO=/home/dongcarl/guix.sigs \\
-        SIGNER=0x96AB007F1A7ED999=dongcarl \\
+    env GUIX_SIGS_REPO=/path/to/connectcoin-attestations \\
+        SIGNER=<authorized-key>=<authorized-signer> \\
       ./contrib/guix/guix-attest
 
 Example w/o signing, just creating SHA256SUMS:
 
-    env GUIX_SIGS_REPO=/home/achow101/guix.sigs \\
-        SIGNER=achow101 \\
+    env GUIX_SIGS_REPO=/path/to/connectcoin-attestations \\
+        SIGNER=<authorized-signer> \\
         NO_SIGN=1 \\
       ./contrib/guix/guix-attest
 
@@ -84,8 +90,8 @@ ERR: The specified GUIX_SIGS_REPO is not an existent directory:
 
     '$GUIX_SIGS_REPO'
 
-Hint: Please clone the guix.sigs repository and point to it with the
-      GUIX_SIGS_REPO environment variable.
+Hint: Clone the future project-owned ConnectCoin attestation repository and
+      point to it with the GUIX_SIGS_REPO environment variable.
 
 EOF
 cmd_usage
@@ -166,11 +172,11 @@ echo "Attesting to build outputs for version: '${VERSION}'"
 echo ""
 
 # Given a SHA256SUMS file as stdin that has lines like:
-#     0ba536819b221a91d3d42e978be016aac918f40984754d74058aa0c921cd3ea6  a/b/d/c/d/s/bitcoin-22.0rc2-riscv64-linux-gnu.tar.gz
+#     0ba536819b221a91d3d42e978be016aac918f40984754d74058aa0c921cd3ea6  a/b/d/c/d/s/connectcoin-31.99.0-riscv64-linux-gnu.tar.gz
 #     ...
 #
 # Replace each line's file name with its basename:
-#     0ba536819b221a91d3d42e978be016aac918f40984754d74058aa0c921cd3ea6  bitcoin-22.0rc2-riscv64-linux-gnu.tar.gz
+#     0ba536819b221a91d3d42e978be016aac918f40984754d74058aa0c921cd3ea6  connectcoin-31.99.0-riscv64-linux-gnu.tar.gz
 #     ...
 #
 basenameify_SHA256SUMS() {

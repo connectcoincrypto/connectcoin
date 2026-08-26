@@ -4,7 +4,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test external signer.
 
-Verify that a bitcoind node can use an external signer command
+Verify that a connectcoind node can use an external signer command
 See also rpc_signer.py for tests without wallet context.
 """
 import os
@@ -88,28 +88,28 @@ class WalletSignerTest(BitcoinTestFramework):
         assert_equal(hww.getwalletinfo()["keypoolsize"], 40)
 
         address1 = hww.getnewaddress(address_type="bech32")
-        assert_equal(address1, "bcrt1qm90ugl4d48jv8n6e5t9ln6t9zlpm5th68x4f8g")
+        assert_equal(address1, "ccrt1qm90ugl4d48jv8n6e5t9ln6t9zlpm5th6jye4cd")
         address_info = hww.getaddressinfo(address1)
         assert_equal(address_info['solvable'], True)
         assert_equal(address_info['ismine'], True)
         assert_equal(address_info['hdkeypath'], "m/84h/1h/0h/0/0")
 
         address2 = hww.getnewaddress(address_type="p2sh-segwit")
-        assert_equal(address2, "2N2gQKzjUe47gM8p1JZxaAkTcoHPXV6YyVp")
+        assert_equal(address2, "tGMnPWAbec9DvEC2ccyai6gLNUcSUDzgvw")
         address_info = hww.getaddressinfo(address2)
         assert_equal(address_info['solvable'], True)
         assert_equal(address_info['ismine'], True)
         assert_equal(address_info['hdkeypath'], "m/49h/1h/0h/0/0")
 
         address3 = hww.getnewaddress(address_type="legacy")
-        assert_equal(address3, "n1LKejAadN6hg2FrBXoU1KrwX4uK16mco9")
+        assert_equal(address3, "TVnaMjTKy4nQ45qs4EUohZLkZs3vGva9ro")
         address_info = hww.getaddressinfo(address3)
         assert_equal(address_info['solvable'], True)
         assert_equal(address_info['ismine'], True)
         assert_equal(address_info['hdkeypath'], "m/44h/1h/0h/0/0")
 
         address4 = hww.getnewaddress(address_type="bech32m")
-        assert_equal(address4, "bcrt1phw4cgpt6cd30kz9k4wkpwm872cdvhss29jga2xpmftelhqll62ms4e9sqj")
+        assert_equal(address4, "ccrt1phw4cgpt6cd30kz9k4wkpwm872cdvhss29jga2xpmftelhqll62msf3c54f")
         address_info = hww.getaddressinfo(address4)
         assert_equal(address_info['solvable'], True)
         assert_equal(address_info['ismine'], True)
@@ -144,7 +144,7 @@ class WalletSignerTest(BitcoinTestFramework):
 
         # Returned address MUST match:
         address_fail = hww.getnewaddress(address_type="bech32")
-        assert_equal(address_fail, "bcrt1ql7zg7ukh3dwr25ex2zn9jse926f27xy2jz58tm")
+        assert_equal(address_fail, "ccrt1ql7zg7ukh3dwr25ex2zn9jse926f27xy28qcm57")
         assert_raises_rpc_error(-1, 'Signer echoed unexpected address wrong_address',
             hww.walletdisplayaddress, address_fail
         )
@@ -159,14 +159,14 @@ class WalletSignerTest(BitcoinTestFramework):
         assert mock_wallet.getwalletinfo()['private_keys_enabled']
 
         result = mock_wallet.importdescriptors([{
-            "desc": "tr([00000001/86h/1h/0']tprv8ZgxMBicQKsPd7Uf69XL1XwhmjHopUGep8GuEiJDZmbQz6o58LninorQAfcKZWARbtRtfnLcJ5MQ2AtHcQJCCRUcMRvmDUjyEmNUWwx8UbK/0/*)#7ew68cn8",
+            "desc": "tr([00000001/86h/1h/0']tcprHuVh8FbViZHtZ3RyETUTGWN7fPRT2RcFpuzPi5v3SGhiG4u85PdTXaP8e2aoVRy41reekrWrRjKGaXdAFA4qZAYaaoEKEDumiDsfLTYRmVR/0/*)#yjea6kk8",
             "timestamp": 0,
             "range": [0,1],
             "internal": False,
             "active": True
         },
         {
-            "desc": "tr([00000001/86h/1h/0']tprv8ZgxMBicQKsPd7Uf69XL1XwhmjHopUGep8GuEiJDZmbQz6o58LninorQAfcKZWARbtRtfnLcJ5MQ2AtHcQJCCRUcMRvmDUjyEmNUWwx8UbK/1/*)#0dtm6drl",
+            "desc": "tr([00000001/86h/1h/0']tcprHuVh8FbViZHtZ3RyETUTGWN7fPRT2RcFpuzPi5v3SGhiG4u85PdTXaP8e2aoVRy41reekrWrRjKGaXdAFA4qZAYaaoEKEDumiDsfLTYRmVR/1/*)#4xuu8rxl",
             "timestamp": 0,
             "range": [0, 0],
             "internal": True,

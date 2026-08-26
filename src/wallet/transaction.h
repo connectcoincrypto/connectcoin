@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_WALLET_TRANSACTION_H
-#define BITCOIN_WALLET_TRANSACTION_H
+#ifndef CONNECTCOIN_WALLET_TRANSACTION_H
+#define CONNECTCOIN_WALLET_TRANSACTION_H
 
 #include <attributes.h>
 #include <consensus/amount.h>
@@ -451,4 +451,4 @@ public:
 };
 } // namespace wallet
 
-#endif // BITCOIN_WALLET_TRANSACTION_H
+#endif // CONNECTCOIN_WALLET_TRANSACTION_H

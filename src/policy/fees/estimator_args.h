@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_POLICY_FEES_ESTIMATOR_ARGS_H
-#define BITCOIN_POLICY_FEES_ESTIMATOR_ARGS_H
+#ifndef CONNECTCOIN_POLICY_FEES_ESTIMATOR_ARGS_H
+#define CONNECTCOIN_POLICY_FEES_ESTIMATOR_ARGS_H
 
 #include <util/fs.h>
 
@@ -18,4 +18,4 @@ fs::path BlockPolicyFeeEstPath(const ArgsManager& argsman);
 /** @return The mempool policy estimator data file path. */
 fs::path MempoolPolicyEstimatorPath(const ArgsManager& argsman);
 
-#endif // BITCOIN_POLICY_FEES_ESTIMATOR_ARGS_H
+#endif // CONNECTCOIN_POLICY_FEES_ESTIMATOR_ARGS_H

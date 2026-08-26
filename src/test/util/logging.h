@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_TEST_UTIL_LOGGING_H
-#define BITCOIN_TEST_UTIL_LOGGING_H
+#ifndef CONNECTCOIN_TEST_UTIL_LOGGING_H
+#define CONNECTCOIN_TEST_UTIL_LOGGING_H
 
 #include <util/macros.h>
 
@@ -39,6 +39,6 @@ private:
     MatchFn m_match;
 };
 
-#define ASSERT_DEBUG_LOG(message) DebugLogHelper BITCOIN_UNIQUE_NAME(debugloghelper)(message)
+#define ASSERT_DEBUG_LOG(message) DebugLogHelper CONNECTCOIN_UNIQUE_NAME(debugloghelper)(message)
 
-#endif // BITCOIN_TEST_UTIL_LOGGING_H
+#endif // CONNECTCOIN_TEST_UTIL_LOGGING_H

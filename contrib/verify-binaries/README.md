@@ -1,5 +1,10 @@
 ### Verify Binaries
 
+> [!WARNING]
+> This inherited utility verifies upstream Bitcoin Core release artifacts from
+> Bitcoin Core servers and signing keys. It does **not** verify ConnectCoin
+> builds. ConnectCoin has no public release-signing infrastructure yet.
+
 #### Preparation
 
 As of Bitcoin Core v22.0, releases are signed by a number of public keys on the basis

@@ -27,3 +27,6 @@ target/
 /guix-build-*
 
 /ci/scratch/
+
+# Functional-test cache created by direct test script invocations.
+/test/cache/

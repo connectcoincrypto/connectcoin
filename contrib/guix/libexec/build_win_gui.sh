@@ -43,7 +43,7 @@ mkdir -p "$DISTSRC"
     cmake -S . -B build \
           --toolchain "${BASEPREFIX}/${HOST}/toolchain.cmake" \
           -DBUILD_BENCH=OFF \
-          -DBUILD_BITCOIN_BIN=OFF \
+          -DBUILD_CONNECTCOIN_BIN=OFF \
           -DBUILD_CLI=OFF \
           -DBUILD_DAEMON=OFF \
           -DBUILD_FUZZ_BINARY=OFF \
@@ -57,11 +57,11 @@ mkdir -p "$DISTSRC"
           -DWITH_CCACHE=OFF \
           -Werror=dev
 
-    # Build Bitcoin Core
-    cmake --build build -j "$JOBS" --target bitcoin-qt
+    # Build ConnectCoin Core
+    cmake --build build -j "$JOBS" --target connectcoin-qt
 
-    # Install built Bitcoin Core
-    cmake --install build --component bitcoin-qt
+    # Install built ConnectCoin Core
+    cmake --install build --component connectcoin-qt
 )
 
 # shellcheck source=package.sh

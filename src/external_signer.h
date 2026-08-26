@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_EXTERNAL_SIGNER_H
-#define BITCOIN_EXTERNAL_SIGNER_H
+#ifndef CONNECTCOIN_EXTERNAL_SIGNER_H
+#define CONNECTCOIN_EXTERNAL_SIGNER_H
 
 #include <common/system.h>
 #include <univalue.h>
@@ -21,7 +21,7 @@ private:
     //! The command which handles interaction with the external signer.
     std::vector<std::string> m_command;
 
-    //! Bitcoin mainnet, testnet, etc
+    //! ConnectCoin mainnet, testnet, etc.
     std::string m_chain;
 
     std::vector<std::string> NetworkArg() const;
@@ -66,4 +66,4 @@ public:
     bool SignTransaction(PartiallySignedTransaction& psbt, std::string& error);
 };
 
-#endif // BITCOIN_EXTERNAL_SIGNER_H
+#endif // CONNECTCOIN_EXTERNAL_SIGNER_H

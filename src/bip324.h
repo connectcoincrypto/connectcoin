@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_BIP324_H
-#define BITCOIN_BIP324_H
+#ifndef CONNECTCOIN_BIP324_H
+#define CONNECTCOIN_BIP324_H
 
 #include <array>
 #include <cstddef>
@@ -13,6 +13,7 @@
 #include <crypto/chacha20poly1305.h>
 #include <key.h>
 #include <pubkey.h>
+#include <protocol.h>
 #include <span.h>
 
 inline constexpr unsigned BIP324_SHORTIDS_IMPLEMENTED{38};
@@ -61,7 +62,8 @@ public:
      * self_decrypt is only for testing, and swaps encryption/decryption keys, so that encryption
      * and decryption can be tested without knowing the other side's private key.
      */
-    void Initialize(const EllSwiftPubKey& their_pubkey, bool initiator, bool self_decrypt = false) noexcept;
+    void Initialize(const EllSwiftPubKey& their_pubkey, bool initiator, bool self_decrypt = false,
+                    const MessageStartChars* message_start_override = nullptr) noexcept;
 
     /** Determine whether this cipher is fully initialized. */
     explicit operator bool() const noexcept { return m_send_l_cipher.has_value(); }
@@ -95,4 +97,4 @@ public:
     std::span<const std::byte> GetReceiveGarbageTerminator() const noexcept { return m_recv_garbage_terminator; }
 };
 
-#endif // BITCOIN_BIP324_H
+#endif // CONNECTCOIN_BIP324_H

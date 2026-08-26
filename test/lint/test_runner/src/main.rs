@@ -39,7 +39,7 @@ fn get_linter_list() -> Vec<&'static Linter> {
             lint_fn: lint_doc_args
         },
         &Linter {
-            description: "Check that no symbol from bitcoin-build-config.h is used without the header being included",
+            description: "Check that no symbol from connectcoin-build-config.h is used without the header being included",
             name: "includes_build_config",
             lint_fn: lint_includes_build_config
         },

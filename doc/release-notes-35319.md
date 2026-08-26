@@ -2,9 +2,9 @@ P2P and network changes
 -----------------------
 
 - Fix a possible leak of the originator's IP address for transactions sent with
-`sendrawtransaction` RPC when `-privatebroadcast=1`. When Bitcoin Core connects
+`sendrawtransaction` RPC when `-privatebroadcast=1`. When ConnectCoin Core connects
 to a peer, if that peer has been advertised to support P2P protocol v2, then
-Bitcoin Core tries to use the v2 protocol and if that fails it retries the
+ConnectCoin Core tries to use the v2 protocol and if that fails it retries the
 connection using the v1 protocol. When the private broadcast is about to send a
 transaction to an IPv4 or IPv6 peer it overrides the normal proxy selection and
 forces the connection through the Tor proxy (and thus through the Tor network,

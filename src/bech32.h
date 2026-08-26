@@ -11,8 +11,8 @@
 //
 // For more information, see BIP 173 and BIP 350.
 
-#ifndef BITCOIN_BECH32_H
-#define BITCOIN_BECH32_H
+#ifndef CONNECTCOIN_BECH32_H
+#define CONNECTCOIN_BECH32_H
 
 #include <cstddef>
 #include <cstdint>
@@ -63,4 +63,4 @@ std::pair<std::string, std::vector<int>> LocateErrors(const std::string& str, Ch
 
 } // namespace bech32
 
-#endif // BITCOIN_BECH32_H
+#endif // CONNECTCOIN_BECH32_H

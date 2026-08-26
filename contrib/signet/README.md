@@ -5,18 +5,23 @@ This directory contains tools related to Signet, both for running a Signet yours
 getcoins.py
 ===========
 
-A script to call a faucet to get Signet coins.
+A script to call an explicitly selected ConnectCoin-compatible faucet. No
+public ConnectCoin faucet is configured, and a Bitcoin Signet faucet cannot
+fund ConnectCoin because the networks have different genesis blocks and address
+encodings.
 
-Syntax: `getcoins.py [-h|--help] [-c|--cmd=<bitcoin-cli path>] [-f|--faucet=<faucet URL>] [-a|--addr=<signet bech32 address>] [-p|--password=<faucet password>] [--] [<bitcoin-cli args>]`
+Syntax: `getcoins.py [-h|--help] [-c|--cmd=<connectcoin-cli path>] -f|--faucet=<ConnectCoin HTTPS faucet URL> [-a|--addr=<signet bech32 address>] [-p|--password=<faucet password>] [--allow-insecure-localhost] [--] [<connectcoin-cli args>]`
 
-* `--cmd` lets you customize the bitcoin-cli path. By default it will look for it in the PATH
-* `--faucet` lets you specify which faucet to use; the faucet is assumed to be compatible with https://github.com/kallewoof/bitcoin-faucet
-* `--addr` lets you specify a Signet address; by default, the address must be a bech32 address. This and `--cmd` above complement each other (i.e. you do not need `bitcoin-cli` if you use `--addr`)
-* `--password` lets you specify a faucet password; this is handy if you are in a classroom and set up your own faucet for your students; (above faucet does not limit by IP when password is enabled)
+* `--cmd` lets you customize the connectcoin-cli path. By default it will look for it in the PATH
+* `--faucet` is required and selects a ConnectCoin-compatible HTTPS faucet; compatibility and trust must be verified by the operator
+* `--addr` lets you specify a Signet address; by default, the address must be a bech32 address. This and `--cmd` above complement each other (i.e. you do not need `connectcoin-cli` if you use `--addr`)
+* `--password` passes a password understood by a faucet you operate or explicitly trust
+* `--allow-insecure-localhost` permits HTTP only for `localhost` or a loopback IP and is intended solely for local development
 
-If using the default network, invoking the script with no arguments should be sufficient under normal
-circumstances, but if multiple people are behind the same IP address, the faucet will by default only
-accept one claim per day. See `--password` above.
+The script deliberately has no default service. Use regtest for local testing
+when no project-owned Signet faucet is available. Redirects, remote captcha
+rendering, unbounded responses, and non-loopback plain HTTP are deliberately not
+supported.
 
 miner
 =====
@@ -24,7 +29,7 @@ miner
 You will first need to pick a difficulty target. Since signet chains are primarily protected by a signature rather than proof of work, there is no need to spend as much energy as possible mining, however you may wish to choose to spend more time than the absolute minimum. The calibrate subcommand can be used to pick a target appropriate for your hardware, eg:
 
     MINER="./contrib/signet/miner"
-    GRIND="./build/bin/bitcoin-util grind"
+    GRIND="./build/bin/connectcoin-util grind"
     $MINER calibrate --grind-cmd="$GRIND"
     nbits=1e00f403 for 25s average mining time
 
@@ -32,7 +37,7 @@ It defaults to estimating an nbits value resulting in 25s average time to find a
 
 To mine the first block in your custom chain, you can run:
 
-    CLI="./build/bin/bitcoin-cli -conf=mysignet.conf"
+    CLI="./build/bin/connectcoin-cli -conf=mysignet.conf"
     ADDR=$($CLI -signet getnewaddress)
     NBITS=1e00f403
     $MINER --cli="$CLI" generate --grind-cmd="$GRIND" --address="$ADDR" --nbits=$NBITS

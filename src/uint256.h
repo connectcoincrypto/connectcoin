@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UINT256_H
-#define BITCOIN_UINT256_H
+#ifndef CONNECTCOIN_UINT256_H
+#define CONNECTCOIN_UINT256_H
 
 #include <crypto/common.h>
 #include <crypto/hex_base.h>
@@ -205,4 +205,4 @@ public:
     static const uint256 ONE;
 };
 
-#endif // BITCOIN_UINT256_H
+#endif // CONNECTCOIN_UINT256_H

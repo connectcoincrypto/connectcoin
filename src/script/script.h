@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SCRIPT_SCRIPT_H
-#define BITCOIN_SCRIPT_SCRIPT_H
+#ifndef CONNECTCOIN_SCRIPT_SCRIPT_H
+#define CONNECTCOIN_SCRIPT_SCRIPT_H
 
 #include <attributes.h>
 #include <crypto/common.h>
@@ -631,4 +631,4 @@ CScript BuildScript(Ts&&... inputs)
     return ret;
 }
 
-#endif // BITCOIN_SCRIPT_SCRIPT_H
+#endif // CONNECTCOIN_SCRIPT_SCRIPT_H

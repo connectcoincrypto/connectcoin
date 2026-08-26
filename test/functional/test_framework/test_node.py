@@ -2,7 +2,7 @@
 # Copyright (c) 2017-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-"""Class for bitcoind node under test"""
+"""Class for connectcoind node under test"""
 
 import contextlib
 import decimal
@@ -43,20 +43,20 @@ from .util import (
     tor_port,
 )
 
-BITCOIND_PROC_WAIT_TIMEOUT = 60
+CONNECTCOIND_PROC_WAIT_TIMEOUT = 60
 # The size of the blocks xor key
 # from InitBlocksdirXorKey::xor_key.size()
 NUM_XOR_BYTES = 8
 # Many systems have a 128kB limit for a command size. Depending on the
 # platform, this limit may be larger or smaller. Moreover, when using the
-# 'bitcoin' command, it may internally insert more args, which must be
+# 'connectcoin' command, it may internally insert more args, which must be
 # accounted for. There is no need to pick the largest possible value here
 # anyway and it should be fine to set it to 1kB in tests.
 TEST_CLI_MAX_ARG_SIZE = 1024
 
 # The null blocks key (all 0s)
 NULL_BLK_XOR_KEY = bytes([0] * NUM_XOR_BYTES)
-BITCOIN_PID_FILENAME_DEFAULT = "bitcoind.pid"
+CONNECTCOIN_PID_FILENAME_DEFAULT = "connectcoind.pid"
 
 if sys.platform.startswith("linux"):
     UNIX_PATH_MAX = 108          # includes the trailing NUL
@@ -80,7 +80,7 @@ RPCConnectionType = Enum("RPCConnectionType", ["AUTO", "AUTHPROXY", "CLI"])
 
 
 class TestNode():
-    """A class for representing a bitcoind node under test.
+    """A class for representing a connectcoind node under test.
 
     This class contains:
 
@@ -116,7 +116,7 @@ class TestNode():
     ):
         self.index = i
         self.datadir_path = datadir_path
-        self.bitcoinconf = self.datadir_path / "bitcoin.conf"
+        self.connectcoinconf = self.datadir_path / "connectcoin.conf"
         self.stdout_dir = self.datadir_path / "stdout"
         self.stderr_dir = self.datadir_path / "stderr"
         self.chain = chain
@@ -137,8 +137,8 @@ class TestNode():
         # Note that common args are set in the config file (see initialize_datadir)
         self.extra_args = extra_args
         self.version = version
-        # Configuration for logging is set as command-line args rather than in the bitcoin.conf file.
-        # This means that starting a bitcoind using the temp dir to debug a failed test won't
+        # Configuration for logging is set as command-line args rather than in the connectcoin.conf file.
+        # This means that starting a connectcoind using the temp dir to debug a failed test won't
         # spam debug.log.
         self.args = self.binaries.node_argv(need_ipc=ipcbind, use_gui=use_gui) + [
             f"-datadir={self.datadir_path}",
@@ -200,18 +200,18 @@ class TestNode():
     AddressKeyPair = collections.namedtuple('AddressKeyPair', ['address', 'key'])
     PRIV_KEYS = [
             # address , privkey
-            AddressKeyPair('mjTkW3DjgyZck4KbiRusZsqTgaYTxdSz6z', 'cVpF924EspNh8KjYsfhgY96mmxvT6DgdWiTYMtMjuM74hJaU5psW'),
-            AddressKeyPair('msX6jQXvxiNhx3Q62PKeLPrhrqZQdSimTg', 'cUxsWyKyZ9MAQTaAhUQWJmBbSvHMwSmuv59KgxQV7oZQU3PXN3KE'),
-            AddressKeyPair('mnonCMyH9TmAsSj3M59DsbH8H63U3RKoFP', 'cTrh7dkEAeJd6b3MRX9bZK8eRmNqVCMH3LSUkE3dSFDyzjU38QxK'),
-            AddressKeyPair('mqJupas8Dt2uestQDvV2NH3RU8uZh2dqQR', 'cVuKKa7gbehEQvVq717hYcbE9Dqmq7KEBKqWgWrYBa2CKKrhtRim'),
-            AddressKeyPair('msYac7Rvd5ywm6pEmkjyxhbCDKqWsVeYws', 'cQDCBuKcjanpXDpCqacNSjYfxeQj8G6CAtH1Dsk3cXyqLNC4RPuh'),
-            AddressKeyPair('n2rnuUnwLgXqf9kk2kjvVm8R5BZK1yxQBi', 'cQakmfPSLSqKHyMFGwAqKHgWUiofJCagVGhiB4KCainaeCSxeyYq'),
-            AddressKeyPair('myzuPxRwsf3vvGzEuzPfK9Nf2RfwauwYe6', 'cQMpDLJwA8DBe9NcQbdoSb1BhmFxVjWD5gRyrLZCtpuF9Zi3a9RK'),
-            AddressKeyPair('mumwTaMtbxEPUswmLBBN3vM9oGRtGBrys8', 'cSXmRKXVcoouhNNVpcNKFfxsTsToY5pvB9DVsFksF1ENunTzRKsy'),
-            AddressKeyPair('mpV7aGShMkJCZgbW7F6iZgrvuPHjZjH9qg', 'cSoXt6tm3pqy43UMabY6eUTmR3eSUYFtB2iNQDGgb3VUnRsQys2k'),
-            AddressKeyPair('mq4fBNdckGtvY2mijd9am7DRsbRB4KjUkf', 'cN55daf1HotwBAgAKWVgDcoppmUNDtQSfb7XLutTLeAgVc3u8hik'),
-            AddressKeyPair('mpFAHDjX7KregM3rVotdXzQmkbwtbQEnZ6', 'cT7qK7g1wkYEMvKowd2ZrX1E5f6JQ7TM246UfqbCiyF7kZhorpX3'),
-            AddressKeyPair('mzRe8QZMfGi58KyWCse2exxEFry2sfF2Y7', 'cPiRWE8KMjTRxH1MWkPerhfoHFn5iHPWVK5aPqjW8NxmdwenFinJ'),
+            AddressKeyPair('TDv1D3WV2gFK87ucb8bDG7KGjNh5HCPZPi', 'TUSnGB5NCSVJgkvh93dCyXL4bTffAh9HamTbEBDxxA8eX7Ro3qwP'),
+            AddressKeyPair('TMyMSQpgJR4QL6z6u5zz2dLWudi1x5Fobw', 'TTbQe8M6smTmxtmJxrL2k9QtGR2a1vEZz89NZFGiAcazHrAn2dMa'),
+            AddressKeyPair('THG2uNG2VASsFWK4DmpZZpkwKtC5Qjkyoo', 'TSVEEnmMVGREf2EVgu57zhMwFG83Zfow7PSXcWurV4FZpYMBGk9W'),
+            AddressKeyPair('TKmAXb9sZaic2wUR6dAN4WXEWw4AwjKkA1', 'TUXrSj8ovGoqyMgyNP3DyzpWxiayuamtFNqZYoimEP3n98o51BXv'),
+            AddressKeyPair('TMzqK7ifxnfe9AQFeTRKew51G7z8G7n66i', 'TNqjK4Lk4CuS5f1M6xXtt7mxn99wCjYrEwH46AcGfM1RAAyZZSTn'),
+            AddressKeyPair('TXK3cV5ggPDY3DLkuTRGBzcE7yhvMQrc47', 'TPDHtpQZf4wvrQYPYK6MkfuoJDYsNg3LZKhm3MBRdXpAU1NyHwqD'),
+            AddressKeyPair('TUTA6xihDMjdJLaFnh511NrU5DpYooAazF', 'TNzMLVL4UkKoCaZkfyZKsyEUXG1AaCxs9jS2idRRwdvpyNZJN8Rb'),
+            AddressKeyPair('TQECAaedwev5rwXnCsrhk9pxr4aVX4mVqs', 'TRAJYUYcwRvXFoZe5zHqh4CAHND1cZHaFCDYjYd6HpFxjbM7UQBT'),
+            AddressKeyPair('TJwNHGjShSytwkBWywn4FvLjxBSLrrAasS', 'TRS51FutNSxacUfVqyTd5rh4EYPeZ1iYF5iRGW8udrX4cEkzckre'),
+            AddressKeyPair('TKWutNvN5yacv6MjcKpvTLhEvPZnFa4rjn', 'TLhckjg8cS1YjbsJatRCf137eGDaJMs6je7aDCkgPTCGKQwuoXAH'),
+            AddressKeyPair('TJhQzE2GT2YM4QdsNWZyEDtaoQ6Vt8mQAc', 'TRkNSGh9GNeqvMWxCzx6HuEWu9qWUav1676XY8TRmnGhaNbaZ5Gk'),
+            AddressKeyPair('TUstqQr6zyPmWPZX5aKNMCS3Jf7eBF8N4A', 'TNLxdP9SgMa3WiCVn8KBJ5u66kXHnkrAZN5dG8bjBBzMTkb4XsS6'),
     ]
 
     def get_deterministic_priv_key(self):
@@ -228,7 +228,7 @@ class TestNode():
         raise AssertionError(self._node_msg(msg))
 
     def __del__(self):
-        # Ensure that we don't leave any bitcoind processes lying around after
+        # Ensure that we don't leave any connectcoind processes lying around after
         # the test ends
         if self.process:
             # Should only happen on test failure
@@ -250,10 +250,10 @@ class TestNode():
         if extra_args is None:
             extra_args = self.extra_args
 
-        # If listening and no -bind is given, then bitcoind would bind P2P ports on
+        # If listening and no -bind is given, then connectcoind would bind P2P ports on
         # 0.0.0.0:P and 127.0.0.1:P+1 (for incoming Tor connections), where P is
         # a unique port chosen by the test framework and configured as port=P in
-        # bitcoin.conf. To avoid collisions, change it to 127.0.0.1:tor_port().
+        # connectcoin.conf. To avoid collisions, change it to 127.0.0.1:tor_port().
         will_listen = all(e != "-nolisten" and e != "-listen=0" for e in extra_args)
         has_explicit_bind = self.has_explicit_bind or any(e.startswith("-bind=") for e in extra_args)
         if will_listen and not has_explicit_bind:
@@ -262,7 +262,7 @@ class TestNode():
 
         self.use_v2transport = "-v2transport=1" in extra_args or (self.default_to_v2 and "-v2transport=0" not in extra_args)
 
-        # Add a new stdout and stderr file each time bitcoind is started
+        # Add a new stdout and stderr file each time connectcoind is started
         if stderr is None:
             stderr = tempfile.NamedTemporaryFile(dir=self.stderr_dir, delete=False)
         if stdout is None:
@@ -274,7 +274,7 @@ class TestNode():
             cwd = self.cwd
 
         # Delete any existing cookie file -- if such a file exists (eg due to
-        # unclean shutdown), it will get overwritten anyway by bitcoind, and
+        # unclean shutdown), it will get overwritten anyway by connectcoind, and
         # potentially interfere with our attempt to authenticate
         delete_cookie_file(self.datadir_path, self.chain)
 
@@ -316,7 +316,7 @@ class TestNode():
         self.process = subprocess.Popen(self.args + extra_args, env=subp_env, stdout=stdout, stderr=stderr, cwd=cwd, **kwargs)
 
         self.running = True
-        self.log.debug("bitcoind started, waiting for RPC to come up")
+        self.log.debug("connectcoind started, waiting for RPC to come up")
 
     def create_new_rpc_connection(self, *, mode="AUTO", client_timeout=None):
         """Create an additional RPC connection, likely to be used in a new thread."""
@@ -349,7 +349,7 @@ class TestNode():
             )
 
     def wait_for_rpc_connection(self, *, wait_for_import=True):
-        """Sets up an RPC connection to the bitcoind process. Returns False if unable to connect."""
+        """Sets up an RPC connection to the connectcoind process. Returns False if unable to connect."""
         # Poll at a rate of four times per second
         poll_per_s = 4
 
@@ -367,7 +367,7 @@ class TestNode():
                 str_error += "************************\n" if str_error else ''
 
                 raise FailedToStartError(self._node_msg(
-                    f'bitcoind exited with status {self.process.returncode} during initialization. {str_error}'))
+                    f'connectcoind exited with status {self.process.returncode} during initialization. {str_error}'))
             try:
                 rpc = self.create_new_rpc_connection(mode="AUTHPROXY")
                 rpc.getblockcount()
@@ -420,7 +420,7 @@ class TestNode():
                     # doesn't specify errno.
                     elif isinstance(e, ConnectionResetError):
                         error_num = errno.ECONNRESET
-                    # Windows can raise this while bitcoind shuts down during startup.
+                    # Windows can raise this while connectcoind shuts down during startup.
                     elif isinstance(e, ConnectionAbortedError):
                         error_num = errno.ECONNABORTED
 
@@ -435,12 +435,12 @@ class TestNode():
                     raise  # unknown OS error
                 latest_error = suppress_error(f"OSError {errno.errorcode[error_num]}", e)
             except ValueError as e:
-                # Suppress if cookie file isn't generated yet and no rpcuser or rpcpassword; bitcoind may be starting.
+                # Suppress if cookie file isn't generated yet and no rpcuser or rpcpassword; connectcoind may be starting.
                 if "No RPC credentials" not in str(e):
                     raise
                 latest_error = suppress_error("missing_credentials", e)
             time.sleep(1.0 / poll_per_s)
-        self._raise_assertion_error(f"Unable to connect to bitcoind after {self.rpc_timeout}s (ignored errors: {dict(suppressed_errors)!s}{'' if latest_error is None else f', latest: {latest_error[0]!r}/{latest_error[1]}'})")
+        self._raise_assertion_error(f"Unable to connect to connectcoind after {self.rpc_timeout}s (ignored errors: {dict(suppressed_errors)!s}{'' if latest_error is None else f', latest: {latest_error[0]!r}/{latest_error[1]}'})")
 
     def wait_for_cookie_credentials(self):
         """Ensures auth cookie credentials can be read, e.g. for testing CLI with -rpcwait before RPC connection is up."""
@@ -452,7 +452,7 @@ class TestNode():
                 get_auth_cookie(self.datadir_path, self.chain)
                 self.log.debug("Cookie credentials successfully retrieved")
                 return
-            except ValueError:  # cookie file not found and no rpcuser or rpcpassword; bitcoind is still starting
+            except ValueError:  # cookie file not found and no rpcuser or rpcpassword; connectcoind is still starting
                 pass            # so we continue polling until RPC credentials are retrieved
             time.sleep(1.0 / poll_per_s)
         self._raise_assertion_error("Unable to retrieve cookie credentials after {}s".format(self.rpc_timeout))
@@ -554,7 +554,7 @@ class TestNode():
         self.log.debug("Node stopped")
         return True
 
-    def wait_until_stopped(self, *, timeout=BITCOIND_PROC_WAIT_TIMEOUT, expect_error=False, **kwargs):
+    def wait_until_stopped(self, *, timeout=CONNECTCOIND_PROC_WAIT_TIMEOUT, expect_error=False, **kwargs):
         if "expected_ret_code" not in kwargs:
             kwargs["expected_ret_code"] = 1 if expect_error else 0  # Whether node shutdown return EXIT_FAILURE or EXIT_SUCCESS
         self.wait_until(lambda: self.is_node_stopped(**kwargs), timeout=timeout)
@@ -570,13 +570,13 @@ class TestNode():
         The substitutions are passed as a list of search-replace-tuples, e.g.
             [("old", "new"), ("foo", "bar"), ...]
         """
-        with open(self.bitcoinconf, 'r') as conf:
+        with open(self.connectcoinconf, 'r', encoding='utf-8') as conf:
             conf_data = conf.read()
         for replacement in replacements:
             assert_equal(len(replacement), 2)
             old, new = replacement[0], replacement[1]
             conf_data = conf_data.replace(old, new)
-        with open(self.bitcoinconf, 'w') as conf:
+        with open(self.connectcoinconf, 'w', encoding='utf-8') as conf:
             conf.write(conf_data)
 
     @property
@@ -695,11 +695,11 @@ class TestNode():
     def assert_start_raises_init_error(self, extra_args=None, expected_msg=None, match=ErrorMatch.FULL_TEXT, *args, **kwargs):
         """Attempt to start the node and expect it to raise an error.
 
-        extra_args: extra arguments to pass through to bitcoind
-        expected_msg: regex that stderr should match when bitcoind fails
+        extra_args: extra arguments to pass through to connectcoind
+        expected_msg: regex that stderr should match when connectcoind fails
 
-        Will raise if bitcoind starts without an error.
-        Will raise if an expected_msg is provided and it does not match bitcoind's stdout."""
+        Will raise if connectcoind starts without an error.
+        Will raise if an expected_msg is provided and it does not match connectcoind's stdout."""
         assert not self.running
         with tempfile.NamedTemporaryFile(dir=self.stderr_dir, delete=False) as log_stderr, \
              tempfile.NamedTemporaryFile(dir=self.stdout_dir, delete=False) as log_stdout:
@@ -707,7 +707,7 @@ class TestNode():
             try:
                 self.start(extra_args, stdout=log_stdout, stderr=log_stderr, *args, **kwargs)
                 ret = self.process.wait(timeout=self.rpc_timeout)
-                self.log.debug(self._node_msg(f'bitcoind exited with status {ret} during initialization'))
+                self.log.debug(self._node_msg(f'connectcoind exited with status {ret} during initialization'))
                 assert_not_equal(ret, 0) # Exit code must indicate failure
                 self.running = False
                 self.process = None
@@ -731,7 +731,7 @@ class TestNode():
                 self.process.kill()
                 self.running = False
                 self.process = None
-                assert_msg = f'bitcoind should have exited within {self.rpc_timeout}s '
+                assert_msg = f'connectcoind should have exited within {self.rpc_timeout}s '
                 if expected_msg is None:
                     assert_msg += "with an error"
                 else:
@@ -917,15 +917,15 @@ def arg_to_cli(arg):
 
 
 class TestNodeCLI():
-    """Interface to bitcoin-cli for an individual node"""
+    """Interface to connectcoin-cli for an individual node"""
     def __init__(self, binaries):
         self.options = []
         self.binaries = binaries
         self.input = None
-        self.log = logging.getLogger('TestFramework.bitcoincli')
+        self.log = logging.getLogger('TestFramework.connectcoincli')
 
     def __call__(self, *options, input=None):
-        # TestNodeCLI is callable with bitcoin-cli command-line options
+        # TestNodeCLI is callable with connectcoin-cli command-line options
         cli = TestNodeCLI(self.binaries)
         cli.options = self.options + [str(o) for o in options]
         cli.input = input
@@ -944,7 +944,7 @@ class TestNodeCLI():
         return results
 
     def send_cli(self, clicommand=None, *args, **kwargs):
-        """Run bitcoin-cli command. Deserializes returned string as python object."""
+        """Run connectcoin-cli command. Deserializes returned string as python object."""
         pos_args = [arg_to_cli(arg) for arg in args]
         named_args = [key + "=" + arg_to_cli(value) for (key, value) in kwargs.items() if value is not None]
         p_args = self.binaries.rpc_argv() + self.options
@@ -969,7 +969,7 @@ class TestNodeCLI():
                 stdin_data = rpc_args
             p_args = p_args[:base_arg_pos] + ['-stdin']
 
-        self.log.debug("Running bitcoin-cli {}".format(p_args[2:]))
+        self.log.debug("Running connectcoin-cli {}".format(p_args[2:]))
         process = subprocess.Popen(p_args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         cli_stdout, cli_stderr = process.communicate(input=stdin_data)
         returncode = process.poll()

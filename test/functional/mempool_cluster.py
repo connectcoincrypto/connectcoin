@@ -107,7 +107,7 @@ class MempoolClusterTest(BitcoinTestFramework):
 
         # Multiply fee by 5, which should easily cover the cost to replace (but
         # is still too large a cluster). Otherwise, use the target vsize at
-        # 10sat/vB
+        # 10con/vB
         fee_to_use = target_vsize_per_tx * 10 if target_vsize_per_tx is not None else int(fee * COIN * 5)
         bad_tx_also_replacement = self.wallet.create_self_transfer_multi(
             utxos_to_spend=[last_result["new_utxo"], utxo_to_double_spend],

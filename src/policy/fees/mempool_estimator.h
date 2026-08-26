@@ -2,8 +2,8 @@
 // Distributed under the MIT software license. See the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_POLICY_FEES_MEMPOOL_ESTIMATOR_H
-#define BITCOIN_POLICY_FEES_MEMPOOL_ESTIMATOR_H
+#ifndef CONNECTCOIN_POLICY_FEES_MEMPOOL_ESTIMATOR_H
+#define CONNECTCOIN_POLICY_FEES_MEMPOOL_ESTIMATOR_H
 
 #include <primitives/transaction.h>
 #include <sync.h>
@@ -154,4 +154,4 @@ private:
     const fs::path m_mempool_estimator_file_path;
 };
 
-#endif // BITCOIN_POLICY_FEES_MEMPOOL_ESTIMATOR_H
+#endif // CONNECTCOIN_POLICY_FEES_MEMPOOL_ESTIMATOR_H

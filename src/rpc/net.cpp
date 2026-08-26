@@ -334,8 +334,8 @@ static RPCMethod addnode()
                 },
                 RPCResult{RPCResult::Type::NONE, "", ""},
                 RPCExamples{
-                    HelpExampleCli("addnode", "\"192.168.0.6:8333\" \"onetry\" true")
-            + HelpExampleRpc("addnode", "\"192.168.0.6:8333\", \"onetry\" true")
+                    HelpExampleCli("addnode", "\"192.168.0.6:48173\" \"onetry\" true")
+            + HelpExampleRpc("addnode", "\"192.168.0.6:48173\", \"onetry\" true")
                 },
         [](const RPCMethod& self, const JSONRPCRequest& request) -> UniValue
 {
@@ -409,8 +409,8 @@ static RPCMethod addconnection()
                 { RPCResult::Type::STR, "connection_type", "Type of connection opened." },
             }},
         RPCExamples{
-            HelpExampleCli("addconnection", "\"192.168.0.6:8333\" \"outbound-full-relay\" true")
-            + HelpExampleRpc("addconnection", "\"192.168.0.6:8333\" \"outbound-full-relay\" true")
+            HelpExampleCli("addconnection", "\"192.168.0.6:48173\" \"outbound-full-relay\" true")
+            + HelpExampleRpc("addconnection", "\"192.168.0.6:48173\" \"outbound-full-relay\" true")
         },
         [](const RPCMethod& self, const JSONRPCRequest& request) -> UniValue
 {
@@ -468,9 +468,9 @@ static RPCMethod disconnectnode()
                 },
                 RPCResult{RPCResult::Type::NONE, "", ""},
                 RPCExamples{
-                    HelpExampleCli("disconnectnode", "\"192.168.0.6:8333\"")
+                    HelpExampleCli("disconnectnode", "\"192.168.0.6:48173\"")
             + HelpExampleCli("disconnectnode", "\"\" 1")
-            + HelpExampleRpc("disconnectnode", "\"192.168.0.6:8333\"")
+            + HelpExampleRpc("disconnectnode", "\"192.168.0.6:48173\"")
             + HelpExampleRpc("disconnectnode", "\"\", 1")
                 },
         [](const RPCMethod& self, const JSONRPCRequest& request) -> UniValue
@@ -521,7 +521,7 @@ static RPCMethod getaddednodeinfo()
                             {
                                 {RPCResult::Type::OBJ, "", "",
                                 {
-                                    {RPCResult::Type::STR, "address", "The bitcoin server IP and port we're connected to"},
+                                    {RPCResult::Type::STR, "address", "The ConnectCoin server IP and port we're connected to"},
                                     {RPCResult::Type::STR, "connected", "connection, inbound or outbound"},
                                 }},
                             }},
@@ -1026,8 +1026,8 @@ static RPCMethod addpeeraddress()
             },
         },
         RPCExamples{
-            HelpExampleCli("addpeeraddress", "\"1.2.3.4\" 8333 true")
-    + HelpExampleRpc("addpeeraddress", "\"1.2.3.4\", 8333, true")
+            HelpExampleCli("addpeeraddress", "\"1.2.3.4\" 48173 true")
+    + HelpExampleRpc("addpeeraddress", "\"1.2.3.4\", 48173, true")
         },
         [](const RPCMethod& self, const JSONRPCRequest& request) -> UniValue
 {

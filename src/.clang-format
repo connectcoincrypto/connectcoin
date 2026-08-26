@@ -100,7 +100,7 @@ IfMacros:
   - LIMITED_WHILE
 IncludeBlocks:   Regroup
 IncludeCategories:
-  - Regex:           '^<bitcoin-build-config\.h>'
+  - Regex:           '^<connectcoin-build-config\.h>'
     Priority:        -1
     CaseSensitive:   true
   - Regex:           '^<boost/'

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_TEST_UTIL_JSON_H
-#define BITCOIN_TEST_UTIL_JSON_H
+#ifndef CONNECTCOIN_TEST_UTIL_JSON_H
+#define CONNECTCOIN_TEST_UTIL_JSON_H
 
 #include <univalue.h>
 
@@ -11,4 +11,4 @@
 
 UniValue read_json(std::string_view jsondata);
 
-#endif // BITCOIN_TEST_UTIL_JSON_H
+#endif // CONNECTCOIN_TEST_UTIL_JSON_H

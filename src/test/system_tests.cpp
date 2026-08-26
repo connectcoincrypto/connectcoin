@@ -20,9 +20,9 @@
 #include <string>
 
 namespace {
-// When set in the environment, test_bitcoin acts as a mock subprocess for the
+// When set in the environment, connectcoin-test acts as a mock subprocess for the
 // run_command test below instead of running unit tests.
-constexpr const char* MOCK_PROCESS_ENV = "BITCOIN_TEST_MOCK_PROCESS";
+constexpr const char* MOCK_PROCESS_ENV = "CONNECTCOIN_TEST_MOCK_PROCESS";
 
 const bool g_maybe_run_mock_dispatcher_before_main{[]() {
     const char* name = std::getenv(MOCK_PROCESS_ENV);

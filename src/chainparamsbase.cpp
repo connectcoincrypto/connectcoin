@@ -34,22 +34,22 @@ const CBaseChainParams& BaseParams()
 }
 
 /**
- * Port numbers for incoming Tor connections (8334, 18334, 38334, 48334, 18445) have
- * been chosen arbitrarily to keep ranges of used ports tight.
+ * ConnectCoin uses a provisional development port range until public assignments are finalized.
+ * The values were chosen arbitrarily to keep the used ports in a compact range.
  */
 std::unique_ptr<CBaseChainParams> CreateBaseChainParams(const ChainType chain)
 {
     switch (chain) {
     case ChainType::MAIN:
-        return std::make_unique<CBaseChainParams>("", 8332);
+        return std::make_unique<CBaseChainParams>("", 48172);
     case ChainType::TESTNET:
-        return std::make_unique<CBaseChainParams>("testnet3", 18332);
+        return std::make_unique<CBaseChainParams>("testnet3", 48175);
     case ChainType::TESTNET4:
-        return std::make_unique<CBaseChainParams>("testnet4", 48332);
+        return std::make_unique<CBaseChainParams>("testnet4", 48178);
     case ChainType::SIGNET:
-        return std::make_unique<CBaseChainParams>("signet", 38332);
+        return std::make_unique<CBaseChainParams>("signet", 48181);
     case ChainType::REGTEST:
-        return std::make_unique<CBaseChainParams>("regtest", 18443);
+        return std::make_unique<CBaseChainParams>("regtest", 48184);
     }
     assert(false);
 }

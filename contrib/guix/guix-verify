@@ -6,11 +6,17 @@ export LC_ALL=C.UTF-8
 set -o errexit -o pipefail
 
 # Source the common prelude, which:
-#   1. Checks if we're at the top directory of the Bitcoin Core repository
+#   1. Checks if we're at the top directory of the ConnectCoin Core repository
 #   2. Defines a few common functions and variables
 #
 # shellcheck source=libexec/prelude.bash
 source "$(dirname "${BASH_SOURCE[0]}")/libexec/prelude.bash"
+
+SIGNING_DISABLED_FILE="$(dirname "${BASH_SOURCE[0]}")/connectcoin-signing-disabled"
+if [[ -f "${SIGNING_DISABLED_FILE}" ]]; then
+    cat "${SIGNING_DISABLED_FILE}" >&2
+    exit 1
+fi
 
 
 ###################
@@ -31,11 +37,11 @@ cmd_usage() {
 cat <<EOF
 Synopsis:
 
-    env GUIX_SIGS_REPO=<path/to/guix.sigs> [ SIGNER=<signer> ] ./contrib/guix/guix-verify
+    env GUIX_SIGS_REPO=<path/to/connectcoin-attestations> [ SIGNER=<signer> ] ./contrib/guix/guix-verify
 
-Example overriding signer's manifest to use as base
+Example overriding the authorized signer's manifest to use as base
 
-    env GUIX_SIGS_REPO=/home/dongcarl/guix.sigs SIGNER=achow101 ./contrib/guix/guix-verify
+    env GUIX_SIGS_REPO=/path/to/connectcoin-attestations SIGNER=<authorized-signer> ./contrib/guix/guix-verify
 
 EOF
 }
@@ -55,8 +61,8 @@ ERR: The specified GUIX_SIGS_REPO is not an existent directory:
 
     '$GUIX_SIGS_REPO'
 
-Hint: Please clone the guix.sigs repository and point to it with the
-      GUIX_SIGS_REPO environment variable.
+Hint: Clone the future project-owned ConnectCoin attestation repository and
+      point to it with the GUIX_SIGS_REPO environment variable.
 
 EOF
 cmd_usage

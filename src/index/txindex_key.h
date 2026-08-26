@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_INDEX_TXINDEX_KEY_H
-#define BITCOIN_INDEX_TXINDEX_KEY_H
+#ifndef CONNECTCOIN_INDEX_TXINDEX_KEY_H
+#define CONNECTCOIN_INDEX_TXINDEX_KEY_H
 
 #include <consensus/consensus.h>
 #include <crypto/siphash.h>
@@ -125,4 +125,4 @@ inline std::pair<uint8_t, uint256> LegacyTxKey(const Txid& txid)
 
 } // namespace txindex
 
-#endif // BITCOIN_INDEX_TXINDEX_KEY_H
+#endif // CONNECTCOIN_INDEX_TXINDEX_KEY_H

@@ -4,88 +4,87 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 import argparse
-import io
+import ipaddress
 import requests
 import subprocess
-import sys
-import xml.etree.ElementTree
+import time
+from urllib.parse import urlparse
 
-DEFAULT_GLOBAL_FAUCET = 'https://signetfaucet.com/claim'
-DEFAULT_GLOBAL_CAPTCHA = 'https://signetfaucet.com/captcha'
-GLOBAL_FIRST_BLOCK_HASH = '00000086d6b2636cb2a392d45edc4ec544a10024d30141c9adf4bfd9de533b53'
+CONNECT_TIMEOUT = 5
+READ_TIMEOUT = 15
+TOTAL_RESPONSE_TIMEOUT = 30
+MAX_RESPONSE_BYTES = 256 * 1024
 
-# braille unicode block
-BASE = 0x2800
-BIT_PER_PIXEL = [
-    [0x01, 0x08],
-    [0x02, 0x10],
-    [0x04, 0x20],
-    [0x40, 0x80],
-]
-BW = 2
-BH = 4
-
-# imagemagick or compatible fork (used for converting SVG)
-CONVERT = 'convert'
-
-class PPMImage:
-    '''
-    Load a PPM image (Pillow-ish API).
-    '''
-    def __init__(self, f):
-        if f.readline() != b'P6\n':
-            raise ValueError('Invalid ppm format: header')
-        line = f.readline()
-        (width, height) = (int(x) for x in line.rstrip().split(b' '))
-        if f.readline() != b'255\n':
-            raise ValueError('Invalid ppm format: color depth')
-        data = f.read(width * height * 3)
-        stride = width * 3
-        self.size = (width, height)
-        self._grid = [[tuple(data[stride * y + 3 * x:stride * y + 3 * (x + 1)]) for x in range(width)] for y in range(height)]
-
-    def getpixel(self, pos):
-        return self._grid[pos[1]][pos[0]]
-
-def print_image(img, threshold=128):
-    '''Print black-and-white image to terminal in braille unicode characters.'''
-    x_blocks = (img.size[0] + BW - 1) // BW
-    y_blocks = (img.size[1] + BH - 1) // BH
-
-    for yb in range(y_blocks):
-        line = []
-        for xb in range(x_blocks):
-            ch = BASE
-            for y in range(BH):
-                for x in range(BW):
-                    try:
-                        val = img.getpixel((xb * BW + x, yb * BH + y))
-                    except IndexError:
-                        pass
-                    else:
-                        if val[0] < threshold:
-                            ch |= BIT_PER_PIXEL[y][x]
-            line.append(chr(ch))
-        print(''.join(line))
-
-parser = argparse.ArgumentParser(description='Script to get coins from a faucet.', epilog='You may need to start with double-dash (--) when providing bitcoin-cli arguments.')
-parser.add_argument('-c', '--cmd', dest='cmd', default='bitcoin-cli', help='bitcoin-cli command to use')
-parser.add_argument('-f', '--faucet', dest='faucet', default=DEFAULT_GLOBAL_FAUCET, help='URL of the faucet')
-parser.add_argument('-g', '--captcha', dest='captcha', default=DEFAULT_GLOBAL_CAPTCHA, help='URL of the faucet captcha, or empty if no captcha is needed')
-parser.add_argument('-a', '--addr', dest='addr', default='', help='Bitcoin address to which the faucet should send')
+parser = argparse.ArgumentParser(
+    description='Script to get coins from an explicitly selected ConnectCoin-compatible faucet.',
+    epilog='No public ConnectCoin faucet is configured. Use regtest for local testing. You may need to start with double-dash (--) when providing connectcoin-cli arguments.',
+)
+parser.add_argument('-c', '--cmd', dest='cmd', default='connectcoin-cli', help='connectcoin-cli command to use')
+parser.add_argument('-f', '--faucet', dest='faucet', required=True, help='HTTPS URL of a ConnectCoin-compatible faucet')
+parser.add_argument('-a', '--addr', dest='addr', default='', help='ConnectCoin address to which the faucet should send')
 parser.add_argument('-p', '--password', dest='password', default='', help='Faucet password, if any')
 parser.add_argument('-n', '--amount', dest='amount', default='0.001', help='Amount to request (0.001-0.1, default is 0.001)')
-parser.add_argument('-i', '--imagemagick', dest='imagemagick', default=CONVERT, help='Path to imagemagick convert utility')
-parser.add_argument('bitcoin_cli_args', nargs='*', help='Arguments to pass on to bitcoin-cli (default: -signet)')
+parser.add_argument('--allow-insecure-localhost', action='store_true', help='Allow an HTTP faucet only on localhost or a loopback IP (development only)')
+parser.add_argument('connectcoin_cli_args', nargs='*', help='Arguments to pass on to connectcoin-cli (default: -signet)')
 
 args = parser.parse_args()
 
-if args.bitcoin_cli_args == []:
-    args.bitcoin_cli_args = ['-signet']
+if args.connectcoin_cli_args == []:
+    args.connectcoin_cli_args = ['-signet']
 
 
-def bitcoin_cli(rpc_command_and_params):
-    argv = [args.cmd] + args.bitcoin_cli_args + rpc_command_and_params
+def is_loopback_host(hostname):
+    if hostname.casefold() == 'localhost':
+        return True
+    try:
+        return ipaddress.ip_address(hostname).is_loopback
+    except ValueError:
+        return False
+
+
+def validate_faucet_url(url):
+    try:
+        parsed = urlparse(url)
+        hostname = parsed.hostname
+    except ValueError as e:
+        raise SystemExit(f'Invalid faucet URL: {e}')
+    if not hostname or parsed.username is not None or parsed.password is not None:
+        raise SystemExit('The faucet must be a URL without embedded credentials.')
+    if parsed.scheme == 'https':
+        return
+    if parsed.scheme == 'http' and args.allow_insecure_localhost and is_loopback_host(hostname):
+        return
+    raise SystemExit('The faucet must use HTTPS. For a local development faucet only, use an HTTP loopback URL together with --allow-insecure-localhost.')
+
+
+def read_limited_response(response):
+    content_length = response.headers.get('content-length')
+    if content_length is not None:
+        try:
+            if int(content_length) > MAX_RESPONSE_BYTES:
+                raise SystemExit(f'Faucet response exceeds the {MAX_RESPONSE_BYTES}-byte limit.')
+        except ValueError:
+            pass
+
+    chunks = []
+    size = 0
+    deadline = time.monotonic() + TOTAL_RESPONSE_TIMEOUT
+    for chunk in response.iter_content(chunk_size=16 * 1024):
+        if time.monotonic() > deadline:
+            raise SystemExit(f'Faucet response exceeded the {TOTAL_RESPONSE_TIMEOUT}-second total timeout.')
+        size += len(chunk)
+        if size > MAX_RESPONSE_BYTES:
+            raise SystemExit(f'Faucet response exceeds the {MAX_RESPONSE_BYTES}-byte limit.')
+        chunks.append(chunk)
+    body = b''.join(chunks)
+    try:
+        return body.decode(response.encoding or 'utf-8', errors='replace')
+    except LookupError:
+        return body.decode('utf-8', errors='replace')
+
+
+def connectcoin_cli(rpc_command_and_params):
+    argv = [args.cmd] + args.connectcoin_cli_args + rpc_command_and_params
     try:
         return subprocess.check_output(argv).strip().decode()
     except FileNotFoundError:
@@ -95,64 +94,39 @@ def bitcoin_cli(rpc_command_and_params):
         raise SystemExit(f"-----\nError while calling {cmdline} (see output above).")
 
 
-if args.faucet.lower() == DEFAULT_GLOBAL_FAUCET:
-    # Get the hash of the block at height 1 of the currently active signet chain
-    curr_signet_hash = bitcoin_cli(['getblockhash', '1'])
-    if curr_signet_hash != GLOBAL_FIRST_BLOCK_HASH:
-        raise SystemExit('The global faucet cannot be used with a custom Signet network. Please use the global signet or setup your custom faucet to use this functionality.\n')
-else:
-    # For custom faucets, don't request captcha by default.
-    if args.captcha == DEFAULT_GLOBAL_CAPTCHA:
-        args.captcha = ''
+validate_faucet_url(args.faucet)
 
 if args.addr == '':
     # get address for receiving coins
-    args.addr = bitcoin_cli(['getnewaddress', 'faucet', 'bech32'])
+    args.addr = connectcoin_cli(['getnewaddress', 'faucet', 'bech32'])
 
 data = {'address': args.addr, 'password': args.password, 'amount': args.amount}
-
-# Store cookies
-# for debugging: print(session.cookies.get_dict())
 session = requests.Session()
 
-if args.captcha != '': # Retrieve a captcha
-    try:
-        res = session.get(args.captcha)
-        res.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        raise SystemExit(f"Unexpected error when contacting faucet: {e}")
-
-    # Size limitation
-    svg = xml.etree.ElementTree.fromstring(res.content)
-    if svg.attrib.get('width') != '150' or svg.attrib.get('height') != '50':
-        raise SystemExit("Captcha size doesn't match expected dimensions 150x50")
-
-    # Convert SVG image to PPM, and load it
-    try:
-        rv = subprocess.run([args.imagemagick, 'svg:-', '-depth', '8', 'ppm:-'], input=res.content, check=True, capture_output=True)
-    except FileNotFoundError:
-        raise SystemExit(f"The binary {args.imagemagick} could not be found. Please make sure ImageMagick (or a compatible fork) is installed and that the correct path is specified.")
-
-    img = PPMImage(io.BytesIO(rv.stdout))
-
-    # Terminal interaction
-    print_image(img)
-    print(f"Captcha from URL {args.captcha}")
-    data['captcha'] = input('Enter captcha: ')
-
 try:
-    res = session.post(args.faucet, data=data)
-except Exception:
-    raise SystemExit(f"Unexpected error when contacting faucet: {sys.exc_info()[0]}")
+    res = session.post(
+        args.faucet,
+        data=data,
+        allow_redirects=False,
+        stream=True,
+        timeout=(CONNECT_TIMEOUT, READ_TIMEOUT),
+    )
+    if 300 <= res.status_code < 400:
+        raise SystemExit('Faucet redirects are disabled; provide the final HTTPS endpoint explicitly.')
+    response_text = read_limited_response(res)
+except requests.exceptions.RequestException as e:
+    raise SystemExit(f'Unexpected error when contacting faucet: {e}')
+finally:
+    if 'res' in locals():
+        res.close()
 
 # Display the output as per the returned status code
-if res:
-    # When the return code is in between 200 and 400 i.e. successful
-    print(res.text)
+if res.ok:
+    print(response_text)
 elif res.status_code == 404:
     print('The specified faucet URL does not exist. Please check for any server issues/typo.')
 elif res.status_code == 429:
-    print('The script does not allow for repeated transactions as the global faucet is rate-limited to 1 request/IP/day. You can access the faucet website to get more coins manually')
+    print('The selected faucet rate-limited this request. Check that service\'s policy before trying again.')
 else:
-    print(f'Returned Error Code {res.status_code}\n{res.text}\n')
+    print(f'Returned Error Code {res.status_code}\n{response_text}\n')
     print('Please check the provided arguments for their validity and/or any possible typo.')

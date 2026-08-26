@@ -2,10 +2,10 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_BITCOIN_H
-#define BITCOIN_QT_BITCOIN_H
+#ifndef CONNECTCOIN_QT_BITCOIN_H
+#define CONNECTCOIN_QT_BITCOIN_H
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <interfaces/node.h>
 #include <qt/initexecutor.h>
@@ -30,7 +30,7 @@ class Init;
 } // namespace interfaces
 
 
-/** Main Bitcoin application object */
+/** Main ConnectCoin application object */
 class BitcoinApplication: public QApplication
 {
     Q_OBJECT
@@ -109,4 +109,4 @@ private:
 
 int GuiMain(int argc, char* argv[]);
 
-#endif // BITCOIN_QT_BITCOIN_H
+#endif // CONNECTCOIN_QT_BITCOIN_H

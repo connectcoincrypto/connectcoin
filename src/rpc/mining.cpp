@@ -3,7 +3,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <interfaces/mining.h>
 
@@ -254,7 +254,7 @@ static RPCMethod generatetodescriptor()
         "Mine to a specified descriptor and return the block hashes.",
         {
             {"num_blocks", RPCArg::Type::NUM, RPCArg::Optional::NO, "How many blocks are generated."},
-            {"descriptor", RPCArg::Type::STR, RPCArg::Optional::NO, "The descriptor to send the newly generated bitcoin to."},
+            {"descriptor", RPCArg::Type::STR, RPCArg::Optional::NO, "The descriptor to send the newly generated ConnectCoin to."},
             {"maxtries", RPCArg::Type::NUM, RPCArg::Default{DEFAULT_MAX_TRIES}, "How many iterations to try."},
         },
         RPCResult{
@@ -298,7 +298,7 @@ static RPCMethod generatetoaddress()
         "Mine to a specified address and return the block hashes.",
          {
              {"nblocks", RPCArg::Type::NUM, RPCArg::Optional::NO, "How many blocks are generated."},
-             {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The address to send the newly generated bitcoin to."},
+             {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The address to send the newly generated ConnectCoin to."},
              {"maxtries", RPCArg::Type::NUM, RPCArg::Default{DEFAULT_MAX_TRIES}, "How many iterations to try."},
          },
          RPCResult{
@@ -309,7 +309,7 @@ static RPCMethod generatetoaddress()
          RPCExamples{
             "\nGenerate 11 blocks to myaddress\n"
             + HelpExampleCli("generatetoaddress", "11 \"myaddress\"")
-            + "If you are using the " CLIENT_NAME " wallet, you can get a new address to send the newly generated bitcoin to with:\n"
+            + "If you are using the " CLIENT_NAME " wallet, you can get a new address to send the newly generated ConnectCoin to with:\n"
             + HelpExampleCli("getnewaddress", "")
                 },
         [](const RPCMethod& self, const JSONRPCRequest& request) -> UniValue
@@ -339,7 +339,7 @@ static RPCMethod generateblock()
         "Mine a set of ordered transactions to a specified address or descriptor and return the block hash.\n"
         "Transaction fees are not collected in the block reward.",
         {
-            {"output", RPCArg::Type::STR, RPCArg::Optional::NO, "The address or descriptor to send the newly generated bitcoin to."},
+            {"output", RPCArg::Type::STR, RPCArg::Optional::NO, "The address or descriptor to send the newly generated ConnectCoin to."},
             {"transactions", RPCArg::Type::ARR, RPCArg::Optional::NO, "An array of hex strings which are either txids or raw transactions.\n"
                 "Txids must reference transactions currently in the mempool.\n"
                 "All transactions must be valid and in valid order, otherwise the block will be rejected.",
@@ -528,7 +528,7 @@ static RPCMethod getmininginfo()
 }
 
 
-// NOTE: Unlike wallet RPC (which use BTC values), mining RPCs follow GBT (BIP 22) in using satoshi amounts
+// NOTE: Unlike wallet RPC (which use CC values), mining RPCs follow GBT (BIP 22) in using base-unit amounts (connects).
 static RPCMethod prioritisetransaction()
 {
     return RPCMethod{"prioritisetransaction",
@@ -538,7 +538,7 @@ static RPCMethod prioritisetransaction()
                     {"dummy", RPCArg::Type::NUM, RPCArg::Optional::OMITTED, "API-Compatibility for previous API. Must be zero or null.\n"
             "                  DEPRECATED. For forward compatibility use named arguments and omit this parameter.",
                         RPCArgOptions{.placeholder = true}},
-                    {"fee_delta", RPCArg::Type::NUM, RPCArg::Optional::NO, "The fee value (in satoshis) to add (or subtract, if negative).\n"
+                    {"fee_delta", RPCArg::Type::NUM, RPCArg::Optional::NO, "The fee value (in connects) to add (or subtract, if negative).\n"
             "                  Note, that this value is not a fee rate. It is a value to modify absolute fee of the TX.\n"
             "                  The fee is not actually paid, only the algorithm for selecting transactions into a block\n"
             "                  considers the transaction as it would have paid a higher (or lower) fee."},
@@ -584,9 +584,9 @@ static RPCMethod getprioritisedtransactions()
             RPCResult::Type::OBJ_DYN, "", "prioritisation keyed by txid",
             {
                 {RPCResult::Type::OBJ, "<transactionid>", "", {
-                    {RPCResult::Type::NUM, "fee_delta", "transaction fee delta in satoshis"},
+                    {RPCResult::Type::NUM, "fee_delta", "transaction fee delta in connects"},
                     {RPCResult::Type::BOOL, "in_mempool", "whether this transaction is currently in mempool"},
-                    {RPCResult::Type::NUM, "modified_fee", /*optional=*/true, "modified fee in satoshis. Only returned if in_mempool=true"},
+                    {RPCResult::Type::NUM, "modified_fee", /*optional=*/true, "modified fee in connects. Only returned if in_mempool=true"},
                 }}
             },
         },
@@ -703,7 +703,7 @@ static RPCMethod getblocktemplate()
                         {
                             {RPCResult::Type::NUM, "", "transactions before this one (by 1-based index in 'transactions' list) that must be present in the final block if this one is"},
                         }},
-                        {RPCResult::Type::NUM, "fee", "difference in value between transaction inputs and outputs (in satoshis); for coinbase transactions, this is a negative Number of the total collected block fees (ie, not including the block subsidy); if key is not present, fee is unknown and clients MUST NOT assume there isn't one"},
+                        {RPCResult::Type::NUM, "fee", "difference in value between transaction inputs and outputs (in connects); for coinbase transactions, this is a negative Number of the total collected block fees (ie, not including the block subsidy); if key is not present, fee is unknown and clients MUST NOT assume there isn't one"},
                         {RPCResult::Type::NUM, "sigops", "total SigOps cost, as counted for purposes of block limits; if key is not present, sigop cost is unknown and clients MUST NOT assume it is zero"},
                         {RPCResult::Type::NUM, "weight", "total transaction weight, as counted for purposes of block limits"},
                     }},
@@ -712,7 +712,7 @@ static RPCMethod getblocktemplate()
                 {
                     {RPCResult::Type::STR_HEX, "key", "values must be in the coinbase (keys may be ignored)"},
                 }},
-                {RPCResult::Type::NUM, "coinbasevalue", "maximum allowable input to coinbase transaction, including the generation award and transaction fees (in satoshis)"},
+                {RPCResult::Type::NUM, "coinbasevalue", "maximum allowable input to coinbase transaction, including the generation award and transaction fees (in connects)"},
                 {RPCResult::Type::STR, "longpollid", "an id to include with a request to longpoll on an update to this template"},
                 {RPCResult::Type::STR, "target", "The hash target"},
                 {RPCResult::Type::NUM_TIME, "mintime", "The minimum timestamp appropriate for the next block time, expressed in " + UNIX_EPOCH_TIME + ". Adjusted for the proposed BIP94 timewarp rule."},
@@ -822,7 +822,7 @@ static RPCMethod getblocktemplate()
          * On mainnet the mempool changes frequently enough that in practice this RPC
          * returns after 60 seconds, or sooner if the best block changes.
          *
-         * getblocktemplate is unlikely to be called by bitcoin-cli, so
+         * getblocktemplate is unlikely to be called by connectcoin-cli, so
          * -rpcclienttimeout is not a concern. BIP22 recommends a long request timeout.
          *
          * The longpollid is assumed to be a tip hash if it has the right format.

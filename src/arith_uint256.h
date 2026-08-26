@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_ARITH_UINT256_H
-#define BITCOIN_ARITH_UINT256_H
+#ifndef CONNECTCOIN_ARITH_UINT256_H
+#define CONNECTCOIN_ARITH_UINT256_H
 
 #include <compare>
 #include <cstdint>
@@ -269,4 +269,4 @@ arith_uint256 UintToArith256(const uint256 &);
 
 extern template class base_uint<256>;
 
-#endif // BITCOIN_ARITH_UINT256_H
+#endif // CONNECTCOIN_ARITH_UINT256_H

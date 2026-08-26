@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <chainparamsbase.h>
 #include <clientversion.h>
@@ -108,17 +108,17 @@ static int AppInitRawTx(int argc, char* argv[])
 
     if (argc < 2 || HelpRequested(gArgs) || gArgs.GetBoolArg("-version", false)) {
         // First part of help message is specific to this utility
-        std::string strUsage = CLIENT_NAME " bitcoin-tx utility version " + FormatFullVersion() + "\n";
+        std::string strUsage = CLIENT_NAME " connectcoin-tx utility version " + FormatFullVersion() + "\n";
 
         if (gArgs.GetBoolArg("-version", false)) {
             strUsage += FormatParagraph(LicenseInfo());
         } else {
             strUsage += "\n"
-                "The bitcoin-tx tool is used for creating and modifying bitcoin transactions.\n\n"
-                "bitcoin-tx can be used with \"<hex-tx> [commands]\" to update a hex-encoded bitcoin transaction, or with \"-create [commands]\" to create a hex-encoded bitcoin transaction.\n"
+                "The connectcoin-tx tool is used for creating and modifying ConnectCoin transactions.\n\n"
+                "connectcoin-tx can be used with \"<hex-tx> [commands]\" to update a hex-encoded ConnectCoin transaction, or with \"-create [commands]\" to create a hex-encoded ConnectCoin transaction.\n"
                 "\n"
-                "Usage: bitcoin-tx [options] <hex-tx> [commands]\n"
-                "or:    bitcoin-tx [options] -create [commands]\n"
+                "Usage: connectcoin-tx [options] <hex-tx> [commands]\n"
+                "or:    connectcoin-tx [options] -create [commands]\n"
                 "\n";
             strUsage += gArgs.GetHelpMessage();
         }
@@ -812,7 +812,7 @@ static int CommandLineRawTx(int argc, char* argv[])
             if (argc < 2)
                 throw std::runtime_error("too few parameters");
 
-            // param: hex-encoded bitcoin transaction
+            // param: hex-encoded ConnectCoin transaction
             std::string strHexTx(argv[1]);
             if (strHexTx == "-")                 // "-" implies standard input
                 strHexTx = readStdin();

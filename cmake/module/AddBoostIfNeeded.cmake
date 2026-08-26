@@ -8,7 +8,7 @@ function(add_boost_if_needed)
         Boost. Therefore, a proper check will be appropriate here.
 
   Implementation notes:
-  Although only Boost headers are used to build Bitcoin Core,
+  Although only Boost headers are used to build ConnectCoin Core,
   we still leverage a standard CMake's approach to handle
   dependencies, i.e., the Boost::headers "library".
   A command target_link_libraries(target PRIVATE Boost::headers)
@@ -64,7 +64,7 @@ function(add_boost_if_needed)
 
   # Some package managers, such as vcpkg, vendor Boost.Test separately
   # from the rest of the headers, so we have to check for it individually.
-  if(BUILD_TESTS AND DEFINED VCPKG_TARGET_TRIPLET)
+  if((BUILD_TESTS OR BUILD_KERNEL_TEST) AND DEFINED VCPKG_TARGET_TRIPLET)
     find_package(boost_included_unit_test_framework ${Boost_VERSION} EXACT REQUIRED CONFIG)
   endif()
 

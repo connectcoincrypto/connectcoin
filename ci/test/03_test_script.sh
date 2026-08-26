@@ -82,9 +82,9 @@ fi
 
 # Make sure default datadir does not exist and is never read by creating a dummy file
 if [ "$CI_OS_NAME" == "macos" ]; then
-  echo > "${HOME}/Library/Application Support/Bitcoin"
+  echo > "${HOME}/Library/Application Support/ConnectCoin"
 else
-  echo > "${HOME}/.bitcoin"
+  echo > "${HOME}/.connectcoin"
 fi
 
 if [ -z "$NO_DEPENDS" ]; then
@@ -95,13 +95,9 @@ if [ -z "$NO_DEPENDS" ]; then
   fi
   bash -c "$SHELL_OPTS make $MAKEJOBS -C depends HOST=$HOST $DEP_OPTS LOG=1"
 fi
-if [ "$DOWNLOAD_PREVIOUS_RELEASES" = "true" ]; then
-  test/get_previous_releases.py --target-dir "$PREVIOUS_RELEASES_DIR"
-fi
-
-BITCOIN_CONFIG_ALL="-DCMAKE_COMPILE_WARNING_AS_ERROR=ON -DBUILD_BENCH=ON -DBUILD_FUZZ_BINARY=ON"
+CONNECTCOIN_CONFIG_ALL="-DCMAKE_COMPILE_WARNING_AS_ERROR=ON -DBUILD_BENCH=ON -DBUILD_FUZZ_BINARY=ON"
 if [ -z "$NO_DEPENDS" ]; then
-  BITCOIN_CONFIG_ALL="${BITCOIN_CONFIG_ALL} -DCMAKE_TOOLCHAIN_FILE=$DEPENDS_DIR/$HOST/toolchain.cmake"
+  CONNECTCOIN_CONFIG_ALL="${CONNECTCOIN_CONFIG_ALL} -DCMAKE_TOOLCHAIN_FILE=$DEPENDS_DIR/$HOST/toolchain.cmake"
 fi
 
 ccache --zero-stats
@@ -109,13 +105,13 @@ ccache --zero-stats
 # Folder where the build is done.
 BASE_BUILD_DIR=${BASE_BUILD_DIR:-$BASE_SCRATCH_DIR/build-$HOST}
 
-BITCOIN_CONFIG_ALL="$BITCOIN_CONFIG_ALL '-DCMAKE_INSTALL_PREFIX=$BASE_OUTDIR' -Werror=dev"
+CONNECTCOIN_CONFIG_ALL="$CONNECTCOIN_CONFIG_ALL '-DCMAKE_INSTALL_PREFIX=$BASE_OUTDIR' -Werror=dev"
 
 if [[ "${RUN_IWYU}" == true || "${RUN_TIDY}" == true ]]; then
-  BITCOIN_CONFIG_ALL="$BITCOIN_CONFIG_ALL -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+  CONNECTCOIN_CONFIG_ALL="$CONNECTCOIN_CONFIG_ALL -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 fi
 
-eval "CMAKE_ARGS=($BITCOIN_CONFIG_ALL $BITCOIN_CONFIG)"
+eval "CMAKE_ARGS=($CONNECTCOIN_CONFIG_ALL $CONNECTCOIN_CONFIG)"
 cmake -S "$BASE_ROOT_DIR" -B "$BASE_BUILD_DIR" "${CMAKE_ARGS[@]}" || (
   cd "${BASE_BUILD_DIR}"
   # shellcheck disable=SC2046
@@ -161,8 +157,6 @@ if calls:
         )
 '
 du -sh "${DEPENDS_DIR}"/*/
-du -sh "${PREVIOUS_RELEASES_DIR}"
-
 if [ -n "${CI_LIMIT_STACK_SIZE}" ]; then
   ulimit -s 512
 fi
@@ -181,8 +175,8 @@ if [ "$RUN_CHECK_DEPS" = "true" ]; then
 fi
 
 if [[ "$CI_OS_NAME" == "macos" && "${GOAL}" = "install deploy" ]]; then
-  unzip "${BASE_BUILD_DIR}/bitcoin-macos-app.zip" -d "${BASE_BUILD_DIR}/deploy"
-  if ! ( codesign --verify "${BASE_BUILD_DIR}/deploy/Bitcoin-Qt.app" ); then
+  unzip "${BASE_BUILD_DIR}/connectcoin-macos-app.zip" -d "${BASE_BUILD_DIR}/deploy"
+  if ! ( codesign --verify "${BASE_BUILD_DIR}/deploy/ConnectCoin-Qt.app" ); then
     echo "Codesigning failed."
     false
   fi
@@ -214,9 +208,9 @@ if [ "$RUN_FUNCTIONAL_TESTS" = "true" ]; then
 fi
 
 if [ "${RUN_TIDY}" = "true" ]; then
-  cmake -B /tidy-build -DLLVM_DIR=/usr/lib/llvm-"${TIDY_LLVM_V}"/cmake -DCMAKE_BUILD_TYPE=Release -S "${BASE_ROOT_DIR}"/contrib/devtools/bitcoin-tidy
+  cmake -B /tidy-build -DLLVM_DIR=/usr/lib/llvm-"${TIDY_LLVM_V}"/cmake -DCMAKE_BUILD_TYPE=Release -S "${BASE_ROOT_DIR}"/contrib/devtools/connectcoin-tidy
   cmake --build /tidy-build "$MAKEJOBS"
-  cmake --build /tidy-build --target bitcoin-tidy-tests "$MAKEJOBS"
+  cmake --build /tidy-build --target connectcoin-tidy-tests "$MAKEJOBS"
 
   set -eo pipefail
   # Filter out:
@@ -225,7 +219,7 @@ if [ "${RUN_TIDY}" = "true" ]; then
   mv tmp.json "${BASE_BUILD_DIR}/compile_commands.json"
 
   cd "${BASE_BUILD_DIR}/src/"
-  if ! ( run-clang-tidy-"${TIDY_LLVM_V}" -config-file="${BASE_ROOT_DIR}/src/.clang-tidy" -quiet -load="/tidy-build/libbitcoin-tidy.so" "${MAKEJOBS}" | tee tmp.tidy-out.txt ); then
+  if ! ( run-clang-tidy-"${TIDY_LLVM_V}" -config-file="${BASE_ROOT_DIR}/src/.clang-tidy" -quiet -load="/tidy-build/libconnectcoin-tidy.so" "${MAKEJOBS}" | tee tmp.tidy-out.txt ); then
     grep -C5 "error: " tmp.tidy-out.txt
     echo "^^^ ⚠️ Failure generated from clang-tidy"
     false
@@ -245,7 +239,7 @@ if [[ "${RUN_IWYU}" == true ]]; then
     {
       python3 "/include-what-you-use/iwyu_tool.py" \
              -p "${BASE_BUILD_DIR}" "${MAKEJOBS}" \
-             -- -Xiwyu --cxx17ns -Xiwyu --mapping_file="${BASE_ROOT_DIR}/contrib/devtools/iwyu/bitcoin.core.imp" \
+             -- -Xiwyu --cxx17ns -Xiwyu --mapping_file="${BASE_ROOT_DIR}/contrib/devtools/iwyu/connectcoin.core.imp" \
              -Xiwyu --max_line_length=160 \
              -Xiwyu --check_also='*/common/types\.h' \
              -Xiwyu --check_also='*/consensus/*\.h' \

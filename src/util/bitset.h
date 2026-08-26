@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UTIL_BITSET_H
-#define BITCOIN_UTIL_BITSET_H
+#ifndef CONNECTCOIN_UTIL_BITSET_H
+#define CONNECTCOIN_UTIL_BITSET_H
 
 #include <util/check.h>
 #include <util/overflow.h>
@@ -525,4 +525,4 @@ using BitSet = std::conditional_t<(BITS <= 32), bitset_detail::IntBitSet<uint32_
                std::conditional_t<(BITS <= std::numeric_limits<size_t>::digits), bitset_detail::IntBitSet<size_t>,
                bitset_detail::MultiIntBitSet<size_t, CeilDiv(BITS, size_t{std::numeric_limits<size_t>::digits})>>>;
 
-#endif // BITCOIN_UTIL_BITSET_H
+#endif // CONNECTCOIN_UTIL_BITSET_H

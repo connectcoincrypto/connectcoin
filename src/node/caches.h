@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_NODE_CACHES_H
-#define BITCOIN_NODE_CACHES_H
+#ifndef CONNECTCOIN_NODE_CACHES_H
+#define CONNECTCOIN_NODE_CACHES_H
 
 #include <kernel/caches.h>
 #include <util/byte_units.h>
@@ -39,4 +39,4 @@ constexpr bool ShouldWarnOversizedDbCache(uint64_t dbcache, uint64_t total_ram) 
 void LogOversizedDbCache(const ArgsManager& args) noexcept;
 } // namespace node
 
-#endif // BITCOIN_NODE_CACHES_H
+#endif // CONNECTCOIN_NODE_CACHES_H

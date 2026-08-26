@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CRYPTO_SIPHASH_H
-#define BITCOIN_CRYPTO_SIPHASH_H
+#ifndef CONNECTCOIN_CRYPTO_SIPHASH_H
+#define CONNECTCOIN_CRYPTO_SIPHASH_H
 
 #include <attributes.h>
 #include <uint256.h>
@@ -218,4 +218,4 @@ public:
     uint64_t operator()(const uint256& val, uint32_t extra) const noexcept;
 };
 
-#endif // BITCOIN_CRYPTO_SIPHASH_H
+#endif // CONNECTCOIN_CRYPTO_SIPHASH_H

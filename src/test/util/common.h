@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_TEST_UTIL_COMMON_H
-#define BITCOIN_TEST_UTIL_COMMON_H
+#ifndef CONNECTCOIN_TEST_UTIL_COMMON_H
+#define CONNECTCOIN_TEST_UTIL_COMMON_H
 
 #include <chrono>
 #include <optional>
@@ -59,4 +59,4 @@ inline std::ostream& operator<<(std::ostream& os, const T& obj)
 
 // @}
 
-#endif // BITCOIN_TEST_UTIL_COMMON_H
+#endif // CONNECTCOIN_TEST_UTIL_COMMON_H

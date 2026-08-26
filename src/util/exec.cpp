@@ -21,12 +21,9 @@
 #endif
 
 namespace util {
-int ExecVp(const char* file, char* const argv[])
+#ifdef WIN32
+static std::vector<const char*> EscapeWindowsArgs(char* const argv[], std::vector<std::string>& escaped_args)
 {
-#ifndef WIN32
-    return execvp(file, argv);
-#else
-    std::vector<std::string> escaped_args;
     for (char* const* arg_ptr{argv}; *arg_ptr; ++arg_ptr) {
         subprocess::util::quote_argument(std::string{*arg_ptr}, escaped_args.emplace_back(), /*force=*/false);
     }
@@ -35,9 +32,29 @@ int ExecVp(const char* file, char* const argv[])
     new_argv.reserve(escaped_args.size() + 1);
     for (const auto& s : escaped_args) new_argv.push_back(s.c_str());
     new_argv.push_back(nullptr);
+    return new_argv;
+}
+#endif
+
+int ExecVp(const char* file, char* const argv[])
+{
+#ifndef WIN32
+    return execvp(file, argv);
+#else
+    std::vector<std::string> escaped_args;
+    const auto new_argv{EscapeWindowsArgs(argv, escaped_args)};
     return _execvp(file, new_argv.data());
 #endif
 }
+
+#ifdef WIN32
+int SpawnVpWait(const char* file, char* const argv[])
+{
+    std::vector<std::string> escaped_args;
+    const auto new_argv{EscapeWindowsArgs(argv, escaped_args)};
+    return static_cast<int>(_spawnvp(_P_WAIT, file, new_argv.data()));
+}
+#endif
 
 fs::path GetExePath(std::string_view argv0)
 {

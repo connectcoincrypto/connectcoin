@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <qt/optionsmodel.h>
 
@@ -56,7 +56,8 @@ static const char* SettingName(OptionsModel::OptionID option)
     }
 }
 
-/** Call node.updateRwSetting() with Bitcoin 22.x workaround. */
+/** Call node.updateRwSetting() with an upstream Bitcoin Core 22.x
+ * compatibility workaround. */
 static void UpdateRwSetting(interfaces::Node& node, OptionsModel::OptionID option, const std::string& suffix, const common::SettingsValue& value)
 {
     if (value.isNum() &&
@@ -65,33 +66,35 @@ static void UpdateRwSetting(interfaces::Node& node, OptionsModel::OptionID optio
          option == OptionsModel::Prune ||
          option == OptionsModel::PruneSize)) {
         // Write certain old settings as strings, even though they are numbers,
-        // because Bitcoin 22.x releases try to read these specific settings as
+        // because upstream Bitcoin Core 22.x releases try to read these
+        // specific settings as
         // strings in addOverriddenOption() calls at startup, triggering
         // uncaught exceptions in UniValue::get_str(). These errors were fixed
         // in later releases by https://github.com/bitcoin/bitcoin/pull/24498.
         // If new numeric settings are added, they can be written as numbers
-        // instead of strings, because bitcoin 22.x will not try to read these.
+        // instead of strings, because upstream Bitcoin Core 22.x will not try
+        // to read these.
         node.updateRwSetting(SettingName(option) + suffix, value.getValStr());
     } else {
         node.updateRwSetting(SettingName(option) + suffix, value);
     }
 }
 
-//! Convert enabled/size values to bitcoin -prune setting.
+//! Convert enabled/size values to the ConnectCoin -prune setting.
 static common::SettingsValue PruneSetting(bool prune_enabled, int prune_size_gb)
 {
     assert(!prune_enabled || prune_size_gb >= 1); // PruneSizeGB and ParsePruneSizeGB never return less
     return prune_enabled ? PruneGBtoMiB(prune_size_gb) : 0;
 }
 
-//! Get pruning enabled value to show in GUI from bitcoin -prune setting.
+//! Get pruning enabled value to show in GUI from the ConnectCoin -prune setting.
 static bool PruneEnabled(const common::SettingsValue& prune_setting)
 {
     // -prune=1 setting is manual pruning mode, so disabled for purposes of the gui
     return SettingTo<int64_t>(prune_setting, 0) > 1;
 }
 
-//! Get pruning size value to show in GUI from bitcoin -prune setting. If
+//! Get pruning size value to show in GUI from the ConnectCoin -prune setting. If
 //! pruning is not enabled, just show default recommended pruning size (2GB).
 static int PruneSizeGB(const common::SettingsValue& prune_setting)
 {
@@ -187,15 +190,15 @@ bool OptionsModel::Init(bilingual_str& error)
     fMinimizeOnClose = settings.value("fMinimizeOnClose").toBool();
 
     // Display
-    if (!settings.contains("DisplayBitcoinUnit")) {
-        settings.setValue("DisplayBitcoinUnit", QVariant::fromValue(BitcoinUnit::BTC));
+    if (!settings.contains("DisplayConnectCoinUnit")) {
+        settings.setValue("DisplayConnectCoinUnit", QVariant::fromValue(BitcoinUnit::BTC));
     }
-    QVariant unit = settings.value("DisplayBitcoinUnit");
+    QVariant unit = settings.value("DisplayConnectCoinUnit");
     if (unit.canConvert<BitcoinUnit>()) {
         m_display_bitcoin_unit = unit.value<BitcoinUnit>();
     } else {
         m_display_bitcoin_unit = BitcoinUnit::BTC;
-        settings.setValue("DisplayBitcoinUnit", QVariant::fromValue(m_display_bitcoin_unit));
+        settings.setValue("DisplayConnectCoinUnit", QVariant::fromValue(m_display_bitcoin_unit));
     }
 
     if (!settings.contains("strThirdPartyTxUrls"))
@@ -358,7 +361,7 @@ void OptionsModel::SetPruneTargetGB(int prune_target_gb)
     node().forceSetting("prune", new_value);
 
     // Update settings.json if value configured in intro screen is different
-    // from saved value. Avoid writing settings.json if bitcoin.conf value
+    // from saved value. Avoid writing settings.json if connectcoin.conf value
     // doesn't need to be overridden.
     if (PruneEnabled(cur_value) != PruneEnabled(new_value) ||
         PruneSizeGB(cur_value) != PruneSizeGB(new_value)) {
@@ -698,7 +701,7 @@ void OptionsModel::setDisplayUnit(const QVariant& new_unit)
     if (new_unit.isNull() || new_unit.value<BitcoinUnit>() == m_display_bitcoin_unit) return;
     m_display_bitcoin_unit = new_unit.value<BitcoinUnit>();
     QSettings settings;
-    settings.setValue("DisplayBitcoinUnit", QVariant::fromValue(m_display_bitcoin_unit));
+    settings.setValue("DisplayConnectCoinUnit", QVariant::fromValue(m_display_bitcoin_unit));
     Q_EMIT displayUnitChanged(m_display_bitcoin_unit);
 }
 

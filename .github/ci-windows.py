@@ -104,27 +104,18 @@ def check_manifests(ci_type):
         return
 
     release_dir = Path.cwd() / "build" / "bin" / "Release"
-    manifest_path = release_dir / "bitcoind.manifest"
-    cmd_bitcoind_manifest = [
+    manifest_path = release_dir / "connectcoind.manifest"
+    cmd_connectcoind_manifest = [
         "mt.exe",
         "-nologo",
-        f"-inputresource:{release_dir / 'bitcoind.exe'}",
+        f"-inputresource:{release_dir / 'connectcoind.exe'}",
         f"-out:{manifest_path}",
     ]
-    run(cmd_bitcoind_manifest)
+    run(cmd_connectcoind_manifest)
     print(manifest_path.read_text())
 
-    skips = {  # Skip as they currently do not have manifests
-        "fuzz.exe",
-        "bench_bitcoin.exe",
-        "test_bitcoin-qt.exe",
-        "bitcoin-chainstate.exe",
-    }
     for entry in release_dir.iterdir():
         if entry.suffix.lower() != ".exe":
-            continue
-        if entry.name in skips:
-            print(f"Skipping {entry.name} (no manifest present)")
             continue
         print(f"Checking {entry.name}")
         cmd_check_manifest = [
@@ -165,14 +156,14 @@ def run_tests(ci_type):
     if ci_type == "standard":
         os.environ["DIR_UNIT_TEST_DATA"] = str(workspace / "unit_test_data")
         test_envs = {
-            "BITCOIN_BIN": "bitcoin.exe",
-            "BITCOIND": "bitcoind.exe",
-            "BITCOINCLI": "bitcoin-cli.exe",
-            "BITCOIN_BENCH": "bench_bitcoin.exe",
-            "BITCOINTX": "bitcoin-tx.exe",
-            "BITCOINUTIL": "bitcoin-util.exe",
-            "BITCOINWALLET": "bitcoin-wallet.exe",
-            "BITCOINCHAINSTATE": "bitcoin-chainstate.exe",
+            "CONNECTCOIN_BIN": "connectcoin.exe",
+            "CONNECTCOIND": "connectcoind.exe",
+            "CONNECTCOINCLI": "connectcoin-cli.exe",
+            "CONNECTCOIN_BENCH": "connectcoin-bench.exe",
+            "CONNECTCOINTX": "connectcoin-tx.exe",
+            "CONNECTCOINUTIL": "connectcoin-util.exe",
+            "CONNECTCOINWALLET": "connectcoin-wallet.exe",
+            "CONNECTCOINCHAINSTATE": "connectcoin-chainstate.exe",
         }
         for var, exe in test_envs.items():
             os.environ[var] = str(release_bin / exe)
@@ -203,7 +194,7 @@ def run_tests(ci_type):
         run(test_cmd)
 
     elif ci_type == "fuzz":
-        os.environ["BITCOINFUZZ"] = str(release_bin / "fuzz.exe")
+        os.environ["CONNECTCOINFUZZ"] = str(release_bin / "fuzz.exe")
         fuzz_cmd = [
             sys.executable,
             str(build_dir / "test" / "fuzz" / "test_runner.py"),

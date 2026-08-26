@@ -3,15 +3,15 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 //! @file common/types.h is a home for simple enum and struct type definitions
-//! that can be used internally by functions in the libbitcoin_common library,
+//! that can be used internally by functions in the libconnectcoin_common library,
 //! but also used externally by node, wallet, and GUI code.
 //!
 //! This file is intended to define only simple types that do not have external
 //! dependencies. More complicated types should be defined in dedicated header
 //! files.
 
-#ifndef BITCOIN_COMMON_TYPES_H
-#define BITCOIN_COMMON_TYPES_H
+#ifndef CONNECTCOIN_COMMON_TYPES_H
+#define CONNECTCOIN_COMMON_TYPES_H
 
 #include <optional>
 
@@ -52,4 +52,4 @@ struct PSBTFillOptions {
 
 } // namespace common
 
-#endif // BITCOIN_COMMON_TYPES_H
+#endif // CONNECTCOIN_COMMON_TYPES_H

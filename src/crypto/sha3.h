@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CRYPTO_SHA3_H
-#define BITCOIN_CRYPTO_SHA3_H
+#ifndef CONNECTCOIN_CRYPTO_SHA3_H
+#define CONNECTCOIN_CRYPTO_SHA3_H
 
 #include <cstdint>
 #include <cstdlib>
@@ -37,4 +37,4 @@ public:
     SHA3_256& Reset();
 };
 
-#endif // BITCOIN_CRYPTO_SHA3_H
+#endif // CONNECTCOIN_CRYPTO_SHA3_H

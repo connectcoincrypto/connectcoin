@@ -29,7 +29,7 @@ defaults:
 jobs:
   test-each-commit:
     name: 'test ancestor commits'
-    runs-on: ${{ github.repository == 'bitcoin/bitcoin' && 'warp-ubuntu-latest-x64-8x' || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
     env:
       TEST_RUNNER_PORT_MIN: "14000"  # Use a larger port range to avoid colliding with other CI services.
     if: github.event_name == 'pull_request' && github.event.pull_request.commits != 1
@@ -306,7 +306,7 @@ jobs:
   windows-cross:
     name: 'Windows-cross to x86_64, ${{ matrix.crt }}'
     needs: record-frozen-commit
-    runs-on: ${{ github.repository == 'bitcoin/bitcoin' && 'warp-ubuntu-latest-x64-4x' || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
     if: ${{ vars.SKIP_BRANCH_PUSH != 'true' || github.event_name == 'pull_request' }}
 
     strategy:
@@ -340,12 +340,12 @@ jobs:
         id: restore-cache
         uses: ./.github/actions/cache/restore
         with:
-          provider: ${{ github.repository == 'bitcoin/bitcoin' && 'warp' || 'gha' }}
+          provider: gha
 
       - name: Configure Docker
         uses: ./.github/actions/configure-docker
         with:
-          provider: ${{ github.repository == 'bitcoin/bitcoin' && 'warp' || 'gha' }}
+          provider: gha
 
       - name: CI script
         run: ./ci/test_run_all.sh
@@ -353,7 +353,7 @@ jobs:
       - name: Save caches
         uses: ./.github/actions/cache/save
         with:
-          provider: ${{ github.repository == 'bitcoin/bitcoin' && 'warp' || 'gha' }}
+          provider: gha
 
       - name: Upload built executables
         uses: actions/upload-artifact@v7
@@ -398,7 +398,7 @@ jobs:
         with:
           name: ${{ matrix.artifact-name }}-${{ github.run_id }}
 
-      - name: Run bitcoind.exe
+      - name: Run connectcoind.exe
         run: py -3 .github/ci-windows-cross.py print_version
 
       - *IMPORT_VS_ENV
@@ -425,7 +425,7 @@ jobs:
 
   ci-matrix:
     name: ${{ matrix.name }}
-    runs-on: ${{ github.repository == 'bitcoin/bitcoin' && matrix.warp-runner || matrix.fallback-runner }}
+    runs-on: ${{ matrix.fallback-runner }}
     if: ${{ vars.SKIP_BRANCH_PUSH != 'true' || github.event_name == 'pull_request' }}
     timeout-minutes: ${{ matrix.timeout-minutes }}
 
@@ -438,110 +438,86 @@ jobs:
       matrix:
         include:
           - name: 'iwyu'
-            warp-runner: 'warp-ubuntu-latest-x64-8x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_native_iwyu.sh'
 
           - name: '32 bit ARM'
-            warp-runner: 'ubuntu-24.04-arm' # Warp's Arm runners don't support 32-bit mode currently
             fallback-runner: 'ubuntu-24.04-arm'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_arm.sh'
-            provider: 'gha'
 
           - name: 'ASan + LSan + UBSan + integer'
-            warp-runner: 'warp-ubuntu-2404-x64-8x' # has to match container in ci/test/00_setup_env_native_asan.sh for tracing tools
             fallback-runner: 'ubuntu-24.04'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_native_asan.sh'
 
           - name: 'macOS-cross to arm64'
-            warp-runner: 'warp-ubuntu-latest-x64-4x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_mac_cross.sh'
 
           - name: 'macOS-cross to x86_64'
-            warp-runner: 'warp-ubuntu-latest-x64-4x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_mac_cross_intel.sh'
 
           - name: 'NetBSD Cross'
-            warp-runner: 'warp-ubuntu-latest-x64-8x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_netbsd_cross.sh'
 
           - name: 'FreeBSD Cross'
-            warp-runner: 'warp-ubuntu-latest-x64-8x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_freebsd_cross.sh'
 
           - name: 'OpenBSD Cross'
-            warp-runner: 'warp-ubuntu-latest-x64-8x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_openbsd_cross.sh'
 
           - name: 'No wallet'
-            warp-runner: 'warp-ubuntu-latest-x64-4x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_native_nowallet.sh'
 
           - name: 'i686, no IPC'
-            warp-runner: 'warp-ubuntu-latest-x64-8x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_i686_no_ipc.sh'
 
           - name: 'fuzzer,address,undefined,integer'
-            warp-runner: 'warp-ubuntu-latest-x64-16x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 240
             file-env: './ci/test/00_setup_env_native_fuzz.sh'
 
-          - name: 'previous releases'
-            warp-runner: 'warp-ubuntu-latest-x64-8x'
-            fallback-runner: 'ubuntu-latest'
-            timeout-minutes: 120
-            file-env: './ci/test/00_setup_env_native_previous_releases.sh'
-
           - name: 'Alpine (musl)'
-            warp-runner: 'warp-ubuntu-latest-x64-8x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_native_alpine_musl.sh'
 
           - name: 'tidy'
-            warp-runner: 'warp-ubuntu-latest-x64-8x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_native_tidy.sh'
 
           - name: 'TSan'
-            warp-runner: 'warp-ubuntu-latest-x64-8x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_native_tsan.sh'
 
           - name: 'MSan, fuzz'
-            warp-runner: 'warp-ubuntu-latest-x64-8x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 180
             file-env: './ci/test/00_setup_env_native_fuzz_with_msan.sh'
 
           - name: 'MSan'
-            warp-runner: 'warp-ubuntu-latest-x64-16x'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_native_msan.sh'
 
-          - name: 'riscv32 bare metal, static libbitcoin_consensus'
-            warp-runner: 'warp-ubuntu-latest-x64-8x'
+          - name: 'riscv32 bare metal, static libconnectcoin_consensus'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 120
             file-env: './ci/test/00_setup_env_riscv_bare_cross.sh'
@@ -558,15 +534,14 @@ jobs:
         id: restore-cache
         uses: ./.github/actions/cache/restore
         with:
-          provider: ${{ matrix.provider || (github.repository == 'bitcoin/bitcoin' && 'warp' || 'gha') }}
+          provider: gha
 
       - name: Configure Docker
         uses: ./.github/actions/configure-docker
         with:
-          provider: ${{ matrix.provider || (github.repository == 'bitcoin/bitcoin' && 'warp' || 'gha') }}
+          provider: gha
 
       - name: Clear unnecessary files
-        if: ${{ github.repository != 'bitcoin/bitcoin' || matrix.provider == 'gha' }} # Only needed on GHA runners
         uses: ./.github/actions/clear-files
 
       - name: Enable bpfcc script
@@ -586,15 +561,15 @@ jobs:
       - name: Save caches
         uses: ./.github/actions/cache/save
         with:
-          provider: ${{ matrix.provider || (github.repository == 'bitcoin/bitcoin' && 'warp' || 'gha') }}
+          provider: gha
 
   lint:
     name: 'lint'
-    runs-on: ${{ github.repository == 'bitcoin/bitcoin' && 'warp-ubuntu-latest-x64-2x' || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
     if: ${{ vars.SKIP_BRANCH_PUSH != 'true' || github.event_name == 'pull_request' }}
     timeout-minutes: 20
     env:
-      CONTAINER_NAME: "bitcoin-linter"
+      CONTAINER_NAME: "connectcoin-linter"
     steps:
       - *ANNOTATION_PR_NUMBER
 
@@ -607,7 +582,7 @@ jobs:
       - name: Configure Docker
         uses: ./.github/actions/configure-docker
         with:
-          provider: ${{ github.repository == 'bitcoin/bitcoin' && 'warp' || 'gha' }}
+          provider: gha
 
       - name: CI script
         run: |

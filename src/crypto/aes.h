@@ -4,8 +4,8 @@
 //
 // C++ wrapper around ctaes, a constant-time AES implementation
 
-#ifndef BITCOIN_CRYPTO_AES_H
-#define BITCOIN_CRYPTO_AES_H
+#ifndef CONNECTCOIN_CRYPTO_AES_H
+#define CONNECTCOIN_CRYPTO_AES_H
 
 #include <support/allocators/secure.h>
 extern "C" {
@@ -69,4 +69,4 @@ private:
     unsigned char *iv;
 };
 
-#endif // BITCOIN_CRYPTO_AES_H
+#endif // CONNECTCOIN_CRYPTO_AES_H

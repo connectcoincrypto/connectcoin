@@ -255,9 +255,9 @@ public:
 //
 // This also requires overriding the default minimal Qt platform:
 //
-//     QT_QPA_PLATFORM=xcb     build/bin/test_bitcoin-qt  # Linux
-//     QT_QPA_PLATFORM=windows build/bin/test_bitcoin-qt  # Windows
-//     QT_QPA_PLATFORM=cocoa   build/bin/test_bitcoin-qt  # macOS
+//     QT_QPA_PLATFORM=xcb     build/bin/connectcoin-test-qt  # Linux
+//     QT_QPA_PLATFORM=windows build/bin/connectcoin-test-qt  # Windows
+//     QT_QPA_PLATFORM=cocoa   build/bin/connectcoin-test-qt  # macOS
 void TestGUI(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet)
 {
     // Create widgets for sending coins and listing transactions.
@@ -325,7 +325,7 @@ void TestGUI(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet)
             QCOMPARE(receiveRequestDialog->QObject::findChild<QLabel*>("payment_header")->text(), QString("Payment information"));
             QCOMPARE(receiveRequestDialog->QObject::findChild<QLabel*>("uri_tag")->text(), QString("URI:"));
             QString uri = receiveRequestDialog->QObject::findChild<QLabel*>("uri_content")->text();
-            QCOMPARE(uri.count("bitcoin:"), 2);
+            QCOMPARE(uri.count("connectcoin:"), 2);
             QCOMPARE(receiveRequestDialog->QObject::findChild<QLabel*>("address_tag")->text(), QString("Address:"));
             QVERIFY(address.isEmpty());
             address = receiveRequestDialog->QObject::findChild<QLabel*>("address_content")->text();

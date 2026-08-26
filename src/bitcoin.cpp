@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <bitcoin-build-config.h> // IWYU pragma: keep
+#include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <clientversion.h>
 #include <common/args.h>
@@ -23,26 +23,26 @@ const TranslateFn G_TRANSLATION_FUN{nullptr};
 static constexpr auto HELP_USAGE = R"(Usage: %s [OPTIONS] COMMAND...
 
 Options:
-  -m, --multiprocess     Run multiprocess binaries bitcoin-node, bitcoin-gui.
-  -M, --monolithic       Run monolithic binaries bitcoind, bitcoin-qt. (Default behavior)
+  -m, --multiprocess     Run multiprocess binaries connectcoin-node, connectcoin-gui.
+  -M, --monolithic       Run monolithic binaries connectcoind, connectcoin-qt. (Default behavior)
   -v, --version          Show version information
   -h, --help             Show full help message
 
 Commands:
-  gui [ARGS]     Start GUI, equivalent to running 'bitcoin-qt [ARGS]' or 'bitcoin-gui [ARGS]'.
-  node [ARGS]    Start node, equivalent to running 'bitcoind [ARGS]' or 'bitcoin-node [ARGS]'.
-  rpc [ARGS]     Call RPC method, equivalent to running 'bitcoin-cli -named [ARGS]'.
-  wallet [ARGS]  Call wallet command, equivalent to running 'bitcoin-wallet [ARGS]'.
-  tx [ARGS]      Manipulate hex-encoded transactions, equivalent to running 'bitcoin-tx [ARGS]'.
+  gui [ARGS]     Start GUI, equivalent to running 'connectcoin-qt [ARGS]' or 'connectcoin-gui [ARGS]'.
+  node [ARGS]    Start node, equivalent to running 'connectcoind [ARGS]' or 'connectcoin-node [ARGS]'.
+  rpc [ARGS]     Call RPC method, equivalent to running 'connectcoin-cli -named [ARGS]'.
+  wallet [ARGS]  Call wallet command, equivalent to running 'connectcoin-wallet [ARGS]'.
+  tx [ARGS]      Manipulate hex-encoded transactions, equivalent to running 'connectcoin-tx [ARGS]'.
   help           Show full help message.
 )";
 
 static constexpr auto HELP_FULL = R"(
 Additional less commonly used commands:
-  bench [ARGS]      Run bench command, equivalent to running 'bench_bitcoin [ARGS]'.
-  chainstate [ARGS] Run bitcoin kernel chainstate util, equivalent to running 'bitcoin-chainstate [ARGS]'.
-  test [ARGS]       Run unit tests, equivalent to running 'test_bitcoin [ARGS]'.
-  test-gui [ARGS]   Run GUI unit tests, equivalent to running 'test_bitcoin-qt [ARGS]'.
+  bench [ARGS]      Run bench command, equivalent to running 'connectcoin-bench [ARGS]'.
+  chainstate [ARGS] Run ConnectCoin kernel chainstate util, equivalent to running 'connectcoin-chainstate [ARGS]'.
+  test [ARGS]       Run unit tests, equivalent to running 'connectcoin-test [ARGS]'.
+  test-gui [ARGS]   Run GUI unit tests, equivalent to running 'connectcoin-test-qt [ARGS]'.
 )";
 
 static constexpr auto HELP_SHORT = R"(
@@ -59,7 +59,7 @@ struct CommandLine {
 
 CommandLine ParseCommandLine(int argc, char* argv[]);
 bool UseMultiprocess(const CommandLine& cmd);
-static void ExecCommand(const std::vector<const char*>& args, std::string_view argv0);
+static int ExecCommand(const std::vector<const char*>& args, std::string_view argv0);
 
 int main(int argc, char* argv[])
 {
@@ -84,37 +84,37 @@ int main(int argc, char* argv[])
                 return EXIT_FAILURE;
             }
         } else if (cmd.command == "gui") {
-            args.emplace_back(UseMultiprocess(cmd) ? "bitcoin-gui" : "bitcoin-qt");
+            args.emplace_back(UseMultiprocess(cmd) ? "connectcoin-gui" : "connectcoin-qt");
         } else if (cmd.command == "node") {
-            args.emplace_back(UseMultiprocess(cmd) ? "bitcoin-node" : "bitcoind");
+            args.emplace_back(UseMultiprocess(cmd) ? "connectcoin-node" : "connectcoind");
         } else if (cmd.command == "rpc") {
-            args.emplace_back("bitcoin-cli");
-            // Since "bitcoin rpc" is a new interface that doesn't need to be
+            args.emplace_back("connectcoin-cli");
+            // Since "connectcoin rpc" is a new interface that doesn't need to be
             // backward compatible, enable -named by default so it is convenient
             // for callers to use a mix of named and unnamed parameters. Callers
             // can override this by specifying -nonamed, but it handles parameters
             // that contain '=' characters, so -nonamed should rarely be needed.
             args.emplace_back("-named");
         } else if (cmd.command == "wallet") {
-            args.emplace_back("bitcoin-wallet");
+            args.emplace_back("connectcoin-wallet");
         } else if (cmd.command == "tx") {
-            args.emplace_back("bitcoin-tx");
+            args.emplace_back("connectcoin-tx");
         } else if (cmd.command == "bench") {
-            args.emplace_back("bench_bitcoin");
+            args.emplace_back("connectcoin-bench");
         } else if (cmd.command == "chainstate") {
-            args.emplace_back("bitcoin-chainstate");
+            args.emplace_back("connectcoin-chainstate");
         } else if (cmd.command == "test") {
-            args.emplace_back("test_bitcoin");
+            args.emplace_back("connectcoin-test");
         } else if (cmd.command == "test-gui") {
-            args.emplace_back("test_bitcoin-qt");
+            args.emplace_back("connectcoin-test-qt");
         } else if (cmd.command == "util") {
-            args.emplace_back("bitcoin-util");
+            args.emplace_back("connectcoin-util");
         } else {
             throw std::runtime_error(strprintf("Unrecognized command: '%s'", cmd.command));
         }
         if (!args.empty()) {
             args.insert(args.end(), cmd.args.begin(), cmd.args.end());
-            ExecCommand(args, argv[0]);
+            return ExecCommand(args, argv[0]);
         }
     } catch (const std::exception& e) {
         tfm::format(std::cerr, "Error: %s\nTry '%s --help' for more information.\n", e.what(), argv[0]);
@@ -172,12 +172,12 @@ bool UseMultiprocess(const CommandLine& cmd)
     return args.IsArgSet("-ipcbind") || args.IsArgSet("-ipcconnect") || args.IsArgSet("-ipcfd");
 }
 
-//! Execute the specified bitcoind, bitcoin-qt or other command line in `args`
+//! Execute the specified connectcoind, connectcoin-qt, or other command line in `args`
 //! using src, bin and libexec directory paths relative to this executable, where
 //! the path to this executable is specified in `wrapper_argv0`.
 //!
 //! @param args Command line arguments to execute, where first argument should
-//!             be a relative path to a bitcoind, bitcoin-qt or other executable
+//!             be a relative path to a connectcoind, connectcoin-qt, or other executable
 //!             that will be located on the PATH or relative to wrapper_argv0.
 //!
 //! @param wrapper_argv0 String containing first command line argument passed to
@@ -188,23 +188,31 @@ bool UseMultiprocess(const CommandLine& cmd)
 //! @note This function doesn't currently print anything but can be debugged
 //! from the command line using strace or dtrace like:
 //!
-//!     strace -e trace=execve -s 10000 build/bin/bitcoin ...
+//!     strace -e trace=execve -s 10000 build/bin/connectcoin ...
 //!     dtrace -n 'proc:::exec-success  /pid == $target/ { trace(curpsinfo->pr_psargs); }' -c ...
-static void ExecCommand(const std::vector<const char*>& args, std::string_view wrapper_argv0)
+static int ExecCommand(const std::vector<const char*>& args, std::string_view wrapper_argv0)
 {
     // Construct argument string for execvp
     std::vector<const char*> exec_args{args};
     exec_args.emplace_back(nullptr);
 
     // Try to call ExecVp with given exe path.
-    auto try_exec = [&](fs::path exe_path, bool allow_notfound = true) {
+    auto try_exec = [&](fs::path exe_path, bool allow_notfound = true) -> std::optional<int> {
         std::string exe_path_str{fs::PathToString(exe_path)};
         exec_args[0] = exe_path_str.c_str();
+#ifdef WIN32
+        const int exit_code{util::SpawnVpWait(exec_args[0], (char*const*)exec_args.data())};
+        if (exit_code != -1) return exit_code;
+#else
         if (util::ExecVp(exec_args[0], (char*const*)exec_args.data()) == -1) {
-            if (allow_notfound && errno == ENOENT) return false;
+            if (allow_notfound && errno == ENOENT) return std::nullopt;
             throw std::system_error(errno, std::system_category(), strprintf("execvp failed to execute '%s'", exec_args[0]));
         }
         throw std::runtime_error("execvp returned unexpectedly");
+#endif
+        if (allow_notfound && errno == ENOENT) return std::nullopt;
+        throw std::system_error(errno, std::system_category(),
+                                strprintf("failed to execute '%s'", exec_args[0]));
     };
 
     // Get the wrapper executable path.
@@ -228,13 +236,22 @@ static void ExecCommand(const std::vector<const char*>& args, std::string_view w
 
     // If wrapper is installed in a bin/ directory, look for target executable
     // in libexec/
-    (wrapper_dir.filename() == "bin" && try_exec(wrapper_dir.parent_path() / "libexec" / arg0.filename())) ||
+    if (wrapper_dir.filename() == "bin") {
+        if (auto result{try_exec(wrapper_dir.parent_path() / "libexec" / arg0.filename())}) return *result;
+    }
 #ifdef WIN32
     // Otherwise check the "daemon" subdirectory in a windows install.
-    (!wrapper_dir.empty() && try_exec(wrapper_dir / "daemon" / arg0.filename())) ||
+    if (!wrapper_dir.empty()) {
+        if (auto result{try_exec(wrapper_dir / "daemon" / arg0.filename())}) return *result;
+    }
 #endif
     // Otherwise look for target executable next to current wrapper
-    (!wrapper_dir.empty() && try_exec(wrapper_dir / arg0.filename(), fallback_os_search)) ||
+    if (!wrapper_dir.empty()) {
+        if (auto result{try_exec(wrapper_dir / arg0.filename(), fallback_os_search)}) return *result;
+    }
     // Otherwise just look on the system path.
-    (fallback_os_search && try_exec(arg0.filename(), false));
+    if (fallback_os_search) return *try_exec(arg0.filename(), false);
+
+    throw std::system_error(std::make_error_code(std::errc::no_such_file_or_directory),
+                            strprintf("failed to locate executable '%s'", args[0]));
 }

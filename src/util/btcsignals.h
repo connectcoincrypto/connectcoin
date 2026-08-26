@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UTIL_BTCSIGNALS_H
-#define BITCOIN_UTIL_BTCSIGNALS_H
+#ifndef CONNECTCOIN_UTIL_BTCSIGNALS_H
+#define CONNECTCOIN_UTIL_BTCSIGNALS_H
 
 #include <sync.h>
 
@@ -258,4 +258,4 @@ public:
 
 } // namespace btcsignals
 
-#endif // BITCOIN_UTIL_BTCSIGNALS_H
+#endif // CONNECTCOIN_UTIL_BTCSIGNALS_H

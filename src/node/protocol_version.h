@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_NODE_PROTOCOL_VERSION_H
-#define BITCOIN_NODE_PROTOCOL_VERSION_H
+#ifndef CONNECTCOIN_NODE_PROTOCOL_VERSION_H
+#define CONNECTCOIN_NODE_PROTOCOL_VERSION_H
 
 /**
  * network protocol versioning
@@ -38,4 +38,4 @@ inline constexpr int WTXID_RELAY_VERSION = 70016;
 //! "feature" message type for feature negotiation starts with this version
 inline constexpr int FEATURE_VERSION = 70017;
 
-#endif // BITCOIN_NODE_PROTOCOL_VERSION_H
+#endif // CONNECTCOIN_NODE_PROTOCOL_VERSION_H

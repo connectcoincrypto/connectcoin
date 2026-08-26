@@ -6,7 +6,7 @@
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.address import (
-    ADDRESS_BCRT1_UNSPENDABLE_DESCRIPTOR,
+    ADDRESS_CCRT1_UNSPENDABLE_DESCRIPTOR,
 )
 from test_framework.util import (
     assert_equal,
@@ -28,7 +28,7 @@ class WalletBlankTest(BitcoinTestFramework):
         assert_equal(info["descriptors"], True)
         assert_equal(info["blank"], True)
         wallet.importdescriptors([{
-            "desc": ADDRESS_BCRT1_UNSPENDABLE_DESCRIPTOR,
+            "desc": ADDRESS_CCRT1_UNSPENDABLE_DESCRIPTOR,
             "timestamp": "now",
         }])
         assert_equal(wallet.getwalletinfo()["blank"], True)

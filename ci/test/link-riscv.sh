@@ -59,8 +59,8 @@ echo -e "#include <sys/stat.h>
     start.o \
     syscalls.o \
     -Wl,--whole-archive \
-    "${BASE_BUILD_DIR}"/lib/libbitcoin_consensus.a \
-    "${BASE_BUILD_DIR}"/lib/libbitcoin_crypto.a \
+    "${BASE_BUILD_DIR}"/lib/libconnectcoin_consensus.a \
+    "${BASE_BUILD_DIR}"/lib/libconnectcoin_crypto.a \
     "${BASE_BUILD_DIR}"/src/secp256k1/lib/libsecp256k1.a \
     -Wl,--no-whole-archive \
     "${LIBSTDCXX}" \

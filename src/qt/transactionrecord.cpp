@@ -54,7 +54,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const interface
 
             if (all_from_me) {
                 // Change is only really possible if we're the sender
-                // Otherwise, someone just sent bitcoins to a change address, which should be shown
+                // Otherwise, someone just sent ConnectCoin to a change address, which should be shown
                 if (wtx.txout_is_change[i]) {
                     continue;
                 }
@@ -68,7 +68,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const interface
 
                 if (!std::get_if<CNoDestination>(&wtx.txout_address[i]))
                 {
-                    // Sent to Bitcoin Address
+                    // Sent to ConnectCoin address
                     sub.type = TransactionRecord::SendToAddress;
                     sub.address = EncodeDestination(wtx.txout_address[i]);
                 }
@@ -103,7 +103,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const interface
                 sub.credit = txout.nValue;
                 if (wtx.txout_address_is_mine[i])
                 {
-                    // Received by Bitcoin Address
+                    // Received by ConnectCoin address
                     sub.type = TransactionRecord::RecvWithAddress;
                     sub.address = EncodeDestination(wtx.txout_address[i]);
                 }

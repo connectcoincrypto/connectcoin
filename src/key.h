@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_KEY_H
-#define BITCOIN_KEY_H
+#ifndef CONNECTCOIN_KEY_H
+#define CONNECTCOIN_KEY_H
 
 #include <pubkey.h>
 #include <script/keyorigin.h>
@@ -341,4 +341,4 @@ public:
     ~ECC_Context();
 };
 
-#endif // BITCOIN_KEY_H
+#endif // CONNECTCOIN_KEY_H

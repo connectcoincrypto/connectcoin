@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_IPC_TEST_FUZZ_IPC_FUZZ_H
-#define BITCOIN_IPC_TEST_FUZZ_IPC_FUZZ_H
+#ifndef CONNECTCOIN_IPC_TEST_FUZZ_IPC_FUZZ_H
+#define CONNECTCOIN_IPC_TEST_FUZZ_IPC_FUZZ_H
 
 #include <primitives/transaction.h>
 #include <script/script.h>
@@ -23,4 +23,4 @@ public:
     CTransactionRef passTransaction(CTransactionRef t) { return t; }
 };
 
-#endif // BITCOIN_IPC_TEST_FUZZ_IPC_FUZZ_H
+#endif // CONNECTCOIN_IPC_TEST_FUZZ_IPC_FUZZ_H

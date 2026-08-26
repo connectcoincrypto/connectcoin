@@ -6,8 +6,9 @@
 """
 
 import os
+import platform
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import BitcoinTestFramework, SkipTest
 
 
 def rename_and_link(*, from_name, to_name):
@@ -19,6 +20,10 @@ def rename_and_link(*, from_name, to_name):
 class SymlinkTest(BitcoinTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
+
+    def skip_test_if_missing_module(self):
+        if platform.system() == "Windows":
+            raise SkipTest("Directory symlink tests require Windows developer mode or elevated symlink privileges")
 
     def run_test(self):
         dir_new_blocks = self.nodes[0].chain_path / "new_blocks"

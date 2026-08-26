@@ -42,7 +42,9 @@ BOOST_AUTO_TEST_CASE(get_next_work_pow_limit)
     pindexLast.nHeight = 2015;
     pindexLast.nTime = 1233061996;  // Block #2015
     pindexLast.nBits = 0x1d00ffff;
-    unsigned int expected_nbits = 0x1d00ffffU;
+    // ConnectCoin's intentionally easier initial pow limit does not clamp
+    // this historical Bitcoin retarget calculation.
+    unsigned int expected_nbits = 0x1d01b304U;
     BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, nLastRetargetTime, chainParams->GetConsensus()), expected_nbits);
     BOOST_CHECK(PermittedDifficultyTransition(chainParams->GetConsensus(), pindexLast.nHeight+1, pindexLast.nBits, expected_nbits));
 }
@@ -164,6 +166,10 @@ void sanity_check_chainparams(const ArgsManager& args, ChainType chain_type)
 
     // hash genesis is correct
     BOOST_CHECK_EQUAL(consensus.hashGenesisBlock, chainParams->GenesisBlock().GetHash());
+
+    // ConnectCoin must not ship Bitcoin Core's generated peer snapshots. This
+    // can be relaxed only when project-owned fixed seeds have been reviewed.
+    BOOST_CHECK(chainParams->FixedSeeds().empty());
 
     // target timespan is an even multiple of spacing
     BOOST_CHECK_EQUAL(consensus.nPowTargetTimespan % consensus.nPowTargetSpacing, 0);

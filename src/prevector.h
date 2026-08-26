@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_PREVECTOR_H
-#define BITCOIN_PREVECTOR_H
+#ifndef CONNECTCOIN_PREVECTOR_H
+#define CONNECTCOIN_PREVECTOR_H
 
 #include <algorithm>
 #include <cassert>
@@ -470,4 +470,4 @@ public:
     }
 };
 
-#endif // BITCOIN_PREVECTOR_H
+#endif // CONNECTCOIN_PREVECTOR_H

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_INTERFACES_CHAIN_H
-#define BITCOIN_INTERFACES_CHAIN_H
+#ifndef CONNECTCOIN_INTERFACES_CHAIN_H
+#define CONNECTCOIN_INTERFACES_CHAIN_H
 
 #include <blockfilter.h>
 #include <common/settings.h>
@@ -96,7 +96,7 @@ using SettingsUpdate = std::function<std::optional<interfaces::SettingsAction>(c
 //! estimate fees, and submit transactions.
 //!
 //! TODO: Current chain methods are too low level, exposing too much of the
-//! internal workings of the bitcoin node, and not being very convenient to use.
+//! internal workings of the ConnectCoin node, and not being very convenient to use.
 //! Chain methods should be cleaned up and simplified over time. Examples:
 //!
 //! * The initMessages() and showProgress() methods which the wallet uses to send
@@ -427,4 +427,4 @@ std::unique_ptr<Chain> MakeChain(node::NodeContext& node);
 
 } // namespace interfaces
 
-#endif // BITCOIN_INTERFACES_CHAIN_H
+#endif // CONNECTCOIN_INTERFACES_CHAIN_H

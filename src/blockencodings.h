@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_BLOCKENCODINGS_H
-#define BITCOIN_BLOCKENCODINGS_H
+#ifndef CONNECTCOIN_BLOCKENCODINGS_H
+#define CONNECTCOIN_BLOCKENCODINGS_H
 
 #include <crypto/siphash.h>
 #include <primitives/block.h>
@@ -151,4 +151,4 @@ public:
     ReadStatus FillBlock(CBlock& block, const std::vector<CTransactionRef>& vtx_missing, bool segwit_active);
 };
 
-#endif // BITCOIN_BLOCKENCODINGS_H
+#endif // CONNECTCOIN_BLOCKENCODINGS_H

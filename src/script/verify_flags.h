@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SCRIPT_VERIFY_FLAGS_H
-#define BITCOIN_SCRIPT_VERIFY_FLAGS_H
+#ifndef CONNECTCOIN_SCRIPT_VERIFY_FLAGS_H
+#define CONNECTCOIN_SCRIPT_VERIFY_FLAGS_H
 
 #include <compare>
 #include <cstdint>
@@ -68,4 +68,4 @@ inline constexpr script_verify_flags operator|(script_verify_flag_name f1, scrip
     return script_verify_flags{f1} | f2;
 }
 
-#endif // BITCOIN_SCRIPT_VERIFY_FLAGS_H
+#endif // CONNECTCOIN_SCRIPT_VERIFY_FLAGS_H

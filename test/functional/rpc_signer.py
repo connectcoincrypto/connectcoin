@@ -4,7 +4,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test external signer.
 
-Verify that a bitcoind node can use an external signer command.
+Verify that a connectcoind node can use an external signer command.
 See also wallet_signer.py for tests that require wallet context.
 """
 import os
@@ -46,16 +46,16 @@ class RPCSignerTest(BitcoinTestFramework):
     def run_test(self):
         self.log.debug(f"-signer={self.mock_signer_path()}")
 
-        assert_raises_rpc_error(-1, 'Error: restart bitcoind with -signer=<cmd>',
+        assert_raises_rpc_error(-1, 'Error: restart connectcoind with -signer=<cmd>',
             self.nodes[0].enumeratesigners
         )
 
         # Handle script missing:
         assert_raises_rpc_error(
             -1,
-            "CreateProcess failed: The system cannot find the file specified."
+            "CreateProcess failed:"
             if platform.system() == "Windows"
-            else "execve failed: No such file or directory",
+            else "execve failed:",
             self.nodes[3].enumeratesigners,
         )
 

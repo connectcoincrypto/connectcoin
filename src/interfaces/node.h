@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_INTERFACES_NODE_H
-#define BITCOIN_INTERFACES_NODE_H
+#ifndef CONNECTCOIN_INTERFACES_NODE_H
+#define CONNECTCOIN_INTERFACES_NODE_H
 
 #include <common/settings.h>
 #include <consensus/amount.h>
@@ -66,7 +66,7 @@ public:
     virtual std::string getName() = 0;
 };
 
-//! Top-level interface for a bitcoin node (bitcoind process).
+//! Top-level interface for a ConnectCoin node (connectcoind process).
 class Node
 {
 public:
@@ -106,7 +106,7 @@ public:
     //! would be ignored because it is also specified in the command line.
     virtual bool isSettingIgnored(const std::string& name) = 0;
 
-    //! Return setting value from <datadir>/settings.json or bitcoin.conf.
+    //! Return setting value from <datadir>/settings.json or connectcoin.conf.
     virtual common::SettingsValue getPersistentSetting(const std::string& name) = 0;
 
     //! Update a setting in <datadir>/settings.json.
@@ -280,4 +280,4 @@ struct BlockTip {
 
 } // namespace interfaces
 
-#endif // BITCOIN_INTERFACES_NODE_H
+#endif // CONNECTCOIN_INTERFACES_NODE_H

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UTIL_LOG_H
-#define BITCOIN_UTIL_LOG_H
+#ifndef CONNECTCOIN_UTIL_LOG_H
+#define CONNECTCOIN_UTIL_LOG_H
 
 // This header works in tandem with `logging/categories.h`
 // to expose the complete logging interface.
@@ -143,4 +143,4 @@ using Level = util::log::Level;
 #define LogDebug(category, ...) detail_LogIfCategoryAndLevelEnabled(category, util::log::ShouldDebugLog, util::log::Level::Debug, __VA_ARGS__)
 #define LogTrace(category, ...) detail_LogIfCategoryAndLevelEnabled(category, util::log::ShouldTraceLog, util::log::Level::Trace, __VA_ARGS__)
 
-#endif // BITCOIN_UTIL_LOG_H
+#endif // CONNECTCOIN_UTIL_LOG_H

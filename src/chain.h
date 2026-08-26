@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CHAIN_H
-#define BITCOIN_CHAIN_H
+#ifndef CONNECTCOIN_CHAIN_H
+#define CONNECTCOIN_CHAIN_H
 
 #include <arith_uint256.h>
 #include <consensus/params.h>
@@ -452,4 +452,4 @@ CBlockLocator GetLocator(const CBlockIndex* index);
 /** Construct a list of hash entries to put in a locator.  */
 std::vector<uint256> LocatorEntries(const CBlockIndex* index);
 
-#endif // BITCOIN_CHAIN_H
+#endif // CONNECTCOIN_CHAIN_H

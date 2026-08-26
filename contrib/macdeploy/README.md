@@ -6,7 +6,7 @@ The `macdeployqtplus` script should not be run manually. Instead, after building
 make deploy
 ```
 
-When complete, it will have produced `Bitcoin-Core.zip`.
+When complete, it will have produced a `ConnectCoin-Qt` application archive.
 
 ## SDK Extraction
 
@@ -71,7 +71,9 @@ for the build process to remain somewhat deterministic. Here's how it works:
 - Builders use Guix to create an unsigned release. This outputs an unsigned ZIP which
   users may choose to bless, self-codesign, and run. It also outputs an unsigned app structure
   in the form of a tarball.
-- The Apple keyholder uses this unsigned app to create a detached signature, using the
-  included script. Detached signatures are available from this [repository](https://github.com/bitcoin-core/bitcoin-detached-sigs).
-- Builders feed the unsigned app + detached signature back into Guix, which combines the
-  pieces into a deterministic ZIP.
+- After ConnectCoin establishes a project-owned Apple identity and release
+  policy, its authorized keyholder can use the included script to create a
+  detached signature. The script currently refuses to run while
+  `connectcoin-signing-disabled` exists.
+- Future release builders can feed the unsigned app and an authenticated
+  detached signature back into Guix to produce a deterministic ZIP.

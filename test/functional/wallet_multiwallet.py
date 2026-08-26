@@ -4,7 +4,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test multiwallet.
 
-Verify that a bitcoind node can load multiple wallet files
+Verify that a connectcoind node can load multiple wallet files
 """
 from threading import Thread
 import os
@@ -125,10 +125,9 @@ class MultiWalletTest(BitcoinTestFramework):
         self.log.info("Test mixed wallets")
         # create symlink to verify wallet directory path can be referenced
         # through symlink
-        os.mkdir(wallet_dir(node, 'w7'))
-        os.symlink('w7', wallet_dir(node, 'w7_symlink'))
-
         if self.check_symlinks:
+            os.mkdir(wallet_dir(node, 'w7'))
+            os.symlink('w7', wallet_dir(node, 'w7_symlink'))
             os.symlink('..', wallet_dir(node, 'recursive_dir_symlink'))
 
         # rename wallet.dat to make sure plain wallet file paths (as opposed to
@@ -156,9 +155,12 @@ class MultiWalletTest(BitcoinTestFramework):
         #   w7_symlink - to verify symlinked wallet path is initialized correctly
         #   w8         - to verify existing wallet file is loaded correctly. Not tested for SQLite wallets as this is a deprecated BDB behavior.
         #   ''         - to verify default wallet file is created correctly
-        to_create = ['w1', 'w2', 'w3', 'w', 'sub/w5', 'w7_symlink']
+        to_create = ['w1', 'w2', 'w3', 'w', 'sub/w5']
+        if self.check_symlinks:
+            to_create.append('w7_symlink')
         in_wallet_dir = [w.replace('/', os.path.sep) for w in to_create]  # Wallets in the wallet dir
-        in_wallet_dir.append('w7')  # w7 is not loaded or created, but will be listed by listwalletdir because w7_symlink
+        if self.check_symlinks:
+            in_wallet_dir.append('w7')  # w7 is not loaded or created, but will be listed by listwalletdir because w7_symlink
         to_create.append(os.path.join(self.options.tmpdir, 'extern/w6'))  # External, not in the wallet dir, so we need to avoid adding it to in_wallet_dir
         to_load = [self.default_wallet_name]
         wallet_names = to_create + to_load  # Wallet names loaded in the wallet

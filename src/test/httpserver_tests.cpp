@@ -22,7 +22,7 @@ using http_bitcoin::MAX_BODY_SIZE;
 using http_bitcoin::MAX_HEADERS_SIZE;
 using util::LineReader;
 
-// HTTP request captured from bitcoin-cli
+// HTTP request captured from connectcoin-cli
 constexpr std::string_view full_request = "POST / HTTP/1.1\r\n"
                                           "Host: 127.0.0.1\r\n"
                                           "Connection: close\r\n"
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE(http_headers_tests)
                                           "\r\n");
     }
     {
-        // Reading request headers captured from bitcoin-cli
+        // Reading request headers captured from connectcoin-cli
         constexpr std::string_view bitcoin_cli_headers = "Host: 127.0.0.1\r\n"
                                                          "Connection: close\r\n"
                                                          "Content-Type: application/json\r\n"

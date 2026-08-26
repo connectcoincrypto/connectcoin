@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_COMMON_RUN_COMMAND_H
-#define BITCOIN_COMMON_RUN_COMMAND_H
+#ifndef CONNECTCOIN_COMMON_RUN_COMMAND_H
+#define CONNECTCOIN_COMMON_RUN_COMMAND_H
 
 #include <string>
 #include <vector>
@@ -19,4 +19,4 @@ class UniValue;
  */
 UniValue RunCommandParseJSON(const std::vector<std::string>& cmd_args, const std::string& str_std_in = "");
 
-#endif // BITCOIN_COMMON_RUN_COMMAND_H
+#endif // CONNECTCOIN_COMMON_RUN_COMMAND_H

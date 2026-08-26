@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_ADDRESSTYPE_H
-#define BITCOIN_ADDRESSTYPE_H
+#ifndef CONNECTCOIN_ADDRESSTYPE_H
+#define CONNECTCOIN_ADDRESSTYPE_H
 
 #include <attributes.h>
 #include <pubkey.h>
@@ -138,7 +138,7 @@ struct PayToAnchor : public WitnessUnknown
  *  * WitnessV1Taproot: TxoutType::WITNESS_V1_TAPROOT destination (P2TR address)
  *  * PayToAnchor: TxoutType::ANCHOR destination (P2A address)
  *  * WitnessUnknown: TxoutType::WITNESS_UNKNOWN destination (P2W??? address)
- *  A CTxDestination is the internal data type encoded in a bitcoin address
+ *  A CTxDestination is the internal data type encoded in a ConnectCoin address
  */
 using CTxDestination = std::variant<CNoDestination, PubKeyDestination, PKHash, ScriptHash, WitnessV0ScriptHash, WitnessV0KeyHash, WitnessV1Taproot, PayToAnchor, WitnessUnknown>;
 
@@ -164,4 +164,4 @@ bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet)
  */
 CScript GetScriptForDestination(const CTxDestination& dest);
 
-#endif // BITCOIN_ADDRESSTYPE_H
+#endif // CONNECTCOIN_ADDRESSTYPE_H

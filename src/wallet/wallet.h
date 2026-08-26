@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_WALLET_WALLET_H
-#define BITCOIN_WALLET_WALLET_H
+#ifndef CONNECTCOIN_WALLET_WALLET_H
+#define CONNECTCOIN_WALLET_WALLET_H
 
 #include <addresstype.h>
 #include <consensus/amount.h>
@@ -135,9 +135,9 @@ inline constexpr bool DEFAULT_DISABLE_WALLET = false;
 inline constexpr bool DEFAULT_WALLETCROSSCHAIN = false;
 //! -maxtxfee default
 inline constexpr CAmount DEFAULT_TRANSACTION_MAXFEE{COIN / 10};
-//! Discourage users to set fees higher than this amount (in satoshis) per kB
+//! Discourage users from setting fees higher than this amount (in connects) per kB.
 inline constexpr CAmount HIGH_TX_FEE_PER_KB{COIN / 100};
-//! -maxtxfee will warn if called with a higher fee than this amount (in satoshis)
+//! -maxtxfee will warn if called with a higher fee than this amount (in connects).
 inline constexpr CAmount HIGH_MAX_TX_FEE{100 * HIGH_TX_FEE_PER_KB};
 //! Pre-calculated constants for input size estimation in *virtual size*
 inline constexpr size_t DUMMY_NESTED_P2WPKH_INPUT_SIZE = 91;
@@ -538,7 +538,7 @@ public:
      *
      * Preconditions: it is only valid to call this function when the wallet is
      * online and the block index is loaded. So this cannot be called by
-     * bitcoin-wallet tool code or by wallet migration code. If this is called
+     * connectcoin-wallet tool code or by wallet migration code. If this is called
      * without the wallet being online, it won't be able able to determine the
      * the height of the last block processed, or the heights of blocks
      * referenced in transaction, and might cause assert failures.
@@ -746,7 +746,7 @@ public:
      * CWallet::TransactionChangeType for details).
      */
     std::optional<OutputType> m_default_change_type{};
-    /** Absolute maximum transaction fee (in satoshis) used by default for the wallet */
+    /** Absolute maximum transaction fee (in connects) used by default for the wallet. */
     CAmount m_default_max_tx_fee{DEFAULT_TRANSACTION_MAXFEE};
 
     /** Number of pre-generated keys/scripts by each spkm (part of the look-ahead process, used to detect payments) */
@@ -1178,4 +1178,4 @@ struct MigrationResult {
 util::Result<fs::path> GetWalletPath(const std::string& name);
 } // namespace wallet
 
-#endif // BITCOIN_WALLET_WALLET_H
+#endif // CONNECTCOIN_WALLET_WALLET_H

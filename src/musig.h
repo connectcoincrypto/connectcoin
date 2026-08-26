@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_MUSIG_H
-#define BITCOIN_MUSIG_H
+#ifndef CONNECTCOIN_MUSIG_H
+#define CONNECTCOIN_MUSIG_H
 
 #include <pubkey.h>
 
@@ -67,4 +67,4 @@ std::vector<uint8_t> CreateMuSig2Nonce(MuSig2SecNonce& secnonce, const uint256& 
 std::optional<uint256> CreateMuSig2PartialSig(const uint256& hash, const CKey& our_seckey, const CPubKey& aggregate_pubkey, const std::vector<CPubKey>& pubkeys, const std::map<CPubKey, std::vector<uint8_t>>& pubnonces, MuSig2SecNonce& secnonce, const std::vector<std::pair<uint256, bool>>& tweaks);
 std::optional<std::vector<uint8_t>> CreateMuSig2AggregateSig(const std::vector<CPubKey>& participants, const CPubKey& aggregate_pubkey, const std::vector<std::pair<uint256, bool>>& tweaks, const uint256& sighash, const std::map<CPubKey, std::vector<uint8_t>>& pubnonces, const std::map<CPubKey, uint256>& partial_sigs);
 
-#endif // BITCOIN_MUSIG_H
+#endif // CONNECTCOIN_MUSIG_H

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_RPC_SERVER_UTIL_H
-#define BITCOIN_RPC_SERVER_UTIL_H
+#ifndef CONNECTCOIN_RPC_SERVER_UTIL_H
+#define CONNECTCOIN_RPC_SERVER_UTIL_H
 
 #include <any>
 
@@ -45,4 +45,4 @@ AddrMan& EnsureAnyAddrman(const std::any& context);
 /** Return an empty block index on top of the tip, with height, time and nBits set */
 void NextEmptyBlockIndex(CBlockIndex& tip, const Consensus::Params& consensusParams, CBlockIndex& next_index);
 
-#endif // BITCOIN_RPC_SERVER_UTIL_H
+#endif // CONNECTCOIN_RPC_SERVER_UTIL_H
