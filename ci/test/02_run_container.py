@@ -79,6 +79,10 @@ def main():
             time.sleep(3)
             run(cmd_build)
 
+        if os.getenv("CI_PRUNE_BUILDX_AFTER_IMAGE"):
+            print("Prune BuildKit cache after loading the CI image")
+            run(["docker", "buildx", "prune", "--all", "--force"])
+
         for suffix in ["ccache", "depends", "depends_sources"]:
             run(["docker", "volume", "create", f"{os.environ['CONTAINER_NAME']}_{suffix}"], check=False)
 

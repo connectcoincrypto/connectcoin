@@ -152,6 +152,10 @@ void initialize()
         MakeNoLogFileContext<HeadersSyncSetup>(ChainType::MAIN,
                                                {
                                                    .setup_validation_interface = false,
+                                                   // ConnectCoin is a new chain and intentionally has no
+                                                   // accumulated-work checkpoint yet. This target needs a
+                                                   // high test-only threshold to exercise headers presync.
+                                                   .minimum_chain_work = ~arith_uint256{0},
                                                }),
     };
     g_testing_setup = setup.get();

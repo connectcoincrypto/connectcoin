@@ -181,7 +181,7 @@ void IpcSocketTest(const fs::path& datadir)
     // Need to specify explicit socket addresses outside the data directory, because the data
     // directory path is so long that the default socket address and any other
     // addresses in the data directory would fail with errors like:
-    //   Address 'unix' path '"/tmp/test_common ConnectCoin/ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff/connectcoin-test.sock"' exceeded maximum socket path length
+    //   Address 'unix' path '"/tmp/test_common ConnectCoin/ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff/test.sock"' exceeded maximum socket path length
     std::vector<std::string> addresses{
         strprintf("unix:%s", TempPath("bitcoin_sock0_XXXXXX")),
         strprintf("unix:%s", TempPath("bitcoin_sock1_XXXXXX")),
@@ -221,8 +221,9 @@ BOOST_AUTO_TEST_CASE(parse_address_test)
         BOOST_CHECK_EQUAL(address, expect_address);
     }};
     std::string prefix{fs::PathToString(datadir / "")};
-    check_address("unix", "unix:" + prefix + "connectcoin-test.sock", "");
-    check_address("unix:", "unix:" + prefix + "connectcoin-test.sock", "");
+    // The canonical socket name omits the project prefix, matching ParseAddress().
+    check_address("unix", "unix:" + prefix + "test.sock", "");
+    check_address("unix:", "unix:" + prefix + "test.sock", "");
     check_address("unix:path.sock", "unix:" + prefix + "path.sock", "");
     check_address("unix:0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.sock",
                   "unix:" + prefix + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.sock",

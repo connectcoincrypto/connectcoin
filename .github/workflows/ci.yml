@@ -324,6 +324,7 @@ jobs:
     env:
       FILE_ENV: ${{ matrix.file-env }}
       DANGER_CI_ON_HOST_FOLDERS: 1
+      CI_PRUNE_BUILDX_AFTER_IMAGE: 1
 
     steps:
       - *ANNOTATION_PR_NUMBER

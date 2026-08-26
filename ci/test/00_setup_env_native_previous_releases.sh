@@ -9,4 +9,4 @@ export LC_ALL=C
 printf '%s\n' \
   'Previous-release CI is disabled until ConnectCoin publishes project-owned release binaries and checksums.' \
   >&2
-return 1 2>/dev/null || exit 1
+exit 1

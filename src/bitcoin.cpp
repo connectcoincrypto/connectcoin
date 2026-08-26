@@ -203,6 +203,9 @@ static int ExecCommand(const std::vector<const char*>& args, std::string_view wr
 #ifdef WIN32
         const int exit_code{util::SpawnVpWait(exec_args[0], (char*const*)exec_args.data())};
         if (exit_code != -1) return exit_code;
+        if (allow_notfound && errno == ENOENT) return std::nullopt;
+        throw std::system_error(errno, std::system_category(),
+                                strprintf("failed to execute '%s'", exec_args[0]));
 #else
         if (util::ExecVp(exec_args[0], (char*const*)exec_args.data()) == -1) {
             if (allow_notfound && errno == ENOENT) return std::nullopt;
@@ -210,9 +213,6 @@ static int ExecCommand(const std::vector<const char*>& args, std::string_view wr
         }
         throw std::runtime_error("execvp returned unexpectedly");
 #endif
-        if (allow_notfound && errno == ENOENT) return std::nullopt;
-        throw std::system_error(errno, std::system_category(),
-                                strprintf("failed to execute '%s'", exec_args[0]));
     };
 
     // Get the wrapper executable path.

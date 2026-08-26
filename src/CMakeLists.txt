@@ -300,6 +300,13 @@ if(WITH_EMBEDDED_ASMAP)
   target_raw_data_sources(connectcoin_node NAMESPACE node::data
     node/data/ip_asn.dat
   )
+  # connectcoin_node is excluded from the default build when no node consumer is
+  # enabled. Keep its generated ASMap header in the global codegen target so
+  # source-analysis jobs can compile every entry in compile_commands.json.
+  add_custom_target(generate_embedded_asmap ALL
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/node/data/ip_asn.dat.h
+  )
+  add_dependencies(connectcoin_node generate_embedded_asmap)
 endif()
 
 # ConnectCoin wrapper executable that can call other executables.

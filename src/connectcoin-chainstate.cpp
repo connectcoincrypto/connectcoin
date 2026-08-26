@@ -11,6 +11,8 @@
 //
 // It is part of the libconnectcoinkernel project.
 
+#include <connectcoin-build-config.h> // IWYU pragma: keep
+
 #include <kernel/connectcoinkernel_wrapper.h>
 
 #include <clientversion.h>
