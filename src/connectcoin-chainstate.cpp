@@ -15,7 +15,7 @@
 
 #include <kernel/connectcoinkernel_wrapper.h>
 
-#include <clientversion.h>
+#include <clientversion_build.h>
 
 #include <cassert>
 #include <charconv>
@@ -168,7 +168,7 @@ int main(int argc, char* argv[])
             return 0;
         }
         if (option == "-version" || option == "--version") {
-            std::cout << CLIENT_NAME << " connectcoin-chainstate utility version " << FormatFullVersion() << std::endl;
+            std::cout << CLIENT_NAME << " connectcoin-chainstate utility version " << clientversion::BuildDescription() << std::endl;
             return 0;
         }
     }

@@ -1,2 +1,2 @@
-src/clientversion.cpp export-subst
+src/clientversion_build.h export-subst
 src/CMakeLists.txt export-subst

@@ -426,11 +426,11 @@ if(BUILD_KERNEL_LIB)
     add_executable(connectcoin-chainstate
       connectcoin-chainstate.cpp
     )
+    add_dependencies(connectcoin-chainstate generate_build_info)
     add_windows_application_manifest(connectcoin-chainstate)
     target_link_libraries(connectcoin-chainstate
       PRIVATE
         core_interface
-        connectcoin_clientversion
         connectcoinkernel
     )
     install_binary_component(connectcoin-chainstate INTERNAL)
