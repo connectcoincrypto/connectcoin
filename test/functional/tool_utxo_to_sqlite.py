@@ -121,6 +121,10 @@ class UtxoToSqliteTest(BitcoinTestFramework):
         input_filename = os.path.join(self.options.tmpdir, "utxos.dat")
         node.dumptxoutset(input_filename, "latest")
 
+        # The index is built asynchronously and can still be catching up on
+        # slower systems after the test has finished mining its blocks.
+        self.wait_until(lambda: node.getindexinfo()['coinstatsindex']['synced'])
+
         for i, (txid_format, spk_format) in enumerate(product(["hex", "raw", "rawle"], ["hex", "raw"])):
             self.log.info(f'Test utxo-to-sqlite script using txid format "{txid_format}" and spk format "{spk_format}" ({i+1})')
             self.log.info('-> Convert UTXO set from compact-serialized format to sqlite format')
