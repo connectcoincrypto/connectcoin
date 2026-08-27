@@ -198,6 +198,14 @@ static int ExecCommand(const std::vector<const char*>& args, std::string_view wr
 
     // Try to call ExecVp with given exe path.
     auto try_exec = [&](fs::path exe_path, bool allow_notfound = true) -> std::optional<int> {
+#ifdef WIN32
+        // Avoid depending on CRT-specific _spawnvp behavior. In particular,
+        // MSVCRT can report ENOEXEC instead of ENOENT for a missing extensionless
+        // path, which would prevent trying the next candidate location.
+        if (!exe_path.has_extension()) exe_path += ".exe";
+        std::error_code ec;
+        if (allow_notfound && !fs::is_regular_file(exe_path, ec)) return std::nullopt;
+#endif
         std::string exe_path_str{fs::PathToString(exe_path)};
         exec_args[0] = exe_path_str.c_str();
 #ifdef WIN32
