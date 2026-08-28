@@ -12,13 +12,16 @@ import os
 from test_framework.blockfilter import REGTEST_GENESIS_BASIC_FILTER_FALSE_POSITIVE
 from test_framework.blocktools import (
     MIN_BLOCKS_TO_KEEP,
+    add_witness_commitment,
     create_block,
     create_coinbase,
 )
-from test_framework.script import (
-    CScript,
-    OP_NOP,
-    OP_RETURN,
+from test_framework.messages import (
+    COutPoint,
+    CTransaction,
+    CTxIn,
+    CTxInWitness,
+    CTxOut,
 )
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
@@ -33,10 +36,14 @@ from test_framework.util import (
 # compatible with pruning based on key creation time.
 TIMESTAMP_WINDOW = 2 * 60 * 60
 
-def mine_large_blocks(node, n):
-    # Make a large scriptPubKey for the coinbase transaction. This is OP_RETURN
-    # followed by 950k of OP_NOP. This would be non-standard in a non-coinbase
-    # transaction but is consensus valid.
+def mine_large_blocks(nodes, n):
+    # ConnectCoin has no raw Script output, so create large, unique children of
+    # the genesis block instead of padding the active-chain coinbase. Keeping
+    # every padding block at height 1 prevents it from competing in any reorg.
+    # They fill block files but are never connected, avoiding changes to the
+    # UTXO set. A witness-padded transaction keeps each block near the
+    # historical 950 kB size without constructing thousands of P2PK outputs.
+    padding_witness_size = 949_700
 
     # Set the nTime if this is the first time this function has been called.
     # A static variable ensures that time is monotonicly increasing and is therefore
@@ -45,22 +52,53 @@ def mine_large_blocks(node, n):
         mine_large_blocks.nTime = 0
 
     # Get the block parameters for the first block
-    big_script = CScript([OP_RETURN] + [OP_NOP] * 950000)
-    best_block = node.getblock(node.getbestblockhash())
+    miner = nodes[0]
+    best_block = miner.getblock(miner.getbestblockhash())
     height = int(best_block["height"]) + 1
     mine_large_blocks.nTime = max(mine_large_blocks.nTime, int(best_block["time"])) + 1
     previousblockhash = int(best_block["hash"], 16)
+    padding_parent_hash = int(miner.getblockhash(0), 16)
 
+    padding_hashes = []
     for _ in range(n):
-        block = create_block(hashprev=previousblockhash, ntime=mine_large_blocks.nTime, coinbase=create_coinbase(height, script_pubkey=big_script))
+        padding_coinbase = create_coinbase(1)
+        padding_tx = CTransaction()
+        padding_tx.vin = [CTxIn(COutPoint(mine_large_blocks.nTime, 0))]
+        padding_tx.vout = [CTxOut(0, padding_coinbase.vout[0].scriptPubKey)]
+        padding_tx.wit.vtxinwit = [CTxInWitness()]
+        padding_tx.wit.vtxinwit[0].scriptWitness.stack = [b"\x00" * padding_witness_size]
+        padding_block = create_block(
+            hashprev=padding_parent_hash,
+            ntime=mine_large_blocks.nTime,
+            coinbase=padding_coinbase,
+            txlist=[padding_tx],
+        )
+        add_witness_commitment(padding_block)
+        padding_block.solve()
+        padding_hex = padding_block.serialize().hex()
+        padding_hashes.append(padding_block.hash_hex)
+        for node in nodes:
+            result = node.submitblock(padding_hex)
+            assert result in [None, "duplicate", "inconclusive"], result
+            block_info = node.getblock(padding_block.hash_hex)
+            assert_equal(block_info["size"], len(padding_hex) // 2)
+            assert_equal(block_info["confirmations"], -1)
+
+        block = create_block(hashprev=previousblockhash, ntime=mine_large_blocks.nTime, coinbase=create_coinbase(height))
         block.solve()
 
-        # Submit to the node
-        node.submitblock(block.serialize().hex())
+        # Submit directly because connected peers can race block relay, while
+        # stale padding blocks are not synchronized as part of the active chain.
+        block_hex = block.serialize().hex()
+        for node in nodes:
+            result = node.submitblock(block_hex)
+            assert result in [None, "duplicate"], result
 
         previousblockhash = block.hash_int
         height += 1
         mine_large_blocks.nTime += 1
+
+    return padding_hashes
 
 def calc_usage(blockdir):
     return sum(os.path.getsize(blockdir + f) for f in os.listdir(blockdir) if os.path.isfile(os.path.join(blockdir, f))) / (1024. * 1024.)
@@ -108,9 +146,10 @@ class PruneTest(BitcoinTestFramework):
         # Start by creating some coinbases we can spend later
         self.generate(self.nodes[1], 200, sync_fun=lambda: self.sync_blocks(self.nodes[0:2]))
         self.generate(self.nodes[0], 150, sync_fun=self.no_op)
+        self.sync_blocks(self.nodes[0:5])
 
         # Then mine enough full blocks to create more than 550MiB of data
-        mine_large_blocks(self.nodes[0], 645)
+        self.initial_padding_hashes = mine_large_blocks(self.nodes[0:5], 645)
 
         self.sync_blocks(self.nodes[0:5])
 
@@ -143,7 +182,7 @@ class PruneTest(BitcoinTestFramework):
         self.log.info(f"Though we're already using more than 550MiB, current usage: {calc_usage(self.prunedir)}")
         self.log.info("Mining 25 more blocks should cause the first block file to be pruned")
         # Pruning doesn't run until we're allocating another chunk, 20 full blocks past the height cutoff will ensure this
-        mine_large_blocks(self.nodes[0], 25)
+        mine_large_blocks(self.nodes[0:3], 25)
 
         # Wait for blk00000.dat to be pruned
         self.wait_until(lambda: not os.path.isfile(os.path.join(self.prunedir, "blk00000.dat")), timeout=30)
@@ -163,10 +202,10 @@ class PruneTest(BitcoinTestFramework):
             self.disconnect_nodes(0, 1)
             self.disconnect_nodes(0, 2)
             # Mine 24 blocks in node 1
-            mine_large_blocks(self.nodes[1], 24)
+            mine_large_blocks(self.nodes[1:3], 24)
 
             # Reorg back with 25 block chain from node 0
-            mine_large_blocks(self.nodes[0], 25)
+            mine_large_blocks([self.nodes[0]], 25)
 
             # Create connections in the order so both nodes can see the reorg at the same time
             self.connect_nodes(0, 1)
@@ -215,7 +254,7 @@ class PruneTest(BitcoinTestFramework):
 
         self.log.info("Mine 220 more large blocks so we have requisite history")
 
-        mine_large_blocks(self.nodes[0], 220)
+        mine_large_blocks(self.nodes[0:3], 220)
         self.sync_blocks(self.nodes[0:3], timeout=120)
 
         usage = calc_usage(self.prunedir)
@@ -467,7 +506,22 @@ class PruneTest(BitcoinTestFramework):
         self.log.info("Test manual pruning with timestamps")
         self.manual_test(4, use_timestamp=True)
 
-        self.log.info("Syncing node 5 to node 0")
+        self.log.info("Replaying the initial chain and large stale blocks to node 5")
+        for height in range(1, 351):
+            block_hash = self.nodes[0].getblockhash(height)
+            assert_equal(self.nodes[5].submitblock(self.nodes[0].getblock(block_hash, 0)), None)
+
+        for height, padding_hash in zip(range(351, 996), self.initial_padding_hashes, strict=True):
+            padding_hex = self.nodes[0].getblock(padding_hash, 0)
+            result = self.nodes[5].submitblock(padding_hex)
+            assert result in [None, "duplicate", "inconclusive"], result
+            block_info = self.nodes[5].getblock(padding_hash)
+            assert_equal(block_info["size"], len(padding_hex) // 2)
+            assert_equal(block_info["confirmations"], -1)
+            block_hash = self.nodes[0].getblockhash(height)
+            assert_equal(self.nodes[5].submitblock(self.nodes[0].getblock(block_hash, 0)), None)
+
+        self.log.info("Syncing the remaining blocks from node 0 to node 5")
         self.connect_nodes(0, 5)
         self.sync_blocks([self.nodes[0], self.nodes[5]], wait=5, timeout=300)
 

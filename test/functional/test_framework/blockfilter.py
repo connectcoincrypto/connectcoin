@@ -9,7 +9,7 @@ from .crypto.siphash import siphash
 # Precomputed script whose BIP158 ranged hash collides with the single output
 # in ConnectCoin's regtest genesis block. Keep this centralized because tests
 # that deliberately exercise false-positive handling need the same fixture.
-REGTEST_GENESIS_BASIC_FILTER_FALSE_POSITIVE = bytes.fromhex("001400000000000000000000000000000000000af315")
+REGTEST_GENESIS_BASIC_FILTER_FALSE_POSITIVE = bytes.fromhex("00140000000000000000000000000000000000171429")
 
 
 def bip158_basic_element_hash(script_pub_key, N, block_hash):

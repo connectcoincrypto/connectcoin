@@ -49,8 +49,21 @@ CKey DeterministicP2PKKey(uint8_t key_id)
 
 CScript DeterministicP2PKScript(uint8_t key_id)
 {
-    const CKey key{DeterministicP2PKKey(key_id)};
-    return GetScriptForDestination(WitnessV1Taproot{XOnlyPubKey{key.GetPubKey()}});
+    assert(key_id > 0);
+    static const auto pubkeys{[] {
+        // Some fuzz targets use this helper without otherwise needing a signing
+        // context. Build the deterministic public-key table with a temporary
+        // context in that case, then retain only the context-independent keys.
+        std::optional<ECC_Context> local_ecc_context;
+        if (GetSecp256k1SignContext() == nullptr) local_ecc_context.emplace();
+
+        std::array<XOnlyPubKey, 256> keys;
+        for (uint16_t id{1}; id < keys.size(); ++id) {
+            keys[id] = XOnlyPubKey{DeterministicP2PKKey(static_cast<uint8_t>(id)).GetPubKey()};
+        }
+        return keys;
+    }()};
+    return GetScriptForDestination(WitnessV1Taproot{pubkeys[key_id]});
 }
 
 void SignDeterministicP2PKInputs(CMutableTransaction& tx, const std::vector<CTxOut>& spent_outputs)

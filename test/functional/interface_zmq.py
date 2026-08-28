@@ -9,8 +9,8 @@ import tempfile
 from io import BytesIO
 
 from test_framework.address import (
-    ADDRESS_CCRT1_P2WSH_OP_TRUE,
     ADDRESS_CCRT1_UNSPENDABLE,
+    create_deterministic_address_ccrt1_p2pk,
 )
 from test_framework.blocktools import (
     add_witness_commitment,
@@ -39,6 +39,8 @@ try:
     import zmq
 except ImportError:
     pass
+
+ADDRESS_CCRT1_P2PK_ALTERNATE, _ = create_deterministic_address_ccrt1_p2pk((2).to_bytes(32, 'big'))
 
 def hash256_reversed(byte_str):
     return hash256(byte_str)[::-1]
@@ -133,6 +135,11 @@ class ZMQTest (BitcoinTestFramework):
             # Destroy the ZMQ context.
             self.log.debug("Destroying ZMQ context")
             self.ctx.destroy(linger=None)
+
+    def bump_fee(self, tx_info):
+        tx_info['tx'].vout[0].nValue -= 1000
+        spent_value = tx_info['new_utxo']['value'] + tx_info['fee']
+        self.wallet.sign_tx(tx_info['tx'], utxos_to_spend=[{'value': spent_value}])
 
     # Restart node with the specified zmq notifications enabled, subscribe to
     # all of them and return the corresponding ZMQSubscriber objects.
@@ -280,7 +287,7 @@ class ZMQTest (BitcoinTestFramework):
         assert_equal(hashtx.receive().hex(), disconnect_cb)
 
         # Generate 2 blocks in nodes[1] to a different address to ensure split
-        connect_blocks = self.generatetoaddress(self.nodes[1], 2, ADDRESS_CCRT1_P2WSH_OP_TRUE, sync_fun=self.no_op)
+        connect_blocks = self.generatetoaddress(self.nodes[1], 2, ADDRESS_CCRT1_P2PK_ALTERNATE, sync_fun=self.no_op)
 
         # nodes[0] will reorg chain after connecting back nodes[1]
         self.connect_nodes(0, 1)
@@ -330,7 +337,7 @@ class ZMQTest (BitcoinTestFramework):
         assert_equal((self.nodes[0].getbestblockhash(), "C", None), seq.receive_sequence())
 
         # Generate 2 blocks in nodes[1] to a different address to ensure a chain split
-        self.generatetoaddress(self.nodes[1], 2, ADDRESS_CCRT1_P2WSH_OP_TRUE, sync_fun=self.no_op)
+        self.generatetoaddress(self.nodes[1], 2, ADDRESS_CCRT1_P2PK_ALTERNATE, sync_fun=self.no_op)
 
         # nodes[0] will reorg chain after connecting back nodes[1]
         self.connect_nodes(0, 1)
@@ -353,7 +360,7 @@ class ZMQTest (BitcoinTestFramework):
 
         self.log.info("Testing RBF notification")
         # Replace it to test eviction/addition notification
-        payment_tx['tx'].vout[0].nValue -= 1000
+        self.bump_fee(payment_tx)
         rbf_txid = self.nodes[1].sendrawtransaction(payment_tx['tx'].serialize().hex())
         self.sync_all()
         assert_equal((payment_txid, "R", seq_num), seq.receive_sequence())
@@ -414,7 +421,7 @@ class ZMQTest (BitcoinTestFramework):
         for _ in range(5):
             more_tx.append(self.wallet.send_self_transfer(from_node=self.nodes[0]))
 
-        orig_tx['tx'].vout[0].nValue -= 1000
+        self.bump_fee(orig_tx)
         bump_txid = self.nodes[0].sendrawtransaction(orig_tx['tx'].serialize().hex())
         # Mine the pre-bump tx
         txs_to_add = [orig_tx['hex']] + [tx['hex'] for tx in more_tx]
@@ -493,7 +500,7 @@ class ZMQTest (BitcoinTestFramework):
         # We have node 0 do all these to avoid p2p races with RBF announcements
         for _ in range(num_txs):
             txs.append(self.wallet.send_self_transfer(from_node=self.nodes[0]))
-        txs[-1]['tx'].vout[0].nValue -= 1000
+        self.bump_fee(txs[-1])
         self.nodes[0].sendrawtransaction(txs[-1]['tx'].serialize().hex())
         self.sync_all()
         self.generatetoaddress(self.nodes[0], 1, ADDRESS_CCRT1_UNSPENDABLE)

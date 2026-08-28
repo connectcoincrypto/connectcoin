@@ -412,7 +412,7 @@ public:
     }
 };
 
-std::string JSONPrettyPrint(const UniValue& univalue)
+[[maybe_unused]] std::string JSONPrettyPrint(const UniValue& univalue)
 {
     std::string ret = univalue.write(4);
     // Workaround for libunivalue pretty printer, which puts a space between commas and newlines

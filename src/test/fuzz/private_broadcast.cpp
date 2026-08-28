@@ -151,8 +151,10 @@ FUZZ_TARGET(private_broadcast)
                     // with the minimum send count of any in the queue. Ties are broken by state we
                     // don't model, so only check this key.
                     auto pending_transactions{transactions | std::views::filter(is_pending)};
-                    const size_t min_picked{std::ranges::min_element(
-                        pending_transactions, {}, [](const auto& el) { return el.second; })->second};
+                    const auto min_it{std::ranges::min_element(
+                        pending_transactions, {}, [](const auto& el) { return el.second; })};
+                    Assert(min_it != pending_transactions.end());
+                    const size_t min_picked{min_it->second};
                     const auto picked_it{transactions.find(opt_tx.value())};
                     Assert(picked_it != transactions.end());
                     Assert(picked_it->second == min_picked); // picked the least-sent transaction

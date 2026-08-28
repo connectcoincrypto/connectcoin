@@ -453,7 +453,6 @@ UNSUPPORTED_TYPED_OUTPUT_SCRIPTS = {
     "rpc_getdescriptorinfo.py",
     "rpc_invalid_address_message.py",
     "rpc_packages.py",
-    "rpc_scanblocks.py",
     "rpc_scantxoutset.py",
     "rpc_signmessagewithprivkey.py",
     "rpc_validateaddress.py",

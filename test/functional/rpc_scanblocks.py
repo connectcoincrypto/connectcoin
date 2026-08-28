@@ -9,6 +9,7 @@ from test_framework.blockfilter import (
     bip158_basic_element_hash,
     bip158_relevant_scriptpubkeys,
 )
+from test_framework.descriptors import descsum_create
 from test_framework.messages import COIN
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
@@ -37,8 +38,10 @@ class ScanblocksTest(BitcoinTestFramework):
         parent_key = "tcubNC1uBHhBxmWgfPoCJ8krUwtLbnqX2uhWwmgfSt2GLbCHhPuEq4LhtLBZKLwC6YkHK2hXrPWvVMgReYFtgWxenNZAuC69MaERFZ7AygMKgQd"
         # send 1.0, mempool only
         # childkey 5 of `parent_key`
+        ranged_descriptor = descsum_create(f"rawtr({parent_key}/*)")
+        child_address = node.deriveaddresses(ranged_descriptor, [5, 5])[0]
         wallet.send_to(from_node=node,
-                       scriptPubKey=address_to_scriptpubkey("TEtJzY6CtD7A2wCM9H9nxqNGWLfga4B4kp"),
+                       scriptPubKey=address_to_scriptpubkey(child_address),
                        amount=1 * COIN)
 
         # mine a block and assure that the mined blockhash is in the filterresult
@@ -81,7 +84,7 @@ class ScanblocksTest(BitcoinTestFramework):
 
         # make sure the blockhash is present when using the first mined block as start_height
         assert blockhash in node.scanblocks(
-            "start", [{"desc": f"pkh({parent_key}/*)", "range": [0, 100]}], height)['relevant_blocks']
+            "start", [{"desc": ranged_descriptor, "range": [0, 100]}], height)['relevant_blocks']
 
         # check that false-positives are included in the result now; note that
         # finding a false-positive at runtime would take too long, hence we simply
