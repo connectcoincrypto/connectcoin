@@ -4,6 +4,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test that the wallet resends transactions periodically."""
 import time
+from decimal import ROUND_DOWN
 
 from test_framework.blocktools import (
     create_block,
@@ -14,6 +15,7 @@ from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
+    satoshi_round,
 )
 
 # 36 hours is the upper limit of the resend timer, see CWallet::SetNextResend()
@@ -39,7 +41,13 @@ class ResendWalletTransactionsTest(BitcoinTestFramework):
         self.log.info("Create a new transaction and wait until it's broadcast")
         parent_utxo, indep_utxo = node.listunspent()[:2]
         addr = node.getnewaddress()
-        txid = node.send(outputs=[{addr: parent_utxo["amount"] / 2}], inputs=[parent_utxo])["txid"]
+        parent_amount = satoshi_round(
+            parent_utxo["amount"] / 2, rounding=ROUND_DOWN
+        )
+        txid = node.send(
+            outputs=[{addr: parent_amount}],
+            inputs=[parent_utxo],
+        )["txid"]
         wtxid = node.getmempoolentry(txid)["wtxid"]
 
         # Can take a few seconds due to transaction trickling
@@ -105,7 +113,13 @@ class ResendWalletTransactionsTest(BitcoinTestFramework):
                 node.mockscheduler(60)
 
             # Evict these txs from the mempool
-            indep_send = node.send(outputs=[{node.getnewaddress(): indep_utxo["amount"] / 2}], inputs=[indep_utxo])
+            indep_amount = satoshi_round(
+                indep_utxo["amount"] / 2, rounding=ROUND_DOWN
+            )
+            indep_send = node.send(
+                outputs=[{node.getnewaddress(): indep_amount}],
+                inputs=[indep_utxo],
+            )
             node.getmempoolentry(indep_send["txid"])
             assert_raises_rpc_error(-5, "Transaction not in mempool", node.getmempoolentry, txid)
             assert_raises_rpc_error(-5, "Transaction not in mempool", node.getmempoolentry, child_txid)
@@ -120,7 +134,13 @@ class ResendWalletTransactionsTest(BitcoinTestFramework):
             # clear mempool
             self.generate(node, 1, sync_fun=self.no_op)
             parent_utxo, indep_utxo = node.listunspent()[:2]
-            txid = node.send(outputs=[{addr: parent_utxo["amount"] / 2}], inputs=[parent_utxo])["txid"]
+            parent_amount = satoshi_round(
+                parent_utxo["amount"] / 2, rounding=ROUND_DOWN
+            )
+            txid = node.send(
+                outputs=[{addr: parent_amount}],
+                inputs=[parent_utxo],
+            )["txid"]
 
         self.log.info("Test rebroadcast of transactions received by others")
         # clear mempool

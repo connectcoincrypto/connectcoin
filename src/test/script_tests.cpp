@@ -386,7 +386,7 @@ public:
         return *this;
     }
 
-    UniValue GetJSON()
+    [[maybe_unused]] UniValue GetJSON()
     {
         DoPush();
         UniValue array(UniValue::VARR);
@@ -406,7 +406,7 @@ public:
         return array;
     }
 
-    std::string GetComment() const
+    [[maybe_unused]] std::string GetComment() const
     {
         return comment;
     }
