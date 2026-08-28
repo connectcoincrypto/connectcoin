@@ -84,6 +84,10 @@ bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet)
     case TxoutType::WITNESS_V1_TAPROOT: {
         WitnessV1Taproot tap;
         std::copy(vSolutions[0].begin(), vSolutions[0].end(), tap.begin());
+        if (!tap.IsFullyValid()) {
+            addressRet = CNoDestination(scriptPubKey);
+            return false;
+        }
         addressRet = tap;
         return true;
     }
@@ -92,7 +96,12 @@ bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet)
         return true;
     }
     case TxoutType::WITNESS_UNKNOWN: {
-        addressRet = WitnessUnknown{vSolutions[0][0], vSolutions[1]};
+        WitnessUnknown unknown{vSolutions[0][0], vSolutions[1]};
+        if (!IsCanonicalWitnessUnknown(unknown)) {
+            addressRet = CNoDestination(scriptPubKey);
+            return false;
+        }
+        addressRet = unknown;
         return true;
     }
     case TxoutType::MULTISIG:
@@ -140,11 +149,18 @@ public:
 
     CScript operator()(const WitnessV1Taproot& tap) const
     {
+        if (!tap.IsFullyValid()) return {};
         return CScript() << OP_1 << ToByteVector(tap);
+    }
+
+    CScript operator()(const PayToAnchor& id) const
+    {
+        return CScript() << OP_1 << id.GetWitnessProgram();
     }
 
     CScript operator()(const WitnessUnknown& id) const
     {
+        if (!IsCanonicalWitnessUnknown(id)) return {};
         return CScript() << CScript::EncodeOP_N(id.GetWitnessVersion()) << id.GetWitnessProgram();
     }
 };
@@ -158,8 +174,9 @@ public:
     bool operator()(const ScriptHash& dest) const { return true; }
     bool operator()(const WitnessV0KeyHash& dest) const { return true; }
     bool operator()(const WitnessV0ScriptHash& dest) const { return true; }
-    bool operator()(const WitnessV1Taproot& dest) const { return true; }
-    bool operator()(const WitnessUnknown& dest) const { return true; }
+    bool operator()(const WitnessV1Taproot& dest) const { return dest.IsFullyValid(); }
+    bool operator()(const PayToAnchor& dest) const { return true; }
+    bool operator()(const WitnessUnknown& dest) const { return IsCanonicalWitnessUnknown(dest); }
 };
 } // namespace
 

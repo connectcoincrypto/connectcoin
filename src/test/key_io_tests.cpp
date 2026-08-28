@@ -150,6 +150,40 @@ BOOST_AUTO_TEST_CASE(key_io_invalid)
 BOOST_AUTO_TEST_CASE(type1_address_rejects_invalid_xonly_key)
 {
     SelectParams(ChainType::REGTEST);
+    const WitnessV1Taproot invalid_key{XOnlyPubKey{}};
+    BOOST_REQUIRE(!invalid_key.IsFullyValid());
+    BOOST_CHECK(!IsValidDestination(invalid_key));
+    BOOST_CHECK(EncodeDestination(invalid_key).empty());
+    BOOST_CHECK(GetScriptForDestination(invalid_key).empty());
+    const CScript invalid_script{CScript{} << OP_1 << std::vector<unsigned char>(XOnlyPubKey::size())};
+    CTxDestination extracted;
+    BOOST_CHECK(!ExtractDestination(invalid_script, extracted));
+    BOOST_CHECK(std::holds_alternative<CNoDestination>(extracted));
+
+    const std::vector<WitnessUnknown> invalid_unknown{
+        WitnessUnknown{0, {0x42, 0x42}},
+        WitnessUnknown{17, {0x42, 0x42}},
+        WitnessUnknown{2, {0x42}},
+        WitnessUnknown{2, std::vector<unsigned char>(41)},
+        WitnessUnknown{1, std::vector<unsigned char>(WitnessV1Taproot::size())},
+        WitnessUnknown{1, ANCHOR_BYTES},
+    };
+    for (const WitnessUnknown& unknown : invalid_unknown) {
+        BOOST_CHECK(!IsValidDestination(unknown));
+        BOOST_CHECK(EncodeDestination(unknown).empty());
+        BOOST_CHECK(GetScriptForDestination(unknown).empty());
+    }
+
+    for (const CTxDestination& valid : {
+             CTxDestination{WitnessUnknown{1, {0x42, 0x42}}},
+             CTxDestination{WitnessUnknown{2, {0x42, 0x42}}},
+             CTxDestination{PayToAnchor{}},
+         }) {
+        BOOST_CHECK(IsValidDestination(valid));
+        BOOST_CHECK(!GetScriptForDestination(valid).empty());
+        BOOST_CHECK(DecodeDestination(EncodeDestination(valid)) == valid);
+    }
+
     const std::string address{"ccrt1pqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq8ep5f4"};
     std::string error;
     const CTxDestination destination{DecodeDestination(address, error)};

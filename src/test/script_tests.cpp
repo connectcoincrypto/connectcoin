@@ -1172,7 +1172,9 @@ BOOST_AUTO_TEST_CASE(script_size_and_capacity_test)
     BOOST_CHECK_EQUAL(sizeof(CScriptBase), 40);
     BOOST_CHECK_NE(sizeof(CScriptBase), sizeof(prevector<CScriptBase::STATIC_SIZE + 1, uint8_t>)); // CScriptBase size should be set to avoid wasting space in padding
     BOOST_CHECK_EQUAL(sizeof(CScript), 40);
-    BOOST_CHECK_EQUAL(sizeof(CTxOut), 88);
+    // Keep the typed output within its expected memory budget without assuming
+    // platform-specific padding (i686 is 84 bytes, while other ABIs use 88).
+    BOOST_CHECK_LE(sizeof(CTxOut), 88);
 
     CKey dummy_key;
     dummy_key.MakeNewKey(/*fCompressed=*/true);

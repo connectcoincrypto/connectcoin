@@ -60,18 +60,26 @@ public:
 
     std::string operator()(const WitnessV1Taproot& tap) const
     {
+        if (!tap.IsFullyValid()) return {};
         std::vector<unsigned char> data = {1};
         data.reserve(53);
         ConvertBits<8, 5, true>([&](unsigned char c) { data.push_back(c); }, tap.begin(), tap.end());
         return bech32::Encode(bech32::Encoding::BECH32M, m_params.Bech32HRP(), data);
     }
 
+    std::string operator()(const PayToAnchor& id) const
+    {
+        const std::vector<unsigned char>& program = id.GetWitnessProgram();
+        std::vector<unsigned char> data = {1};
+        data.reserve(1 + CeilDiv(program.size() * 8, 5u));
+        ConvertBits<8, 5, true>([&](unsigned char c) { data.push_back(c); }, program.begin(), program.end());
+        return bech32::Encode(bech32::Encoding::BECH32M, m_params.Bech32HRP(), data);
+    }
+
     std::string operator()(const WitnessUnknown& id) const
     {
         const std::vector<unsigned char>& program = id.GetWitnessProgram();
-        if (id.GetWitnessVersion() < 1 || id.GetWitnessVersion() > 16 || program.size() < 2 || program.size() > 40) {
-            return {};
-        }
+        if (!IsCanonicalWitnessUnknown(id)) return {};
         std::vector<unsigned char> data = {(unsigned char)id.GetWitnessVersion()};
         data.reserve(1 + CeilDiv(program.size() * 8, 5u));
         ConvertBits<8, 5, true>([&](unsigned char c) { data.push_back(c); }, program.begin(), program.end());

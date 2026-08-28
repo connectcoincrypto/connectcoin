@@ -74,6 +74,7 @@ FUZZ_TARGET(script, .init = initialize_script)
     bool extract_destination_ret = ExtractDestination(script, address);
     if (!extract_destination_ret) {
         assert(which_type == TxoutType::PUBKEY ||
+               which_type == TxoutType::WITNESS_V1_TAPROOT ||
                which_type == TxoutType::NONSTANDARD ||
                which_type == TxoutType::NULL_DATA ||
                which_type == TxoutType::MULTISIG);
@@ -150,8 +151,12 @@ FUZZ_TARGET(script, .init = initialize_script)
         if (!std::get_if<PubKeyDestination>(&tx_destination_1)) {
             // Only try to round trip non-pubkey destinations since PubKeyDestination has no encoding
             Assert(dest.empty() != valid);
-            Assert(tx_destination_1 == DecodeDestination(encoded_dest));
             Assert(valid == IsValidDestinationString(encoded_dest));
+            if (valid) {
+                Assert(tx_destination_1 == DecodeDestination(encoded_dest));
+            } else {
+                Assert(encoded_dest.empty());
+            }
         }
 
         (void)(tx_destination_1 < tx_destination_2);
@@ -159,6 +164,22 @@ FUZZ_TARGET(script, .init = initialize_script)
             Assert(encoded_dest == EncodeDestination(tx_destination_2));
             Assert(json_dest.write() == DescribeAddress(tx_destination_2).write());
             Assert(dest == GetScriptForDestination(tx_destination_2));
+        }
+    }
+
+    {
+        const WitnessUnknown unknown{
+            fuzzed_data_provider.ConsumeIntegralInRange<unsigned int>(0, 17),
+            ConsumeRandomLengthByteVector(fuzzed_data_provider, /*max_length=*/41)};
+        const CTxDestination destination{unknown};
+        const bool valid{IsValidDestination(destination)};
+        const std::string encoded{EncodeDestination(destination)};
+        Assert(GetScriptForDestination(destination).empty() != valid);
+        Assert(IsValidDestinationString(encoded) == valid);
+        if (valid) {
+            Assert(DecodeDestination(encoded) == destination);
+        } else {
+            Assert(encoded.empty());
         }
     }
 }

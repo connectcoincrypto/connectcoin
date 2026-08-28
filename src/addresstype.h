@@ -127,6 +127,16 @@ struct PayToAnchor : public WitnessUnknown
     };
 };
 
+/** Whether a generic witness destination has a valid, non-special encoding. */
+inline bool IsCanonicalWitnessUnknown(const WitnessUnknown& dest)
+{
+    const unsigned int version{dest.GetWitnessVersion()};
+    const std::vector<unsigned char>& program{dest.GetWitnessProgram()};
+    if (version < 1 || version > 16 || program.size() < 2 || program.size() > 40) return false;
+    if (version == 1 && (program.size() == WitnessV1Taproot::size() || program == ANCHOR_BYTES)) return false;
+    return true;
+}
+
 /**
  * A txout script categorized into standard templates.
  *  * CNoDestination: Optionally a script, no corresponding address.
