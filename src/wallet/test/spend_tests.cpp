@@ -64,6 +64,17 @@ BOOST_AUTO_TEST_CASE(rejects_amounts_above_money_range)
     BOOST_CHECK_EQUAL(util::ErrorString(result_with_fee).original, "Transaction too large");
 }
 
+BOOST_AUTO_TEST_CASE(rejects_invalid_type1_destination)
+{
+    const CRecipient recipient{WitnessV1Taproot{XOnlyPubKey{}}, COIN, /*subtract_fee=*/false};
+    CCoinControl coin_control;
+
+    const auto result{CreateTransaction(m_wallet, {recipient}, /*change_pos=*/std::nullopt, coin_control)};
+    BOOST_REQUIRE(!result);
+    BOOST_CHECK_EQUAL(util::ErrorString(result).original,
+                      "ConnectCoin transactions support only valid type-1 P2PK (bech32m) destinations");
+}
+
 BOOST_FIXTURE_TEST_CASE(SubtractFee, TestChain100Setup)
 {
     CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));

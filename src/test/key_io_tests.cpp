@@ -2,12 +2,12 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <test/data/key_io_invalid.json.h>
-#include <test/data/key_io_valid.json.h>
-
 #include <key.h>
 #include <key_io.h>
+#include <outputtype.h>
 #include <script/script.h>
+#include <test/data/key_io_invalid.json.h>
+#include <test/data/key_io_valid.json.h>
 #include <test/util/json.h>
 #include <test/util/setup_common.h>
 #include <univalue.h>
@@ -155,6 +155,7 @@ BOOST_AUTO_TEST_CASE(type1_address_rejects_invalid_xonly_key)
     BOOST_CHECK(!IsValidDestination(invalid_key));
     BOOST_CHECK(EncodeDestination(invalid_key).empty());
     BOOST_CHECK(GetScriptForDestination(invalid_key).empty());
+    BOOST_CHECK(!OutputTypeFromDestination(invalid_key));
     const CScript invalid_script{CScript{} << OP_1 << std::vector<unsigned char>(XOnlyPubKey::size())};
     CTxDestination extracted;
     BOOST_CHECK(!ExtractDestination(invalid_script, extracted));

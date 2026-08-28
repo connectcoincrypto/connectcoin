@@ -72,7 +72,7 @@ CTxDestination AddAndGetDestinationForScript(FlatSigningProvider& keystore, cons
 }
 
 std::optional<OutputType> OutputTypeFromDestination(const CTxDestination& dest) {
-    if (std::holds_alternative<WitnessV1Taproot>(dest)) {
+    if (std::holds_alternative<WitnessV1Taproot>(dest) && IsValidDestination(dest)) {
         return OutputType::BECH32M;
     }
     return std::nullopt;

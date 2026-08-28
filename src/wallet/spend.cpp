@@ -1087,9 +1087,9 @@ static util::Result<CreatedTransactionResult> CreateTransactionInternal(
 
     CAmount recipients_sum = 0;
     if (std::any_of(vecSend.begin(), vecSend.end(), [](const CRecipient& recipient) {
-            return !std::holds_alternative<WitnessV1Taproot>(recipient.dest);
+            return !std::holds_alternative<WitnessV1Taproot>(recipient.dest) || !IsValidDestination(recipient.dest);
         })) {
-        return util::Error{_("ConnectCoin transactions support only type-1 P2PK (bech32m) destinations")};
+        return util::Error{_("ConnectCoin transactions support only valid type-1 P2PK (bech32m) destinations")};
     }
     const OutputType change_type = wallet.TransactionChangeType(coin_control.m_change_type ? *coin_control.m_change_type : wallet.m_default_change_type, vecSend);
     ReserveDestination reservedest(&wallet, change_type);
