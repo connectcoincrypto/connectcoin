@@ -927,6 +927,9 @@ RPCMethod signrawtransactionwithwallet()
     if (!nHashType) {
         nHashType = SIGHASH_DEFAULT;
     }
+    if (*nHashType != SIGHASH_DEFAULT) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "ConnectCoin type-1 outputs support only SIGHASH_DEFAULT");
+    }
 
     // Script verification errors
     std::map<int, bilingual_str> input_errors;
@@ -1638,6 +1641,9 @@ RPCMethod walletprocesspsbt()
 
     // Get the sighash type
     std::optional<int> nHashType = ParseSighashString(request.params[2]);
+    if (nHashType && *nHashType != SIGHASH_DEFAULT) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "ConnectCoin type-1 outputs support only SIGHASH_DEFAULT");
+    }
 
     // Fill transaction with our data and also sign
     bool sign = request.params[1].isNull() ? true : request.params[1].get_bool();

@@ -39,10 +39,11 @@ class ResendWalletTransactionsTest(BitcoinTestFramework):
         self.log.info("Create a new transaction and wait until it's broadcast")
         parent_utxo, indep_utxo = node.listunspent()[:2]
         addr = node.getnewaddress()
-        txid = node.send(outputs=[{addr: 1}], inputs=[parent_utxo])["txid"]
+        txid = node.send(outputs=[{addr: parent_utxo["amount"] / 2}], inputs=[parent_utxo])["txid"]
+        wtxid = node.getmempoolentry(txid)["wtxid"]
 
         # Can take a few seconds due to transaction trickling
-        peer_first.wait_for_broadcast([txid])
+        peer_first.wait_for_broadcast([wtxid])
 
         # Add a second peer since txs aren't rebroadcast to the same peer (see m_tx_inventory_known_filter)
         peer_second = node.add_p2p_connection(P2PTxInvStore())
@@ -76,7 +77,7 @@ class ResendWalletTransactionsTest(BitcoinTestFramework):
             node.setmocktime(now + RESEND_TIMER_LIMIT)
             # Tell scheduler to call MaybeResendWalletTxs now.
             node.mockscheduler(60)
-            peer_second.wait_for_broadcast([txid])
+            peer_second.wait_for_broadcast([wtxid])
 
         self.log.info("Chain of unconfirmed not-in-mempool txs are rebroadcast")
         # We cannot predict the ordering in mapWallet of parent and child, so
@@ -104,7 +105,7 @@ class ResendWalletTransactionsTest(BitcoinTestFramework):
                 node.mockscheduler(60)
 
             # Evict these txs from the mempool
-            indep_send = node.send(outputs=[{node.getnewaddress(): 1}], inputs=[indep_utxo])
+            indep_send = node.send(outputs=[{node.getnewaddress(): indep_utxo["amount"] / 2}], inputs=[indep_utxo])
             node.getmempoolentry(indep_send["txid"])
             assert_raises_rpc_error(-5, "Transaction not in mempool", node.getmempoolentry, txid)
             assert_raises_rpc_error(-5, "Transaction not in mempool", node.getmempoolentry, child_txid)
@@ -119,7 +120,7 @@ class ResendWalletTransactionsTest(BitcoinTestFramework):
             # clear mempool
             self.generate(node, 1, sync_fun=self.no_op)
             parent_utxo, indep_utxo = node.listunspent()[:2]
-            txid = node.send(outputs=[{addr: 1}], inputs=[parent_utxo])["txid"]
+            txid = node.send(outputs=[{addr: parent_utxo["amount"] / 2}], inputs=[parent_utxo])["txid"]
 
         self.log.info("Test rebroadcast of transactions received by others")
         # clear mempool

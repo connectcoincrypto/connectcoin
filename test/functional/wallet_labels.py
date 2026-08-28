@@ -11,6 +11,10 @@ RPCs tested are:
 """
 from collections import defaultdict
 
+from test_framework.address import (
+    ADDRESS_CCRT1_UNSPENDABLE,
+    create_deterministic_address_ccrt1_p2pk,
+)
 from test_framework.blocktools import COINBASE_MATURITY
 from test_framework.descriptors import descsum_create
 from test_framework.test_framework import BitcoinTestFramework
@@ -29,7 +33,6 @@ class WalletLabelsTest(BitcoinTestFramework):
     def invalid_label_name_test(self):
         node = self.nodes[0]
         address = node.getnewaddress()
-        pubkey = node.getaddressinfo(address)['pubkey']
         rpc_calls = [
             [node.getnewaddress],
             [node.setlabel, address],
@@ -38,7 +41,7 @@ class WalletLabelsTest(BitcoinTestFramework):
             [node.listsinceblock, node.getblockhash(0), 1, False, True, False],
         ]
         response = node.importdescriptors([{
-            'desc': f'pkh({pubkey})',
+            'desc': descsum_create(f'addr({address})'),
             'label': '*',
             'timestamp': 'now',
         }])
@@ -101,7 +104,7 @@ class WalletLabelsTest(BitcoinTestFramework):
             linked_addresses.add(address_group[0][0])
 
         # send 100 from each address to a third address not in this wallet
-        common_address = "TN7KDtekt71EJSUwVxEDqXfbX1ArTaeRHA"
+        common_address = ADDRESS_CCRT1_UNSPENDABLE
         node.sendmany(
             amounts={common_address: 200},
             subtractfeefrom=[common_address],
@@ -182,22 +185,21 @@ class WalletLabelsTest(BitcoinTestFramework):
         self.invalid_label_name_test()
         self.test_label_named_parameter_handling()
 
-        # This is a descriptor wallet test because of segwit v1+ addresses
+        # Watch-only labels for native type-1 destinations.
         self.log.info('Check watchonly labels')
         node.createwallet(wallet_name='watch_only', disable_private_keys=True)
         wallet_watch_only = node.get_wallet_rpc('watch_only')
         BECH32_VALID = {
-            '✔️_VER15_PROG40': 'ccrt10qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu3jr46',
-            '✔️_VER16_PROG03': 'ccrt1sqqqqqjcmmj5',
-            '✔️_VER16_PROB02': 'ccrt1sqqqqn8myhg',
+            f'✔️_TYPE1_KEY{i}': create_deterministic_address_ccrt1_p2pk(i.to_bytes(32, 'big'))
+            for i in range(2, 5)
         }
         BECH32_INVALID = {
             '❌_VER15_PROG41': 'ccrt1sqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqaw0nmv',
             '❌_VER16_PROB01': 'ccrt1sqq6u3gfs',
         }
         for l in BECH32_VALID:
-            ad = BECH32_VALID[l]
-            import_res = wallet_watch_only.importdescriptors([{"desc": descsum_create(f"addr({ad})"), "timestamp": "now", "label": l}])
+            ad, xonly = BECH32_VALID[l]
+            import_res = wallet_watch_only.importdescriptors([{"desc": descsum_create(f"rawtr({xonly.hex()})"), "timestamp": "now", "label": l}])
             assert_equal(import_res[0]["success"], True)
             self.generatetoaddress(node, 1, ad)
             assert_equal(wallet_watch_only.getaddressesbylabel(label=l), {ad: {'purpose': 'receive'}})

@@ -31,7 +31,7 @@ class SignetBasicTest(BitcoinTestFramework):
         self.setup_clean_chain = True
         self.signets = [
             SignetParams(),                 # ConnectCoin default: OP_TRUE
-            SignetParams(challenge='00'),   # Incompatible: OP_FALSE
+            SignetParams(challenge='60'),   # Supported custom trivial challenge: OP_16
         ]
         self.extra_args = [
             self.signets[0].shared_args,
@@ -82,6 +82,19 @@ class SignetBasicTest(BitcoinTestFramework):
             extra_args=["-signetchallenge=abc"] * 2,
             expected_msg="Error: -signetchallenge cannot be multiple values.",
         )
+        unsupported_error = (
+            "Error: -signetchallenge must be a trivial truthy script that needs no scriptSig or witness; "
+            "arbitrary BIP325 Script challenges are incompatible with ConnectCoin typed outputs."
+        )
+        for challenge in [
+            "00",  # OP_FALSE
+            "00140000000000000000000000000000000000000000",  # P2WPKH
+            "51200000000000000000000000000000000000000000000000000000000000000000",  # P2TR
+        ]:
+            self.nodes[0].assert_start_raises_init_error(
+                extra_args=[f"-signetchallenge={challenge}"],
+                expected_msg=unsupported_error,
+            )
 
 
 if __name__ == '__main__':

@@ -10,6 +10,7 @@
 #include <consensus/merkle.h>
 #include <consensus/validation.h>
 #include <interfaces/mining.h>
+#include <key.h>
 #include <key_io.h>
 #include <node/context.h>
 #include <pow.h>
@@ -24,12 +25,25 @@
 #include <validationinterface.h>
 #include <versionbits.h>
 
+#include <array>
 #include <cstdint>
 #include <memory>
 #include <optional>
 #include <utility>
 
 using node::NodeContext;
+
+CScript DeterministicP2PKScript()
+{
+    constexpr std::array<unsigned char, 32> secret{{
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    }};
+    CKey key;
+    key.Set(secret.begin(), secret.end(), /*fCompressedIn=*/true);
+    assert(key.IsValid());
+    return GetScriptForDestination(WitnessV1Taproot{XOnlyPubKey{key.GetPubKey()}});
+}
 
 COutPoint generatetoaddress(const NodeContext& node, const std::string& address)
 {
@@ -54,7 +68,7 @@ std::vector<std::shared_ptr<CBlock>> CreateBlockChain(size_t total_height, const
         coinbase_tx.vin[0].prevout.SetNull();
         coinbase_tx.vin[0].nSequence = CTxIn::MAX_SEQUENCE_NONFINAL; // Make sure timelock is enforced.
         coinbase_tx.vout.resize(1);
-        coinbase_tx.vout[0].scriptPubKey = P2WSH_OP_TRUE;
+        coinbase_tx.vout[0].SetScriptPubKey(DeterministicP2PKScript());
         coinbase_tx.vout[0].nValue = GetBlockSubsidy(height + 1, params.GetConsensus());
         // Always include OP_0 as a dummy extraNonce.
         coinbase_tx.vin[0].scriptSig = CScript() << (height + 1) << OP_0;

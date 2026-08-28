@@ -140,7 +140,7 @@ std::optional<CMutableTransaction> PartiallySignedTransaction::GetUnsignedTx() c
     for (const PSBTOutput& output : outputs) {
         CTxOut txout;
         txout.nValue = output.amount;
-        txout.scriptPubKey = output.script;
+        txout.SetScriptPubKey(output.script);
         mtx.vout.push_back(txout);
     }
     return mtx;
@@ -545,11 +545,31 @@ bool PSBTInputSigned(const PSBTInput& input)
     return !input.final_script_sig.empty() || !input.final_script_witness.IsNull();
 }
 
+bool PSBTHasValidTypedOutputs(const PartiallySignedTransaction& psbt)
+{
+    const auto unsigned_tx{psbt.GetUnsignedTx()};
+    if (!unsigned_tx || unsigned_tx->vout.empty()) return false;
+
+    return std::ranges::all_of(unsigned_tx->vout, [](const CTxOut& output) {
+        return MoneyRange(output.nValue) && output.GetType() == TxOutputType::P2PK && output.GetP2PKPubKey().has_value();
+    });
+}
+
 bool PSBTInputSignedAndVerified(const PartiallySignedTransaction& psbt, unsigned int input_index, const PrecomputedTransactionData* txdata)
 {
     CTxOut utxo;
     assert(input_index < psbt.inputs.size());
     const PSBTInput& input = psbt.inputs[input_index];
+
+    // A finalized type-1 spend has exactly one 64-byte Schnorr signature,
+    // an empty scriptSig, no annex or script path, and SIGHASH_DEFAULT.
+    // Check this before VerifyScript, whose generic Taproot path intentionally
+    // accepts forms that ConnectCoin consensus does not.
+    if (!input.final_script_sig.empty() || input.final_script_witness.stack.size() != 1 ||
+        input.final_script_witness.stack.front().size() != 64 ||
+        (input.sighash_type && *input.sighash_type != SIGHASH_DEFAULT)) {
+        return false;
+    }
 
     if (input.non_witness_utxo) {
         // If we're taking our information from a non-witness UTXO, verify that it matches the prevout.
@@ -564,6 +584,10 @@ bool PSBTInputSignedAndVerified(const PartiallySignedTransaction& psbt, unsigned
     } else if (!input.witness_utxo.IsNull()) {
         utxo = input.witness_utxo;
     } else {
+        return false;
+    }
+
+    if (utxo.GetType() != TxOutputType::P2PK || !utxo.GetP2PKPubKey() || !PSBTHasValidTypedOutputs(psbt)) {
         return false;
     }
 
@@ -640,7 +664,7 @@ util::Expected<void, PSBTError> SignPSBTInput(const SigningProvider& provider, P
 {
     PSBTInput& input = psbt.inputs.at(index);
     std::optional<CMutableTransaction> unsigned_tx = psbt.GetUnsignedTx();
-    if (!unsigned_tx) {
+    if (!unsigned_tx || !PSBTHasValidTypedOutputs(psbt)) {
         return util::Unexpected{PSBTError::INVALID_TX};
     }
     const CMutableTransaction& tx = *unsigned_tx;
@@ -678,43 +702,29 @@ util::Expected<void, PSBTError> SignPSBTInput(const SigningProvider& provider, P
         return util::Unexpected{PSBTError::MISSING_INPUTS};
     }
 
-    // Get the sighash type
-    // If both the field and the parameter are provided, they must match
-    // If only the parameter is provided, use it and add it to the PSBT if it is other than SIGHASH_DEFAULT
-    // for all input types, and not SIGHASH_ALL for non-taproot input types.
-    // If neither are provided, use SIGHASH_DEFAULT if it is taproot, and SIGHASH_ALL for everything else.
-    int sighash{options.sighash_type.value_or(utxo.scriptPubKey.IsPayToTaproot() ? SIGHASH_DEFAULT : SIGHASH_ALL)};
+    if (utxo.GetType() != TxOutputType::P2PK || !utxo.GetP2PKPubKey()) {
+        return util::Unexpected{PSBTError::UNSUPPORTED};
+    }
+
+    // Type-1 consensus permits exactly one 64-byte Schnorr signature, which
+    // implies SIGHASH_DEFAULT. Never create a PSBT that can finalize to a
+    // 65-byte signature rejected by the node.
+    int sighash{options.sighash_type.value_or(SIGHASH_DEFAULT)};
+    if (sighash != SIGHASH_DEFAULT ||
+        (input.sighash_type && *input.sighash_type != SIGHASH_DEFAULT)) {
+        return util::Unexpected{PSBTError::SIGHASH_MISMATCH};
+    }
 
     // For user safety, the desired sighash must be provided if the PSBT wants something other than the default set in the previous line.
     if (input.sighash_type && input.sighash_type != sighash) {
         return util::Unexpected{PSBTError::SIGHASH_MISMATCH};
     }
-    // Set the PSBT sighash field when sighash is not DEFAULT or ALL
-    // DEFAULT is allowed for non-taproot inputs since DEFAULT may be passed for them (e.g. the psbt being signed also has taproot inputs)
-    // Note that signing already aliases DEFAULT to ALL for non-taproot inputs.
-    if (utxo.scriptPubKey.IsPayToTaproot() ? sighash != SIGHASH_DEFAULT :
-                                            (sighash != SIGHASH_DEFAULT && sighash != SIGHASH_ALL)) {
-        input.sighash_type = sighash;
-    }
-
     // Check all existing signatures use the sighash type
-    if (sighash == SIGHASH_DEFAULT) {
-        if (!input.m_tap_key_sig.empty() && input.m_tap_key_sig.size() != 64) {
-            return util::Unexpected{PSBTError::SIGHASH_MISMATCH};
-        }
-        for (const auto& [_, sig] : input.m_tap_script_sigs) {
-            if (sig.size() != 64) return util::Unexpected{PSBTError::SIGHASH_MISMATCH};
-        }
-    } else {
-        if (!input.m_tap_key_sig.empty() && (input.m_tap_key_sig.size() != 65 || input.m_tap_key_sig.back() != sighash)) {
-            return util::Unexpected{PSBTError::SIGHASH_MISMATCH};
-        }
-        for (const auto& [_, sig] : input.m_tap_script_sigs) {
-            if (sig.size() != 65 || sig.back() != sighash) return util::Unexpected{PSBTError::SIGHASH_MISMATCH};
-        }
-        for (const auto& [_, sig] : input.partial_sigs) {
-            if (sig.second.back() != sighash) return util::Unexpected{PSBTError::SIGHASH_MISMATCH};
-        }
+    if (!input.m_tap_key_sig.empty() && input.m_tap_key_sig.size() != 64) {
+        return util::Unexpected{PSBTError::SIGHASH_MISMATCH};
+    }
+    if (!input.m_tap_script_sigs.empty() || !input.partial_sigs.empty()) {
+        return util::Unexpected{PSBTError::UNSUPPORTED};
     }
 
     sigdata.witness = false;
@@ -724,6 +734,10 @@ util::Expected<void, PSBTError> SignPSBTInput(const SigningProvider& provider, P
     } else {
         MutableTransactionSignatureCreator creator(tx, index, utxo.nValue, txdata, {.sighash_type = sighash});
         sig_complete = ProduceSignature(provider, creator, utxo.scriptPubKey, sigdata);
+    }
+    if (sigdata.complete && (sigdata.scriptSig.size() != 0 ||
+        sigdata.scriptWitness.stack.size() != 1 || sigdata.scriptWitness.stack.front().size() != 64)) {
+        return util::Unexpected{PSBTError::UNSUPPORTED};
     }
     // Verify that a witness signature was produced in case one was required.
     if (require_witness_sig && !sigdata.witness) return util::Unexpected{PSBTError::INCOMPLETE};
@@ -796,6 +810,8 @@ bool FinalizePSBT(PartiallySignedTransaction& psbtx)
     //   signature, but have not combined them yet (e.g. because the combiner that created this
     //   PartiallySignedTransaction did not understand them), this will combine them into a final
     //   script.
+    if (!PSBTHasValidTypedOutputs(psbtx)) return false;
+
     bool complete = true;
     std::optional<PrecomputedTransactionData> txdata_res = PrecomputePSBTData(psbtx);
     if (!txdata_res) {

@@ -20,6 +20,9 @@ struct BlockCreateOptions;
 struct NodeContext;
 } // namespace node
 
+/** Return a deterministic valid type-1 P2PK compatibility script. */
+CScript DeterministicP2PKScript();
+
 /** Create a blockchain, starting from genesis */
 std::vector<std::shared_ptr<CBlock>> CreateBlockChain(size_t total_height, const CChainParams& params);
 

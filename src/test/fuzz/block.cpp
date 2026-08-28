@@ -56,7 +56,7 @@ FUZZ_TARGET(block, .init = initialize_block)
         (void)BlockWitnessMerkleRoot(block);
     }
     (void)GetBlockWeight(block);
-    (void)GetWitnessCommitmentIndex(block);
+    (void)GetWitnessCommitmentOffset(block);
     const size_t raw_memory_size = RecursiveDynamicUsage(block);
     const size_t raw_memory_size_as_shared_ptr = RecursiveDynamicUsage(std::make_shared<CBlock>(block));
     assert(raw_memory_size_as_shared_ptr > raw_memory_size);

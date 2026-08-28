@@ -8,6 +8,13 @@ of outputs that belong to the wallet.
 This document describes the language. For the specifics on usage, see the RPC
 documentation.
 
+> **Consensus limitation:** the parser is inherited and can still inspect many
+> Bitcoin descriptor forms, but the current wallet and transaction builders
+> accept only single-key `tr(KEY)`/Bech32m destinations that map to type-1
+> ConnectCoin P2PK outputs. Script trees, multisig, P2PKH, P2SH, P2WPKH,
+> P2WSH, raw scripts, and data outputs are not valid transaction outputs. See
+> [typed-outputs.md](typed-outputs.md).
+
 ## Features
 
 Output descriptors currently support:

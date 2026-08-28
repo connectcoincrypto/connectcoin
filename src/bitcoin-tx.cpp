@@ -60,16 +60,10 @@ static void SetupBitcoinTxArgs(ArgsManager &argsman)
     argsman.AddArg("locktime=N", "Set TX lock time to N", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
     argsman.AddArg("nversion=N", "Set TX version to N", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
     argsman.AddArg("outaddr=VALUE:ADDRESS", "Add address-based output to TX", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
-    argsman.AddArg("outdata=[VALUE:]DATA", "Add data-based output to TX", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
-    argsman.AddArg("outmultisig=VALUE:REQUIRED:PUBKEYS:PUBKEY1:PUBKEY2:....[:FLAGS]", "Add Pay To n-of-m Multi-sig output to TX. n = REQUIRED, m = PUBKEYS. "
-        "Optionally add the \"W\" flag to produce a pay-to-witness-script-hash output. "
-        "Optionally add the \"S\" flag to wrap the output in a pay-to-script-hash.", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
-    argsman.AddArg("outpubkey=VALUE:PUBKEY[:FLAGS]", "Add pay-to-pubkey output to TX. "
-        "Optionally add the \"W\" flag to produce a pay-to-witness-pubkey-hash output. "
-        "Optionally add the \"S\" flag to wrap the output in a pay-to-script-hash.", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
-    argsman.AddArg("outscript=VALUE:SCRIPT[:FLAGS]", "Add raw script output to TX. "
-        "Optionally add the \"W\" flag to produce a pay-to-witness-script-hash output. "
-        "Optionally add the \"S\" flag to wrap the output in a pay-to-script-hash.", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
+    argsman.AddArg("outdata=[VALUE:]DATA", "Unsupported: ConnectCoin has no data/Script output type", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
+    argsman.AddArg("outmultisig=...", "Unsupported: ConnectCoin currently has only type-1 P2PK outputs", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
+    argsman.AddArg("outpubkey=VALUE:PUBKEY", "Add a type-1 P2PK output from a 32-byte x-only or full secp256k1 public key", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
+    argsman.AddArg("outscript=...", "Unsupported: ConnectCoin has no raw Script output type", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
     argsman.AddArg("replaceable(=N)", "Sets Replace-By-Fee (RBF) opt-in sequence number for input N. "
         "If N is not provided, the command attempts to opt-in all available inputs for RBF. "
         "If the transaction has no inputs, this option is ignored.", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
@@ -309,6 +303,9 @@ static void MutateTxAddOutAddr(CMutableTransaction& tx, const std::string& strIn
     if (!IsValidDestination(destination)) {
         throw std::runtime_error("invalid TX output address");
     }
+    if (!std::holds_alternative<WitnessV1Taproot>(destination)) {
+        throw std::runtime_error("ConnectCoin outputs require a type-1 bech32m address");
+    }
     CScript scriptPubKey = GetScriptForDestination(destination);
 
     // construct TxOut, append to transaction output list
@@ -318,192 +315,51 @@ static void MutateTxAddOutAddr(CMutableTransaction& tx, const std::string& strIn
 
 static void MutateTxAddOutPubKey(CMutableTransaction& tx, const std::string& strInput)
 {
-    // Separate into VALUE:PUBKEY[:FLAGS]
+    // Separate into VALUE:PUBKEY
     std::vector<std::string> vStrInputParts = SplitString(strInput, ':');
 
-    if (vStrInputParts.size() < 2 || vStrInputParts.size() > 3)
+    if (vStrInputParts.size() != 2)
         throw std::runtime_error("TX output missing or too many separators");
 
     // Extract and validate VALUE
     CAmount value = ExtractAndValidateValue(vStrInputParts[0]);
 
     // Extract and validate PUBKEY
-    CPubKey pubkey(ParseHex(vStrInputParts[1]));
-    if (!pubkey.IsFullyValid())
-        throw std::runtime_error("invalid TX output pubkey");
-    CScript scriptPubKey = GetScriptForRawPubKey(pubkey);
-
-    // Extract and validate FLAGS
-    bool bSegWit = false;
-    bool bScriptHash = false;
-    if (vStrInputParts.size() == 3) {
-        const std::string& flags = vStrInputParts[2];
-        bSegWit = (flags.find('W') != std::string::npos);
-        bScriptHash = (flags.find('S') != std::string::npos);
+    const std::vector<unsigned char> encoded{ParseHex(vStrInputParts[1])};
+    XOnlyPubKey pubkey;
+    if (encoded.size() == XOnlyPubKey::size()) {
+        pubkey = XOnlyPubKey{encoded};
+    } else {
+        const CPubKey full_pubkey{encoded};
+        if (!full_pubkey.IsFullyValid()) throw std::runtime_error("invalid TX output pubkey");
+        pubkey = XOnlyPubKey{full_pubkey};
     }
-
-    if (bSegWit) {
-        if (!pubkey.IsCompressed()) {
-            throw std::runtime_error("Uncompressed pubkeys are not useable for SegWit outputs");
-        }
-        // Build a P2WPKH script
-        scriptPubKey = GetScriptForDestination(WitnessV0KeyHash(pubkey));
-    }
-    if (bScriptHash) {
-        // Get the ID for the script, and then construct a P2SH destination for it.
-        scriptPubKey = GetScriptForDestination(ScriptHash(scriptPubKey));
-    }
+    if (!pubkey.IsFullyValid()) throw std::runtime_error("invalid TX output x-only pubkey");
 
     // construct TxOut, append to transaction output list
-    CTxOut txout(value, scriptPubKey);
+    CTxOut txout(value, pubkey);
     tx.vout.push_back(txout);
 }
 
 static void MutateTxAddOutMultiSig(CMutableTransaction& tx, const std::string& strInput)
 {
-    // Separate into VALUE:REQUIRED:NUMKEYS:PUBKEY1:PUBKEY2:....[:FLAGS]
-    std::vector<std::string> vStrInputParts = SplitString(strInput, ':');
-
-    // Check that there are enough parameters
-    if (vStrInputParts.size()<3)
-        throw std::runtime_error("Not enough multisig parameters");
-
-    // Extract and validate VALUE
-    CAmount value = ExtractAndValidateValue(vStrInputParts[0]);
-
-    // Extract REQUIRED
-    const uint32_t required{TrimAndParse<uint32_t>(vStrInputParts.at(1), "invalid multisig required number")};
-
-    // Extract NUMKEYS
-    const uint32_t numkeys{TrimAndParse<uint32_t>(vStrInputParts.at(2), "invalid multisig total number")};
-
-    // Validate there are the correct number of pubkeys
-    if (vStrInputParts.size() < numkeys + 3)
-        throw std::runtime_error("incorrect number of multisig pubkeys");
-
-    if (required < 1 || required > MAX_PUBKEYS_PER_MULTISIG || numkeys < 1 || numkeys > MAX_PUBKEYS_PER_MULTISIG || numkeys < required)
-        throw std::runtime_error("multisig parameter mismatch. Required " \
-                            + ToString(required) + " of " + ToString(numkeys) + "signatures.");
-
-    // extract and validate PUBKEYs
-    std::vector<CPubKey> pubkeys;
-    for(int pos = 1; pos <= int(numkeys); pos++) {
-        CPubKey pubkey(ParseHex(vStrInputParts[pos + 2]));
-        if (!pubkey.IsFullyValid())
-            throw std::runtime_error("invalid TX output pubkey");
-        pubkeys.push_back(pubkey);
-    }
-
-    // Extract FLAGS
-    bool bSegWit = false;
-    bool bScriptHash = false;
-    if (vStrInputParts.size() == numkeys + 4) {
-        const std::string& flags = vStrInputParts.back();
-        bSegWit = (flags.find('W') != std::string::npos);
-        bScriptHash = (flags.find('S') != std::string::npos);
-    }
-    else if (vStrInputParts.size() > numkeys + 4) {
-        // Validate that there were no more parameters passed
-        throw std::runtime_error("Too many parameters");
-    }
-
-    CScript scriptPubKey = GetScriptForMultisig(required, pubkeys);
-
-    if (bSegWit) {
-        for (const CPubKey& pubkey : pubkeys) {
-            if (!pubkey.IsCompressed()) {
-                throw std::runtime_error("Uncompressed pubkeys are not useable for SegWit outputs");
-            }
-        }
-        // Build a P2WSH with the multisig script
-        scriptPubKey = GetScriptForDestination(WitnessV0ScriptHash(scriptPubKey));
-    }
-    if (bScriptHash) {
-        if (scriptPubKey.size() > MAX_SCRIPT_ELEMENT_SIZE) {
-            throw std::runtime_error(strprintf(
-                        "redeemScript exceeds size limit: %d > %d", scriptPubKey.size(), MAX_SCRIPT_ELEMENT_SIZE));
-        }
-        // Get the ID for the script, and then construct a P2SH destination for it.
-        scriptPubKey = GetScriptForDestination(ScriptHash(scriptPubKey));
-    }
-
-    // construct TxOut, append to transaction output list
-    CTxOut txout(value, scriptPubKey);
-    tx.vout.push_back(txout);
+    (void)tx;
+    (void)strInput;
+    throw std::runtime_error("ConnectCoin currently supports only type-1 P2PK outputs; multisig is unavailable");
 }
 
 static void MutateTxAddOutData(CMutableTransaction& tx, const std::string& strInput)
 {
-    CAmount value = 0;
-
-    // separate [VALUE:]DATA in string
-    size_t pos = strInput.find(':');
-
-    if (pos==0)
-        throw std::runtime_error("TX output value not specified");
-
-    if (pos == std::string::npos) {
-        pos = 0;
-    } else {
-        // Extract and validate VALUE
-        value = ExtractAndValidateValue(strInput.substr(0, pos));
-        ++pos;
-    }
-
-    // extract and validate DATA
-    const std::string strData{strInput.substr(pos, std::string::npos)};
-
-    if (!IsHex(strData))
-        throw std::runtime_error("invalid TX output data");
-
-    std::vector<unsigned char> data = ParseHex(strData);
-
-    CTxOut txout(value, CScript() << OP_RETURN << data);
-    tx.vout.push_back(txout);
+    (void)tx;
+    (void)strInput;
+    throw std::runtime_error("ConnectCoin type-1 outputs do not support data/OP_RETURN");
 }
 
 static void MutateTxAddOutScript(CMutableTransaction& tx, const std::string& strInput)
 {
-    // separate VALUE:SCRIPT[:FLAGS]
-    std::vector<std::string> vStrInputParts = SplitString(strInput, ':');
-    if (vStrInputParts.size() < 2)
-        throw std::runtime_error("TX output missing separator");
-
-    // Extract and validate VALUE
-    CAmount value = ExtractAndValidateValue(vStrInputParts[0]);
-
-    // extract and validate script
-    const std::string& strScript = vStrInputParts[1];
-    CScript scriptPubKey = ParseScript(strScript);
-
-    // Extract FLAGS
-    bool bSegWit = false;
-    bool bScriptHash = false;
-    if (vStrInputParts.size() == 3) {
-        const std::string& flags = vStrInputParts.back();
-        bSegWit = (flags.find('W') != std::string::npos);
-        bScriptHash = (flags.find('S') != std::string::npos);
-    }
-
-    if (scriptPubKey.size() > MAX_SCRIPT_SIZE) {
-        throw std::runtime_error(strprintf(
-                    "script exceeds size limit: %d > %d", scriptPubKey.size(), MAX_SCRIPT_SIZE));
-    }
-
-    if (bSegWit) {
-        scriptPubKey = GetScriptForDestination(WitnessV0ScriptHash(scriptPubKey));
-    }
-    if (bScriptHash) {
-        if (scriptPubKey.size() > MAX_SCRIPT_ELEMENT_SIZE) {
-            throw std::runtime_error(strprintf(
-                        "redeemScript exceeds size limit: %d > %d", scriptPubKey.size(), MAX_SCRIPT_ELEMENT_SIZE));
-        }
-        scriptPubKey = GetScriptForDestination(ScriptHash(scriptPubKey));
-    }
-
-    // construct TxOut, append to transaction output list
-    CTxOut txout(value, scriptPubKey);
-    tx.vout.push_back(txout);
+    (void)tx;
+    (void)strInput;
+    throw std::runtime_error("ConnectCoin has no raw Script output type; use outaddr or outpubkey");
 }
 
 static void MutateTxDelInput(CMutableTransaction& tx, const std::string& strInIdx)
@@ -524,18 +380,12 @@ static void MutateTxDelOutput(CMutableTransaction& tx, const std::string& strOut
     tx.vout.erase(tx.vout.begin() + *idx);
 }
 
-static const unsigned int N_SIGHASH_OPTS = 7;
+static const unsigned int N_SIGHASH_OPTS = 1;
 static const struct {
     const char *flagStr;
     int flags;
 } sighashOptions[N_SIGHASH_OPTS] = {
     {"DEFAULT", SIGHASH_DEFAULT},
-    {"ALL", SIGHASH_ALL},
-    {"NONE", SIGHASH_NONE},
-    {"SINGLE", SIGHASH_SINGLE},
-    {"ALL|ANYONECANPAY", SIGHASH_ALL|SIGHASH_ANYONECANPAY},
-    {"NONE|ANYONECANPAY", SIGHASH_NONE|SIGHASH_ANYONECANPAY},
-    {"SINGLE|ANYONECANPAY", SIGHASH_SINGLE|SIGHASH_ANYONECANPAY},
 };
 
 static bool findSighashFlags(int& flags, const std::string& flagStr)
@@ -576,7 +426,7 @@ static std::vector<unsigned char> ParseHexUV(const UniValue& v, const std::strin
 
 static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
 {
-    int nHashType = SIGHASH_ALL;
+    int nHashType = SIGHASH_DEFAULT;
 
     if (flagStr.size() > 0)
         if (!findSighashFlags(nHashType, flagStr))
@@ -585,7 +435,6 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
     // mergedTx will end up with all the signatures; it
     // starts as a clone of the raw tx:
     CMutableTransaction mergedTx{tx};
-    const CMutableTransaction txv{tx};
     CCoinsViewCache view{&CoinsViewEmpty::Get()};
 
     if (!registers.contains("privatekeys"))
@@ -643,7 +492,10 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
                     throw std::runtime_error(err);
                 }
                 Coin newcoin;
-                newcoin.out.scriptPubKey = scriptPubKey;
+                newcoin.out.SetScriptPubKey(scriptPubKey);
+                if (newcoin.out.GetType() != TxOutputType::P2PK || !newcoin.out.GetP2PKPubKey()) {
+                    throw std::runtime_error("prevtxs scriptPubKey must encode a ConnectCoin type-1 P2PK output");
+                }
                 newcoin.out.nValue = MAX_MONEY;
                 if (prevOut.exists("amount")) {
                     newcoin.out.nValue = AmountFromValue(prevOut["amount"]);
@@ -666,6 +518,26 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
 
     const FillableSigningProvider& keystore = tempKeystore;
 
+    // Type-1 signatures use the BIP341 transaction digest, which commits to
+    // every input's prevout amount and authorization key. Build the complete
+    // spent-output set before signing any input; a partial prevtxs register
+    // cannot produce a valid SIGHASH_DEFAULT signature.
+    const CTransaction tx_const{mergedTx};
+    std::vector<CTxOut> spent_outputs;
+    spent_outputs.reserve(mergedTx.vin.size());
+    for (const CTxIn& txin : mergedTx.vin) {
+        const Coin& coin = view.AccessCoin(txin.prevout);
+        if (coin.IsSpent()) {
+            throw std::runtime_error("prevtxs must contain every transaction input for type-1 signing");
+        }
+        if (coin.out.nValue == MAX_MONEY) {
+            throw std::runtime_error(strprintf("Missing amount for CTxOut with scriptPubKey=%s", HexStr(coin.out.scriptPubKey)));
+        }
+        spent_outputs.push_back(coin.out);
+    }
+    PrecomputedTransactionData txdata;
+    txdata.Init(tx_const, std::move(spent_outputs), /*force=*/true);
+
     bool fHashSingle = ((nHashType & ~SIGHASH_ANYONECANPAY) == SIGHASH_SINGLE);
 
     // Sign what we can:
@@ -681,13 +553,24 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
         SignatureData sigdata = DataFromTransaction(mergedTx, i, coin.out);
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
         if (!fHashSingle || (i < mergedTx.vout.size()))
-            ProduceSignature(keystore, MutableTransactionSignatureCreator(mergedTx, i, amount, {.sighash_type = nHashType}), prevPubKey, sigdata);
+            ProduceSignature(keystore, MutableTransactionSignatureCreator(mergedTx, i, amount, &txdata, {.sighash_type = nHashType}), prevPubKey, sigdata);
 
         if (amount == MAX_MONEY && !sigdata.scriptWitness.IsNull()) {
             throw std::runtime_error(strprintf("Missing amount for CTxOut with scriptPubKey=%s", HexStr(prevPubKey)));
         }
 
         UpdateInput(txin, sigdata);
+        if (!txin.scriptSig.empty() || txin.scriptWitness.stack.size() != 1 ||
+            txin.scriptWitness.stack.front().size() != 64) {
+            throw std::runtime_error("sign did not produce a complete type-1 SIGHASH_DEFAULT witness");
+        }
+        ScriptError error{SCRIPT_ERR_OK};
+        if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.scriptWitness,
+                          STANDARD_SCRIPT_VERIFY_FLAGS,
+                          TransactionSignatureChecker{&tx_const, i, amount, txdata, MissingDataBehavior::FAIL},
+                          &error)) {
+            throw std::runtime_error(strprintf("sign did not produce a valid type-1 witness: %s", ScriptErrorString(error)));
+        }
     }
 
     tx = mergedTx;

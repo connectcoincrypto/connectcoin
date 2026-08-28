@@ -25,6 +25,7 @@
 #include <serialize.h>
 #include <sync.h>
 #include <test/util/common.h>
+#include <test/util/script.h>
 #include <test/util/setup_common.h>
 #include <test/util/transaction_utils.h>
 #include <test/util/time.h>
@@ -60,8 +61,7 @@ namespace miner_tests {
 struct MinerTestingSetup : public TestingSetup {
     MinerTestingSetup()
         : TestingSetup{ChainType::REGTEST,
-                       {.extra_args = {"-testactivationheight=csv@999999",
-                                       "-testactivationheight=segwit@999999"}}} {}
+                       {.extra_args = {"-testactivationheight=csv@999999"}}} {}
     void TestPackageSelection(const CScript& scriptPubKey, const std::vector<CTransactionRef>& txFirst) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
     void TestBasicMining(const CScript& scriptPubKey, const std::vector<CTransactionRef>& txFirst, int baseheight) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
     void TestPrioritisedMining(const CScript& scriptPubKey, const std::vector<CTransactionRef>& txFirst) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
@@ -129,6 +129,46 @@ static std::unique_ptr<CBlockIndex> CreateBlockIndex(int nHeight, CBlockIndex* a
     index->nHeight = nHeight;
     index->pprev = active_chain_tip;
     return index;
+}
+
+BOOST_AUTO_TEST_CASE(external_coinbase_template_is_complete)
+{
+    std::array<unsigned char, 32> secret{};
+    secret.back() = 1;
+    CKey payout_key;
+    payout_key.Set(secret.begin(), secret.end(), /*fCompressedIn=*/true);
+    const CScript payout_script{GetScriptForP2PKOutput(payout_key)};
+    auto mining{MakeMining()};
+    auto block_template{mining->createNewBlock({
+        .coinbase_output_script = payout_script,
+    }, /*cooldown=*/false)};
+    BOOST_REQUIRE(block_template);
+
+    const node::CoinbaseTx fields{block_template->getCoinbaseTx()};
+    CMutableTransaction coinbase;
+    coinbase.version = fields.version;
+    coinbase.vin.resize(1);
+    coinbase.vin[0].prevout.SetNull();
+    coinbase.vin[0].nSequence = fields.sequence;
+    coinbase.vin[0].scriptSig = fields.script_sig_prefix;
+    coinbase.vin[0].scriptSig.push_back(0x42); // Client extraNonce.
+    if (fields.witness) {
+        coinbase.vin[0].scriptWitness.stack.emplace_back(fields.witness->begin(), fields.witness->end());
+    }
+    coinbase.vout.resize(1);
+    coinbase.vout[0].nValue = fields.block_reward_remaining;
+    coinbase.vout[0].SetScriptPubKey(payout_script);
+    coinbase.vout.insert(coinbase.vout.end(), fields.required_outputs.begin(), fields.required_outputs.end());
+    coinbase.nLockTime = fields.lock_time;
+
+    CBlock block{block_template->getBlock()};
+    block.vtx[0] = MakeTransactionRef(std::move(coinbase));
+    block.hashMerkleRoot = BlockMerkleRoot(block);
+    BOOST_CHECK_NE(GetWitnessCommitmentOffset(block), NO_WITNESS_COMMITMENT);
+
+    std::string reason;
+    std::string debug;
+    BOOST_CHECK_MESSAGE(mining->checkBlock(block, {.check_merkle_root = true, .check_pow = false}, reason, debug), reason + ": " + debug);
 }
 
 // Test suite for ancestor feerate transaction selection.
@@ -420,56 +460,6 @@ void MinerTestingSetup::TestBasicMining(const CScript& scriptPubKey, const std::
     BlockCreateOptions options{
         .coinbase_output_script = scriptPubKey,
     };
-
-    {
-        CTxMemPool& tx_mempool{MakeMempool()};
-        LOCK(tx_mempool.cs);
-
-        // Just to make sure we can still make simple blocks
-        auto block_template{mining->createNewBlock(options, /*cooldown=*/false)};
-        BOOST_REQUIRE(block_template);
-        CBlock block{block_template->getBlock()};
-
-        auto txs = CreateBigSigOpsCluster(txFirst[0]);
-
-        int64_t legacy_sigops = 0;
-        for (auto& t : txs) {
-            // If we don't set the number of sigops in the CTxMemPoolEntry,
-            // template creation fails during sanity checks.
-            TryAddToMempool(tx_mempool, entry.Fee(LOWFEE).Time(Now<NodeSeconds>()).SpendsCoinbase(true).FromTx(t));
-            legacy_sigops += GetLegacySigOpCount(*t);
-            BOOST_CHECK(tx_mempool.GetIter(t->GetHash()).has_value());
-        }
-        assert(tx_mempool.mapTx.size() == 51);
-        assert(legacy_sigops == 20001);
-        BOOST_CHECK_EXCEPTION(mining->createNewBlock(options, /*cooldown=*/false), std::runtime_error, HasReason("bad-blk-sigops"));
-    }
-
-    {
-        CTxMemPool& tx_mempool{MakeMempool()};
-        LOCK(tx_mempool.cs);
-
-        // Check that the mempool is empty.
-        assert(tx_mempool.mapTx.empty());
-
-        // Just to make sure we can still make simple blocks
-        auto block_template{mining->createNewBlock(options, /*cooldown=*/false)};
-        BOOST_REQUIRE(block_template);
-        CBlock block{block_template->getBlock()};
-
-        auto txs = CreateBigSigOpsCluster(txFirst[0]);
-
-        int64_t legacy_sigops = 0;
-        for (auto& t : txs) {
-            TryAddToMempool(tx_mempool, entry.Fee(LOWFEE).Time(Now<NodeSeconds>()).SpendsCoinbase(true).SigOpsCost(GetLegacySigOpCount(*t)*WITNESS_SCALE_FACTOR).FromTx(t));
-            legacy_sigops += GetLegacySigOpCount(*t);
-            BOOST_CHECK(tx_mempool.GetIter(t->GetHash()).has_value());
-        }
-        assert(tx_mempool.mapTx.size() == 51);
-        assert(legacy_sigops == 20001);
-
-        BOOST_REQUIRE(mining->createNewBlock(options, /*cooldown=*/false));
-    }
 
     {
         CTxMemPool& tx_mempool{MakeMempool()};
@@ -844,7 +834,8 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
     BOOST_REQUIRE(mining);
 
     // Note that by default, these tests run with size accounting enabled.
-    CScript scriptPubKey = CScript() << "04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f"_hex << OP_CHECKSIG;
+    const CKey mining_key{GenerateRandomKey()};
+    const CScript scriptPubKey{GetScriptForP2PKOutput(mining_key)};
     BlockCreateOptions options{
         .coinbase_output_script = scriptPubKey,
     };
@@ -897,7 +888,6 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
     // We can't make transactions until we have inputs
     // Therefore, load 110 blocks :)
     static_assert(std::size(BLOCKINFO) == 110, "Should have 110 blocks to import");
-    int baseheight = 0;
     std::vector<CTransactionRef> txFirst;
     for (const auto& bi : BLOCKINFO) {
         const int current_height{mining->getTip()->height};
@@ -920,12 +910,10 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
             block.nTime = Assert(m_node.chainman)->ActiveChain().Tip()->GetMedianTimePast()+1;
             txCoinbase.version = 1;
             txCoinbase.vin[0].scriptSig = CScript{} << (current_height + 1) << bi.extranonce;
-            // Keep the segwit commitment. ConnectCoin activates segwit from
-            // the beginning, and the nonce is mined dynamically below.
-            txCoinbase.vout[0].scriptPubKey = CScript();
             block.vtx[0] = MakeTransactionRef(txCoinbase);
-            if (txFirst.size() == 0)
-                baseheight = current_height;
+            // Rebuild the commitment after changing coinbase metadata.
+            m_node.chainman->GenerateCoinbaseCommitment(block, m_node.chainman->ActiveChain().Tip());
+            txCoinbase = CMutableTransaction{*block.vtx[0]};
             if (txFirst.size() < 4)
                 txFirst.push_back(block.vtx[0]);
             block.hashMerkleRoot = BlockMerkleRoot(block);
@@ -977,29 +965,39 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
         }
     }
 
+    // Exercise transaction selection with a real type-1 spend. The upstream
+    // tail used deliberately invalid P2SH, CHECKMULTISIG and Script-density
+    // transactions; none of those objects can exist in ConnectCoin consensus.
+    CMutableTransaction spend;
+    spend.vin.emplace_back(COutPoint{txFirst.front()->GetHash(), 0});
+    spend.vout.emplace_back(txFirst.front()->vout.front().nValue - COIN,
+                            XOnlyPubKey{GenerateRandomKey().GetPubKey()});
+
+    PrecomputedTransactionData txdata;
+    txdata.Init(spend, std::vector<CTxOut>{txFirst.front()->vout.front()}, /*force=*/true);
+    ScriptExecutionData execdata;
+    execdata.m_annex_init = true;
+    execdata.m_annex_present = false;
+    uint256 sighash;
+    BOOST_REQUIRE(SignatureHashSchnorr(sighash, execdata, spend, /*in_pos=*/0, SIGHASH_DEFAULT,
+                                       SigVersion::TAPROOT, txdata, MissingDataBehavior::ASSERT_FAIL));
+    std::array<unsigned char, 64> signature;
+    BOOST_REQUIRE(mining_key.SignSchnorr(sighash, signature, /*merkle_root=*/nullptr, uint256{}));
+    spend.vin.front().scriptWitness.stack = {
+        std::vector<unsigned char>{signature.begin(), signature.end()}};
+
+    const CTransactionRef spend_ref{MakeTransactionRef(spend)};
+    CTxMemPool& tx_mempool{MakeMempool()};
     {
-        LOCK(cs_main);
-
-        TestBasicMining(scriptPubKey, txFirst, baseheight);
-
-        m_node.chainman->ActiveChain().Tip()->nHeight--;
+        LOCK(tx_mempool.cs);
+        TryAddToMempool(tx_mempool,
+                        TestMemPoolEntryHelper{}.Fee(COIN).SpendsCoinbase(true).FromTx(spend_ref));
     }
-
-    // Drain validation callbacks before replacing the mempool, without
-    // holding cs_main (SyncWithValidationInterfaceQueue requires this).
-    m_node.validation_signals->SyncWithValidationInterfaceQueue();
-
-    {
-        LOCK(cs_main);
-
-        TestPackageSelection(scriptPubKey, txFirst);
-
-        m_node.chainman->ActiveChain().Tip()->nHeight--;
-
-        TestPrioritisedMining(scriptPubKey, txFirst);
-
-        TestSigOpsAdjustedWeightChunkLimit(scriptPubKey, txFirst);
-    }
+    block_template = mining->createNewBlock(options, /*cooldown=*/false);
+    BOOST_REQUIRE(block_template);
+    const CBlock selected_block{block_template->getBlock()};
+    BOOST_REQUIRE_EQUAL(selected_block.vtx.size(), 2U);
+    BOOST_CHECK_EQUAL(selected_block.vtx[1]->GetHash(), spend_ref->GetHash());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

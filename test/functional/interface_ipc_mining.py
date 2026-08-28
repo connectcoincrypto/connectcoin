@@ -82,10 +82,12 @@ class IPCMiningTest(BitcoinTestFramework):
         coinbase_tx.vin[0].prevout = NULL_OUTPOINT
         coinbase_tx.vin[0].nSequence = coinbase_res.sequence
 
-        # Verify there's no dummy extraNonce in the coinbase scriptSig
+        # Verify that the complete prefix starts with BIP34 height metadata and
+        # also contains ConnectCoin's required witness commitment.
         current_block_height = self.nodes[0].getchaintips()[0]["height"]
         bip34_prefix = script_BIP34_coinbase_height(current_block_height + 1, padding=False)
-        assert_equal(coinbase_res.scriptSigPrefix, bip34_prefix)
+        assert coinbase_res.scriptSigPrefix.startswith(bip34_prefix)
+        assert bytes.fromhex("24aa21a9ed") in coinbase_res.scriptSigPrefix
 
         # Typically a mining pool appends its name and an extraNonce
         coinbase_tx.vin[0].scriptSig = coinbase_res.scriptSigPrefix + extra_nonce
@@ -101,8 +103,8 @@ class IPCMiningTest(BitcoinTestFramework):
         coinbase_tx.vout = [CTxOut()]
         coinbase_tx.vout[0].scriptPubKey = miniwallet.get_output_script()
         coinbase_tx.vout[0].nValue = coinbase_res.blockRewardRemaining
-        # Add SegWit OP_RETURN. This is currently always present even for
-        # empty blocks, but this may change.
+        # Append any future required typed outputs. The current witness
+        # commitment is already part of scriptSigPrefix.
         for output_data in coinbase_res.requiredOutputs:
             output = CTxOut()
             output.deserialize(BytesIO(output_data))
@@ -565,11 +567,8 @@ class IPCMiningTest(BitcoinTestFramework):
                 assert_not_equal(coinbase.serialize_without_witness().hex(), coinbase.serialize().hex())
                 missing_witness_block = deepcopy(block)
                 missing_witness_block.vtx[0].wit.vtxinwit = []
-                has_witness_commitment = any(
-                    len(o.scriptPubKey) >= 38 and o.scriptPubKey[2:6] == WITNESS_COMMITMENT_HEADER
-                    for o in missing_witness_block.vtx[0].vout
-                )
-                assert has_witness_commitment, "Coinbase should have a witness commitment output"
+                has_witness_commitment = bytes.fromhex("24") + WITNESS_COMMITMENT_HEADER in bytes(missing_witness_block.vtx[0].vin[0].scriptSig)
+                assert has_witness_commitment, "Coinbase input should contain a witness commitment"
                 missing_witness_block.hashMerkleRoot = missing_witness_block.calc_merkle_root()
                 missing_witness_block.solve()
                 self.log.debug("submitSolution should reject a coinbase missing witness")
@@ -765,10 +764,8 @@ class IPCMiningTest(BitcoinTestFramework):
         """Test that IPC createNewBlock() works at low block heights on a
         clean chain, in particular with regard to bad-cb-length.
 
-        createNewBlock pads the scriptSig with a dummy extranonce to pass
-        its internal CheckBlock(). This dummy is omitted from the
-        getCoinbaseTx() script_sig_prefix field. The client provides its
-        own extraNonce via submitSolution()."""
+        getCoinbaseTx() supplies a complete metadata prefix at every height;
+        the client may append its own extraNonce via submitSolution()."""
         self.log.info("Running low block height test")
 
         node = self.nodes[0]
@@ -791,8 +788,7 @@ class IPCMiningTest(BitcoinTestFramework):
                     template = await mining_create_block_template(mining, stack, ctx, opts, cooldown=False)
                     assert template is not None
                     block = await mining_get_block(template, ctx)
-                    # Heights <= 16 need extra nonce padding.
-                    extra_nonce = b'\xaa\xbb\xcc\xdd' if height <= 16 else b""
+                    extra_nonce = b'\xaa\xbb\xcc\xdd'
                     coinbase = await self.build_coinbase_test(template, ctx, self.miniwallet, extra_nonce=extra_nonce)
                     block.vtx[0] = coinbase
                     block.hashMerkleRoot = block.calc_merkle_root()

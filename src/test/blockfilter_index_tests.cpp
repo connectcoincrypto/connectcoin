@@ -16,6 +16,7 @@
 #include <test/util/common.h>
 #include <test/util/mining.h>
 #include <test/util/setup_common.h>
+#include <test/util/script.h>
 #include <uint256.h>
 #include <util/check.h>
 #include <validation.h>
@@ -121,8 +122,8 @@ BOOST_FIXTURE_TEST_CASE(blockfilter_index_initial_sync, TestChain100Setup)
     }
     CKey coinbase_key_A = GenerateRandomKey();
     CKey coinbase_key_B = GenerateRandomKey();
-    CScript coinbase_script_pub_key_A = GetScriptForDestination(PKHash(coinbase_key_A.GetPubKey()));
-    CScript coinbase_script_pub_key_B = GetScriptForDestination(PKHash(coinbase_key_B.GetPubKey()));
+    const CScript coinbase_script_pub_key_A{GetScriptForP2PKOutput(coinbase_key_A)};
+    const CScript coinbase_script_pub_key_B{GetScriptForP2PKOutput(coinbase_key_B)};
     std::vector<std::shared_ptr<CBlock>> chainA, chainB;
     BOOST_REQUIRE(BuildChain(m_node, tip, coinbase_script_pub_key_A, 10, chainA));
     BOOST_REQUIRE(BuildChain(m_node, tip, coinbase_script_pub_key_B, 10, chainB));

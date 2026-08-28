@@ -22,13 +22,7 @@ static const std::string OUTPUT_TYPE_STRING_UNKNOWN = "unknown";
 
 std::optional<OutputType> ParseOutputType(std::string_view type)
 {
-    if (type == OUTPUT_TYPE_STRING_LEGACY) {
-        return OutputType::LEGACY;
-    } else if (type == OUTPUT_TYPE_STRING_P2SH_SEGWIT) {
-        return OutputType::P2SH_SEGWIT;
-    } else if (type == OUTPUT_TYPE_STRING_BECH32) {
-        return OutputType::BECH32;
-    } else if (type == OUTPUT_TYPE_STRING_BECH32M) {
+    if (type == OUTPUT_TYPE_STRING_BECH32M) {
         return OutputType::BECH32M;
     }
     return std::nullopt;
@@ -78,16 +72,7 @@ CTxDestination AddAndGetDestinationForScript(FlatSigningProvider& keystore, cons
 }
 
 std::optional<OutputType> OutputTypeFromDestination(const CTxDestination& dest) {
-    if (std::holds_alternative<PKHash>(dest) ||
-        std::holds_alternative<ScriptHash>(dest)) {
-        return OutputType::LEGACY;
-    }
-    if (std::holds_alternative<WitnessV0KeyHash>(dest) ||
-        std::holds_alternative<WitnessV0ScriptHash>(dest)) {
-        return OutputType::BECH32;
-    }
-    if (std::holds_alternative<WitnessV1Taproot>(dest) ||
-        std::holds_alternative<WitnessUnknown>(dest)) {
+    if (std::holds_alternative<WitnessV1Taproot>(dest)) {
         return OutputType::BECH32M;
     }
     return std::nullopt;

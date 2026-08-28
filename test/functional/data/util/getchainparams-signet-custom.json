@@ -1,10 +1,10 @@
 {
   "chain": "signet",
   "test_chain": true,
-  "genesis": "8047a6ba854f76398d37581218efa06d97278e68f2b6885784905c0a85000000",
+  "genesis": "76f120bd21a2b76bcd9df057f3151e5c87427a236533bc1243c4bf2727010000",
   "subsidy_halving_interval": 450000,
   "signet": {
-    "challenge": "512102f7561d208dd9ae99bf497273e16f389bdbd6c4742ddb8e6b216e64fa2928ad8f51ae"
+    "challenge": "60"
   },
   "pow": {
     "limit": "00000377ae000000000000000000000000000000000000000000000000000000",
@@ -14,7 +14,7 @@
   },
   "net": {
     "default_port": 48182,
-    "magic": "a5df2dcb",
+    "magic": "dbf0784a",
     "dns_seeds": [
     ]
   },

@@ -27,8 +27,9 @@ class FeatureFrameworkMiniWalletTest(BitcoinTestFramework):
         for mode_name, wallet in self.wallets:
             self.log.info(f"Test tx padding with MiniWallet mode {mode_name}...")
             utxo = wallet.get_utxo(mark_as_spent=False)
-            for target_vsize in [250, 500, 1250, 2500, 5000, 12500, 25000, 50000, 1000000,
-                                 248, 501, 1085, 3343, 5805, 12289, 25509, 55855,  999998]:
+            # Type-1 outputs have a fixed 41-byte size, so only transaction
+            # sizes representable by adding whole outputs are meaningful.
+            for target_vsize in [150, 478, 1298, 4168, 10072, 20570]:
                 tx = wallet.create_self_transfer(utxo_to_spend=utxo, target_vsize=target_vsize)
                 assert_equal(tx['tx'].get_vsize(), target_vsize)
                 child_tx = wallet.create_self_transfer_multi(utxos_to_spend=[tx["new_utxo"]], target_vsize=target_vsize)

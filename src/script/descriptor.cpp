@@ -1563,6 +1563,7 @@ public:
     }
     std::optional<OutputType> GetOutputType() const override { return OutputType::BECH32M; }
     bool IsSingleType() const final { return true; }
+    bool IsKeyPathOnly() const final { return m_depths.empty(); }
 
     std::optional<int64_t> ScriptSize() const override { return 1 + 1 + 32; }
 
@@ -1766,6 +1767,7 @@ public:
     RawTRDescriptor(std::unique_ptr<PubkeyProvider> output_key) : DescriptorImpl(Vector(std::move(output_key)), "rawtr") {}
     std::optional<OutputType> GetOutputType() const override { return OutputType::BECH32M; }
     bool IsSingleType() const final { return true; }
+    bool IsKeyPathOnly() const final { return true; }
 
     std::optional<int64_t> ScriptSize() const override { return 1 + 1 + 32; }
 

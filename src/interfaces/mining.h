@@ -68,9 +68,9 @@ public:
      *       reserved value. Callers must provide a complete coinbase transaction,
      *       including the witness when a witness commitment is present.
      *
-     * @note for heights <= 16, the BIP34 height push in getCoinbaseTx().script_sig_prefix
-     *       is only one byte long, so the coinbase scriptSig needs at least
-     *       one additional byte of data to avoid bad-cb-length.
+     * @note getCoinbaseTx().script_sig_prefix contains both the BIP34 height
+     *       and ConnectCoin's coinbase-input witness commitment. Callers must
+     *       preserve the prefix and append any extraNonce after it.
      *
      * @returns true if the block was accepted as a new block
      */

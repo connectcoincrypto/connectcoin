@@ -9,6 +9,7 @@
 #include <node/types.h>
 #include <wallet/external_signer_scriptpubkeyman.h>
 
+#include <algorithm>
 #include <iostream>
 #include <key_io.h>
 #include <memory>
@@ -57,7 +58,12 @@ std::unique_ptr<ExternalSignerScriptPubKeyMan> ExternalSignerScriptPubKeyMan::Cr
     if (command == "") return util::Error{Untranslated("restart connectcoind with -signer=<cmd>")};
     std::vector<ExternalSigner> signers;
     ExternalSigner::Enumerate(command, signers, Params().GetChainTypeString());
-    if (signers.empty()) return util::Error{Untranslated("No external signers found")};
+    signers.erase(std::remove_if(signers.begin(), signers.end(), [](const ExternalSigner& signer) {
+        return !signer.m_supports_typed_outputs;
+    }), signers.end());
+    if (signers.empty()) {
+        return util::Error{Untranslated("No compatible external signers found. The signer must advertise protocol 'connectcoin-typed-v1'.")};
+    }
     // TODO: add fingerprint argument instead of failing in case of multiple signers.
     if (signers.size() > 1) return util::Error{Untranslated("More than one external signer found. Please connect only one at a time.")};
     return signers[0];

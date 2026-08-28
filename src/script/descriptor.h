@@ -121,6 +121,10 @@ struct Descriptor {
     /** Whether this descriptor will return at most one scriptPubKey or multiple (aka is or is not combo) */
     virtual bool IsSingleType() const = 0;
 
+    /** Whether every satisfaction is a single key-path Schnorr signature.
+     * ConnectCoin type-1 wallets must not rely on Taproot script paths. */
+    virtual bool IsKeyPathOnly() const { return false; }
+
     /** Whether the given provider has all private keys required by this descriptor.
      * @return `false` if the descriptor doesn't have any keys or subdescriptors,
      *         or if the provider does not have all private keys required by

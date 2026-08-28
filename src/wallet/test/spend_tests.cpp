@@ -5,16 +5,23 @@
 #include <consensus/amount.h>
 #include <key.h>
 #include <script/solver.h>
+#include <test/util/script.h>
 #include <validation.h>
 #include <wallet/coincontrol.h>
 #include <wallet/spend.h>
 #include <wallet/test/util.h>
 #include <wallet/test/wallet_test_fixture.h>
 
+#include <algorithm>
 #include <boost/test/unit_test.hpp>
 
 namespace wallet {
 BOOST_FIXTURE_TEST_SUITE(spend_tests, WalletTestingSetup)
+
+static CTxDestination P2PKDestination(const CKey& key)
+{
+    return WitnessV1Taproot{XOnlyPubKey{key.GetPubKey()}};
+}
 
 BOOST_AUTO_TEST_CASE(max_signed_input_size_uses_external_outpoint)
 {
@@ -22,19 +29,20 @@ BOOST_AUTO_TEST_CASE(max_signed_input_size_uses_external_outpoint)
     FillableSigningProvider provider;
     BOOST_REQUIRE(provider.AddKey(key));
 
-    const CTxOut txout{COIN, GetScriptForDestination(PKHash{key.GetPubKey()})};
+    const CTxOut txout{COIN, XOnlyPubKey{key.GetPubKey()}};
     const COutPoint outpoint{Txid{}, 0};
     CCoinControl coin_control;
     coin_control.Select(outpoint).SetTxOut(txout);
 
     const int low_r{CalculateMaximumSignedInputSize(txout, COutPoint{}, &provider, /*can_grind_r=*/true, &coin_control)};
     const int high_r{CalculateMaximumSignedInputSize(txout, outpoint, &provider, /*can_grind_r=*/true, &coin_control)};
-    BOOST_CHECK_EQUAL(high_r, low_r + 1);
+    BOOST_CHECK_EQUAL(low_r, 58);
+    BOOST_CHECK_EQUAL(high_r, low_r);
 }
 
 BOOST_AUTO_TEST_CASE(rejects_amounts_above_money_range)
 {
-    const CTxDestination destination{PubKeyDestination({})};
+    const CTxDestination destination{P2PKDestination(GenerateRandomKey())};
     CCoinControl coin_control;
 
     // Each recipient is individually valid, but their sum is not.
@@ -48,6 +56,7 @@ BOOST_AUTO_TEST_CASE(rejects_amounts_above_money_range)
     // The recipient amount fits exactly, but adding a non-zero fee does not.
     coin_control.m_feerate.emplace(COIN);
     coin_control.fOverrideFeeRate = true;
+    coin_control.destChange = destination;
     auto result_with_fee{CreateTransaction(m_wallet,
                                            {{destination, MAX_MONEY, /*subtract_fee=*/false}},
                                            /*change_pos=*/std::nullopt, coin_control)};
@@ -57,47 +66,27 @@ BOOST_AUTO_TEST_CASE(rejects_amounts_above_money_range)
 
 BOOST_FIXTURE_TEST_CASE(SubtractFee, TestChain100Setup)
 {
-    CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
+    CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
     auto wallet = CreateSyncedWallet(*m_node.chain, WITH_LOCK(Assert(m_node.chainman)->GetMutex(), return m_node.chainman->ActiveChain()), coinbaseKey);
 
-    // Check that a subtract-from-recipient transaction slightly less than the
-    // coinbase input amount does not create a change output (because it would
-    // be uneconomical to add and spend the output), and make sure it pays the
-    // leftover input amount which would have been change to the recipient
-    // instead of the miner.
-    auto check_tx = [&wallet](CAmount leftover_input_amount) {
-        CRecipient recipient{PubKeyDestination({}), 100 * COIN - leftover_input_amount, /*subtract_fee=*/true};
-        CCoinControl coin_control;
-        coin_control.m_feerate.emplace(10000);
-        coin_control.fOverrideFeeRate = true;
-        // We need to use a change type with high cost of change so that the leftover amount will be dropped to fee instead of added as a change output
-        coin_control.m_change_type = OutputType::LEGACY;
-        auto res = CreateTransaction(*wallet, {recipient}, /*change_pos=*/std::nullopt, coin_control);
-        BOOST_CHECK(res);
-        const auto& txr = *res;
-        BOOST_CHECK_EQUAL(txr.tx->vout.size(), 1);
-        BOOST_CHECK_EQUAL(txr.tx->vout[0].nValue, recipient.nAmount + leftover_input_amount - txr.fee);
-        BOOST_CHECK_GT(txr.fee, 0);
-        return txr.fee;
-    };
+    const CKey recipient_key{GenerateRandomKey()};
+    const XOnlyPubKey recipient_pubkey{recipient_key.GetPubKey()};
+    const CRecipient recipient{P2PKDestination(recipient_key), 100 * COIN, /*subtract_fee=*/true};
+    CCoinControl coin_control;
+    coin_control.m_feerate.emplace(10000);
+    coin_control.fOverrideFeeRate = true;
 
-    // Send full input amount to recipient, check that only nonzero fee is
-    // subtracted (to_reduce == fee).
-    const CAmount fee{check_tx(0)};
+    const auto result{CreateTransaction(*wallet, {recipient}, /*change_pos=*/std::nullopt, coin_control)};
+    BOOST_REQUIRE(result);
+    BOOST_CHECK_GT(result->fee, 0);
 
-    // Send slightly less than full input amount to recipient, check leftover
-    // input amount is paid to recipient not the miner (to_reduce == fee - 123)
-    BOOST_CHECK_EQUAL(fee, check_tx(123));
-
-    // Send full input minus fee amount to recipient, check leftover input
-    // amount is paid to recipient not the miner (to_reduce == 0)
-    BOOST_CHECK_EQUAL(fee, check_tx(fee));
-
-    // Send full input minus more than the fee amount to recipient, check
-    // leftover input amount is paid to recipient not the miner (to_reduce ==
-    // -123). This overpays the recipient instead of overpaying the miner more
-    // than double the necessary fee.
-    BOOST_CHECK_EQUAL(fee, check_tx(fee + 123));
+    const auto recipient_output{std::find_if(result->tx->vout.begin(), result->tx->vout.end(),
+        [&](const CTxOut& out) { return out.GetP2PKPubKey() == recipient_pubkey; })};
+    BOOST_REQUIRE(recipient_output != result->tx->vout.end());
+    BOOST_CHECK_EQUAL(recipient_output->nValue, recipient.nAmount - result->fee);
+    for (const CTxOut& output : result->tx->vout) {
+        BOOST_CHECK(output.GetType() == TxOutputType::P2PK);
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(wallet_duplicated_preset_inputs_test, TestChain100Setup)
@@ -105,7 +94,7 @@ BOOST_FIXTURE_TEST_CASE(wallet_duplicated_preset_inputs_test, TestChain100Setup)
     // Verify that the wallet's Coin Selection process does not include pre-selected inputs twice in a transaction.
 
     // Add 4 spendable UTXOs, 100 CC each, to the wallet (total balance 400 CC).
-    for (int i = 0; i < 4; i++) CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
+    for (int i = 0; i < 4; i++) CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
     auto wallet = CreateSyncedWallet(*m_node.chain, WITH_LOCK(Assert(m_node.chainman)->GetMutex(), return m_node.chainman->ActiveChain()), coinbaseKey);
 
     LOCK(wallet->cs_wallet);
@@ -116,7 +105,7 @@ BOOST_FIXTURE_TEST_CASE(wallet_duplicated_preset_inputs_test, TestChain100Setup)
 
     // Try to create a tx that spends more than what preset inputs + wallet selected inputs are covering for.
     // The wallet can cover up to 400 CC, and the tx target is 499 CC.
-    std::vector<CRecipient> recipients{{*Assert(wallet->GetNewDestination(OutputType::BECH32, "dummy")),
+    std::vector<CRecipient> recipients{{*Assert(wallet->GetNewDestination(OutputType::BECH32M, "dummy")),
                                            /*nAmount=*/499 * COIN, /*fSubtractFeeFromAmount=*/true}};
     CCoinControl coin_control;
     coin_control.m_allow_other_inputs = true;

@@ -1086,6 +1086,11 @@ static util::Result<CreatedTransactionResult> CreateTransactionInternal(
     coin_selection_params.tx_noinputs_size = 10 + GetSizeOfCompactSize(vecSend.size()); // bytes for output count
 
     CAmount recipients_sum = 0;
+    if (std::any_of(vecSend.begin(), vecSend.end(), [](const CRecipient& recipient) {
+            return !std::holds_alternative<WitnessV1Taproot>(recipient.dest);
+        })) {
+        return util::Error{_("ConnectCoin transactions support only type-1 P2PK (bech32m) destinations")};
+    }
     const OutputType change_type = wallet.TransactionChangeType(coin_control.m_change_type ? *coin_control.m_change_type : wallet.m_default_change_type, vecSend);
     ReserveDestination reservedest(&wallet, change_type);
     unsigned int outputs_to_subtract_fee_from = 0; // The number of outputs which we are subtracting the fee from
@@ -1138,6 +1143,9 @@ static util::Result<CreatedTransactionResult> CreateTransactionInternal(
         CHECK_NONFATAL(IsValidDestination(dest) != scriptChange.empty());
     }
     CTxOut change_prototype_txout(0, scriptChange);
+    if (change_prototype_txout.GetType() != TxOutputType::P2PK) {
+        return util::Error{_("Change destination must be a type-1 P2PK (bech32m) destination")};
+    }
     coin_selection_params.change_output_size = GetSerializeSize(change_prototype_txout);
 
     // Get size of spending the change output

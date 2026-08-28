@@ -806,7 +806,9 @@ def BIP341_sha_amounts(spent_utxos):
     return sha256(b"".join(u.nValue.to_bytes(8, "little", signed=True) for u in spent_utxos))
 
 def BIP341_sha_scriptpubkeys(spent_utxos):
-    return sha256(b"".join(ser_string(u.scriptPubKey) for u in spent_utxos))
+    # ConnectCoin commits to the canonical typed lock payload (type byte and
+    # x-only key), not to the in-memory script compatibility view.
+    return sha256(b"".join(u.serialize_payload() for u in spent_utxos))
 
 def BIP341_sha_sequences(txTo):
     return sha256(b"".join(i.nSequence.to_bytes(4, "little") for i in txTo.vin))
@@ -819,7 +821,6 @@ def TaprootSignatureMsg(txTo, spent_utxos, hash_type, input_index=0, *, scriptpa
     assert input_index < len(txTo.vin)
     out_type = SIGHASH_ALL if hash_type == 0 else hash_type & 3
     in_type = hash_type & SIGHASH_ANYONECANPAY
-    spk = spent_utxos[input_index].scriptPubKey
     ss = bytes([0, hash_type]) # epoch, hash_type
     ss += txTo.version.to_bytes(4, "little")
     ss += txTo.nLockTime.to_bytes(4, "little")
@@ -839,7 +840,7 @@ def TaprootSignatureMsg(txTo, spent_utxos, hash_type, input_index=0, *, scriptpa
     if in_type == SIGHASH_ANYONECANPAY:
         ss += txTo.vin[input_index].prevout.serialize()
         ss += spent_utxos[input_index].nValue.to_bytes(8, "little", signed=True)
-        ss += ser_string(spk)
+        ss += spent_utxos[input_index].serialize_payload()
         ss += txTo.vin[input_index].nSequence.to_bytes(4, "little")
     else:
         ss += input_index.to_bytes(4, "little")

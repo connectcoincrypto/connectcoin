@@ -87,10 +87,6 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
 
 void RegenerateCommitments(CBlock& block, ChainstateManager& chainman)
 {
-    CMutableTransaction tx{*block.vtx.at(0)};
-    tx.vout.erase(tx.vout.begin() + GetWitnessCommitmentIndex(block));
-    block.vtx.at(0) = MakeTransactionRef(tx);
-
     const CBlockIndex* prev_block = WITH_LOCK(::cs_main, return chainman.m_blockman.LookupBlockIndex(block.hashPrevBlock));
     chainman.GenerateCoinbaseCommitment(block, prev_block);
 
@@ -116,7 +112,7 @@ void BlockAssembler::resetBlock()
 {
     // Reserve space for fixed-size block header, txs count, and coinbase tx.
     nBlockWeight = *Assert(m_options.block_reserved_weight);
-    nBlockSigOpsCost = m_options.coinbase_output_max_additional_sigops;
+    nBlockSigOpsCost = 0;
 
     // These counters do not include coinbase tx
     nBlockTx = 0;
@@ -177,7 +173,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock()
 
     // Add an output that spends the full coinbase reward.
     coinbaseTx.vout.resize(1);
-    coinbaseTx.vout[0].scriptPubKey = m_options.coinbase_output_script;
+    coinbaseTx.vout[0].SetScriptPubKey(m_options.coinbase_output_script);
     // Block subsidy + fees
     const CAmount block_reward{nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus())};
     coinbaseTx.vout[0].nValue = block_reward;
@@ -188,11 +184,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock()
     // increasing its length would reduce the space they can use and may break
     // existing clients.
     coinbaseTx.vin[0].scriptSig = CScript() << nHeight;
-    // Set script_sig_prefix here, so IPC mining clients are not affected by
-    // the optional scriptSig padding below. They provide their own extraNonce,
-    // and in a typical setup a pool name or realistic extraNonce already makes
-    // the scriptSig long enough.
-    coinbase_tx.script_sig_prefix = coinbaseTx.vin[0].scriptSig;
     if (nHeight <= 16) {
         // For blocks at heights <= 16, the BIP34-encoded height alone is only
         // one byte. Consensus requires coinbase scriptSigs to be at least two
@@ -208,6 +199,10 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock()
     m_chainstate.m_chainman.GenerateCoinbaseCommitment(*pblock, pindexPrev);
 
     const CTransactionRef& final_coinbase{pblock->vtx[0]};
+    // ConnectCoin stores the witness commitment in coinbase input metadata.
+    // Mining clients must preserve the complete prefix, then append their
+    // extraNonce, otherwise the reconstructed coinbase is invalid.
+    coinbase_tx.script_sig_prefix = final_coinbase->vin[0].scriptSig;
     if (final_coinbase->HasWitness()) {
         const auto& witness_stack{final_coinbase->vin[0].scriptWitness.stack};
         // Consensus requires the coinbase witness stack to have exactly one
@@ -215,11 +210,6 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock()
         Assert(witness_stack.size() == 1 && witness_stack[0].size() == 32);
         coinbase_tx.witness = uint256(witness_stack[0]);
     }
-    if (const int witness_index = GetWitnessCommitmentIndex(*pblock); witness_index != NO_WITNESS_COMMITMENT) {
-        Assert(witness_index >= 0 && static_cast<size_t>(witness_index) < final_coinbase->vout.size());
-        coinbase_tx.required_outputs.push_back(final_coinbase->vout[witness_index]);
-    }
-
     LogInfo("CreateNewBlock(): block weight: %u txs: %u fees: %ld sigops %d\n", GetBlockWeight(*pblock), nBlockTx, nFees, nBlockSigOpsCost);
 
     // Fill in header

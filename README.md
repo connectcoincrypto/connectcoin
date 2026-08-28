@@ -5,15 +5,17 @@ ConnectCoin Core is a Bitcoin Core fork under active development. Its goal is a
 UTXO cryptocurrency with native pay-to-connect (P2C) outputs backed by
 independently verifiable TLS 1.3 connection proofs.
 
-This repository is not production-ready. The current migration milestone
-separates the product name, binaries, data directory, configuration file, ports,
-network magic, peer discovery, and genesis blocks from Bitcoin Core. Native P2C
-consensus rules and TLS 1.3 connection proofs are planned for later milestones.
+This repository is not production-ready. The current consensus milestone uses
+typed transaction outputs instead of serialized output scripts. Type `1` is a
+single 32-byte x-only public key authorized by one 64-byte BIP340 Schnorr
+signature. P2C and TLS 1.3 connection proofs remain later milestones.
 
 The codebase retains Bitcoin Core copyright notices and upstream attribution.
 
 The current public identifier inventory and pre-launch registry warnings are in
 [doc/connectcoin-branding.md](doc/connectcoin-branding.md).
+The experimental consensus format and its compatibility boundaries are in
+[doc/typed-outputs.md](doc/typed-outputs.md).
 
 License
 -------

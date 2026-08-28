@@ -11,9 +11,6 @@ import time
 
 from test_framework.messages import (
     COIN,
-    DEFAULT_BLOCK_RESERVED_WEIGHT,
-    MAX_BLOCK_WEIGHT,
-    WITNESS_SCALE_FACTOR,
 )
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
@@ -68,6 +65,9 @@ def small_txpuzzle_randfee(
     tx.vout[0].nValue = int((total_in - amount - fee) * COIN)
     tx.vout.append(deepcopy(tx.vout[0]))
     tx.vout[1].nValue = int(amount * COIN)
+    # create_self_transfer_multi() returns a signed transaction. Changing its
+    # outputs changes the type-1 signature hash, so authorize the final form.
+    wallet.sign_tx(tx=tx, utxos_to_spend=utxos_to_spend)
     txid = tx.txid_hex
     tx_hex = tx.serialize().hex()
 
@@ -507,7 +507,9 @@ class EstimateFeeTest(BitcoinTestFramework):
         for i in range(6):
             self.broadcast_and_maybe_mine(self.nodes[1], feerate_0_5_s_per_vb, TXS_COUNT)
             self.broadcast_and_maybe_mine(self.nodes[1], feerate_1_s_per_vb, TXS_COUNT, 1, self.nodes[2])
-        assert_equal(feerate_0_5_s_per_vb, self.nodes[0].estimatesmartfee(1, "economical", {"fee_rate_estimator": "block_policy"})["feerate"])
+        # The estimator reports the lower bound of its exponential bucket,
+        # which is slightly above the submitted 0.5 connect/vB rate.
+        assert_equal(Decimal("0.0000000504"), self.nodes[0].estimatesmartfee(1, "economical", {"fee_rate_estimator": "block_policy"})["feerate"])
 
 
     def test_estimatesmartfee_return_mempool_estimates(self):
@@ -525,7 +527,10 @@ class EstimateFeeTest(BitcoinTestFramework):
         self.log.info("Test estimatesmartfee returns block policy estimator estimate when mempool is higher")
         # Add 10 large insane-feerate transactions enough to generate a block template
         num_txs = 10
-        target_vsize = int(((MAX_BLOCK_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT) / WITNESS_SCALE_FACTOR) / num_txs)
+        # With a fixed 41-byte output payload, not every arbitrary vsize is
+        # representable. 99,772 vB is the largest one-input type-1 transaction
+        # below the original per-transaction target.
+        target_vsize = 99_782
         utxos = [self.wallet.get_utxo(confirmed_only=True) for _ in range(num_txs)]
         insane_feerate = Decimal("0.0001")
         self.send_transactions(utxos, insane_feerate, target_vsize)

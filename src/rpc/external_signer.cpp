@@ -20,7 +20,7 @@
 static RPCMethod enumeratesigners()
 {
     return RPCMethod{"enumeratesigners",
-        "Returns a list of external signers from -signer. Signers with duplicate master key fingerprints are skipped.",
+        "Returns external signers from -signer and whether they explicitly support ConnectCoin's typed-output protocol. Signers with duplicate master key fingerprints are skipped.",
         {},
         RPCResult{
             RPCResult::Type::OBJ, "", "",
@@ -31,6 +31,7 @@ static RPCMethod enumeratesigners()
                     {
                         {RPCResult::Type::STR_HEX, "fingerprint", "Master key fingerprint"},
                         {RPCResult::Type::STR, "name", "Device name, the model returned by the signer"},
+                        {RPCResult::Type::BOOL, "connectcoin_compatible", "Whether the signer advertised protocol 'connectcoin-typed-v1'"},
                     }},
                 },
                 }
@@ -53,6 +54,7 @@ static RPCMethod enumeratesigners()
                     UniValue signer_res = UniValue::VOBJ;
                     signer_res.pushKV("fingerprint", signer.m_fingerprint);
                     signer_res.pushKV("name", signer.m_name);
+                    signer_res.pushKV("connectcoin_compatible", signer.m_supports_typed_outputs);
                     signers_res.push_back(std::move(signer_res));
                 }
             } catch (const std::exception& e) {

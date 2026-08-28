@@ -16,11 +16,12 @@ from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
 )
+from test_framework.wallet import getnewdestination
 
 # Linux allow all characters other than \x00
-# Windows disallow control characters (0-31) and /\?%:|"<>
+# Windows disallows control characters (0-31 and DEL) and /\?%:|"<>
 FILE_CHAR_START = 32 if platform.system() == 'Windows' else 1
-FILE_CHAR_END = 128
+FILE_CHAR_END = 127 if platform.system() == 'Windows' else 128
 FILE_CHARS_DISALLOWED = '/\\?%*:|"<>' if platform.system() == 'Windows' else '/'
 UNCONFIRMED_HASH_STRING = 'unconfirmed'
 
@@ -45,6 +46,10 @@ class NotificationsTest(BitcoinTestFramework):
 
     def setup_network(self):
         self.wallet = ''.join(chr(i) for i in range(FILE_CHAR_START, FILE_CHAR_END) if chr(i) not in FILE_CHARS_DISALLOWED)
+        if platform.system() == 'Windows':
+            # Keep representative shell/path punctuation without making the
+            # full wallet path exceed legacy MAX_PATH limits in SQLite.
+            self.wallet = " !#$&'()+,-.;=@[]^_`{}~"
         self.alertnotify_dir = os.path.join(self.options.tmpdir, "alertnotify")
         self.alertnotify_file = os.path.join(self.alertnotify_dir, "alertnotify.txt")
         self.blocknotify_dir = os.path.join(self.options.tmpdir, "blocknotify")
@@ -77,12 +82,12 @@ class NotificationsTest(BitcoinTestFramework):
             # Setup the descriptors to be imported to the wallet
             xpriv = ExtendedPrivateKey.generate().to_string()
             desc_imports = [{
-                "desc": descsum_create(f"wpkh({xpriv}/0/*)"),
+                "desc": descsum_create(f"tr({xpriv}/0/*)"),
                 "timestamp": 0,
                 "active": True,
                 "keypool": True,
             },{
-                "desc": descsum_create(f"wpkh({xpriv}/1/*)"),
+                "desc": descsum_create(f"tr({xpriv}/1/*)"),
                 "timestamp": 0,
                 "active": True,
                 "keypool": True,
@@ -93,10 +98,14 @@ class NotificationsTest(BitcoinTestFramework):
             for i, name in enumerate(self.wallet_names):
                 self.nodes[i].createwallet(wallet_name=name, blank=True, load_on_startup=True)
                 self.nodes[i].importdescriptors(desc_imports)
+            # Mine conflict-test blocks to a valid type-1 destination that is
+            # not owned by either wallet, so coinbase wallet notifications do
+            # not pollute the transaction-notification assertions below.
+            notification_address = getnewdestination()[2]
 
         self.log.info("test -blocknotify")
         block_count = 10
-        blocks = self.generatetoaddress(self.nodes[1], block_count, self.nodes[1].getnewaddress() if self.is_wallet_compiled() else ADDRESS_CCRT1_UNSPENDABLE)
+        blocks = self.generatetoaddress(self.nodes[1], block_count, self.nodes[1].getnewaddress(address_type="bech32m") if self.is_wallet_compiled() else ADDRESS_CCRT1_UNSPENDABLE)
 
         # wait at most 10 seconds for expected number of files before reading the content
         self.wait_until(lambda: len(os.listdir(self.blocknotify_dir)) == block_count, timeout=10)
@@ -129,11 +138,11 @@ class NotificationsTest(BitcoinTestFramework):
             # triggered by node 1
             self.log.info("test -walletnotify with conflicting transactions")
             self.nodes[0].rescanblockchain()
-            self.generatetoaddress(self.nodes[0], 100, ADDRESS_CCRT1_UNSPENDABLE)
+            self.generatetoaddress(self.nodes[0], 100, notification_address)
 
             # Generate transaction on node 0, sync mempools, and check for
             # notification on node 1.
-            tx1 = self.nodes[0].sendtoaddress(address=ADDRESS_CCRT1_UNSPENDABLE, amount=1, replaceable=True)
+            tx1 = self.nodes[0].sendtoaddress(address=notification_address, amount=1, replaceable=True)
             assert_equal(tx1 in self.nodes[0].getrawmempool(), True)
             self.sync_mempools()
             self.expect_wallet_notify([(tx1, -1, UNCONFIRMED_HASH_STRING)])
@@ -149,14 +158,14 @@ class NotificationsTest(BitcoinTestFramework):
 
             # Add bump1 transaction to new block, checking for a notification
             # and the correct number of confirmations.
-            blockhash1 = self.generatetoaddress(self.nodes[0], 1, ADDRESS_CCRT1_UNSPENDABLE)[0]
+            blockhash1 = self.generatetoaddress(self.nodes[0], 1, notification_address)[0]
             blockheight1 = self.nodes[0].getblockcount()
             self.sync_blocks()
             self.expect_wallet_notify([(bump1, blockheight1, blockhash1)])
             assert_equal(self.nodes[1].gettransaction(bump1)["confirmations"], 1)
 
             # Generate a second transaction to be bumped.
-            tx2 = self.nodes[0].sendtoaddress(address=ADDRESS_CCRT1_UNSPENDABLE, amount=1, replaceable=True)
+            tx2 = self.nodes[0].sendtoaddress(address=notification_address, amount=1, replaceable=True)
             assert_equal(tx2 in self.nodes[0].getrawmempool(), True)
             self.sync_mempools()
             self.expect_wallet_notify([(tx2, -1, UNCONFIRMED_HASH_STRING)])
@@ -166,7 +175,7 @@ class NotificationsTest(BitcoinTestFramework):
             # about newly confirmed bump2 and newly conflicted tx2.
             self.disconnect_nodes(0, 1)
             bump2 = self.nodes[0].bumpfee(tx2)["txid"]
-            blockhash2 = self.generatetoaddress(self.nodes[0], 1, ADDRESS_CCRT1_UNSPENDABLE, sync_fun=self.no_op)[0]
+            blockhash2 = self.generatetoaddress(self.nodes[0], 1, notification_address, sync_fun=self.no_op)[0]
             blockheight2 = self.nodes[0].getblockcount()
             assert_equal(self.nodes[0].gettransaction(bump2)["confirmations"], 1)
             assert_equal(tx2 in self.nodes[1].getrawmempool(), True)

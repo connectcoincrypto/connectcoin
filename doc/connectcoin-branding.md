@@ -72,6 +72,10 @@ display names and have no standards registration.
 
 ## Address and key encodings
 
+Only the Bech32m HRPs are accepted for current transaction outputs. The
+Base58 P2PKH/P2SH codecs and version bytes remain inherited compatibility
+parsers; they do not identify consensus-valid type-1 outputs.
+
 | Network | P2PKH | P2SH | WIF | HD public | HD private | Segwit HRP |
 | --- | ---: | ---: | ---: | --- | --- | --- |
 | Mainnet | 28 (`C…`) | 87 (`c…`) | 80 (`C…` compressed) | `ccpub…` (`a7c73fd9`) | `ccprv…` (`a7c73b9f`) | `cc` |

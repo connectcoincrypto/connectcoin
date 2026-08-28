@@ -69,8 +69,9 @@ struct BlockCreateOptions {
      */
     size_t coinbase_output_max_additional_sigops{DEFAULT_COINBASE_OUTPUT_MAX_ADDITIONAL_SIGOPS};
     /**
-     * Script to put in the coinbase transaction. The default is an
-     * anyone-can-spend dummy.
+     * Compatibility script view of the type-1 coinbase payout key. The
+     * default is the x-only public key for private key 1 and is intended only
+     * as a deterministic test fallback.
      *
      * Should only be used for tests, when the default doesn't suffice.
      *
@@ -83,7 +84,12 @@ struct BlockCreateOptions {
      * The size and sigops are not checked against
      * coinbase_max_additional_weight and coinbase_output_max_additional_sigops.
      */
-    CScript coinbase_output_script{CScript() << OP_TRUE};
+    CScript coinbase_output_script{CScript{} << OP_1 << std::vector<unsigned char>{
+        0x79, 0xbe, 0x66, 0x7e, 0xf9, 0xdc, 0xbb, 0xac,
+        0x55, 0xa0, 0x62, 0x95, 0xce, 0x87, 0x0b, 0x07,
+        0x02, 0x9b, 0xfc, 0xdb, 0x2d, 0xce, 0x28, 0xd9,
+        0x59, 0xf2, 0x81, 0x5b, 0x16, 0xf8, 0x17, 0x98,
+    }};
     /**
      * Whether to call TestBlockValidity() at the end of CreateNewBlock().
      * Should only be disabled for tests / benchmarks.
@@ -138,12 +144,11 @@ struct CoinbaseTx {
      * Prefix which needs to be placed at the beginning of the scriptSig.
      * Clients may append extra data to this as long as the overall scriptSig
      * size is 100 bytes or less, to avoid the block being rejected with
-     * "bad-cb-length" error. At heights <= 16 the BIP 34 height push is only
-     * one byte long, so clients must append at least one additional byte to
-     * meet the consensus minimum scriptSig length of two bytes.
+     * "bad-cb-length" error. The prefix includes the BIP34 height and
+     * ConnectCoin's required witness commitment metadata. Clients must
+     * preserve it byte-for-byte and append their extraNonce after it.
      *
-     * Currently with BIP 34, the prefix is guaranteed to be less than 8 bytes,
-     * but future soft forks could require longer prefixes.
+     * The remaining space available to clients is 100 minus prefix.size().
      */
     CScript script_sig_prefix;
     /**
@@ -163,9 +168,10 @@ struct CoinbaseTx {
      */
     CAmount block_reward_remaining;
     /*
-     * To be included as the last outputs in the coinbase transaction.
-     * Currently this is only the witness commitment OP_RETURN, but future
-     * softforks or a custom mining patch could add more.
+     * To be included as the last outputs in the coinbase transaction. This is
+     * currently empty because ConnectCoin's witness commitment is part of the
+     * script_sig_prefix, but future soft forks or custom mining patches could
+     * add required typed outputs.
      *
      * The dummy output that spends the full reward is excluded.
      */

@@ -2022,10 +2022,25 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, CTxUndo &txund
 }
 
 std::optional<std::pair<ScriptError, std::string>> CScriptCheck::operator()() {
-    const CScript &scriptSig = ptxTo->vin[nIn].scriptSig;
-    const CScriptWitness *witness = &ptxTo->vin[nIn].scriptWitness;
+    const CTxIn& txin{ptxTo->vin[nIn]};
+    const auto pubkey{m_tx_out.GetP2PKPubKey()};
     ScriptError error{SCRIPT_ERR_UNKNOWN_ERROR};
-    if (VerifyScript(scriptSig, m_tx_out.scriptPubKey, witness, m_flags, CachingTransactionSignatureChecker(ptxTo, nIn, m_tx_out.nValue, cacheStore, *m_signature_cache, *txdata), &error)) {
+
+    bool valid{pubkey.has_value() && txin.scriptSig.empty() && txin.scriptWitness.stack.size() == 1 &&
+               txin.scriptWitness.stack.front().size() == 64};
+    if (valid) {
+        ScriptExecutionData execdata;
+        execdata.m_annex_init = true;
+        execdata.m_annex_present = false;
+        CachingTransactionSignatureChecker checker{ptxTo, nIn, m_tx_out.nValue, cacheStore, *m_signature_cache, *txdata};
+        valid = checker.CheckSchnorrSignature(txin.scriptWitness.stack.front(),
+                                             std::span<const unsigned char>{pubkey->data(), pubkey->size()},
+                                             SigVersion::TAPROOT, execdata, &error);
+    } else {
+        error = SCRIPT_ERR_EVAL_FALSE;
+    }
+
+    if (valid) {
         return std::nullopt;
     } else {
         auto debug_str = strprintf("input %i of %s (wtxid %s), spending %s:%i", nIn, ptxTo->GetHash().ToString(), ptxTo->GetWitnessHash().ToString(), ptxTo->vin[nIn].prevout.hash.ToString(), ptxTo->vin[nIn].prevout.n);
@@ -3900,7 +3915,7 @@ static bool CheckWitnessMalleation(const CBlock& block, bool expect_witness_comm
     if (expect_witness_commitment) {
         if (block.m_checked_witness_commitment) return true;
 
-        int commitpos = GetWitnessCommitmentIndex(block);
+        int commitpos = GetWitnessCommitmentOffset(block);
         if (commitpos != NO_WITNESS_COMMITMENT) {
             assert(!block.vtx.empty() && !block.vtx[0]->vin.empty());
             const auto& witness_stack{block.vtx[0]->vin[0].scriptWitness.stack};
@@ -3918,7 +3933,7 @@ static bool CheckWitnessMalleation(const CBlock& block, bool expect_witness_comm
             uint256 hash_witness = BlockWitnessMerkleRoot(block);
 
             CHash256().Write(hash_witness).Write(witness_stack[0]).Finalize(hash_witness);
-            if (memcmp(hash_witness.begin(), &block.vtx[0]->vout[commitpos].scriptPubKey[6], 32)) {
+            if (memcmp(hash_witness.begin(), &block.vtx[0]->vin[0].scriptSig[commitpos + std::size(WITNESS_COMMITMENT_HEADER)], 32)) {
                 return state.Invalid(
                     /*result=*/BlockValidationResult::BLOCK_MUTATED,
                     /*reject_reason=*/"bad-witness-merkle-match",
@@ -4012,7 +4027,7 @@ bool CheckBlock(const CBlock& block, BlockValidationState& state, const Consensu
 
 void ChainstateManager::UpdateUncommittedBlockStructures(CBlock& block, const CBlockIndex* pindexPrev) const
 {
-    int commitpos = GetWitnessCommitmentIndex(block);
+    int commitpos = GetWitnessCommitmentOffset(block);
     static const std::vector<unsigned char> nonce(32, 0x00);
     if (commitpos != NO_WITNESS_COMMITMENT && DeploymentActiveAfter(pindexPrev, *this, Consensus::DEPLOYMENT_SEGWIT) && !block.vtx[0]->HasWitness()) {
         CMutableTransaction tx(*block.vtx[0]);
@@ -4024,25 +4039,20 @@ void ChainstateManager::UpdateUncommittedBlockStructures(CBlock& block, const CB
 
 void ChainstateManager::GenerateCoinbaseCommitment(CBlock& block, const CBlockIndex* pindexPrev) const
 {
-    int commitpos = GetWitnessCommitmentIndex(block);
+    int commitpos = GetWitnessCommitmentOffset(block);
     std::vector<unsigned char> ret(32, 0x00);
+    uint256 witnessroot = BlockWitnessMerkleRoot(block);
+    CHash256().Write(witnessroot).Write(ret).Finalize(witnessroot);
+    CMutableTransaction tx(*block.vtx[0]);
     if (commitpos == NO_WITNESS_COMMITMENT) {
-        uint256 witnessroot = BlockWitnessMerkleRoot(block);
-        CHash256().Write(witnessroot).Write(ret).Finalize(witnessroot);
-        CTxOut out;
-        out.nValue = 0;
-        out.scriptPubKey.resize(MINIMUM_WITNESS_COMMITMENT);
-        out.scriptPubKey[0] = OP_RETURN;
-        out.scriptPubKey[1] = 0x24;
-        out.scriptPubKey[2] = 0xaa;
-        out.scriptPubKey[3] = 0x21;
-        out.scriptPubKey[4] = 0xa9;
-        out.scriptPubKey[5] = 0xed;
-        memcpy(&out.scriptPubKey[6], witnessroot.begin(), 32);
-        CMutableTransaction tx(*block.vtx[0]);
-        tx.vout.push_back(out);
-        block.vtx[0] = MakeTransactionRef(std::move(tx));
+        std::vector<unsigned char> commitment;
+        commitment.insert(commitment.end(), std::begin(WITNESS_COMMITMENT_HEADER), std::end(WITNESS_COMMITMENT_HEADER));
+        commitment.insert(commitment.end(), witnessroot.begin(), witnessroot.end());
+        tx.vin[0].scriptSig << commitment;
+    } else {
+        std::copy(witnessroot.begin(), witnessroot.end(), tx.vin[0].scriptSig.begin() + commitpos + std::size(WITNESS_COMMITMENT_HEADER));
     }
+    block.vtx[0] = MakeTransactionRef(std::move(tx));
     UpdateUncommittedBlockStructures(block, pindexPrev);
 }
 
@@ -4191,9 +4201,9 @@ static bool ContextualCheckBlock(const CBlock& block, BlockValidationState& stat
     //   coinbase (where 0x0000....0000 is used instead).
     // * The coinbase scriptWitness is a stack of a single 32-byte vector, containing a witness reserved value (unconstrained).
     // * We build a merkle tree with all those witness hashes as leaves (similar to the hashMerkleRoot in the block header).
-    // * There must be at least one output whose scriptPubKey is a single 36-byte push, the first 4 bytes of which are
-    //   {0xaa, 0x21, 0xa9, 0xed}, and the following 32 bytes are SHA256^2(witness root, witness reserved value). In case there are
-    //   multiple, the last one is used.
+    // * The coinbase input metadata must contain a 36-byte push whose first 4 payload bytes are
+    //   {0xaa, 0x21, 0xa9, 0xed}, followed by SHA256^2(witness root, witness reserved value). If there are
+    //   multiple matching pushes, the last one is used.
     if (!CheckWitnessMalleation(block, DeploymentActiveAfter(pindexPrev, chainman, Consensus::DEPLOYMENT_SEGWIT), state)) {
         return false;
     }

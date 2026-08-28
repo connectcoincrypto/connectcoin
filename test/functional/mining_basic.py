@@ -14,6 +14,7 @@ import copy
 from decimal import Decimal
 
 from test_framework.blocktools import (
+    add_witness_commitment,
     create_coinbase,
     get_witness_script,
     NORMAL_GBT_REQUEST_PARAMS,
@@ -56,6 +57,18 @@ MAX_TIMEWARP = 600
 VERSIONBITS_TOP_BITS = 0x20000000
 VERSIONBITS_DEPLOYMENT_TESTDUMMY_BIT = 28
 DEFAULT_BLOCK_MIN_TX_FEE = 1 # default `-blockmintxfee` setting [con/kvB]
+
+
+def typed_output_vsize_at_most(target):
+    """Largest one-input type-1 transaction vsize not exceeding target."""
+    # A one-input/one-output transaction is 109 vbytes. Each additional
+    # fixed-size typed output adds 41 bytes; CompactSize adds two bytes once
+    # the output count reaches 253.
+    if target >= 70 + 41 * 253:
+        output_count = (target - 70) // 41
+        return 70 + 41 * output_count
+    output_count = max(1, (target - 68) // 41)
+    return 68 + 41 * output_count
 
 class MiningTest(BitcoinTestFramework):
     def set_test_params(self):
@@ -137,8 +150,10 @@ class MiningTest(BitcoinTestFramework):
             height=int(block_template["height"]), fees=sum(block_template_fees)).vout[0].nValue
         assert_equal(block_template["coinbasevalue"], expected_block_reward)
 
+        # Every native type-1 output has exactly one P2PK authorization cost,
+        # independent of the inherited MiniWallet mode name.
         block_template_sigops = [tx['sigops'] for tx in block_template_txs]
-        assert_equal(block_template_sigops, [0, 4, 4, 4])
+        assert_equal(block_template_sigops, [1, 1, 1, 1])
 
         # Clear mempool
         self.generate(self.wallet, 1, sync_fun=self.no_op)
@@ -230,6 +245,7 @@ class MiningTest(BitcoinTestFramework):
         block.nBits = int(tmpl["bits"], 16)
         block.nNonce = 0
         block.vtx = [create_coinbase(height=int(tmpl["height"]))]
+        add_witness_commitment(block)
         block.hashMerkleRoot = block.calc_merkle_root()
         block.solve()
         assert_equal(node.getblocktemplate(template_request={
@@ -294,7 +310,9 @@ class MiningTest(BitcoinTestFramework):
         self.log.info("Testing default and custom -blockmaxweight startup options.")
 
         LARGE_TXS_COUNT = 10
-        LARGE_VSIZE = int(((MAX_BLOCK_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT) / WITNESS_SCALE_FACTOR) / LARGE_TXS_COUNT)
+        LARGE_VSIZE = typed_output_vsize_at_most(
+            int(((MAX_BLOCK_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT) / WITNESS_SCALE_FACTOR) / LARGE_TXS_COUNT)
+        )
         HIGH_FEERATE = Decimal("0.0003")
 
         # Ensure the mempool is empty
@@ -305,7 +323,7 @@ class MiningTest(BitcoinTestFramework):
         self.send_transactions(utxos[:LARGE_TXS_COUNT], HIGH_FEERATE, LARGE_VSIZE)
 
         # Send 2 normal transactions with a lower fee rate
-        NORMAL_VSIZE = int(2000 / WITNESS_SCALE_FACTOR)
+        NORMAL_VSIZE = typed_output_vsize_at_most(int(2000 / WITNESS_SCALE_FACTOR))
         NORMAL_FEERATE = Decimal("0.0001")
         self.send_transactions(utxos[LARGE_TXS_COUNT:LARGE_TXS_COUNT + 2], NORMAL_FEERATE, NORMAL_VSIZE)
 
@@ -336,8 +354,15 @@ class MiningTest(BitcoinTestFramework):
         self.restart_node(0, extra_args=[f"-blockmaxweight={MAX_BLOCK_WEIGHT}"])
         self.log.info("Sending 2 additional normal transactions to fill the mempool to the maximum block weight.")
         self.send_transactions(utxos[LARGE_TXS_COUNT + 2:], NORMAL_FEERATE, NORMAL_VSIZE)
-        self.log.info(f"Testing that the mempool's weight matches the maximum block weight: {MAX_BLOCK_WEIGHT}.")
-        assert_equal(self.nodes[0].getmempoolinfo()['bytes'] * WITNESS_SCALE_FACTOR, MAX_BLOCK_WEIGHT)
+        self.log.info(f"Testing that the mempool's weight closely approaches the maximum block weight: {MAX_BLOCK_WEIGHT}.")
+        mempool_weight = self.nodes[0].getmempoolinfo()['bytes'] * WITNESS_SCALE_FACTOR
+        assert_greater_than_or_equal(MAX_BLOCK_WEIGHT, mempool_weight)
+        # Fixed-size outputs make some exact transaction sizes impossible. The
+        # aggregate may be short by less than one output per transaction.
+        assert_greater_than_or_equal(
+            mempool_weight,
+            MAX_BLOCK_WEIGHT - WITNESS_SCALE_FACTOR * 41 * (LARGE_TXS_COUNT + 4),
+        )
 
         self.log.info("Testing that the block template includes only 10 transactions and cannot reach full block weight.")
         self.verify_block_template(
@@ -422,7 +447,9 @@ class MiningTest(BitcoinTestFramework):
         witness_root = CBlock.get_merkle_root([ser_uint256(0),
                                                ser_uint256(txid)])
         script = get_witness_script(witness_root, 0)
-        assert_equal(witness_commitment, script.hex())
+        assert_equal(tmpl['witness_commitment_location'], 'coinbase_input')
+        assert_equal(witness_commitment, script.hex()[2:])
+        assert_equal(tmpl['coinbaseaux']['typedoutputs'], witness_commitment)
 
         # Mine a block to leave initial block download and clear the mempool
         self.generatetoaddress(node, 1, node.get_deterministic_priv_key().address)
@@ -443,13 +470,15 @@ class MiningTest(BitcoinTestFramework):
         block.nBits = int(tmpl["bits"], 16)
         block.nNonce = 0
         block.vtx = [coinbase_tx]
+        add_witness_commitment(block)
         block.hashMerkleRoot = block.calc_merkle_root()
 
         self.log.info("getblocktemplate: segwit rule must be set")
         assert_raises_rpc_error(-8, "getblocktemplate must be called with the segwit rule set", node.getblocktemplate, {})
+        assert_raises_rpc_error(-8, "getblocktemplate must be called with the typedoutputs rule set", node.getblocktemplate, {"rules": ["segwit"]})
 
         self.log.info("getblocktemplate: result should set the right rules")
-        assert_equal(['csv', '!segwit', 'taproot'], self.nodes[0].getblocktemplate(NORMAL_GBT_REQUEST_PARAMS)['rules'])
+        assert_equal(['csv', '!typedoutputs', '!segwit', 'taproot'], self.nodes[0].getblocktemplate(NORMAL_GBT_REQUEST_PARAMS)['rules'])
 
         self.log.info("submitblock: Test block decode failure")
         assert_raises_rpc_error(-22, "Block decode failed", node.submitblock, block.serialize()[:-15].hex())

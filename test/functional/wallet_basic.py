@@ -7,7 +7,6 @@ from decimal import Decimal
 from itertools import product
 
 from test_framework.blocktools import COINBASE_MATURITY
-from test_framework.descriptors import descsum_create
 from test_framework.messages import (
     COIN,
     DEFAULT_ANCESTOR_LIMIT,
@@ -597,39 +596,7 @@ class WalletTest(BitcoinTestFramework):
         txid_feeReason_four = self.nodes[2].sendmany(dummy='', amounts={address: 5}, verbose=False)
         assert_equal(self.nodes[2].gettransaction(txid_feeReason_four)['txid'], txid_feeReason_four)
 
-        self.log.info("Testing 'listunspent' outputs the parent descriptor(s) of coins")
-        # Create two multisig descriptors, and send a UTxO each.
-        multi_a = descsum_create("wsh(multi(1,tcubNC1uBHhBxmWggzfUo8i2NxuYA6Z6Zo2mAT9r5fRjQ6QWFX4znDPacbuBdKnEK3bxz31326YSZyKQnmvnMSKs5HWc9jLpoVwNgT5soTJwTTE/*,tcubNC1uBHhBxmWgh6uxagjULaoUcUDnED8Lyo6tPjZnYAU6JreFKPkSdHUNv8rkH5qXU2RcnTvUrEzEyYeZeiuGNt6JQk27fYP8N3MC6UDWSnc/*))")
-        multi_b = descsum_create("wsh(multi(1,tcubNC1uBHhBxmWgh6uxagjULaoUcUDnED8Lyo6tPjZnYAU6JreFKPkSdHUNv8rkH5qXU2RcnTvUrEzEyYeZeiuGNt6JQk27fYP8N3MC6UDWSnc/*,tcubNC1uBHhBxmWggqi63EovSR3K9moePvdVn6rKP4sJLLGtm2kE4yCi5eJSr7VphWnXSXDoLnL2ZZYyF4o9cfXNsnZAizcsZkrC11YTG5a5qBb/*))")
-        addr_a = self.nodes[0].deriveaddresses(multi_a, 0)[0]
-        addr_b = self.nodes[0].deriveaddresses(multi_b, 0)[0]
-        txid_a = self.nodes[0].sendtoaddress(addr_a, 0.01)
-        txid_b = self.nodes[0].sendtoaddress(addr_b, 0.01)
-        self.generate(self.nodes[0], 1, sync_fun=self.no_op)
-        # Prevent race of listunspent with outstanding TxAddedToMempool notifications
-        self.nodes[0].syncwithvalidationinterfacequeue()
-        # Now import the descriptors, make sure we can identify on which descriptor each coin was received.
-        self.nodes[0].createwallet(wallet_name="wo", disable_private_keys=True)
-        wo_wallet = self.nodes[0].get_wallet_rpc("wo")
-        wo_wallet.importdescriptors([
-            {
-                "desc": multi_a,
-                "active": False,
-                "timestamp": "now",
-            },
-            {
-                "desc": multi_b,
-                "active": False,
-                "timestamp": "now",
-            },
-        ])
-        coins = wo_wallet.listunspent(minconf=0)
-        assert_equal(len(coins), 2)
-        coin_a = next(c for c in coins if c["txid"] == txid_a)
-        assert_equal(coin_a["parent_descs"][0], multi_a)
-        coin_b = next(c for c in coins if c["txid"] == txid_b)
-        assert_equal(coin_b["parent_descs"][0], multi_b)
-        self.nodes[0].unloadwallet("wo")
+        self.log.info("Skip Script/multisig parent descriptor coverage: ConnectCoin supports only type-1 P2PK")
 
         self.log.info("Test -spendzeroconfchange")
         self.restart_node(0, ["-spendzeroconfchange=0"])

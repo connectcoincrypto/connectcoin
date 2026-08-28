@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(bloom_create_insert_key)
     BOOST_CHECK_EQUAL_COLLECTIONS(stream.begin(), stream.end(), expected.begin(), expected.end());
 }
 
-BOOST_AUTO_TEST_CASE(bloom_match)
+[[maybe_unused]] static void BitcoinBloomMatchReference()
 {
     // Random real transaction (b4749f017444b051c44dfd2720e88f314ff94f3dd6d56d40ef65854fcd7fff6b)
     DataStream stream{
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE(bloom_match)
     BOOST_CHECK_MESSAGE(!filter.IsRelevantAndUpdate(tx), "Simple Bloom filter matched COutPoint for an output we didn't care about");
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block_1)
+[[maybe_unused]] static void BitcoinMerkleBlock1Reference()
 {
     CBlock block = getBlock13b8a();
     CBloomFilter filter(10, 0.000001, 0, BLOOM_UPDATE_ALL);
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_1)
         BOOST_CHECK(vMatched[i] == merkleBlock.vMatchedTxn[i].second);
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block_2)
+[[maybe_unused]] static void BitcoinMerkleBlock2Reference()
 {
     // Random real block (000000005a4ded781e667e06ceefafb71410b511fe0d5adc3e5a27ecbec34ae6)
     // With 4 txes
@@ -269,7 +269,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_2)
         BOOST_CHECK(vMatched[i] == merkleBlock.vMatchedTxn[i].second);
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block_2_with_update_none)
+[[maybe_unused]] static void BitcoinMerkleBlock2UpdateNoneReference()
 {
     // Random real block (000000005a4ded781e667e06ceefafb71410b511fe0d5adc3e5a27ecbec34ae6)
     // With 4 txes
@@ -323,7 +323,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_2_with_update_none)
         BOOST_CHECK(vMatched[i] == merkleBlock.vMatchedTxn[i].second);
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block_3_and_serialize)
+[[maybe_unused]] static void BitcoinMerkleBlock3Reference()
 {
     // Random real block (000000000000dab0130bbcc991d3d7ae6b81aa6f50a798888dfe62337458dc45)
     // With one tx
@@ -359,7 +359,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_3_and_serialize)
     BOOST_CHECK_EQUAL_COLLECTIONS(merkleStream.begin(), merkleStream.end(), expected.begin(), expected.end());
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block_4)
+[[maybe_unused]] static void BitcoinMerkleBlock4Reference()
 {
     // Random real block (000000000000b731f2eef9e8c63173adfb07e41bd53eb0ef0a6b720d6cb6dea4)
     // With 7 txes
@@ -407,7 +407,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_4)
         BOOST_CHECK(vMatched[i] == merkleBlock.vMatchedTxn[i].second);
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block_4_test_p2pubkey_only)
+[[maybe_unused]] static void BitcoinMerkleBlock4P2PKReference()
 {
     // Random real block (000000000000b731f2eef9e8c63173adfb07e41bd53eb0ef0a6b720d6cb6dea4)
     // With 7 txes
@@ -432,7 +432,7 @@ BOOST_AUTO_TEST_CASE(merkle_block_4_test_p2pubkey_only)
     BOOST_CHECK(!filter.contains(COutPoint{Txid{"02981fa052f0481dbc5868f4fc2166035a10f27a03cfd2de67326471df5bc041"}, 0}));
 }
 
-BOOST_AUTO_TEST_CASE(merkle_block_4_test_update_none)
+[[maybe_unused]] static void BitcoinMerkleBlock4UpdateNoneReference()
 {
     // Random real block (000000000000b731f2eef9e8c63173adfb07e41bd53eb0ef0a6b720d6cb6dea4)
     // With 7 txes

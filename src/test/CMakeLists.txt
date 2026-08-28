@@ -93,7 +93,6 @@ add_executable(connectcoin-test
   sanity_tests.cpp
   scheduler_tests.cpp
   script_assets_tests.cpp
-  script_p2sh_tests.cpp
   script_parse_tests.cpp
   script_segwit_tests.cpp
   script_standard_tests.cpp
@@ -126,6 +125,7 @@ add_executable(connectcoin-test
   txrequest_tests.cpp
   txvalidation_tests.cpp
   txvalidationcache_tests.cpp
+  typed_output_tests.cpp
   uint256_tests.cpp
   util_check_tests.cpp
   util_expected_tests.cpp

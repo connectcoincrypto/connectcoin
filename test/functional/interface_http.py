@@ -594,11 +594,21 @@ class HTTPBasicsTest (BitcoinTestFramework):
 
     def check_whitespace_in_headers(self):
         self.log.info("Check that requests with whitespace in headers are rejected")
+
+        def assert_rejected(conn):
+            try:
+                response = conn.post('/', '{"method": "getbestblockhash"}')
+            except ConnectionError:
+                # HTTP parsers may reject malformed headers either with a 400
+                # response or by immediately closing the connection. Both
+                # outcomes prevent the request from reaching the RPC server.
+                return
+            assert_equal(response.status, http.client.BAD_REQUEST)
+
         # Extra whitespace before colon in header.
         conn = BitcoinHTTPConnection(self.node)
         conn.headers = {"Authorization ": f"Basic {str_to_b64str(conn.authpair)}"}
-        response = conn.post('/', '{"method": "getbestblockhash"}')
-        assert_equal(response.status, http.client.BAD_REQUEST)
+        assert_rejected(conn)
 
         # Extra whitespace at start of new line.
         # "line folding" as defined in
@@ -607,8 +617,7 @@ class HTTPBasicsTest (BitcoinTestFramework):
         # https://www.rfc-editor.org/rfc/rfc7230#section-3.2.4
         conn = BitcoinHTTPConnection(self.node)
         conn.headers = {"Authorization": f"Basic \n {str_to_b64str(conn.authpair)}"}
-        response = conn.post('/', '{"method": "getbestblockhash"}')
-        assert_equal(response.status, http.client.BAD_REQUEST)
+        assert_rejected(conn)
 
 
     def check_connection_limit(self):
@@ -683,7 +692,7 @@ class HTTPBasicsTest (BitcoinTestFramework):
 
             # The waiting connection gets processed
             delayed_response = waiting_request.result(timeout=5)
-            assert "197dd70fa5df793d1b9e4684f3c9608afcdae4b86f935c04e8187a48def347f6" in delayed_response.decode()
+            assert "620da2900b1e7d0c01b49d37f4a5129a56e8534f2fd924d3c86041c709da3b4c" in delayed_response.decode()
 
             # Close all remaining connections for clean up
             for client in connections:

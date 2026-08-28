@@ -1024,6 +1024,12 @@ bool IsSegWitOutput(const SigningProvider& provider, const CScript& script)
 
 bool SignTransaction(CMutableTransaction& mtx, const SigningProvider* keystore, const std::map<COutPoint, Coin>& coins, const SignOptions& options, std::map<int, bilingual_str>& input_errors)
 {
+    if (options.sighash_type != SIGHASH_DEFAULT) {
+        for (unsigned int i = 0; i < mtx.vin.size(); ++i) {
+            input_errors[i] = _("ConnectCoin type-1 outputs support only SIGHASH_DEFAULT");
+        }
+        return false;
+    }
     bool fHashSingle = ((options.sighash_type & ~SIGHASH_ANYONECANPAY) == SIGHASH_SINGLE);
 
     // Use CTransaction for the constant parts of the
@@ -1039,7 +1045,7 @@ bool SignTransaction(CMutableTransaction& mtx, const SigningProvider* keystore, 
             txdata.Init(txConst, /*spent_outputs=*/{}, /*force=*/true);
             break;
         } else {
-            spent_outputs.emplace_back(coin->second.out.nValue, coin->second.out.scriptPubKey);
+            spent_outputs.push_back(coin->second.out);
         }
     }
     if (spent_outputs.size() == mtx.vin.size()) {
@@ -1064,6 +1070,13 @@ bool SignTransaction(CMutableTransaction& mtx, const SigningProvider* keystore, 
         }
 
         UpdateInput(txin, sigdata);
+
+        if (coin->second.out.GetType() != TxOutputType::P2PK || !coin->second.out.GetP2PKPubKey() ||
+            !txin.scriptSig.empty() || txin.scriptWitness.stack.size() != 1 ||
+            txin.scriptWitness.stack.front().size() != 64) {
+            input_errors[i] = _("Input is not a complete type-1 SIGHASH_DEFAULT spend");
+            continue;
+        }
 
         // amount must be specified for valid segwit signature
         if (amount == MAX_MONEY && !txin.scriptWitness.IsNull()) {

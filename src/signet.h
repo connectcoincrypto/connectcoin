@@ -8,7 +8,10 @@
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 
+#include <cstddef>
+#include <cstdint>
 #include <optional>
+#include <span>
 
 class CScript;
 namespace Consensus {
@@ -19,6 +22,28 @@ struct Params;
  * Extract signature and check whether a block has a valid solution
  */
 bool CheckSignetBlockSolution(const CBlock& block, const Consensus::Params& consensusParams);
+
+/**
+ * Return whether a signet challenge is one of the deliberately supported
+ * truthy scripts that needs no scriptSig or witness solution. ConnectCoin's
+ * typed outputs cannot represent BIP325's arbitrary Script prevout.
+ */
+inline bool IsTrivialSignetChallenge(std::span<const uint8_t> challenge)
+{
+    if (challenge.size() == 1 && challenge[0] >= 0x51 && challenge[0] <= 0x60) {
+        return true; // OP_1 through OP_16
+    }
+    if (challenge.size() < 2 || challenge.size() > 76 || challenge[0] + 1 != challenge.size()) {
+        return false;
+    }
+    const auto value{challenge.subspan(1)};
+    for (std::size_t index{0}; index < value.size(); ++index) {
+        if (value[index] != 0) {
+            return !(index == value.size() - 1 && value[index] == 0x80);
+        }
+    }
+    return false;
+}
 
 /**
  * Generate the signet tx corresponding to the given block

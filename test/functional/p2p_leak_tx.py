@@ -70,13 +70,15 @@ class P2PLeakTxTest(BitcoinTestFramework):
         inbound_peer = self.gen_node.add_p2p_connection(P2PTxInvStore())
 
         self.log.info("Transaction tx_a is broadcast")
-        tx_a = self.miniwallet.send_self_transfer(from_node=self.gen_node)
+        spent_utxo = self.miniwallet.get_utxo()
+        tx_a = self.miniwallet.send_self_transfer(from_node=self.gen_node, utxo_to_spend=spent_utxo)
         self.mocktime += 120
         self.gen_node.setmocktime(self.mocktime)
         inbound_peer.wait_for_broadcast(txns=[tx_a["wtxid"]])
 
         tx_b = tx_a["tx"]
         tx_b.vout[0].nValue -= 9000
+        self.miniwallet.sign_tx(tx_b, utxos_to_spend=[spent_utxo])
         self.gen_node.sendrawtransaction(tx_b.serialize().hex())
         self.mocktime += 120
         self.gen_node.setmocktime(self.mocktime)

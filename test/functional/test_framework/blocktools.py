@@ -36,6 +36,7 @@ from .script import (
     CScriptNum,
     CScriptOp,
     OP_0,
+    OP_1,
     OP_RETURN,
     OP_TRUE,
 )
@@ -62,10 +63,11 @@ COINBASE_MATURITY = 100
 
 # From BIP141
 WITNESS_COMMITMENT_HEADER = b"\xaa\x21\xa9\xed"
+DETERMINISTIC_P2PK_XONLY = bytes.fromhex("79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798")
 
 NULL_OUTPOINT = COutPoint(0, 0xffffffff)
 
-NORMAL_GBT_REQUEST_PARAMS = {"rules": ["segwit"]}
+NORMAL_GBT_REQUEST_PARAMS = {"rules": ["segwit", "typedoutputs"]}
 VERSIONBITS_LAST_OLD_BLOCK_VERSION = 4
 MIN_BLOCKS_TO_KEEP = 288
 
@@ -146,8 +148,8 @@ def get_witness_script(witness_root, witness_nonce):
 def add_witness_commitment(block, nonce=0):
     """Add a witness commitment to the block's coinbase transaction.
 
-    According to BIP141, blocks with witness rules active must commit to the
-    hash of all in-block transactions including witness."""
+    ConnectCoin stores the commitment as a 36-byte push in the coinbase input
+    metadata instead of creating a Script output."""
     # First calculate the merkle root of the block's
     # transactions, with witnesses.
     witness_nonce = nonce
@@ -156,8 +158,10 @@ def add_witness_commitment(block, nonce=0):
     block.vtx[0].wit.vtxinwit = [CTxInWitness()]
     block.vtx[0].wit.vtxinwit[0].scriptWitness.stack = [ser_uint256(witness_nonce)]
 
-    # witness commitment is the last OP_RETURN output in coinbase
-    block.vtx[0].vout.append(CTxOut(0, get_witness_script(witness_root, witness_nonce)))
+    # Drop the leading OP_RETURN from the historical script. The remaining
+    # canonical push (0x24 || header || hash) is coinbase input metadata.
+    commitment = get_witness_script(witness_root, witness_nonce)[1:]
+    block.vtx[0].vin[0].scriptSig = CScript(bytes(block.vtx[0].vin[0].scriptSig) + commitment)
     block.hashMerkleRoot = block.calc_merkle_root()
 
 
@@ -174,8 +178,8 @@ def script_BIP34_coinbase_height(height, *, padding=True):
 def create_coinbase(height, pubkey=None, *, script_pubkey=None, extra_output_script=None, fees=0, nValue=100, halving_period=REGTEST_RETARGET_PERIOD):
     """Create a coinbase transaction.
 
-    If pubkey is passed in, the coinbase output will be a P2PK output;
-    otherwise an anyone-can-spend output.
+    If pubkey is passed in, its x coordinate becomes the type-1 P2PK key.
+    Otherwise a deterministic valid x-only key is used.
 
     If extra_output_script is given, make a 0-value output to that
     script. This is useful to pad block weight/sigops as needed. """
@@ -189,11 +193,11 @@ def create_coinbase(height, pubkey=None, *, script_pubkey=None, extra_output_scr
         coinbaseoutput.nValue >>= halvings
         coinbaseoutput.nValue += fees
     if pubkey is not None:
-        coinbaseoutput.scriptPubKey = key_to_p2pk_script(pubkey)
+        coinbaseoutput.scriptPubKey = CScript([OP_1, pubkey[1:33]])
     elif script_pubkey is not None:
         coinbaseoutput.scriptPubKey = script_pubkey
     else:
-        coinbaseoutput.scriptPubKey = CScript([OP_TRUE])
+        coinbaseoutput.scriptPubKey = CScript([OP_1, DETERMINISTIC_P2PK_XONLY])
     coinbase.vout = [coinbaseoutput]
     if extra_output_script is not None:
         coinbaseoutput2 = CTxOut()

@@ -112,7 +112,19 @@ struct AmountCompression
 /** wrapper for CTxOut that provides a more compact serialization */
 struct TxOutCompression
 {
-    FORMATTER_METHODS(CTxOut, obj) { READWRITE(Using<AmountCompression>(obj.nValue), Using<ScriptCompression>(obj.scriptPubKey)); }
+    template<typename Stream>
+    void Ser(Stream& s, const CTxOut& obj)
+    {
+        ::Serialize(s, Using<AmountCompression>(obj.nValue));
+        obj.SerializePayload(s);
+    }
+
+    template<typename Stream>
+    void Unser(Stream& s, CTxOut& obj)
+    {
+        ::Unserialize(s, Using<AmountCompression>(obj.nValue));
+        obj.UnserializePayload(s);
+    }
 };
 
 #endif // CONNECTCOIN_COMPRESSOR_H

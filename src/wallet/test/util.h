@@ -29,7 +29,7 @@ inline constexpr DatabaseFormat DATABASE_FORMATS[] = {
        DatabaseFormat::SQLITE,
 };
 
-inline const std::string ADDRESS_BCRT1_UNSPENDABLE = "ccrt1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqdwpa3f";
+inline const std::string ADDRESS_BCRT1_UNSPENDABLE = "ccrt1p2zffkaxp5py4fdutfdsrt6t6tcrc5ks09rkfd428hlhf4n5q8tqqg4lsdc";
 
 std::unique_ptr<CWallet> CreateSyncedWallet(interfaces::Chain& chain, CChain& cchain, const CKey& key);
 

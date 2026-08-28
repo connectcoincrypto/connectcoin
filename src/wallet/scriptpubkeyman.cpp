@@ -1439,7 +1439,7 @@ std::optional<PSBTError> DescriptorScriptPubKeyMan::FillPSBT(PartiallySignedTran
         }
     }
 
-    // Fill in the bip32 keypaths and redeemscripts for the outputs so that hardware wallets can identify change
+    // Fill in key origins for outputs so compatible external signers can identify change.
     for (unsigned int i = 0; i < psbtx.outputs.size(); ++i) {
         std::unique_ptr<SigningProvider> keys = GetSolvingProvider(psbtx.outputs.at(i).script);
         if (!keys) {

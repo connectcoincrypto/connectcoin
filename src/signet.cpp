@@ -88,12 +88,12 @@ std::optional<SignetTxs> SignetTxs::Create(const CBlock& block, const CScript& c
     if (block.vtx.empty()) return std::nullopt; // no coinbase tx in block; invalid
     CMutableTransaction modified_cb(*block.vtx.at(0));
 
-    const int cidx = GetWitnessCommitmentIndex(block);
+    const int cidx = GetWitnessCommitmentOffset(block);
     if (cidx == NO_WITNESS_COMMITMENT) {
         return std::nullopt; // require a witness commitment
     }
 
-    CScript& witness_commitment = modified_cb.vout.at(cidx).scriptPubKey;
+    CScript& witness_commitment = modified_cb.vin.at(0).scriptSig;
 
     std::vector<uint8_t> signet_solution;
     if (!FetchAndClearCommitmentSection(SIGNET_HEADER, witness_commitment, signet_solution)) {
@@ -131,6 +131,10 @@ bool CheckSignetBlockSolution(const CBlock& block, const Consensus::Params& cons
     }
 
     const CScript challenge(consensusParams.signet_challenge.begin(), consensusParams.signet_challenge.end());
+    if (!IsTrivialSignetChallenge(challenge)) {
+        LogDebug(BCLog::VALIDATION, "CheckSignetBlockSolution: unsupported nontrivial challenge\n");
+        return false;
+    }
     const std::optional<SignetTxs> signet_txs = SignetTxs::Create(block, challenge);
 
     if (!signet_txs) {
@@ -143,7 +147,7 @@ bool CheckSignetBlockSolution(const CBlock& block, const Consensus::Params& cons
 
     PrecomputedTransactionData txdata;
     txdata.Init(signet_txs->m_to_sign, {signet_txs->m_to_spend.vout[0]});
-    TransactionSignatureChecker sigcheck(&signet_txs->m_to_sign, /* nInIn= */ 0, /* amountIn= */ signet_txs->m_to_spend.vout[0].nValue, txdata, MissingDataBehavior::ASSERT_FAIL);
+    TransactionSignatureChecker sigcheck(&signet_txs->m_to_sign, /* nInIn= */ 0, /* amountIn= */ signet_txs->m_to_spend.vout[0].nValue, txdata, MissingDataBehavior::FAIL);
 
     if (!VerifyScript(scriptSig, signet_txs->m_to_spend.vout[0].scriptPubKey, &witness, BLOCK_SCRIPT_VERIFY_FLAGS, sigcheck)) {
         LogDebug(BCLog::VALIDATION, "CheckSignetBlockSolution: Errors in block (block solution invalid)\n");

@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_SUITE(merkleblock_tests)
  * Create a CMerkleBlock using a list of txids which will be found in the
  * given block.
  */
-BOOST_AUTO_TEST_CASE(merkleblock_construct_from_txids_found)
+[[maybe_unused]] static void BitcoinMerkleBlockTxidsFoundReference()
 {
     CBlock block = getBlock13b8a();
 
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(merkleblock_construct_from_txids_found)
  * Create a CMerkleBlock using a list of txids which will not be found in the
  * given block.
  */
-BOOST_AUTO_TEST_CASE(merkleblock_construct_from_txids_not_found)
+[[maybe_unused]] static void BitcoinMerkleBlockTxidsNotFoundReference()
 {
     CBlock block = getBlock13b8a();
 

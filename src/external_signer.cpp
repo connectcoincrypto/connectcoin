@@ -16,8 +16,8 @@
 #include <string>
 #include <vector>
 
-ExternalSigner::ExternalSigner(std::vector<std::string> command, std::string chain, std::string fingerprint, std::string name)
-    : m_command{std::move(command)}, m_chain{std::move(chain)}, m_fingerprint{std::move(fingerprint)}, m_name{std::move(name)} {}
+ExternalSigner::ExternalSigner(std::vector<std::string> command, std::string chain, std::string fingerprint, std::string name, bool supports_typed_outputs)
+    : m_command{std::move(command)}, m_chain{std::move(chain)}, m_fingerprint{std::move(fingerprint)}, m_name{std::move(name)}, m_supports_typed_outputs{supports_typed_outputs} {}
 
 std::vector<std::string> ExternalSigner::NetworkArg() const
 {
@@ -51,18 +51,25 @@ bool ExternalSigner::Enumerate(const std::string& command, std::vector<ExternalS
         if (fingerprintStr.size() != 8 || !IsHex(fingerprintStr)) {
             throw std::runtime_error(strprintf("'%s' received invalid fingerprint, must be 8 hex characters", command));
         }
-        // Skip duplicate signer
-        bool duplicate = false;
-        for (const ExternalSigner& signer : signers) {
-            if (signer.m_fingerprint.compare(fingerprintStr) == 0) duplicate = true;
-        }
-        if (duplicate) continue;
         std::string name;
         const UniValue& model_field = signer.find_value("model");
         if (model_field.isStr() && model_field.getValStr() != "") {
             name += model_field.getValStr();
         }
-        signers.emplace_back(subprocess::util::split(command), chain, fingerprintStr, name);
+        const UniValue& protocol_field = signer.find_value("protocol");
+        const bool supports_typed_outputs{protocol_field.isStr() && protocol_field.get_str() == "connectcoin-typed-v1"};
+
+        // A command may report the same physical signer more than once. Keep
+        // the compatible record if only one duplicate advertises typed output
+        // support, rather than letting response order disable the signer.
+        const auto duplicate{std::ranges::find(signers, fingerprintStr, &ExternalSigner::m_fingerprint)};
+        if (duplicate != signers.end()) {
+            if (supports_typed_outputs && !duplicate->m_supports_typed_outputs) {
+                *duplicate = ExternalSigner{subprocess::util::split(command), chain, fingerprintStr, name, true};
+            }
+            continue;
+        }
+        signers.emplace_back(subprocess::util::split(command), chain, fingerprintStr, name, supports_typed_outputs);
     }
     return true;
 }

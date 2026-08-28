@@ -104,22 +104,17 @@ std::vector<std::pair<CTxDestination, CAmount>> ParseOutputs(const UniValue& out
     // Duplicate checking
     std::set<CTxDestination> destinations;
     std::vector<std::pair<CTxDestination, CAmount>> parsed_outputs;
-    bool has_data{false};
     for (const std::string& name_ : outputs.getKeys()) {
         if (name_ == "data") {
-            if (has_data) {
-                throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, duplicate key: data");
-            }
-            has_data = true;
-            std::vector<unsigned char> data = ParseHexV(outputs[name_].getValStr(), "Data");
-            CTxDestination destination{CNoDestination{CScript() << OP_RETURN << data}};
-            CAmount amount{0};
-            parsed_outputs.emplace_back(destination, amount);
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "ConnectCoin type-1 outputs do not support data/OP_RETURN outputs");
         } else {
             CTxDestination destination{DecodeDestination(name_)};
             CAmount amount{AmountFromValue(outputs[name_])};
             if (!IsValidDestination(destination)) {
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid ConnectCoin address: ") + name_);
+            }
+            if (!std::holds_alternative<WitnessV1Taproot>(destination)) {
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "ConnectCoin supports only type-1 P2PK (bech32m) destinations");
             }
 
             if (!destinations.insert(destination).second) {
@@ -227,7 +222,7 @@ void ParsePrevouts(const UniValue& prevTxsUnival, FlatSigningProvider* keystore,
                     throw JSONRPCError(RPC_DESERIALIZATION_ERROR, err);
                 }
                 Coin newcoin;
-                newcoin.out.scriptPubKey = scriptPubKey;
+                newcoin.out.SetScriptPubKey(scriptPubKey);
                 newcoin.out.nValue = MAX_MONEY;
                 if (prevOut.exists("amount")) {
                     newcoin.out.nValue = AmountFromValue(prevOut.find_value("amount"));
@@ -315,6 +310,9 @@ void SignTransaction(CMutableTransaction& mtx, const SigningProvider* keystore, 
     if (!nHashType) {
         nHashType = SIGHASH_DEFAULT;
     }
+    if (*nHashType != SIGHASH_DEFAULT) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "ConnectCoin type-1 outputs support only SIGHASH_DEFAULT");
+    }
 
     // Script verification errors
     std::map<int, bilingual_str> input_errors;
@@ -379,6 +377,8 @@ std::vector<RPCResult> TxDoc(const TxDocOptions& opts)
                 {RPCResult::Type::BOOL, "generated", "Coinbase or not"},
                 {RPCResult::Type::NUM, "height", "The height of the prevout"},
                 {RPCResult::Type::STR_AMOUNT, "value", "The value in " + CURRENCY_UNIT},
+                {RPCResult::Type::NUM, "type", "ConnectCoin output type (1 is P2PK Schnorr)"},
+                {RPCResult::Type::STR_HEX, "pubkey", "The 32-byte x-only public key"},
                 {RPCResult::Type::OBJ, "scriptPubKey", "", ScriptPubKeyDoc()},
             }
         );
@@ -422,6 +422,8 @@ std::vector<RPCResult> TxDoc(const TxDocOptions& opts)
                 {
                     {RPCResult::Type::STR_AMOUNT, "value", "The value in " + CURRENCY_UNIT},
                     {RPCResult::Type::NUM, "n", "index"},
+                    {RPCResult::Type::NUM, "type", "ConnectCoin output type (1 is P2PK Schnorr)"},
+                    {RPCResult::Type::STR_HEX, "pubkey", "The 32-byte x-only public key"},
                     {RPCResult::Type::OBJ, "scriptPubKey", "", ScriptPubKeyDoc()},
                 },
                 opts.wallet ?

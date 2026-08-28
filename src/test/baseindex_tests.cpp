@@ -22,6 +22,7 @@
 #include <script/script.h>
 #include <sync.h>
 #include <test/util/mining.h>
+#include <test/util/script.h>
 #include <test/util/setup_common.h>
 #include <test/util/time.h>
 #include <test/util/validation.h>
@@ -102,7 +103,7 @@ BOOST_FIXTURE_TEST_CASE(baseindex_no_commit_ahead_of_flush, TestChain100Setup)
         // (m_last_flushed_block stays at tip_height). For a real node this would
         // happen in parallel with Sync(). Here we do it before Sync() to make the
         // race state deterministic.
-        CreateAndProcessBlock({}, CScript() << OP_TRUE);
+        CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
         sync_index(false, tip_height + 1, tip_height);
     }
 }
@@ -126,7 +127,7 @@ BOOST_FIXTURE_TEST_CASE(index_unclean_shutdown, TestChain100Setup)
             std::shared_ptr<const CBlock> new_block;
             CBlockIndex* new_block_index = nullptr;
             {
-                const CScript script_pub_key{CScript() << ToByteVector(coinbaseKey.GetPubKey()) << OP_CHECKSIG};
+                const CScript script_pub_key{GetScriptForP2PKOutput(coinbaseKey)};
                 const CBlock block = this->CreateBlock({}, script_pub_key);
 
                 new_block = std::make_shared<CBlock>(block);
@@ -217,7 +218,8 @@ BOOST_FIXTURE_TEST_CASE(index_reorg_crash, TestChain100Setup)
     // Create a fork to trigger the reorg
     std::vector<std::shared_ptr<CBlock>> fork;
     const CBlockIndex* prev_tip = WITH_LOCK(cs_main, return m_node.chainman->ActiveChain().Tip()->pprev);
-    BOOST_REQUIRE(BuildChain(m_node, prev_tip, GetScriptForDestination(PKHash(GenerateRandomKey().GetPubKey())), 3, fork));
+    const CKey fork_key{GenerateRandomKey()};
+    BOOST_REQUIRE(BuildChain(m_node, prev_tip, GetScriptForP2PKOutput(fork_key), 3, fork));
 
     for (const auto& block : fork) {
         BOOST_REQUIRE(m_node.chainman->ProcessNewBlock(block, /*force_processing=*/true, /*min_pow_checked=*/true, nullptr));

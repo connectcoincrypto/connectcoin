@@ -660,27 +660,62 @@ static RPCMethod combinerawtransaction()
         view.SetBackend(CoinsViewEmpty::Get()); // switch back to avoid locking mempool for too long
     }
 
-    // Use CTransaction for the constant parts of the
-    // transaction to avoid rehashing.
-    const CTransaction txConst(mergedTx);
-    // Sign what we can:
-    for (unsigned int i = 0; i < mergedTx.vin.size(); i++) {
-        CTxIn& txin = mergedTx.vin[i];
+    // Typed outputs have no Script program or partial Script solution to merge.
+    // Gather the complete prevout set once for the BIP341-style type-1 digest,
+    // then select the first valid canonical Schnorr witness for every input.
+    std::vector<CTxOut> spent_outputs;
+    spent_outputs.reserve(mergedTx.vin.size());
+    for (CTxIn& txin : mergedTx.vin) {
         const Coin& coin = view.AccessCoin(txin.prevout);
         if (coin.IsSpent()) {
             throw JSONRPCError(RPC_VERIFY_ERROR, "Input not found or already spent");
         }
-        SignatureData sigdata;
+        if (coin.out.GetType() != TxOutputType::P2PK || !coin.out.GetP2PKPubKey()) {
+            throw JSONRPCError(RPC_VERIFY_ERROR, "Input does not spend a type-1 P2PK output");
+        }
+        spent_outputs.push_back(coin.out);
+        txin.scriptSig.clear();
+        txin.scriptWitness.SetNull();
+    }
 
-        // ... and merge in other signatures:
-        for (const CMutableTransaction& txv : txVariants) {
-            if (txv.vin.size() > i) {
-                sigdata.MergeSignatureData(DataFromTransaction(txv, i, coin.out));
+    PrecomputedTransactionData txdata;
+    txdata.Init(mergedTx, std::move(spent_outputs), /*force=*/true);
+
+    for (unsigned int input_index = 0; input_index < mergedTx.vin.size(); ++input_index) {
+        CTxIn& merged_input = mergedTx.vin[input_index];
+        const Coin& coin = view.AccessCoin(merged_input.prevout);
+        const XOnlyPubKey pubkey{*coin.out.GetP2PKPubKey()};
+
+        for (unsigned int variant_index = 0; variant_index < txVariants.size(); ++variant_index) {
+            const CTxIn& candidate = txVariants[variant_index].vin[input_index];
+            if (!candidate.scriptSig.empty()) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER,
+                                   strprintf("Transaction number %u input %u has a non-empty scriptSig",
+                                             variant_index + 1, input_index));
+            }
+            if (candidate.scriptWitness.IsNull()) {
+                continue;
+            }
+            if (candidate.scriptWitness.stack.size() != 1 ||
+                candidate.scriptWitness.stack.front().size() != 64) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER,
+                                   strprintf("Transaction number %u input %u has a malformed type-1 witness",
+                                             variant_index + 1, input_index));
+            }
+
+            ScriptExecutionData execdata;
+            execdata.m_annex_init = true;
+            execdata.m_annex_present = false;
+            ScriptError error{SCRIPT_ERR_OK};
+            MutableTransactionSignatureChecker checker{&mergedTx, input_index, coin.out.nValue, txdata,
+                                                       MissingDataBehavior::FAIL};
+            if (checker.CheckSchnorrSignature(candidate.scriptWitness.stack.front(),
+                                              std::span<const unsigned char>{pubkey.data(), pubkey.size()},
+                                              SigVersion::TAPROOT, execdata, &error)) {
+                merged_input.scriptWitness = candidate.scriptWitness;
+                break;
             }
         }
-        ProduceSignature(DUMMY_SIGNING_PROVIDER, MutableTransactionSignatureCreator(mergedTx, i, coin.out.nValue, {.sighash_type = SIGHASH_ALL}), coin.out.scriptPubKey, sigdata);
-
-        UpdateInput(txin, sigdata);
     }
 
     return EncodeHexTx(CTransaction(mergedTx));
@@ -2118,6 +2153,9 @@ RPCMethod descriptorprocesspsbt()
     }
 
     std::optional<int> sighash_type = ParseSighashString(request.params[2]);
+    if (sighash_type && *sighash_type != SIGHASH_DEFAULT) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "ConnectCoin type-1 outputs support only SIGHASH_DEFAULT");
+    }
     bool bip32derivs = request.params[3].isNull() ? true : request.params[3].get_bool();
     bool finalize = request.params[4].isNull() ? true : request.params[4].get_bool();
 

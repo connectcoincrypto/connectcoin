@@ -5,8 +5,8 @@
 """Test the importprunedfunds and removeprunedfunds RPCs."""
 from decimal import Decimal
 
-from test_framework.address import key_to_p2wpkh
 from test_framework.blocktools import COINBASE_MATURITY
+from test_framework.descriptors import descsum_create
 from test_framework.messages import (
     CMerkleBlock,
     from_hex,
@@ -16,7 +16,6 @@ from test_framework.util import (
     assert_equal,
     assert_not_equal,
     assert_raises_rpc_error,
-    wallet_importprivkey,
 )
 from test_framework.wallet_util import generate_keypair
 
@@ -39,9 +38,11 @@ class ImportPrunedFundsTest(BitcoinTestFramework):
         # pubkey
         address2 = self.nodes[0].getnewaddress()
         # privkey
-        address3_privkey, address3_pubkey = generate_keypair(wif=True)
-        address3 = key_to_p2wpkh(address3_pubkey)
-        wallet_importprivkey(self.nodes[0], address3_privkey, "now")
+        address3_privkey, _ = generate_keypair(wif=True)
+        address3_private_desc = descsum_create(f"tr({address3_privkey})")
+        address3_public_desc = self.nodes[0].getdescriptorinfo(address3_private_desc)["descriptor"]
+        address3 = self.nodes[0].deriveaddresses(address3_public_desc)[0]
+        self.nodes[0].importdescriptors([{"desc": address3_private_desc, "timestamp": "now"}])
 
         # Check only one address
         address_info = self.nodes[0].getaddressinfo(address1)
@@ -95,7 +96,7 @@ class ImportPrunedFundsTest(BitcoinTestFramework):
 
         # Import with private key with no rescan
         w1 = self.nodes[1].get_wallet_rpc(self.default_wallet_name)
-        wallet_importprivkey(w1, address3_privkey, "now")
+        w1.importdescriptors([{"desc": address3_private_desc, "timestamp": "now"}])
         w1.importprunedfunds(rawtxn3, proof3)
         assert txnid3 in [tx['txid'] for tx in w1.listtransactions()]
         balance3 = w1.getbalance()

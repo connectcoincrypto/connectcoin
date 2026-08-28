@@ -467,6 +467,10 @@ struct SnapshotTestSetup : TestChain100Setup {
 //! Test basic snapshot activation.
 BOOST_FIXTURE_TEST_CASE(chainstatemanager_activate_snapshot, SnapshotTestSetup)
 {
+    if (Params().GetAvailableSnapshotHeights().empty()) {
+        BOOST_TEST_MESSAGE("assumeutxo disabled until typed-output snapshots are regenerated");
+        return;
+    }
     this->SetupSnapshot();
 }
 
@@ -658,7 +662,8 @@ BOOST_FIXTURE_TEST_CASE(invalidate_block_and_reconsider_fork, TestChain100Setup)
     BlockValidationState state;
     BOOST_REQUIRE(chainstate.InvalidateBlock(state, block99));
     BOOST_REQUIRE(WITH_LOCK(cs_main, return chainman.ActiveChain().Tip()) == block98);
-    CScript coinbase_script = CScript() << ToByteVector(coinbaseKey.GetPubKey()) << OP_CHECKSIG;
+    const XOnlyPubKey coinbase_pubkey{coinbaseKey.GetPubKey()};
+    CScript coinbase_script = CScript{} << OP_1 << std::vector<unsigned char>{coinbase_pubkey.begin(), coinbase_pubkey.end()};
     for (int i = 0; i < 2; ++i) {
         CreateAndProcessBlock({}, coinbase_script);
     }
@@ -724,6 +729,10 @@ BOOST_FIXTURE_TEST_CASE(invalidate_block_and_reconsider_fork, TestChain100Setup)
 //! restart, and that new blocks can be connected to both chainstates.
 BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_init, SnapshotTestSetup)
 {
+    if (Params().GetAvailableSnapshotHeights().empty()) {
+        BOOST_TEST_MESSAGE("assumeutxo disabled until typed-output snapshots are regenerated");
+        return;
+    }
     ChainstateManager& chainman = *Assert(m_node.chainman);
     Chainstate& bg_chainstate = chainman.ActiveChainstate();
 
@@ -798,6 +807,10 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_init, SnapshotTestSetup)
 
 BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_completion, SnapshotTestSetup)
 {
+    if (Params().GetAvailableSnapshotHeights().empty()) {
+        BOOST_TEST_MESSAGE("assumeutxo disabled until typed-output snapshots are regenerated");
+        return;
+    }
     this->SetupSnapshot();
 
     ChainstateManager& chainman = *Assert(m_node.chainman);
@@ -878,6 +891,10 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_completion, SnapshotTestSetup
 
 BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_completion_hash_mismatch, SnapshotTestSetup)
 {
+    if (Params().GetAvailableSnapshotHeights().empty()) {
+        BOOST_TEST_MESSAGE("assumeutxo disabled until typed-output snapshots are regenerated");
+        return;
+    }
     auto chainstates = this->SetupSnapshot();
     Chainstate& validation_chainstate = *std::get<0>(chainstates);
     Chainstate& unvalidated_cs = *std::get<1>(chainstates);

@@ -49,9 +49,9 @@ static CTransactionRef MakeTransactionSpending(const std::vector<COutPoint>& out
     tx.vin[0].scriptWitness.stack.push_back({1});
     tx.vout.resize(2);
     tx.vout[0].nValue = CENT;
-    tx.vout[0].scriptPubKey = GetScriptForDestination(PKHash(key.GetPubKey()));
+    tx.vout[0].SetP2PK(XOnlyPubKey{key.GetPubKey()});
     tx.vout[1].nValue = 3 * CENT;
-    tx.vout[1].scriptPubKey = GetScriptForDestination(WitnessV0KeyHash(key.GetPubKey()));
+    tx.vout[1].SetP2PK(XOnlyPubKey{key.GetPubKey()});
     return MakeTransactionRef(tx);
 }
 
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(peer_dos_limits)
 
     // Construct transactions to use. They must all be the same size.
     static constexpr unsigned int NUM_TXNS_CREATED = 100;
-    static constexpr int64_t TX_SIZE{469};
+    static constexpr int64_t TX_SIZE{537};
     static constexpr int64_t TOTAL_SIZE = NUM_TXNS_CREATED * TX_SIZE;
 
     std::vector<CTransactionRef> txns;
@@ -342,7 +342,7 @@ BOOST_AUTO_TEST_CASE(peer_dos_limits)
         // Create a large transaction that is 10 times larger than the normal size transaction.
         CMutableTransaction tx_large;
         tx_large.vin.resize(1);
-        BulkTransaction(tx_large, 10 * TX_SIZE);
+        BulkTransaction(tx_large, 10 * TX_SIZE + 1);
         auto ptx_large = MakeTransactionRef(tx_large);
 
         const auto large_tx_size = GetTransactionWeight(*ptx_large);
@@ -675,6 +675,7 @@ BOOST_AUTO_TEST_CASE(too_large_orphan_tx)
     BOOST_CHECK_EQUAL(GetTransactionWeight(CTransaction(tx)), MAX_STANDARD_TX_WEIGHT + 4);
     BOOST_CHECK(!orphanage->AddTx(MakeTransactionRef(tx), 0));
 
+    tx.vin.front().scriptWitness.stack.clear();
     tx.vout.clear();
     BulkTransaction(tx, MAX_STANDARD_TX_WEIGHT);
     BOOST_CHECK_EQUAL(GetTransactionWeight(CTransaction(tx)), MAX_STANDARD_TX_WEIGHT);

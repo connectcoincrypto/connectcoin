@@ -1,9 +1,26 @@
 # PSBT Howto for ConnectCoin Core
 
-ConnectCoin Core inherits the Partially Signed Bitcoin Transaction (PSBT) RPC
-interface and wire format from Bitcoin Core. The format is specified in
-[BIP 174](https://github.com/bitcoin/bips/blob/master/bip-0174.mediawiki), and
-this project uses it for partially signed ConnectCoin transactions.
+ConnectCoin Core inherits its PSBT container, roles, and RPC interface from
+Bitcoin Core and [BIP 174](https://github.com/bitcoin/bips/blob/master/bip-0174.mediawiki),
+but the payload is a **ConnectCoin-specific, non-interoperable dialect**. In
+particular, PSBTv0's global unsigned transaction and every
+`non_witness_utxo` contain ConnectCoin's typed transaction-output wire format
+(`amount + type + payload`), not a Bitcoin transaction. PSBTv2 fields may look
+structurally familiar, but signatures use ConnectCoin's type-1 digest and
+authorization rules.
+
+The current encoding retains the inherited `psbt\xff` magic. That is not a
+compatibility promise: Bitcoin PSBT software, hardware wallets, and generic
+signers may reject the data or, worse, interpret compatibility fields and sign
+the wrong digest. Only ConnectCoin-aware implementations may parse or sign
+these PSBTs. A distinct magic or mandatory dialect marker should be introduced
+before public interoperability is offered so unsupported tools fail closed.
+
+The PSBT container and descriptor machinery are compatibility infrastructure;
+the current consensus accepts only type-1 single-key outputs and one 64-byte
+Schnorr witness signature per input. Multisig and Script-based examples below
+are inherited reference material and do not produce valid ConnectCoin
+transactions. See [typed-outputs.md](typed-outputs.md).
 
 This document describes the overall workflow for producing signed transactions
 through the use of PSBT, and the specific RPC commands used in typical
@@ -11,11 +28,12 @@ scenarios.
 
 ## PSBT in general
 
-PSBT is an interchange format for ConnectCoin transactions that are not fully signed
-yet, together with relevant metadata to help entities work towards signing it.
-It is intended to simplify workflows where multiple parties need to cooperate to
-produce a transaction. Examples include hardware wallets, multisig setups, and
-[CoinJoin](https://bitcointalk.org/?topic=279249) transactions.
+Within ConnectCoin-aware software, PSBT is a container for ConnectCoin
+transactions that are not fully signed yet, together with relevant metadata to
+help entities work towards signing them. The inherited workflow supports
+cooperation between components, but Bitcoin hardware-wallet, multisig, and
+CoinJoin examples are not claims of compatibility with the current type-1-only
+protocol.
 
 ### Overall workflow
 

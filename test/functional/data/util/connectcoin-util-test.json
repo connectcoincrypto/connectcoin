@@ -66,7 +66,7 @@
   },
   {
     "exec": "./connectcoin-util",
-    "args": ["-signet", "-signetchallenge=512102f7561d208dd9ae99bf497273e16f389bdbd6c4742ddb8e6b216e64fa2928ad8f51ae", "getchainparams"],
+    "args": ["-signet", "-signetchallenge=60", "getchainparams"],
     "return_code": 0,
     "output_cmp": "getchainparams-signet-custom.json",
     "description": "getchainparams returns custom signet info"

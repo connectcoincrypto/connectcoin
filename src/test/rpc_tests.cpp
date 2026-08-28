@@ -4,7 +4,10 @@
 
 #include <core_io.h>
 #include <interfaces/chain.h>
+#include <key.h>
+#include <key_io.h>
 #include <node/context.h>
+#include <primitives/transaction.h>
 #include <rpc/blockchain.h>
 #include <rpc/client.h>
 #include <rpc/server.h>
@@ -12,6 +15,7 @@
 #include <test/util/common.h>
 #include <test/util/setup_common.h>
 #include <test/util/time.h>
+#include <streams.h>
 #include <univalue.h>
 #include <util/time.h>
 
@@ -188,11 +192,16 @@ BOOST_AUTO_TEST_CASE(rpc_rawparams)
     BOOST_CHECK_THROW(CallRPC("decoderawtransaction"), std::runtime_error);
     BOOST_CHECK_THROW(CallRPC("decoderawtransaction null"), std::runtime_error);
     BOOST_CHECK_THROW(CallRPC("decoderawtransaction DEADBEEF"), std::runtime_error);
-    std::string rawtx = "0100000001a15d57094aa7a21a28cb20b59aab8fc7d1149a3bdbcddba9c622e4f5f6a99ece010000006c493046022100f93bb0e7d8db7bd46e40132d1f8242026e045f03a0efe71bbb8e3f475e970d790221009337cd7f1f929f00cc6ff01f03729b069a7c21b59b1736ddfee5db5946c5da8c0121033b9b137ee87d5a812d6f506efdd37f0affa7ffc310711c06c7f3e097c9447c52ffffffff0100e1f505000000001976a9140389035a9225b3839e2bbf32d826a1e222031fd888ac00000000";
+    CMutableTransaction tx;
+    tx.vin.emplace_back(Txid::FromUint256(uint256{1}), 0);
+    tx.vout.emplace_back(5 * COIN, XOnlyPubKey{GenerateRandomKey().GetPubKey()});
+    DataStream encoded;
+    encoded << TX_WITH_WITNESS(tx);
+    const std::string rawtx{HexStr(encoded)};
     BOOST_CHECK_NO_THROW(r = CallRPC(std::string("decoderawtransaction ")+rawtx));
-    BOOST_CHECK_EQUAL(r.get_obj().find_value("size").getInt<int>(), 193);
-    BOOST_CHECK_EQUAL(r.get_obj().find_value("version").getInt<int>(), 1);
-    BOOST_CHECK_EQUAL(r.get_obj().find_value("locktime").getInt<int>(), 0);
+    BOOST_CHECK_EQUAL(r.get_obj().find_value("size").getInt<int>(), static_cast<int>(rawtx.size() / 2));
+    BOOST_CHECK_EQUAL(r.get_obj().find_value("version").getInt<int>(), tx.version);
+    BOOST_CHECK_EQUAL(r.get_obj().find_value("locktime").getInt<int>(), tx.nLockTime);
     BOOST_CHECK_THROW(CallRPC(std::string("decoderawtransaction ")+rawtx+" extra"), std::runtime_error);
     BOOST_CHECK_NO_THROW(r = CallRPC(std::string("decoderawtransaction ")+rawtx+" false"));
     BOOST_CHECK_THROW(r = CallRPC(std::string("decoderawtransaction ")+rawtx+" false extra"), std::runtime_error);
@@ -228,26 +237,37 @@ BOOST_AUTO_TEST_CASE(rpc_togglenetwork)
 
 BOOST_AUTO_TEST_CASE(rpc_rawsign)
 {
-    UniValue r;
-    // input is a 1-of-2 multisig (so is output):
-    std::string prevout =
-      "[{\"txid\":\"b4cc287e58f87cdae59417329f710f3ecd75a4ee1d2872b7248f50977c8493f3\","
-      "\"vout\":1,\"scriptPubKey\":\"a914b10c9df5f7edf436c697f02f1efdba4cf399615187\","
-      "\"redeemScript\":\"512103debedc17b3df2badbcdd86d5feb4562b86fe182e5998abd8bcd4f122c6155b1b21027e940bb73ab8732bfdf7f9216ecefca5b94d6df834e77e108f68e66f126044c052ae\"}]";
-    r = CallRPC(std::string("createrawtransaction ")+prevout+" "+
-      "{\"cHYdP3nWayjdwCnADNriGk7RowbtiHjScV\":11}");
-    std::string notsigned = r.get_str();
-    std::string privkey1 = "\"Cu3GXrWyL97TcF1syNNck4rjCT4a5pycJ8ubq8bYWjugzGbzYWoP\"";
-    std::string privkey2 = "\"CssNDL3iv5TMHr1DcLeHyXB6Df6BME3dTkG4tDcrmqr8DNkY5GtR\"";
-    r = CallRPC(std::string("signrawtransactionwithkey ")+notsigned+" [] "+prevout);
-    BOOST_CHECK(r.get_obj().find_value("complete").get_bool() == false);
-    r = CallRPC(std::string("signrawtransactionwithkey ")+notsigned+" ["+privkey1+","+privkey2+"] "+prevout);
-    BOOST_CHECK(r.get_obj().find_value("complete").get_bool() == true);
+    const CKey spending_key{GenerateRandomKey()};
+    const CKey destination_key{GenerateRandomKey()};
+    const XOnlyPubKey spending_pubkey{spending_key.GetPubKey()};
+    const COutPoint prevout{Txid::FromUint256(uint256::ONE), 1};
+
+    CMutableTransaction tx;
+    tx.vin.emplace_back(prevout);
+    tx.vout.emplace_back(COIN, XOnlyPubKey{destination_key.GetPubKey()});
+    const std::string unsigned_hex{EncodeHexTx(CTransaction{tx})};
+
+    const CScript prevout_script{GetScriptForDestination(WitnessV1Taproot{spending_pubkey})};
+    const std::string prevouts{strprintf(
+        "[{\"txid\":\"%s\",\"vout\":%u,\"scriptPubKey\":\"%s\",\"amount\":%s}]",
+        prevout.hash.ToString(), prevout.n, HexStr(prevout_script), ValueFromAmount(2 * COIN).write())};
+
+    UniValue result{CallRPC("signrawtransactionwithkey " + unsigned_hex + " [] " + prevouts)};
+    BOOST_CHECK(!result.get_obj().find_value("complete").get_bool());
+
+    result = CallRPC("signrawtransactionwithkey " + unsigned_hex + " [\"" + EncodeSecret(spending_key) + "\"] " + prevouts);
+    BOOST_REQUIRE(result.get_obj().find_value("complete").get_bool());
+
+    CMutableTransaction signed_tx;
+    BOOST_REQUIRE(DecodeHexTx(signed_tx, result.get_obj().find_value("hex").get_str()));
+    BOOST_CHECK(signed_tx.vin.front().scriptSig.empty());
+    BOOST_REQUIRE_EQUAL(signed_tx.vin.front().scriptWitness.stack.size(), 1U);
+    BOOST_CHECK_EQUAL(signed_tx.vin.front().scriptWitness.stack.front().size(), 64U);
 }
 
-BOOST_AUTO_TEST_CASE(rpc_createraw_op_return)
+BOOST_AUTO_TEST_CASE(rpc_rejects_data_outputs)
 {
-    BOOST_CHECK_NO_THROW(CallRPC("createrawtransaction [{\"txid\":\"a3b807410df0b60fcb9736768df5823938b2f838694939ba45f3c0a1bff150ed\",\"vout\":0}] {\"data\":\"68656c6c6f776f726c64\"}"));
+    BOOST_CHECK_THROW(CallRPC("createrawtransaction [{\"txid\":\"a3b807410df0b60fcb9736768df5823938b2f838694939ba45f3c0a1bff150ed\",\"vout\":0}] {\"data\":\"68656c6c6f776f726c64\"}"), std::runtime_error);
 
     // Key not "data" (bad address)
     BOOST_CHECK_THROW(CallRPC("createrawtransaction [{\"txid\":\"a3b807410df0b60fcb9736768df5823938b2f838694939ba45f3c0a1bff150ed\",\"vout\":0}] {\"somedata\":\"68656c6c6f776f726c64\"}"), std::runtime_error);
@@ -257,7 +277,7 @@ BOOST_AUTO_TEST_CASE(rpc_createraw_op_return)
     BOOST_CHECK_THROW(CallRPC("createrawtransaction [{\"txid\":\"a3b807410df0b60fcb9736768df5823938b2f838694939ba45f3c0a1bff150ed\",\"vout\":0}] {\"data\":\"12345g\"}"), std::runtime_error);
 
     // Data 81 bytes long
-    BOOST_CHECK_NO_THROW(CallRPC("createrawtransaction [{\"txid\":\"a3b807410df0b60fcb9736768df5823938b2f838694939ba45f3c0a1bff150ed\",\"vout\":0}] {\"data\":\"010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081\"}"));
+    BOOST_CHECK_THROW(CallRPC("createrawtransaction [{\"txid\":\"a3b807410df0b60fcb9736768df5823938b2f838694939ba45f3c0a1bff150ed\",\"vout\":0}] {\"data\":\"010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081\"}"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(rpc_format_monetary_values)

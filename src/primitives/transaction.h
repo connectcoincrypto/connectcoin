@@ -9,6 +9,7 @@
 #include <attributes.h>
 #include <consensus/amount.h>
 #include <primitives/transaction_identifier.h> // IWYU pragma: export
+#include <pubkey.h>
 #include <script/script.h>
 #include <serialize.h>
 
@@ -19,6 +20,7 @@
 #include <limits>
 #include <memory>
 #include <numeric>
+#include <optional>
 #include <string>
 #include <tuple>
 #include <utility>
@@ -133,11 +135,30 @@ public:
     std::string ToString() const;
 };
 
-/** An output of a transaction.  It contains the public key that the next input
- * must be able to sign with to claim it.
+/** Consensus output types.
+ *
+ * Type 0 is reserved for null/invalid objects and for decoding legacy data in
+ * diagnostic tools. It is never a valid transaction output. Type 1 is the
+ * only spendable output type and commits directly to an x-only public key.
+ */
+enum class TxOutputType : uint8_t {
+    INVALID = 0,
+    P2PK = 1,
+};
+
+/** An output of a transaction.
+ *
+ * The consensus serialization is amount + one-byte type + type payload. For
+ * P2PK the payload is exactly one 32-byte x-only public key. scriptPubKey is a
+ * compatibility view used by wallet, descriptor, PSBT, and RPC code; it is not
+ * serialized for valid outputs and is never executed by consensus validation.
  */
 class CTxOut
 {
+private:
+    uint8_t type;
+    XOnlyPubKey p2pk_pubkey;
+
 public:
     CAmount nValue;
     CScript scriptPubKey;
@@ -148,12 +169,77 @@ public:
     }
 
     CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn);
+    CTxOut(const CAmount& nValueIn, const XOnlyPubKey& pubkeyIn);
 
-    SERIALIZE_METHODS(CTxOut, obj) { READWRITE(obj.nValue, obj.scriptPubKey); }
+    TxOutputType GetType() const;
+    std::optional<XOnlyPubKey> GetP2PKPubKey() const;
+    void SetScriptPubKey(CScript scriptPubKeyIn);
+    void SetP2PK(const XOnlyPubKey& pubkeyIn);
+
+    template<typename Stream>
+    void SerializePayload(Stream& s) const
+    {
+        ::Serialize(s, type);
+        switch (static_cast<TxOutputType>(type)) {
+        case TxOutputType::P2PK:
+            if (const auto pubkey{GetP2PKPubKey()}) {
+                ::Serialize(s, *pubkey);
+            } else {
+                throw std::ios_base::failure("Inconsistent P2PK transaction output");
+            }
+            break;
+        case TxOutputType::INVALID:
+            // Type 0 has no payload and is rejected by consensus. Keeping it
+            // parseable lets null objects and malformed transactions be
+            // handled without ever putting Script back on the wire.
+            break;
+        default:
+            throw std::ios_base::failure("Unknown transaction output type");
+        }
+    }
+
+    template<typename Stream>
+    void UnserializePayload(Stream& s)
+    {
+        uint8_t encoded_type{0};
+        ::Unserialize(s, encoded_type);
+        type = encoded_type;
+        switch (static_cast<TxOutputType>(encoded_type)) {
+        case TxOutputType::P2PK:
+            ::Unserialize(s, p2pk_pubkey);
+            if (!p2pk_pubkey.IsFullyValid()) {
+                throw std::ios_base::failure("Invalid P2PK x-only public key");
+            }
+            SetP2PK(p2pk_pubkey);
+            break;
+        case TxOutputType::INVALID:
+            p2pk_pubkey = {};
+            scriptPubKey.clear();
+            break;
+        default:
+            throw std::ios_base::failure("Unknown transaction output type");
+        }
+    }
+
+    template<typename Stream>
+    void Serialize(Stream& s) const
+    {
+        ::Serialize(s, nValue);
+        SerializePayload(s);
+    }
+
+    template<typename Stream>
+    void Unserialize(Stream& s)
+    {
+        ::Unserialize(s, nValue);
+        UnserializePayload(s);
+    }
 
     void SetNull()
     {
         nValue = -1;
+        type = static_cast<uint8_t>(TxOutputType::INVALID);
+        p2pk_pubkey = {};
         scriptPubKey.clear();
     }
 
@@ -164,8 +250,8 @@ public:
 
     friend bool operator==(const CTxOut& a, const CTxOut& b)
     {
-        return (a.nValue       == b.nValue &&
-                a.scriptPubKey == b.scriptPubKey);
+        return (a.nValue == b.nValue && a.GetType() == b.GetType() &&
+                a.GetP2PKPubKey() == b.GetP2PKPubKey());
     }
 
     std::string ToString() const;

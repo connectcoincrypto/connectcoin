@@ -727,7 +727,8 @@ def sync_txindex(test_framework, node):
     test_framework.log.debug(f"Synced in {time.time() - sync_start} seconds")
 
 def wallet_importprivkey(wallet_rpc, privkey, timestamp, *, label=""):
-    desc = descsum_create("combo(" + privkey + ")")
+    # The deterministic test-chain outputs are native type-1 P2PK locks.
+    desc = descsum_create("rawtr(" + privkey + ")")
     req = [{
         "desc": desc,
         "timestamp": timestamp,

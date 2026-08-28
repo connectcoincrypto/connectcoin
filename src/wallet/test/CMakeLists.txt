@@ -15,7 +15,6 @@ target_sources(connectcoin-test
     group_outputs_tests.cpp
     init_tests.cpp
     ismine_tests.cpp
-    psbt_wallet_tests.cpp
     scriptpubkeyman_tests.cpp
     spend_tests.cpp
     wallet_crypto_tests.cpp

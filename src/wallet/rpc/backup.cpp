@@ -165,6 +165,11 @@ static UniValue ProcessDescriptorImport(CWallet& wallet, const UniValue& data, c
         if (parsed_descs.empty()) {
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, error);
         }
+        for (const auto& parsed : parsed_descs) {
+            if (parsed->GetOutputType() != OutputType::BECH32M || !parsed->IsKeyPathOnly()) {
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "ConnectCoin wallets accept only key-path-only tr() or rawtr() type-1 descriptors");
+            }
+        }
         std::optional<bool> internal;
         if (data.exists("internal")) {
             if (parsed_descs.size() > 1) {

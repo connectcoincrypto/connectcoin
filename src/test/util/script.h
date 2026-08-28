@@ -6,6 +6,7 @@
 #define CONNECTCOIN_TEST_UTIL_SCRIPT_H
 
 #include <crypto/sha256.h>
+#include <key.h>
 #include <script/script.h>
 #include <script/verify_flags.h>
 
@@ -30,6 +31,12 @@ inline const CScript P2WSH_EMPTY{
        }())};
 inline const std::vector<std::vector<uint8_t>> P2WSH_EMPTY_TRUE_STACK{{static_cast<uint8_t>(OP_TRUE)}, {}};
 inline const std::vector<std::vector<uint8_t>> P2WSH_EMPTY_TWO_STACK{{static_cast<uint8_t>(OP_2)}, {}};
+
+inline CScript GetScriptForP2PKOutput(const CKey& key)
+{
+    const XOnlyPubKey pubkey{key.GetPubKey()};
+    return CScript{} << OP_1 << std::vector<unsigned char>{pubkey.begin(), pubkey.end()};
+}
 
 /** Flags that are not forbidden by an assert in script validation */
 bool IsValidFlagCombination(script_verify_flags flags);

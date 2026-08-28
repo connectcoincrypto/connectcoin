@@ -71,7 +71,7 @@ class CreateWalletTest(BitcoinTestFramework):
 
         self.log.info('Test that private keys cannot be imported')
         privkey, pubkey = generate_keypair(wif=True)
-        result = w1.importdescriptors([{'desc': descsum_create('wpkh(' + privkey + ')'), 'timestamp': 'now'}])
+        result = w1.importdescriptors([{'desc': descsum_create('tr(' + privkey + ')'), 'timestamp': 'now'}])
         assert not result[0]['success']
         assert 'warnings' not in result[0]
         assert_equal(result[0]['error']['code'], -4)
@@ -98,12 +98,12 @@ class CreateWalletTest(BitcoinTestFramework):
         assert_raises_rpc_error(-4, "Error: This wallet has no available keys", w3.getnewaddress)
         # Set the seed
         w3.importdescriptors([{
-            'desc': descsum_create(f'wpkh({ExtendedPrivateKey.generate().to_string()}/0h/*)'),
+            'desc': descsum_create(f'tr({ExtendedPrivateKey.generate().to_string()}/0h/*)'),
             'timestamp': 'now',
             'active': True
         },
         {
-            'desc': descsum_create(f'wpkh({ExtendedPrivateKey.generate().to_string()}/1h/*)'),
+            'desc': descsum_create(f'tr({ExtendedPrivateKey.generate().to_string()}/1h/*)'),
             'timestamp': 'now',
             'active': True,
             'internal': True
@@ -125,12 +125,12 @@ class CreateWalletTest(BitcoinTestFramework):
         with WalletUnlock(w4, "pass"):
             # Now set a seed and it should work. Wallet should also be encrypted
             w4.importdescriptors([{
-                'desc': descsum_create(f'wpkh({ExtendedPrivateKey.generate().to_string()}/0h/*)'),
+                'desc': descsum_create(f'tr({ExtendedPrivateKey.generate().to_string()}/0h/*)'),
                 'timestamp': 'now',
                 'active': True
             },
             {
-                'desc': descsum_create(f'wpkh({ExtendedPrivateKey.generate().to_string()}/1h/*)'),
+                'desc': descsum_create(f'tr({ExtendedPrivateKey.generate().to_string()}/1h/*)'),
                 'timestamp': 'now',
                 'active': True,
                 'internal': True
@@ -163,11 +163,11 @@ class CreateWalletTest(BitcoinTestFramework):
         w6 = node.get_wallet_rpc('w6')
         assert_raises_rpc_error(-13, "Error: Please enter the wallet passphrase with walletpassphrase first.", w6.signmessage, "needanargument", "test")
         with WalletUnlock(w6, "thisisapassphrase"):
-            w6.signmessage(w6.getnewaddress('', 'legacy'), "test")
+            w6.getnewaddress()
             w6.keypoolrefill(1)
-            # There should only be 1 key for legacy, 3 for descriptors
+            # Type-1 wallets maintain one active receive and one change descriptor.
             walletinfo = w6.getwalletinfo()
-            keys = 4
+            keys = 1
             assert_equal(walletinfo['keypoolsize'], keys)
             assert_equal(walletinfo['keypoolsize_hd_internal'], keys)
         # Allow empty passphrase, but there should be a warning

@@ -10,6 +10,7 @@
 
 import unittest
 
+from .key import compute_xonly_pubkey
 from .script import (
     CScript,
     OP_0,
@@ -31,12 +32,20 @@ from test_framework.segwit_addr import (
 )
 
 
-ADDRESS_CCRT1_UNSPENDABLE = 'ccrt1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqdwpa3f'
-ADDRESS_CCRT1_UNSPENDABLE_DESCRIPTOR = 'addr(ccrt1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqdwpa3f)#jwf4s0w6'
+ADDRESS_CCRT1_UNSPENDABLE = 'ccrt1p2zffkaxp5py4fdutfdsrt6t6tcrc5ks09rkfd428hlhf4n5q8tqqg4lsdc'
+ADDRESS_CCRT1_UNSPENDABLE_DESCRIPTOR = 'addr(ccrt1p2zffkaxp5py4fdutfdsrt6t6tcrc5ks09rkfd428hlhf4n5q8tqqg4lsdc)#dnask55q'
 # Coins sent to this address can be spent with a witness stack of just OP_TRUE
 ADDRESS_CCRT1_P2WSH_OP_TRUE = 'ccrt1qft5p2uhsdcdc3l2ua4ap5qqfg4pjaqlp250x7us7a8qqhrxrxfsqv3quj0'
 
 b58chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+
+
+def create_deterministic_address_ccrt1_p2pk(secret=(1).to_bytes(32, 'big')):
+    """Return a deterministic type-1 address and its x-only public key."""
+    xonly, _ = compute_xonly_pubkey(secret)
+    if xonly is None:
+        raise ValueError("invalid deterministic private key")
+    return output_key_to_p2tr(xonly), xonly
 
 
 def create_deterministic_address_ccrt1_p2tr_op_true(explicit_internal_key=None):

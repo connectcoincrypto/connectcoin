@@ -14,6 +14,7 @@
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <script/script.h>
+#include <signet.h>
 #include <uint256.h>
 #include <util/chaintype.h>
 #include <util/log.h>
@@ -25,6 +26,7 @@
 #include <cstdint>
 #include <cstring>
 #include <span>
+#include <stdexcept>
 #include <utility>
 
 using namespace util::hex_literals;
@@ -37,7 +39,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
     txNew.vout.resize(1);
     txNew.vin[0].scriptSig = CScript() << 486604799 << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
     txNew.vout[0].nValue = genesisReward;
-    txNew.vout[0].scriptPubKey = genesisOutputScript;
+    txNew.vout[0].SetScriptPubKey(genesisOutputScript);
 
     CBlock genesis;
     genesis.nTime    = nTime;
@@ -53,14 +55,14 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
 /** Public-network development-fund key. The corresponding private key is not part of the source tree. */
 static const CScript& PublicGenesisOutputScript()
 {
-    static const CScript script = CScript() << "02da12a44d69673e42ba95ac1d2bd4e5c76c3709a1765edbc5f52b8e5e643b0609"_hex << OP_CHECKSIG;
+    static const CScript script = CScript() << OP_1 << "da12a44d69673e42ba95ac1d2bd4e5c76c3709a1765edbc5f52b8e5e643b0609"_hex;
     return script;
 }
 
 /** Regtest-only key with a published private key, so tests can spend its genesis output. */
 static const CScript& RegTestGenesisOutputScript()
 {
-    static const CScript script = CScript() << "04738a50e0af6185956d5e0c393859830eb70ea92351b19facbd47259cd7a10c278e0dc93464060c9d873d7a2b0fc106888d87539c83d75de94c3e43d8fbabbefb"_hex << OP_CHECKSIG;
+    static const CScript script = CScript() << OP_1 << "738a50e0af6185956d5e0c393859830eb70ea92351b19facbd47259cd7a10c27"_hex;
     return script;
 }
 
@@ -149,10 +151,10 @@ public:
         m_assumed_blockchain_size = 0;
         m_assumed_chain_state_size = 0;
 
-        genesis = CreateConnectCoinGenesisBlock("teste testado", 1787596781, 314125, 0x1e01ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
+        genesis = CreateConnectCoinGenesisBlock("teste testado", 1787596781, 10651320, 0x1e01ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"0000004b461aae33a4be0ee95ae8461155f2c48130bc8dd521adb71ec0d3e9a2"});
-        assert(genesis.hashMerkleRoot == uint256{"16c0a19492ab1767d72cea5f47a6720fa85bc0f21716c8affdf541758d34611b"});
+        assert(consensus.hashGenesisBlock == uint256{"0000011d9cb5b5e6be16f52fb0f3a1f207722c008cd176323b6fdb394f95fedd"});
+        assert(genesis.hashMerkleRoot == uint256{"1e6ec171b38c7d4b5bb150c9dfa2f9eb7eb412906a0807201792722095ac1c8a"});
 
         // Note that of those which support the service bits prefix, most only support a subset of
         // possible options.
@@ -237,10 +239,10 @@ public:
         m_assumed_blockchain_size = 0;
         m_assumed_chain_state_size = 0;
 
-        genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin testnet3", 1787596782, 4355844, 0x1e01ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
+        genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin testnet3", 1787596782, 5195828, 0x1e01ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(genesis.hashMerkleRoot == uint256{"f69148784ca217158b5fa2dc172e6f66499535189304b27806d92cb194fb6b0f"});
-        assert(consensus.hashGenesisBlock == uint256{"000001c906bb16924aaa92ab23ba23616d7916ecfdc3a256c060dbe9ead948f3"});
+        assert(genesis.hashMerkleRoot == uint256{"1df98af4c1fc04b34d14c2fc8231083428b5056975bfb51e7fad9ca2043d8cc9"});
+        assert(consensus.hashGenesisBlock == uint256{"000000ead690e3b69094398c0aa49fbb70623143cc6affcac9f8622aa60e5512"});
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -320,10 +322,10 @@ public:
         m_assumed_blockchain_size = 0;
         m_assumed_chain_state_size = 0;
 
-        genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin testnet4", 1787596783, 20414323, 0x1e01ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
+        genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin testnet4", 1787596783, 27882997, 0x1e01ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"000001218f2321c9ccd0f18fe8603865e9a97ea644d8ab62c434cc39928377f1"});
-        assert(genesis.hashMerkleRoot == uint256{"39760bb1e81f6d6b56cbf85d55f404289b842c5f30b7c652f0d2b0ac53fcd998"});
+        assert(consensus.hashGenesisBlock == uint256{"000001dd808d4fb0ced2ae73487e593776fffab24ccbe928ab11863383b6942f"});
+        assert(genesis.hashMerkleRoot == uint256{"2fccd9d71c8cdbd5b5520f94bf29fbf7e38d5a90b4039166d2d8c86fe89028f0"});
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -379,6 +381,10 @@ public:
             LogInfo("Signet with challenge %s", HexStr(bin));
         }
 
+        if (!IsTrivialSignetChallenge(bin)) {
+            throw std::runtime_error("-signetchallenge must be a trivial truthy script that needs no scriptSig or witness; arbitrary BIP325 Script challenges are incompatible with ConnectCoin typed outputs.");
+        }
+
         if (options.seeds) {
             vSeeds = *options.seeds;
         }
@@ -425,10 +431,10 @@ public:
         nDefaultPort = 48182;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin signet", 1787596784, 12166496, 0x1e01ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
+        genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin signet", 1787596784, 18813852, 0x1e01ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"000000850a5c90845788b6f2688e27976da0ef181258378d39764f85baa64780"});
-        assert(genesis.hashMerkleRoot == uint256{"039d04fd0d0875ccefe1c4a615780b99f27f645e9b848ce059287e87ff5f0ca9"});
+        assert(consensus.hashGenesisBlock == uint256{"0000012727bfc44312bc3365237a42875c1e15f357f09dcd6bb7a221bd20f176"});
+        assert(genesis.hashMerkleRoot == uint256{"5f09f9b805e8731b6d9f7410bb4404d24e5c95005ec395a47a80c45fd92024b2"});
 
         m_assumeutxo_data.clear();
 
@@ -499,10 +505,10 @@ public:
 
         ApplyDeploymentOptions(opts.dep_opts);
 
-        genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin regtest", 1296688602, 0, 0x207fffff, 1, 10'000'000 * COIN, RegTestGenesisOutputScript());
+        genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin regtest", 1296688602, 1, 0x207fffff, 1, 10'000'000 * COIN, RegTestGenesisOutputScript());
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"197dd70fa5df793d1b9e4684f3c9608afcdae4b86f935c04e8187a48def347f6"});
-        assert(genesis.hashMerkleRoot == uint256{"1859f50c30e835050a33fe2773c3b33c54160923d10afa0a9eba901f28fb969b"});
+        assert(consensus.hashGenesisBlock == uint256{"620da2900b1e7d0c01b49d37f4a5129a56e8534f2fd924d3c86041c709da3b4c"});
+        assert(genesis.hashMerkleRoot == uint256{"a0d6ef2f2a981e1c00845ba4de2c34784d7724ef5fe1341fef76cf1a5367ca6b"});
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();
@@ -511,29 +517,10 @@ public:
         fDefaultConsistencyChecks = true;
         m_is_mockable_chain = true;
 
-        m_assumeutxo_data = {
-            {
-                // Regenerated for the spendable ConnectCoin regtest genesis.
-                .height = 110,
-                .hash_serialized = AssumeutxoHash{uint256{"cc524f6f2a786c23ada8f047c6cf72b99da1430a62949dfacdcdad9fc94e4721"}},
-                .m_chain_tx_count = 111,
-                .blockhash = uint256{"734c0ba8aa3d36e9b9e357b6752592b07154f0cb2830782e0415ccf3b461ce9d"},
-            },
-            {
-                // For use by fuzz target src/test/fuzz/utxo_snapshot.cpp.
-                .height = 200,
-                .hash_serialized = AssumeutxoHash{uint256{"625485c6e2e46dbda2e6c4cb6b4c3ea7b665e15d8b708de7c279063496221000"}},
-                .m_chain_tx_count = 201,
-                .blockhash = uint256{"52f716326ae1bd1be2643d1b4bbe48ae2549d3148f8519f4af062465f6012c74"},
-            },
-            {
-                // For use by feature_assumeutxo.py and tool_bitcoin_chainstate.py.
-                .height = 299,
-                .hash_serialized = AssumeutxoHash{uint256{"f08765d5aac8a793b35d644120aadc280317e0c1118f3f3ee7eaf8c958e854aa"}},
-                .m_chain_tx_count = 334,
-                .blockhash = uint256{"3543b4c9d2b4f69bd34634920756b94c2c1783ea43a7aea030270f800349f25f"},
-            },
-        };
+        // Typed outputs changed both block hashes and the serialized UTXO set.
+        // Do not advertise stale snapshots; add freshly generated ConnectCoin
+        // entries only after the typed-output chain is finalized.
+        m_assumeutxo_data.clear();
 
         chainTxData = ChainTxData{
             .nTime = 0,

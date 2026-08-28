@@ -32,6 +32,9 @@ bool CheckTransaction(const CTransaction& tx, TxValidationState& state)
     CAmount nValueOut = 0;
     for (const auto& txout : tx.vout)
     {
+        if (txout.GetType() != TxOutputType::P2PK || !txout.GetP2PKPubKey()) {
+            return state.Invalid(TxValidationResult::TX_CONSENSUS, "bad-txns-vout-type", "only type 1 (P2PK) outputs are valid");
+        }
         if (txout.nValue < 0)
             return state.Invalid(TxValidationResult::TX_CONSENSUS, "bad-txns-vout-negative");
         if (txout.nValue > MAX_MONEY)
@@ -59,9 +62,12 @@ bool CheckTransaction(const CTransaction& tx, TxValidationState& state)
     }
     else
     {
-        for (const auto& txin : tx.vin)
+        for (const auto& txin : tx.vin) {
             if (txin.prevout.IsNull())
                 return state.Invalid(TxValidationResult::TX_CONSENSUS, "bad-txns-prevout-null");
+            if (!txin.scriptSig.empty())
+                return state.Invalid(TxValidationResult::TX_CONSENSUS, "bad-txns-scriptsig-nonempty", "P2PK inputs must not contain scriptSig data");
+        }
     }
 
     return true;

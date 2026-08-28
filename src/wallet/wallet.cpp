@@ -83,6 +83,7 @@
 #include <tuple>
 #include <utility>
 #include <variant>
+#include <vector>
 
 struct KeyOriginInfo;
 
@@ -2272,63 +2273,9 @@ SigningResult CWallet::SignMessage(const std::string& message, const PKHash& pkh
 
 OutputType CWallet::TransactionChangeType(const std::optional<OutputType>& change_type, const std::vector<CRecipient>& vecSend) const
 {
-    // If -changetype is specified, always use that change type.
-    if (change_type) {
-        return *change_type;
-    }
-
-    // if m_default_address_type is legacy, use legacy address as change.
-    if (m_default_address_type == OutputType::LEGACY) {
-        return OutputType::LEGACY;
-    }
-
-    bool any_tr{false};
-    bool any_wpkh{false};
-    bool any_sh{false};
-    bool any_pkh{false};
-
-    for (const auto& recipient : vecSend) {
-        if (std::get_if<WitnessV1Taproot>(&recipient.dest)) {
-            any_tr = true;
-        } else if (std::get_if<WitnessV0KeyHash>(&recipient.dest)) {
-            any_wpkh = true;
-        } else if (std::get_if<ScriptHash>(&recipient.dest)) {
-            any_sh = true;
-        } else if (std::get_if<PKHash>(&recipient.dest)) {
-            any_pkh = true;
-        }
-    }
-
-    const bool has_bech32m_spkman(GetScriptPubKeyMan(OutputType::BECH32M, /*internal=*/true));
-    if (has_bech32m_spkman && any_tr) {
-        // Currently tr is the only type supported by the BECH32M spkman
-        return OutputType::BECH32M;
-    }
-    const bool has_bech32_spkman(GetScriptPubKeyMan(OutputType::BECH32, /*internal=*/true));
-    if (has_bech32_spkman && any_wpkh) {
-        // Currently wpkh is the only type supported by the BECH32 spkman
-        return OutputType::BECH32;
-    }
-    const bool has_p2sh_segwit_spkman(GetScriptPubKeyMan(OutputType::P2SH_SEGWIT, /*internal=*/true));
-    if (has_p2sh_segwit_spkman && any_sh) {
-        // Currently sh_wpkh is the only type supported by the P2SH_SEGWIT spkman
-        // As of 2021 about 80% of all SH are wrapping WPKH, so use that
-        return OutputType::P2SH_SEGWIT;
-    }
-    const bool has_legacy_spkman(GetScriptPubKeyMan(OutputType::LEGACY, /*internal=*/true));
-    if (has_legacy_spkman && any_pkh) {
-        // Currently pkh is the only type supported by the LEGACY spkman
-        return OutputType::LEGACY;
-    }
-
-    if (has_bech32m_spkman) {
-        return OutputType::BECH32M;
-    }
-    if (has_bech32_spkman) {
-        return OutputType::BECH32;
-    }
-    // else use m_default_address_type for change
-    return m_default_address_type;
+    (void)change_type;
+    (void)vecSend;
+    return OutputType::BECH32M;
 }
 
 void CWallet::CommitTransaction(
@@ -2617,6 +2564,9 @@ bool CWallet::TopUpKeyPool(unsigned int kpSize)
 util::Result<CTxDestination> CWallet::GetNewDestination(const OutputType type, const std::string& label)
 {
     LOCK(cs_wallet);
+    if (type != OutputType::BECH32M) {
+        return util::Error{_("ConnectCoin supports only type-1 P2PK (bech32m) addresses")};
+    }
     auto spk_man = GetScriptPubKeyMan(type, /*internal=*/false);
     if (!spk_man) {
         return util::Error{strprintf(_("Error: No %s addresses available."), FormatOutputType(type))};
@@ -2633,6 +2583,9 @@ util::Result<CTxDestination> CWallet::GetNewDestination(const OutputType type, c
 util::Result<CTxDestination> CWallet::GetNewChangeDestination(const OutputType type)
 {
     LOCK(cs_wallet);
+    if (type != OutputType::BECH32M) {
+        return util::Error{_("ConnectCoin supports only type-1 P2PK (bech32m) change addresses")};
+    }
 
     ReserveDestination reservedest(this, type);
     auto op_dest = reservedest.GetReservedDestination(true);
@@ -3672,6 +3625,9 @@ void CWallet::SetupDescriptorScriptPubKeyMans()
         WalletBatch batch(GetDatabase());
         if (!batch.TxnBegin()) throw std::runtime_error("Error: cannot create db transaction for descriptors import");
 
+        std::vector<std::pair<bool, std::unique_ptr<Descriptor>>> type1_descriptors;
+        bool has_receive_type1{false};
+        bool has_internal_type1{false};
         for (bool internal : {false, true}) {
             const UniValue& descriptor_vals = signer_res.find_value(internal ? "internal" : "receive");
             if (!descriptor_vals.isArray()) throw std::runtime_error(std::string(__func__) + ": Unexpected result");
@@ -3684,15 +3640,23 @@ void CWallet::SetupDescriptorScriptPubKeyMans()
                     throw std::runtime_error(std::string(__func__) + ": Invalid descriptor \"" + desc_str + "\" (" + desc_error + ")");
                 }
                 auto& desc = descs.at(0);
-                if (!desc->GetOutputType()) {
+                if (desc->GetOutputType() != OutputType::BECH32M || !desc->IsKeyPathOnly()) {
                     continue;
                 }
-                OutputType t =  *desc->GetOutputType();
-                auto spk_manager = ExternalSignerScriptPubKeyMan::CreateNew(*this, batch, m_keypool_size, std::move(desc));
-                uint256 id = spk_manager->GetID();
-                AddScriptPubKeyMan(id, std::move(spk_manager));
-                AddActiveScriptPubKeyManWithDb(batch, id, t, internal);
+                (internal ? has_internal_type1 : has_receive_type1) = true;
+                type1_descriptors.emplace_back(internal, std::move(desc));
             }
+        }
+
+        if (!has_receive_type1 || !has_internal_type1) {
+            throw std::runtime_error(std::string(__func__) + ": External signer must provide at least one receive and one internal key-path-only tr() or rawtr() type-1 descriptor");
+        }
+
+        for (auto& [internal, desc] : type1_descriptors) {
+            auto spk_manager = ExternalSignerScriptPubKeyMan::CreateNew(*this, batch, m_keypool_size, std::move(desc));
+            uint256 id = spk_manager->GetID();
+            AddScriptPubKeyMan(id, std::move(spk_manager));
+            AddActiveScriptPubKeyManWithDb(batch, id, OutputType::BECH32M, internal);
         }
 
         // Ensure imported descriptors are committed to disk

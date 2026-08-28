@@ -60,8 +60,10 @@ static RPCMethod validateaddress()
             std::string error_msg;
             std::vector<int> error_locations;
             CTxDestination dest = DecodeDestination(request.params[0].get_str(), error_msg, &error_locations);
-            const bool isValid = IsValidDestination(dest);
-            CHECK_NONFATAL(isValid == error_msg.empty());
+            const bool isValid = std::holds_alternative<WitnessV1Taproot>(dest);
+            if (!isValid && error_msg.empty()) {
+                error_msg = "Address does not encode a ConnectCoin type-1 P2PK output";
+            }
 
             UniValue ret(UniValue::VOBJ);
             ret.pushKV("isvalid", isValid);
@@ -86,86 +88,9 @@ static RPCMethod validateaddress()
     };
 }
 
-static RPCMethod createmultisig()
-{
-    return RPCMethod{
-        "createmultisig",
-        "Creates a multi-signature address with n signatures of m keys required.\n"
-        "It returns a json object with the address and redeemScript.\n",
-        {
-            {"nrequired", RPCArg::Type::NUM, RPCArg::Optional::NO, "The number of required signatures out of the m keys."},
-            {"keys", RPCArg::Type::ARR, RPCArg::Optional::NO, "The hex-encoded public keys.",
-                {
-                    {"key", RPCArg::Type::STR_HEX, RPCArg::Optional::OMITTED, "The hex-encoded public key"},
-                }},
-            {"address_type", RPCArg::Type::STR, RPCArg::Default{"legacy"}, "The address type to use. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\"."},
-        },
-        RPCResult{
-            RPCResult::Type::OBJ, "", "",
-            {
-                {RPCResult::Type::STR, "address", "The value of the new multisig address."},
-                {RPCResult::Type::STR_HEX, "redeemScript", "The string value of the hex-encoded redemption script."},
-                {RPCResult::Type::STR, "descriptor", "The descriptor for this multisig"},
-                {RPCResult::Type::ARR, "warnings", /*optional=*/true, "Any warnings resulting from the creation of this multisig",
-                {
-                    {RPCResult::Type::STR, "", ""},
-                }},
-            }
-        },
-        RPCExamples{
-            "\nCreate a multisig address from 2 public keys\n"
-            + HelpExampleCli("createmultisig", "2 \"[\\\"03789ed0bb717d88f7d321a368d905e7430207ebbd82bd342cf11ae157a7ace5fd\\\",\\\"03dbc6764b8884a92e871274b87583e6d5c2a58819473e17e107ef3f6aa5a61626\\\"]\"") +
-            "\nAs a JSON-RPC call\n"
-            + HelpExampleRpc("createmultisig", "2, [\"03789ed0bb717d88f7d321a368d905e7430207ebbd82bd342cf11ae157a7ace5fd\",\"03dbc6764b8884a92e871274b87583e6d5c2a58819473e17e107ef3f6aa5a61626\"]")
-                },
-        [](const RPCMethod& self, const JSONRPCRequest& request) -> UniValue
-        {
-            int required = request.params[0].getInt<int>();
-
-            // Get the public keys
-            const UniValue& keys = request.params[1].get_array();
-            std::vector<CPubKey> pubkeys;
-            pubkeys.reserve(keys.size());
-            for (unsigned int i = 0; i < keys.size(); ++i) {
-                pubkeys.push_back(HexToPubKey(keys[i].get_str()));
-            }
-
-            // Get the output type
-            auto address_type{self.Arg<std::string_view>("address_type")};
-            auto output_type{ParseOutputType(address_type)};
-            if (!output_type) {
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, tfm::format("Unknown address type '%s'", address_type));
-            } else if (output_type.value() == OutputType::BECH32M) {
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "createmultisig cannot create bech32m multisig addresses");
-            }
-
-            FlatSigningProvider keystore;
-            CScript inner;
-            const CTxDestination dest = AddAndGetMultisigDestination(required, pubkeys, output_type.value(), keystore, inner);
-
-            // Make the descriptor
-            std::unique_ptr<Descriptor> descriptor = InferDescriptor(GetScriptForDestination(dest), keystore);
-
-            UniValue result(UniValue::VOBJ);
-            result.pushKV("address", EncodeDestination(dest));
-            result.pushKV("redeemScript", HexStr(inner));
-            result.pushKV("descriptor", descriptor->ToString());
-
-            UniValue warnings(UniValue::VARR);
-            if (descriptor->GetOutputType() != output_type.value()) {
-                // Only warns if the user has explicitly chosen an address type we cannot generate
-                warnings.push_back("Unable to make chosen address type, please ensure no uncompressed public keys are present.");
-            }
-            PushWarnings(warnings, result);
-
-            return result;
-        },
-    };
-}
-
 static RPCMethod getdescriptorinfo()
 {
-    const std::string EXAMPLE_DESCRIPTOR = "wpkh([d34db33f/84h/0h/0h]0279be667ef9dcbbac55a06295Ce870b07029Bfcdb2dce28d959f2815b16f81798)";
+    const std::string EXAMPLE_DESCRIPTOR = "tr([d34db33f/86h/0h/0h]0279be667ef9dcbbac55a06295Ce870b07029Bfcdb2dce28d959f2815b16f81798)";
 
     return RPCMethod{
         "getdescriptorinfo",
@@ -183,7 +108,8 @@ static RPCMethod getdescriptorinfo()
                 }},
                 {RPCResult::Type::STR, "checksum", "The checksum for the input descriptor"},
                 {RPCResult::Type::BOOL, "isrange", "Whether the descriptor is ranged"},
-                {RPCResult::Type::BOOL, "issolvable", "Whether the descriptor is solvable"},
+                {RPCResult::Type::BOOL, "issolvable", "Whether the descriptor is solvable as a ConnectCoin type-1 output"},
+                {RPCResult::Type::BOOL, "isconnectcoinoutput", "Whether every expansion is a key-path-only tr() or rawtr() type-1 output"},
                 {RPCResult::Type::BOOL, "hasprivatekeys", "Whether the input descriptor contained at least one private key"},
             }
         },
@@ -200,6 +126,9 @@ static RPCMethod getdescriptorinfo()
             if (descs.empty()) {
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, error);
             }
+            const bool is_connectcoin_output{std::ranges::all_of(descs, [](const auto& parsed) {
+                return parsed->GetOutputType() == OutputType::BECH32M && parsed->IsKeyPathOnly();
+            })};
 
             UniValue result(UniValue::VOBJ);
             result.pushKV("descriptor", descs.at(0)->ToString());
@@ -214,7 +143,8 @@ static RPCMethod getdescriptorinfo()
 
             result.pushKV("checksum", GetDescriptorChecksum(request.params[0].get_str()));
             result.pushKV("isrange", descs.at(0)->IsRange());
-            result.pushKV("issolvable", descs.at(0)->IsSolvable());
+            result.pushKV("issolvable", is_connectcoin_output && descs.at(0)->IsSolvable());
+            result.pushKV("isconnectcoinoutput", is_connectcoin_output);
             result.pushKV("hasprivatekeys", provider.keys.size() > 0);
             return result;
         },
@@ -257,17 +187,14 @@ static UniValue DeriveAddresses(const Descriptor* desc, int64_t range_begin, int
 
 static RPCMethod deriveaddresses()
 {
-    const std::string EXAMPLE_DESCRIPTOR = "wpkh([d34db33f/84h/0h/0h]ccpubKLseupAvr3wT83sz2g4wDtDkqAxjaJbH2E5qVQoMBQWwQSen3utNFQQB43wFU8VwSNuVLzrAKkekBN3sZ1D1JK1tssSQUY7YMW4sDDpDP1o/0/*)#wxjee0pc";
+    const std::string EXAMPLE_DESCRIPTOR = "tr([d34db33f/86h/0h/0h]ccpubKLseupAvr3wT83sz2g4wDtDkqAxjaJbH2E5qVQoMBQWwQSen3utNFQQB43wFU8VwSNuVLzrAKkekBN3sZ1D1JK1tssSQUY7YMW4sDDpDP1o/0/*)#gessv4na";
 
     return RPCMethod{
         "deriveaddresses",
         "Derives one or more addresses corresponding to an output descriptor.\n"
-         "Examples of output descriptors are:\n"
-         "    pkh(<pubkey>)                                     P2PKH outputs for the given pubkey\n"
-         "    wpkh(<pubkey>)                                    Native segwit P2PKH outputs for the given pubkey\n"
-         "    sh(multi(<n>,<pubkey>,<pubkey>,...))              P2SH-multisig outputs for the given threshold and pubkeys\n"
-         "    raw(<hex script>)                                 Outputs whose output script equals the specified hex-encoded bytes\n"
-         "    tr(<pubkey>,multi_a(<n>,<pubkey>,<pubkey>,...))   P2TR-multisig outputs for the given threshold and pubkeys\n"
+         "ConnectCoin accepts only key-path-only type-1 descriptors here:\n"
+         "    tr(<pubkey>)                                      BIP86-derived type-1 P2PK output\n"
+         "    rawtr(<pubkey>)                                   Type-1 P2PK output using the given x-only key directly\n"
          "\nIn the above, <pubkey> either refers to a fixed public key in hexadecimal notation, or to an xpub/xprv optionally followed by one\n"
          "or more path elements separated by \"/\", where \"h\" represents a hardened child key.\n"
         "For more information on output descriptors, see the documentation in the doc/descriptors.md file.\n",
@@ -295,7 +222,7 @@ static RPCMethod deriveaddresses()
             },
         },
         RPCExamples{
-            "First three native segwit receive addresses\n" +
+            "First three ConnectCoin type-1 receive addresses\n" +
             HelpExampleCli("deriveaddresses", "\"" + EXAMPLE_DESCRIPTOR + "\" \"[0,2]\"") +
             HelpExampleRpc("deriveaddresses", "\"" + EXAMPLE_DESCRIPTOR + "\", \"[0,2]\"")
         },
@@ -316,6 +243,11 @@ static RPCMethod deriveaddresses()
             auto descs = Parse(desc_str, key_provider, error, /* require_checksum = */ true);
             if (descs.empty()) {
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, error);
+            }
+            for (const auto& parsed : descs) {
+                if (parsed->GetOutputType() != OutputType::BECH32M || !parsed->IsKeyPathOnly()) {
+                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Descriptor must be a key-path-only tr() or rawtr() ConnectCoin type-1 descriptor");
+                }
             }
             auto& desc = descs.at(0);
             if (!desc->IsRange() && range) {
@@ -346,7 +278,6 @@ void RegisterOutputScriptRPCCommands(CRPCTable& t)
 {
     static const CRPCCommand commands[]{
         {"util", &validateaddress},
-        {"util", &createmultisig},
         {"util", &deriveaddresses},
         {"util", &getdescriptorinfo},
     };

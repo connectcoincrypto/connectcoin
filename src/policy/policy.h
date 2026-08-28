@@ -25,8 +25,8 @@ class CScript;
 inline constexpr unsigned int DEFAULT_BLOCK_MAX_WEIGHT{MAX_BLOCK_WEIGHT};
 /** Default for -blockreservedweight **/
 inline constexpr unsigned int DEFAULT_BLOCK_RESERVED_WEIGHT{8000};
-/** Default sigops cost to reserve for coinbase transaction outputs when creating block templates. */
-inline constexpr unsigned int DEFAULT_COINBASE_OUTPUT_MAX_ADDITIONAL_SIGOPS{400};
+/** Type-1 coinbase outputs contain no executable signature operations. */
+inline constexpr unsigned int DEFAULT_COINBASE_OUTPUT_MAX_ADDITIONAL_SIGOPS{0};
 /** This accounts for the block header, var_int encoding of the transaction count and a minimally viable
  * coinbase transaction. It adds an additional safety margin, because even with a thorough understanding
  * of block serialization, it's easy to make a costly mistake when trying to squeeze every last byte.

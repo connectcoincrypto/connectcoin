@@ -481,6 +481,8 @@ void TxToUniv(const CTransaction& tx, const uint256& block_hash, UniValue& entry
                 p.pushKV("generated", prev_coin.IsCoinBase());
                 p.pushKV("height", prev_coin.nHeight);
                 p.pushKV("value", ValueFromAmount(prev_txout.nValue));
+                p.pushKV("type", static_cast<uint8_t>(prev_txout.GetType()));
+                if (const auto pubkey{prev_txout.GetP2PKPubKey()}) p.pushKV("pubkey", HexStr(*pubkey));
                 p.pushKV("scriptPubKey", std::move(o_script_pub_key));
                 in.pushKV("prevout", std::move(p));
             }
@@ -499,6 +501,8 @@ void TxToUniv(const CTransaction& tx, const uint256& block_hash, UniValue& entry
 
         out.pushKV("value", ValueFromAmount(txout.nValue));
         out.pushKV("n", i);
+        out.pushKV("type", static_cast<uint8_t>(txout.GetType()));
+        if (const auto pubkey{txout.GetP2PKPubKey()}) out.pushKV("pubkey", HexStr(*pubkey));
 
         UniValue o(UniValue::VOBJ);
         ScriptToUniv(txout.scriptPubKey, /*out=*/o, /*include_hex=*/true, /*include_address=*/true);

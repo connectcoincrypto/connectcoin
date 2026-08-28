@@ -16,6 +16,7 @@
 #include <boost/test/unit_test.hpp>
 #include <test/util/common.h>
 #include <test/util/logging.h>
+#include <test/util/script.h>
 #include <test/util/setup_common.h>
 
 using kernel::CBlockFileInfo;
@@ -67,7 +68,7 @@ BOOST_FIXTURE_TEST_CASE(blockmanager_scan_unlink_already_pruned_files, TestChain
     auto& blockman{chainman.m_blockman};
     const CBlockIndex* old_tip{WITH_LOCK(chainman.GetMutex(), return chainman.ActiveChain().Tip())};
     WITH_LOCK(chainman.GetMutex(), blockman.GetBlockFileInfo(old_tip->GetBlockPos().nFile)->nSize = MAX_BLOCKFILE_SIZE);
-    CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
+    CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
 
     // Prune the older block file, but don't unlink it
     int file_number;

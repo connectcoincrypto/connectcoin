@@ -24,9 +24,6 @@ enum class OutputType {
 };
 
 inline constexpr auto OUTPUT_TYPES = std::array{
-    OutputType::LEGACY,
-    OutputType::P2SH_SEGWIT,
-    OutputType::BECH32,
     OutputType::BECH32M,
 };
 

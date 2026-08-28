@@ -162,7 +162,8 @@ BOOST_AUTO_TEST_CASE(sighash_test)
 }
 
 // Goal: check that SignatureHash generates correct hash
-BOOST_AUTO_TEST_CASE(sighash_from_data)
+// These fixtures embed Bitcoin's retired Script-based transaction wire format.
+[[maybe_unused]] static void BitcoinSighashVectorsReference()
 {
     UniValue tests = read_json(json_tests::sighash);
 

@@ -3,10 +3,167 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-import os
-import sys
 import argparse
 import json
+import os
+import struct
+import sys
+import traceback
+from io import BytesIO
+
+TEST_FRAMEWORK_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+sys.path.insert(0, TEST_FRAMEWORK_PATH)
+
+from test_framework.address import b58chars  # noqa: E402
+from test_framework.extendedkey import ExtendedPrivateKey  # noqa: E402
+from test_framework.key import (  # noqa: E402
+    ECKey,
+    compute_xonly_pubkey,
+    sign_schnorr,
+    tweak_add_privkey,
+)
+from test_framework.messages import (  # noqa: E402
+    COutPoint,
+    CTransaction,
+    CTxIn,
+    CTxOut,
+    deser_compact_size,
+    from_binary,
+    hash256,
+)
+from test_framework.psbt import (  # noqa: E402
+    PSBT,
+    PSBT_GLOBAL_FALLBACK_LOCKTIME,
+    PSBT_GLOBAL_TX_VERSION,
+    PSBT_GLOBAL_UNSIGNED_TX,
+    PSBT_IN_OUTPUT_INDEX,
+    PSBT_IN_PREVIOUS_TXID,
+    PSBT_IN_REQUIRED_HEIGHT_LOCKTIME,
+    PSBT_IN_REQUIRED_TIME_LOCKTIME,
+    PSBT_IN_SEQUENCE,
+    PSBT_IN_TAP_BIP32_DERIVATION,
+    PSBT_IN_TAP_KEY_SIG,
+    PSBT_IN_WITNESS_UTXO,
+    PSBT_OUT_AMOUNT,
+    PSBT_OUT_SCRIPT,
+)
+from test_framework.script import (  # noqa: E402
+    SIGHASH_DEFAULT,
+    TaprootSignatureHash,
+    taproot_construct,
+)
+
+
+MOCK_XPRV = "tcprHuVh8FbViZHtZ3RyETUTGWN7fPRT2RcFpuzPi5v3SGhiG4u85PdTXaP8e2aoVRy41reekrWrRjKGaXdAFA4qZAYaaoEKEDumiDsfLTYRmVR"
+
+
+def decode_mock_xprv():
+    value = 0
+    for char in MOCK_XPRV:
+        value = value * 58 + b58chars.index(char)
+    encoded = value.to_bytes((value.bit_length() + 7) // 8, "big")
+    encoded = b"\x00" * (len(MOCK_XPRV) - len(MOCK_XPRV.lstrip("1"))) + encoded
+    if len(encoded) != 82 or hash256(encoded[:-4])[:4] != encoded[-4:]:
+        raise ValueError("invalid mock extended private key")
+
+    payload = encoded[:-4]
+    key = ECKey()
+    key.set(payload[46:78], compressed=True)
+    return ExtendedPrivateKey(
+        key,
+        payload[13:45],
+        depth=payload[4],
+        parent_fingerprint_bytes=payload[5:9],
+        child_num=int.from_bytes(payload[9:13], "big"),
+    )
+
+
+def unsigned_tx_from_psbt(psbt):
+    if psbt.version == 0:
+        return from_binary(CTransaction, psbt.g.map[PSBT_GLOBAL_UNSIGNED_TX])
+
+    tx = CTransaction()
+    tx.version = int.from_bytes(psbt.g.map[PSBT_GLOBAL_TX_VERSION], "little", signed=True)
+
+    height_locks = []
+    time_locks = []
+    for psbt_input in psbt.i:
+        if PSBT_IN_REQUIRED_HEIGHT_LOCKTIME in psbt_input.map:
+            height_locks.append(int.from_bytes(psbt_input.map[PSBT_IN_REQUIRED_HEIGHT_LOCKTIME], "little"))
+        if PSBT_IN_REQUIRED_TIME_LOCKTIME in psbt_input.map:
+            time_locks.append(int.from_bytes(psbt_input.map[PSBT_IN_REQUIRED_TIME_LOCKTIME], "little"))
+    if height_locks and time_locks:
+        raise ValueError("PSBTv2 contains incompatible height and time lock requirements")
+    if height_locks:
+        tx.nLockTime = max(height_locks)
+    elif time_locks:
+        tx.nLockTime = max(time_locks)
+    else:
+        tx.nLockTime = int.from_bytes(psbt.g.map.get(PSBT_GLOBAL_FALLBACK_LOCKTIME, b"\x00" * 4), "little")
+
+    for psbt_input in psbt.i:
+        prev_txid = psbt_input.map[PSBT_IN_PREVIOUS_TXID]
+        if len(prev_txid) != 32:
+            raise ValueError("PSBTv2 previous transaction id must be 32 bytes")
+        prev_index = int.from_bytes(psbt_input.map[PSBT_IN_OUTPUT_INDEX], "little")
+        sequence = int.from_bytes(psbt_input.map.get(PSBT_IN_SEQUENCE, b"\xff" * 4), "little")
+        tx.vin.append(CTxIn(COutPoint(int.from_bytes(prev_txid, "little"), prev_index), nSequence=sequence))
+
+    for psbt_output in psbt.o:
+        amount = int.from_bytes(psbt_output.map[PSBT_OUT_AMOUNT], "little", signed=True)
+        tx.vout.append(CTxOut(amount, psbt_output.map[PSBT_OUT_SCRIPT]))
+    return tx
+
+
+def sign_typed_psbt(encoded_psbt):
+    psbt = PSBT.from_base64(encoded_psbt)
+    tx = unsigned_tx_from_psbt(psbt)
+    spent_outputs = []
+    for psbt_input in psbt.i:
+        if PSBT_IN_WITNESS_UTXO not in psbt_input.map:
+            raise ValueError("typed signer requires witness_utxo for every input")
+        spent_outputs.append(from_binary(CTxOut, psbt_input.map[PSBT_IN_WITNESS_UTXO]))
+
+    descriptor_root = decode_mock_xprv()
+    for input_index, psbt_input in enumerate(psbt.i):
+        for key, value in list(psbt_input.map.items()):
+            if not isinstance(key, bytes) or len(key) != 33 or key[0] != PSBT_IN_TAP_BIP32_DERIVATION:
+                continue
+
+            reader = BytesIO(value)
+            leaf_hash_count = deser_compact_size(reader)
+            reader.read(32 * leaf_hash_count)
+            if reader.read(4) != bytes.fromhex("00000001"):
+                continue
+
+            path = []
+            while component := reader.read(4):
+                if len(component) != 4:
+                    raise ValueError("truncated BIP32 path")
+                path.append(struct.unpack("<I", component)[0])
+            if len(path) < 3:
+                raise ValueError("unexpected BIP32 path")
+
+            child = descriptor_root
+            for component in path[3:]:
+                child = child._derive(component)
+            secret = child.key.get_bytes()
+            internal_key, _ = compute_xonly_pubkey(secret)
+            if internal_key != key[1:]:
+                continue
+
+            tweak = taproot_construct(internal_key).tweak
+            tweaked_secret = tweak_add_privkey(secret, tweak)
+            sighash = TaprootSignatureHash(
+                tx,
+                spent_outputs,
+                SIGHASH_DEFAULT,
+                input_index=input_index,
+            )
+            psbt_input.map[PSBT_IN_TAP_KEY_SIG] = sign_schnorr(tweaked_secret, sighash)
+            break
+
+    return psbt.to_base64()
 
 def perform_pre_checks():
     mock_result_path = os.path.join(os.getcwd(), "mock_result")
@@ -17,8 +174,13 @@ def perform_pre_checks():
             sys.stdout.write(mock_result[2:])
             sys.exit(int(mock_result[0]))
 
-def enumerate(args):
-    sys.stdout.write(json.dumps([{"fingerprint": "00000001", "type": "trezor", "model": "trezor_t"}]))
+def enumerate_signers(args):
+    sys.stdout.write(json.dumps([{
+        "fingerprint": "00000001",
+        "type": "connectcoin-test-signer",
+        "model": "typed-v1-mock",
+        "protocol": "connectcoin-typed-v1",
+    }]))
 
 def getdescriptors(args):
     xpub = "tcubNC1uBHhBxmWgfPoCJ8krUwtLbnqX2uhWwmgfSt2GLbCHhPuEq4LhtLBZKLwC6YkHK2hXrPWvVMgReYFtgWxenNZAuC69MaERFZ7AygMKgQd"
@@ -60,16 +222,20 @@ def signtx(args):
     if args.fingerprint != "00000001":
         return sys.stdout.write(json.dumps({"error": "Unexpected fingerprint", "fingerprint": args.fingerprint}))
 
-    with open(os.path.join(os.getcwd(), "mock_psbt"), "r") as f:
-        mock_psbt = f.read()
-
-    if args.fingerprint == "00000001" :
-        sys.stdout.write(json.dumps({
-            "psbt": mock_psbt,
-            "complete": True
-        }))
+    mock_psbt_path = os.path.join(os.getcwd(), "mock_psbt")
+    if os.path.isfile(mock_psbt_path):
+        with open(mock_psbt_path, "r") as f:
+            signed_psbt = f.read()
     else:
-        sys.stdout.write(json.dumps({"psbt": args.psbt}))
+        try:
+            signed_psbt = sign_typed_psbt(args.psbt)
+        except Exception as error:
+            return sys.stdout.write(json.dumps({"error": f"{type(error).__name__}: {error}\n{traceback.format_exc()}"}))
+
+    sys.stdout.write(json.dumps({
+        "psbt": signed_psbt,
+        "complete": True,
+    }))
 
 parser = argparse.ArgumentParser(prog='./signer.py', description='External signer mock')
 parser.add_argument('--fingerprint')
@@ -80,7 +246,7 @@ subparsers = parser.add_subparsers(description='Commands', dest='command')
 subparsers.required = True
 
 parser_enumerate = subparsers.add_parser('enumerate', help='list available signers')
-parser_enumerate.set_defaults(func=enumerate)
+parser_enumerate.set_defaults(func=enumerate_signers)
 
 parser_getdescriptors = subparsers.add_parser('getdescriptors')
 parser_getdescriptors.set_defaults(func=getdescriptors)

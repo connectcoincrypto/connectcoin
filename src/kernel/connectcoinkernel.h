@@ -767,18 +767,16 @@ CONNECTCOINKERNEL_API cck_ScriptPubkey* CONNECTCOINKERNEL_WARN_UNUSED_RESULT cck
     const cck_ScriptPubkey* script_pubkey) CONNECTCOINKERNEL_ARG_NONNULL(1);
 
 /**
- * @brief Verify if the input at input_index of tx_to spends the script pubkey
- * under the constraints specified by flags. If the
- * `cck_ScriptVerificationFlags_WITNESS` flag is set in the flags bitfield, the
- * amount parameter is used. If the taproot flag is set, the precomputed data
- * must contain the spent outputs.
+ * @brief Verify if the input at input_index of tx_to spends a ConnectCoin
+ * type-1 P2PK output. Consensus requires an exact OP_1/32-byte valid x-only
+ * compatibility script, an empty scriptSig, and one 64-byte SIGHASH_DEFAULT
+ * Schnorr witness. The flags argument is retained for API compatibility, but
+ * cannot enable legacy Script forms or relax the type-1 rules.
  *
  * @param[in] script_pubkey      Non-null, script pubkey to be spent.
- * @param[in] amount             Amount of the script pubkey's associated output. May be zero if
- *                               the witness flag is not set.
+ * @param[in] amount             Amount of the script pubkey's associated output.
  * @param[in] tx_to              Non-null, transaction spending the script_pubkey.
- * @param[in] precomputed_txdata Nullable if the taproot flag is not set. Otherwise, precomputed data
- *                               for tx_to with the spent outputs must be provided.
+ * @param[in] precomputed_txdata Non-null precomputed data for tx_to containing every spent output.
  * @param[in] input_index        Index of the input in tx_to spending the script_pubkey.
  * @param[in] flags              Bitfield of cck_ScriptVerificationFlags controlling validation constraints.
  * @param[out] status            Nullable, will be set to an error code if the operation fails, or OK otherwise.
@@ -824,7 +822,8 @@ CONNECTCOINKERNEL_API void cck_script_pubkey_destroy(cck_ScriptPubkey* script_pu
  *
  * @param[in] script_pubkey Non-null.
  * @param[in] amount        The amount associated with the script pubkey for this output.
- * @return                  The transaction output.
+ * @return                  The transaction output, or null if script_pubkey is not a valid
+ *                          ConnectCoin type-1 P2PK compatibility script.
  */
 CONNECTCOINKERNEL_API cck_TransactionOutput* CONNECTCOINKERNEL_WARN_UNUSED_RESULT cck_transaction_output_create(
     const cck_ScriptPubkey* script_pubkey,
@@ -969,10 +968,12 @@ CONNECTCOINKERNEL_API cck_ChainParameters* CONNECTCOINKERNEL_WARN_UNUSED_RESULT 
  * @brief Create a signet chain parameters struct with a user-provided
  * challenge.
  *
- * @param[in] challenge     The signet challenge value. Blocks must satisfy it in
- *                          order to be valid.
+ * @param[in] challenge     A trivial truthy signet challenge that needs no
+ *                          scriptSig or witness solution. Arbitrary BIP325
+ *                          Script challenges are unsupported by typed outputs.
  * @param[in] challenge_len The length of the signet challenge.
- * @return                  An allocated chain parameters opaque struct.
+ * @return                  An allocated chain parameters opaque struct, or null
+ *                          if the challenge is unsupported.
  */
 CONNECTCOINKERNEL_API cck_ChainParameters* CONNECTCOINKERNEL_WARN_UNUSED_RESULT cck_chain_parameters_create_signet(
     const void* challenge, size_t challenge_len);

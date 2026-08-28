@@ -192,8 +192,17 @@ static bool GenerateBlock(ChainstateManager& chainman, CBlock&& block, uint64_t&
     return true;
 }
 
+static void EnsureType1CoinbaseOutput(const CScript& coinbase_output_script)
+{
+    const CTxOut output{0, coinbase_output_script};
+    if (output.GetType() != TxOutputType::P2PK || !output.GetP2PKPubKey()) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Mining payout must be a ConnectCoin type-1 P2PK (bech32m) destination");
+    }
+}
+
 static UniValue generateBlocks(ChainstateManager& chainman, Mining& miner, const CScript& coinbase_output_script, int nGenerate, uint64_t nMaxTries)
 {
+    EnsureType1CoinbaseOutput(coinbase_output_script);
     UniValue blockHashes(UniValue::VARR);
     while (nGenerate > 0 && !chainman.m_interrupt) {
         std::unique_ptr<BlockTemplate> block_template(miner.createNewBlock({ .coinbase_output_script = coinbase_output_script }, /*cooldown=*/false));
@@ -374,6 +383,7 @@ static RPCMethod generateblock()
 
         coinbase_output_script = GetScriptForDestination(destination);
     }
+    EnsureType1CoinbaseOutput(coinbase_output_script);
 
     NodeContext& node = EnsureAnyNodeContext(request.context);
     Mining& miner = EnsureMining(node);
@@ -662,9 +672,10 @@ static RPCMethod getblocktemplate()
                 {
                     {"str", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "client side supported feature, 'longpoll', 'coinbasevalue', 'proposal', 'serverlist', 'workid'"},
                 }},
-                {"rules", RPCArg::Type::ARR, RPCArg::Optional::NO, "A list of strings",
+                {"rules", RPCArg::Type::ARR, RPCArg::Optional::NO, "A list of strings; ConnectCoin templates require both 'segwit' and 'typedoutputs'",
                 {
                     {"segwit", RPCArg::Type::STR, RPCArg::Optional::NO, "(literal) indicates client side segwit support"},
+                    {"typedoutputs", RPCArg::Type::STR, RPCArg::Optional::NO, "(literal) indicates support for typed outputs and coinbase-input witness commitments"},
                     {"str", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "other client side supported softfork deployment"},
                 }},
                 {"longpollid", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "delay processing request until the result would vary significantly from the \"longpollid\" of a prior template"},
@@ -729,11 +740,12 @@ static RPCMethod getblocktemplate()
                 {RPCResult::Type::NUM, "height", "The height of the next block"},
                 {RPCResult::Type::STR_HEX, "signet_challenge", /*optional=*/true, "Only on signet"},
                 {RPCResult::Type::STR_HEX, "default_witness_commitment", /*optional=*/true, "a valid witness commitment for the unmodified block template"},
+                {RPCResult::Type::STR, "witness_commitment_location", /*optional=*/true, "where the commitment is encoded; ConnectCoin returns 'coinbase_input'"},
             }},
         },
         RPCExamples{
-                    HelpExampleCli("getblocktemplate", "'{\"rules\": [\"segwit\"]}'")
-            + HelpExampleRpc("getblocktemplate", "{\"rules\": [\"segwit\"]}")
+                    HelpExampleCli("getblocktemplate", "'{\"rules\": [\"segwit\", \"typedoutputs\"]}'")
+            + HelpExampleRpc("getblocktemplate", "{\"rules\": [\"segwit\", \"typedoutputs\"]}")
                 },
         [](const RPCMethod& self, const JSONRPCRequest& request) -> UniValue
 {
@@ -884,7 +896,14 @@ static RPCMethod getblocktemplate()
 
     // GBT must be called with 'segwit' set in the rules
     if (!setClientRules.contains("segwit")) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "getblocktemplate must be called with the segwit rule set (call with {\"rules\": [\"segwit\"]})");
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "getblocktemplate must be called with the segwit rule set (call with {\"rules\": [\"segwit\", \"typedoutputs\"]})");
+    }
+
+    // Typed outputs and the coinbase-input witness commitment are structural
+    // consensus changes. Do not hand a template to a legacy mining client
+    // which would construct an invalid coinbase transaction.
+    if (!setClientRules.contains("typedoutputs")) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "getblocktemplate must be called with the typedoutputs rule set (call with {\"rules\": [\"segwit\", \"typedoutputs\"]})");
     }
 
     // Update block
@@ -967,6 +986,10 @@ static RPCMethod getblocktemplate()
     }
 
     UniValue aux(UniValue::VOBJ);
+    if (const int commitment_pos{GetWitnessCommitmentOffset(block)}; commitment_pos != NO_WITNESS_COMMITMENT) {
+        const CScript& metadata{block.vtx[0]->vin[0].scriptSig};
+        aux.pushKV("typedoutputs", HexStr(std::span{metadata}.subspan(commitment_pos - 1, MINIMUM_WITNESS_COMMITMENT + 1)));
+    }
 
     arith_uint256 hashTarget = arith_uint256().SetCompact(block.nBits);
 
@@ -983,6 +1006,7 @@ static RPCMethod getblocktemplate()
     // ! indicates a more subtle change to the block structure or generation transaction
     // Otherwise clients may assume the rule will not impact usage of the template as-is.
     aRules.push_back("csv");
+    aRules.push_back("!typedoutputs");
     if (!fPreSegWit) {
         aRules.push_back("!segwit");
         aRules.push_back("taproot");
@@ -1056,9 +1080,10 @@ static RPCMethod getblocktemplate()
         result.pushKV("signet_challenge", HexStr(consensusParams.signet_challenge));
     }
 
-    if (auto coinbase{block_template->getCoinbaseTx()}; coinbase.required_outputs.size() > 0) {
-        CHECK_NONFATAL(coinbase.required_outputs.size() == 1); // Only one output is currently expected
-        result.pushKV("default_witness_commitment", HexStr(coinbase.required_outputs[0].scriptPubKey));
+    if (const int commitment_pos{GetWitnessCommitmentOffset(block)}; commitment_pos != NO_WITNESS_COMMITMENT) {
+        const CScript& metadata{block.vtx[0]->vin[0].scriptSig};
+        result.pushKV("default_witness_commitment", HexStr(std::span{metadata}.subspan(commitment_pos - 1, MINIMUM_WITNESS_COMMITMENT + 1)));
+        result.pushKV("witness_commitment_location", "coinbase_input");
     }
 
     return result;

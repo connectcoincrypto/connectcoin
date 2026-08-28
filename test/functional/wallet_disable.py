@@ -9,6 +9,7 @@
 """
 
 from test_framework.test_framework import BitcoinTestFramework
+from test_framework.address import ADDRESS_CCRT1_UNSPENDABLE
 from test_framework.util import assert_raises_rpc_error, assert_equal
 
 class DisableWalletTest (BitcoinTestFramework):
@@ -23,7 +24,7 @@ class DisableWalletTest (BitcoinTestFramework):
         assert_raises_rpc_error(-32601, 'Method not found', self.nodes[0].getwalletinfo)
         x = self.nodes[0].validateaddress('cHrbcuxSTM6tFvCWw7xkd5JE8DvBiR8tDR')
         assert_equal(x['isvalid'], False)
-        x = self.nodes[0].validateaddress('TH6oBmoJDcRp932jM8dYQGe61eKSou51Qn')
+        x = self.nodes[0].validateaddress(ADDRESS_CCRT1_UNSPENDABLE)
         assert_equal(x['isvalid'], True)
 
 

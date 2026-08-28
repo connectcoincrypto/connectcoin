@@ -1,26 +1,20 @@
 # Support for signing transactions outside of ConnectCoin Core
 
-ConnectCoin Core can be launched with `-signer=<cmd>` where `<cmd>` is an external tool which can sign transactions and perform other functions. For example, it can be used to communicate with a hardware wallet.
+ConnectCoin Core can be launched with `-signer=<cmd>` where `<cmd>` is an external tool that explicitly implements ConnectCoin's typed-output signing protocol.
 
-Interaction with external signer uses [Partially Signed Bitcoin Transaction (PSBT)](psbt.md).
+Interaction with an external signer uses ConnectCoin's [non-interoperable PSBT dialect](psbt.md). A generic Bitcoin signer or Bitcoin Core HWI installation is **not compatible**: it may understand `tr()` descriptors while computing the wrong signature digest for ConnectCoin's type-1 outputs.
 
 ## Example usage
 
-The following example is based on the upstream [Bitcoin Core HWI](https://github.com/bitcoin-core/HWI) tool. Version 2.0 or newer is required. HWI is hosted under the Bitcoin Core GitHub organization and maintained independently of ConnectCoin. Its compatibility with ConnectCoin's custom address and extended-key prefixes has not been audited, so treat this integration as experimental and test it without valuable private keys first.
-
-When using a hardware wallet, consult the manufacturer website for (alternative) software they recommend. As long as their software conforms to the standard below, it should be able to work with ConnectCoin Core.
+No production hardware-wallet integration is currently endorsed. Only use a signer whose `enumerate` response advertises `"protocol": "connectcoin-typed-v1"` and whose implementation has been tested end to end with ConnectCoin transactions. Merely wrapping an existing Bitcoin HWI command is insufficient.
 
 Start ConnectCoin Core:
 
 ```sh
-connectcoind -signer=../HWI/hwi.py
+connectcoind -signer=/path/to/connectcoin-compatible-signer
 ```
 
 `connectcoin node` can also be substituted for `connectcoind`.
-
-### Device setup
-
-Follow the hardware manufacturers instructions for the initial device setup, as well as their instructions for creating a backup. Alternatively, for some devices, you can use the `setup`, `restore` and `backup` commands provided by [HWI](https://github.com/bitcoin-core/HWI).
 
 ### Create wallet and import keys
 
@@ -35,13 +29,14 @@ connectcoin-cli enumeratesigners
   "signers": [
     {
       "fingerprint": "c8df832a",
-      "name": "trezor_t"
+      "name": "typed-v1-signer",
+      "connectcoin_compatible": true
     }
   ]
 }
 ```
 
-The master key fingerprint is used to identify a device.
+The master key fingerprint identifies a signer. Wallet creation rejects entries where `connectcoin_compatible` is false.
 
 Create a wallet, this automatically imports the public keys:
 
@@ -70,7 +65,7 @@ Under the hood this uses a [PSBT (Partially Signed Bitcoin Transaction)](psbt.md
 connectcoin rpc -rpcwallet=<walletname> send outputs='{"<address>": <amount>}'
 ```
 
-This constructs a PSBT and prompts your external signer to sign (will fail if it's not connected). If successful, ConnectCoin Core finalizes and broadcasts the transaction.
+This constructs a ConnectCoin PSBT and prompts the external signer. ConnectCoin Core independently verifies and finalizes the returned type-1 Schnorr signature before broadcasting.
 
 ```
 {"complete": true, "txid": "<txid>"}
@@ -78,7 +73,7 @@ This constructs a PSBT and prompts your external signer to sign (will fail if it
 
 ## Signer API
 
-In order to be compatible with ConnectCoin Core, any signer command should conform to the specification below. This specification is subject to change. Ideally a BIP should propose a standard so that other wallets can also make use of it.
+To be compatible with ConnectCoin Core, a signer command must conform to the specification below, including the mandatory protocol capability. This is a ConnectCoin-specific interface and is not a Bitcoin BIP standard.
 
 Prerequisite knowledge:
 * [Output Descriptors](descriptors.md)
@@ -129,16 +124,15 @@ Usage:
 [
     {
         "fingerprint": "00000000",
-        "model": "trezor_t"
+        "model": "typed-v1-signer",
+        "protocol": "connectcoin-typed-v1"
     }
 ]
 ```
 
-The command MUST return an array, possibly empty, of entries that contain at least a `fingerprint` field.
+The command MUST return an array, possibly empty, of entries that contain at least a `fingerprint` field. A signer used by a wallet MUST also return the exact string `"protocol": "connectcoin-typed-v1"`. Signers without it remain visible through `enumeratesigners` with `connectcoin_compatible: false`, but wallet creation and signing reject them.
 
 If present, the optional `model` field is used as the device name in the `enumeratesigners` RPC result.
-
-A future extension could add an optional return field with device capabilities. Perhaps a descriptor with wildcards. For example: `["pkh("44'/0'/$'/{0,1}/*"), sh(wpkh("49'/0'/$'/{0,1}/*")), wpkh("84'/0'/$'/{0,1}/*")]`. This would indicate the device supports legacy, wrapped SegWit and native SegWit. In addition it restricts the derivation paths that can used for those, to maintain compatibility with other wallet software. It also indicates the device, or the driver, doesn't support multisig.
 
 A future extension could add an optional return field `reachable`, in case `<cmd>` knows a signer exists but can't currently reach it.
 
@@ -171,15 +165,9 @@ Returns descriptors supported by the device. Example:
 ```
 {
   "receive": [
-    "pkh([00000000/44h/0h/0h]ccpub.../0/*)#fn95jwmg",
-    "sh(wpkh([00000000/49h/0h/0h]ccpub..../0/*))#j4r9hntt",
-    "wpkh([00000000/84h/0h/0h]ccpub.../0/*)#qw72dxa9",
     "tr([00000000/86h/0h/0h]ccpub.../0/*)#4d8tq2ns"
   ],
   "internal": [
-    "pkh([00000000/44h/0h/0h]ccpub.../1/*)#c8q40mts",
-    "sh(wpkh([00000000/49h/0h/0h]ccpub..../1/*))#85dn0v75",
-    "wpkh([00000000/84h/0h/0h]ccpub..../1/*)#36mtsnda",
     "tr([00000000/86h/0h/0h]ccpub.../1/*)#d63h6jpt"
   ]
 }
@@ -192,10 +180,10 @@ Usage:
 <cmd> --fingerprint <fingerprint> --chain <name> displayaddress --desc <descriptor>
 ```
 
-Example, display the first native SegWit receive address on Testnet:
+Example, display the first type-1 receive address on Testnet:
 
 ```sh
-<cmd> --fingerprint 00000000 --chain test displayaddress --desc "wpkh([00000000/84h/1h/0h]tcub..../0/0)"
+<cmd> --fingerprint 00000000 --chain test displayaddress --desc "tr([00000000/86h/1h/0h]tcub..../0/0)"
 ```
 
 The command MUST be able to figure out the address type from the descriptor.
@@ -211,15 +199,15 @@ The command MAY complain if `--chain` is set to a test-network, but the BIP32 co
 
 ## How ConnectCoin Core uses the Signer API
 
-The `enumeratesigners` RPC calls `<cmd> enumerate`, skips duplicate entries with the same `fingerprint`, and maps the optional `model` field to the RPC `name` field.
+The `enumeratesigners` RPC calls `<cmd> enumerate`, skips duplicate entries with the same `fingerprint`, maps `model` to `name`, and maps the exact `connectcoin-typed-v1` advertisement to `connectcoin_compatible`.
 
-Wallet operations that need a signer (`createwallet`, `walletdisplayaddress` and spending) also call `<cmd> enumerate` and fail unless exactly one signer is found, so only one device should be connected at a time.
+Wallet operations that need a signer (`createwallet`, `walletdisplayaddress` and spending) also call `<cmd> enumerate` and fail unless exactly one compatible signer is found.
 
 The `createwallet` RPC calls:
 
 * `<cmd> --fingerprint 00000000 --chain <name> getdescriptors --account 0`
 
-It then imports descriptors for all supported address types, in a BIP44/49/84/86 compatible manner.
+It ignores legacy Bitcoin descriptor families and imports only key-path-only `tr()` or `rawtr()` descriptors for ConnectCoin type-1 outputs. At least one receive and one internal descriptor are required.
 
 The `walletdisplayaddress` RPC obtains the inferred descriptor for the provided address. It then calls `<cmd> --fingerprint 00000000 --chain <name> displayaddress --desc <descriptor>`.
 

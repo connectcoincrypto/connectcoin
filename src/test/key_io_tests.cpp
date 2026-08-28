@@ -147,4 +147,15 @@ BOOST_AUTO_TEST_CASE(key_io_invalid)
     }
 }
 
+BOOST_AUTO_TEST_CASE(type1_address_rejects_invalid_xonly_key)
+{
+    SelectParams(ChainType::REGTEST);
+    const std::string address{"ccrt1pqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq8ep5f4"};
+    std::string error;
+    const CTxDestination destination{DecodeDestination(address, error)};
+    BOOST_CHECK(!IsValidDestination(destination));
+    BOOST_CHECK_EQUAL(error, "Invalid ConnectCoin type-1 x-only public key");
+    SelectParams(ChainType::MAIN);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

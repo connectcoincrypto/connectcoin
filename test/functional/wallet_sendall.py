@@ -33,6 +33,9 @@ class SendallTest(BitcoinTestFramework):
         getcontext().prec=28
         self.num_nodes = 1
         self.setup_clean_chain = True
+        # The type-1 oversized-transaction case creates 2,000 outputs in one
+        # funding transaction and can exceed the default Windows RPC timeout.
+        self.rpc_timeout = 120
 
     def assert_balance_swept_completely(self, tx, balance):
         output_sum = sum([o["value"] for o in tx["decoded"]["vout"]])
@@ -458,10 +461,10 @@ class SendallTest(BitcoinTestFramework):
         self.log.info("Test that sendall fails if resulting transaction is too large")
 
         # Force the wallet to bulk-generate the addresses we'll need
-        self.wallet.keypoolrefill(1600)
+        self.wallet.keypoolrefill(2000)
 
         # create many inputs
-        outputs = {self.wallet.getnewaddress(): 0.000025 for _ in range(1600)}
+        outputs = {self.wallet.getnewaddress(): 0.000025 for _ in range(2000)}
         self.def_wallet.sendmany(amounts=outputs)
         self.generate(self.nodes[0], 1)
 

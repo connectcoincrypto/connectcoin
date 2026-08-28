@@ -26,7 +26,6 @@ BOOST_AUTO_TEST_SUITE(txvalidation_tests)
  */
 BOOST_FIXTURE_TEST_CASE(tx_mempool_reject_coinbase, TestChain100Setup)
 {
-    CScript scriptPubKey = CScript() << ToByteVector(coinbaseKey.GetPubKey()) << OP_CHECKSIG;
     CMutableTransaction coinbaseTx;
 
     coinbaseTx.version = 1;
@@ -34,7 +33,7 @@ BOOST_FIXTURE_TEST_CASE(tx_mempool_reject_coinbase, TestChain100Setup)
     coinbaseTx.vout.resize(1);
     coinbaseTx.vin[0].scriptSig = CScript() << OP_11 << OP_EQUAL;
     coinbaseTx.vout[0].nValue = 1 * CENT;
-    coinbaseTx.vout[0].scriptPubKey = scriptPubKey;
+    coinbaseTx.vout[0].SetP2PK(XOnlyPubKey{coinbaseKey.GetPubKey()});
 
     BOOST_CHECK(CTransaction(coinbaseTx).IsCoinBase());
 
@@ -63,29 +62,18 @@ static inline std::vector<COutPoint> random_outpoints(size_t num_outpoints) {
     return outpoints;
 }
 
-static inline std::vector<CPubKey> random_keys(size_t num_keys) {
-    std::vector<CPubKey> keys;
-    keys.reserve(num_keys);
-    for (size_t i{0}; i < num_keys; ++i) {
-        CKey key;
-        key.MakeNewKey(true);
-        keys.emplace_back(key.GetPubKey());
-    }
-    return keys;
-}
-
-// Creates a placeholder tx (not valid) with 25 outputs. Specify the version and the inputs.
+// Creates a placeholder tx (not valid) with 10 typed outputs. Specify the version and the inputs.
 static inline CTransactionRef make_tx(const std::vector<COutPoint>& inputs, int32_t version)
 {
     CMutableTransaction mtx = CMutableTransaction{};
     mtx.version = version;
     mtx.vin.resize(inputs.size());
-    mtx.vout.resize(25);
+    mtx.vout.resize(10);
     for (size_t i{0}; i < inputs.size(); ++i) {
         mtx.vin[i].prevout = inputs[i];
     }
-    for (auto i{0}; i < 25; ++i) {
-        mtx.vout[i].scriptPubKey = CScript() << OP_TRUE;
+    for (auto i{0}; i < 10; ++i) {
+        mtx.vout[i].SetP2PK(XOnlyPubKey{GenerateRandomKey().GetPubKey()});
         mtx.vout[i].nValue = 10000;
     }
     return MakeTransactionRef(mtx);
@@ -111,6 +99,7 @@ static inline CTransactionRef make_ephemeral_tx(const std::vector<COutPoint>& in
     return MakeTransactionRef(mtx);
 }
 
+#if 0 // Ephemeral anchor outputs are not part of the type-1-only protocol.
 BOOST_FIXTURE_TEST_CASE(ephemeral_tests, RegTestingSetup)
 {
     CTxMemPool& pool = *Assert(m_node.mempool);
@@ -271,6 +260,7 @@ BOOST_FIXTURE_TEST_CASE(ephemeral_tests, RegTestingSetup)
     BOOST_CHECK(child_state.IsValid());
     BOOST_CHECK_EQUAL(child_wtxid, Wtxid());
 }
+#endif
 
 BOOST_FIXTURE_TEST_CASE(version3_tests, RegTestingSetup)
 {
@@ -449,50 +439,6 @@ BOOST_FIXTURE_TEST_CASE(version3_tests, RegTestingSetup)
 
         Package package_child_big{mempool_tx_v3, tx_v3_child_big};
         BOOST_CHECK_EQUAL(*PackageTRUCChecks(pool, tx_v3_child_big, GetVirtualTransactionSize(*tx_v3_child_big), package_child_big, empty_parents),
-                          expected_error_str);
-    }
-
-    // Tx spending TRUC cannot have too many sigops.
-    // This child has 10 P2WSH multisig inputs.
-    auto multisig_outpoints{random_outpoints(10)};
-    multisig_outpoints.emplace_back(mempool_tx_v3->GetHash(), 0);
-    auto keys{random_keys(2)};
-    CScript script_multisig;
-    script_multisig << OP_1;
-    for (const auto& key : keys) {
-        script_multisig << ToByteVector(key);
-    }
-    script_multisig << OP_2 << OP_CHECKMULTISIG;
-    {
-        CMutableTransaction mtx_many_sigops = CMutableTransaction{};
-        mtx_many_sigops.version = TRUC_VERSION;
-        for (const auto& outpoint : multisig_outpoints) {
-            mtx_many_sigops.vin.emplace_back(outpoint);
-            mtx_many_sigops.vin.back().scriptWitness.stack.emplace_back(script_multisig.begin(), script_multisig.end());
-        }
-        mtx_many_sigops.vout.resize(1);
-        mtx_many_sigops.vout.back().scriptPubKey = CScript() << OP_TRUE;
-        mtx_many_sigops.vout.back().nValue = 10000;
-        auto tx_many_sigops{MakeTransactionRef(mtx_many_sigops)};
-
-        auto parents{pool.GetParents(entry.FromTx(tx_many_sigops))};
-        // legacy uses fAccurate = false, and the maximum number of multisig keys is used
-        const int64_t total_sigops{static_cast<int64_t>(tx_many_sigops->vin.size()) * static_cast<int64_t>(script_multisig.GetSigOpCount(/*fAccurate=*/false))};
-        BOOST_CHECK_EQUAL(total_sigops, tx_many_sigops->vin.size() * MAX_PUBKEYS_PER_MULTISIG);
-        const int64_t bip141_vsize{GetVirtualTransactionSize(*tx_many_sigops)};
-        // Weight limit is not reached...
-        BOOST_CHECK(SingleTRUCChecks(pool, tx_many_sigops, parents, empty_conflicts_set, bip141_vsize) == std::nullopt);
-        // ...but sigop limit is.
-        const auto expected_error_str{strprintf("version=3 child tx %s (wtxid=%s) is too big: %u > %u virtual bytes",
-            tx_many_sigops->GetHash().ToString(), tx_many_sigops->GetWitnessHash().ToString(),
-            total_sigops * DEFAULT_BYTES_PER_SIGOP / WITNESS_SCALE_FACTOR, TRUC_CHILD_MAX_VSIZE)};
-        auto result{SingleTRUCChecks(pool, tx_many_sigops, parents, empty_conflicts_set,
-                                        GetVirtualTransactionSize(*tx_many_sigops, /*nSigOpCost=*/total_sigops, /*bytes_per_sigop=*/ DEFAULT_BYTES_PER_SIGOP))};
-        BOOST_CHECK_EQUAL(result->first, expected_error_str);
-        BOOST_CHECK_EQUAL(result->second, nullptr);
-
-        Package package_child_sigops{mempool_tx_v3, tx_many_sigops};
-        BOOST_CHECK_EQUAL(*PackageTRUCChecks(pool, tx_many_sigops, total_sigops * DEFAULT_BYTES_PER_SIGOP / WITNESS_SCALE_FACTOR, package_child_sigops, empty_parents),
                           expected_error_str);
     }
 

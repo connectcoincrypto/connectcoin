@@ -179,6 +179,10 @@ CTxDestination DecodeDestination(const std::string& str, const CChainParams& par
                 static_assert(WITNESS_V1_TAPROOT_SIZE == WitnessV1Taproot::size());
                 WitnessV1Taproot tap;
                 std::copy(data.begin(), data.end(), tap.begin());
+                if (!tap.IsFullyValid()) {
+                    error_str = "Invalid ConnectCoin type-1 x-only public key";
+                    return CNoDestination();
+                }
                 return tap;
             }
 

@@ -80,8 +80,8 @@ class RPCSignerTest(BitcoinTestFramework):
             '{"fingerprint": "00000002", "type": "trezor", "model": "trezor_one"}'
             ']')
         assert_equal(self.nodes[1].enumeratesigners(), {"signers": [
-            {"fingerprint": "00000001", "name": "trezor_t"},
-            {"fingerprint": "00000002", "name": "trezor_one"},
+            {"fingerprint": "00000001", "name": "trezor_t", "connectcoin_compatible": False},
+            {"fingerprint": "00000002", "name": "trezor_one", "connectcoin_compatible": False},
         ]})
         self.clear_mock_result(self.nodes[1])
 
@@ -91,7 +91,11 @@ class RPCSignerTest(BitcoinTestFramework):
             assert_raises_rpc_error(-1, 'invalid fingerprint', self.nodes[1].enumeratesigners)
             self.clear_mock_result(self.nodes[1])
 
-        assert_equal({'fingerprint': '00000001', 'name': 'trezor_t'} in self.nodes[1].enumeratesigners()['signers'], True)
+        assert_equal({
+            'fingerprint': '00000001',
+            'name': 'typed-v1-mock',
+            'connectcoin_compatible': True,
+        } in self.nodes[1].enumeratesigners()['signers'], True)
 
 if __name__ == '__main__':
     RPCSignerTest(__file__).main()

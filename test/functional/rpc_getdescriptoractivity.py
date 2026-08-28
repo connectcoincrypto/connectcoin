@@ -223,14 +223,13 @@ class GetBlocksActivityTest(BitcoinTestFramework):
 
         assert_equal(a1['type'], "spend")
         assert_equal(a1['blockhash'], blockhash)
-        # sPK lacks address.
-        assert_equal(list(a1['prevout_spk'].keys()), ['asm', 'desc', 'hex', 'type'])
+        # Every type-1 key has a native ConnectCoin address.
+        assert_equal(list(a1['prevout_spk'].keys()), ['asm', 'desc', 'hex', 'address', 'type'])
         assert_equal(a1['amount'], no_addr_tx["fee"] + Decimal(no_addr_tx["tx"].vout[0].nValue) / COIN)
 
         assert_equal(a2['type'], "receive")
         assert_equal(a2['blockhash'], blockhash)
-        # sPK lacks address.
-        assert_equal(list(a2['output_spk'].keys()), ['asm', 'desc', 'hex', 'type'])
+        assert_equal(list(a2['output_spk'].keys()), ['asm', 'desc', 'hex', 'address', 'type'])
         assert_equal(a2['amount'], Decimal(no_addr_tx["tx"].vout[0].nValue) / COIN)
 
     def test_required_args(self, node):

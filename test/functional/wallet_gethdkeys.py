@@ -27,8 +27,8 @@ class WalletGetHDKeyTest(BitcoinTestFramework):
         self.test_basic_gethdkeys()
         self.test_ranged_imports()
         self.test_lone_key_imports()
-        self.test_ranged_multisig()
-        self.test_mixed_multisig()
+        # Multisig descriptors are intentionally outside ConnectCoin's
+        # type-1-only authorization model.
 
     def test_basic_gethdkeys(self):
         self.log.info("Test gethdkeys basics")
@@ -111,7 +111,7 @@ class WalletGetHDKeyTest(BitcoinTestFramework):
         wallet = self.nodes[0].get_wallet_rpc("lonekey")
 
         assert_equal(wallet.gethdkeys(), [])
-        wallet.importdescriptors([{"desc": descsum_create("wpkh(TSGYnEskmkGjmgsdmqfVqKPVgi8WRd8K8Tnj8FLx11UWkQXFawR9)"), "timestamp": "now"}])
+        wallet.importdescriptors([{"desc": descsum_create("tr(TSGYnEskmkGjmgsdmqfVqKPVgi8WRd8K8Tnj8FLx11UWkQXFawR9)"), "timestamp": "now"}])
         assert_equal(wallet.gethdkeys(), [])
 
         self.log.info("HD keys of non-ranged descriptors should appear in gethdkeys")
@@ -119,8 +119,8 @@ class WalletGetHDKeyTest(BitcoinTestFramework):
         xpub_info = def_wallet.gethdkeys(private=True)
         xpub = xpub_info[0]["xpub"]
         xprv = xpub_info[0]["xprv"]
-        prv_desc = descsum_create(f"wpkh({xprv})")
-        pub_desc = descsum_create(f"wpkh({xpub})")
+        prv_desc = descsum_create(f"tr({xprv})")
+        pub_desc = descsum_create(f"tr({xpub})")
         assert_equal(wallet.importdescriptors([{"desc": prv_desc, "timestamp": "now"}])[0]["success"], True)
         xpub_info = wallet.gethdkeys()
         assert_equal(len(xpub_info), 1)

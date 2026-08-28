@@ -136,13 +136,13 @@ class WalletDeriveHDKeyTest(BitcoinTestFramework):
         self.log.info("Test derivation in wallet with regular descriptors")
         self.nodes[0].createwallet("active_descriptor")
         wallet = self.nodes[0].get_wallet_rpc("active_descriptor")
-        xpub_info = wallet.derivehdkey("m/44h/1h/0h")
+        xpub_info = wallet.derivehdkey("m/86h/1h/0h")
         active_xpub = wallet.gethdkeys(active_only=True)[0]["xpub"]
-        assert_equal(wallet.derivehdkey("m/44h/1h/0h", hdkey=active_xpub), xpub_info)
+        assert_equal(wallet.derivehdkey("m/86h/1h/0h", hdkey=active_xpub), xpub_info)
 
-        # Get the activate wpkh() receive descriptor
+        # Get the active type-1 tr() receive descriptor.
         desc = list(filter(lambda d:
-                           d["active"] and not d["internal"] and d["desc"][0:3] == "pkh",
+                           d["active"] and not d["internal"] and d["desc"].startswith("tr("),
                            wallet.listdescriptors()["descriptors"])
                     )[0]["desc"]
         self.log.debug(desc)
@@ -164,7 +164,7 @@ class WalletDeriveHDKeyTest(BitcoinTestFramework):
         self.nodes[0].createwallet(wallet_name="hdkey_source")
         source = self.nodes[0].get_wallet_rpc("hdkey_source")
         desc = next(d["desc"] for d in source.listdescriptors(private=True)["descriptors"]
-                    if d["active"] and not d["internal"] and d["desc"].startswith("pkh("))
+                    if d["active"] and not d["internal"] and d["desc"].startswith("tr("))
 
         self.nodes[0].createwallet(wallet_name="inactive_descriptor", blank=True)
         wallet = self.nodes[0].get_wallet_rpc("inactive_descriptor")
@@ -214,15 +214,15 @@ class WalletDeriveHDKeyTest(BitcoinTestFramework):
         wallet = self.nodes[0].get_wallet_rpc("w1")
         master_xpub = wallet.addhdkey()["xpub"]
 
-        # Derive xpub for legacy descriptor
-        xpub_info = wallet.derivehdkey("m/44h/1h/0h")
+        # Derive the xpub used by the BIP86 type-1 descriptor.
+        xpub_info = wallet.derivehdkey("m/86h/1h/0h")
 
-        # Generate legacy descriptor
-        wallet.createwalletdescriptor(type="legacy", hdkey=master_xpub)
+        # Generate the native type-1 descriptor.
+        wallet.createwalletdescriptor(type="bech32m", hdkey=master_xpub)
 
-        # Get the activate wpkh() receive descriptor
+        # Get the active type-1 tr() receive descriptor.
         desc = list(filter(lambda d:
-                           d["active"] and not d["internal"] and d["desc"][0:3] == "pkh",
+                           d["active"] and not d["internal"] and d["desc"].startswith("tr("),
                            wallet.listdescriptors()["descriptors"])
                     )[0]["desc"]
         self.log.debug(desc)

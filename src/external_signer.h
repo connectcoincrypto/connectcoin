@@ -13,8 +13,8 @@
 
 class PartiallySignedTransaction;
 
-//! Enables interaction with an external signing device or service, such as
-//! a hardware wallet. See doc/external-signer.md
+//! Enables interaction with a signing device or service that explicitly
+//! implements ConnectCoin's typed-output protocol. See doc/external-signer.md
 class ExternalSigner
 {
 private:
@@ -31,13 +31,17 @@ public:
     //! @param[in] fingerprint  master key fingerprint of the signer
     //! @param[in] chain        "main", "test", "signet", "regtest" or "testnet4"
     //! @param[in] name         device name
-    ExternalSigner(std::vector<std::string> command, std::string chain, std::string fingerprint, std::string name);
+    ExternalSigner(std::vector<std::string> command, std::string chain, std::string fingerprint, std::string name, bool supports_typed_outputs);
 
     //! Master key fingerprint of the signer
     std::string m_fingerprint;
 
     //! Name of signer
     std::string m_name;
+
+    //! Whether the signer explicitly advertises ConnectCoin's typed-output
+    //! PSBT and signature-digest protocol.
+    bool m_supports_typed_outputs;
 
     //! Obtain a list of signers. Calls `<command> enumerate`.
     //! @param[in]              command the command which handles interaction with the external signer

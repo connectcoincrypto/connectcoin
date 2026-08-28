@@ -11,20 +11,16 @@ from test_framework.blocktools import (
     NORMAL_GBT_REQUEST_PARAMS,
     add_witness_commitment,
     create_block,
-    script_to_p2wsh_script,
 )
 from test_framework.messages import (
     COIN,
     COutPoint,
     CTransaction,
     CTxIn,
-    CTxInWitness,
     CTxOut,
     tx_from_hex,
 )
 from test_framework.script import (
-    CScript,
-    OP_TRUE,
     SEQUENCE_LOCKTIME_DISABLE_FLAG,
     SEQUENCE_LOCKTIME_TYPE_FLAG,
     SEQUENCE_LOCKTIME_GRANULARITY,
@@ -38,8 +34,6 @@ from test_framework.util import (
     softfork_active,
 )
 from test_framework.wallet import MiniWallet
-
-SCRIPT_W0_SH_OP_TRUE = script_to_p2wsh_script(CScript([OP_TRUE]))
 
 # RPC error for non-BIP68 final transactions
 NOT_FINAL_ERROR = "non-BIP68-final"
@@ -95,7 +89,7 @@ class BIP68Test(BitcoinTestFramework):
         # input to mature.
         sequence_value = SEQUENCE_LOCKTIME_DISABLE_FLAG | 1
         tx1.vin = [CTxIn(COutPoint(int(utxo["txid"], 16), utxo["vout"]), nSequence=sequence_value)]
-        tx1.vout = [CTxOut(value, SCRIPT_W0_SH_OP_TRUE)]
+        tx1.vout = [CTxOut(value, self.wallet.get_output_script())]
 
         self.wallet.sign_tx(tx=tx1)
         tx1_id = self.wallet.sendrawtransaction(from_node=self.nodes[0], tx_hex=tx1.serialize().hex())
@@ -107,15 +101,15 @@ class BIP68Test(BitcoinTestFramework):
         tx2.version = 2
         sequence_value = sequence_value & 0x7fffffff
         tx2.vin = [CTxIn(COutPoint(tx1_id, 0), nSequence=sequence_value)]
-        tx2.wit.vtxinwit = [CTxInWitness()]
-        tx2.wit.vtxinwit[0].scriptWitness.stack = [CScript([OP_TRUE])]
-        tx2.vout = [CTxOut(int(value - self.relayfee * COIN), SCRIPT_W0_SH_OP_TRUE)]
+        tx2.vout = [CTxOut(int(value - self.relayfee * COIN), self.wallet.get_output_script())]
+        self.wallet.sign_tx(tx=tx2)
 
         assert_raises_rpc_error(-26, NOT_FINAL_ERROR, self.wallet.sendrawtransaction, from_node=self.nodes[0], tx_hex=tx2.serialize().hex())
 
         # Setting the version back down to 1 should disable the sequence lock,
         # so this should be accepted.
         tx2.version = 1
+        self.wallet.sign_tx(tx=tx2)
 
         self.wallet.sendrawtransaction(from_node=self.nodes[0], tx_hex=tx2.serialize().hex())
 
@@ -226,7 +220,7 @@ class BIP68Test(BitcoinTestFramework):
         tx2 = CTransaction()
         tx2.version = 2
         tx2.vin = [CTxIn(COutPoint(tx1.txid_int, 0), nSequence=0)]
-        tx2.vout = [CTxOut(int(tx1.vout[0].nValue - self.relayfee * COIN), SCRIPT_W0_SH_OP_TRUE)]
+        tx2.vout = [CTxOut(int(tx1.vout[0].nValue - self.relayfee * COIN), self.wallet.get_output_script())]
         self.wallet.sign_tx(tx=tx2)
         tx2_raw = tx2.serialize().hex()
 
@@ -243,9 +237,8 @@ class BIP68Test(BitcoinTestFramework):
             tx = CTransaction()
             tx.version = 2
             tx.vin = [CTxIn(COutPoint(orig_tx.txid_int, 0), nSequence=sequence_value)]
-            tx.wit.vtxinwit = [CTxInWitness()]
-            tx.wit.vtxinwit[0].scriptWitness.stack = [CScript([OP_TRUE])]
-            tx.vout = [CTxOut(int(orig_tx.vout[0].nValue - relayfee * COIN), SCRIPT_W0_SH_OP_TRUE)]
+            tx.vout = [CTxOut(int(orig_tx.vout[0].nValue - relayfee * COIN), self.wallet.get_output_script())]
+            self.wallet.sign_tx(tx=tx)
 
             if (orig_tx.txid_hex in node.getrawmempool()):
                 # sendrawtransaction should fail if the tx is in the mempool
@@ -299,7 +292,9 @@ class BIP68Test(BitcoinTestFramework):
         tx5 = test_nonzero_locks(tx4, self.nodes[0], self.relayfee, use_height_lock=True)
         assert tx5.txid_hex not in self.nodes[0].getrawmempool()
 
-        utxo = self.wallet.get_utxo()
+        # Add an independent confirmed input. The wallet also tracks tx4's
+        # unconfirmed output, which is already tx5's first input.
+        utxo = self.wallet.get_utxo(confirmed_only=True)
         tx5.vin.append(CTxIn(COutPoint(int(utxo["txid"], 16), utxo["vout"]), nSequence=1))
         tx5.vout[0].nValue += int(utxo["value"]*COIN)
         self.wallet.sign_tx(tx=tx5)
@@ -355,7 +350,7 @@ class BIP68Test(BitcoinTestFramework):
         tx2 = CTransaction()
         tx2.version = 1
         tx2.vin = [CTxIn(COutPoint(tx1.txid_int, 0), nSequence=0)]
-        tx2.vout = [CTxOut(int(tx1.vout[0].nValue - self.relayfee * COIN), SCRIPT_W0_SH_OP_TRUE)]
+        tx2.vout = [CTxOut(int(tx1.vout[0].nValue - self.relayfee * COIN), self.wallet.get_output_script())]
 
         # sign tx2
         self.wallet.sign_tx(tx=tx2)
@@ -370,9 +365,8 @@ class BIP68Test(BitcoinTestFramework):
         tx3 = CTransaction()
         tx3.version = 2
         tx3.vin = [CTxIn(COutPoint(tx2.txid_int, 0), nSequence=sequence_value)]
-        tx3.wit.vtxinwit = [CTxInWitness()]
-        tx3.wit.vtxinwit[0].scriptWitness.stack = [CScript([OP_TRUE])]
-        tx3.vout = [CTxOut(int(tx2.vout[0].nValue - self.relayfee * COIN), SCRIPT_W0_SH_OP_TRUE)]
+        tx3.vout = [CTxOut(int(tx2.vout[0].nValue - self.relayfee * COIN), self.wallet.get_output_script())]
+        self.wallet.sign_tx(tx=tx3)
 
         assert_raises_rpc_error(-26, NOT_FINAL_ERROR, self.wallet.sendrawtransaction, from_node=self.nodes[0], tx_hex=tx3.serialize().hex())
 

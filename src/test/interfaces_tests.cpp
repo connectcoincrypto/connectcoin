@@ -6,6 +6,7 @@
 #include <consensus/validation.h>
 #include <interfaces/chain.h>
 #include <test/util/common.h>
+#include <test/util/script.h>
 #include <test/util/setup_common.h>
 #include <script/solver.h>
 #include <validation.h>
@@ -108,7 +109,7 @@ BOOST_FIXTURE_TEST_CASE(findCommonAncestor, TestChain100Setup)
     BOOST_CHECK_EQUAL(active.Height(), orig_tip->nHeight - 10);
     coinbaseKey.MakeNewKey(true);
     for (int i = 0; i < 20; ++i) {
-        CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
+        CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
     }
     BOOST_CHECK_EQUAL(active.Height(), orig_tip->nHeight + 10);
     uint256 fork_hash;

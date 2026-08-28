@@ -53,9 +53,10 @@ Node1 is unused in tests 3-7:
 
 import time
 
-from test_framework.blocktools import create_block, create_tx_with_script
+from test_framework.blocktools import DETERMINISTIC_P2PK_XONLY, create_block, create_tx_with_script
 from test_framework.messages import CBlockHeader, CInv, MSG_BLOCK, msg_block, msg_headers, msg_inv
 from test_framework.p2p import p2p_lock, P2PInterface
+from test_framework.script import CScript, OP_1
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
@@ -240,7 +241,12 @@ class AcceptBlockTest(BitcoinTestFramework):
         block_290f = create_block(block_289f.hash_int, height=290, ntime=block_289f.nTime+1)
         block_290f.solve()
         # block_291 spends a coinbase below maturity!
-        tx_to_add = create_tx_with_script(block_290f.vtx[0], 0, script_sig=b"42", amount=1)
+        tx_to_add = create_tx_with_script(
+            block_290f.vtx[0],
+            0,
+            amount=1,
+            output_script=CScript([OP_1, DETERMINISTIC_P2PK_XONLY]),
+        )
         block_291 = create_block(block_290f.hash_int, height=291, ntime=block_290f.nTime+1, txlist=[tx_to_add])
         block_291.solve()
         block_292 = create_block(block_291.hash_int, height=292, ntime=block_291.nTime+1)

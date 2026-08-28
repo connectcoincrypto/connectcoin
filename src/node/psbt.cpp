@@ -19,8 +19,8 @@ PSBTAnalysis AnalyzePSBT(PartiallySignedTransaction psbtx)
     PSBTAnalysis result;
 
     std::optional<CMutableTransaction> unsigned_tx = psbtx.GetUnsignedTx();
-    if (!unsigned_tx) {
-        result.SetInvalid("PSBT cannot be made into a valid transaction");
+    if (!unsigned_tx || !PSBTHasValidTypedOutputs(psbtx)) {
+        result.SetInvalid("PSBT cannot be made into a valid typed-output transaction");
         return result;
     }
     CMutableTransaction& mtx = *unsigned_tx;

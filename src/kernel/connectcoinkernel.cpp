@@ -600,7 +600,11 @@ void cck_script_pubkey_destroy(cck_ScriptPubkey* script_pubkey)
 
 cck_TransactionOutput* cck_transaction_output_create(const cck_ScriptPubkey* script_pubkey, int64_t amount)
 {
-    return cck_TransactionOutput::create(amount, cck_ScriptPubkey::get(script_pubkey));
+    CTxOut output{amount, cck_ScriptPubkey::get(script_pubkey)};
+    if (output.GetType() != TxOutputType::P2PK || !output.GetP2PKPubKey()) {
+        return nullptr;
+    }
+    return cck_TransactionOutput::create(std::move(output));
 }
 
 cck_TransactionOutput* cck_transaction_output_copy(const cck_TransactionOutput* output)
@@ -678,22 +682,37 @@ int cck_script_pubkey_verify(const cck_ScriptPubkey* script_pubkey,
     const CTransaction& tx{*cck_Transaction::get(tx_to)};
     assert(input_index < tx.vin.size());
 
-    const PrecomputedTransactionData& txdata{precomputed_txdata ? cck_PrecomputedTransactionData::get(precomputed_txdata) : PrecomputedTransactionData(tx)};
-
-    if (flags & cck_ScriptVerificationFlags_TAPROOT && txdata.m_spent_outputs.empty()) {
+    if (!precomputed_txdata) {
+        if (status) *status = cck_ScriptVerifyStatus_ERROR_SPENT_OUTPUTS_REQUIRED;
+        return 0;
+    }
+    const PrecomputedTransactionData& txdata{cck_PrecomputedTransactionData::get(precomputed_txdata)};
+    if (!txdata.m_spent_outputs_ready || txdata.m_spent_outputs.size() != tx.vin.size()) {
         if (status) *status = cck_ScriptVerifyStatus_ERROR_SPENT_OUTPUTS_REQUIRED;
         return 0;
     }
 
     if (status) *status = cck_ScriptVerifyStatus_OK;
 
-    bool result = VerifyScript(tx.vin[input_index].scriptSig,
-                               cck_ScriptPubkey::get(script_pubkey),
-                               &tx.vin[input_index].scriptWitness,
-                               script_verify_flags::from_int(flags),
-                               TransactionSignatureChecker(&tx, input_index, amount, txdata, MissingDataBehavior::FAIL),
-                               nullptr);
-    return result ? 1 : 0;
+    const CTxOut spent_output{amount, cck_ScriptPubkey::get(script_pubkey)};
+    const auto pubkey{spent_output.GetP2PKPubKey()};
+    const CTxIn& txin{tx.vin[input_index]};
+    if (!pubkey || txdata.m_spent_outputs[input_index] != spent_output ||
+        !txin.scriptSig.empty() || txin.scriptWitness.stack.size() != 1 ||
+        txin.scriptWitness.stack.front().size() != 64) {
+        return 0;
+    }
+
+    ScriptExecutionData execdata;
+    execdata.m_annex_init = true;
+    execdata.m_annex_present = false;
+    ScriptError error{SCRIPT_ERR_OK};
+    TransactionSignatureChecker checker{&tx, input_index, amount, txdata, MissingDataBehavior::FAIL};
+    return checker.CheckSchnorrSignature(txin.scriptWitness.stack.front(),
+                                         std::span<const unsigned char>{pubkey->data(), pubkey->size()},
+                                         SigVersion::TAPROOT, execdata, &error)
+        ? 1
+        : 0;
 }
 
 cck_TransactionInput* cck_transaction_input_copy(const cck_TransactionInput* input)
@@ -864,10 +883,18 @@ cck_ChainParameters* cck_chain_parameters_create_signet(const void* challenge, s
 {
     assert(challenge != nullptr || challenge_len == 0);
     const uint8_t* p = static_cast<const uint8_t*>(challenge);
-    CChainParams::SigNetOptions options{
-        .challenge = std::vector<uint8_t>{p, p + challenge_len},
-    };
-    return cck_ChainParameters::ref(const_cast<CChainParams*>(CChainParams::SigNet(options).release()));
+    try {
+        std::vector<uint8_t> challenge_bytes;
+        if (challenge_len != 0) {
+            challenge_bytes.assign(p, p + challenge_len);
+        }
+        CChainParams::SigNetOptions options{
+            .challenge = std::move(challenge_bytes),
+        };
+        return cck_ChainParameters::ref(const_cast<CChainParams*>(CChainParams::SigNet(options).release()));
+    } catch (...) {
+        return nullptr;
+    }
 }
 
 cck_ChainParameters* cck_chain_parameters_copy(const cck_ChainParameters* chain_parameters)

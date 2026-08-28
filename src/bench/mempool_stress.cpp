@@ -9,6 +9,7 @@
 #include <script/script.h>
 #include <sync.h>
 #include <test/util/setup_common.h>
+#include <test/util/mining.h>
 #include <test/util/txmempool.h>
 #include <txmempool.h>
 #include <validation.h>
@@ -54,7 +55,7 @@ static std::vector<CTransactionRef> CreateCoinCluster(FastRandomContext& det_ran
         tx.vin[0].scriptWitness.stack.push_back(CScriptNum(x).getvch());
         tx.vout.resize(det_rand.randrange(10)+2);
         for (auto& out : tx.vout) {
-            out.scriptPubKey = CScript() << CScriptNum(tx_counter) << OP_EQUAL;
+            out.SetScriptPubKey(DeterministicP2PKScript());
             out.nValue = 10 * COIN;
         }
         ordered_coins.emplace_back(MakeTransactionRef(tx));
@@ -65,7 +66,7 @@ static std::vector<CTransactionRef> CreateCoinCluster(FastRandomContext& det_ran
         size_t n_ancestors = det_rand.randrange(10)+1;
         for (size_t ancestor = 0; ancestor < n_ancestors && !available_coins.empty(); ++ancestor){
             size_t idx = det_rand.randrange(available_coins.size());
-            Available coin = available_coins[idx];
+            Available& coin = available_coins[idx];
             Txid hash = coin.ref->GetHash();
             // biased towards taking min_ancestors parents, but maybe more
             size_t n_to_take = det_rand.randrange(2) == 0 ?
@@ -77,13 +78,13 @@ static std::vector<CTransactionRef> CreateCoinCluster(FastRandomContext& det_ran
                 tx.vin.back().scriptSig = CScript() << coin.tx_count;
                 tx.vin.back().scriptWitness.stack.push_back(CScriptNum(coin.tx_count).getvch());
             }
-            if (coin.vin_left == coin.ref->vin.size()) {
-                coin = available_coins.back();
+            if (coin.vin_left == coin.ref->vout.size()) {
+                available_coins[idx] = std::move(available_coins.back());
                 available_coins.pop_back();
             }
             tx.vout.resize(det_rand.randrange(10)+2);
             for (auto& out : tx.vout) {
-                out.scriptPubKey = CScript() << CScriptNum(tx_counter) << OP_EQUAL;
+                out.SetScriptPubKey(DeterministicP2PKScript());
                 out.nValue = 10 * COIN;
             }
         }

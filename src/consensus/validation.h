@@ -12,6 +12,7 @@
 #include <script/script.h>
 #include <serialize.h>
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <memory>
@@ -22,8 +23,9 @@
 /** Index marker for when no witness commitment is present in a coinbase transaction. */
 inline constexpr int NO_WITNESS_COMMITMENT{-1};
 
-/** Minimum size of a witness commitment structure. Defined in BIP 141. **/
-inline constexpr size_t MINIMUM_WITNESS_COMMITMENT{38};
+/** Witness commitment marker and payload size in coinbase input metadata. */
+inline constexpr uint8_t WITNESS_COMMITMENT_HEADER[4]{0xaa, 0x21, 0xa9, 0xed};
+inline constexpr size_t MINIMUM_WITNESS_COMMITMENT{36};
 
 /** A "reason" why a transaction was invalid, suitable for determining whether the
   * provider of the transaction should be banned/ignored/disconnected/etc.
@@ -151,21 +153,27 @@ static inline int64_t GetTransactionInputWeight(const CTxIn& txin)
     return ::GetSerializeSize(TX_NO_WITNESS(txin)) * (WITNESS_SCALE_FACTOR - 1) + ::GetSerializeSize(TX_WITH_WITNESS(txin)) + ::GetSerializeSize(txin.scriptWitness.stack);
 }
 
-/** Compute at which vout of the block's coinbase transaction the witness commitment occurs, or -1 if not found */
-inline int GetWitnessCommitmentIndex(const CBlock& block)
+/** Return the byte offset of the witness commitment marker in coinbase input
+ * metadata, or -1 when none is present. The last marker wins, mirroring the
+ * historical witness-output behavior.
+ */
+inline int GetWitnessCommitmentOffset(const CBlock& block)
 {
     int commitpos = NO_WITNESS_COMMITMENT;
-    if (!block.vtx.empty()) {
-        for (size_t o = 0; o < block.vtx[0]->vout.size(); o++) {
-            const CTxOut& vout = block.vtx[0]->vout[o];
-            if (vout.scriptPubKey.size() >= MINIMUM_WITNESS_COMMITMENT &&
-                vout.scriptPubKey[0] == OP_RETURN &&
-                vout.scriptPubKey[1] == 0x24 &&
-                vout.scriptPubKey[2] == 0xaa &&
-                vout.scriptPubKey[3] == 0x21 &&
-                vout.scriptPubKey[4] == 0xa9 &&
-                vout.scriptPubKey[5] == 0xed) {
-                commitpos = o;
+    if (!block.vtx.empty() && !block.vtx[0]->vin.empty()) {
+        const CScript& metadata{block.vtx[0]->vin[0].scriptSig};
+        CScript::const_iterator pc{metadata.begin()};
+        opcodetype opcode;
+        std::vector<unsigned char> pushdata;
+        while (pc != metadata.end()) {
+            const CScript::const_iterator opcode_pos{pc};
+            if (!metadata.GetOp(pc, opcode, pushdata)) {
+                break;
+            }
+            if (opcode == static_cast<opcodetype>(MINIMUM_WITNESS_COMMITMENT) &&
+                pushdata.size() == MINIMUM_WITNESS_COMMITMENT &&
+                std::equal(std::begin(WITNESS_COMMITMENT_HEADER), std::end(WITNESS_COMMITMENT_HEADER), pushdata.begin())) {
+                commitpos = static_cast<int>(opcode_pos - metadata.begin()) + 1;
             }
         }
     }

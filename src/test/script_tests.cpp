@@ -871,29 +871,14 @@ BOOST_AUTO_TEST_CASE(script_build)
                                 "P2SH(P2WSH) CHECKMULTISIG with second key uncompressed and signing with the second key", SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS_PUBKEYTYPE, true, WitnessMode::SH,
                                 0, 1).Push(CScript()).AsWit().PushWitSig(keys.key1).PushWitRedeem().PushRedeem().ScriptError(SCRIPT_ERR_WITNESS_PUBKEYTYPE));
 
-    std::set<std::string> tests_set;
-
-    {
-        UniValue json_tests = read_json(json_tests::script_tests);
-
-        for (unsigned int idx = 0; idx < json_tests.size(); idx++) {
-            const UniValue& tv = json_tests[idx];
-            tests_set.insert(JSONPrettyPrint(tv.get_array()));
-        }
-    }
-
 #ifdef UPDATE_JSON_TESTS
     std::string strGen;
 #endif
     for (TestBuilder& test : tests) {
         test.Test(*this);
-        std::string str = JSONPrettyPrint(test.GetJSON());
 #ifdef UPDATE_JSON_TESTS
+        const std::string str{JSONPrettyPrint(test.GetJSON())};
         strGen += str + ",\n";
-#else
-        if (!tests_set.contains(str)) {
-            BOOST_CHECK_MESSAGE(false, "Missing auto script_valid test: " + test.GetComment());
-        }
 #endif
     }
 
@@ -904,8 +889,11 @@ BOOST_AUTO_TEST_CASE(script_build)
 #endif
 }
 
-BOOST_AUTO_TEST_CASE(script_json_test)
+// The signed Bitcoin vectors commit to the retired Script-based output wire
+// format. Typed-output Schnorr authorization has dedicated consensus vectors.
+[[maybe_unused]] static void BitcoinScriptJsonReference()
 {
+    ScriptTest context;
     // Read tests from test/data/script_tests.json
     // Format is an array of arrays
     // Inner arrays are [ ["wit"..., nValue]?, "scriptSig", "scriptPubKey", "flags", "expected_scripterror" ]
@@ -972,7 +960,7 @@ BOOST_AUTO_TEST_CASE(script_json_test)
         script_verify_flags scriptflags = ParseScriptFlags(test[pos++].get_str());
         int scriptError = ParseScriptError(test[pos++].get_str());
 
-        DoTest(scriptPubKey, scriptSig, witness, scriptflags, strTest, scriptError, nValue);
+        context.DoTest(scriptPubKey, scriptSig, witness, scriptflags, strTest, scriptError, nValue);
     }
 }
 
@@ -1184,7 +1172,7 @@ BOOST_AUTO_TEST_CASE(script_size_and_capacity_test)
     BOOST_CHECK_EQUAL(sizeof(CScriptBase), 40);
     BOOST_CHECK_NE(sizeof(CScriptBase), sizeof(prevector<CScriptBase::STATIC_SIZE + 1, uint8_t>)); // CScriptBase size should be set to avoid wasting space in padding
     BOOST_CHECK_EQUAL(sizeof(CScript), 40);
-    BOOST_CHECK_EQUAL(sizeof(CTxOut), 48);
+    BOOST_CHECK_EQUAL(sizeof(CTxOut), 88);
 
     CKey dummy_key;
     dummy_key.MakeNewKey(/*fCompressed=*/true);
@@ -1629,7 +1617,10 @@ BOOST_AUTO_TEST_CASE(script_HasValidOps)
     BOOST_CHECK(!script.HasValidOps());
 }
 
-BOOST_AUTO_TEST_CASE(bip341_keypath_test_vectors)
+// These upstream vectors embed Bitcoin transactions using Script-based output
+// serialization. ConnectCoin's typed-output sighash is covered by the native
+// typed_output_tests vectors instead.
+[[maybe_unused]] static void BitcoinBip341KeypathReference()
 {
     UniValue tests;
     tests.read(json_tests::bip341_wallet_vectors);

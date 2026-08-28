@@ -65,49 +65,61 @@ BOOST_AUTO_TEST_CASE(GetSigOpCount)
     BOOST_CHECK_EQUAL(p2sh.GetSigOpCount(scriptSig2), 3U);
 }
 
-/**
- * Verifies script execution of the zeroth scriptPubKey of tx output and
- * zeroth scriptSig and witness of tx input.
- */
 static ScriptError VerifyWithFlag(const CTransaction& output, const CMutableTransaction& input, script_verify_flags flags)
 {
     ScriptError error;
     CTransaction inputi(input);
-    bool ret = VerifyScript(inputi.vin[0].scriptSig, output.vout[0].scriptPubKey, &inputi.vin[0].scriptWitness, flags, TransactionSignatureChecker(&inputi, 0, output.vout[0].nValue, MissingDataBehavior::ASSERT_FAIL), &error);
-    BOOST_CHECK((ret == true) == (error == SCRIPT_ERR_OK));
-
+    const bool ret{VerifyScript(inputi.vin[0].scriptSig, output.vout[0].scriptPubKey,
+                                &inputi.vin[0].scriptWitness, flags,
+                                TransactionSignatureChecker(&inputi, 0, output.vout[0].nValue,
+                                                            MissingDataBehavior::ASSERT_FAIL),
+                                &error)};
+    BOOST_CHECK(ret == (error == SCRIPT_ERR_OK));
     return error;
 }
 
-/**
- * Builds a creationTx from scriptPubKey and a spendingTx from scriptSig
- * and witness such that spendingTx spends output zero of creationTx.
- * Also inserts creationTx's output into the coins view.
- */
-static void BuildTxs(CMutableTransaction& spendingTx, CCoinsViewCache& coins, CMutableTransaction& creationTx, const CScript& scriptPubKey, const CScript& scriptSig, const CScriptWitness& witness)
+static void BuildTxs(CMutableTransaction& spending_tx, CCoinsViewCache& coins,
+                     CMutableTransaction& creation_tx, const CScript& script_pubkey,
+                     const CScript& script_sig, const CScriptWitness& witness)
 {
-    creationTx.version = 1;
-    creationTx.vin.resize(1);
-    creationTx.vin[0].prevout.SetNull();
-    creationTx.vin[0].scriptSig = CScript();
-    creationTx.vout.resize(1);
-    creationTx.vout[0].nValue = 1;
-    creationTx.vout[0].scriptPubKey = scriptPubKey;
+    creation_tx.version = 1;
+    creation_tx.vin.resize(1);
+    creation_tx.vin[0].prevout.SetNull();
+    creation_tx.vout.resize(1);
+    creation_tx.vout[0].nValue = 1;
+    creation_tx.vout[0].scriptPubKey = script_pubkey;
 
-    spendingTx.version = 1;
-    spendingTx.vin.resize(1);
-    spendingTx.vin[0].prevout.hash = creationTx.GetHash();
-    spendingTx.vin[0].prevout.n = 0;
-    spendingTx.vin[0].scriptSig = scriptSig;
-    spendingTx.vin[0].scriptWitness = witness;
-    spendingTx.vout.resize(1);
-    spendingTx.vout[0].nValue = 1;
-    spendingTx.vout[0].scriptPubKey = CScript();
+    spending_tx.version = 1;
+    spending_tx.vin.resize(1);
+    spending_tx.vin[0].prevout = {creation_tx.GetHash(), 0};
+    spending_tx.vin[0].scriptSig = script_sig;
+    spending_tx.vin[0].scriptWitness = witness;
+    spending_tx.vout.resize(1);
+    spending_tx.vout[0].nValue = 1;
 
-    AddCoins(coins, CTransaction(creationTx), 0);
+    AddCoins(coins, CTransaction{creation_tx}, 0);
 }
 
-BOOST_AUTO_TEST_CASE(GetTxSigOpCost)
+BOOST_AUTO_TEST_CASE(GetTypedTxSigOpCost)
+{
+    CCoinsViewCache coins{&CoinsViewEmpty::Get()};
+    CKey key = GenerateRandomKey();
+
+    CMutableTransaction spend;
+    spend.vin.resize(2);
+    spend.vout.emplace_back(1, XOnlyPubKey{key.GetPubKey()});
+    BOOST_CHECK_EQUAL(GetTransactionSigOpCost(CTransaction{spend}, coins, SCRIPT_VERIFY_NONE), 2);
+    BOOST_CHECK_EQUAL(GetTransactionSigOpCost(CTransaction{spend}, coins, SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_P2SH), 2);
+
+    spend.vin.resize(1);
+    spend.vin[0].prevout.SetNull();
+    BOOST_CHECK_EQUAL(GetTransactionSigOpCost(CTransaction{spend}, coins, SCRIPT_VERIFY_NONE), 0);
+}
+
+// Historical Bitcoin Script accounting is retained as non-registered reference
+// code. It is not a ConnectCoin consensus test after typed outputs replaced
+// Script execution.
+[[maybe_unused]] static void BitcoinScriptSigOpCostReference()
 {
     // Transaction creates outputs
     CMutableTransaction creationTx;

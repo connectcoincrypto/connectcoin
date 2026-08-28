@@ -8,6 +8,7 @@
 #include <common/messages.h>
 #include <consensus/amount.h>
 #include <consensus/consensus.h>
+#include <crypto/hex_base.h>
 #include <node/mining_types.h>
 #include <policy/feerate.h>
 #include <policy/policy.h>
@@ -56,6 +57,11 @@ Result<void> CheckMiningOptions(BlockCreateOptions options, bool use_argnames)
         return Error{Untranslated(strprintf("%s (%zu) exceeds consensus maximum block sigops cost (%d)",
                                             "coinbase_output_max_additional_sigops",
                                             options.coinbase_output_max_additional_sigops, MAX_BLOCK_SIGOPS_COST))};
+    }
+    const CTxOut coinbase_output{0, options.coinbase_output_script};
+    if (coinbase_output.GetType() != TxOutputType::P2PK || !coinbase_output.GetP2PKPubKey()) {
+        return Error{Untranslated(strprintf("coinbase_output_script must encode a type-1 P2PK x-only public key (got %s)",
+                                            HexStr(options.coinbase_output_script)))};
     }
     return {};
 }

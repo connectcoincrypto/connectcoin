@@ -55,12 +55,53 @@ std::string CTxIn::ToString() const
 CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn)
 {
     nValue = nValueIn;
-    scriptPubKey = scriptPubKeyIn;
+    SetScriptPubKey(std::move(scriptPubKeyIn));
+}
+
+CTxOut::CTxOut(const CAmount& nValueIn, const XOnlyPubKey& pubkeyIn)
+{
+    nValue = nValueIn;
+    SetP2PK(pubkeyIn);
+}
+
+std::optional<XOnlyPubKey> CTxOut::GetP2PKPubKey() const
+{
+    if (GetType() != TxOutputType::P2PK || !p2pk_pubkey.IsFullyValid()) return std::nullopt;
+    const CScript expected{CScript{} << OP_1 << std::vector<unsigned char>{p2pk_pubkey.begin(), p2pk_pubkey.end()}};
+    if (scriptPubKey != expected) return std::nullopt;
+    return p2pk_pubkey;
+}
+
+TxOutputType CTxOut::GetType() const
+{
+    return static_cast<TxOutputType>(type);
+}
+
+void CTxOut::SetScriptPubKey(CScript scriptPubKeyIn)
+{
+    scriptPubKey = std::move(scriptPubKeyIn);
+    type = static_cast<uint8_t>(TxOutputType::INVALID);
+    p2pk_pubkey = {};
+    if (scriptPubKey.size() != 34 || scriptPubKey[0] != OP_1 || scriptPubKey[1] != XOnlyPubKey::size()) return;
+
+    XOnlyPubKey pubkey{std::span{scriptPubKey}.subspan(2)};
+    if (!pubkey.IsFullyValid()) return;
+    type = static_cast<uint8_t>(TxOutputType::P2PK);
+    p2pk_pubkey = pubkey;
+}
+
+void CTxOut::SetP2PK(const XOnlyPubKey& pubkeyIn)
+{
+    assert(pubkeyIn.IsFullyValid());
+    type = static_cast<uint8_t>(TxOutputType::P2PK);
+    p2pk_pubkey = pubkeyIn;
+    scriptPubKey = CScript{} << OP_1 << std::vector<unsigned char>{pubkeyIn.begin(), pubkeyIn.end()};
 }
 
 std::string CTxOut::ToString() const
 {
-    return strprintf("CTxOut(nValue=%d.%010d, scriptPubKey=%s)", nValue / COIN, nValue % COIN, HexStr(scriptPubKey).substr(0, 30));
+    return strprintf("CTxOut(nValue=%d.%010d, type=%u, pubkey=%s)", nValue / COIN, nValue % COIN,
+                     static_cast<unsigned>(GetType()), GetP2PKPubKey() ? HexStr(*GetP2PKPubKey()) : "invalid");
 }
 
 CMutableTransaction::CMutableTransaction() : version{CTransaction::CURRENT_VERSION}, nLockTime{0} {}

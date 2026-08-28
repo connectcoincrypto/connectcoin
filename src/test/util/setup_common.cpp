@@ -425,17 +425,13 @@ TestChain100Setup::TestChain100Setup(
     // Generate a 100-block chain:
     this->mineBlocks(COINBASE_MATURITY);
 
-    {
-        LOCK(::cs_main);
-        assert(
-            m_node.chainman->ActiveChain().Tip()->GetBlockHash().ToString() ==
-            "2d472655375bce80d6b27dc29c9d18daf7e11af4bd7244bb70e6562b276240a5");
-    }
+    LOCK(::cs_main);
+    assert(m_node.chainman->ActiveChain().Height() == COINBASE_MATURITY);
 }
 
 void TestChain100Setup::mineBlocks(int num_blocks)
 {
-    CScript scriptPubKey = CScript() << ToByteVector(coinbaseKey.GetPubKey()) << OP_CHECKSIG;
+    const CScript scriptPubKey{GetScriptForDestination(WitnessV1Taproot{XOnlyPubKey{coinbaseKey.GetPubKey()}})};
     for (int i = 0; i < num_blocks; i++) {
         std::vector<CMutableTransaction> noTxns;
         CBlock b = CreateAndProcessBlock(noTxns, scriptPubKey);
@@ -495,11 +491,6 @@ std::pair<CMutableTransaction, CAmount> TestChain100Setup::CreateValidTransactio
     }
     mempool_txn.vout = outputs;
 
-    // - Add the signing key to a keystore
-    FillableSigningProvider keystore;
-    for (const auto& input_signing_key : input_signing_keys) {
-        keystore.AddKey(input_signing_key);
-    }
     // - Populate a CoinsViewCache with the unspent output
     CCoinsViewCache coins_cache{&CoinsViewEmpty::Get()};
     for (const auto& input_transaction : input_transactions) {
@@ -514,10 +505,43 @@ std::pair<CMutableTransaction, CAmount> TestChain100Setup::CreateValidTransactio
         input_coins.insert({outpoint_to_spend, utxo_to_spend});
         inputs_amount += utxo_to_spend.out.nValue;
     }
-    // - Default signature hashing type
-    int nHashType = SIGHASH_ALL;
-    std::map<int, bilingual_str> input_errors;
-    assert(SignTransaction(mempool_txn, &keystore, input_coins, {.sighash_type = nHashType}, input_errors));
+    std::vector<CTxOut> spent_outputs;
+    spent_outputs.reserve(inputs.size());
+    for (const auto& input : inputs) {
+        spent_outputs.push_back(input_coins.at(input).out);
+    }
+
+    const auto sign_inputs = [&] {
+        for (auto& input : mempool_txn.vin) input.scriptWitness.SetNull();
+
+        PrecomputedTransactionData txdata;
+        txdata.Init(mempool_txn, std::vector<CTxOut>{spent_outputs}, /*force=*/true);
+        for (size_t input_index{0}; input_index < inputs.size(); ++input_index) {
+            const auto expected_pubkey{spent_outputs[input_index].GetP2PKPubKey()};
+            assert(expected_pubkey);
+
+            const CKey* signing_key{nullptr};
+            for (const auto& candidate : input_signing_keys) {
+                if (XOnlyPubKey{candidate.GetPubKey()} == *expected_pubkey) {
+                    signing_key = &candidate;
+                    break;
+                }
+            }
+            assert(signing_key);
+
+            ScriptExecutionData execdata;
+            execdata.m_annex_init = true;
+            execdata.m_annex_present = false;
+            uint256 sighash;
+            assert(SignatureHashSchnorr(sighash, execdata, mempool_txn, input_index, SIGHASH_DEFAULT,
+                                        SigVersion::TAPROOT, txdata, MissingDataBehavior::ASSERT_FAIL));
+            std::array<unsigned char, 64> signature;
+            assert(signing_key->SignSchnorr(sighash, signature, /*merkle_root=*/nullptr, uint256{}));
+            mempool_txn.vin[input_index].scriptWitness.stack = {
+                std::vector<unsigned char>{signature.begin(), signature.end()}};
+        }
+    };
+    sign_inputs();
     CAmount current_fee = inputs_amount - std::accumulate(outputs.begin(), outputs.end(), CAmount(0),
         [](const CAmount& acc, const CTxOut& out) {
         return acc + out.nValue;
@@ -532,9 +556,8 @@ std::pair<CMutableTransaction, CAmount> TestChain100Setup::CreateValidTransactio
             // Only deduct fee if there's anything to deduct. If the caller has put more fees than
             // the target feerate, don't change the fee.
             mempool_txn.vout[fee_output.value()].nValue -= deduction;
-            // Re-sign since an output has changed
-            input_errors.clear();
-            assert(SignTransaction(mempool_txn, &keystore, input_coins, {.sighash_type = nHashType}, input_errors));
+            // Re-sign since an output has changed.
+            sign_inputs();
             current_fee = target_fee;
         }
     }

@@ -226,8 +226,8 @@
         }
     ],
     [
-        "tcc1pae5um27ahn8n73pgexe3kcwlp8dhswpn684h2k2w6t9a7w3eq65qwc7yfk",
-        "5120ee69cdabddbccf3f4428c9b31b61df09db783833d1eb75594ed2cbdf3a3906a8",
+        "tcc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqz8t54j",
+        "512079be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
         {
             "chain": "signet",
             "isPrivkey": false,
@@ -262,8 +262,8 @@
         }
     ],
     [
-        "ccrt1pfwxjqvtt4tcxrtdluukfmy2dv7xd2qzdfy6kajv5nwn4yam3wxkqduf4fv",
-        "51204b8d20316baaf061adbfe72c9d914d678cd5004d49356ec9949ba752777171ac",
+        "ccrt1pccz8l9zpa47k6vz9gphftsrumpw80rjt3nhnefat4symjhrsnmjs57x4kp",
+        "5120c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
         {
             "chain": "regtest",
             "isPrivkey": false,
@@ -434,8 +434,8 @@
         }
     ],
     [
-        "cc1pve739yap4uxjvfk0jrey69078u0gasm2nwvv483ec6zkzulgw9xqaaryll",
-        "5120667d1293a1af0d2626cf90f24d15fe3f1e8ec36a9b98ca9e39c6856173e8714c",
+        "cc1plycg5qvjtrp3qjf5f7zl382j9x6nrjz9sdhenvyxq8c3808qxmuscq3qy2",
+        "5120f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
         {
             "chain": "main",
             "isPrivkey": false,
@@ -506,8 +506,8 @@
         }
     ],
     [
-        "tcc1pwst9qszjrhuv2e7as0flcq9gm698v6gdxzz9e87p07s8rssdx3zqpxjc3m",
-        "512074165040521df8c567dd83d3fc00a8de8a76690d30845c9fc17fa071c20d3444",
+        "tcc1pujfahuwppkq0xkq7fyzfxzc5qnxxcyuspms8tpr5l222h6xye5fsmf0h6f",
+        "5120e493dbf1c10d80f3581e4904930b1404cc6c13900ee0758474fa94abe8c4cd13",
         {
             "chain": "signet",
             "isPrivkey": false,
@@ -542,8 +542,8 @@
         }
     ],
     [
-        "ccrt1p39a4s4vdcw9kqa8w2t0rp7aj8kfxyw7mce5sk5d70x6wnnmpvt7s2phjnl",
-        "5120897b58558dc38b6074ee52de30fbb23d92623bdbc6690b51be79b4e9cf6162fd",
+        "ccrt1p979aung6qusfx4d55ujs5hz39r5ghp9am3se4d7t4r2knvjqaljqu4l73d",
+        "51202f8bde4d1a07209355b4a7250a5c5128e88b84bddc619ab7cba8d569b240efe4",
         {
             "chain": "regtest",
             "isPrivkey": false,

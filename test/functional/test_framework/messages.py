@@ -527,26 +527,69 @@ class CTxIn:
 
 
 class CTxOut:
-    __slots__ = ("nValue", "scriptPubKey")
+    """ConnectCoin amount + one-byte type + type payload output.
+
+    ``scriptPubKey`` is only the Python test framework's compatibility view.
+    Assigning an OP_1/32-byte witness-v1 program selects type 1 and extracts
+    its x-only key. Every other script selects invalid type 0, whose script
+    bytes are deliberately not serialized.
+    """
+
+    TYPE_INVALID = 0
+    TYPE_P2PK = 1
+    __slots__ = ("nValue", "type", "pubkey", "_scriptPubKey")
 
     def __init__(self, nValue=0, scriptPubKey=b""):
         self.nValue = nValue
         self.scriptPubKey = scriptPubKey
 
+    @property
+    def scriptPubKey(self):
+        return self._scriptPubKey
+
+    @scriptPubKey.setter
+    def scriptPubKey(self, script):
+        self._scriptPubKey = bytes(script)
+        if len(self._scriptPubKey) == 34 and self._scriptPubKey[:2] == b"\x51\x20":
+            self.type = self.TYPE_P2PK
+            self.pubkey = self._scriptPubKey[2:]
+        else:
+            self.type = self.TYPE_INVALID
+            self.pubkey = b""
+
     def deserialize(self, f):
         self.nValue = int.from_bytes(f.read(8), "little", signed=True)
-        self.scriptPubKey = deser_string(f)
+        encoded_type = f.read(1)
+        if len(encoded_type) != 1:
+            raise EOFError("missing transaction output type")
+        self.type = encoded_type[0]
+        if self.type == self.TYPE_P2PK:
+            self.pubkey = f.read(32)
+            if len(self.pubkey) != 32:
+                raise EOFError("truncated P2PK output key")
+            self._scriptPubKey = b"\x51\x20" + self.pubkey
+        elif self.type == self.TYPE_INVALID:
+            self.pubkey = b""
+            self._scriptPubKey = b""
+        else:
+            raise ValueError(f"unknown transaction output type {self.type}")
+
+    def serialize_payload(self):
+        if self.type == self.TYPE_P2PK:
+            if len(self.pubkey) != 32:
+                raise ValueError("P2PK output key must be 32 bytes")
+            return bytes([self.type]) + self.pubkey
+        if self.type == self.TYPE_INVALID:
+            return bytes([self.type])
+        raise ValueError(f"unknown transaction output type {self.type}")
 
     def serialize(self):
-        r = b""
-        r += self.nValue.to_bytes(8, "little", signed=True)
-        r += ser_string(self.scriptPubKey)
-        return r
+        return self.nValue.to_bytes(8, "little", signed=True) + self.serialize_payload()
 
     def __repr__(self):
-        return "CTxOut(nValue=%i.%010i scriptPubKey=%s)" \
+        return "CTxOut(nValue=%i.%010i type=%i pubkey=%s)" \
             % (self.nValue // COIN, self.nValue % COIN,
-               self.scriptPubKey.hex())
+               self.type, self.pubkey.hex())
 
 
 class CScriptWitness:

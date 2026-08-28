@@ -20,11 +20,6 @@ from test_framework.messages import (
     COIN,
     CTxOut,
 )
-from test_framework.script import (
-    CScript,
-    OP_FALSE,
-    OP_RETURN,
-)
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_not_equal,
@@ -138,8 +133,8 @@ class CoinStatsIndexTest(BitcoinTestFramework):
             assert_equal(res5['block_info'], {
                 'unspendable': 0,
                 'prevout_spent': 100,
-                'new_outputs_ex_coinbase': Decimal('99.9999968800'),
-                'coinbase': Decimal('100.0000031200'),
+                'new_outputs_ex_coinbase': Decimal('99.9999967300'),
+                'coinbase': Decimal('100.0000032700'),
                 'unspendables': {
                     'genesis_block': 0,
                     'bip30': 0,
@@ -159,12 +154,14 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         # Find the right position of the 21 BTC output
         tx1_out_21 = self.wallet.get_utxo(txid=tx1["txid"], vout=tx1["sent_vout"])
 
-        # Generate and send another tx with an OP_RETURN output (which is unspendable)
-        tx2 = self.wallet.create_self_transfer(utxo_to_spend=tx1_out_21)['tx']
-        tx2_val = '20.99'
-        tx2.vout = [CTxOut(int(Decimal(tx2_val) * COIN), CScript([OP_RETURN] + [OP_FALSE] * 30))]
-        tx2_hex = tx2.serialize().hex()
-        self.nodes[0].sendrawtransaction(tx2_hex, 0, tx2_val)
+        # Generate and send another type-1 transaction with a 0.01 fee.
+        # ConnectCoin deliberately has no provably-unspendable Script output
+        # type, so the output remains part of the UTXO set.
+        tx2 = self.wallet.create_self_transfer(
+            utxo_to_spend=tx1_out_21,
+            fee=Decimal('0.0100000000'),
+        )
+        self.nodes[0].sendrawtransaction(tx2['hex'])
 
         # Include both txs in a block
         self.generate(self.nodes[0], 1)
@@ -172,16 +169,16 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         for hash_option in index_hash_options:
             # Check all amounts were registered correctly
             res6 = index_node.gettxoutsetinfo(hash_option, 108)
-            assert_equal(res6['total_unspendable_amount'], Decimal('20.9900000000'))
+            assert_equal(res6['total_unspendable_amount'], 0)
             assert_equal(res6['block_info'], {
-                'unspendable': Decimal('20.9900000000'),
+                'unspendable': 0,
                 'prevout_spent': 121,
-                'new_outputs_ex_coinbase': Decimal('99.9999999000'),
+                'new_outputs_ex_coinbase': Decimal('120.9899999000'),
                 'coinbase': Decimal('100.0100001000'),
                 'unspendables': {
                     'genesis_block': 0,
                     'bip30': 0,
-                    'scripts': Decimal('20.9900000000'),
+                    'scripts': 0,
                     'unclaimed_rewards': 0,
                 }
             })
@@ -190,7 +187,7 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         # Create a coinbase that does not claim full subsidy and also
         # has two outputs
         cb = create_coinbase(109, nValue=35)
-        cb.vout.append(CTxOut(5 * COIN, CScript([OP_FALSE])))
+        cb.vout.append(CTxOut(5 * COIN, cb.vout[0].scriptPubKey))
 
         # Generate a block that includes previous coinbase
         tip = self.nodes[0].getbestblockhash()
@@ -202,7 +199,7 @@ class CoinStatsIndexTest(BitcoinTestFramework):
 
         for hash_option in index_hash_options:
             res7 = index_node.gettxoutsetinfo(hash_option, 109)
-            assert_equal(res7['total_unspendable_amount'], Decimal('80.9900000000'))
+            assert_equal(res7['total_unspendable_amount'], 60)
             assert_equal(res7['block_info'], {
                 'unspendable': 60,
                 'prevout_spent': 0,
@@ -355,7 +352,7 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         # This private key is deliberately published for the regtest genesis only.
         genesis_wif = bytes_to_wif(
             bytes.fromhex('bc4470438702a7aa1c7696ff857e0439657583f87e3d889abea285771604891d'),
-            compressed=False,
+            compressed=True,
         )
         raw_tx = index_node.createrawtransaction(
             [{'txid': genesis_outpoint['txid'], 'vout': 0}],
