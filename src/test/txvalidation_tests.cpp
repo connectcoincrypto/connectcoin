@@ -79,6 +79,7 @@ static inline CTransactionRef make_tx(const std::vector<COutPoint>& inputs, int3
     return MakeTransactionRef(mtx);
 }
 
+#if 0 // Ephemeral anchor outputs are not part of the type-1-only protocol.
 static constexpr auto NUM_EPHEMERAL_TX_OUTPUTS = 3;
 static constexpr auto EPHEMERAL_DUST_INDEX = NUM_EPHEMERAL_TX_OUTPUTS - 1;
 
@@ -99,7 +100,6 @@ static inline CTransactionRef make_ephemeral_tx(const std::vector<COutPoint>& in
     return MakeTransactionRef(mtx);
 }
 
-#if 0 // Ephemeral anchor outputs are not part of the type-1-only protocol.
 BOOST_FIXTURE_TEST_CASE(ephemeral_tests, RegTestingSetup)
 {
     CTxMemPool& pool = *Assert(m_node.mempool);
