@@ -988,11 +988,8 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
 
     const CTransactionRef spend_ref{MakeTransactionRef(spend)};
     CTxMemPool& tx_mempool{MakeMempool()};
-    {
-        LOCK(tx_mempool.cs);
-        TryAddToMempool(tx_mempool,
-                        TestMemPoolEntryHelper{}.Fee(COIN).SpendsCoinbase(true).FromTx(spend_ref));
-    }
+    TryAddToMempool(tx_mempool,
+                    TestMemPoolEntryHelper{}.Fee(COIN).SpendsCoinbase(true).FromTx(spend_ref));
     block_template = mining->createNewBlock(options, /*cooldown=*/false);
     BOOST_REQUIRE(block_template);
     const CBlock selected_block{block_template->getBlock()};

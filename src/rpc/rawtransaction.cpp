@@ -2166,12 +2166,23 @@ RPCMethod descriptorprocesspsbt()
         sighash_type,
         finalize);
 
-    // Check whether or not all of the inputs are now correctly signed
-    bool complete = true;
+    // Check whether all inputs are already finalized and valid. Validate the
+    // outputs separately so an empty input set cannot bypass typed-output
+    // validation.
+    bool complete{PSBTHasValidTypedOutputs(psbtx)};
     const std::optional<PrecomputedTransactionData> txdata_opt{PrecomputePSBTData(psbtx)};
-    const PrecomputedTransactionData txdata{*CHECK_NONFATAL(txdata_opt)};
-    for (unsigned int i = 0; i < psbtx.inputs.size(); ++i) {
-        complete = complete && PSBTInputSignedAndVerified(psbtx, i, &txdata);
+    if (complete && txdata_opt) {
+        for (unsigned int i = 0; i < psbtx.inputs.size(); ++i) {
+            complete = complete && PSBTInputSignedAndVerified(psbtx, i, &*txdata_opt);
+        }
+    } else {
+        complete = false;
+    }
+
+    CMutableTransaction mtx;
+    if (complete) {
+        PartiallySignedTransaction psbtx_copy = psbtx;
+        complete = FinalizeAndExtractPSBT(psbtx_copy, mtx);
     }
 
     DataStream ssTx{};
@@ -2182,9 +2193,6 @@ RPCMethod descriptorprocesspsbt()
     result.pushKV("psbt", EncodeBase64(ssTx));
     result.pushKV("complete", complete);
     if (complete) {
-        CMutableTransaction mtx;
-        PartiallySignedTransaction psbtx_copy = psbtx;
-        CHECK_NONFATAL(FinalizeAndExtractPSBT(psbtx_copy, mtx));
         DataStream ssTx_final;
         ssTx_final << TX_WITH_WITNESS(mtx);
         result.pushKV("hex", HexStr(ssTx_final));

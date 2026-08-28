@@ -26,7 +26,7 @@ BOOST_FIXTURE_TEST_SUITE(typed_output_tests, BasicTestingSetup)
 BOOST_AUTO_TEST_CASE(p2pk_wire_format)
 {
     CKey key;
-    key.MakeNewKey(/*fCompressedIn=*/true);
+    key.MakeNewKey(/*fCompressed=*/true);
     const XOnlyPubKey pubkey{key.GetPubKey()};
     const CTxOut output{42 * COIN, pubkey};
 
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(invalid_and_unknown_wire_types)
 BOOST_AUTO_TEST_CASE(mutable_script_view_cannot_change_consensus_payload)
 {
     CKey key;
-    key.MakeNewKey(/*fCompressedIn=*/true);
+    key.MakeNewKey(/*fCompressed=*/true);
     CTxOut output{42, XOnlyPubKey{key.GetPubKey()}};
 
     output.scriptPubKey = CScript{} << OP_TRUE;
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(mutable_script_view_cannot_change_consensus_payload)
 BOOST_AUTO_TEST_CASE(only_p2pk_is_valid)
 {
     CKey key;
-    key.MakeNewKey(/*fCompressedIn=*/true);
+    key.MakeNewKey(/*fCompressed=*/true);
 
     CMutableTransaction valid;
     valid.vin.emplace_back();
@@ -105,9 +105,9 @@ BOOST_AUTO_TEST_CASE(only_p2pk_is_valid)
 BOOST_AUTO_TEST_CASE(direct_schnorr_authorization)
 {
     CKey spending_key;
-    spending_key.MakeNewKey(/*fCompressedIn=*/true);
+    spending_key.MakeNewKey(/*fCompressed=*/true);
     CKey destination_key;
-    destination_key.MakeNewKey(/*fCompressedIn=*/true);
+    destination_key.MakeNewKey(/*fCompressed=*/true);
 
     const CTxOut prevout{5 * COIN, XOnlyPubKey{spending_key.GetPubKey()}};
     CMutableTransaction spend;
@@ -147,9 +147,9 @@ BOOST_AUTO_TEST_CASE(direct_schnorr_authorization)
 BOOST_AUTO_TEST_CASE(psbt_requires_canonical_typed_outputs_and_spends)
 {
     CKey spending_key;
-    spending_key.MakeNewKey(/*fCompressedIn=*/true);
+    spending_key.MakeNewKey(/*fCompressed=*/true);
     CKey destination_key;
-    destination_key.MakeNewKey(/*fCompressedIn=*/true);
+    destination_key.MakeNewKey(/*fCompressed=*/true);
 
     const CTxOut prevout{5 * COIN, XOnlyPubKey{spending_key.GetPubKey()}};
     CMutableTransaction spend;

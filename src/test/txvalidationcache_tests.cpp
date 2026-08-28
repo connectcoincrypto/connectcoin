@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_SUITE(txvalidationcache_tests)
 BOOST_FIXTURE_TEST_CASE(typed_execution_cache_hit_and_miss, TestChain100Setup)
 {
     CKey destination_key;
-    destination_key.MakeNewKey(/*fCompressedIn=*/true);
+    destination_key.MakeNewKey(/*fCompressed=*/true);
     const CTransactionRef& funding{m_coinbase_txns[0]};
     const COutPoint funding_out{funding->GetHash(), 0};
     const CTxOut output{funding->vout[0].nValue - 1000, XOnlyPubKey{destination_key.GetPubKey()}};
@@ -77,7 +77,7 @@ BOOST_FIXTURE_TEST_CASE(typed_execution_cache_hit_and_miss, TestChain100Setup)
 BOOST_FIXTURE_TEST_CASE(mempool_cache_is_consumed_when_block_connects, TestChain100Setup)
 {
     CKey destination_key;
-    destination_key.MakeNewKey(/*fCompressedIn=*/true);
+    destination_key.MakeNewKey(/*fCompressed=*/true);
     const CTransactionRef& funding{m_coinbase_txns[0]};
     const COutPoint funding_out{funding->GetHash(), 0};
     const CTxOut output{funding->vout[0].nValue - 1000, XOnlyPubKey{destination_key.GetPubKey()}};

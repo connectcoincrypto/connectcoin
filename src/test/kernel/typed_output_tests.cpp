@@ -39,9 +39,9 @@ BOOST_AUTO_TEST_CASE(kernel_type1_verification_matches_consensus)
 {
     ECC_Context ecc_context;
     CKey spending_key;
-    spending_key.MakeNewKey(/*fCompressedIn=*/true);
+    spending_key.MakeNewKey(/*fCompressed=*/true);
     CKey destination_key;
-    destination_key.MakeNewKey(/*fCompressedIn=*/true);
+    destination_key.MakeNewKey(/*fCompressed=*/true);
 
     constexpr CAmount amount{50000};
     const CTxOut spent_output{amount, XOnlyPubKey{spending_key.GetPubKey()}};

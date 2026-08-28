@@ -34,7 +34,6 @@
 #include <memory>
 
 using util::SplitString;
-using util::ToString;
 using util::TrimString;
 using util::TrimStringView;
 

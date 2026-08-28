@@ -1658,15 +1658,18 @@ RPCMethod walletprocesspsbt()
         throw JSONRPCPSBTError(*err);
     }
 
+    CMutableTransaction mtx;
+    if (complete) {
+        PartiallySignedTransaction psbtx_copy = psbtx;
+        complete = FinalizeAndExtractPSBT(psbtx_copy, mtx);
+    }
+
     UniValue result(UniValue::VOBJ);
     DataStream ssTx{};
     ssTx << psbtx;
     result.pushKV("psbt", EncodeBase64(ssTx.str()));
     result.pushKV("complete", complete);
     if (complete) {
-        CMutableTransaction mtx;
-        // Returns true if complete, which we already think it is.
-        CHECK_NONFATAL(FinalizeAndExtractPSBT(psbtx, mtx));
         DataStream ssTx_final;
         ssTx_final << TX_WITH_WITNESS(mtx);
         result.pushKV("hex", HexStr(ssTx_final));

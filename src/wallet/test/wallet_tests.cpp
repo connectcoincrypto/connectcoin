@@ -75,6 +75,16 @@ static void AddKey(CWallet& wallet, const CKey& key)
     Assert(wallet.AddWalletDescriptor(w_desc, provider, "", false));
 }
 
+BOOST_AUTO_TEST_CASE(psbt_empty_inputs_do_not_bypass_output_validation)
+{
+    CMutableTransaction tx;
+    PartiallySignedTransaction psbtx{tx};
+    bool complete{true};
+
+    BOOST_CHECK(!m_wallet.FillPSBT(psbtx, {.sign = false}, complete));
+    BOOST_CHECK(!complete);
+}
+
 BOOST_FIXTURE_TEST_CASE(scan_spendable_regtest_genesis, TestChain100Setup)
 {
     CWallet wallet(m_node.chain.get(), "", CreateMockableWalletDatabase());

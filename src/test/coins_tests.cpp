@@ -535,7 +535,7 @@ BOOST_AUTO_TEST_CASE(ccoins_serialization)
 {
     const CKey key{GenerateRandomKey()};
     const XOnlyPubKey pubkey{key.GetPubKey()};
-    const Coin original{CTxOut{60000000000, pubkey}, /*height=*/203998, /*coinbase=*/false};
+    const Coin original{CTxOut{60000000000, pubkey}, /*nHeightIn=*/203998, /*fCoinBaseIn=*/false};
 
     DataStream encoded;
     encoded << original;
