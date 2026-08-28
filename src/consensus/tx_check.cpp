@@ -8,9 +8,11 @@
 #include <consensus/consensus.h>
 #include <consensus/validation.h>
 #include <primitives/transaction.h>
+#include <pubkey.h>
 #include <script/script.h>
 #include <serialize.h>
 
+#include <optional>
 #include <set>
 #include <string>
 #include <utility>

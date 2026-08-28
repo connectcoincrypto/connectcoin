@@ -6,6 +6,7 @@
 #define CONNECTCOIN_TEST_UTIL_MINING_H
 
 #include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
@@ -13,15 +14,20 @@
 class CBlock;
 class CBlockIndex;
 class CChainParams;
+struct CMutableTransaction;
 class COutPoint;
 class CScript;
+class CTxOut;
 namespace node {
 struct BlockCreateOptions;
 struct NodeContext;
 } // namespace node
 
 /** Return a deterministic valid type-1 P2PK compatibility script. */
-CScript DeterministicP2PKScript();
+CScript DeterministicP2PKScript(uint8_t key_id = 1);
+
+/** Sign every input using the deterministic type-1 P2PK key. */
+void SignDeterministicP2PKInputs(CMutableTransaction& tx, const std::vector<CTxOut>& spent_outputs);
 
 /** Create a blockchain, starting from genesis */
 std::vector<std::shared_ptr<CBlock>> CreateBlockChain(size_t total_height, const CChainParams& params);

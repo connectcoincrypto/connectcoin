@@ -38,10 +38,8 @@ from .script import (
     OP_0,
     OP_1,
     OP_RETURN,
-    OP_TRUE,
 )
 from .script_util import (
-    key_to_p2pk_script,
     key_to_p2wpkh_script,
     keys_to_multisig_script,
     script_to_p2wsh_script,

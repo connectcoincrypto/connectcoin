@@ -25,9 +25,9 @@
 #include <test/fuzz/fuzz.h>
 #include <test/fuzz/util.h>
 #include <test/fuzz/util/net.h>
+#include <test/util/mining.h>
 #include <test/util/net.h>
 #include <test/util/random.h>
-#include <test/util/script.h>
 #include <test/util/setup_common.h>
 #include <test/util/time.h>
 #include <test/util/validation.h>
@@ -169,14 +169,14 @@ FUZZ_TARGET(cmpctblock, .init = initialize_cmpctblock)
         tx_mut.nLockTime = fuzzed_data_provider.ConsumeBool() ? 0 : fuzzed_data_provider.ConsumeIntegral<uint32_t>();
 
         // Choose an outpoint from the mempool, created blocks, or coinbases.
-        CAmount amount_in;
+        CTxOut spent_output;
         COutPoint outpoint;
         unsigned long mempool_size = mempool.size();
         if (mempool_size != 0 && fuzzed_data_provider.ConsumeBool()) {
             size_t random_idx = fuzzed_data_provider.ConsumeIntegralInRange<size_t>(0, mempool_size - 1);
             CTransactionRef tx = WITH_LOCK(mempool.cs, return mempool.txns_randomized[random_idx].second->GetSharedTx(););
             outpoint = COutPoint(tx->GetHash(), 0);
-            amount_in = tx->vout[0].nValue;
+            spent_output = tx->vout[0];
         } else if (info.size() != 0 && fuzzed_data_provider.ConsumeBool()) {
             // These blocks (and txs) may be invalid, use a spent output, or not be in the main chain.
             auto info_it = info.begin();
@@ -184,27 +184,24 @@ FUZZ_TARGET(cmpctblock, .init = initialize_cmpctblock)
             auto tx_it = info_it->block->vtx.begin();
             std::advance(tx_it, fuzzed_data_provider.ConsumeIntegralInRange<size_t>(0, info_it->block->vtx.size() - 1));
             outpoint = COutPoint(tx_it->get()->GetHash(), 0);
-            amount_in = tx_it->get()->vout[0].nValue;
+            spent_output = tx_it->get()->vout[0];
         } else {
             auto coinbase_it = mature_coinbase.begin();
             std::advance(coinbase_it, fuzzed_data_provider.ConsumeIntegralInRange<size_t>(0, mature_coinbase.size() - 1));
             outpoint = coinbase_it->first;
-            amount_in = coinbase_it->second;
+            spent_output = CTxOut{coinbase_it->second, DeterministicP2PKScript()};
         }
 
         const auto sequence = ConsumeSequence(fuzzed_data_provider);
-        const auto script_sig = CScript{};
-        const auto script_wit_stack = std::vector<std::vector<uint8_t>>{WITNESS_STACK_ELEM_OP_TRUE};
 
         CTxIn in;
         in.prevout = outpoint;
         in.nSequence = sequence;
-        in.scriptSig = script_sig;
-        in.scriptWitness.stack = script_wit_stack;
         tx_mut.vin.push_back(in);
 
-        const CAmount amount_out = amount_in - AMOUNT_FEE;
-        tx_mut.vout.emplace_back(amount_out, P2WSH_OP_TRUE);
+        const CAmount amount_out = spent_output.nValue - AMOUNT_FEE;
+        tx_mut.vout.emplace_back(amount_out, DeterministicP2PKScript());
+        SignDeterministicP2PKInputs(tx_mut, {spent_output});
 
         auto tx = MakeTransactionRef(tx_mut);
         return tx;
@@ -241,7 +238,7 @@ FUZZ_TARGET(cmpctblock, .init = initialize_cmpctblock)
         coinbase_tx.vin[0].prevout.SetNull();
         coinbase_tx.vin[0].scriptSig = CScript() << height << OP_0;
         coinbase_tx.vout.resize(1);
-        coinbase_tx.vout[0].scriptPubKey = CScript() << OP_TRUE;
+        coinbase_tx.vout[0].SetScriptPubKey(DeterministicP2PKScript());
         coinbase_tx.vout[0].nValue = COIN;
         block->vtx.push_back(MakeTransactionRef(coinbase_tx));
 

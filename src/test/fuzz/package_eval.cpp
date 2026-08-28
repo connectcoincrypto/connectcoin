@@ -13,7 +13,6 @@
 #include <policy/settings.h>
 #include <policy/truc_policy.h>
 #include <primitives/transaction.h>
-#include <script/script.h>
 #include <sync.h>
 #include <test/fuzz/FuzzedDataProvider.h>
 #include <test/fuzz/fuzz.h>
@@ -21,7 +20,6 @@
 #include <test/fuzz/util/mempool.h>
 #include <test/util/mining.h>
 #include <test/util/random.h>
-#include <test/util/script.h>
 #include <test/util/setup_common.h>
 #include <test/util/txmempool.h>
 #include <txmempool.h>
@@ -70,8 +68,8 @@ void initialize_tx_pool()
 
     for (int i = 0; i < 2 * COINBASE_MATURITY; ++i) {
         COutPoint prevout{MineBlock(g_setup->m_node, {
-            .coinbase_output_script = P2WSH_EMPTY,
-        })};
+                                                         .coinbase_output_script = DeterministicP2PKScript(),
+                                                     })};
         if (i < COINBASE_MATURITY) {
             // Remember the txids to avoid expensive disk access later on
             g_outpoints_coinbase_init_mature.push_back(prevout);
@@ -269,6 +267,8 @@ FUZZ_TARGET(ephemeral_package_eval, .init = initialize_tx_pool)
                 Assert((int)outpoints.size() >= num_in && num_in > 0);
 
                 CAmount amount_in{0};
+                std::vector<CTxOut> spent_outputs;
+                spent_outputs.reserve(num_in);
                 for (int i = 0; i < num_in; ++i) {
                     // Pop random outpoint. We erase them to avoid double-spending
                     // while in this loop, but later add them back (unless last_tx).
@@ -283,12 +283,13 @@ FUZZ_TARGET(ephemeral_package_eval, .init = initialize_tx_pool)
                         outpoints.erase(pop);
                     }
                     // no need to update or erase from outpoints_value
-                    amount_in += outpoints_value.at(outpoint);
+                    const CTxOut prevout{outpoints_value.at(outpoint), DeterministicP2PKScript()};
+                    amount_in += prevout.nValue;
+                    spent_outputs.push_back(prevout);
 
                     // Create input
                     CTxIn in;
                     in.prevout = outpoint;
-                    in.scriptWitness.stack = P2WSH_EMPTY_TRUE_STACK;
 
                     tx_mut.vin.push_back(in);
                 }
@@ -296,14 +297,16 @@ FUZZ_TARGET(ephemeral_package_eval, .init = initialize_tx_pool)
                 const auto amount_fee = fuzzed_data_provider.ConsumeIntegralInRange<CAmount>(0, amount_in);
                 const auto amount_out = (amount_in - amount_fee) / num_out;
                 for (int i = 0; i < num_out; ++i) {
-                    tx_mut.vout.emplace_back(amount_out, P2WSH_EMPTY);
+                    tx_mut.vout.emplace_back(amount_out, DeterministicP2PKScript());
                 }
 
                 // Note output amounts can naturally drop to dust on their own.
                 if (!outpoint_to_rbf && fuzzed_data_provider.ConsumeBool()) {
                     uint32_t dust_index = fuzzed_data_provider.ConsumeIntegralInRange<uint32_t>(0, num_out);
-                    tx_mut.vout.insert(tx_mut.vout.begin() + dust_index, CTxOut(0, P2WSH_EMPTY));
+                    tx_mut.vout.insert(tx_mut.vout.begin() + dust_index, CTxOut(0, DeterministicP2PKScript()));
                 }
+
+                SignDeterministicP2PKInputs(tx_mut, spent_outputs);
 
                 auto tx = MakeTransactionRef(tx_mut);
                 // Restore previously removed outpoints, except in-package outpoints (to allow RBF)
@@ -417,6 +420,9 @@ FUZZ_TARGET(tx_package_eval, .init = initialize_tx_pool)
                 Assert(!outpoints.empty());
 
                 CAmount amount_in{0};
+                std::vector<CTxOut> spent_outputs;
+                spent_outputs.reserve(num_in + 1);
+                bool valid_witness{true};
                 for (size_t i = 0; i < num_in; ++i) {
                     // Pop random outpoint. We erase them to avoid double-spending
                     // while in this loop, but later add them back (unless last_tx).
@@ -425,18 +431,17 @@ FUZZ_TARGET(tx_package_eval, .init = initialize_tx_pool)
                     const auto outpoint = *pop;
                     outpoints.erase(pop);
                     // no need to update or erase from outpoints_value
-                    amount_in += outpoints_value.at(outpoint);
+                    const CTxOut prevout{outpoints_value.at(outpoint), DeterministicP2PKScript()};
+                    amount_in += prevout.nValue;
+                    spent_outputs.push_back(prevout);
 
                     // Create input
                     const auto sequence = ConsumeSequence(fuzzed_data_provider);
-                    const auto script_sig = CScript{};
-                    const auto script_wit_stack = fuzzed_data_provider.ConsumeBool() ? P2WSH_EMPTY_TRUE_STACK : P2WSH_EMPTY_TWO_STACK;
+                    valid_witness &= fuzzed_data_provider.ConsumeBool();
 
                     CTxIn in;
                     in.prevout = outpoint;
                     in.nSequence = sequence;
-                    in.scriptSig = script_sig;
-                    in.scriptWitness.stack = script_wit_stack;
 
                     tx_mut.vin.push_back(in);
                 }
@@ -445,16 +450,18 @@ FUZZ_TARGET(tx_package_eval, .init = initialize_tx_pool)
                 bool dup_input = fuzzed_data_provider.ConsumeBool();
                 if (dup_input) {
                     tx_mut.vin.push_back(tx_mut.vin.back());
+                    spent_outputs.push_back(spent_outputs.back());
                 }
 
                 // Refer to a non-existent input
                 if (fuzzed_data_provider.ConsumeBool()) {
                     tx_mut.vin.emplace_back();
+                    valid_witness = false;
                 }
 
-                // Make a p2pk output to make sigops adjusted vsize to violate TRUC rules, potentially, which is never spent
+                // Reserve one output to vary package topology and fee distribution.
                 if (last_tx && amount_in > 1000 && fuzzed_data_provider.ConsumeBool()) {
-                    tx_mut.vout.emplace_back(1000, CScript() << std::vector<unsigned char>(33, 0x02) << OP_CHECKSIG);
+                    tx_mut.vout.emplace_back(1000, DeterministicP2PKScript());
                     // Don't add any other outputs.
                     num_out = 1;
                     amount_in -= 1000;
@@ -463,7 +470,13 @@ FUZZ_TARGET(tx_package_eval, .init = initialize_tx_pool)
                 const auto amount_fee = fuzzed_data_provider.ConsumeIntegralInRange<CAmount>(0, amount_in);
                 const auto amount_out = (amount_in - amount_fee) / num_out;
                 for (int i = 0; i < num_out; ++i) {
-                    tx_mut.vout.emplace_back(amount_out, P2WSH_EMPTY);
+                    tx_mut.vout.emplace_back(amount_out, DeterministicP2PKScript());
+                }
+                if (valid_witness) {
+                    SignDeterministicP2PKInputs(tx_mut, spent_outputs);
+                } else {
+                    for (auto& input : tx_mut.vin)
+                        input.scriptWitness.stack = {{}, {}};
                 }
                 auto tx = MakeTransactionRef(tx_mut);
                 // Restore previously removed outpoints, except in-package outpoints

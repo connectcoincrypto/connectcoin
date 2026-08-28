@@ -7,6 +7,7 @@
 #define CONNECTCOIN_CONSENSUS_VALIDATION_H
 
 #include <consensus/consensus.h>
+#include <prevector.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <script/script.h>
@@ -15,6 +16,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <iterator>
 #include <memory>
 #include <string>
 #include <vector>

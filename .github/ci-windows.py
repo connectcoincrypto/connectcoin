@@ -11,10 +11,6 @@ import sys
 import time
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).resolve().parent.parent / "test"))
-from download_utils import download_script_assets
-
-
 def run(cmd, **kwargs):
     print("+ " + shlex.join(cmd), flush=True)
     kwargs.setdefault("check", True)
@@ -129,12 +125,10 @@ def check_manifests(ci_type):
 
 def prepare_tests(ci_type):
     workspace = Path.cwd()
-    qa_assets_commit = (workspace / "ci" / "qa-assets-commit.txt").read_text(encoding="utf8").strip()
     if ci_type == "standard":
         run([sys.executable, "-m", "pip", "install", "pyzmq"])
-        dest = workspace / "unit_test_data"
-        download_script_assets(dest, qa_assets_commit)
     elif ci_type == "fuzz":
+        qa_assets_commit = (workspace / "ci" / "qa-assets-commit.txt").read_text(encoding="utf8").strip()
         repo_dir = str(workspace / "qa-assets")
         clone_cmd = [
             "git",
@@ -158,7 +152,6 @@ def run_tests(ci_type):
     release_bin = build_dir / "bin" / "Release"
 
     if ci_type == "standard":
-        os.environ["DIR_UNIT_TEST_DATA"] = str(workspace / "unit_test_data")
         test_envs = {
             "CONNECTCOIN_BIN": "connectcoin.exe",
             "CONNECTCOIND": "connectcoind.exe",

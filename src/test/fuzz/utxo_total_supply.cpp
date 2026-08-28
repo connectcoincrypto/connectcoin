@@ -23,6 +23,7 @@
 #include <util/check.h>
 #include <validation.h>
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <functional>
@@ -55,15 +56,16 @@ FUZZ_TARGET(utxo_total_supply)
         return chainman.ActiveHeight();
     };
     const auto PrepareNextBlock = [&]() {
-        // Use OP_FALSE to avoid BIP30 check from hitting early
+        // Use a distinct valid P2PK output while assembling the template so
+        // the intentional duplicate coinbase does not hit BIP30 too early.
         auto block = PrepareBlock(node, {
-            .coinbase_output_script = CScript() << OP_FALSE,
-        });
-        // Replace OP_FALSE with OP_TRUE
+                                            .coinbase_output_script = DeterministicP2PKScript(/*key_id=*/2),
+                                        });
+        // Replace it with the deterministic output used by mined fixtures.
         {
             CMutableTransaction tx{*block->vtx.back()};
             tx.nLockTime = 0; // Use the same nLockTime for all as we want to duplicate one of them.
-            tx.vout.at(0).scriptPubKey = CScript{} << OP_TRUE;
+            tx.vout.at(0).SetScriptPubKey(DeterministicP2PKScript());
             block->vtx.back() = MakeTransactionRef(tx);
         }
         return block;
@@ -98,7 +100,16 @@ FUZZ_TARGET(utxo_total_supply)
     const auto AppendRandomTxo = [&](CMutableTransaction& tx) {
         const auto& txo = txos.at(fuzzed_data_provider.ConsumeIntegralInRange<size_t>(0, txos.size() - 1));
         tx.vin.emplace_back(txo.first);
-        tx.vout.emplace_back(txo.second.nValue, txo.second.scriptPubKey); // "Forward" coin with no fee
+        tx.vout.push_back(txo.second); // "Forward" coin with no fee
+
+        std::vector<CTxOut> spent_outputs;
+        spent_outputs.reserve(tx.vin.size());
+        for (const auto& input : tx.vin) {
+            const auto match{std::ranges::find_if(txos, [&](const auto& entry) { return entry.first == input.prevout; })};
+            if (match == txos.end()) return; // The modified coinbase is intentionally invalid.
+            spent_outputs.push_back(match->second);
+        }
+        SignDeterministicP2PKInputs(tx, spent_outputs);
     };
     const auto UpdateUtxoStats = [&](bool wipe_cache) {
         LOCK(chainman.GetMutex());
@@ -132,6 +143,7 @@ FUZZ_TARGET(utxo_total_supply)
         // Create duplicate (CScript should match exact format as in CreateNewBlock)
         CMutableTransaction tx{*current_block->vtx.front()};
         tx.vin.at(0).scriptSig = duplicate_coinbase_script;
+        tx.vin.at(0).scriptWitness.SetNull();
 
         // Mine block and create next block template
         current_block->vtx.front() = MakeTransactionRef(tx);
@@ -167,6 +179,17 @@ FUZZ_TARGET(utxo_total_supply)
             [&] {
                 // Append the current block to the active chain
                 node::RegenerateCommitments(*current_block, chainman);
+                if (duplicate_coinbase_height == ActiveHeight() + 1) {
+                    // ConnectCoin stores the witness commitment in the coinbase
+                    // scriptSig. Restore the original scriptSig at the selected
+                    // height so this transaction can genuinely duplicate the
+                    // first mined coinbase and exercise the BIP30 check.
+                    CMutableTransaction tx{*current_block->vtx.front()};
+                    tx.vin.at(0).scriptSig = duplicate_coinbase_script;
+                    tx.vin.at(0).scriptWitness.SetNull();
+                    current_block->vtx.front() = MakeTransactionRef(tx);
+                    current_block->hashMerkleRoot = BlockMerkleRoot(*current_block);
+                }
                 const bool was_valid = !MineBlock(node, current_block).IsNull();
 
                 const uint256 prev_hash_serialized{utxo_stats.hashSerialized};

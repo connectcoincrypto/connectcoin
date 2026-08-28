@@ -315,9 +315,10 @@ bool ParseFixedPoint(std::string_view val, int decimals, int64_t *amount_out)
         }
         if (ptr < end && IsDigit(val[ptr])) {
             while (ptr < end && IsDigit(val[ptr])) {
-                if (exponent > (UPPER_BOUND / 10LL))
+                const int64_t digit{val[ptr] - '0'};
+                if (exponent > (UPPER_BOUND - digit) / 10LL)
                     return false; /* overflow */
-                exponent = exponent * 10 + val[ptr] - '0';
+                exponent = exponent * 10 + digit;
                 ++ptr;
             }
         } else return false; /* missing expected digit */
@@ -328,14 +329,20 @@ bool ParseFixedPoint(std::string_view val, int decimals, int64_t *amount_out)
     /* finalize exponent */
     if (exponent_sign)
         exponent = -exponent;
-    exponent = exponent - point_ofs + mantissa_tzeros;
+    const auto exponent_without_point{CheckedAdd(exponent, -int64_t{point_ofs})};
+    if (!exponent_without_point) return false; /* overflow */
+    const auto exponent_without_decimals{CheckedAdd(*exponent_without_point, int64_t{mantissa_tzeros})};
+    if (!exponent_without_decimals) return false; /* overflow */
+    exponent = *exponent_without_decimals;
 
     /* finalize mantissa */
     if (mantissa_sign)
         mantissa = -mantissa;
 
     /* convert to one 64-bit fixed-point value */
-    exponent += decimals;
+    const auto scaled_exponent{CheckedAdd(exponent, int64_t{decimals})};
+    if (!scaled_exponent) return false; /* overflow */
+    exponent = *scaled_exponent;
     if (exponent < 0)
         return false; /* cannot represent values smaller than 10^-decimals */
     if (exponent > 18)

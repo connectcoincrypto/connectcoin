@@ -34,6 +34,7 @@
 #include <pow.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
+#include <pubkey.h>
 #include <rpc/blockchain.h>
 #include <rpc/mining.h>
 #include <rpc/protocol.h>

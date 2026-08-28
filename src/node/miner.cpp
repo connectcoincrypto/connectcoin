@@ -44,7 +44,6 @@
 #include <algorithm>
 #include <compare>
 #include <condition_variable>
-#include <cstddef>
 #include <functional>
 #include <numeric>
 #include <span>

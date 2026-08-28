@@ -33,7 +33,7 @@ inline bool IsTrivialSignetChallenge(std::span<const uint8_t> challenge)
     if (challenge.size() == 1 && challenge[0] >= 0x51 && challenge[0] <= 0x60) {
         return true; // OP_1 through OP_16
     }
-    if (challenge.size() < 2 || challenge.size() > 76 || challenge[0] + 1 != challenge.size()) {
+    if (challenge.size() < 2 || challenge.size() > 76 || std::size_t{challenge[0]} + 1 != challenge.size()) {
         return false;
     }
     const auto value{challenge.subspan(1)};

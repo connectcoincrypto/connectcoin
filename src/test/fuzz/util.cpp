@@ -2,10 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <test/fuzz/util.h>
+
 #include <consensus/amount.h>
 #include <pubkey.h>
-#include <test/fuzz/util.h>
-#include <test/util/script.h>
+#include <test/util/mining.h>
 #include <util/check.h>
 #include <util/overflow.h>
 #include <util/rbf.h>
@@ -42,10 +43,10 @@ NodeSeconds ConsumeTime(FuzzedDataProvider& fuzzed_data_provider, const std::opt
 CMutableTransaction ConsumeTransaction(FuzzedDataProvider& fuzzed_data_provider, const std::optional<std::vector<Txid>>& prevout_txids, const int max_num_in, const int max_num_out) noexcept
 {
     CMutableTransaction tx_mut;
-    const auto p2wsh_op_true = fuzzed_data_provider.ConsumeBool();
+    const auto typed_p2pk = fuzzed_data_provider.ConsumeBool();
     tx_mut.version = fuzzed_data_provider.ConsumeBool() ?
-                          CTransaction::CURRENT_VERSION :
-                          fuzzed_data_provider.ConsumeIntegral<uint32_t>();
+                         CTransaction::CURRENT_VERSION :
+                         fuzzed_data_provider.ConsumeIntegral<uint32_t>();
     tx_mut.nLockTime = fuzzed_data_provider.ConsumeIntegral<uint32_t>();
     const auto num_in = fuzzed_data_provider.ConsumeIntegralInRange<int>(0, max_num_in);
     const auto num_out = fuzzed_data_provider.ConsumeIntegralInRange<int>(0, max_num_out);
@@ -55,10 +56,12 @@ CMutableTransaction ConsumeTransaction(FuzzedDataProvider& fuzzed_data_provider,
                                     Txid::FromUint256(ConsumeUInt256(fuzzed_data_provider));
         const auto index_out = fuzzed_data_provider.ConsumeIntegralInRange<uint32_t>(0, max_num_out);
         const auto sequence = ConsumeSequence(fuzzed_data_provider);
-        const auto script_sig = p2wsh_op_true ? CScript{} : ConsumeScript(fuzzed_data_provider);
+        const auto script_sig = typed_p2pk ? CScript{} : ConsumeScript(fuzzed_data_provider);
         CScriptWitness script_wit;
-        if (p2wsh_op_true) {
-            script_wit.stack = std::vector<std::vector<uint8_t>>{WITNESS_STACK_ELEM_OP_TRUE};
+        if (typed_p2pk) {
+            // Structurally valid type-1 witness; callers that know the spent
+            // outputs can replace it with a valid deterministic signature.
+            script_wit.stack = {std::vector<uint8_t>(64)};
         } else {
             script_wit = ConsumeScriptWitness(fuzzed_data_provider);
         }
@@ -72,8 +75,8 @@ CMutableTransaction ConsumeTransaction(FuzzedDataProvider& fuzzed_data_provider,
     }
     for (int i = 0; i < num_out; ++i) {
         const auto amount = fuzzed_data_provider.ConsumeIntegralInRange<CAmount>(-10, 50 * COIN + 10);
-        const auto script_pk = p2wsh_op_true ?
-                                   P2WSH_OP_TRUE :
+        const auto script_pk = typed_p2pk ?
+                                   DeterministicP2PKScript() :
                                    ConsumeScript(fuzzed_data_provider, /*maybe_p2wsh=*/true);
         tx_mut.vout.emplace_back(amount, script_pk);
     }

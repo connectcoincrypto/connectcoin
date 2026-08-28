@@ -2,18 +2,18 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <node/txdownloadman.h>
+
 #include <consensus/validation.h>
 #include <node/context.h>
 #include <node/mempool_args.h>
 #include <node/miner.h>
-#include <node/txdownloadman.h>
 #include <node/txdownloadman_impl.h>
 #include <test/fuzz/FuzzedDataProvider.h>
 #include <test/fuzz/fuzz.h>
 #include <test/fuzz/util.h>
 #include <test/fuzz/util/mempool.h>
 #include <test/util/mining.h>
-#include <test/util/script.h>
 #include <test/util/setup_common.h>
 #include <test/util/time.h>
 #include <test/util/txmempool.h>
@@ -66,7 +66,8 @@ static CTransactionRef MakeTransactionSpending(const std::vector<COutPoint>& out
     if (add_witness) {
         tx.vin[0].scriptWitness.stack.push_back({1});
     }
-    for (size_t o = 0; o < num_outputs; ++o) tx.vout.emplace_back(CENT, P2WSH_OP_TRUE);
+    for (size_t o = 0; o < num_outputs; ++o)
+        tx.vout.emplace_back(CENT, DeterministicP2PKScript());
     return MakeTransactionRef(tx);
 }
 static std::vector<COutPoint> PickCoins(FuzzedDataProvider& fuzzed_data_provider)

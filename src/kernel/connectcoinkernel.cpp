@@ -22,8 +22,10 @@
 #include <node/chainstate.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
+#include <pubkey.h>
 #include <script/interpreter.h>
 #include <script/script.h>
+#include <script/script_error.h>
 #include <script/verify_flags.h>
 #include <serialize.h>
 #include <streams.h>

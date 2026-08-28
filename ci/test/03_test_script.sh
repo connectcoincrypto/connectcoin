@@ -62,9 +62,8 @@ if [[ "${RUN_IWYU}" == true ]]; then
   git commit -m "dummy CI ./src init for IWYU"
 fi
 
-QA_ASSETS_COMMIT="$(<"${BASE_ROOT_DIR}/ci/qa-assets-commit.txt")"
-
 if [ "$RUN_FUZZ_TESTS" = "true" ]; then
+  QA_ASSETS_COMMIT="$(<"${BASE_ROOT_DIR}/ci/qa-assets-commit.txt")"
   export DIR_FUZZ_IN=${DIR_QA_ASSETS}/fuzz_corpora/
   if [ ! -d "${DIR_QA_ASSETS}/.git" ]; then
     if [ -e "${DIR_QA_ASSETS}" ]; then
@@ -82,10 +81,6 @@ if [ "$RUN_FUZZ_TESTS" = "true" ]; then
     echo "Using qa-assets repo from commit ..."
     git log -1
   )
-elif [ "$RUN_UNIT_TESTS" = "true" ]; then
-  export DIR_UNIT_TEST_DATA=${DIR_QA_ASSETS}/unit_test_data/
-  mkdir -p "$DIR_UNIT_TEST_DATA"
-  ${CI_RETRY_EXE} curl --location --fail "https://raw.githubusercontent.com/bitcoin-core/qa-assets/${QA_ASSETS_COMMIT}/unit_test_data/script_assets_test.json" -o "${DIR_UNIT_TEST_DATA}/script_assets_test.json"
 fi
 
 # Make sure default datadir does not exist and is never read by creating a dummy file
@@ -191,7 +186,6 @@ if [[ "$CI_OS_NAME" == "macos" && "${GOAL}" = "install deploy" ]]; then
 fi
 
 if [ "$RUN_UNIT_TESTS" = "true" ]; then
-  DIR_UNIT_TEST_DATA="${DIR_UNIT_TEST_DATA}" \
   LD_LIBRARY_PATH="${DEPENDS_DIR}/${HOST}/lib" \
   CTEST_OUTPUT_ON_FAILURE=ON \
   ctest --test-dir "${BASE_BUILD_DIR}" \

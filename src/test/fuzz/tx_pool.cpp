@@ -15,7 +15,6 @@
 #include <policy/truc_policy.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
-#include <script/script.h>
 #include <sync.h>
 #include <test/fuzz/FuzzedDataProvider.h>
 #include <test/fuzz/fuzz.h>
@@ -23,7 +22,6 @@
 #include <test/fuzz/util/mempool.h>
 #include <test/util/mining.h>
 #include <test/util/random.h>
-#include <test/util/script.h>
 #include <test/util/setup_common.h>
 #include <test/util/txmempool.h>
 #include <txmempool.h>
@@ -75,8 +73,8 @@ void initialize_tx_pool()
 
     for (int i = 0; i < 2 * COINBASE_MATURITY; ++i) {
         COutPoint prevout{MineBlock(g_setup->m_node, {
-            .coinbase_output_script = P2WSH_OP_TRUE,
-        })};
+                                                         .coinbase_output_script = DeterministicP2PKScript(),
+                                                     })};
         // Remember the txids to avoid expensive disk access later on
         auto& outpoints = i < COINBASE_MATURITY ?
                               g_outpoints_coinbase_init_mature :
@@ -316,9 +314,12 @@ FUZZ_TARGET(tx_pool_standard, .init = initialize_tx_pool)
 
     // Helper to query an amount
     const CCoinsViewMemPool amount_view{WITH_LOCK(::cs_main, return &chainstate.CoinsTip()), tx_pool};
-    const auto GetAmount = [&](const COutPoint& outpoint) {
+    const auto GetOutput = [&](const COutPoint& outpoint) {
         auto coin{amount_view.GetCoin(outpoint).value()};
-        return coin.out.nValue;
+        return coin.out;
+    };
+    const auto GetAmount = [&](const COutPoint& outpoint) {
+        return GetOutput(outpoint).nValue;
     };
 
     LIMITED_WHILE (fuzzed_data_provider.ConsumeBool(), 100) {
@@ -341,39 +342,33 @@ FUZZ_TARGET(tx_pool_standard, .init = initialize_tx_pool)
             const auto num_out = fuzzed_data_provider.ConsumeIntegralInRange<int>(1, outpoints_rbf.size() * 2);
 
             CAmount amount_in{0};
+            std::vector<CTxOut> spent_outputs;
+            spent_outputs.reserve(num_in);
             for (int i = 0; i < num_in; ++i) {
                 // Pop random outpoint
                 auto pop = outpoints_rbf.begin();
                 std::advance(pop, fuzzed_data_provider.ConsumeIntegralInRange<size_t>(0, outpoints_rbf.size() - 1));
                 const auto outpoint = *pop;
                 outpoints_rbf.erase(pop);
-                amount_in += GetAmount(outpoint);
+                const CTxOut prevout{GetOutput(outpoint)};
+                amount_in += prevout.nValue;
+                spent_outputs.push_back(prevout);
 
                 // Create input
                 const auto sequence = ConsumeSequence(fuzzed_data_provider);
-                const auto script_sig = CScript{};
-                const auto script_wit_stack = std::vector<std::vector<uint8_t>>{WITNESS_STACK_ELEM_OP_TRUE};
                 CTxIn in;
                 in.prevout = outpoint;
                 in.nSequence = sequence;
-                in.scriptSig = script_sig;
-                in.scriptWitness.stack = script_wit_stack;
 
                 tx_mut.vin.push_back(in);
             }
 
-            // Check sigops in mempool + block template creation
-            bool add_sigops{fuzzed_data_provider.ConsumeBool()};
-
             const auto amount_fee = fuzzed_data_provider.ConsumeIntegralInRange<CAmount>(-1000, amount_in);
             const auto amount_out = (amount_in - amount_fee) / num_out;
             for (int i = 0; i < num_out; ++i) {
-                if (i == 0 && add_sigops) {
-                    tx_mut.vout.emplace_back(amount_out, CScript() << std::vector<unsigned char>(33, 0x02) << OP_CHECKSIG);
-                } else {
-                    tx_mut.vout.emplace_back(amount_out, P2WSH_OP_TRUE);
-                }
+                tx_mut.vout.emplace_back(amount_out, DeterministicP2PKScript());
             }
+            SignDeterministicP2PKInputs(tx_mut, spent_outputs);
 
             auto tx = MakeTransactionRef(tx_mut);
             // Restore previously removed outpoints

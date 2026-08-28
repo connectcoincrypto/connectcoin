@@ -9,7 +9,6 @@
 #include <node/blockstorage.h>
 #include <node/mining_types.h>
 #include <test/util/mining.h>
-#include <test/util/script.h>
 #include <test/util/setup_common.h>
 #include <test/util/time.h>
 #include <test/util/txmempool.h>
@@ -119,7 +118,7 @@ std::vector<std::pair<COutPoint, CAmount>> ResetChainmanAndMempool(TestingSetup&
     setup.LoadVerifyActivateChainstate();
 
     node::BlockCreateOptions options;
-    options.coinbase_output_script = P2WSH_OP_TRUE;
+    options.coinbase_output_script = DeterministicP2PKScript();
 
     std::vector<std::pair<COutPoint, CAmount>> mature_coinbase;
     for (int i = 0; i < 2 * COINBASE_MATURITY; ++i) {

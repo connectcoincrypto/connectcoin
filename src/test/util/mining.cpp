@@ -16,9 +16,9 @@
 #include <pow.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
+#include <script/interpreter.h>
 #include <script/script.h>
 #include <sync.h>
-#include <test/util/script.h>
 #include <uint256.h>
 #include <util/check.h>
 #include <validation.h>
@@ -30,19 +30,52 @@
 #include <memory>
 #include <optional>
 #include <utility>
+#include <vector>
 
 using node::NodeContext;
 
-CScript DeterministicP2PKScript()
+namespace {
+CKey DeterministicP2PKKey(uint8_t key_id)
 {
-    constexpr std::array<unsigned char, 32> secret{{
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    }};
+    assert(key_id > 0);
+    std::array<unsigned char, 32> secret{};
+    secret.back() = key_id;
     CKey key;
     key.Set(secret.begin(), secret.end(), /*fCompressedIn=*/true);
     assert(key.IsValid());
+    return key;
+}
+} // namespace
+
+CScript DeterministicP2PKScript(uint8_t key_id)
+{
+    const CKey key{DeterministicP2PKKey(key_id)};
     return GetScriptForDestination(WitnessV1Taproot{XOnlyPubKey{key.GetPubKey()}});
+}
+
+void SignDeterministicP2PKInputs(CMutableTransaction& tx, const std::vector<CTxOut>& spent_outputs)
+{
+    assert(tx.vin.size() == spent_outputs.size());
+    for (auto& input : tx.vin)
+        input.scriptWitness.SetNull();
+
+    PrecomputedTransactionData txdata;
+    txdata.Init(tx, std::vector<CTxOut>{spent_outputs}, /*force=*/true);
+    const CKey key{DeterministicP2PKKey(/*key_id=*/1)};
+    const XOnlyPubKey expected_pubkey{key.GetPubKey()};
+
+    for (size_t input_index{0}; input_index < tx.vin.size(); ++input_index) {
+        assert(spent_outputs[input_index].GetP2PKPubKey() == expected_pubkey);
+        ScriptExecutionData execdata;
+        execdata.m_annex_init = true;
+        execdata.m_annex_present = false;
+        uint256 sighash;
+        assert(SignatureHashSchnorr(sighash, execdata, tx, input_index, SIGHASH_DEFAULT,
+                                    SigVersion::TAPROOT, txdata, MissingDataBehavior::ASSERT_FAIL));
+        std::array<unsigned char, 64> signature;
+        assert(key.SignSchnorr(sighash, signature, /*merkle_root=*/nullptr, uint256{}));
+        tx.vin[input_index].scriptWitness.stack.emplace_back(signature.begin(), signature.end());
+    }
 }
 
 COutPoint generatetoaddress(const NodeContext& node, const std::string& address)

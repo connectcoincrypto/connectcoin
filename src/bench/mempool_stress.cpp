@@ -8,8 +8,8 @@
 #include <random.h>
 #include <script/script.h>
 #include <sync.h>
-#include <test/util/setup_common.h>
 #include <test/util/mining.h>
+#include <test/util/setup_common.h>
 #include <test/util/txmempool.h>
 #include <txmempool.h>
 #include <validation.h>
@@ -18,6 +18,7 @@
 #include <cstdint>
 #include <memory>
 #include <optional>
+#include <utility>
 #include <vector>
 
 class CCoinsViewCache;

@@ -2,14 +2,16 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <node/mempool_args.h>
 #include <policy/rbf.h>
+
+#include <node/mempool_args.h>
 #include <primitives/transaction.h>
 #include <sync.h>
 #include <test/fuzz/FuzzedDataProvider.h>
 #include <test/fuzz/fuzz.h>
 #include <test/fuzz/util.h>
 #include <test/fuzz/util/mempool.h>
+#include <test/util/mining.h>
 #include <test/util/setup_common.h>
 #include <test/util/time.h>
 #include <test/util/txmempool.h>
@@ -133,7 +135,7 @@ FUZZ_TARGET(package_rbf, .init = initialize_package_rbf)
         CMutableTransaction parent;
         parent.vin.resize(1);
         parent.vin[0].prevout = g_outpoints.at(iter++);
-        parent.vout.emplace_back(0, CScript());
+        parent.vout.emplace_back(0, DeterministicP2PKScript());
 
         mempool_txs.emplace_back(parent);
         const auto parent_entry = ConsumeTxMemPoolEntry(fuzzed_data_provider, mempool_txs.back());

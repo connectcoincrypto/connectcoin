@@ -40,8 +40,10 @@ ADDRESS_CCRT1_P2WSH_OP_TRUE = 'ccrt1qft5p2uhsdcdc3l2ua4ap5qqfg4pjaqlp250x7us7a8q
 b58chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 
 
-def create_deterministic_address_ccrt1_p2pk(secret=(1).to_bytes(32, 'big')):
+def create_deterministic_address_ccrt1_p2pk(secret=None):
     """Return a deterministic type-1 address and its x-only public key."""
+    if secret is None:
+        secret = (1).to_bytes(32, 'big')
     xonly, _ = compute_xonly_pubkey(secret)
     if xonly is None:
         raise ValueError("invalid deterministic private key")

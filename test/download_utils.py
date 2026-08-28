@@ -4,7 +4,6 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
 
-import sys
 import time
 import urllib.request
 
@@ -47,19 +46,3 @@ def download_from_url(url, archive):
             raise RuntimeError(f"Download incomplete: expected {total_size} bytes, got {progress_bytes} bytes")
 
     print('\n', flush=True, end="") # Flush to avoid error output on the same line.
-
-
-def download_script_assets(script_assets_dir, qa_assets_commit):
-    script_assets_dir.mkdir(parents=True, exist_ok=True)
-    script_assets = script_assets_dir / "script_assets_test.json"
-    url = f"https://raw.githubusercontent.com/bitcoin-core/qa-assets/{qa_assets_commit}/unit_test_data/script_assets_test.json"
-    try:
-        download_from_url(url, script_assets)
-    except Exception as e:
-        print(f"\nDownload failed: {e}", file=sys.stderr)
-        print("Retrying download after failure ...", file=sys.stderr)
-        time.sleep(12)
-        try:
-            download_from_url(url, script_assets)
-        except Exception as e2:
-            sys.exit(e2)

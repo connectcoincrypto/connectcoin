@@ -136,7 +136,9 @@ class ImportPrunedFundsTest(BitcoinTestFramework):
         node = self.nodes[0]
 
         # Create a transaction
-        utxo = node.listunspent()[0]
+        # The wallet also contains the small self-payments imported above, so
+        # select a large mining reward instead of relying on list order.
+        utxo = max(node.listunspent(), key=lambda entry: entry["amount"])
         addr = node.getnewaddress()
         tx1_id = node.send(outputs=[{addr: 1}], inputs=[utxo])["txid"]
         tx1_fee = node.gettransaction(tx1_id)["fee"]

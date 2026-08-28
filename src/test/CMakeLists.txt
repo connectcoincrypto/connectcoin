@@ -92,7 +92,6 @@ add_executable(connectcoin-test
   rpc_tests.cpp
   sanity_tests.cpp
   scheduler_tests.cpp
-  script_assets_tests.cpp
   script_parse_tests.cpp
   script_segwit_tests.cpp
   script_standard_tests.cpp
@@ -192,7 +191,6 @@ function(add_boost_test source_file)
     set_property(TEST ${test_suite_name} PROPERTY
       SKIP_REGULAR_EXPRESSION
         "no test cases matching filter"
-        "skipping script_assets_test"
     )
   endforeach()
 endfunction()

@@ -13,7 +13,7 @@
 #include <test/fuzz/FuzzedDataProvider.h>
 #include <test/fuzz/fuzz.h>
 #include <test/fuzz/util.h>
-#include <test/util/script.h>
+#include <test/util/mining.h>
 #include <test/util/random.h>
 #include <test/util/setup_common.h>
 #include <test/util/time.h>
@@ -67,7 +67,7 @@ FUZZ_TARGET(mini_miner, .init = initialize_miner)
             available_coins.pop_front();
         }
         for (uint32_t n{0}; n < num_outputs; ++n) {
-            mtx.vout.emplace_back(100, P2WSH_OP_TRUE);
+            mtx.vout.emplace_back(100, DeterministicP2PKScript());
         }
         CTransactionRef tx = MakeTransactionRef(mtx);
         TestMemPoolEntryHelper entry;

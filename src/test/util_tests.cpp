@@ -1003,6 +1003,10 @@ BOOST_AUTO_TEST_CASE(test_ParseFixedPoint)
     BOOST_CHECK(!ParseFixedPoint("1.1e", 8, &amount));
     BOOST_CHECK(!ParseFixedPoint("1.1e-", 8, &amount));
     BOOST_CHECK(!ParseFixedPoint("1.", 8, &amount));
+    BOOST_CHECK(!ParseFixedPoint("1e9223372036854775808", 8, &amount));
+    BOOST_CHECK(!ParseFixedPoint("1e9223372036854775807", 8, &amount));
+    BOOST_CHECK(!ParseFixedPoint("1.00e-9223372036854775807", 8, &amount));
+    BOOST_CHECK(!ParseFixedPoint("10e9223372036854775807", 8, &amount));
 
     // Test with 3 decimal places for fee rates in con/vB.
     BOOST_CHECK(ParseFixedPoint("0.001", 3, &amount));

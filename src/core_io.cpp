@@ -14,6 +14,7 @@
 #include <prevector.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
+#include <pubkey.h>
 #include <script/descriptor.h>
 #include <script/interpreter.h>
 #include <script/script.h>

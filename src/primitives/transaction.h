@@ -180,15 +180,15 @@ public:
     void SerializePayload(Stream& s) const
     {
         ::Serialize(s, type);
-        switch (static_cast<TxOutputType>(type)) {
-        case TxOutputType::P2PK:
+        switch (type) {
+        case static_cast<uint8_t>(TxOutputType::P2PK):
             if (const auto pubkey{GetP2PKPubKey()}) {
                 ::Serialize(s, *pubkey);
             } else {
                 throw std::ios_base::failure("Inconsistent P2PK transaction output");
             }
             break;
-        case TxOutputType::INVALID:
+        case static_cast<uint8_t>(TxOutputType::INVALID):
             // Type 0 has no payload and is rejected by consensus. Keeping it
             // parseable lets null objects and malformed transactions be
             // handled without ever putting Script back on the wire.
@@ -204,15 +204,15 @@ public:
         uint8_t encoded_type{0};
         ::Unserialize(s, encoded_type);
         type = encoded_type;
-        switch (static_cast<TxOutputType>(encoded_type)) {
-        case TxOutputType::P2PK:
+        switch (encoded_type) {
+        case static_cast<uint8_t>(TxOutputType::P2PK):
             ::Unserialize(s, p2pk_pubkey);
             if (!p2pk_pubkey.IsFullyValid()) {
                 throw std::ios_base::failure("Invalid P2PK x-only public key");
             }
             SetP2PK(p2pk_pubkey);
             break;
-        case TxOutputType::INVALID:
+        case static_cast<uint8_t>(TxOutputType::INVALID):
             p2pk_pubkey = {};
             scriptPubKey.clear();
             break;

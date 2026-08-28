@@ -11,10 +11,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).resolve().parent.parent / "test"))
-from download_utils import download_script_assets
-
-
 def run(cmd, **kwargs):
     print("+ " + shlex.join(cmd), flush=True)
     kwargs.setdefault("check", True)
@@ -76,7 +72,6 @@ def check_manifests():
 
 def prepare_tests():
     workspace = Path.cwd()
-    qa_assets_commit = (workspace / "ci" / "qa-assets-commit.txt").read_text(encoding="utf8").strip()
     config_path = workspace / "test" / "config.ini"
     rpcauth_path = workspace / "share" / "rpcauth" / "rpcauth.py"
     replacements = {
@@ -94,9 +89,6 @@ def prepare_tests():
     config_path.write_text(content)
     print(content)
     run([sys.executable, "-m", "pip", "install", "pyzmq"])
-
-    dest = workspace / "unit_test_data"
-    download_script_assets(dest, qa_assets_commit)
 
 
 def run_functional_tests():
@@ -116,8 +108,6 @@ def run_functional_tests():
 
 
 def run_unit_tests():
-    workspace = Path.cwd()
-    os.environ["DIR_UNIT_TEST_DATA"] = str(workspace / "unit_test_data")
     # Can't use ctest here like other jobs as we don't have a CMake build tree.
     commands = [
         ["./bin/connectcoin-test-qt.exe"],

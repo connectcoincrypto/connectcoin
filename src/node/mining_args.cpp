@@ -12,6 +12,9 @@
 #include <node/mining_types.h>
 #include <policy/feerate.h>
 #include <policy/policy.h>
+#include <primitives/transaction.h>
+#include <pubkey.h>
+#include <script/script.h>
 #include <tinyformat.h>
 #include <util/moneystr.h>
 #include <util/result.h>
@@ -19,6 +22,7 @@
 
 #include <cstdint>
 #include <optional>
+#include <span>
 #include <string>
 #include <utility>
 

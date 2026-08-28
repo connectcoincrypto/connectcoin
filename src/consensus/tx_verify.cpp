@@ -10,7 +10,6 @@
 #include <consensus/consensus.h>
 #include <consensus/validation.h>
 #include <primitives/transaction.h>
-#include <script/interpreter.h>
 #include <script/script.h>
 #include <tinyformat.h>
 #include <util/check.h>

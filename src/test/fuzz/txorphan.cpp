@@ -14,6 +14,7 @@
 #include <test/fuzz/FuzzedDataProvider.h>
 #include <test/fuzz/fuzz.h>
 #include <test/fuzz/util.h>
+#include <test/util/mining.h>
 #include <test/util/setup_common.h>
 #include <test/util/time.h>
 #include <uint256.h>
@@ -73,7 +74,7 @@ FUZZ_TARGET(txorphan, .init = initialize_orphanage)
             // output amount will not affect txorphanage
             tx_mut.vout.reserve(num_out);
             for (uint32_t i = 0; i < num_out; i++) {
-                tx_mut.vout.emplace_back(CAmount{0}, CScript{});
+                tx_mut.vout.emplace_back(CAmount{0}, DeterministicP2PKScript());
             }
             auto new_tx = MakeTransactionRef(tx_mut);
             // add newly constructed outpoints to the coin pool
@@ -281,15 +282,14 @@ FUZZ_TARGET(txorphan_protected, .init = initialize_orphanage)
                 // try making transactions unique by setting a random nSequence, but allow duplicate transactions if they happen
                 tx_mut.vin.emplace_back(prevout, CScript{}, fuzzed_data_provider.ConsumeIntegralInRange<uint32_t>(0, CTxIn::SEQUENCE_FINAL));
             }
-            // output amount or spendability will not affect txorphanage
+            // Output amount or spendability will not affect txorphanage. Use
+            // witness padding to retain variable transaction weights now that
+            // typed outputs have a fixed payload size.
             tx_mut.vout.reserve(num_out);
             for (uint32_t i = 0; i < num_out; i++) {
                 const auto payload_size = fuzzed_data_provider.ConsumeIntegralInRange<unsigned int>(0, 100000);
-                if (payload_size) {
-                    tx_mut.vout.emplace_back(0, CScript() << OP_RETURN << std::vector<unsigned char>(payload_size));
-                } else {
-                    tx_mut.vout.emplace_back(0, CScript{});
-                }
+                if (payload_size) tx_mut.vin[0].scriptWitness.stack.emplace_back(payload_size);
+                tx_mut.vout.emplace_back(0, DeterministicP2PKScript());
             }
             auto new_tx = MakeTransactionRef(tx_mut);
             // add newly constructed outpoints to the coin pool
@@ -429,9 +429,7 @@ FUZZ_TARGET(txorphanage_sim)
             // Construct 1 to 16 outputs.
             auto num_outputs = rng.randrange<unsigned>(1 << rng.randrange<unsigned>(5)) + 1;
             for (unsigned output = 0; output < num_outputs; ++output) {
-                CScript scriptpubkey;
-                scriptpubkey.resize(provider.ConsumeIntegralInRange<unsigned>(20, 34));
-                tx.vout.emplace_back(CAmount{0}, std::move(scriptpubkey));
+                tx.vout.emplace_back(CAmount{0}, DeterministicP2PKScript());
             }
             // Construct inputs (one for each dependency).
             for (auto& [child, parent] : deps) {
