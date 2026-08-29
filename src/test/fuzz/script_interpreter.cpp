@@ -7,6 +7,7 @@
 #include <test/fuzz/FuzzedDataProvider.h>
 #include <test/fuzz/fuzz.h>
 #include <test/fuzz/util.h>
+#include <test/util/random.h>
 #include <util/check.h>
 
 #include <cstdint>
@@ -50,6 +51,7 @@ FUZZ_TARGET(script_interpreter)
 /** Differential fuzzing for SignatureHash with and without cache. */
 FUZZ_TARGET(sighash_cache)
 {
+    SeedRandomStateForTest(SeedRand::ZEROS);
     FuzzedDataProvider provider(buffer.data(), buffer.size());
 
     // Get inputs to the sighash function that won't change across types.
