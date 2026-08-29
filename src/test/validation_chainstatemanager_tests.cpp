@@ -467,8 +467,8 @@ struct SnapshotTestSetup : TestChain100Setup {
 //! Test basic snapshot activation.
 BOOST_FIXTURE_TEST_CASE(chainstatemanager_activate_snapshot, SnapshotTestSetup)
 {
-    if (Params().GetAvailableSnapshotHeights().empty()) {
-        BOOST_TEST_MESSAGE("assumeutxo disabled until typed-output snapshots are regenerated");
+    if (!Params().AssumeutxoForHeight(110)) {
+        BOOST_TEST_MESSAGE("height-110 assumeutxo commitment not regenerated for typed outputs");
         return;
     }
     this->SetupSnapshot();
@@ -729,8 +729,8 @@ BOOST_FIXTURE_TEST_CASE(invalidate_block_and_reconsider_fork, TestChain100Setup)
 //! restart, and that new blocks can be connected to both chainstates.
 BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_init, SnapshotTestSetup)
 {
-    if (Params().GetAvailableSnapshotHeights().empty()) {
-        BOOST_TEST_MESSAGE("assumeutxo disabled until typed-output snapshots are regenerated");
+    if (!Params().AssumeutxoForHeight(110)) {
+        BOOST_TEST_MESSAGE("height-110 assumeutxo commitment not regenerated for typed outputs");
         return;
     }
     ChainstateManager& chainman = *Assert(m_node.chainman);
@@ -807,8 +807,8 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_init, SnapshotTestSetup)
 
 BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_completion, SnapshotTestSetup)
 {
-    if (Params().GetAvailableSnapshotHeights().empty()) {
-        BOOST_TEST_MESSAGE("assumeutxo disabled until typed-output snapshots are regenerated");
+    if (!Params().AssumeutxoForHeight(110)) {
+        BOOST_TEST_MESSAGE("height-110 assumeutxo commitment not regenerated for typed outputs");
         return;
     }
     this->SetupSnapshot();
@@ -891,8 +891,8 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_completion, SnapshotTestSetup
 
 BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_completion_hash_mismatch, SnapshotTestSetup)
 {
-    if (Params().GetAvailableSnapshotHeights().empty()) {
-        BOOST_TEST_MESSAGE("assumeutxo disabled until typed-output snapshots are regenerated");
+    if (!Params().AssumeutxoForHeight(110)) {
+        BOOST_TEST_MESSAGE("height-110 assumeutxo commitment not regenerated for typed outputs");
         return;
     }
     auto chainstates = this->SetupSnapshot();

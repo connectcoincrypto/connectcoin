@@ -189,10 +189,19 @@ BOOST_AUTO_TEST_CASE(test_assumeutxo)
 {
     const auto params = CreateChainParams(*m_node.args, ChainType::REGTEST);
 
-    // Typed outputs changed UTXO serialization and all deterministic block
-    // hashes. Never advertise the stale Bitcoin-format snapshots.
-    BOOST_CHECK(params->GetAvailableSnapshotHeights().empty());
+    const auto heights{params->GetAvailableSnapshotHeights()};
+    BOOST_REQUIRE_EQUAL(heights.size(), 1U);
+    BOOST_CHECK_EQUAL(heights.front(), 200);
     BOOST_CHECK(!params->AssumeutxoForHeight(110));
+
+    const auto out200{params->AssumeutxoForHeight(200)};
+    BOOST_REQUIRE(out200);
+    BOOST_CHECK_EQUAL(out200->hash_serialized.ToString(), "b9ea4c5f1e0cd6d3d9780cc86c44a26e3308165d22cadf86ea9886e82a1026ca");
+    BOOST_CHECK_EQUAL(out200->m_chain_tx_count, 201U);
+
+    const auto out200_by_hash{params->AssumeutxoForBlockhash(uint256{"0d8d658b2ee38defdddcbddc97274346471b152657bbb4a11226d482d448af8c"})};
+    BOOST_REQUIRE(out200_by_hash);
+    BOOST_CHECK_EQUAL(out200_by_hash->height, 200);
     BOOST_CHECK(!params->AssumeutxoForBlockhash(uint256::ONE));
 }
 

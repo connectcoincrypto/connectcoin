@@ -517,10 +517,15 @@ public:
         fDefaultConsistencyChecks = true;
         m_is_mockable_chain = true;
 
-        // Typed outputs changed both block hashes and the serialized UTXO set.
-        // Do not advertise stale snapshots; add freshly generated ConnectCoin
-        // entries only after the typed-output chain is finalized.
-        m_assumeutxo_data.clear();
+        m_assumeutxo_data = {
+            {
+                // Deterministic regtest commitment used by the utxo_snapshot fuzz targets.
+                .height = 200,
+                .hash_serialized = AssumeutxoHash{uint256{"b9ea4c5f1e0cd6d3d9780cc86c44a26e3308165d22cadf86ea9886e82a1026ca"}},
+                .m_chain_tx_count = 201,
+                .blockhash = uint256{"0d8d658b2ee38defdddcbddc97274346471b152657bbb4a11226d482d448af8c"},
+            },
+        };
 
         chainTxData = ChainTxData{
             .nTime = 0,
