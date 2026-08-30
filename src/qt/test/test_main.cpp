@@ -4,6 +4,7 @@
 
 #include <connectcoin-build-config.h> // IWYU pragma: keep
 
+#include <chainparams.h>
 #include <interfaces/init.h>
 #include <interfaces/node.h>
 #include <qt/bitcoin.h>
@@ -54,9 +55,16 @@ int main(int argc, char* argv[])
     gArgs.ForceSetArg("-dnsseed", "0");
     gArgs.ForceSetArg("-fixedseeds", "0");
     gArgs.ForceSetArg("-natpmp", "0");
+    // LIGHT and FAST are consensus-equivalent. The GUI test creates a short
+    // chain and must not reserve or initialize a 2 GiB dataset.
+    gArgs.ForceSetArg("-randomxfast", "0");
 
     std::string error;
     if (!gArgs.ReadConfigFiles(error, true)) qWarning() << error.c_str();
+    // BasicTestingSetup selected regtest before the RandomX test override was
+    // installed. Rebuild the global parameters so app initialization also uses
+    // LIGHT mode instead of prewarming the 2 GiB FAST dataset.
+    SelectParams(ChainType::REGTEST);
 
     // Prefer the "minimal" platform for the test instead of the normal default
     // platform ("xcb", "windows", or "cocoa") so tests can't unintentionally
@@ -86,6 +94,10 @@ int main(int argc, char* argv[])
     int num_test_failures{0};
 
     const auto run_test = [](QObject& test) {
+        // Individual test fixtures may clear gArgs during teardown. Restore
+        // LIGHT mode before every test so a later fixture cannot allocate the
+        // 2 GiB FAST dataset.
+        gArgs.ForceSetArg("-randomxfast", "0");
         const int failures{QTest::qExec(&test)};
         if (failures != 0) {
             std::cerr << test.metaObject()->className() << ": " << failures << " failed test(s)\n";

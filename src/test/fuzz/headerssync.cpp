@@ -105,7 +105,10 @@ FUZZ_TARGET(headers_sync_state, .init = initialize_headers_sync_state_fuzz)
         }
 
         if (headers.empty()) return;
-        auto result = headers_sync.ProcessNextHeaders(headers, fuzzed_data_provider.ConsumeBool());
+        // Proof-of-work is covered independently. Rehashing every generated
+        // header with RandomX would make this state-machine fuzz target
+        // prohibitively slow without increasing its structural coverage.
+        auto result = headers_sync.ProcessNextHeaders(headers, fuzzed_data_provider.ConsumeBool(), /*pow_checked=*/true);
         requested_more = result.request_more;
 
         if (result.request_more) {

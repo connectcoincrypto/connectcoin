@@ -49,6 +49,19 @@ endif()
 target_compile_options(randomx PRIVATE
   "$<$<COMPILE_LANGUAGE:C,CXX>:$<TARGET_PROPERTY:sanitize_interface,INTERFACE_COMPILE_OPTIONS>>"
 )
+# Debug builds enable -ftrapv project-wide. RandomX's VM and hashing code use
+# intentional modular integer arithmetic, so trapping there aborts valid
+# LIGHT/interpreter execution (notably on i686).
+target_compile_options(randomx PRIVATE
+  "$<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang>:-fno-trapv>"
+)
+# RandomX deliberately relies on defined unsigned wraparound and truncation.
+# Keep the memory/thread and true-UB sanitizer coverage while suppressing only
+# Clang's integer checks for defined behavior in this vendored implementation.
+target_compile_options(randomx PRIVATE
+  "$<$<COMPILE_LANG_AND_ID:C,Clang,AppleClang>:-fno-sanitize=unsigned-integer-overflow,unsigned-shift-base,implicit-integer-conversion>"
+  "$<$<COMPILE_LANG_AND_ID:CXX,Clang,AppleClang>:-fno-sanitize=unsigned-integer-overflow,unsigned-shift-base,implicit-integer-conversion>"
+)
 unset(randomx_core_compile_options)
 unset(randomx_core_compile_definitions)
 target_link_options(randomx PRIVATE

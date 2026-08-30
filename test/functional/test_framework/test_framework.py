@@ -1206,4 +1206,14 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
         path = Path(_path)
         if not path.is_relative_to(self.options.tmpdir):
             raise AssertionError(f"Trying to delete #{path} outside of #{self.options.tmpdir}")
-        shutil.rmtree(path)
+        # Windows can keep debug.log locked briefly after the node process has
+        # exited. Give the handle time to close instead of turning a successful
+        # functional test into a cleanup failure.
+        for attempt in range(5):
+            try:
+                shutil.rmtree(path)
+                break
+            except PermissionError:
+                if attempt == 4:
+                    raise
+                time.sleep(0.1 * (attempt + 1))

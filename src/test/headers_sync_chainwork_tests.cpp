@@ -7,7 +7,6 @@
 #include <consensus/params.h>
 #include <headerssync.h>
 #include <net_processing.h>
-#include <pow.h>
 #include <test/util/common.h>
 #include <test/util/setup_common.h>
 #include <validation.h>
@@ -43,7 +42,7 @@ using State = HeadersSyncState::State;
     } while (false)
 
 // Keep this above MAX_HEADERS_RESULTS so the presync/redownload boundary is
-// exercised without making every RandomX-enabled fixture hash 15,000 headers.
+// exercised without constructing a mainnet-scale fixture chain.
 constexpr size_t TARGET_BLOCKS{3'000};
 constexpr arith_uint256 CHAIN_WORK{TARGET_BLOCKS * 2};
 
@@ -96,24 +95,18 @@ struct HeadersGeneratorSetup : public RegTestingSetup {
     }
 
 private:
-    /** Search for a nonce to meet (regtest) proof of work */
-    void FindProofOfWork(CBlockHeader& starting_header);
     /**
      * Generate headers in a chain that build off a given starting hash, using
      * the given nVersion, advancing time by 1 second from the starting
-     * prev_time, and with a fixed merkle root hash.
+     * prev_time, and with a fixed merkle root hash. The tests pass
+     * pow_checked=true when processing these synthetic headers: proof-of-work
+     * validation is covered separately, while this suite exercises the header
+     * sync state machine and chainwork accounting.
      */
     std::vector<CBlockHeader> GenerateHeaders(size_t count,
             uint256 prev_hash, int32_t nVersion, uint32_t prev_time,
             const uint256& merkle_root, uint32_t nBits);
 };
-
-void HeadersGeneratorSetup::FindProofOfWork(CBlockHeader& starting_header)
-{
-    while (!CheckProofOfWork(starting_header, nullptr, Params().GetConsensus())) {
-        ++starting_header.nNonce;
-    }
-}
 
 std::vector<CBlockHeader> HeadersGeneratorSetup::GenerateHeaders(
         const size_t count, uint256 prev_hash, const int32_t nVersion,
@@ -127,7 +120,6 @@ std::vector<CBlockHeader> HeadersGeneratorSetup::GenerateHeaders(
         next_header.nTime = ++prev_time;
         next_header.nBits = nBits;
 
-        FindProofOfWork(next_header);
         prev_hash = next_header.GetHash();
     }
     return headers;
@@ -156,7 +148,7 @@ BOOST_AUTO_TEST_CASE(sneaky_redownload)
 
     // Just feed one header and check state.
     // Pretend the message is still "full", so we don't abort.
-    CHECK_RESULT(hss.ProcessNextHeaders({{first_chain.front()}}, /*full_headers_message=*/true),
+    CHECK_RESULT(hss.ProcessNextHeaders({{first_chain.front()}}, /*full_headers_message=*/true, /*pow_checked=*/true),
         hss, /*exp_state=*/State::PRESYNC,
         /*exp_success=*/true, /*exp_request_more=*/true,
         /*exp_headers_size=*/0, /*exp_pow_validated_prev=*/std::nullopt,
@@ -164,7 +156,7 @@ BOOST_AUTO_TEST_CASE(sneaky_redownload)
 
     // This chain should look valid, and we should have met the proof-of-work
     // requirement during PRESYNC and transitioned to REDOWNLOAD.
-    CHECK_RESULT(hss.ProcessNextHeaders(std::span{first_chain}.subspan(1), true),
+    CHECK_RESULT(hss.ProcessNextHeaders(std::span{first_chain}.subspan(1), true, /*pow_checked=*/true),
         hss, /*exp_state=*/State::REDOWNLOAD,
         /*exp_success=*/true, /*exp_request_more=*/true,
         /*exp_headers_size=*/0, /*exp_pow_validated_prev=*/std::nullopt,
@@ -176,7 +168,7 @@ BOOST_AUTO_TEST_CASE(sneaky_redownload)
     static_assert(TARGET_BLOCKS / COMMITMENT_PERIOD == 25);
 
     // Try to sneakily feed back the second chain during REDOWNLOAD.
-    CHECK_RESULT(hss.ProcessNextHeaders(second_chain, true),
+    CHECK_RESULT(hss.ProcessNextHeaders(second_chain, true, /*pow_checked=*/true),
         hss, /*exp_state=*/State::FINAL,
         /*exp_success=*/false, // Foiled! We detected mismatching headers.
         /*exp_request_more=*/false,
@@ -195,7 +187,7 @@ BOOST_AUTO_TEST_CASE(happy_path)
 
         // Sufficient work transitions us from PRESYNC to REDOWNLOAD:
         const auto genesis_hash{genesis.GetHash()};
-        CHECK_RESULT(hss.ProcessNextHeaders(first_chain, full_headers_message),
+        CHECK_RESULT(hss.ProcessNextHeaders(first_chain, full_headers_message, /*pow_checked=*/true),
             hss, /*exp_state=*/State::REDOWNLOAD,
             /*exp_success=*/true, /*exp_request_more=*/true,
             /*exp_headers_size=*/0, /*exp_pow_validated_prev=*/std::nullopt,
@@ -203,14 +195,14 @@ BOOST_AUTO_TEST_CASE(happy_path)
 
         // Process only so that the internal threshold isn't exceeded, meaning
         // validated headers shouldn't be returned yet:
-        CHECK_RESULT(hss.ProcessNextHeaders({first_chain.begin(), REDOWNLOAD_BUFFER_SIZE}, true),
+        CHECK_RESULT(hss.ProcessNextHeaders({first_chain.begin(), REDOWNLOAD_BUFFER_SIZE}, true, /*pow_checked=*/true),
             hss, /*exp_state=*/State::REDOWNLOAD,
             /*exp_success=*/true, /*exp_request_more=*/true,
             /*exp_headers_size=*/0, /*exp_pow_validated_prev=*/std::nullopt,
             /*exp_locator_hash=*/first_chain[REDOWNLOAD_BUFFER_SIZE - 1].GetHash());
 
         // We start receiving headers for permanent storage before completing:
-        CHECK_RESULT(hss.ProcessNextHeaders({{first_chain[REDOWNLOAD_BUFFER_SIZE]}}, true),
+        CHECK_RESULT(hss.ProcessNextHeaders({{first_chain[REDOWNLOAD_BUFFER_SIZE]}}, true, /*pow_checked=*/true),
             hss, /*exp_state=*/State::REDOWNLOAD,
             /*exp_success=*/true, /*exp_request_more=*/true,
             /*exp_headers_size=*/1, /*exp_pow_validated_prev=*/genesis_hash,
@@ -218,7 +210,7 @@ BOOST_AUTO_TEST_CASE(happy_path)
 
         // Feed in remaining headers, meeting the work threshold again and
         // completing the REDOWNLOAD phase:
-        CHECK_RESULT(hss.ProcessNextHeaders({first_chain.begin() + REDOWNLOAD_BUFFER_SIZE + 1, first_chain.end()}, full_headers_message),
+        CHECK_RESULT(hss.ProcessNextHeaders({first_chain.begin() + REDOWNLOAD_BUFFER_SIZE + 1, first_chain.end()}, full_headers_message, /*pow_checked=*/true),
             hss, /*exp_state=*/State::FINAL,
             /*exp_success=*/true, /*exp_request_more=*/false,
             // All headers except the one already returned above:
@@ -237,7 +229,7 @@ BOOST_AUTO_TEST_CASE(too_little_work)
     BOOST_REQUIRE_EQUAL(hss.GetState(), State::PRESYNC);
 
     // Pretend just the first message is "full", so we don't abort.
-    CHECK_RESULT(hss.ProcessNextHeaders({{second_chain.front()}}, true),
+    CHECK_RESULT(hss.ProcessNextHeaders({{second_chain.front()}}, true, /*pow_checked=*/true),
         hss, /*exp_state=*/State::PRESYNC,
         /*exp_success=*/true, /*exp_request_more=*/true,
         /*exp_headers_size=*/0, /*exp_pow_validated_prev=*/std::nullopt,
@@ -246,7 +238,7 @@ BOOST_AUTO_TEST_CASE(too_little_work)
     // Tell the sync logic that the headers message was not full, implying no
     // more headers can be requested. For a low-work-chain, this should cause
     // the sync to end with no headers for acceptance.
-    CHECK_RESULT(hss.ProcessNextHeaders(std::span{second_chain}.subspan(1), false),
+    CHECK_RESULT(hss.ProcessNextHeaders(std::span{second_chain}.subspan(1), false, /*pow_checked=*/true),
         hss, /*exp_state=*/State::FINAL,
         // Nevertheless, no validation errors should have been detected with the
         // chain:
