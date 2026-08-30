@@ -378,7 +378,7 @@ std::vector<RPCResult> TxDoc(const TxDocOptions& opts)
                 {RPCResult::Type::NUM, "height", "The height of the prevout"},
                 {RPCResult::Type::STR_AMOUNT, "value", "The value in " + CURRENCY_UNIT},
                 {RPCResult::Type::NUM, "type", "ConnectCoin output type (1 is P2PK Schnorr)"},
-                {RPCResult::Type::STR_HEX, "pubkey", "The 32-byte x-only public key"},
+                {RPCResult::Type::STR_HEX, "pubkey", /*optional=*/true, "The 32-byte x-only public key (only present for P2PK outputs)"},
                 {RPCResult::Type::OBJ, "scriptPubKey", "", ScriptPubKeyDoc()},
             }
         );
@@ -423,7 +423,7 @@ std::vector<RPCResult> TxDoc(const TxDocOptions& opts)
                     {RPCResult::Type::STR_AMOUNT, "value", "The value in " + CURRENCY_UNIT},
                     {RPCResult::Type::NUM, "n", "index"},
                     {RPCResult::Type::NUM, "type", "ConnectCoin output type (1 is P2PK Schnorr)"},
-                    {RPCResult::Type::STR_HEX, "pubkey", "The 32-byte x-only public key"},
+                    {RPCResult::Type::STR_HEX, "pubkey", /*optional=*/true, "The 32-byte x-only public key (only present for P2PK outputs)"},
                     {RPCResult::Type::OBJ, "scriptPubKey", "", ScriptPubKeyDoc()},
                 },
                 opts.wallet ?
