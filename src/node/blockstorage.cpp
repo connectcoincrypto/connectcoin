@@ -145,8 +145,11 @@ bool BlockTreeDB::LoadBlockIndexGuts(const Consensus::Params& consensusParams, s
                 pindexNew->nStatus        = diskindex.nStatus;
                 pindexNew->nTx            = diskindex.nTx;
 
-                if (!CheckProofOfWork(pindexNew->GetBlockHash(), pindexNew->nBits, consensusParams)) {
-                    LogError("%s: CheckProofOfWork failed: %s\n", __func__, pindexNew->ToString());
+                // RandomX keys depend on ancestry, which is not guaranteed to
+                // be populated in LevelDB key order. Full PoW is checked when
+                // blocks are accepted and by VerifyDB.
+                if (!DeriveTarget(pindexNew->nBits, consensusParams.powLimit)) {
+                    LogError("%s: invalid proof-of-work target: %s\n", __func__, pindexNew->ToString());
                     return false;
                 }
 
@@ -1067,9 +1070,10 @@ bool BlockManager::ReadBlock(CBlock& block, const FlatFilePos& pos, const std::o
 
     const auto block_hash{block.GetHash()};
 
-    // Check the header
-    if (!CheckProofOfWork(block_hash, block.nBits, GetConsensus())) {
-        LogError("Errors in block header at %s while reading block", pos.ToString());
+    // A position-only read may be importing a block whose ancestry is not yet
+    // indexed, so only context-free target validation is possible here.
+    if (!DeriveTarget(block.nBits, GetConsensus().powLimit)) {
+        LogError("Invalid proof-of-work target at %s while reading block", pos.ToString());
         return false;
     }
 

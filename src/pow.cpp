@@ -7,9 +7,137 @@
 
 #include <arith_uint256.h>
 #include <chain.h>
+#include <crypto/randomx_util.h>
 #include <primitives/block.h>
+#include <span.h>
+#include <streams.h>
 #include <uint256.h>
 #include <util/check.h>
+#include <util/log.h>
+
+#include <algorithm>
+#include <chrono>
+#include <future>
+#include <memory>
+#include <mutex>
+#include <vector>
+
+namespace {
+
+struct RandomXCacheEntry {
+    uint256 key;
+    RandomXMemoryMode mode;
+    uint64_t last_use;
+    std::shared_future<std::shared_ptr<const RandomXContext>> context;
+};
+
+std::shared_ptr<const RandomXContext> MakeRandomXContext(const uint256& key, RandomXMemoryMode mode)
+{
+    try {
+        return std::make_shared<const RandomXContext>(RandomXAlgorithm::V2, MakeByteSpan(key), mode);
+    } catch (const std::exception& e) {
+        if (mode != RandomXMemoryMode::FAST) throw;
+        LogWarning("Unable to initialize the RandomX FAST dataset (%s); falling back to consensus-equivalent LIGHT mode.\n", e.what());
+        return std::make_shared<const RandomXContext>(RandomXAlgorithm::V2, MakeByteSpan(key), RandomXMemoryMode::LIGHT);
+    }
+}
+
+class RandomXContextCache
+{
+public:
+    std::shared_ptr<const RandomXContext> Get(const uint256& key, RandomXMemoryMode mode)
+    {
+        std::shared_future<std::shared_ptr<const RandomXContext>> future;
+        {
+            std::lock_guard lock{m_mutex};
+            CleanupRetired();
+            auto it{Find(key, mode)};
+            if (it == m_entries.end()) {
+                it = Insert(key, mode);
+            } else {
+                it->last_use = ++m_clock;
+            }
+            future = it->context;
+        }
+
+        try {
+            return future.get();
+        } catch (...) {
+            std::lock_guard lock{m_mutex};
+            const auto it{Find(key, mode)};
+            if (it != m_entries.end()) m_entries.erase(it);
+            throw;
+        }
+    }
+
+    void Prepare(const uint256& key, RandomXMemoryMode mode)
+    {
+        std::lock_guard lock{m_mutex};
+        CleanupRetired();
+        auto it{Find(key, mode)};
+        if (it == m_entries.end()) {
+            Insert(key, mode);
+        } else {
+            it->last_use = ++m_clock;
+        }
+    }
+
+private:
+    static constexpr size_t MAX_CONTEXTS{2};
+    std::mutex m_mutex;
+    uint64_t m_clock{0};
+    std::vector<RandomXCacheEntry> m_entries;
+    std::vector<std::shared_future<std::shared_ptr<const RandomXContext>>> m_retired;
+
+    auto Find(const uint256& key, RandomXMemoryMode mode)
+    {
+        return std::find_if(m_entries.begin(), m_entries.end(), [&](const auto& entry) {
+            return entry.key == key && entry.mode == mode;
+        });
+    }
+
+    void CleanupRetired()
+    {
+        std::erase_if(m_retired, [](const auto& future) {
+            return future.wait_for(std::chrono::seconds{0}) == std::future_status::ready;
+        });
+    }
+
+    auto Insert(const uint256& key, RandomXMemoryMode mode)
+    {
+        // Destroying the last shared_future returned by std::async may wait for
+        // the task. Keep evicted builds alive until they are ready so callers
+        // (notably UpdateTip while holding cs_main) never block on eviction.
+        auto future{std::async(std::launch::async, [key, mode] {
+            return MakeRandomXContext(key, mode);
+        }).share()};
+        m_entries.push_back(RandomXCacheEntry{key, mode, ++m_clock, std::move(future)});
+
+        if (m_entries.size() > MAX_CONTEXTS) {
+            const auto oldest{std::min_element(m_entries.begin(), m_entries.end(), [](const auto& a, const auto& b) {
+                return a.last_use < b.last_use;
+            })};
+            if (oldest->context.wait_for(std::chrono::seconds{0}) != std::future_status::ready) {
+                m_retired.push_back(std::move(oldest->context));
+            }
+            m_entries.erase(oldest);
+        }
+        return Find(key, mode);
+    }
+};
+
+RandomXContextCache& GetRandomXContextCache()
+{
+    static RandomXContextCache cache;
+    return cache;
+}
+
+RandomXMemoryMode GetRandomXMemoryMode(const Consensus::Params& params)
+{
+    return params.randomx_fast_mode ? RandomXMemoryMode::FAST : RandomXMemoryMode::LIGHT;
+}
+
+} // namespace
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
@@ -168,4 +296,74 @@ bool CheckProofOfWorkImpl(uint256 hash, unsigned int nBits, const Consensus::Par
         return false;
 
     return true;
+}
+
+int RandomXSeedHeight(int block_height, const Consensus::Params& params)
+{
+    assert(block_height >= 0);
+    if (params.randomx_epoch_blocks == 0) return 0;
+    assert(params.randomx_epoch_lag > 0);
+    assert(params.randomx_epoch_lag < params.randomx_epoch_blocks);
+    if (block_height <= static_cast<int>(params.randomx_epoch_lag)) return 0;
+    return ((block_height - params.randomx_epoch_lag) / params.randomx_epoch_blocks) * params.randomx_epoch_blocks;
+}
+
+uint256 GetRandomXKey(const CBlockIndex* pindexPrev, const Consensus::Params& params)
+{
+    const int block_height{pindexPrev == nullptr ? 0 : pindexPrev->nHeight + 1};
+    const int seed_height{RandomXSeedHeight(block_height, params)};
+    if (seed_height == 0) return params.randomx_bootstrap_key;
+
+    assert(pindexPrev != nullptr);
+    const CBlockIndex* seed_block{pindexPrev->GetAncestor(seed_height)};
+    assert(seed_block != nullptr);
+    return seed_block->GetBlockHash();
+}
+
+uint256 GetPoWHash(const CBlockHeader& header, const uint256& key, const Consensus::Params& params)
+{
+    DataStream stream;
+    stream << header;
+    assert(stream.size() == 80);
+
+    const auto context{GetRandomXContextCache().Get(key, GetRandomXMemoryMode(params))};
+    const auto hash{context->Calculate(MakeByteSpan(stream))};
+    return uint256{MakeUCharSpan(hash)};
+}
+
+bool CheckProofOfWork(const CBlockHeader& header, const CBlockIndex* pindexPrev, const Consensus::Params& params)
+{
+    const int block_height{pindexPrev == nullptr ? 0 : pindexPrev->nHeight + 1};
+    return CheckProofOfWork(header, GetRandomXKey(pindexPrev, params), block_height, params);
+}
+
+bool CheckProofOfWork(const CBlockHeader& header, const uint256& key, int /*block_height*/, const Consensus::Params& params)
+{
+    if (EnableFuzzDeterminism()) return (header.GetHash().data()[31] & 0x80) == 0;
+    return CheckProofOfWorkImpl(GetPoWHash(header, key, params), header.nBits, params);
+}
+
+void PrepareRandomXKey(const uint256& key, const Consensus::Params& params)
+{
+    GetRandomXContextCache().Prepare(key, GetRandomXMemoryMode(params));
+}
+
+void PrepareRandomXKeys(const CBlockIndex* tip, const Consensus::Params& params)
+{
+    // Always prepare the key needed by the block after the active tip. This is
+    // the bootstrap key for a new chain and the current epoch key otherwise.
+    PrepareRandomXKey(GetRandomXKey(tip, params), params);
+
+    if (tip == nullptr || params.randomx_epoch_blocks == 0) return;
+
+    // A key block becomes usable only after randomx_epoch_lag blocks. During
+    // that window, prepare its dataset without allowing arbitrary headers or
+    // side chains to create multi-gigabyte datasets.
+    const int epoch_blocks{static_cast<int>(params.randomx_epoch_blocks)};
+    const int key_height{tip->nHeight - tip->nHeight % epoch_blocks};
+    if (key_height == 0 || tip->nHeight >= key_height + static_cast<int>(params.randomx_epoch_lag)) return;
+
+    const CBlockIndex* key_block{tip->GetAncestor(key_height)};
+    assert(key_block != nullptr);
+    PrepareRandomXKey(key_block->GetBlockHash(), params);
 }

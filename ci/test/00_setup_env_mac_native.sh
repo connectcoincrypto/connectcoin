@@ -17,6 +17,7 @@ export CONNECTCOIN_CONFIG="\
   --preset=dev-mode \
   -DWITH_USDT=OFF \
   -DREDUCE_EXPORTS=ON \
+  -DENABLE_RANDOMX_FAST_TEST=ON \
   -DCMAKE_EXE_LINKER_FLAGS='-Wl,-stack_size -Wl,0x80000' \
 "
 export CONNECTCOIN_CMD="connectcoin -m" # Used in functional tests

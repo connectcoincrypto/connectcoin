@@ -336,7 +336,7 @@ class HTTPBasicsTest (BitcoinTestFramework):
             headers=headers_chunked,
             encode_chunked=True)
         response1 = conn.recv_raw()
-        assert b'{"result":"high-hash","error":null}\n' in response1
+        assert b'{"result":"prev-blk-not-found","error":null}\n' in response1
 
         self.log.info("Check excessive size HTTP request encoded with chunked transfer")
         conn = BitcoinHTTPConnection(self.node)
@@ -692,7 +692,7 @@ class HTTPBasicsTest (BitcoinTestFramework):
 
             # The waiting connection gets processed
             delayed_response = waiting_request.result(timeout=5)
-            assert "620da2900b1e7d0c01b49d37f4a5129a56e8534f2fd924d3c86041c709da3b4c" in delayed_response.decode()
+            assert "ccfa95619bae24b5045dbd91e4410c5279bc757ddad127a25c31d0258ee99342" in delayed_response.decode()
 
             # Close all remaining connections for clean up
             for client in connections:

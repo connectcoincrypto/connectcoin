@@ -14,13 +14,13 @@
   { "exec": "./connectcoin-util",
     "args": ["grind"],
     "return_code": 1,
-    "error_txt": "Must specify block header to grind",
+    "error_txt": "Must specify a block header and, for non-genesis headers, the raw 32-byte RandomX key",
     "description": ""
   },
   { "exec": "./connectcoin-util",
     "args": ["grind", "1", "2"],
     "return_code": 1,
-    "error_txt": "Must specify block header to grind",
+    "error_txt": "Could not decode block header",
     "description": ""
   },
   { "exec": "./connectcoin-util",

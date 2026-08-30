@@ -24,7 +24,7 @@ import time
 
 from .address import create_deterministic_address_ccrt1_p2pk
 from . import coverage
-from .messages import CAddress
+from .messages import CAddress, set_pow_hash_callback
 from .p2p import NetworkThread
 from .test_node import TestNode
 from .util import (
@@ -497,6 +497,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
 
         node.start(*args, **kwargs)
         node.wait_for_rpc_connection()
+        self._install_pow_hash_callback()
 
         if self.options.coveragedir is not None:
             coverage.write_all_rpc_commands(self.options.coveragedir, node._rpc)
@@ -512,9 +513,21 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
         for node in self.nodes:
             node.wait_for_rpc_connection()
 
+        self._install_pow_hash_callback()
+
         if self.options.coveragedir is not None:
             for node in self.nodes:
                 coverage.write_all_rpc_commands(self.options.coveragedir, node._rpc)
+
+    def _install_pow_hash_callback(self):
+        def randomx_pow_hash(header):
+            header_hex = header._serialize_header().hex()
+            for node in self.nodes:
+                if node.running and node.rpc_connected:
+                    return int(node.getpowhash(header_hex), 16)
+            raise RuntimeError("No running regtest node is available to calculate RandomX proof of work")
+
+        set_pow_hash_callback(randomx_pow_hash)
 
     def stop_node(self, i, expected_stderr='', wait=0):
         """Stop a connectcoind test node"""

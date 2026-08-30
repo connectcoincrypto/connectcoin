@@ -170,8 +170,16 @@ static bool GenerateBlock(ChainstateManager& chainman, CBlock&& block, uint64_t&
 {
     block_out.reset();
     block.hashMerkleRoot = BlockMerkleRoot(block);
+    const CBlockIndex* pindex_prev{
+        WITH_LOCK(cs_main, return chainman.m_blockman.LookupBlockIndex(block.hashPrevBlock))};
+    if (pindex_prev == nullptr) {
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Cannot derive RandomX key: previous block is unknown");
+    }
+    const uint256 randomx_key{GetRandomXKey(pindex_prev, chainman.GetConsensus())};
+    const int block_height{pindex_prev->nHeight + 1};
 
-    while (max_tries > 0 && block.nNonce < std::numeric_limits<uint32_t>::max() && !CheckProofOfWork(block.GetHash(), block.nBits, chainman.GetConsensus()) && !chainman.m_interrupt) {
+    while (max_tries > 0 && block.nNonce < std::numeric_limits<uint32_t>::max() &&
+           !CheckProofOfWork(block, randomx_key, block_height, chainman.GetConsensus()) && !chainman.m_interrupt) {
         ++block.nNonce;
         --max_tries;
     }
@@ -739,6 +747,9 @@ static RPCMethod getblocktemplate()
                 {RPCResult::Type::NUM_TIME, "curtime", "current timestamp in " + UNIX_EPOCH_TIME + ". Adjusted for the proposed BIP94 timewarp rule."},
                 {RPCResult::Type::STR, "bits", "compressed target of next block"},
                 {RPCResult::Type::NUM, "height", "The height of the next block"},
+                {RPCResult::Type::STR, "powalgo", "The proof-of-work algorithm ('randomx-v2')"},
+                {RPCResult::Type::STR_HEX, "randomxkey", "Raw RandomX key bytes for this template"},
+                {RPCResult::Type::NUM, "randomxseedheight", "Height of the key block, or 0 while using the bootstrap key"},
                 {RPCResult::Type::STR_HEX, "signet_challenge", /*optional=*/true, "Only on signet"},
                 {RPCResult::Type::STR_HEX, "default_witness_commitment", /*optional=*/true, "a valid witness commitment for the unmodified block template"},
                 {RPCResult::Type::STR, "witness_commitment_location", /*optional=*/true, "where the commitment is encoded; ConnectCoin returns 'coinbase_input'"},
@@ -1075,7 +1086,12 @@ static RPCMethod getblocktemplate()
     }
     result.pushKV("curtime", block.GetBlockTime());
     result.pushKV("bits", strprintf("%08x", block.nBits));
-    result.pushKV("height", pindexPrev->nHeight + 1);
+    const int next_height{pindexPrev->nHeight + 1};
+    const uint256 randomx_key{GetRandomXKey(pindexPrev, consensusParams)};
+    result.pushKV("height", next_height);
+    result.pushKV("powalgo", "randomx-v2");
+    result.pushKV("randomxkey", HexStr(std::span{randomx_key.begin(), randomx_key.end()}));
+    result.pushKV("randomxseedheight", RandomXSeedHeight(next_height, consensusParams));
 
     if (consensusParams.signet_blocks) {
         result.pushKV("signet_challenge", HexStr(consensusParams.signet_challenge));
@@ -1203,6 +1219,45 @@ static RPCMethod submitheader()
     };
 }
 
+/** Test-only RandomX hash oracle used by the functional-test block solver. */
+static RPCMethod getpowhash()
+{
+    return RPCMethod{
+        "getpowhash",
+        "Returns the RandomX v2 proof-of-work hash for a serialized block header.\n"
+        "This RPC is available only on regtest.\n",
+        {
+            {"hexdata", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The 80-byte serialized block header"},
+        },
+        RPCResult{RPCResult::Type::STR_HEX, "hash", "The RandomX proof-of-work hash"},
+        RPCExamples{HelpExampleCli("getpowhash", "\"00000000...\"")},
+        [](const RPCMethod& self, const JSONRPCRequest& request) -> UniValue
+        {
+            ChainstateManager& chainman{EnsureAnyChainman(request.context)};
+            if (!chainman.GetParams().IsMockableChain()) {
+                throw JSONRPCError(RPC_METHOD_NOT_FOUND, "getpowhash is available only on regtest");
+            }
+
+            CBlockHeader header;
+            if (!DecodeHexBlockHeader(header, request.params[0].get_str())) {
+                throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Block header decode failed");
+            }
+
+            const Consensus::Params& consensus{chainman.GetConsensus()};
+            uint256 key{consensus.randomx_bootstrap_key};
+            if (consensus.randomx_epoch_blocks != 0) {
+                const CBlockIndex* pindex_prev{
+                    WITH_LOCK(cs_main, return chainman.m_blockman.LookupBlockIndex(header.hashPrevBlock))};
+                if (pindex_prev == nullptr) {
+                    throw JSONRPCError(RPC_INVALID_PARAMETER, "Previous block is unknown; RandomX key cannot be derived");
+                }
+                key = GetRandomXKey(pindex_prev, consensus);
+            }
+            return GetPoWHash(header, key, consensus).GetHex();
+        },
+    };
+}
+
 void RegisterMiningRPCCommands(CRPCTable& t)
 {
     static const CRPCCommand commands[]{
@@ -1218,6 +1273,7 @@ void RegisterMiningRPCCommands(CRPCTable& t)
         {"hidden", &generatetodescriptor},
         {"hidden", &generateblock},
         {"hidden", &generate},
+        {"hidden", &getpowhash},
     };
     for (const auto& c : commands) {
         t.appendCommand(c.name, &c);

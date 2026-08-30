@@ -116,6 +116,17 @@ struct Params {
     std::array<BIP9Deployment,MAX_VERSION_BITS_DEPLOYMENTS> vDeployments;
     /** Proof of work parameters */
     uint256 powLimit;
+    /** Domain-separated RandomX v2 key used before the first key epoch. */
+    uint256 randomx_bootstrap_key;
+    /** Blocks between RandomX key blocks. Zero keeps the bootstrap key forever. */
+    uint32_t randomx_epoch_blocks{0};
+    /** Delay between a key block and the epoch that uses it. */
+    uint32_t randomx_epoch_lag{0};
+    /**
+     * Runtime memory policy, not a consensus rule: FAST and LIGHT produce the
+     * same hash. Production nodes default to FAST; tests may select LIGHT.
+     */
+    bool randomx_fast_mode{sizeof(void*) >= 8};
     bool fPowAllowMinDifficultyBlocks;
     /**
       * Enforce BIP94 timewarp attack mitigation. On testnet4 this also enforces

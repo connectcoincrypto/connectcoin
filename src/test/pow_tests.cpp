@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(get_next_work)
     // CalculateNextWorkRequired(); redoing the calculation here would be just
     // reimplementing the same code that is written in pow.cpp. Rather than
     // copy that code, we just hardcode the expected result.
-    unsigned int expected_nbits = 0x1c7fff80U;
+    unsigned int expected_nbits = 0x1d02fffdU;
     BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, nLastRetargetTime, consensus), expected_nbits);
     BOOST_CHECK(PermittedDifficultyTransition(consensus, pindexLast.nHeight+1, pindexLast.nBits, expected_nbits));
 }
@@ -139,6 +139,43 @@ BOOST_AUTO_TEST_CASE(CheckProofOfWork_test_zero_target)
     BOOST_CHECK(!CheckProofOfWork(hash, nBits, consensus));
 }
 
+BOOST_AUTO_TEST_CASE(randomx_epoch_schedule)
+{
+    const auto main_params{CreateChainParams(*m_node.args, ChainType::MAIN)};
+    const auto& main_consensus{main_params->GetConsensus()};
+    BOOST_CHECK_EQUAL(RandomXSeedHeight(0, main_consensus), 0);
+    BOOST_CHECK_EQUAL(RandomXSeedHeight(64, main_consensus), 0);
+    BOOST_CHECK_EQUAL(RandomXSeedHeight(2048, main_consensus), 0);
+    BOOST_CHECK_EQUAL(RandomXSeedHeight(2111, main_consensus), 0);
+    BOOST_CHECK_EQUAL(RandomXSeedHeight(2112, main_consensus), 2048);
+    BOOST_CHECK_EQUAL(RandomXSeedHeight(4159, main_consensus), 2048);
+    BOOST_CHECK_EQUAL(RandomXSeedHeight(4160, main_consensus), 4096);
+
+    const auto regtest_params{CreateChainParams(*m_node.args, ChainType::REGTEST)};
+    BOOST_CHECK_EQUAL(RandomXSeedHeight(1000000, regtest_params->GetConsensus()), 0);
+
+    // Exercise contextual key selection across two deliberately short epochs.
+    // This catches off-by-one differences between the numeric schedule and
+    // the ancestry lookup used by validation.
+    auto short_epoch_consensus{regtest_params->GetConsensus()};
+    short_epoch_consensus.randomx_epoch_blocks = 4;
+    short_epoch_consensus.randomx_epoch_lag = 2;
+    std::vector<CBlockIndex> blocks(10);
+    std::vector<uint256> hashes(10);
+    for (int height{0}; height < static_cast<int>(blocks.size()); ++height) {
+        blocks[height].nHeight = height;
+        blocks[height].pprev = height == 0 ? nullptr : &blocks[height - 1];
+        hashes[height].data()[0] = static_cast<uint8_t>(height + 1);
+        blocks[height].phashBlock = &hashes[height];
+        blocks[height].BuildSkip();
+    }
+    BOOST_CHECK(GetRandomXKey(nullptr, short_epoch_consensus) == short_epoch_consensus.randomx_bootstrap_key);
+    BOOST_CHECK(GetRandomXKey(&blocks[4], short_epoch_consensus) == short_epoch_consensus.randomx_bootstrap_key); // candidate 5
+    BOOST_CHECK(GetRandomXKey(&blocks[5], short_epoch_consensus) == hashes[4]); // candidate 6
+    BOOST_CHECK(GetRandomXKey(&blocks[8], short_epoch_consensus) == hashes[4]); // candidate 9
+    BOOST_CHECK(GetRandomXKey(&blocks[9], short_epoch_consensus) == hashes[8]); // candidate 10
+}
+
 BOOST_AUTO_TEST_CASE(GetBlockProofEquivalentTime_test)
 {
     const auto chainParams = CreateChainParams(*m_node.args, ChainType::MAIN);
@@ -184,6 +221,13 @@ void sanity_check_chainparams(const ArgsManager& args, ChainType chain_type)
     BOOST_CHECK(pow_compact != 0);
     BOOST_CHECK(!over);
     BOOST_CHECK(UintToArith256(consensus.powLimit) >= pow_compact);
+
+    // Every hardcoded genesis must satisfy the RandomX v2 proof of work. Use
+    // LIGHT mode here to keep the all-networks parameter test memory-bounded;
+    // LIGHT and FAST are consensus-identical.
+    auto light_consensus{consensus};
+    light_consensus.randomx_fast_mode = false;
+    BOOST_CHECK(CheckProofOfWork(chainParams->GenesisBlock(), nullptr, light_consensus));
 
     // check max target * 4*nPowTargetTimespan doesn't overflow -- see pow.cpp:CalculateNextWorkRequired()
     if (!consensus.fPowNoRetargeting) {

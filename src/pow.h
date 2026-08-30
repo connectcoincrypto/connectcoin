@@ -33,6 +33,25 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params&);
 bool CheckProofOfWorkImpl(uint256 hash, unsigned int nBits, const Consensus::Params&);
 
+/** Return the key-block height used by RandomX for a candidate block height. */
+int RandomXSeedHeight(int block_height, const Consensus::Params& params);
+
+/** Derive the RandomX key for the block following pindexPrev. */
+uint256 GetRandomXKey(const CBlockIndex* pindexPrev, const Consensus::Params& params);
+
+/** Calculate the RandomX v2 proof-of-work hash of an 80-byte block header. */
+uint256 GetPoWHash(const CBlockHeader& header, const uint256& key, const Consensus::Params& params);
+
+/** Check RandomX proof of work using chain context or an already-derived key. */
+bool CheckProofOfWork(const CBlockHeader& header, const CBlockIndex* pindexPrev, const Consensus::Params& params);
+bool CheckProofOfWork(const CBlockHeader& header, const uint256& key, int block_height, const Consensus::Params& params);
+
+/** Begin initializing a key-specific dataset without waiting for completion. */
+void PrepareRandomXKey(const uint256& key, const Consensus::Params& params);
+
+/** Prepare the current and, during the lag window, next active-chain key. */
+void PrepareRandomXKeys(const CBlockIndex* tip, const Consensus::Params& params);
+
 /**
  * Return false if the proof-of-work requirement specified by new_nbits at a
  * given height is not possible, given the proof-of-work on the prior block as

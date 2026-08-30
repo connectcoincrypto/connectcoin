@@ -25,6 +25,15 @@ if (ENABLE_IPC AND NOT WITH_EXTERNAL_LIBMULTIPROCESS)
 endif()
 include(../cmake/secp256k1.cmake)
 add_secp256k1(secp256k1)
+set(RANDOMX_BUILD_TESTS OFF CACHE BOOL "Build RandomX tests and benchmark tools" FORCE)
+set(RANDOMX_INSTALL OFF CACHE BOOL "Install the RandomX library and public header" FORCE)
+add_subdirectory(randomx EXCLUDE_FROM_ALL)
+target_include_directories(randomx SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/randomx/src)
+# RandomX executes consensus-critical, untrusted input. Apply the same
+# sanitizer and platform-hardening policy as the rest of the node. Keep
+# warnings non-fatal because the vendored project retains its upstream style.
+target_link_libraries(randomx PRIVATE core_interface)
+set_property(TARGET randomx PROPERTY COMPILE_WARNING_AS_ERROR OFF)
 
 # Set top-level target output locations.
 if(NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
@@ -132,6 +141,7 @@ add_library(connectcoin_common STATIC EXCLUDE_FROM_ALL
   policy/feerate.cpp
   policy/policy.cpp
   pow.cpp
+  crypto/randomx_util.cpp
   protocol.cpp
   psbt.cpp
   rpc/rawtransaction_util.cpp
@@ -149,6 +159,7 @@ target_link_libraries(connectcoin_common
   PRIVATE
     core_interface
     connectcoin_consensus
+    randomx
     connectcoin_util
     univalue
     secp256k1

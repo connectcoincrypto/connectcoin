@@ -14,6 +14,7 @@
 #include <common/system.h>
 #include <compat/compat.h>
 #include <core_io.h>
+#include <pow.h>
 #include <streams.h>
 #include <univalue.h>
 #include <util/exception.h>
@@ -88,7 +89,9 @@ static int AppInitUtil(ArgsManager& args, int argc, char* argv[])
     return CONTINUE_EXECUTION;
 }
 
-static void grind_task(uint32_t nBits, CBlockHeader header, uint32_t offset, uint32_t step, std::atomic<bool>& found, uint32_t& proposed_nonce)
+static void grind_task(const Consensus::Params& consensus, const uint256& randomx_key, uint32_t nBits,
+                       CBlockHeader header, uint32_t offset, uint32_t step,
+                       std::atomic<bool>& found, uint32_t& proposed_nonce)
 {
     arith_uint256 target;
     bool neg, over;
@@ -102,7 +105,7 @@ static void grind_task(uint32_t nBits, CBlockHeader header, uint32_t offset, uin
     while (!found && header.nNonce < finish) {
         const uint32_t next = (finish - header.nNonce < 5000*step) ? finish : header.nNonce + 5000*step;
         do {
-            if (UintToArith256(header.GetHash()) <= target) {
+            if (CheckProofOfWorkImpl(GetPoWHash(header, randomx_key, consensus), nBits, consensus)) {
                 if (!found.exchange(true)) {
                     proposed_nonce = header.nNonce;
                 }
@@ -115,14 +118,28 @@ static void grind_task(uint32_t nBits, CBlockHeader header, uint32_t offset, uin
 
 static int Grind(const std::vector<std::string>& args, std::string& strPrint)
 {
-    if (args.size() != 1) {
-        strPrint = "Must specify block header to grind";
+    if (args.empty() || args.size() > 2) {
+        strPrint = "Must specify a block header and, for non-genesis headers, the raw 32-byte RandomX key";
         return EXIT_FAILURE;
     }
 
     CBlockHeader header;
     if (!DecodeHexBlockHeader(header, args[0])) {
         strPrint = "Could not decode block header";
+        return EXIT_FAILURE;
+    }
+
+    const Consensus::Params& consensus{Params().GetConsensus()};
+    uint256 randomx_key{consensus.randomx_bootstrap_key};
+    if (args.size() == 2) {
+        const auto key_bytes{TryParseHex<unsigned char>(args[1])};
+        if (!key_bytes || key_bytes->size() != uint256::size()) {
+            strPrint = "RandomX key must contain exactly 32 bytes of hexadecimal data";
+            return EXIT_FAILURE;
+        }
+        randomx_key = uint256{std::span{*key_bytes}};
+    } else if (!header.hashPrevBlock.IsNull()) {
+        strPrint = "A RandomX key is required when grinding a non-genesis header";
         return EXIT_FAILURE;
     }
 
@@ -134,7 +151,8 @@ static int Grind(const std::vector<std::string>& args, std::string& strPrint)
     int n_tasks = std::max(1u, std::thread::hardware_concurrency());
     threads.reserve(n_tasks);
     for (int i = 0; i < n_tasks; ++i) {
-        threads.emplace_back(grind_task, nBits, header, i, n_tasks, std::ref(found), std::ref(proposed_nonce));
+        threads.emplace_back(grind_task, std::cref(consensus), std::cref(randomx_key), nBits,
+                             header, i, n_tasks, std::ref(found), std::ref(proposed_nonce));
     }
     for (auto& t : threads) {
         t.join();
@@ -176,7 +194,12 @@ static int GetChainParams(const std::vector<std::string>& args, std::string& str
 
     {
         UniValue pow{UniValue::VOBJ};
+        pow.pushKV("algorithm", "randomx-v2");
         pow.pushKV("limit", consensus.powLimit.ToString());
+        pow.pushKV("randomx_bootstrap_key", HexStr(std::span{consensus.randomx_bootstrap_key.begin(), consensus.randomx_bootstrap_key.end()}));
+        pow.pushKV("randomx_epoch_blocks", consensus.randomx_epoch_blocks);
+        pow.pushKV("randomx_epoch_lag", consensus.randomx_epoch_lag);
+        pow.pushKV("randomx_mode", consensus.randomx_fast_mode ? "fast" : "light");
         if (!consensus.fPowNoRetargeting) {
             pow.pushKV("target_spacing", TicksSeconds(consensus.PowTargetSpacing()));
             pow.pushKV("difficulty_retarget_interval", consensus.DifficultyAdjustmentInterval());

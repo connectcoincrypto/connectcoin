@@ -23,6 +23,10 @@
 
 using util::SplitString;
 
+namespace {
+constexpr bool DEFAULT_RANDOMX_FAST{sizeof(void*) >= 8};
+}
+
 static void HandleDeploymentArgs(const ArgsManager& args, CChainParams::DeploymentOptions& options)
 {
     for (const std::string& arg : args.GetArgs("-testactivationheight")) {
@@ -88,16 +92,19 @@ static void HandleDeploymentArgs(const ArgsManager& args, CChainParams::Deployme
 
 void ReadMainNetArgs(const ArgsManager& args, CChainParams::MainNetOptions& options)
 {
+    options.randomx_fast = args.GetBoolArg("-randomxfast", DEFAULT_RANDOMX_FAST);
     HandleDeploymentArgs(args, options.dep_opts);
 }
 
 void ReadTestNetArgs(const ArgsManager& args, CChainParams::TestNetOptions& options)
 {
+    options.randomx_fast = args.GetBoolArg("-randomxfast", DEFAULT_RANDOMX_FAST);
     HandleDeploymentArgs(args, options.dep_opts);
 }
 
 void ReadSigNetArgs(const ArgsManager& args, CChainParams::SigNetOptions& options)
 {
+    options.randomx_fast = args.GetBoolArg("-randomxfast", DEFAULT_RANDOMX_FAST);
     if (!args.GetArgs("-signetseednode").empty()) {
         options.seeds.emplace(args.GetArgs("-signetseednode"));
     }
@@ -117,6 +124,7 @@ void ReadSigNetArgs(const ArgsManager& args, CChainParams::SigNetOptions& option
 
 void ReadRegTestArgs(const ArgsManager& args, CChainParams::RegTestOptions& options)
 {
+    options.randomx_fast = args.GetBoolArg("-randomxfast", DEFAULT_RANDOMX_FAST);
     if (auto value = args.GetBoolArg("-fastprune")) options.fastprune = *value;
     if (HasTestOption(args, "bip94")) options.enforce_bip94 = true;
 

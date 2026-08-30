@@ -68,6 +68,7 @@ pub fn get_subtrees() -> Vec<&'static str> {
         "src/ipc/libmultiprocess",
         "src/leveldb",
         "src/minisketch",
+        "src/randomx",
         "src/secp256k1",
     ]
 }

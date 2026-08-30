@@ -25,6 +25,7 @@ add_library(connectcoinkernel
   ../consensus/merkle.cpp
   ../consensus/tx_check.cpp
   ../consensus/tx_verify.cpp
+  ../crypto/randomx_util.cpp
   ../dbwrapper.cpp
   ../deploymentinfo.cpp
   ../deploymentstatus.cpp
@@ -102,6 +103,7 @@ target_link_libraries(connectcoinkernel
   PRIVATE
     core_interface
     kernel_warn_interface
+    randomx
     secp256k1_objs
     $<$<PLATFORM_ID:Windows>:bcrypt>
     $<TARGET_NAME_IF_EXISTS:USDT::headers>
@@ -131,6 +133,20 @@ install(TARGETS connectcoinkernel
     COMPONENT libconnectcoinkernel
   ARCHIVE
     DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    COMPONENT libconnectcoinkernel
+)
+
+# Static libconnectcoinkernel consumers also need the pinned private RandomX
+# archive. Shared kernel builds absorb these position-independent objects.
+set_property(TARGET randomx PROPERTY PUBLIC_HEADER
+  "${CMAKE_CURRENT_SOURCE_DIR}/../randomx/src/randomx.h"
+)
+install(TARGETS randomx
+  ARCHIVE
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    COMPONENT libconnectcoinkernel
+  PUBLIC_HEADER
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/connectcoin/randomx
     COMPONENT libconnectcoinkernel
 )
 

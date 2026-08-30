@@ -4,6 +4,7 @@
 
 #include <chain.h>
 #include <chainparams.h>
+#include <consensus/merkle.h>
 #include <consensus/params.h>
 #include <interfaces/mining.h>
 #include <net_processing.h>
@@ -35,8 +36,9 @@ static void mineBlock(node::NodeContext& node, FakeNodeClock& clock, std::chrono
     auto block_template{mining->createNewBlock({}, /*cooldown=*/false)};
     BOOST_REQUIRE(block_template);
     CBlock block{block_template->getBlock()};
-    while (!CheckProofOfWork(block.GetHash(), block.nBits, node.chainman->GetConsensus())) ++block.nNonce;
-    block.fChecked = true; // little speedup
+    block.hashMerkleRoot = BlockMerkleRoot(block);
+    const CBlockIndex* pindex_prev{WITH_LOCK(cs_main, return node.chainman->ActiveTip())};
+    while (!CheckProofOfWork(block, pindex_prev, node.chainman->GetConsensus())) ++block.nNonce;
     clock.set(curr_time); // process block at current time
     Assert(node.chainman->ProcessNewBlock(std::make_shared<const CBlock>(block), /*force_processing=*/true, /*min_pow_checked=*/true, nullptr));
     node.validation_signals->SyncWithValidationInterfaceQueue(); // drain events queue

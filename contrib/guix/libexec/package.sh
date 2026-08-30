@@ -41,6 +41,8 @@ set -o errexit -o pipefail
         # Copy over the example connectcoin.conf file. If contrib/devtools/gen-connectcoin-conf.sh
         # has not been run before building, this file will be a stub
         cp "${DISTSRC}/share/examples/connectcoin.conf" "${DISTNAME}/"
+        cp "${DISTSRC}/COPYING" "${DISTNAME}/COPYING"
+        cp "${DISTSRC}/src/randomx/LICENSE" "${DISTNAME}/RandomX-LICENSE.txt"
 
         cp -r "${DISTSRC}/share/rpcauth" "${DISTNAME}/share/"
 

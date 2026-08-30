@@ -85,6 +85,7 @@ add_executable(connectcoin-test
   private_broadcast_tests.cpp
   psbt_tests.cpp
   random_tests.cpp
+  randomx_tests.cpp
   rbf_tests.cpp
   rest_tests.cpp
   result_tests.cpp
@@ -170,6 +171,13 @@ target_link_libraries(connectcoin-test
   Boost::headers
   $<TARGET_NAME_IF_EXISTS:USDT::headers>
 )
+
+if(ENABLE_RANDOMX_FAST_TEST)
+  if(CMAKE_SIZEOF_VOID_P LESS 8)
+    message(FATAL_ERROR "ENABLE_RANDOMX_FAST_TEST requires a 64-bit target")
+  endif()
+  target_compile_definitions(connectcoin-test PRIVATE ENABLE_RANDOMX_FAST_TEST)
+endif()
 
 function(add_boost_test source_file)
   if(NOT EXISTS ${source_file})

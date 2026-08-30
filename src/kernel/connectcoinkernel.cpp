@@ -1234,9 +1234,47 @@ int cck_block_check(const cck_Block* block, const cck_ConsensusParams* consensus
     const bool check_pow    = (flags & cck_BlockCheckFlags_POW) != 0;
     const bool check_merkle = (flags & cck_BlockCheckFlags_MERKLE) != 0;
 
-    const bool result = CheckBlock(*cck_Block::get(block), state, cck_ConsensusParams::get(consensus_params), /*fCheckPOW=*/check_pow, /*fCheckMerkleRoot=*/check_merkle);
+    try {
+        const bool result = CheckBlock(*cck_Block::get(block), state, cck_ConsensusParams::get(consensus_params), /*fCheckPOW=*/check_pow, /*fCheckMerkleRoot=*/check_merkle);
+        return result ? 1 : 0;
+    } catch (const std::exception& e) {
+        LogError("cck_block_check failed: %s\n", e.what());
+        state.Error("block-check-runtime-error");
+        return 0;
+    } catch (...) {
+        LogError("cck_block_check failed with an unknown exception\n");
+        state.Error("block-check-runtime-error");
+        return 0;
+    }
+}
 
-    return result ? 1 : 0;
+int cck_block_check_with_randomx_key(const cck_Block* block, const cck_ConsensusParams* consensus_params, cck_BlockCheckFlags flags, const cck_BlockHash* randomx_key, int block_height, cck_BlockValidationState* validation_state)
+{
+    auto& state = cck_BlockValidationState::get(validation_state);
+    state = BlockValidationState{};
+    if (block_height < 0) {
+        state.Error("invalid-block-height");
+        return 0;
+    }
+
+    const bool check_pow = (flags & cck_BlockCheckFlags_POW) != 0;
+    const bool check_merkle = (flags & cck_BlockCheckFlags_MERKLE) != 0;
+
+    try {
+        const uint256& key{cck_BlockHash::get(randomx_key)};
+        const bool result = CheckBlock(*cck_Block::get(block), state, cck_ConsensusParams::get(consensus_params),
+                                       /*fCheckPOW=*/check_pow, /*fCheckMerkleRoot=*/check_merkle,
+                                       &key, block_height);
+        return result ? 1 : 0;
+    } catch (const std::exception& e) {
+        LogError("cck_block_check_with_randomx_key failed: %s\n", e.what());
+        state.Error("block-check-runtime-error");
+        return 0;
+    } catch (...) {
+        LogError("cck_block_check_with_randomx_key failed with an unknown exception\n");
+        state.Error("block-check-runtime-error");
+        return 0;
+    }
 }
 
 size_t cck_block_count_transactions(const cck_Block* block)

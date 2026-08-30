@@ -900,6 +900,12 @@ public:
         BlockCheckFlags flags,
         BlockValidationState& state) const;
 
+    bool Check(const ConsensusParamsView& consensus_params,
+        BlockCheckFlags flags,
+        const BlockHashView& randomx_key,
+        int block_height,
+        BlockValidationState& state) const;
+
     MAKE_RANGE_METHOD(Transactions, Block, &Block::CountTransactions, &Block::GetTransaction, *this)
 
     BlockHash GetHash() const
@@ -1068,6 +1074,15 @@ inline bool Block::Check(const ConsensusParamsView& consensus_params,
     BlockValidationState& state) const
 {
     return cck_block_check(get(), consensus_params.get(), static_cast<cck_BlockCheckFlags>(flags), state.get()) == 1;
+}
+
+inline bool Block::Check(const ConsensusParamsView& consensus_params,
+    BlockCheckFlags flags,
+    const BlockHashView& randomx_key,
+    int block_height,
+    BlockValidationState& state) const
+{
+    return cck_block_check_with_randomx_key(get(), consensus_params.get(), static_cast<cck_BlockCheckFlags>(flags), randomx_key.get(), block_height, state.get()) == 1;
 }
 
 class TxValidationState : public UniqueHandle<cck_TxValidationState, cck_tx_validation_state_destroy>

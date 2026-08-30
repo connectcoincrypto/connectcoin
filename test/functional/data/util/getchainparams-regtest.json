@@ -1,10 +1,15 @@
 {
   "chain": "regtest",
   "test_chain": true,
-  "genesis": "4c3bda09c74160c8d324d92f4f53e8569a12a5f4379db4010c7d1e0b90a20d62",
+  "genesis": "4293e98e25d0315ca227d1da7d75bc79520c41e491bd5d04b524ae9b6195facc",
   "subsidy_halving_interval": 150,
   "pow": {
-    "limit": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    "algorithm": "randomx-v2",
+    "limit": "7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "randomx_bootstrap_key": "c83dda0036e86a35b346d0721a668c1a5960944ba8fb5756bcc9a388a5201fa3",
+    "randomx_epoch_blocks": 0,
+    "randomx_epoch_lag": 0,
+    "randomx_mode": "fast"
   },
   "net": {
     "default_port": 48185,

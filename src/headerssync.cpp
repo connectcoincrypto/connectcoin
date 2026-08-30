@@ -52,6 +52,8 @@ void HeadersSyncState::Finalize()
 {
     Assume(m_download_state != State::FINAL);
     ClearShrink(m_header_commitments);
+    m_presync_randomx_key_blocks.clear();
+    m_redownload_randomx_key_blocks.clear();
     m_last_header_received.SetNull();
     ClearShrink(m_redownloaded_headers);
     m_redownload_buffer_last_hash.SetNull();
@@ -66,7 +68,8 @@ void HeadersSyncState::Finalize()
  *  Validate and store commitments, and compare total chainwork to our target to
  *  see if we can switch to REDOWNLOAD mode.  */
 HeadersSyncState::ProcessingResult HeadersSyncState::ProcessNextHeaders(
-        std::span<const CBlockHeader> received_headers, const bool full_headers_message)
+        std::span<const CBlockHeader> received_headers, const bool full_headers_message,
+        const bool pow_checked)
 {
     ProcessingResult ret;
 
@@ -80,7 +83,7 @@ HeadersSyncState::ProcessingResult HeadersSyncState::ProcessNextHeaders(
         // During PRESYNC, we minimally validate block headers and
         // occasionally add commitments to them, until we reach our work
         // threshold (at which point m_download_state is updated to REDOWNLOAD).
-        ret.success = ValidateAndStoreHeadersCommitments(received_headers);
+        ret.success = ValidateAndStoreHeadersCommitments(received_headers, pow_checked);
         if (ret.success) {
             if (full_headers_message || m_download_state == State::REDOWNLOAD) {
                 // A full headers message means the peer may have more to give us;
@@ -102,7 +105,7 @@ HeadersSyncState::ProcessingResult HeadersSyncState::ProcessNextHeaders(
         // we'll return a batch of headers to the caller for processing.
         ret.success = true;
         for (const auto& hdr : received_headers) {
-            if (!ValidateAndStoreRedownloadedHeader(hdr)) {
+            if (!ValidateAndStoreRedownloadedHeader(hdr, pow_checked)) {
                 // Something went wrong -- the peer gave us an unexpected chain.
                 // We could consider looking at the reason for failure and
                 // punishing the peer, but for now just give up on sync.
@@ -136,7 +139,7 @@ HeadersSyncState::ProcessingResult HeadersSyncState::ProcessNextHeaders(
     return ret;
 }
 
-bool HeadersSyncState::ValidateAndStoreHeadersCommitments(std::span<const CBlockHeader> headers)
+bool HeadersSyncState::ValidateAndStoreHeadersCommitments(std::span<const CBlockHeader> headers, const bool pow_checked)
 {
     // The caller should not give us an empty set of headers.
     Assume(headers.size() > 0);
@@ -157,7 +160,7 @@ bool HeadersSyncState::ValidateAndStoreHeadersCommitments(std::span<const CBlock
     // If it does connect, (minimally) validate and occasionally store
     // commitments.
     for (const auto& hdr : headers) {
-        if (!ValidateAndProcessSingleHeader(hdr)) {
+        if (!ValidateAndProcessSingleHeader(hdr, pow_checked)) {
             return false;
         }
     }
@@ -174,7 +177,7 @@ bool HeadersSyncState::ValidateAndStoreHeadersCommitments(std::span<const CBlock
     return true;
 }
 
-bool HeadersSyncState::ValidateAndProcessSingleHeader(const CBlockHeader& current)
+bool HeadersSyncState::ValidateAndProcessSingleHeader(const CBlockHeader& current, const bool pow_checked)
 {
     Assume(m_download_state == State::PRESYNC);
     if (m_download_state != State::PRESYNC) return false;
@@ -189,6 +192,12 @@ bool HeadersSyncState::ValidateAndProcessSingleHeader(const CBlockHeader& curren
     if (!PermittedDifficultyTransition(m_consensus_params, next_height,
                 m_last_header_received.nBits, current.nBits)) {
         LogDebug(BCLog::NET, "Initial headers sync aborted with peer=%d: invalid difficulty transition at height=%i (presync phase)\n", m_id, next_height);
+        return false;
+    }
+
+    const auto randomx_key{GetRandomXKey(next_height, m_presync_randomx_key_blocks)};
+    if (!randomx_key || (!pow_checked && !CheckProofOfWork(current, *randomx_key, next_height, m_consensus_params))) {
+        LogDebug(BCLog::NET, "Initial headers sync aborted with peer=%d: invalid RandomX proof of work or key schedule at height=%i (presync phase)\n", m_id, next_height);
         return false;
     }
 
@@ -208,11 +217,15 @@ bool HeadersSyncState::ValidateAndProcessSingleHeader(const CBlockHeader& curren
     m_current_chain_work += GetBlockProof(current);
     m_last_header_received = current;
     m_current_height = next_height;
+    if (m_consensus_params.randomx_epoch_blocks != 0 &&
+        next_height % m_consensus_params.randomx_epoch_blocks == 0) {
+        m_presync_randomx_key_blocks.emplace(next_height, current.GetHash());
+    }
 
     return true;
 }
 
-bool HeadersSyncState::ValidateAndStoreRedownloadedHeader(const CBlockHeader& header)
+bool HeadersSyncState::ValidateAndStoreRedownloadedHeader(const CBlockHeader& header, const bool pow_checked)
 {
     Assume(m_download_state == State::REDOWNLOAD);
     if (m_download_state != State::REDOWNLOAD) return false;
@@ -237,6 +250,12 @@ bool HeadersSyncState::ValidateAndStoreRedownloadedHeader(const CBlockHeader& he
     if (!PermittedDifficultyTransition(m_consensus_params, next_height,
                 previous_nBits, header.nBits)) {
         LogDebug(BCLog::NET, "Initial headers sync aborted with peer=%d: invalid difficulty transition at height=%i (redownload phase)\n", m_id, next_height);
+        return false;
+    }
+
+    const auto randomx_key{GetRandomXKey(next_height, m_redownload_randomx_key_blocks)};
+    if (!randomx_key || (!pow_checked && !CheckProofOfWork(header, *randomx_key, next_height, m_consensus_params))) {
+        LogDebug(BCLog::NET, "Initial headers sync aborted with peer=%d: invalid RandomX proof of work or key schedule at height=%i (redownload phase)\n", m_id, next_height);
         return false;
     }
 
@@ -273,8 +292,28 @@ bool HeadersSyncState::ValidateAndStoreRedownloadedHeader(const CBlockHeader& he
     m_redownloaded_headers.emplace_back(header);
     m_redownload_buffer_last_height = next_height;
     m_redownload_buffer_last_hash = header.GetHash();
+    if (m_consensus_params.randomx_epoch_blocks != 0 &&
+        next_height % m_consensus_params.randomx_epoch_blocks == 0) {
+        m_redownload_randomx_key_blocks.emplace(next_height, m_redownload_buffer_last_hash);
+    }
 
     return true;
+}
+
+std::optional<uint256> HeadersSyncState::GetRandomXKey(int64_t block_height, const std::map<int64_t, uint256>& key_blocks) const
+{
+    const int seed_height{RandomXSeedHeight(block_height, m_consensus_params)};
+    if (seed_height == 0) return m_consensus_params.randomx_bootstrap_key;
+
+    if (seed_height <= m_chain_start.nHeight) {
+        const CBlockIndex* seed_block{m_chain_start.GetAncestor(seed_height)};
+        if (seed_block == nullptr) return std::nullopt;
+        return seed_block->GetBlockHash();
+    }
+
+    const auto it{key_blocks.find(seed_height)};
+    if (it == key_blocks.end()) return std::nullopt;
+    return it->second;
 }
 
 std::vector<CBlockHeader> HeadersSyncState::PopHeadersReadyForAcceptance()

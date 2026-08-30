@@ -88,6 +88,22 @@ DEFAULT_MEMPOOL_EXPIRY_HOURS = 336  # hours
 TX_MIN_STANDARD_VERSION = 1
 TX_MAX_STANDARD_VERSION = 3
 
+# Functional tests install a regtest RandomX v2 oracle backed by a running
+# node. Keeping the callback here lets existing block-building tests call
+# CBlock.solve() without embedding or reimplementing RandomX in Python.
+_pow_hash_callback = None
+
+
+def set_pow_hash_callback(callback):
+    global _pow_hash_callback
+    _pow_hash_callback = callback
+
+
+def _pow_hash_int(header):
+    if _pow_hash_callback is None:
+        raise RuntimeError("RandomX proof-of-work callback is not configured")
+    return _pow_hash_callback(header)
+
 MAGIC_BYTES = {
     "mainnet": b"\xd9\x51\xa5\xe2",
     "testnet3": b"\x03\x84\x8e\x59",
@@ -836,6 +852,11 @@ class CBlockHeader:
         """Return block header hash as integer."""
         return uint256_from_str(hash256(self._serialize_header()))
 
+    @property
+    def pow_hash_int(self):
+        """Return the RandomX proof-of-work hash as an integer."""
+        return _pow_hash_int(self)
+
     def __repr__(self):
         return "CBlockHeader(nVersion=%i hashPrevBlock=%064x hashMerkleRoot=%064x nTime=%s nBits=%08x nNonce=%08x)" \
             % (self.nVersion, self.hashPrevBlock, self.hashMerkleRoot,
@@ -894,7 +915,7 @@ class CBlock(CBlockHeader):
 
     def is_valid(self):
         target = uint256_from_compact(self.nBits)
-        if self.hash_int > target:
+        if self.pow_hash_int > target:
             return False
         for tx in self.vtx:
             if not tx.is_valid():
@@ -905,7 +926,7 @@ class CBlock(CBlockHeader):
 
     def solve(self):
         target = uint256_from_compact(self.nBits)
-        while self.hash_int > target:
+        while self.pow_hash_int > target:
             self.nNonce += 1
 
     # Calculate the block weight using witness and non-witness

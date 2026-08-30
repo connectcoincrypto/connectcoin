@@ -170,6 +170,11 @@ class TestNode():
             self.args.append("-loglevel=trace")
         if self.version_is_at_least(290100):
             self.args.append("-nologratelimit")
+        if self.version_is_at_least(319900):
+            # LIGHT and FAST produce identical RandomX hashes. The functional
+            # suite runs many nodes concurrently, so avoid allocating a 2 GiB
+            # dataset in every process.
+            self.args.append("-randomxfast=0")
 
         # Default behavior from global -v2transport flag is added to args to persist it over restarts.
         # May be overwritten in individual tests, using extra_args.

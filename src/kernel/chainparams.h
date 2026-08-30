@@ -148,6 +148,7 @@ public:
         DeploymentOptions dep_opts{};
         std::optional<std::vector<uint8_t>> challenge{};
         std::optional<std::vector<std::string>> seeds{};
+        bool randomx_fast{sizeof(void*) >= 8};
     };
 
     /**
@@ -157,14 +158,19 @@ public:
         DeploymentOptions dep_opts{};
         bool fastprune{false};
         bool enforce_bip94{false};
+        // Directly constructed regtest params stay memory-light. The
+        // node-facing parser uses FAST by default on 64-bit hosts.
+        bool randomx_fast{false};
     };
 
     struct MainNetOptions {
         DeploymentOptions dep_opts{};
+        bool randomx_fast{sizeof(void*) >= 8};
     };
 
     struct TestNetOptions {
         DeploymentOptions dep_opts{};
+        bool randomx_fast{sizeof(void*) >= 8};
     };
 
     static std::unique_ptr<const CChainParams> RegTest(const RegTestOptions& options);

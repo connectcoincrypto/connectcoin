@@ -1407,7 +1407,7 @@ CONNECTCOINKERNEL_API cck_Block* CONNECTCOINKERNEL_WARN_UNUSED_RESULT cck_block_
 /** Bitflags to control context-free block checks (optional). */
 typedef uint32_t cck_BlockCheckFlags;
 #define cck_BlockCheckFlags_BASE   ((cck_BlockCheckFlags)0)                                                        //!< run the base context-free block checks only
-#define cck_BlockCheckFlags_POW    ((cck_BlockCheckFlags)(1U << 0))                                                //!< run CheckProofOfWork via CheckBlockHeader
+#define cck_BlockCheckFlags_POW    ((cck_BlockCheckFlags)(1U << 0))                                                //!< run CheckProofOfWork with the network bootstrap RandomX key
 #define cck_BlockCheckFlags_MERKLE ((cck_BlockCheckFlags)(1U << 1))                                                //!< verify merkle root (and mutation detection)
 #define cck_BlockCheckFlags_ALL    ((cck_BlockCheckFlags)(cck_BlockCheckFlags_POW | cck_BlockCheckFlags_MERKLE)) //!< enable all optional context-free block checks
 
@@ -1417,7 +1417,10 @@ typedef uint32_t cck_BlockCheckFlags;
  * Runs the base context-free block checks (size limits, coinbase structure,
  * transaction checks, and sigop limits) using the supplied
  * cck_ConsensusParams. The proof-of-work and merkle-root checks are optional
- * and can be toggled via @p flags. Note that this does not include any
+ * and can be toggled via @p flags. The context-free POW flag uses the network's
+ * bootstrap RandomX key and is therefore appropriate only for blocks in that
+ * key epoch. Full chain processing derives later epoch keys from ancestry.
+ * Note that this does not include any
  * transaction script, timestamps, order, or other checks that may require more
  * context.
  *
@@ -1438,6 +1441,31 @@ CONNECTCOINKERNEL_API int cck_block_check(
     const cck_ConsensusParams* consensus_params,
     cck_BlockCheckFlags flags,
     cck_BlockValidationState* validation_state) CONNECTCOINKERNEL_ARG_NONNULL(1, 2, 4);
+
+/**
+ * @brief Perform block checks with an explicitly derived RandomX epoch key.
+ *
+ * This context-aware variant is required when the POW flag is used outside
+ * the bootstrap epoch. The caller derives @p randomx_key from the appropriate
+ * key-block ancestry and supplies the candidate block height. Exceptions from
+ * RandomX allocation or execution are captured as validation-state errors and
+ * never cross the C ABI boundary.
+ *
+ * @param[in]     block             Non-null block to validate.
+ * @param[in]     consensus_params  Non-null consensus parameters.
+ * @param[in]     flags             Checks to perform.
+ * @param[in]     randomx_key       Non-null RandomX key (32-byte block-hash value).
+ * @param[in]     block_height      Non-negative candidate height.
+ * @param[out]    validation_state  Non-null validation result.
+ * @return 1 if all requested checks passed, 0 otherwise.
+ */
+CONNECTCOINKERNEL_API int cck_block_check_with_randomx_key(
+    const cck_Block* block,
+    const cck_ConsensusParams* consensus_params,
+    cck_BlockCheckFlags flags,
+    const cck_BlockHash* randomx_key,
+    int block_height,
+    cck_BlockValidationState* validation_state) CONNECTCOINKERNEL_ARG_NONNULL(1, 2, 4, 6);
 
 /**
  * @brief Count the number of transactions contained in a block.

@@ -113,6 +113,7 @@ option(BUILD_GUI "Build connectcoin-qt executable." OFF)
 option(BUILD_CLI "Build connectcoin-cli executable." ON)
 
 option(BUILD_TESTS "Build connectcoin-test and other unit test executables." ON)
+option(ENABLE_RANDOMX_FAST_TEST "Run the memory-intensive RandomX FAST/LIGHT equivalence test." OFF)
 option(BUILD_TX "Build connectcoin-tx executable." ${BUILD_TESTS})
 option(BUILD_UTIL "Build connectcoin-util executable." ${BUILD_TESTS})
 cmake_dependent_option(BUILD_GUI_TESTS "Build connectcoin-test-qt executable." ON "BUILD_GUI;BUILD_TESTS" OFF)

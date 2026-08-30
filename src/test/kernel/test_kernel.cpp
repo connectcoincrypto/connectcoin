@@ -78,10 +78,12 @@ std::string byte_span_to_hex_string_reversed(std::span<const std::byte> bytes)
     return oss.str();
 }
 
-constexpr auto VERIFY_ALL_PRE_SEGWIT{ScriptVerificationFlags::P2SH | ScriptVerificationFlags::DERSIG |
-                                     ScriptVerificationFlags::NULLDUMMY | ScriptVerificationFlags::CHECKLOCKTIMEVERIFY |
-                                     ScriptVerificationFlags::CHECKSEQUENCEVERIFY};
-constexpr auto VERIFY_ALL_PRE_TAPROOT{VERIFY_ALL_PRE_SEGWIT | ScriptVerificationFlags::WITNESS};
+constexpr std::string_view TEST_XONLY_PUBKEY{"17dcaae1908f91b39aa592755dcbba876610933e239c8630eb8bfc0ddff8b3b4"};
+constexpr std::string_view TEST_P2PK_SCRIPT{"512017dcaae1908f91b39aa592755dcbba876610933e239c8630eb8bfc0ddff8b3b4"};
+constexpr std::string_view TEST_COINBASE_TX{
+    "020000000001010000000000000000000000000000000000000000000000000000000000000000ffffffff2802ce0024aa21a9ed1ab08ff674614d3b8be37cefffd867d117efa84bcfd4b4d9c9791a0c521efecefeffffff01d8d5546a740000000117dcaae1908f91b39aa592755dcbba876610933e239c8630eb8bfc0ddff8b3b401200000000000000000000000000000000000000000000000000000000000000000cd000000"};
+constexpr std::string_view TEST_SPENDING_TX{
+    "020000000001013f32810d70987d3eb431c22b5b453cc518c4471976c5d3e4d712b51331fcb3ad0000000000fdffffff0200e40b54020000000117dcaae1908f91b39aa592755dcbba876610933e239c8630eb8bfc0ddff8b3b428de9680e600000001555f1c7f8bc719cc53b59980ec0a2ab186b2438c6672330efc7e835c0447ca580140cd4256664792333e9e1234d94c9cf61f6d3af7e88882b807935c7e90f715d6c2b24e324b00f7eaf857cbbd745ed9530e122cc92c81a80a305d7c528648336c36cd000000"};
 
 void check_equal(std::span<const std::byte> _actual, std::span<const std::byte> _expected, bool equal = true)
 {
@@ -208,55 +210,6 @@ public:
         std::cout << "Block disconnected." << std::endl;
     }
 };
-
-void run_verify_test(
-    const ScriptPubkey& spent_script_pubkey,
-    const Transaction& spending_tx,
-    const PrecomputedTransactionData* precomputed_txdata,
-    int64_t amount,
-    unsigned int input_index,
-    bool taproot)
-{
-    auto status = ScriptVerifyStatus::OK;
-
-    if (taproot) {
-        BOOST_CHECK(spent_script_pubkey.Verify(
-            amount,
-            spending_tx,
-            precomputed_txdata,
-            input_index,
-            ScriptVerificationFlags::ALL,
-            status));
-        BOOST_CHECK(status == ScriptVerifyStatus::OK);
-    } else {
-        BOOST_CHECK(!spent_script_pubkey.Verify(
-            amount,
-            spending_tx,
-            precomputed_txdata,
-            input_index,
-            ScriptVerificationFlags::ALL,
-            status));
-        BOOST_CHECK(status == ScriptVerifyStatus::ERROR_SPENT_OUTPUTS_REQUIRED);
-    }
-
-    BOOST_CHECK(spent_script_pubkey.Verify(
-        amount,
-        spending_tx,
-        precomputed_txdata,
-        input_index,
-        VERIFY_ALL_PRE_TAPROOT,
-        status));
-    BOOST_CHECK(status == ScriptVerifyStatus::OK);
-
-    BOOST_CHECK(spent_script_pubkey.Verify(
-        0,
-        spending_tx,
-        precomputed_txdata,
-        input_index,
-        VERIFY_ALL_PRE_SEGWIT,
-        status));
-    BOOST_CHECK(status == ScriptVerifyStatus::OK);
-}
 
 template <typename T>
 concept HasToBytes = requires(T t) {
@@ -394,9 +347,9 @@ void CheckRange(const RangeType& range, size_t expected_size)
 
 BOOST_AUTO_TEST_CASE(cck_transaction_tests)
 {
-    auto tx_data{hex_string_to_byte_vec("02000000013f7cebd65c27431a90bba7f796914fe8cc2ddfc3f2cbd6f7e5f2fc854534da95000000006b483045022100de1ac3bcdfb0332207c4a91f3832bd2c2915840165f876ab47c5f8996b971c3602201c6c053d750fadde599e6f5c4e1963df0f01fc0d97815e8157e3d59fe09ca30d012103699b464d1d8bc9e47d4fb1cdaa89a1c5783d68363c4dbc4b524ed3d857148617feffffff02836d3c01000000001976a914fc25d6d5c94003bf5b0c7b640a248e2c637fcfb088ac7ada8202000000001976a914fbed3d9b11183209a57999d54d59f67c019e756c88ac6acb0700")};
+    auto tx_data{hex_string_to_byte_vec(TEST_SPENDING_TX)};
     auto tx{Transaction{tx_data}};
-    auto tx_data_2{hex_string_to_byte_vec("02000000000101904f4ee5c87d20090b642f116e458cd6693292ad9ece23e72f15fb6c05b956210500000000fdffffff02e2010000000000002251200839a723933b56560487ec4d67dda58f09bae518ffa7e148313c5696ac837d9f10060000000000002251205826bcdae7abfb1c468204170eab00d887b61ab143464a4a09e1450bdc59a3340140f26e7af574e647355830772946356c27e7bbc773c5293688890f58983499581be84de40be7311a14e6d6422605df086620e75adae84ff06b75ce5894de5e994a00000000")};
+    auto tx_data_2{hex_string_to_byte_vec(TEST_COINBASE_TX)};
     auto tx2{Transaction{tx_data_2}};
     CheckHandle(tx, tx2);
 
@@ -407,13 +360,13 @@ BOOST_AUTO_TEST_CASE(cck_transaction_tests)
 
     BOOST_CHECK_EQUAL(tx.CountOutputs(), 2);
     BOOST_CHECK_EQUAL(tx.CountInputs(), 1);
-    BOOST_CHECK_EQUAL(tx.GetLocktime(), 510826);
+    BOOST_CHECK_EQUAL(tx.GetLocktime(), 205);
     auto broken_tx_data{std::span<std::byte>{tx_data.begin(), tx_data.begin() + 10}};
     BOOST_CHECK_THROW(Transaction{broken_tx_data}, std::runtime_error);
     auto input{tx.GetInput(0)};
-    BOOST_CHECK_EQUAL(input.GetSequence(), 0xfffffffe);
+    BOOST_CHECK_EQUAL(input.GetSequence(), 0xfffffffd);
     auto output{tx.GetOutput(tx.CountOutputs() - 1)};
-    BOOST_CHECK_EQUAL(output.Amount(), 42130042);
+    BOOST_CHECK_EQUAL(output.Amount(), 989999849000);
     auto script_pubkey{output.GetScriptPubkey()};
     {
         auto tx_new{Transaction{tx_data}};
@@ -438,7 +391,7 @@ BOOST_AUTO_TEST_CASE(cck_transaction_tests)
         BOOST_CHECK_NE(script3.get(), script2.get());
         check_equal(script3.ToBytes(), script2.ToBytes());
     }
-    BOOST_CHECK_EQUAL(output.Amount(), 42130042);
+    BOOST_CHECK_EQUAL(output.Amount(), 989999849000);
 
     auto tx_roundtrip{Transaction{tx.ToBytes()}};
     check_equal(tx_roundtrip.ToBytes(), tx_data);
@@ -457,16 +410,16 @@ BOOST_AUTO_TEST_CASE(cck_transaction_tests)
     for (const auto output : tx.Outputs()) {
         total_amount += output.Amount();
     }
-    BOOST_CHECK_EQUAL(total_amount, 62867453);
+    BOOST_CHECK_EQUAL(total_amount, 999999849000);
 
     auto amount = *(tx.Outputs() | std::ranges::views::filter([](const auto& output) {
-                        return output.Amount() == 42130042;
+                        return output.Amount() == 989999849000;
                     }) |
                     std::views::transform([](const auto& output) {
                         return output.Amount();
                     })).begin();
     BOOST_REQUIRE(amount);
-    BOOST_CHECK_EQUAL(amount, 42130042);
+    BOOST_CHECK_EQUAL(amount, 989999849000);
 
     CheckRange(tx.Outputs(), tx.CountOutputs());
 
@@ -490,7 +443,7 @@ BOOST_AUTO_TEST_CASE(cck_script_pubkey)
 
 BOOST_AUTO_TEST_CASE(cck_transaction_output)
 {
-    ScriptPubkey script{hex_string_to_byte_vec("76a9144bfbaf6afb76cc5771bc6404810d1cc041a6933988ac")};
+    ScriptPubkey script{hex_string_to_byte_vec(TEST_P2PK_SCRIPT)};
     TransactionOutput output{script, 1};
     TransactionOutput output2{script, 2};
     CheckHandle(output, output2);
@@ -498,9 +451,10 @@ BOOST_AUTO_TEST_CASE(cck_transaction_output)
 
 BOOST_AUTO_TEST_CASE(cck_transaction_input)
 {
-    Transaction tx{hex_string_to_byte_vec("020000000248c03e66fd371c7033196ce24298628e59ebefa00363026044e0f35e0325a65d000000006a473044022004893432347f39beaa280e99da595681ddb20fc45010176897e6e055d716dbfa022040a9e46648a5d10c33ef7cee5e6cf4b56bd513eae3ae044f0039824b02d0f44c012102982331a52822fd9b62e9b5d120da1d248558fac3da3a3c51cd7d9c8ad3da760efeffffffb856678c6e4c3c84e39e2ca818807049d6fba274b42af3c6d3f9d4b6513212d2000000006a473044022068bcedc7fe39c9f21ad318df2c2da62c2dc9522a89c28c8420ff9d03d2e6bf7b0220132afd752754e5cb1ea2fd0ed6a38ec666781e34b0e93dc9a08f2457842cf5660121033aeb9c079ea3e08ea03556182ab520ce5c22e6b0cb95cee6435ee17144d860cdfeffffff0260d50b00000000001976a914363cc8d55ea8d0500de728ef6d63804ddddbdc9888ac67040f00000000001976a914c303bdc5064bf9c9a8b507b5496bd0987285707988ac6acb0700")};
+    Transaction tx{hex_string_to_byte_vec(TEST_SPENDING_TX)};
+    Transaction coinbase{hex_string_to_byte_vec(TEST_COINBASE_TX)};
     TransactionInput input_0 = tx.GetInput(0);
-    TransactionInput input_1 = tx.GetInput(1);
+    TransactionInput input_1 = coinbase.GetInput(0);
     CheckHandle(input_0, input_1);
     CheckRange(tx.Inputs(), tx.CountInputs());
     OutPoint point_0 = input_0.OutPoint();
@@ -508,37 +462,27 @@ BOOST_AUTO_TEST_CASE(cck_transaction_input)
     CheckHandle(point_0, point_1);
 
     WitnessStackView ws_0 = input_0.GetWitnessStack();
-    BOOST_CHECK_EQUAL(ws_0.CountItems(), 0);
-    BOOST_CHECK(ws_0.Items().empty());
+    BOOST_CHECK_EQUAL(ws_0.CountItems(), 1);
+    BOOST_CHECK_EQUAL(ws_0.GetItem(0).size(), 64);
+    BOOST_CHECK(input_0.GetScriptSig().empty());
 
-    // P2PKH: DER sig + compressed pubkey push.
-    BOOST_CHECK(input_0.GetScriptSig() == hex_string_to_byte_vec("473044022004893432347f39beaa280e99da595681ddb20fc45010176897e6e055d716dbfa022040a9e46648a5d10c33ef7cee5e6cf4b56bd513eae3ae044f0039824b02d0f44c012102982331a52822fd9b62e9b5d120da1d248558fac3da3a3c51cd7d9c8ad3da760e"));
-    BOOST_CHECK(input_1.GetScriptSig() == hex_string_to_byte_vec("473044022068bcedc7fe39c9f21ad318df2c2da62c2dc9522a89c28c8420ff9d03d2e6bf7b0220132afd752754e5cb1ea2fd0ed6a38ec666781e34b0e93dc9a08f2457842cf5660121033aeb9c079ea3e08ea03556182ab520ce5c22e6b0cb95cee6435ee17144d860cd"));
-
-    // P2WSH input: OP_0, sig, sig, redeem_script (0, 71, 71, 105 bytes); no scriptSig.
-    Transaction segwit_tx{hex_string_to_byte_vec("010000000001011f97548fbbe7a0db7588a66e18d803d0089315aa7d4cc28360b6ec50ef36718a0100000000ffffffff02df1776000000000017a9146c002a686959067f4866b8fb493ad7970290ab728757d29f0000000000220020701a8d401c84fb13e6baf169d59684e17abd9fa216c8cc5b9fc63d622ff8c58d04004730440220565d170eed95ff95027a69b313758450ba84a01224e1f7f130dda46e94d13f8602207bdd20e307f062594022f12ed5017bbf4a055a06aea91c10110a0e3bb23117fc014730440220647d2dc5b15f60bc37dc42618a370b2a1490293f9e5c8464f53ec4fe1dfe067302203598773895b4b16d37485cbe21b337f4e4b650739880098c592553add7dd4355016952210375e00eb72e29da82b89367947f29ef34afb75e8654f6ea368e0acdfd92976b7c2103a1b26313f430c4b15bb1fdce663207659d8cac749a0e53d70eff01874496feff2103c96d495bfdd5ba4145e3e046fee45e84a8a48ad05bd8dbb395c011a32cf9f88053ae00000000")};
-    TransactionInputView segwit_input = segwit_tx.GetInput(0);
-    WitnessStackView ws = segwit_input.GetWitnessStack();
-    BOOST_CHECK_EQUAL(ws.CountItems(), 4);
-    BOOST_CHECK(ws.GetItem(0).empty());
-    BOOST_CHECK(ws.GetItem(1) == hex_string_to_byte_vec("30440220565d170eed95ff95027a69b313758450ba84a01224e1f7f130dda46e94d13f8602207bdd20e307f062594022f12ed5017bbf4a055a06aea91c10110a0e3bb23117fc01"));
-    BOOST_CHECK(ws.GetItem(2) == hex_string_to_byte_vec("30440220647d2dc5b15f60bc37dc42618a370b2a1490293f9e5c8464f53ec4fe1dfe067302203598773895b4b16d37485cbe21b337f4e4b650739880098c592553add7dd435501"));
-    BOOST_CHECK(ws.GetItem(3) == hex_string_to_byte_vec("52210375e00eb72e29da82b89367947f29ef34afb75e8654f6ea368e0acdfd92976b7c2103a1b26313f430c4b15bb1fdce663207659d8cac749a0e53d70eff01874496feff2103c96d495bfdd5ba4145e3e046fee45e84a8a48ad05bd8dbb395c011a32cf9f88053ae"));
+    WitnessStackView ws = input_1.GetWitnessStack();
+    BOOST_CHECK_EQUAL(ws.CountItems(), 1);
+    BOOST_CHECK_EQUAL(ws.GetItem(0).size(), 32);
     auto items = ws.Items();
-    BOOST_CHECK_EQUAL(items.size(), 4);
+    BOOST_CHECK_EQUAL(items.size(), 1);
     for (size_t i = 0; i < items.size(); ++i) {
         BOOST_CHECK(items[i] == ws.GetItem(i));
     }
     WitnessStack owned_ws_0{ws_0};
     WitnessStack owned_ws{ws};
     CheckHandle(owned_ws_0, owned_ws);
-    BOOST_CHECK(segwit_input.GetScriptSig().empty());
 }
 
 BOOST_AUTO_TEST_CASE(cck_precomputed_txdata) {
-    auto tx_data{hex_string_to_byte_vec("02000000013f7cebd65c27431a90bba7f796914fe8cc2ddfc3f2cbd6f7e5f2fc854534da95000000006b483045022100de1ac3bcdfb0332207c4a91f3832bd2c2915840165f876ab47c5f8996b971c3602201c6c053d750fadde599e6f5c4e1963df0f01fc0d97815e8157e3d59fe09ca30d012103699b464d1d8bc9e47d4fb1cdaa89a1c5783d68363c4dbc4b524ed3d857148617feffffff02836d3c01000000001976a914fc25d6d5c94003bf5b0c7b640a248e2c637fcfb088ac7ada8202000000001976a914fbed3d9b11183209a57999d54d59f67c019e756c88ac6acb0700")};
+    auto tx_data{hex_string_to_byte_vec(TEST_SPENDING_TX)};
     auto tx{Transaction{tx_data}};
-    auto tx_data_2{hex_string_to_byte_vec("02000000000101904f4ee5c87d20090b642f116e458cd6693292ad9ece23e72f15fb6c05b956210500000000fdffffff02e2010000000000002251200839a723933b56560487ec4d67dda58f09bae518ffa7e148313c5696ac837d9f10060000000000002251205826bcdae7abfb1c468204170eab00d887b61ab143464a4a09e1450bdc59a3340140f26e7af574e647355830772946356c27e7bbc773c5293688890f58983499581be84de40be7311a14e6d6422605df086620e75adae84ff06b75ce5894de5e994a00000000")};
+    auto tx_data_2{hex_string_to_byte_vec(TEST_COINBASE_TX)};
     auto tx2{Transaction{tx_data_2}};
     auto precomputed_txdata{PrecomputedTransactionData{
         /*tx_to=*/tx,
@@ -553,96 +497,25 @@ BOOST_AUTO_TEST_CASE(cck_precomputed_txdata) {
 
 BOOST_AUTO_TEST_CASE(cck_script_verify_tests)
 {
-    // Legacy transaction aca326a724eda9a461c10a876534ecd5ae7b27f10f26c3862fb996f80ea2d45d
-    auto legacy_spent_script_pubkey{ScriptPubkey{hex_string_to_byte_vec("76a9144bfbaf6afb76cc5771bc6404810d1cc041a6933988ac")}};
-    auto legacy_spending_tx{Transaction{hex_string_to_byte_vec("02000000013f7cebd65c27431a90bba7f796914fe8cc2ddfc3f2cbd6f7e5f2fc854534da95000000006b483045022100de1ac3bcdfb0332207c4a91f3832bd2c2915840165f876ab47c5f8996b971c3602201c6c053d750fadde599e6f5c4e1963df0f01fc0d97815e8157e3d59fe09ca30d012103699b464d1d8bc9e47d4fb1cdaa89a1c5783d68363c4dbc4b524ed3d857148617feffffff02836d3c01000000001976a914fc25d6d5c94003bf5b0c7b640a248e2c637fcfb088ac7ada8202000000001976a914fbed3d9b11183209a57999d54d59f67c019e756c88ac6acb0700")}};
-    run_verify_test(
-        /*spent_script_pubkey=*/legacy_spent_script_pubkey,
-        /*spending_tx=*/legacy_spending_tx,
-        /*precomputed_txdata=*/nullptr,
-        /*amount=*/0,
-        /*input_index=*/0,
-        /*taproot=*/false);
+    constexpr int64_t spent_amount{1'000'000'000'000};
+    ScriptPubkey spent_script_pubkey{hex_string_to_byte_vec(TEST_P2PK_SCRIPT)};
+    Transaction spending_tx{hex_string_to_byte_vec(TEST_SPENDING_TX)};
+    std::vector<TransactionOutput> spent_outputs;
+    spent_outputs.emplace_back(spent_script_pubkey, spent_amount);
+    PrecomputedTransactionData precomputed_txdata{spending_tx, spent_outputs};
 
-    // Legacy transaction aca326a724eda9a461c10a876534ecd5ae7b27f10f26c3862fb996f80ea2d45d with precomputed_txdata
-    auto legacy_precomputed_txdata{PrecomputedTransactionData{
-        /*tx_to=*/legacy_spending_tx,
-        /*spent_outputs=*/{},
-    }};
-    run_verify_test(
-        /*spent_script_pubkey=*/legacy_spent_script_pubkey,
-        /*spending_tx=*/legacy_spending_tx,
-        /*precomputed_txdata=*/&legacy_precomputed_txdata,
-        /*amount=*/0,
-        /*input_index=*/0,
-        /*taproot=*/false);
+    auto status{ScriptVerifyStatus::OK};
+    BOOST_CHECK(!spent_script_pubkey.Verify(spent_amount, spending_tx, nullptr, 0,
+                                            ScriptVerificationFlags::ALL, status));
+    BOOST_CHECK(status == ScriptVerifyStatus::ERROR_SPENT_OUTPUTS_REQUIRED);
 
-    // Segwit transaction 1a3e89644985fbbb41e0dcfe176739813542b5937003c46a07de1e3ee7a4a7f3
-    auto segwit_spent_script_pubkey{ScriptPubkey{hex_string_to_byte_vec("0020701a8d401c84fb13e6baf169d59684e17abd9fa216c8cc5b9fc63d622ff8c58d")}};
-    auto segwit_spending_tx{Transaction{hex_string_to_byte_vec("010000000001011f97548fbbe7a0db7588a66e18d803d0089315aa7d4cc28360b6ec50ef36718a0100000000ffffffff02df1776000000000017a9146c002a686959067f4866b8fb493ad7970290ab728757d29f0000000000220020701a8d401c84fb13e6baf169d59684e17abd9fa216c8cc5b9fc63d622ff8c58d04004730440220565d170eed95ff95027a69b313758450ba84a01224e1f7f130dda46e94d13f8602207bdd20e307f062594022f12ed5017bbf4a055a06aea91c10110a0e3bb23117fc014730440220647d2dc5b15f60bc37dc42618a370b2a1490293f9e5c8464f53ec4fe1dfe067302203598773895b4b16d37485cbe21b337f4e4b650739880098c592553add7dd4355016952210375e00eb72e29da82b89367947f29ef34afb75e8654f6ea368e0acdfd92976b7c2103a1b26313f430c4b15bb1fdce663207659d8cac749a0e53d70eff01874496feff2103c96d495bfdd5ba4145e3e046fee45e84a8a48ad05bd8dbb395c011a32cf9f88053ae00000000")}};
-    run_verify_test(
-        /*spent_script_pubkey=*/segwit_spent_script_pubkey,
-        /*spending_tx=*/segwit_spending_tx,
-        /*precomputed_txdata=*/nullptr,
-        /*amount=*/18393430,
-        /*input_index=*/0,
-        /*taproot=*/false);
+    BOOST_CHECK(spent_script_pubkey.Verify(spent_amount, spending_tx, &precomputed_txdata, 0,
+                                           ScriptVerificationFlags::ALL, status));
+    BOOST_CHECK(status == ScriptVerifyStatus::OK);
 
-    // Segwit transaction 1a3e89644985fbbb41e0dcfe176739813542b5937003c46a07de1e3ee7a4a7f3 with precomputed_txdata
-    auto segwit_precomputed_txdata{PrecomputedTransactionData{
-        /*tx_to=*/segwit_spending_tx,
-        /*spent_outputs=*/{},
-    }};
-    run_verify_test(
-        /*spent_script_pubkey=*/segwit_spent_script_pubkey,
-        /*spending_tx=*/segwit_spending_tx,
-        /*precomputed_txdata=*/&segwit_precomputed_txdata,
-        /*amount=*/18393430,
-        /*input_index=*/0,
-        /*taproot=*/false);
-
-    // Taproot transaction 33e794d097969002ee05d336686fc03c9e15a597c1b9827669460fac98799036
-    auto taproot_spent_script_pubkey{ScriptPubkey{hex_string_to_byte_vec("5120339ce7e165e67d93adb3fef88a6d4beed33f01fa876f05a225242b82a631abc0")}};
-    auto taproot_spending_tx{Transaction{hex_string_to_byte_vec("01000000000101d1f1c1f8cdf6759167b90f52c9ad358a369f95284e841d7a2536cef31c0549580100000000fdffffff020000000000000000316a2f49206c696b65205363686e6f7272207369677320616e6420492063616e6e6f74206c69652e204062697462756734329e06010000000000225120a37c3903c8d0db6512e2b40b0dffa05e5a3ab73603ce8c9c4b7771e5412328f90140a60c383f71bac0ec919b1d7dbc3eb72dd56e7aa99583615564f9f99b8ae4e837b758773a5b2e4c51348854c8389f008e05029db7f464a5ff2e01d5e6e626174affd30a00")}};
-    std::vector<TransactionOutput> taproot_spent_outputs;
-    taproot_spent_outputs.emplace_back(taproot_spent_script_pubkey, 88480);
-    auto taproot_precomputed_txdata{PrecomputedTransactionData{
-        /*tx_to=*/taproot_spending_tx,
-        /*spent_outputs=*/taproot_spent_outputs,
-    }};
-    run_verify_test(
-        /*spent_script_pubkey=*/taproot_spent_script_pubkey,
-        /*spending_tx=*/taproot_spending_tx,
-        /*precomputed_txdata=*/&taproot_precomputed_txdata,
-        /*amount=*/88480,
-        /*input_index=*/0,
-        /*taproot=*/true);
-
-    // Two-input taproot transaction e8e8320f40c31ed511570e9cdf1d241f8ec9a5cc392e6105240ac8dbea2098de
-    auto taproot2_spent_script_pubkey0{ScriptPubkey{hex_string_to_byte_vec("5120b7da80f57e36930b0515eb09293e25858d13e6b91fee6184943f5a584cb4248e")}};
-    auto taproot2_spent_script_pubkey1{ScriptPubkey{hex_string_to_byte_vec("5120ab78e077d062e7b8acd7063668b4db5355a1b5d5fd2a46a8e98e62e5e63fab77")}};
-    auto taproot2_spending_tx{Transaction{hex_string_to_byte_vec("02000000000102c0f01ead18750892c84b1d4f595149ad38f16847df1fbf490e235b3b78c1f98a0100000000ffffffff456764a19c2682bf5b1567119f06a421849ad1664cf42b5ef95b69d6e2159e9d0000000000ffffffff022202000000000000225120b6c0c2a8ee25a2ae0322ab7f1a06f01746f81f6b90d179c3c2a51a356e6188f1d70e020000000000225120b7da80f57e36930b0515eb09293e25858d13e6b91fee6184943f5a584cb4248e0141933fdc49eb1af1f08ed1e9cf5559259309a8acd25ff1e6999b6955124438aef4fceaa4e6a5f85286631e24837329563595bc3cf4b31e1c687442abb01c4206818101401c9620faf1e8c84187762ad14d04ae3857f59a2f03f1dcbb99290e16dfc572a63b4ea435780a5787af59beb5742fd71cda8a95381517a1ff14b4c67996c4bf8100000000")}};
-    std::vector<TransactionOutput> taproot2_spent_outputs;
-    taproot2_spent_outputs.emplace_back(taproot2_spent_script_pubkey0, 546);
-    taproot2_spent_outputs.emplace_back(taproot2_spent_script_pubkey1, 135125);
-    auto taproot2_precomputed_txdata{PrecomputedTransactionData{
-        /*tx_to=*/taproot2_spending_tx,
-        /*spent_outputs=*/taproot2_spent_outputs,
-    }};
-    run_verify_test(
-        /*spent_script_pubkey=*/taproot2_spent_script_pubkey0,
-        /*spending_tx=*/taproot2_spending_tx,
-        /*precomputed_txdata=*/&taproot2_precomputed_txdata,
-        /*amount=*/546,
-        /*input_index=*/0,
-        /*taproot=*/true);
-    run_verify_test(
-        /*spent_script_pubkey=*/taproot2_spent_script_pubkey1,
-        /*spending_tx=*/taproot2_spending_tx,
-        /*precomputed_txdata=*/&taproot2_precomputed_txdata,
-        /*amount=*/135125,
-        /*input_index=*/1,
-        /*taproot=*/true);
+    BOOST_CHECK(!spent_script_pubkey.Verify(spent_amount - 1, spending_tx, &precomputed_txdata, 0,
+                                            ScriptVerificationFlags::ALL, status));
+    BOOST_CHECK(status == ScriptVerifyStatus::OK);
 }
 
 BOOST_AUTO_TEST_CASE(logging_tests)
@@ -715,12 +588,12 @@ BOOST_AUTO_TEST_CASE(cck_block_header_tests)
     mainnet_block_1_header.resize(80);
     BlockHeader header{mainnet_block_1_header};
     BOOST_CHECK_EQUAL(header.Version(), 4);
-    BOOST_CHECK_EQUAL(header.Timestamp(), 1787596782);
-    BOOST_CHECK_EQUAL(header.Bits(), 0x1e01ffff);
-    BOOST_CHECK_EQUAL(header.Nonce(), 360070);
-    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(header.Hash().ToBytes()), "000001fdb917994e21826d48debd3245978e43e95d09014417e771dc02cd2b8b");
+    BOOST_CHECK_EQUAL(header.Timestamp(), 1787596841);
+    BOOST_CHECK_EQUAL(header.Bits(), 0x1f00ffff);
+    BOOST_CHECK_EQUAL(header.Nonce(), 69871);
+    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(header.Hash().ToBytes()), "7bfacd75f5e2f90f898f22e2619551d63de51d33e1ed0bc2e8fe1e8c7e751339");
     auto prev_hash = header.PrevHash();
-    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(prev_hash.ToBytes()), "0000004b461aae33a4be0ee95ae8461155f2c48130bc8dd521adb71ec0d3e9a2");
+    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(prev_hash.ToBytes()), "8b6373205ad2b6314f2937cebacfc143af9eb6183162c24fb19cdf382ff576c5");
 
     // Test round-trip serialization of block header
     auto header_roundtrip{BlockHeader{header.ToBytes()}};
@@ -730,10 +603,10 @@ BOOST_AUTO_TEST_CASE(cck_block_header_tests)
     Block block{raw_block};
     BlockHeader block_header{block.GetHeader()};
     BOOST_CHECK_EQUAL(block_header.Version(), 4);
-    BOOST_CHECK_EQUAL(block_header.Timestamp(), 1787596782);
-    BOOST_CHECK_EQUAL(block_header.Bits(), 0x1e01ffff);
-    BOOST_CHECK_EQUAL(block_header.Nonce(), 360070);
-    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(block_header.Hash().ToBytes()), "000001fdb917994e21826d48debd3245978e43e95d09014417e771dc02cd2b8b");
+    BOOST_CHECK_EQUAL(block_header.Timestamp(), 1787596841);
+    BOOST_CHECK_EQUAL(block_header.Bits(), 0x1f00ffff);
+    BOOST_CHECK_EQUAL(block_header.Nonce(), 69871);
+    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(block_header.Hash().ToBytes()), "7bfacd75f5e2f90f898f22e2619551d63de51d33e1ed0bc2e8fe1e8c7e751339");
 
     // Verify header from block serializes to first 80 bytes of raw block
     auto block_header_bytes = block_header.ToBytes();
@@ -918,11 +791,11 @@ void chainman_mainnet_validation_test(TestDirectory& test_directory)
     Block block{raw_block};
     BlockHeader header{block.GetHeader()};
     TransactionView tx{block.GetTransaction(block.CountTransactions() - 1)};
-    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(tx.Txid().ToBytes()), "62af4303df8fc7431d17100880d32f303d8b123eb9f246eec06e4c2157ff00b3");
+    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(tx.Txid().ToBytes()), "b6d6f00f0c1bf525e2998e042cc270aa0b8fb3645da3559e0857bec8bf79d08a");
     BOOST_CHECK_EQUAL(header.Version(), 4);
-    BOOST_CHECK_EQUAL(header.Timestamp(), 1787596782);
-    BOOST_CHECK_EQUAL(header.Bits(), 0x1e01ffff);
-    BOOST_CHECK_EQUAL(header.Nonce(), 360070);
+    BOOST_CHECK_EQUAL(header.Timestamp(), 1787596841);
+    BOOST_CHECK_EQUAL(header.Bits(), 0x1f00ffff);
+    BOOST_CHECK_EQUAL(header.Nonce(), 69871);
     BOOST_CHECK_EQUAL(tx.CountInputs(), 1);
     Transaction tx2 = tx;
     BOOST_CHECK_EQUAL(tx2.CountInputs(), 1);
@@ -988,8 +861,32 @@ BOOST_AUTO_TEST_CASE(cck_check_block_context_free)
     BOOST_CHECK(block.Check(consensus_params, BlockCheckFlags::BASE, state));
     BOOST_CHECK(state.GetValidationMode() == ValidationMode::VALID);
 
-    BOOST_CHECK(block.Check(consensus_params, BlockCheckFlags::ALL, state));
+    BOOST_CHECK_MESSAGE(block.Check(consensus_params, BlockCheckFlags::ALL, state),
+                        "block result=" << static_cast<int>(state.GetBlockValidationResult()));
     BOOST_CHECK(state.GetValidationMode() == ValidationMode::VALID);
+
+    // Exercise the context-aware C ABI on the same block object twice. A
+    // successful check must not let CBlock::fChecked bypass a later RandomX
+    // check with a different epoch key.
+    const auto bootstrap_key_hex = hex_string_to_byte_vec("d91b262aecaac2c4868b2cbe1563538f107c33fbee8c5d373bdaa8e551567fe5");
+    std::array<std::byte, 32> bootstrap_key_bytes;
+    for (size_t i{0}; i < bootstrap_key_bytes.size(); ++i) {
+        bootstrap_key_bytes[i] = bootstrap_key_hex[bootstrap_key_bytes.size() - i - 1];
+    }
+    BlockHash bootstrap_key{bootstrap_key_bytes};
+    BlockHashView bootstrap_key_view{bootstrap_key.get()};
+    BOOST_CHECK_MESSAGE(block.Check(consensus_params, BlockCheckFlags::ALL, bootstrap_key_view, /*block_height=*/1, state),
+                        "explicit-key block result=" << static_cast<int>(state.GetBlockValidationResult()));
+    BOOST_CHECK(state.GetValidationMode() == ValidationMode::VALID);
+
+    std::array<std::byte, 32> wrong_key_bytes{};
+    BlockHash wrong_key{wrong_key_bytes};
+    BlockHashView wrong_key_view{wrong_key.get()};
+    BOOST_CHECK(!block.Check(consensus_params, BlockCheckFlags::POW, wrong_key_view, /*block_height=*/1, state));
+    BOOST_CHECK(state.GetValidationMode() == ValidationMode::INVALID);
+
+    BOOST_CHECK(!block.Check(consensus_params, BlockCheckFlags::POW, bootstrap_key_view, /*block_height=*/-1, state));
+    BOOST_CHECK(state.GetValidationMode() == ValidationMode::INTERNAL_ERROR);
 
     auto bad_merkle_block_data = raw_block;
     bad_merkle_block_data[MERKLE_ROOT_OFFSET] ^= std::byte{0x01};
@@ -1229,32 +1126,33 @@ BOOST_AUTO_TEST_CASE(cck_chainman_regtest_tests)
         }
     }
 
-    // Read spent outputs for current tip and its previous block
+    // Read spent outputs for the current tip. The regenerated fixture contains
+    // one non-coinbase transaction in its final block.
     BlockSpentOutputs block_spent_outputs{chainman->ReadBlockSpentOutputs(tip)};
-    BlockSpentOutputs block_spent_outputs_prev{chainman->ReadBlockSpentOutputs(*tip.GetPrevious())};
-    CheckHandle(block_spent_outputs, block_spent_outputs_prev);
-    CheckRange(block_spent_outputs_prev.TxsSpentOutputs(), block_spent_outputs_prev.Count());
+    BlockSpentOutputs block_spent_outputs_copy{chainman->ReadBlockSpentOutputs(tip)};
+    CheckHandle(block_spent_outputs, block_spent_outputs_copy);
+    CheckRange(block_spent_outputs.TxsSpentOutputs(), block_spent_outputs.Count());
     BOOST_CHECK_EQUAL(block_spent_outputs.Count(), 1);
 
-    // Get transaction spent outputs from the last transaction in the two blocks
+    // Get transaction spent outputs from the final block.
     TransactionSpentOutputsView transaction_spent_outputs{block_spent_outputs.GetTxSpentOutputs(block_spent_outputs.Count() - 1)};
     TransactionSpentOutputs owned_transaction_spent_outputs{transaction_spent_outputs};
-    TransactionSpentOutputs owned_transaction_spent_outputs_prev{block_spent_outputs_prev.GetTxSpentOutputs(block_spent_outputs_prev.Count() - 1)};
-    CheckHandle(owned_transaction_spent_outputs, owned_transaction_spent_outputs_prev);
+    TransactionSpentOutputs owned_transaction_spent_outputs_copy{transaction_spent_outputs};
+    CheckHandle(owned_transaction_spent_outputs, owned_transaction_spent_outputs_copy);
     CheckRange(transaction_spent_outputs.Coins(), transaction_spent_outputs.Count());
 
     // Get the last coin from the transaction spent outputs
     CoinView coin{transaction_spent_outputs.GetCoin(transaction_spent_outputs.Count() - 1)};
-    BOOST_CHECK(!coin.IsCoinbase());
+    BOOST_CHECK(coin.IsCoinbase());
     Coin owned_coin{coin};
-    Coin owned_coin_prev{owned_transaction_spent_outputs_prev.GetCoin(owned_transaction_spent_outputs_prev.Count() - 1)};
-    CheckHandle(owned_coin, owned_coin_prev);
+    Coin owned_coin_copy{coin};
+    CheckHandle(owned_coin, owned_coin_copy);
 
     // Validate coin properties
     TransactionOutputView output = coin.GetOutput();
     uint32_t coin_height = coin.GetConfirmationHeight();
-    BOOST_CHECK_EQUAL(coin_height, 143);
-    BOOST_CHECK_EQUAL(output.Amount(), 3949990974);
+    BOOST_CHECK_EQUAL(coin_height, 58);
+    BOOST_CHECK_EQUAL(output.Amount(), 1'000'000'000'000);
 
     // Test script pubkey serialization
     auto script_pubkey = output.GetScriptPubkey();
@@ -1315,18 +1213,12 @@ BOOST_AUTO_TEST_CASE(cck_transaction_check_tests)
 {
     using namespace cck;
 
-    constexpr std::string_view valid_tx_hex{
-        "01000000010001000000000000000000000000000000000000000000000000000000000000"
-        "000000006a473044022067288ea50aa799543a536ff9306f8e1cba05b9c6b10951175b92"
-        "4f96732555ed022026d7b5265f38d21541519e4a1e55044d5b9e17e15cdbaf29ae3792e9"
-        "9e883e7a012103ba8c8b86dea131c22ab967e6dd99bdae8eff7a1f75a2c35f1f944109e3"
-        "fe5e22ffffffff010000000000000000015100000000"};
-    constexpr std::string_view no_outputs_tx_hex{
-        "01000000010001000000000000000000000000000000000000000000000000000000000000"
-        "000000006d483045022100f16703104aab4e4088317c862daec83440242411b039d14280e0"
-        "3dd33b487ab802201318a7be236672c5c56083eb7a5a195bc57a40af7923ff8545016cd3b5"
-        "71e2a601232103c40e5d339df3f30bf753e7e04450ae4ef76c9e45587d1d993bdc4cd06f06"
-        "51c7acffffffff0000000000"};
+    const std::string non_null_hash{"01" + std::string(62, '0')};
+    const std::string regular_input{non_null_hash + "0000000000ffffffff"};
+    const std::string null_input{std::string(64, '0') + "ffffffff00ffffffff"};
+    const std::string typed_output_zero{"000000000000000001" + std::string{TEST_XONLY_PUBKEY}};
+    const std::string valid_tx_hex{TEST_SPENDING_TX};
+    const std::string no_outputs_tx_hex{"0100000001" + regular_input + "0000000000"};
 
     auto expect_valid = [](std::string_view hex) {
         Transaction tx{hex_string_to_byte_vec(hex)};
@@ -1344,13 +1236,11 @@ BOOST_AUTO_TEST_CASE(cck_transaction_check_tests)
         BOOST_CHECK(st.GetTxValidationResult() == TxValidationResult::CONSENSUS);
     };
 
-    // Valid: simple 1-in 1-out transaction (from tx_valid.json)
+    // Valid: a current type-1 P2PK transaction generated on regtest.
     expect_valid(valid_tx_hex);
 
-    // Valid coinbase with scriptSig size 2 (from tx_valid.json)
-    expect_valid(
-        "01000000010000000000000000000000000000000000000000000000000000000000000000"
-        "ffffffff025151ffffffff010000000000000000015100000000");
+    // Valid coinbase with scriptSig size 2 and one typed output.
+    expect_valid("0100000001" + std::string(64, '0') + "ffffffff025151ffffffff01" + typed_output_zero + "00000000");
 
     // No outputs (BADTX from tx_invalid.json)
     expect_invalid(no_outputs_tx_hex);
@@ -1369,60 +1259,24 @@ BOOST_AUTO_TEST_CASE(cck_transaction_check_tests)
         BOOST_CHECK(state.GetTxValidationResult() == TxValidationResult::CONSENSUS);
     }
 
-    // Negative output (BADTX)
-    expect_invalid(
-        "01000000010001000000000000000000000000000000000000000000000000000000000000"
-        "000000006d4830450220063222cbb128731fc09de0d7323746539166544d6c1df84d867cce"
-        "a84bcc8903022100bf568e8552844de664cd41648a031554327aa8844af34b4f27397c65b9"
-        "2c04de0123210243ec37dee0e2e053a9c976f43147e79bc7d9dc606ea51010af1ac80db6b0"
-        "69e1acffffffff01ffffffffffffffff015100000000");
+    // Negative output, MAX_MONEY + 1, and aggregate overflow.
+    expect_invalid("0100000001" + regular_input + "01ffffffffffffffff01" + std::string{TEST_XONLY_PUBKEY} + "00000000");
+    const std::string max_output{"000064a7b3b6e00d01" + std::string{TEST_XONLY_PUBKEY}};
+    const std::string max_plus_one_output{"010064a7b3b6e00d01" + std::string{TEST_XONLY_PUBKEY}};
+    const std::string one_output{"010000000000000001" + std::string{TEST_XONLY_PUBKEY}};
+    expect_invalid("0100000001" + regular_input + "01" + max_plus_one_output + "00000000");
+    expect_invalid("0100000001" + regular_input + "02" + max_output + one_output + "00000000");
 
-    // MAX_MONEY + 1 output (BADTX)
-    expect_invalid(
-        "01000000010001000000000000000000000000000000000000000000000000000000000000"
-        "000000006e493046022100e1eadba00d9296c743cb6ecc703fd9ddc9b3cd12906176a226ae"
-        "4c18d6b00796022100a71aef7d2874deff681ba6080f1b278bac7bb99c61b08a85f4311970"
-        "ffe7f63f012321030c0588dc44d92bdcbf8e72093466766fdc265ead8db64517b0c542275b"
-        "70fffbacffffffff01010064a7b3b6e00d015100000000");
+    // Unknown/reserved output type and duplicate inputs.
+    expect_invalid("0100000001" + regular_input + "01000000000000000000" + "00000000");
+    expect_invalid("0100000002" + regular_input + regular_input + "01" + typed_output_zero + "00000000");
 
-    // MAX_MONEY output + 1 output: sum exceeds MAX_MONEY (BADTX)
-    expect_invalid(
-        "01000000010001000000000000000000000000000000000000000000000000000000000000"
-        "000000006d483045022027deccc14aa6668e78a8c9da3484fbcd4f9dcc9bb7d1b85146314b"
-        "21b9ae4d86022100d0b43dece8cfb07348de0ca8bc5b86276fa88f7f2138381128b7c36ab2"
-        "e42264012321029bb13463ddd5d2cc05da6e84e37536cb9525703cfd8f43afdb414988987a"
-        "92f6acffffffff02000064a7b3b6e00d0151000100000000000000015100000000");
+    // Coinbase scripts outside the allowed 2..100 byte range.
+    expect_invalid("0100000001" + std::string(64, '0') + "ffffffff0151ffffffff01" + typed_output_zero + "00000000");
+    expect_invalid("0100000001" + std::string(64, '0') + "ffffffff65" + std::string(202, '1') + "ffffffff01" + typed_output_zero + "00000000");
 
-    // Duplicate inputs (BADTX)
-    expect_invalid(
-        "01000000020001000000000000000000000000000000000000000000000000000000000000"
-        "000000006c47304402204bb1197053d0d7799bf1b30cd503c44b58d6240cccbdc85b6fe76d"
-        "087980208f02204beeed78200178ffc6c74237bb74b3f276bbb4098b5605d814304fe128bf"
-        "1431012321039e8815e15952a7c3fada1905f8cf55419837133bd7756c0ef14fc8dfe50c0d"
-        "eaacffffffff0001000000000000000000000000000000000000000000000000000000000000"
-        "000000006c47304402202306489afef52a6f62e90bf750bbcdf40c06f5c6b138286e6b6b8617"
-        "6bb9341802200dba98486ea68380f47ebb19a7df173b99e6bc9c681d6ccf3bde31465d1f16"
-        "b3012321039e8815e15952a7c3fada1905f8cf55419837133bd7756c0ef14fc8dfe50c0dea"
-        "acffffffff010000000000000000015100000000");
-
-    // Coinbase with scriptSig size 1: too small (BADTX)
-    expect_invalid(
-        "01000000010000000000000000000000000000000000000000000000000000000000000000"
-        "ffffffff0151ffffffff010000000000000000015100000000");
-
-    // Coinbase with scriptSig size 101: too large (BADTX)
-    expect_invalid(
-        "01000000010000000000000000000000000000000000000000000000000000000000000000"
-        "ffffffff6551515151515151515151515151515151515151515151515151515151515151515151"
-        "515151515151515151515151515151515151515151515151515151515151515151515151515151"
-        "51515151515151515151515151515151515151515151515151515151ffffffff01000000000000"
-        "0000015100000000");
-
-    // Null prevout in non-coinbase: two inputs, one is null (BADTX)
-    expect_invalid(
-        "01000000020000000000000000000000000000000000000000000000000000000000000000"
-        "ffffffff00ffffffff000100000000000000000000000000000000000000000000000000000000"
-        "00000000000000ffffffff010000000000000000015100000000");
+    // Null prevout in a non-coinbase transaction.
+    expect_invalid("0100000002" + null_input + regular_input + "01" + typed_output_zero + "00000000");
 }
 
 class KernelMockTime

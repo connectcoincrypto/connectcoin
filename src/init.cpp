@@ -71,6 +71,7 @@
 #include <policy/fees/estimator_man.h>
 #include <policy/policy.h>
 #include <policy/settings.h>
+#include <pow.h>
 #include <protocol.h>
 #include <random.h>
 #include <rpc/register.h>
@@ -1491,6 +1492,10 @@ static ChainstateLoadResult InitAndLoadChainstate(
         std::tie(status, error) = catch_exceptions([&] { return VerifyLoadedChainstate(chainman, options); });
         if (status == node::ChainstateLoadStatus::SUCCESS) {
             LogInfo("Block index and chainstate loaded");
+            // The persisted tip may be well past the bootstrap epoch. Warm the
+            // actual current key (and a pending lagged key, when applicable)
+            // only after the active chain has been selected.
+            PrepareRandomXKeys(chainman.ActiveTip(), chainparams.GetConsensus());
             node.notifications->setChainstateLoaded(true);
         }
     }

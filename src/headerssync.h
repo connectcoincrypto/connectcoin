@@ -15,6 +15,8 @@
 #include <util/hasher.h>
 
 #include <deque>
+#include <map>
+#include <optional>
 #include <vector>
 
 // A compressed CBlockHeader, which leaves out the prevhash
@@ -151,11 +153,8 @@ public:
      *
      * received_headers: headers that were received over the network for processing.
      *                   Assumes the caller has already verified the headers
-     *                   are continuous, and has checked that each header
-     *                   satisfies the proof-of-work target included in the
-     *                   header (but not necessarily verified that the
-     *                   proof-of-work target is correct and passes consensus
-     *                   rules).
+     *                   are continuous. RandomX proof of work is verified in
+     *                   both synchronization phases before work is credited.
      * full_headers_message: true if the message was at max capacity,
      *                       indicating more headers may be available
      * ProcessingResult.pow_validated_headers: will be filled in with any
@@ -168,7 +167,7 @@ public:
      *                       NextHeadersRequestLocator and send a getheaders message using it.
      */
     ProcessingResult ProcessNextHeaders(std::span<const CBlockHeader>
-            received_headers, bool full_headers_message);
+            received_headers, bool full_headers_message, bool pow_checked = false);
 
     /** Issue the next GETHEADERS message to our peer.
      *
@@ -197,14 +196,17 @@ private:
      *  processed headers.
      *  On failure, this invokes Finalize() and returns false.
      */
-    bool ValidateAndStoreHeadersCommitments(std::span<const CBlockHeader> headers);
+    bool ValidateAndStoreHeadersCommitments(std::span<const CBlockHeader> headers, bool pow_checked);
 
     /** In PRESYNC, process and update state for a single header */
-    bool ValidateAndProcessSingleHeader(const CBlockHeader& current);
+    bool ValidateAndProcessSingleHeader(const CBlockHeader& current, bool pow_checked);
 
     /** In REDOWNLOAD, check a header's commitment (if applicable) and add to
      * buffer for later processing */
-    bool ValidateAndStoreRedownloadedHeader(const CBlockHeader& header);
+    bool ValidateAndStoreRedownloadedHeader(const CBlockHeader& header, bool pow_checked);
+
+    /** Derive an epoch key using the indexed fork point and key blocks seen in this phase. */
+    std::optional<uint256> GetRandomXKey(int64_t block_height, const std::map<int64_t, uint256>& key_blocks) const;
 
     /** Return a set of headers that satisfy our proof-of-work threshold */
     std::vector<CBlockHeader> PopHeadersReadyForAcceptance();
@@ -244,6 +246,9 @@ private:
     /** Store the latest header received while in PRESYNC (initialized to m_chain_start) */
     CBlockHeader m_last_header_received;
 
+    /** RandomX key-block ids observed during PRESYNC. */
+    std::map<int64_t, uint256> m_presync_randomx_key_blocks;
+
     /** Height of m_last_header_received */
     int64_t m_current_height{0};
 
@@ -266,6 +271,9 @@ private:
      * processing.
      */
     uint256 m_redownload_buffer_first_prev_hash;
+
+    /** RandomX key-block ids independently observed during REDOWNLOAD. */
+    std::map<int64_t, uint256> m_redownload_randomx_key_blocks;
 
     /** The accumulated work on the redownloaded chain. */
     arith_uint256 m_redownload_chain_work;

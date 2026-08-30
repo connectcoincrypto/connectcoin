@@ -1,12 +1,17 @@
 {
   "chain": "test",
   "test_chain": true,
-  "genesis": "12550ea62a62f8c9caff6acc43316270bb9fa40a8c399490b6e390d6ea000000",
+  "genesis": "c9a8a5e09dcb5af37d8a79b80ad459c99cdeee585bbc865f275fc1e317030990",
   "subsidy_halving_interval": 450000,
   "pow": {
-    "limit": "000001ffff000000000000000000000000000000000000000000000000000000",
+    "algorithm": "randomx-v2",
+    "limit": "0000ffff00000000000000000000000000000000000000000000000000000000",
+    "randomx_bootstrap_key": "2a73f803209e294a38476b7473e9d4117e956a64a1bdd0cc441aa6ce75a4ba50",
+    "randomx_epoch_blocks": 2048,
+    "randomx_epoch_lag": 64,
+    "randomx_mode": "fast",
     "target_spacing": 60,
-    "difficulty_retarget_interval": 1440,
+    "difficulty_retarget_interval": 240,
     "mindiff_blocks": "yes"
   },
   "net": {

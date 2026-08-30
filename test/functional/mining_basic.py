@@ -271,7 +271,11 @@ class MiningTest(BitcoinTestFramework):
     def test_pruning(self):
         self.log.info("Test that submitblock stores previously pruned block")
         prune_node = self.nodes[2]
-        self.generate(prune_node, 400, sync_fun=self.no_op)
+        # RandomX LIGHT verification makes one 400-block RPC exceed the
+        # framework's per-request timeout on slower builders. Keep each RPC
+        # bounded while preserving the same chain and pruning coverage.
+        for _ in range(4):
+            self.generate(prune_node, 100, sync_fun=self.no_op)
         pruned_block = prune_node.getblock(prune_node.getblockhash(2), verbosity=0)
         pruned_height = prune_node.pruneblockchain(400)
         assert_greater_than_or_equal(pruned_height, 2)
@@ -484,7 +488,9 @@ class MiningTest(BitcoinTestFramework):
         assert_raises_rpc_error(-22, "Block decode failed", node.submitblock, block.serialize()[:-15].hex())
 
         self.log.info("submitblock: Test empty block")
-        assert_equal('high-hash', node.submitblock(hexdata=CBlock().serialize().hex()))
+        # With epoch-keyed RandomX, an unconnecting block has no ancestry from
+        # which to derive its PoW key. Reject it before expensive body checks.
+        assert_equal('prev-blk-not-found', node.submitblock(hexdata=CBlock().serialize().hex()))
 
         self.log.info('submitheader tests')
         assert_raises_rpc_error(-22, 'Block header decode failed', lambda: node.submitheader(hexdata='xx' * BLOCK_HEADER_SIZE))

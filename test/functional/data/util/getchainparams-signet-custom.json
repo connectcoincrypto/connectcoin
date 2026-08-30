@@ -1,15 +1,20 @@
 {
   "chain": "signet",
   "test_chain": true,
-  "genesis": "76f120bd21a2b76bcd9df057f3151e5c87427a236533bc1243c4bf2727010000",
+  "genesis": "c50076f4cd5e3a305d851c091089015c6eed6bb9951bc2658793fd9a17d1e9cc",
   "subsidy_halving_interval": 450000,
   "signet": {
     "challenge": "60"
   },
   "pow": {
-    "limit": "00000377ae000000000000000000000000000000000000000000000000000000",
+    "algorithm": "randomx-v2",
+    "limit": "0000ffff00000000000000000000000000000000000000000000000000000000",
+    "randomx_bootstrap_key": "dbf50093b80c4a5a1afe9a85bfe418311a5e612f2346187c1b065c6092e8b934",
+    "randomx_epoch_blocks": 2048,
+    "randomx_epoch_lag": 64,
+    "randomx_mode": "fast",
     "target_spacing": 60,
-    "difficulty_retarget_interval": 1440,
+    "difficulty_retarget_interval": 240,
     "mindiff_blocks": "no"
   },
   "net": {

@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(test_assumeutxo)
     BOOST_CHECK_EQUAL(out200->hash_serialized.ToString(), "b9ea4c5f1e0cd6d3d9780cc86c44a26e3308165d22cadf86ea9886e82a1026ca");
     BOOST_CHECK_EQUAL(out200->m_chain_tx_count, 201U);
 
-    const auto out200_by_hash{params->AssumeutxoForBlockhash(uint256{"0d8d658b2ee38defdddcbddc97274346471b152657bbb4a11226d482d448af8c"})};
+    const auto out200_by_hash{params->AssumeutxoForBlockhash(uint256{"8fe93355b748d8cacf210853ac520751c3cc6d7ecaf85aadea165c492b806fd9"})};
     BOOST_REQUIRE(out200_by_hash);
     BOOST_CHECK_EQUAL(out200_by_hash->height, 200);
     BOOST_CHECK(!params->AssumeutxoForBlockhash(uint256::ONE));
