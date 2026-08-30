@@ -1495,7 +1495,8 @@ static ChainstateLoadResult InitAndLoadChainstate(
             // The persisted tip may be well past the bootstrap epoch. Warm the
             // actual current key (and a pending lagged key, when applicable)
             // only after the active chain has been selected.
-            PrepareRandomXKeys(chainman.ActiveTip(), chainparams.GetConsensus());
+            const CBlockIndex* active_tip{WITH_LOCK(::cs_main, return chainman.ActiveTip())};
+            PrepareRandomXKeys(active_tip, chainparams.GetConsensus());
             node.notifications->setChainstateLoaded(true);
         }
     }

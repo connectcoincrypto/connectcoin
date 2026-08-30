@@ -68,7 +68,6 @@ pub fn get_subtrees() -> Vec<&'static str> {
         "src/ipc/libmultiprocess",
         "src/leveldb",
         "src/minisketch",
-        "src/randomx",
         "src/secp256k1",
     ]
 }
@@ -78,6 +77,7 @@ pub fn get_pathspecs_default_excludes() -> Vec<String> {
     get_subtrees()
         .iter()
         .chain(&[
+            "src/randomx",                       // vendored, but not a git subtree
             "doc/release-notes/release-notes-*", // archived notes
         ])
         .map(|s| format!(":(exclude){s}"))

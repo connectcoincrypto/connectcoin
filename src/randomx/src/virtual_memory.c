@@ -92,7 +92,7 @@ int setPrivilege(const char* pszPrivilege, BOOL bEnable, char **errfunc) {
 	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken))
 		Fail("OpenProcessToken");
 
-	if (!LookupPrivilegeValue(NULL, pszPrivilege, &tp.Privileges[0].Luid)) {
+	if (!LookupPrivilegeValueA(NULL, pszPrivilege, &tp.Privileges[0].Luid)) {
 		*errfunc = "LookupPrivilegeValue";
 		error = GetLastError();
 		goto out;

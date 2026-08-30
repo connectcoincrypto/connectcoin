@@ -84,12 +84,14 @@ public:
 
 private:
     static constexpr size_t MAX_CONTEXTS{2};
+    using EntryIterator = std::vector<RandomXCacheEntry>::iterator;
+
     std::mutex m_mutex;
     uint64_t m_clock{0};
     std::vector<RandomXCacheEntry> m_entries;
     std::vector<std::shared_future<std::shared_ptr<const RandomXContext>>> m_retired;
 
-    auto Find(const uint256& key, RandomXMemoryMode mode)
+    EntryIterator Find(const uint256& key, RandomXMemoryMode mode)
     {
         return std::find_if(m_entries.begin(), m_entries.end(), [&](const auto& entry) {
             return entry.key == key && entry.mode == mode;
@@ -103,7 +105,7 @@ private:
         });
     }
 
-    auto Insert(const uint256& key, RandomXMemoryMode mode)
+    EntryIterator Insert(const uint256& key, RandomXMemoryMode mode)
     {
         // Destroying the last shared_future returned by std::async may wait for
         // the task. Keep evicted builds alive until they are ready so callers

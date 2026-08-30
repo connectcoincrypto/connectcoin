@@ -29,10 +29,40 @@ set(RANDOMX_BUILD_TESTS OFF CACHE BOOL "Build RandomX tests and benchmark tools"
 set(RANDOMX_INSTALL OFF CACHE BOOL "Install the RandomX library and public header" FORCE)
 add_subdirectory(randomx EXCLUDE_FROM_ALL)
 target_include_directories(randomx SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/randomx/src)
-# RandomX executes consensus-critical, untrusted input. Apply the same
-# sanitizer and platform-hardening policy as the rest of the node. Keep
-# warnings non-fatal because the vendored project retains its upstream style.
-target_link_libraries(randomx PRIVATE core_interface)
+# RandomX executes consensus-critical, untrusted input. Apply the core hardening,
+# platform definitions, and sanitizer options to its C and C++ sources, but not
+# to its MASM source, which rejects compiler-specific C/C++ flags. Do not link
+# core_interface: its transitive debug policy defines _GLIBCXX_DEBUG, which
+# changes std::vector's layout and violates a requirement of the RandomX JIT.
+get_target_property(randomx_core_compile_options core_interface INTERFACE_COMPILE_OPTIONS)
+get_target_property(randomx_core_compile_definitions core_interface INTERFACE_COMPILE_DEFINITIONS)
+if(randomx_core_compile_options)
+  target_compile_options(randomx PRIVATE
+    "$<$<COMPILE_LANGUAGE:C,CXX>:${randomx_core_compile_options}>"
+  )
+endif()
+if(randomx_core_compile_definitions)
+  target_compile_definitions(randomx PRIVATE
+    "$<$<COMPILE_LANGUAGE:C,CXX>:${randomx_core_compile_definitions}>"
+  )
+endif()
+target_compile_options(randomx PRIVATE
+  "$<$<COMPILE_LANGUAGE:C,CXX>:$<TARGET_PROPERTY:sanitize_interface,INTERFACE_COMPILE_OPTIONS>>"
+)
+unset(randomx_core_compile_options)
+unset(randomx_core_compile_definitions)
+target_link_options(randomx PRIVATE
+  "$<TARGET_PROPERTY:sanitize_interface,INTERFACE_LINK_OPTIONS>"
+)
+if(TARGET Threads::Threads)
+  target_link_libraries(randomx PRIVATE Threads::Threads)
+endif()
+if(MSVC)
+  target_compile_definitions(randomx PRIVATE
+    "$<$<COMPILE_LANGUAGE:C,CXX>:_CRT_SECURE_NO_WARNINGS>"
+  )
+endif()
+# Keep upstream warnings non-fatal while retaining hardening flags.
 set_property(TARGET randomx PROPERTY COMPILE_WARNING_AS_ERROR OFF)
 
 # Set top-level target output locations.

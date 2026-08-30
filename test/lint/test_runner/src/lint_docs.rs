@@ -44,6 +44,7 @@ pub fn lint_doc_args() -> LintResult {
 pub fn lint_markdown() -> LintResult {
     let bin_name = "mlc";
     let mut md_ignore_paths = get_subtrees();
+    md_ignore_paths.push("src/randomx");
     md_ignore_paths.push("./doc/README_doxygen.md");
     let md_ignore_path_str = md_ignore_paths.join(",");
 

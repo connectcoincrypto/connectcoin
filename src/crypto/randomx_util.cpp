@@ -65,21 +65,21 @@ randomx_flags MakeBaseFlags(RandomXAlgorithm algorithm, RandomXMemoryMode memory
     flags = RemoveFlag(flags, RANDOMX_FLAG_LARGE_PAGES);
     flags = RemoveFlag(flags, RANDOMX_FLAG_SECURE);
 
-    switch (algorithm) {
-    case RandomXAlgorithm::V2:
-        flags = AddFlag(flags, RANDOMX_FLAG_V2);
-        break;
-    default:
+#if defined(_MSC_VER) && defined(_DEBUG)
+    // MSVC's debug STL changes randomx_cache's layout. Upstream documents
+    // that its JIT is unsafe with that layout; the interpreter is
+    // consensus-equivalent and keeps Debug builds usable.
+    flags = RemoveFlag(flags, RANDOMX_FLAG_JIT);
+#endif
+
+    if (algorithm != RandomXAlgorithm::V2) {
         throw std::invalid_argument("Unknown RandomX algorithm variant");
     }
+    flags = AddFlag(flags, RANDOMX_FLAG_V2);
 
-    switch (memory_mode) {
-    case RandomXMemoryMode::LIGHT:
-        break;
-    case RandomXMemoryMode::FAST:
+    if (memory_mode == RandomXMemoryMode::FAST) {
         flags = AddFlag(flags, RANDOMX_FLAG_FULL_MEM);
-        break;
-    default:
+    } else if (memory_mode != RandomXMemoryMode::LIGHT) {
         throw std::invalid_argument("Unknown RandomX memory mode");
     }
 
