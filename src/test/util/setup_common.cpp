@@ -171,6 +171,12 @@ BasicTestingSetup::BasicTestingSetup(const ChainType chainType, TestOpts opts)
     if (chainType == ChainType::REGTEST && EnableFuzzDeterminism()) {
         arguments.push_back("-test=randomx_mock_pow");
     }
+    if (std::getenv("TEST_RANDOMX_MOCK_POW") != nullptr) {
+        // Generic sanitizer and emulated test jobs use mocked regtest PoW. Keep
+        // public-network fixtures in LIGHT mode as well so they do not launch
+        // multi-gigabyte FAST dataset preparation in the background.
+        arguments.push_back("-randomxfast=0");
+    }
     if (G_TEST_COMMAND_LINE_ARGUMENTS) {
         arguments = Cat(arguments, G_TEST_COMMAND_LINE_ARGUMENTS());
     }

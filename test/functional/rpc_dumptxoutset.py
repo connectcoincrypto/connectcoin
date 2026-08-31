@@ -5,6 +5,8 @@
 """Test the generation of UTXO snapshots using `dumptxoutset`.
 """
 
+import os
+
 from test_framework.blocktools import COINBASE_MATURITY
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
@@ -65,15 +67,27 @@ class DumptxoutsetTest(BitcoinTestFramework):
         assert_equal(out['coins_written'], 101)
         assert_equal(out['base_height'], 100)
         assert_equal(out['path'], str(expected_path))
-        # Blockhash should be deterministic based on mocked time.
+        # Blockhash should be deterministic based on mocked time and the PoW
+        # implementation selected by the test environment.
+        expected_base_hash = (
+            '0f2e376f37ce7a00e055cd7bfa8497ff6feb5975f9b51dec242cfa1e237d77b2'
+            if os.getenv('TEST_RANDOMX_MOCK_POW') is not None else
+            'fe753bb1c4a50cc7b9f96ae6c986ff55d570417ca4295cba12edf310b6c76e55'
+        )
         assert_equal(
             out['base_hash'],
-            'fe753bb1c4a50cc7b9f96ae6c986ff55d570417ca4295cba12edf310b6c76e55')
+            expected_base_hash)
 
-        # UTXO snapshot hash should be deterministic based on mocked time.
+        # The snapshot includes the base block hash, so its file hash also
+        # differs when the mock PoW implementation is active.
+        expected_snapshot_hash = (
+            '64d812c9089ec82d5b69b5a97f6dae0dfc7eac9318a872b26ebfcedbb952a871'
+            if os.getenv('TEST_RANDOMX_MOCK_POW') is not None else
+            '96a203f1a9522e43117fa718d6c5c35b55b436e6580270f74df20f9d199ac29e'
+        )
         assert_equal(
             sha256sum_file(str(expected_path)).hex(),
-            '96a203f1a9522e43117fa718d6c5c35b55b436e6580270f74df20f9d199ac29e')
+            expected_snapshot_hash)
 
         assert_equal(
             out['txoutset_hash'], '7fcd124173c64e975bd0d7bfc9279ad6833cc238274e55210525e197c1a3e5a3')
