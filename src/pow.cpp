@@ -339,14 +339,22 @@ bool CheckProofOfWork(const CBlockHeader& header, const CBlockIndex* pindexPrev,
     return CheckProofOfWork(header, GetRandomXKey(pindexPrev, params), block_height, params);
 }
 
-bool CheckProofOfWork(const CBlockHeader& header, const uint256& key, int /*block_height*/, const Consensus::Params& params)
+bool CheckProofOfWork(const CBlockHeader& header, const uint256& key, int block_height, const Consensus::Params& params)
 {
+    if (params.randomx_mock_pow) {
+        // The hardcoded genesis was mined with RandomX. Test harnesses that
+        // replace RandomX with header hashing must still be able to initialize
+        // the chain from that exact consensus genesis.
+        if (block_height == 0 && header.GetHash() == params.hashGenesisBlock) return true;
+        return CheckProofOfWorkImpl(header.GetHash(), header.nBits, params);
+    }
     if (EnableFuzzDeterminism()) return (header.GetHash().data()[31] & 0x80) == 0;
     return CheckProofOfWorkImpl(GetPoWHash(header, key, params), header.nBits, params);
 }
 
 void PrepareRandomXKey(const uint256& key, const Consensus::Params& params)
 {
+    if (params.randomx_mock_pow || EnableFuzzDeterminism()) return;
     GetRandomXContextCache().Prepare(key, GetRandomXMemoryMode(params));
 }
 

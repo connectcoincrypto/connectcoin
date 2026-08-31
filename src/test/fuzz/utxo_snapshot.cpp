@@ -71,7 +71,9 @@ void sanity_check_snapshot()
 template <bool INVALID>
 void initialize_chain()
 {
-    const auto params{CreateChainParams(ArgsManager{}, ChainType::REGTEST)};
+    ArgsManager args;
+    args.ForceSetArg("-test", "randomx_mock_pow");
+    const auto params{CreateChainParams(args, ChainType::REGTEST)};
     static const auto chain{CreateBlockChain(2 * COINBASE_MATURITY, *params)};
     g_chain = &chain;
     FakeNodeClock node_clock{chain.back()->Time()};

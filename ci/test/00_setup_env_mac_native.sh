@@ -11,6 +11,7 @@ export PIP_PACKAGES="--break-system-packages pycapnp pyzmq"
 export GOAL="install deploy"
 export CMAKE_GENERATOR="Ninja"
 export CI_OS_NAME="macos"
+export TEST_RANDOMX_MOCK_POW=1  # Generic tests exercise chain logic; randomx_tests covers the real PoW implementation.
 export NO_DEPENDS=1
 export OSX_SDK=""
 export CONNECTCOIN_CONFIG="\

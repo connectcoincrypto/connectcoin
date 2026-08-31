@@ -175,6 +175,8 @@ class TestNode():
             # suite runs many nodes concurrently, so avoid allocating a 2 GiB
             # dataset in every process.
             self.args.append("-randomxfast=0")
+            if self.chain == "regtest" and os.getenv("TEST_RANDOMX_MOCK_POW") is not None:
+                self.args.append("-test=randomx_mock_pow")
 
         # Default behavior from global -v2transport flag is added to args to persist it over restarts.
         # May be overwritten in individual tests, using extra_args.

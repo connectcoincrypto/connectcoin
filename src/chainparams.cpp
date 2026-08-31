@@ -125,6 +125,7 @@ void ReadSigNetArgs(const ArgsManager& args, CChainParams::SigNetOptions& option
 void ReadRegTestArgs(const ArgsManager& args, CChainParams::RegTestOptions& options)
 {
     options.randomx_fast = args.GetBoolArg("-randomxfast", DEFAULT_RANDOMX_FAST);
+    options.randomx_mock_pow = HasTestOption(args, "randomx_mock_pow");
     if (auto value = args.GetBoolArg("-fastprune")) options.fastprune = *value;
     if (HasTestOption(args, "bip94")) options.enforce_bip94 = true;
 

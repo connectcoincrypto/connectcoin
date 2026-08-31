@@ -127,6 +127,8 @@ struct Params {
      * same hash. Production nodes default to FAST; tests may select LIGHT.
      */
     bool randomx_fast_mode{sizeof(void*) >= 8};
+    /** Regtest-only test harness policy. Never enabled on public networks. */
+    bool randomx_mock_pow{false};
     bool fPowAllowMinDifficultyBlocks;
     /**
       * Enforce BIP94 timewarp attack mitigation. On testnet4 this also enforces

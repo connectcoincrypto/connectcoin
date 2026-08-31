@@ -176,6 +176,30 @@ BOOST_AUTO_TEST_CASE(randomx_epoch_schedule)
     BOOST_CHECK(GetRandomXKey(&blocks[9], short_epoch_consensus) == hashes[8]); // candidate 10
 }
 
+BOOST_AUTO_TEST_CASE(randomx_mock_pow)
+{
+    const auto regtest_params{CreateChainParams(ArgsManager{}, ChainType::REGTEST)};
+    const auto& genesis{regtest_params->GenesisBlock()};
+    auto consensus{regtest_params->GetConsensus()};
+    BOOST_CHECK(!consensus.randomx_mock_pow);
+
+    ArgsManager mock_args;
+    mock_args.ForceSetArg("-test", "randomx_mock_pow");
+    BOOST_CHECK(CreateChainParams(mock_args, ChainType::REGTEST)->GetConsensus().randomx_mock_pow);
+    BOOST_CHECK(!CreateChainParams(mock_args, ChainType::MAIN)->GetConsensus().randomx_mock_pow);
+
+    consensus.randomx_mock_pow = true;
+
+    // The test-only hash substitution must preserve the exact hardcoded
+    // RandomX genesis while using header hashing for every later block.
+    BOOST_CHECK(CheckProofOfWork(genesis, uint256{}, 0, consensus));
+    CBlockHeader next{genesis};
+    next.hashPrevBlock = genesis.GetHash();
+    BOOST_CHECK_EQUAL(
+        CheckProofOfWork(next, uint256{}, 1, consensus),
+        CheckProofOfWork(next.GetHash(), next.nBits, consensus));
+}
+
 BOOST_AUTO_TEST_CASE(GetBlockProofEquivalentTime_test)
 {
     const auto chainParams = CreateChainParams(*m_node.args, ChainType::MAIN);

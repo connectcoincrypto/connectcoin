@@ -521,6 +521,8 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
 
     def _install_pow_hash_callback(self):
         def randomx_pow_hash(header):
+            if self.chain == "regtest" and os.getenv("TEST_RANDOMX_MOCK_POW") is not None:
+                return header.hash_int
             header_hex = header._serialize_header().hex()
             for node in self.nodes:
                 if node.running and node.rpc_connected:

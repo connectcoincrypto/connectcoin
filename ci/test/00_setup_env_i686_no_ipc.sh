@@ -16,6 +16,7 @@ export PACKAGES="g++-i686-linux-gnu binutils-i686-linux-gnu libstdc++6:i386 liba
 export DEP_OPTS="DEBUG=1 NO_IPC=1"
 export GOAL="install"
 export CI_LIMIT_STACK_SIZE=1
+export TEST_RANDOMX_MOCK_POW=1  # RandomX LIGHT hashing is prohibitively slow in the 32-bit generic test suite.
 export CONNECTCOIN_CONFIG="\
  --preset=dev-mode \
  -DENABLE_IPC=OFF \

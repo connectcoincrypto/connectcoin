@@ -31,3 +31,4 @@ export CONNECTCOIN_CONFIG="\
  -DAPPEND_CPPFLAGS='-U_FORTIFY_SOURCE' \
 "
 export USE_INSTRUMENTED_LIBCPP="MemoryWithOrigins"
+export TEST_RANDOMX_MOCK_POW=1  # Keep generic test processes below the MSan memory limit.

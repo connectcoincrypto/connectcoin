@@ -17,6 +17,8 @@ The upstream CMake file has small integration changes locally:
 - The embedded target is always static, and MSVC ARM64 uses the portable
   interpreter instead of GNU AArch64 assembly.
 - The MSVC assembly-generation rule tracks `configuration.h` explicitly.
+- The hardware-AES probe uses a thread-local dummy value so concurrent VM
+  creation does not race on upstream's process-global probe storage.
 
 ConnectCoin disables both options and tests its wrapper and the official v2
 reference vector in `src/test/randomx_tests.cpp`. CI also enables the

@@ -161,6 +161,7 @@ public:
         // Directly constructed regtest params stay memory-light. The
         // node-facing parser uses FAST by default on 64-bit hosts.
         bool randomx_fast{false};
+        bool randomx_mock_pow{false};
     };
 
     struct MainNetOptions {

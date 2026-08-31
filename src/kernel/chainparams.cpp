@@ -500,6 +500,7 @@ public:
         consensus.randomx_epoch_blocks = 0;
         consensus.randomx_epoch_lag = 0;
         consensus.randomx_fast_mode = opts.randomx_fast;
+        consensus.randomx_mock_pow = opts.randomx_mock_pow;
         consensus.nPowTargetTimespan = 24 * 60 * 60; // one day
         consensus.nPowTargetSpacing = 10 * 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
@@ -543,7 +544,9 @@ public:
                 .height = 200,
                 .hash_serialized = AssumeutxoHash{uint256{"b9ea4c5f1e0cd6d3d9780cc86c44a26e3308165d22cadf86ea9886e82a1026ca"}},
                 .m_chain_tx_count = 201,
-                .blockhash = uint256{"8fe93355b748d8cacf210853ac520751c3cc6d7ecaf85aadea165c492b806fd9"},
+                .blockhash = opts.randomx_mock_pow
+                    ? uint256{"1ccff6d470035e3da4f35f5cad803bb01c257368d1322fd671e01d3f6a7e6253"}
+                    : uint256{"8fe93355b748d8cacf210853ac520751c3cc6d7ecaf85aadea165c492b806fd9"},
             },
         };
 
