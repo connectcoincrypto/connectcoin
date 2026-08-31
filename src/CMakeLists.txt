@@ -65,8 +65,8 @@ target_compile_options(randomx PRIVATE
 # Keep the memory/thread and true-UB sanitizer coverage while suppressing only
 # Clang's integer checks for defined behavior in this vendored implementation.
 target_compile_options(randomx PRIVATE
-  "$<$<COMPILE_LANG_AND_ID:C,Clang,AppleClang>:-fno-sanitize=unsigned-integer-overflow,unsigned-shift-base,implicit-integer-sign-change>"
-  "$<$<COMPILE_LANG_AND_ID:CXX,Clang,AppleClang>:-fno-sanitize=unsigned-integer-overflow,unsigned-shift-base,implicit-integer-sign-change>"
+  "$<$<COMPILE_LANG_AND_ID:C,Clang,AppleClang>:-fno-sanitize=unsigned-integer-overflow,unsigned-shift-base,implicit-integer-sign-change,implicit-integer-truncation>"
+  "$<$<COMPILE_LANG_AND_ID:CXX,Clang,AppleClang>:-fno-sanitize=unsigned-integer-overflow,unsigned-shift-base,implicit-integer-sign-change,implicit-integer-truncation>"
 )
 unset(randomx_core_compile_options)
 unset(randomx_core_compile_definitions)

@@ -32,3 +32,4 @@ export CONNECTCOIN_CONFIG="\
 "
 export USE_INSTRUMENTED_LIBCPP="MemoryWithOrigins"
 export TEST_RANDOMX_MOCK_POW=1  # Keep generic test processes below the MSan memory limit.
+export MAKEJOBS="-j2"  # Avoid MSan OOMs from four concurrent wallet test binaries.

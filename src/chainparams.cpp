@@ -17,6 +17,7 @@
 
 #include <cassert>
 #include <cstdint>
+#include <cstdlib>
 #include <limits>
 #include <stdexcept>
 #include <vector>
@@ -125,7 +126,8 @@ void ReadSigNetArgs(const ArgsManager& args, CChainParams::SigNetOptions& option
 void ReadRegTestArgs(const ArgsManager& args, CChainParams::RegTestOptions& options)
 {
     options.randomx_fast = args.GetBoolArg("-randomxfast", DEFAULT_RANDOMX_FAST);
-    options.randomx_mock_pow = HasTestOption(args, "randomx_mock_pow");
+    options.randomx_mock_pow =
+        HasTestOption(args, "randomx_mock_pow") || std::getenv("TEST_RANDOMX_MOCK_POW") != nullptr;
     if (auto value = args.GetBoolArg("-fastprune")) options.fastprune = *value;
     if (HasTestOption(args, "bip94")) options.enforce_bip94 = true;
 

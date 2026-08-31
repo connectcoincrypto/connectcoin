@@ -168,8 +168,7 @@ BasicTestingSetup::BasicTestingSetup(const ChainType chainType, TestOpts opts)
             "-debugexclude=leveldb",
         },
         opts.extra_args);
-    if (chainType == ChainType::REGTEST &&
-        (EnableFuzzDeterminism() || std::getenv("TEST_RANDOMX_MOCK_POW") != nullptr)) {
+    if (chainType == ChainType::REGTEST && EnableFuzzDeterminism()) {
         arguments.push_back("-test=randomx_mock_pow");
     }
     if (G_TEST_COMMAND_LINE_ARGUMENTS) {

@@ -5,12 +5,14 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <pow.h>
-#include <test/util/random.h>
 #include <test/util/common.h>
+#include <test/util/random.h>
 #include <test/util/setup_common.h>
 #include <util/chaintype.h>
 
 #include <boost/test/unit_test.hpp>
+
+#include <cstdlib>
 
 BOOST_FIXTURE_TEST_SUITE(pow_tests, BasicTestingSetup)
 
@@ -181,7 +183,7 @@ BOOST_AUTO_TEST_CASE(randomx_mock_pow)
     const auto regtest_params{CreateChainParams(ArgsManager{}, ChainType::REGTEST)};
     const auto& genesis{regtest_params->GenesisBlock()};
     auto consensus{regtest_params->GetConsensus()};
-    BOOST_CHECK(!consensus.randomx_mock_pow);
+    BOOST_CHECK_EQUAL(consensus.randomx_mock_pow, std::getenv("TEST_RANDOMX_MOCK_POW") != nullptr);
 
     ArgsManager mock_args;
     mock_args.ForceSetArg("-test", "randomx_mock_pow");

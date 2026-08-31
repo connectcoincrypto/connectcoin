@@ -24,3 +24,5 @@ export CONNECTCOIN_CONFIG="\
   -DAPPEND_CPPFLAGS='-DARENA_DEBUG -DDEBUG_LOCKCONTENTION -D_LIBCPP_REMOVE_TRANSITIVE_INCLUDES -U_FORTIFY_SOURCE' \
 "
 export USE_INSTRUMENTED_LIBCPP="Thread"
+export TEST_RANDOMX_MOCK_POW=1  # Dedicated RandomX tests still exercise the real implementation.
+export MAKEJOBS="-j2"  # Keep instrumented build and test concurrency responsive on hosted runners.
