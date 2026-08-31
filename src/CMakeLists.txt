@@ -27,7 +27,14 @@ include(../cmake/secp256k1.cmake)
 add_secp256k1(secp256k1)
 set(RANDOMX_BUILD_TESTS OFF CACHE BOOL "Build RandomX tests and benchmark tools" FORCE)
 set(RANDOMX_INSTALL OFF CACHE BOOL "Install the RandomX library and public header" FORCE)
+# The project's Debug flags enable -ftrapv globally, while RandomX relies on
+# modular arithmetic. Remove it only from the RandomX subdirectory; restoring
+# the parent value immediately keeps the policy unchanged for ConnectCoin code.
+set(randomx_parent_cxx_flags_debug "${CMAKE_CXX_FLAGS_DEBUG}")
+string(REGEX REPLACE "(^|[ \t])-ftrapv([ \t]|$)" "\\1\\2" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 add_subdirectory(randomx EXCLUDE_FROM_ALL)
+set(CMAKE_CXX_FLAGS_DEBUG "${randomx_parent_cxx_flags_debug}")
+unset(randomx_parent_cxx_flags_debug)
 target_include_directories(randomx SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/randomx/src)
 # RandomX executes consensus-critical, untrusted input. Apply the core hardening,
 # platform definitions, and sanitizer options to its C and C++ sources, but not
@@ -49,18 +56,17 @@ endif()
 target_compile_options(randomx PRIVATE
   "$<$<COMPILE_LANGUAGE:C,CXX>:$<TARGET_PROPERTY:sanitize_interface,INTERFACE_COMPILE_OPTIONS>>"
 )
-# Debug builds enable -ftrapv project-wide. RandomX's VM and hashing code use
-# intentional modular integer arithmetic, so trapping there aborts valid
-# LIGHT/interpreter execution (notably on i686).
+# Select defined wrapping semantics for RandomX's C++ modular arithmetic
+# (notably needed by i686 LIGHT mode).
 target_compile_options(randomx PRIVATE
-  "$<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang>:-fno-trapv>"
+  "$<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang>:-fwrapv>"
 )
-# RandomX deliberately relies on defined unsigned wraparound and truncation.
+# RandomX deliberately relies on defined unsigned wraparound and shifts.
 # Keep the memory/thread and true-UB sanitizer coverage while suppressing only
 # Clang's integer checks for defined behavior in this vendored implementation.
 target_compile_options(randomx PRIVATE
-  "$<$<COMPILE_LANG_AND_ID:C,Clang,AppleClang>:-fno-sanitize=unsigned-integer-overflow,unsigned-shift-base,implicit-integer-conversion>"
-  "$<$<COMPILE_LANG_AND_ID:CXX,Clang,AppleClang>:-fno-sanitize=unsigned-integer-overflow,unsigned-shift-base,implicit-integer-conversion>"
+  "$<$<COMPILE_LANG_AND_ID:C,Clang,AppleClang>:-fno-sanitize=unsigned-integer-overflow,unsigned-shift-base>"
+  "$<$<COMPILE_LANG_AND_ID:CXX,Clang,AppleClang>:-fno-sanitize=unsigned-integer-overflow,unsigned-shift-base>"
 )
 unset(randomx_core_compile_options)
 unset(randomx_core_compile_definitions)
