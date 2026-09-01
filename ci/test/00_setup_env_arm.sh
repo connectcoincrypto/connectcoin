@@ -16,10 +16,14 @@ export CI_IMAGE_PLATFORM="linux/arm64"
 export GOAL="install"
 export CI_LIMIT_STACK_SIZE=1
 export TEST_RANDOMX_MOCK_POW=1  # Avoid thousands of RandomX LIGHT hashes under ARM emulation.
+# Fuzz and benchmark targets are covered by dedicated native jobs; compiling
+# their hundreds of sources here needlessly dominates the 32-bit job.
 # -Wno-psabi is to disable ABI warnings: "note: parameter passing for argument of type ... changed in GCC 7.1"
 # This could be removed once the ABI change warning does not show up by default
 export CONNECTCOIN_CONFIG=" \
   --preset=dev-mode \
+  -DBUILD_BENCH=OFF \
+  -DBUILD_FUZZ_BINARY=OFF \
   -DREDUCE_EXPORTS=ON \
   -DCMAKE_CXX_FLAGS='-Wno-psabi -Wno-error=maybe-uninitialized' \
 "

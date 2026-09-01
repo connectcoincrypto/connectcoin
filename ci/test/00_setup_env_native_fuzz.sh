@@ -10,6 +10,9 @@ export CI_IMAGE_NAME_TAG="mirror.gcr.io/ubuntu:26.04"
 export FUZZ_SHARD_COUNT="${FUZZ_SHARD_COUNT:-1}"
 export FUZZ_SHARD_INDEX="${FUZZ_SHARD_INDEX:-0}"
 export CONTAINER_NAME="ci_native_fuzz_${FUZZ_SHARD_INDEX}"
+# Both shards compile the same configuration. Share their Docker and compiler
+# cache namespace while retaining distinct container names for execution.
+export CI_CACHE_NAME="ci_native_fuzz"
 export FUZZ_TESTS_CONFIG="--shard-count=${FUZZ_SHARD_COUNT} --shard-index=${FUZZ_SHARD_INDEX}"
 export APT_LLVM_V="22"
 export PACKAGES="clang-${APT_LLVM_V} llvm-${APT_LLVM_V} libclang-rt-${APT_LLVM_V}-dev libboost-dev libsqlite3-dev libcapnp-dev capnproto"

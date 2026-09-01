@@ -17,8 +17,12 @@ export DEP_OPTS="DEBUG=1 NO_IPC=1"
 export GOAL="install"
 export CI_LIMIT_STACK_SIZE=1
 export TEST_RANDOMX_MOCK_POW=1  # RandomX LIGHT hashing is prohibitively slow in the 32-bit generic test suite.
+# Fuzz and benchmark targets are covered by dedicated native jobs; compiling
+# their hundreds of sources here needlessly dominates the 32-bit job.
 export CONNECTCOIN_CONFIG="\
  --preset=dev-mode \
+ -DBUILD_BENCH=OFF \
+ -DBUILD_FUZZ_BINARY=OFF \
  -DENABLE_IPC=OFF \
  -DCMAKE_BUILD_TYPE=Debug \
  -DAPPEND_CPPFLAGS='-DBOOST_MULTI_INDEX_ENABLE_SAFE_MODE' \

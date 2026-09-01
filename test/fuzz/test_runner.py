@@ -30,6 +30,32 @@ def get_fuzz_env(*, target, source_dir):
     return fuzz_env
 
 
+def select_fuzz_shard(*, targets, corpus_dir, shard_count, shard_index):
+    """Balance targets by corpus input count and return one deterministic shard."""
+    if shard_count == 1:
+        return targets, None
+
+    weighted_targets = []
+    for target in targets:
+        target_corpus = corpus_dir / target
+        try:
+            with os.scandir(target_corpus) as entries:
+                input_count = sum(1 for entry in entries if entry.is_file())
+        except FileNotFoundError:
+            input_count = 0
+        # Empty corpora run for --empty_min_time, so they still represent work.
+        weighted_targets.append((target, max(input_count, 1)))
+
+    shards = [[] for _ in range(shard_count)]
+    shard_loads = [0] * shard_count
+    for target, input_count in sorted(weighted_targets, key=lambda item: (-item[1], item[0])):
+        lightest_shard = min(range(shard_count), key=lambda index: (shard_loads[index], index))
+        shards[lightest_shard].append(target)
+        shard_loads[lightest_shard] += input_count
+
+    return sorted(shards[shard_index]), shard_loads
+
+
 def main():
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -68,7 +94,7 @@ def main():
         '--shard-count',
         type=int,
         default=1,
-        help='Split the sorted fuzz target list into this many shards.',
+        help='Balance the fuzz target list by corpus input count across this many shards.',
     )
     parser.add_argument(
         '--shard-index',
@@ -150,16 +176,25 @@ def main():
         parser.error('--shard-count must be at least 1')
     if not 0 <= args.shard_index < args.shard_count:
         parser.error('--shard-index must be between 0 and --shard-count - 1')
-    test_list_selection = test_list_selection[args.shard_index::args.shard_count]
+    test_list_selection, shard_loads = select_fuzz_shard(
+        targets=test_list_selection,
+        corpus_dir=args.corpus_dir,
+        shard_count=args.shard_count,
+        shard_index=args.shard_index,
+    )
     if not test_list_selection:
         parser.error('Selected fuzz shard contains no targets')
 
+    load_description = ''
+    if shard_loads is not None:
+        load_description = ' (estimated corpus inputs: {})'.format(shard_loads[args.shard_index])
     logging.info(
-        "{} of {} detected fuzz target(s) selected for shard {}/{}: {}".format(
+        "{} of {} detected fuzz target(s) selected for shard {}/{}{}: {}".format(
             len(test_list_selection),
             len(test_list_all),
             args.shard_index + 1,
             args.shard_count,
+            load_description,
             " ".join(test_list_selection),
         )
     )

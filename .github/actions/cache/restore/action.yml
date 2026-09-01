@@ -12,8 +12,9 @@ runs:
       uses: ./.github/actions/cache/restore/internal
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ env.CONTAINER_NAME }}-${{ github.run_id }}
+        key: ccache-${{ env.CI_CACHE_NAME }}-${{ github.run_id }}-${{ env.CONTAINER_NAME }}
         restore-keys: |
+          ccache-${{ env.CI_CACHE_NAME }}-
           ccache-${{ env.CONTAINER_NAME }}-
         provider: ${{ inputs.provider }}
 

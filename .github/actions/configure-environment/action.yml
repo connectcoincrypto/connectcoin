@@ -25,3 +25,4 @@ runs:
       run: |
         source $FILE_ENV
         echo "CONTAINER_NAME=$CONTAINER_NAME" >> "$GITHUB_ENV"
+        echo "CI_CACHE_NAME=${CI_CACHE_NAME:-$CONTAINER_NAME}" >> "$GITHUB_ENV"

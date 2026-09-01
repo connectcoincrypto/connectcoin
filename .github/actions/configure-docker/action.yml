@@ -36,7 +36,7 @@ runs:
     - name: Construct docker build cache args
       shell: bash
       run: |
-        cache_options="scope=${CONTAINER_NAME}"
+        cache_options="scope=${CI_CACHE_NAME:-$CONTAINER_NAME}"
         if [[ "${{ inputs.provider }}" == "warp" ]]; then
           cache_options="url=http://127.0.0.1:49160/,version=1,${cache_options}"
         fi

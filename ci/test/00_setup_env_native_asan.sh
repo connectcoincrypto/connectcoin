@@ -26,8 +26,12 @@ export TEST_RANDOMX_MOCK_POW=1  # Dedicated RandomX tests still exercise the rea
 export NO_DEPENDS=1
 export GOAL="install"
 export CI_LIMIT_STACK_SIZE=1
+# The dedicated ASan/UBSan fuzz job compiles every fuzz harness, while normal
+# native jobs retain benchmark coverage. Avoid compiling both sets twice here.
 export CONNECTCOIN_CONFIG="\
  --preset=dev-mode \
+ -DBUILD_BENCH=OFF \
+ -DBUILD_FUZZ_BINARY=OFF \
  -DSANITIZERS=address,float-divide-by-zero,integer,undefined \
  -DCMAKE_C_COMPILER=clang \
  -DCMAKE_CXX_COMPILER=clang++ \
