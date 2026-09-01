@@ -1,2 +1,8 @@
+/.gitattributes text eol=lf
 src/clientversion_build.h export-subst
 src/CMakeLists.txt export-subst
+
+# Shell scripts must keep Unix line endings, including on Windows checkouts.
+*.sh text eol=lf
+*.bash text eol=lf
+contrib/guix/guix-* text eol=lf
