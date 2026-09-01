@@ -38,6 +38,27 @@ key. That representation is a wallet compatibility layer, not the consensus
 output serialization. P2PKH, P2SH, P2WPKH, P2WSH, multisig, Script trees,
 `OP_RETURN`, and arbitrary raw scripts are not valid output types.
 
+### Type 2: PAY_TO_CONNECT
+
+Type `2` has exactly one payload form. It pays for proving a fresh TLS 1.3
+connection to a canonical DNS domain. Its payload is:
+
+| Field | Size | Meaning |
+| --- | ---: | --- |
+| `domain_length` | 1 byte | Number of bytes in `domain` |
+| `domain` | variable | Lower-case ASCII DNS LDH labels, without a trailing dot |
+| `connection_work_target` | 32 bytes | Maximum accepted connection-work hash |
+| `root_certificates_version` | 4 bytes | Immutable trusted-root bundle identifier |
+
+There is no mode byte and no certificate-specific output form. The leaf
+certificate and every intermediate sent by the server appear in the redemption
+proof, where consensus validates the chain, domain, validity time, TLS
+CertificateVerify signature, claim challenge, and connection-work target.
+
+A type-2 spend has an empty `scriptSig` and exactly one witness element: the
+versioned P2C proof, limited to 64 KiB. See [pay-to-connect.md](pay-to-connect.md)
+for the complete proof profile.
+
 ## Internal compatibility view
 
 `CTxOut::scriptPubKey` remains temporarily available in memory because wallet,
@@ -49,6 +70,11 @@ script produces invalid type `0`; its script bytes never enter consensus
 serialization. Serializing a type-1 output also verifies that this compatibility
 view still exactly matches the canonical key, so direct mutation cannot silently
 change or desynchronize the consensus payload.
+
+For type `2`, the compatibility view is a deterministic internal byte sequence
+beginning with `OP_2`, followed by the domain length, domain, target, and root
+bundle version. It exists only for inherited interfaces. It is neither the
+consensus wire payload nor an executable Script.
 
 ## Coinbase witness commitment
 
@@ -75,7 +101,7 @@ that prefix and append pool names or extra nonces after it.
   feature. The bundled signet miner supports trivial challenges (including
   ConnectCoin's default `OP_TRUE`) that need no solution; nontrivial custom
   challenges are not supported because BIP325's signing PSBT requires an
-  arbitrary Script output that the type-1-only format cannot represent.
+  arbitrary Script output that the typed-output format cannot represent.
 - Upstream unit vectors that embed Bitcoin's Script-based transaction wire
   format, PSBT fixtures, P2SH execution-cache tests, and witness-script swap
   fixtures are not registered as ConnectCoin consensus tests. The experimental
@@ -89,7 +115,6 @@ that prefix and append pool names or extra nonces after it.
   payloads, exact variable-script transaction sizes, or pre-type-1 serialized
   fixtures. Keeping this list centralized makes the temporary coverage debt
   reviewable and prevents a red legacy test from being mistaken for native
-  type-1 coverage.
-- Type `2` is intentionally unassigned. A future P2C output must specify its
-  exact payload, signature/proof rules, resource limits, and activation before
-  that identifier is enabled.
+  typed-output coverage.
+- Type `3` and all higher identifiers are unassigned and rejected. New output
+  types require an explicit consensus specification and deployment decision.

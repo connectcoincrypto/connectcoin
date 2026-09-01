@@ -8,9 +8,12 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <common/args.h>
+#include <coins.h>
 #include <consensus/amount.h>
 #include <consensus/consensus.h>
 #include <consensus/merkle.h>
+#include <consensus/p2c.h>
+#include <consensus/p2c_x509.h>
 #include <consensus/params.h>
 #include <consensus/tx_verify.h>
 #include <consensus/validation.h>
@@ -247,11 +250,57 @@ bool BlockAssembler::TestChunkBlockLimits(int64_t chunk_weight, int64_t chunk_si
 
 // Perform transaction-level checks before adding to block:
 // - transaction finality (locktime)
+// - P2C certificate validity at the previous block's current median time
 bool BlockAssembler::TestChunkTransactions(const std::vector<CTxMemPoolEntryRef>& txs) const
 {
-    for (const auto tx : txs) {
-        if (!IsFinalTx(tx.get().GetTx(), nHeight, m_lock_time_cutoff)) {
+    for (const auto tx_ref : txs) {
+        const CTransaction& tx{tx_ref.get().GetTx()};
+        if (!IsFinalTx(tx, nHeight, m_lock_time_cutoff)) {
             return false;
+        }
+
+        // A P2C transaction can become invalid while it remains in the
+        // mempool if its certificate expires as median time advances. Filter
+        // it here so one stale entry cannot make TestBlockValidity reject the
+        // entire template. Every other part of the proof is immutable and was
+        // checked when the entry entered the mempool.
+        for (uint32_t input_index{0}; input_index < tx.vin.size(); ++input_index) {
+            const CTxIn& input{tx.vin[input_index]};
+            // Valid type-1 entries have one 64-byte witness, while every
+            // structurally valid version-1 TLS proof is larger. Avoid UTXO
+            // lookups for the overwhelmingly common P2PK path. This also
+            // preserves the block-assembler tests' deliberately synthetic
+            // mempool entries, which do not have backing coins.
+            if (input.scriptWitness.stack.size() != 1 ||
+                input.scriptWitness.stack.front().empty() ||
+                input.scriptWitness.stack.front().size() == 64) {
+                continue;
+            }
+            const CTxOut* spent_output{nullptr};
+            if (const auto parent{m_mempool->GetIter(input.prevout.hash)}) {
+                const auto& parent_outputs{(*parent)->GetTx().vout};
+                if (input.prevout.n >= parent_outputs.size()) return false;
+                spent_output = &parent_outputs[input.prevout.n];
+            } else {
+                const Coin& coin{m_chainstate.CoinsTip().AccessCoin(input.prevout)};
+                if (coin.IsSpent()) return false;
+                spent_output = &coin.out;
+            }
+            const auto p2c{spent_output->GetPayToDomain()};
+            if (!p2c) continue;
+            if (!input.scriptSig.empty() || input.scriptWitness.stack.size() != 1 ||
+                input.scriptWitness.stack.front().empty() ||
+                input.scriptWitness.stack.front().size() > MAX_P2C_PROOF_SIZE) {
+                return false;
+            }
+            P2CTlsProofView proof;
+            std::string error;
+            if (!ParseP2CTlsProof(input.scriptWitness.stack.front(), p2c->domain,
+                                  P2CClaimChallenge(tx, input_index), proof, error) ||
+                !P2CMeetsWorkTarget(proof.connection_work_hash, p2c->connection_work_target) ||
+                !VerifyP2CCertificateProof(*spent_output, proof, m_lock_time_cutoff, error)) {
+                return false;
+            }
         }
     }
     return true;

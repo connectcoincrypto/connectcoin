@@ -106,7 +106,12 @@ class ReindexTest(BitcoinTestFramework):
 
     def continue_reindex_after_shutdown(self):
         node = self.nodes[0]
-        self.generate(node, 1500)
+        # RandomX makes one 1,500-block generatetoaddress RPC long enough to
+        # exceed the framework's per-call timeout on slower and contended
+        # builders. Keep the same chain length while allowing progress between
+        # bounded batches.
+        for _ in range(6):
+            self.generate(node, 250)
 
         # Restart node with reindex and stop reindex as soon as it starts reindexing
         self.log.info("Restarting node while reindexing..")

@@ -7,6 +7,7 @@
 
 #include <coins.h>
 #include <consensus/amount.h>
+#include <consensus/p2c.h>
 #include <core_io.h>
 #include <key_io.h>
 #include <policy/policy.h>
@@ -128,15 +129,80 @@ std::vector<std::pair<CTxDestination, CAmount>> ParseOutputs(const UniValue& out
 
 void AddOutputs(CMutableTransaction& rawTx, const UniValue& outputs_in)
 {
-    UniValue outputs(UniValue::VOBJ);
-    outputs = NormalizeOutputs(outputs_in);
+    if (outputs_in.isNull()) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, output argument must be non-null");
+    }
 
-    std::vector<std::pair<CTxDestination, CAmount>> parsed_outputs = ParseOutputs(outputs);
-    for (const auto& [destination, nAmount] : parsed_outputs) {
-        CScript scriptPubKey = GetScriptForDestination(destination);
+    std::set<CTxDestination> destinations;
+    const auto add_output = [&](const std::string& name, const UniValue& value) {
+        if (name == "data") {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "ConnectCoin typed outputs do not support data/OP_RETURN outputs");
+        }
+        if (name == "p2c") {
+            if (!value.isObject()) throw JSONRPCError(RPC_INVALID_PARAMETER, "p2c output must be an object");
+            const UniValue& spec{value.get_obj()};
+            static const std::set<std::string> allowed{
+                "amount", "domain", "connection_work_target", "root_certificates_version",
+            };
+            for (const auto& key : spec.getKeys()) {
+                if (!allowed.contains(key)) throw JSONRPCError(RPC_INVALID_PARAMETER, "Unknown p2c field: " + key);
+            }
 
-        CTxOut out(nAmount, scriptPubKey);
-        rawTx.vout.push_back(out);
+            const UniValue& amount_value{spec.find_value("amount")};
+            const UniValue& domain_value{spec.find_value("domain")};
+            const UniValue& target_value{spec.find_value("connection_work_target")};
+            const UniValue& roots_value{spec.find_value("root_certificates_version")};
+            if (amount_value.isNull() || !domain_value.isStr() || !target_value.isStr() || roots_value.isNull()) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "p2c requires amount, domain, connection_work_target, and root_certificates_version");
+            }
+            const CAmount amount{AmountFromValue(amount_value)};
+            const std::string domain{domain_value.get_str()};
+            if (!IsCanonicalP2CDomain(domain)) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "p2c domain must be canonical lower-case ASCII without a trailing dot");
+            }
+            const auto target{uint256::FromHex(target_value.get_str())};
+            if (!target) throw JSONRPCError(RPC_INVALID_PARAMETER, "connection_work_target must be exactly 32 bytes of hex");
+
+            const uint32_t roots_version{roots_value.getInt<uint32_t>()};
+            if (!IsSupportedP2CRootCertificatesVersion(roots_version)) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "unsupported p2c root_certificates_version");
+            }
+            rawTx.vout.emplace_back(amount, PayToDomainOutput{
+                .domain = domain,
+                .connection_work_target = *target,
+                .root_certificates_version = roots_version,
+            });
+            return;
+        }
+
+        CTxDestination destination{DecodeDestination(name)};
+        if (!IsValidDestination(destination)) {
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid ConnectCoin address: " + name);
+        }
+        if (!std::holds_alternative<WitnessV1Taproot>(destination)) {
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "ConnectCoin supports type-1 P2PK addresses and explicit type-2 p2c objects");
+        }
+        if (!destinations.insert(destination).second) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, duplicated address: " + name);
+        }
+        rawTx.vout.emplace_back(AmountFromValue(value), GetScriptForDestination(destination));
+    };
+
+    if (outputs_in.isArray()) {
+        const UniValue& outputs{outputs_in.get_array()};
+        for (size_t i{0}; i < outputs.size(); ++i) {
+            if (!outputs[i].isObject() || outputs[i].size() != 1) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "each output must be an object containing exactly one address or p2c key");
+            }
+            const UniValue& output{outputs[i].get_obj()};
+            const std::string& name{output.getKeys().front()};
+            add_output(name, output.find_value(name));
+        }
+    } else if (outputs_in.isObject()) {
+        const UniValue& outputs{outputs_in.get_obj()};
+        for (const std::string& name : outputs.getKeys()) add_output(name, outputs.find_value(name));
+    } else {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "outputs must be an array or object");
     }
 }
 
@@ -377,8 +443,11 @@ std::vector<RPCResult> TxDoc(const TxDocOptions& opts)
                 {RPCResult::Type::BOOL, "generated", "Coinbase or not"},
                 {RPCResult::Type::NUM, "height", "The height of the prevout"},
                 {RPCResult::Type::STR_AMOUNT, "value", "The value in " + CURRENCY_UNIT},
-                {RPCResult::Type::NUM, "type", "ConnectCoin output type (1 is P2PK Schnorr)"},
+                {RPCResult::Type::NUM, "type", "ConnectCoin output type (1 is P2PK Schnorr, 2 is PAY_TO_CONNECT)"},
                 {RPCResult::Type::STR_HEX, "pubkey", /*optional=*/true, "The 32-byte x-only public key (only present for P2PK outputs)"},
+                {RPCResult::Type::STR, "domain", /*optional=*/true, "Canonical P2C DNS domain"},
+                {RPCResult::Type::STR_HEX, "connection_work_target", /*optional=*/true, "Maximum accepted P2C connection-work hash"},
+                {RPCResult::Type::NUM, "root_certificates_version", /*optional=*/true, "Immutable P2C root bundle version"},
                 {RPCResult::Type::OBJ, "scriptPubKey", "", ScriptPubKeyDoc()},
             }
         );
@@ -422,8 +491,11 @@ std::vector<RPCResult> TxDoc(const TxDocOptions& opts)
                 {
                     {RPCResult::Type::STR_AMOUNT, "value", "The value in " + CURRENCY_UNIT},
                     {RPCResult::Type::NUM, "n", "index"},
-                    {RPCResult::Type::NUM, "type", "ConnectCoin output type (1 is P2PK Schnorr)"},
+                    {RPCResult::Type::NUM, "type", "ConnectCoin output type (1 is P2PK Schnorr, 2 is PAY_TO_CONNECT)"},
                     {RPCResult::Type::STR_HEX, "pubkey", /*optional=*/true, "The 32-byte x-only public key (only present for P2PK outputs)"},
+                    {RPCResult::Type::STR, "domain", /*optional=*/true, "Canonical P2C DNS domain"},
+                    {RPCResult::Type::STR_HEX, "connection_work_target", /*optional=*/true, "Maximum accepted P2C connection-work hash"},
+                    {RPCResult::Type::NUM, "root_certificates_version", /*optional=*/true, "Immutable P2C root bundle version"},
                     {RPCResult::Type::OBJ, "scriptPubKey", "", ScriptPubKeyDoc()},
                 },
                 opts.wallet ?

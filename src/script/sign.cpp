@@ -8,6 +8,7 @@
 #include <addresstype.h>
 #include <coins.h>
 #include <consensus/amount.h>
+#include <consensus/p2c.h>
 #include <hash.h>
 #include <key.h>
 #include <musig.h>
@@ -1058,6 +1059,20 @@ bool SignTransaction(CMutableTransaction& mtx, const SigningProvider* keystore, 
         auto coin = coins.find(txin.prevout);
         if (coin == coins.end() || coin->second.IsSpent()) {
             input_errors[i] = _("Input not found or already spent");
+            continue;
+        }
+        if (IsCanonicalP2COutput(coin->second.out)) {
+            // P2C inputs are authorized by an externally produced TLS proof,
+            // not a wallet key. Preserve a complete proof witness while this
+            // routine signs any type-1 inputs in the same transaction. The
+            // node performs contextual certificate/time validation on relay.
+            if (txin.scriptSig.empty() && txin.scriptWitness.stack.size() == 1 &&
+                !txin.scriptWitness.stack.front().empty() &&
+                txin.scriptWitness.stack.front().size() <= MAX_P2C_PROOF_SIZE) {
+                input_errors.erase(i);
+            } else {
+                input_errors[i] = _("Input requires a complete P2C proof witness");
+            }
             continue;
         }
         const CScript& prevPubKey = coin->second.out.scriptPubKey;

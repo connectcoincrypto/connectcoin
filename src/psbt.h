@@ -1635,7 +1635,7 @@ std::optional<PrecomputedTransactionData> PrecomputePSBTData(const PartiallySign
 /** Checks whether a PSBTInput is already signed by checking for non-null finalized fields. */
 bool PSBTInputSigned(const PSBTInput& input);
 
-/** Checks that every PSBT output maps to a consensus-valid type-1 P2PK output. */
+/** Checks that every PSBT output maps to a consensus-valid typed output. */
 bool PSBTHasValidTypedOutputs(const PartiallySignedTransaction& psbt);
 
 /** Checks whether a PSBTInput is finalized in the canonical type-1 form and verifies its signature. */

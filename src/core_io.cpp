@@ -426,6 +426,18 @@ void ScriptToUniv(const CScript& script, UniValue& out, bool include_hex, bool i
     out.pushKV("type", GetTxnOutputType(type));
 }
 
+static void TypedOutputFieldsToUniv(const CTxOut& txout, UniValue& out)
+{
+    out.pushKV("type", static_cast<uint8_t>(txout.GetType()));
+    if (const auto pubkey{txout.GetP2PKPubKey()}) {
+        out.pushKV("pubkey", HexStr(*pubkey));
+    } else if (const auto p2c{txout.GetPayToDomain()}) {
+        out.pushKV("domain", p2c->domain);
+        out.pushKV("connection_work_target", p2c->connection_work_target.GetHex());
+        out.pushKV("root_certificates_version", p2c->root_certificates_version);
+    }
+}
+
 void TxToUniv(const CTransaction& tx, const uint256& block_hash, UniValue& entry, bool include_hex, const CTxUndo* txundo, TxVerbosity verbosity, std::function<bool(const CTxOut&)> is_change_func)
 {
     CHECK_NONFATAL(verbosity >= TxVerbosity::SHOW_DETAILS);
@@ -482,8 +494,7 @@ void TxToUniv(const CTransaction& tx, const uint256& block_hash, UniValue& entry
                 p.pushKV("generated", prev_coin.IsCoinBase());
                 p.pushKV("height", prev_coin.nHeight);
                 p.pushKV("value", ValueFromAmount(prev_txout.nValue));
-                p.pushKV("type", static_cast<uint8_t>(prev_txout.GetType()));
-                if (const auto pubkey{prev_txout.GetP2PKPubKey()}) p.pushKV("pubkey", HexStr(*pubkey));
+                TypedOutputFieldsToUniv(prev_txout, p);
                 p.pushKV("scriptPubKey", std::move(o_script_pub_key));
                 in.pushKV("prevout", std::move(p));
             }
@@ -502,8 +513,7 @@ void TxToUniv(const CTransaction& tx, const uint256& block_hash, UniValue& entry
 
         out.pushKV("value", ValueFromAmount(txout.nValue));
         out.pushKV("n", i);
-        out.pushKV("type", static_cast<uint8_t>(txout.GetType()));
-        if (const auto pubkey{txout.GetP2PKPubKey()}) out.pushKV("pubkey", HexStr(*pubkey));
+        TypedOutputFieldsToUniv(txout, out);
 
         UniValue o(UniValue::VOBJ);
         ScriptToUniv(txout.scriptPubKey, /*out=*/o, /*include_hex=*/true, /*include_address=*/true);

@@ -8,7 +8,9 @@ independently verifiable TLS 1.3 connection proofs.
 This repository is not production-ready. The current consensus milestone uses
 typed transaction outputs instead of serialized output scripts. Type `1` is a
 single 32-byte x-only public key authorized by one 64-byte BIP340 Schnorr
-signature. P2C and TLS 1.3 connection proofs remain later milestones.
+signature. Type `2` is PAY_TO_CONNECT for a canonical DNS domain and is spent
+with a bounded, independently verified TLS 1.3 connection proof. There is no
+certificate-specific P2C output form.
 
 The codebase retains Bitcoin Core copyright notices and upstream attribution.
 
@@ -16,6 +18,8 @@ The current public identifier inventory and pre-launch registry warnings are in
 [doc/connectcoin-branding.md](doc/connectcoin-branding.md).
 The experimental consensus format and its compatibility boundaries are in
 [doc/typed-outputs.md](doc/typed-outputs.md).
+The P2C payload and proof profile are specified in
+[doc/pay-to-connect.md](doc/pay-to-connect.md).
 
 License
 -------

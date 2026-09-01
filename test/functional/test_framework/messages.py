@@ -547,13 +547,23 @@ class CTxOut:
 
     ``scriptPubKey`` is only the Python test framework's compatibility view.
     Assigning an OP_1/32-byte witness-v1 program selects type 1 and extracts
-    its x-only key. Every other script selects invalid type 0, whose script
-    bytes are deliberately not serialized.
+    its x-only key. The deterministic OP_2 P2C compatibility view selects type
+    2. Every other script selects invalid type 0, whose script bytes are
+    deliberately not serialized.
     """
 
     TYPE_INVALID = 0
     TYPE_P2PK = 1
-    __slots__ = ("nValue", "type", "pubkey", "_scriptPubKey")
+    TYPE_PAY_TO_CONNECT = 2
+    __slots__ = (
+        "nValue",
+        "type",
+        "pubkey",
+        "domain",
+        "connection_work_target",
+        "root_certificates_version",
+        "_scriptPubKey",
+    )
 
     def __init__(self, nValue=0, scriptPubKey=b""):
         self.nValue = nValue
@@ -566,12 +576,38 @@ class CTxOut:
     @scriptPubKey.setter
     def scriptPubKey(self, script):
         self._scriptPubKey = bytes(script)
+        self.pubkey = b""
+        self.domain = b""
+        self.connection_work_target = b""
+        self.root_certificates_version = 0
         if len(self._scriptPubKey) == 34 and self._scriptPubKey[:2] == b"\x51\x20":
             self.type = self.TYPE_P2PK
             self.pubkey = self._scriptPubKey[2:]
+        elif len(self._scriptPubKey) >= 2 and self._scriptPubKey[0] == 0x52:
+            domain_size = self._scriptPubKey[1]
+            expected_size = 2 + domain_size + 32 + 4
+            domain = self._scriptPubKey[2:2 + domain_size]
+            roots = int.from_bytes(self._scriptPubKey[-4:], "little")
+            if len(self._scriptPubKey) == expected_size and self._canonical_p2c_domain(domain) and roots != 0:
+                self.type = self.TYPE_PAY_TO_CONNECT
+                self.domain = domain
+                self.connection_work_target = self._scriptPubKey[2 + domain_size:2 + domain_size + 32]
+                self.root_certificates_version = roots
+            else:
+                self.type = self.TYPE_INVALID
         else:
             self.type = self.TYPE_INVALID
-            self.pubkey = b""
+
+    @staticmethod
+    def _canonical_p2c_domain(domain):
+        if not 1 <= len(domain) <= 253 or domain.endswith(b"."):
+            return False
+        for label in domain.split(b"."):
+            if not 1 <= len(label) <= 63 or label.startswith(b"-") or label.endswith(b"-"):
+                return False
+            if any(not (ord("a") <= ch <= ord("z") or ord("0") <= ch <= ord("9") or ch == ord("-")) for ch in label):
+                return False
+        return True
 
     def deserialize(self, f):
         self.nValue = int.from_bytes(f.read(8), "little", signed=True)
@@ -584,8 +620,37 @@ class CTxOut:
             if len(self.pubkey) != 32:
                 raise EOFError("truncated P2PK output key")
             self._scriptPubKey = b"\x51\x20" + self.pubkey
+            self.domain = b""
+            self.connection_work_target = b""
+            self.root_certificates_version = 0
+        elif self.type == self.TYPE_PAY_TO_CONNECT:
+            encoded_size = f.read(1)
+            if len(encoded_size) != 1:
+                raise EOFError("missing PAY_TO_CONNECT domain size")
+            self.domain = f.read(encoded_size[0])
+            if len(self.domain) != encoded_size[0]:
+                raise EOFError("truncated PAY_TO_CONNECT domain")
+            if not self._canonical_p2c_domain(self.domain):
+                raise ValueError("invalid PAY_TO_CONNECT domain")
+            self.connection_work_target = f.read(32)
+            if len(self.connection_work_target) != 32:
+                raise EOFError("truncated PAY_TO_CONNECT work target")
+            encoded_roots = f.read(4)
+            if len(encoded_roots) != 4:
+                raise EOFError("truncated PAY_TO_CONNECT root certificate version")
+            self.root_certificates_version = int.from_bytes(encoded_roots, "little")
+            if self.root_certificates_version == 0:
+                raise ValueError("invalid PAY_TO_CONNECT root certificate version")
+            self.pubkey = b""
+            self._scriptPubKey = (
+                b"\x52" + encoded_size + self.domain +
+                self.connection_work_target + encoded_roots
+            )
         elif self.type == self.TYPE_INVALID:
             self.pubkey = b""
+            self.domain = b""
+            self.connection_work_target = b""
+            self.root_certificates_version = 0
             self._scriptPubKey = b""
         else:
             raise ValueError(f"unknown transaction output type {self.type}")
@@ -595,6 +660,18 @@ class CTxOut:
             if len(self.pubkey) != 32:
                 raise ValueError("P2PK output key must be 32 bytes")
             return bytes([self.type]) + self.pubkey
+        if self.type == self.TYPE_PAY_TO_CONNECT:
+            if not self._canonical_p2c_domain(self.domain):
+                raise ValueError("invalid PAY_TO_CONNECT domain")
+            if len(self.connection_work_target) != 32:
+                raise ValueError("PAY_TO_CONNECT work target must be 32 bytes")
+            if not 0 < self.root_certificates_version <= 0xffffffff:
+                raise ValueError("invalid PAY_TO_CONNECT root certificate version")
+            return (
+                bytes([self.type, len(self.domain)]) + self.domain +
+                self.connection_work_target +
+                self.root_certificates_version.to_bytes(4, "little")
+            )
         if self.type == self.TYPE_INVALID:
             return bytes([self.type])
         raise ValueError(f"unknown transaction output type {self.type}")
@@ -603,6 +680,11 @@ class CTxOut:
         return self.nValue.to_bytes(8, "little", signed=True) + self.serialize_payload()
 
     def __repr__(self):
+        if self.type == self.TYPE_PAY_TO_CONNECT:
+            return "CTxOut(nValue=%i.%010i type=%i domain=%s target=%s roots=%i)" \
+                % (self.nValue // COIN, self.nValue % COIN, self.type,
+                   self.domain.decode("ascii", errors="replace"),
+                   self.connection_work_target.hex(), self.root_certificates_version)
         return "CTxOut(nValue=%i.%010i type=%i pubkey=%s)" \
             % (self.nValue // COIN, self.nValue % COIN,
                self.type, self.pubkey.hex())

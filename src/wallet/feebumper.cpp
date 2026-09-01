@@ -253,8 +253,25 @@ Result CreateRateBumpTransaction(CWallet& wallet, const Txid& txid, const CCoinC
     const auto& txouts = outputs.empty() ? tx->vout : outputs;
     for (size_t i = 0; i < txouts.size(); ++i) {
         const CTxOut& output = txouts.at(i);
+        if (const auto p2c{output.GetPayToDomain()}) {
+            if (original_change_index && *original_change_index == i) {
+                errors.emplace_back(Untranslated("A PAY_TO_CONNECT output cannot be selected as wallet change"));
+                return Result::INVALID_PARAMETER;
+            }
+            recipients.push_back(CRecipient{
+                .dest = CNoDestination{},
+                .nAmount = output.nValue,
+                .fSubtractFeeFromAmount = false,
+                .p2c = *p2c,
+            });
+            new_outputs_value += output.nValue;
+            continue;
+        }
         CTxDestination dest;
-        ExtractDestination(output.scriptPubKey, dest);
+        if (!ExtractDestination(output.scriptPubKey, dest)) {
+            errors.emplace_back(Untranslated("Transaction contains a non-canonical typed output"));
+            return Result::INVALID_PARAMETER;
+        }
         if (original_change_index.has_value() ?  original_change_index.value() == i : OutputIsChange(wallet, output)) {
             new_coin_control.destChange = dest;
         } else {

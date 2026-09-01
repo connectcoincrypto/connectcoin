@@ -23,6 +23,7 @@ ConnectCoin Core requires one of the following compilers.
 | --- | --- | --- |
 | [Boost](../depends/packages/boost.mk) | [link](https://www.boost.org/users/download/) | [1.74.0](https://github.com/bitcoin/bitcoin/pull/34107) |
 | CMake | [link](https://cmake.org/) | [3.22](https://github.com/bitcoin/bitcoin/pull/30454) |
+| Mbed TLS | [link](https://github.com/Mbed-TLS/mbedtls/releases) | 3.6.7 (downloaded and hash-pinned by CMake) |
 
 ### Runtime
 

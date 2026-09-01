@@ -260,7 +260,7 @@ Read the [Honggfuzz documentation](https://github.com/google/honggfuzz/blob/mast
 
 ConnectCoin is not currently enrolled as its own project in Google's OSS-Fuzz.
 The upstream [Bitcoin Core OSS-Fuzz integration](https://github.com/google/oss-fuzz/tree/master/projects/bitcoin-core)
-does not test this fork's branding, network parameters, or future P2C changes.
+does not test this fork's branding, network parameters, or native P2C parser.
 Before a public release, ConnectCoin should add a project-owned continuous
 fuzzing integration and publish its own coverage status. Security findings must
 follow the local [security policy](../SECURITY.md).

@@ -25,6 +25,22 @@ if (ENABLE_IPC AND NOT WITH_EXTERNAL_LIBMULTIPROCESS)
 endif()
 include(../cmake/secp256k1.cmake)
 add_secp256k1(secp256k1)
+
+# P2C certificate and TLS CertificateVerify validation is consensus-critical.
+# Pin the exact Mbed TLS source archive and never use a platform TLS backend or
+# the host operating system's mutable root store.
+include(FetchContent)
+set(ENABLE_PROGRAMS OFF CACHE BOOL "Build Mbed TLS programs" FORCE)
+set(ENABLE_TESTING OFF CACHE BOOL "Build Mbed TLS tests" FORCE)
+set(MBEDTLS_FATAL_WARNINGS OFF CACHE BOOL "Treat Mbed TLS warnings as errors" FORCE)
+set(DISABLE_PACKAGE_CONFIG_AND_INSTALL ON CACHE BOOL "Disable Mbed TLS installation" FORCE)
+FetchContent_Declare(connectcoin_mbedtls
+  URL https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-3.6.7/mbedtls-3.6.7.tar.bz2
+  URL_HASH SHA256=a7e8bcbec0e6f761b4af24f25677626b35f762f68eef79c08677a363212d11f6
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_MakeAvailable(connectcoin_mbedtls)
+
 set(RANDOMX_BUILD_TESTS OFF CACHE BOOL "Build RandomX tests and benchmark tools" FORCE)
 set(RANDOMX_INSTALL OFF CACHE BOOL "Install the RandomX library and public header" FORCE)
 # The project's Debug flags enable -ftrapv globally, while RandomX relies on
@@ -127,6 +143,8 @@ endif()
 add_library(connectcoin_consensus STATIC EXCLUDE_FROM_ALL
   arith_uint256.cpp
   consensus/merkle.cpp
+  consensus/p2c.cpp
+  consensus/p2c_x509.cpp
   consensus/tx_check.cpp
   hash.cpp
   primitives/block.cpp
@@ -141,7 +159,12 @@ target_link_libraries(connectcoin_consensus
   PRIVATE
     core_interface
     connectcoin_crypto
+    MbedTLS::mbedx509
+    MbedTLS::mbedcrypto
     secp256k1
+)
+target_raw_data_sources(connectcoin_consensus NAMESPACE consensus::p2c::data
+  consensus/p2c_roots_v1.pem
 )
 
 if(WITH_ZMQ)

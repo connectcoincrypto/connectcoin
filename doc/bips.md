@@ -3,13 +3,14 @@
 ConnectCoin inherits the following BIP implementations from its Bitcoin Core
 base. Version numbers and pull-request links in this file describe upstream
 Bitcoin Core history, not independent ConnectCoin release milestones. Custom
-ConnectCoin encodings, network parameters, and future P2C rules are documented
+ConnectCoin encodings, network parameters, and P2C rules are documented
 separately and must not be inferred from this historical list.
 
 > **Current consensus warning:** the inherited Script engine remains in the
 > source tree for descriptors, signet authorization, message tooling, and
 > compatibility code, but transaction outputs do not serialize or execute
-> Script. Only ConnectCoin type-1 P2PK outputs are consensus-valid. Entries
+> Script. ConnectCoin type-1 P2PK and type-2 PAY_TO_CONNECT outputs are
+> consensus-valid. Entries
 > below for P2PKH, P2SH, P2WSH, multisig, Tapscript, and other Bitcoin output
 > forms are historical implementation inventory, not spendable ConnectCoin
 > output types. See [typed-outputs.md](typed-outputs.md).

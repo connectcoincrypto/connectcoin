@@ -1,0 +1,256 @@
+// Copyright (c) 2026 The ConnectCoin developers
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or https://opensource.org/license/mit/.
+
+#include <consensus/p2c_x509.h>
+
+#include <consensus/p2c_roots_v1.pem.h>
+#include <mbedtls/ecp.h>
+#include <mbedtls/oid.h>
+#include <mbedtls/pk.h>
+#include <mbedtls/rsa.h>
+#include <mbedtls/x509_crt.h>
+#include <psa/crypto.h>
+
+#include <array>
+#include <cstddef>
+#include <cstdint>
+#include <limits>
+#include <span>
+#include <string>
+#include <vector>
+
+namespace {
+
+constexpr uint16_t TLS_ECDSA_SECP256R1_SHA256{0x0403};
+constexpr uint16_t TLS_RSA_PSS_RSAE_SHA256{0x0804};
+constexpr uint16_t TLS_RSA_PSS_PSS_SHA256{0x0809};
+constexpr std::string_view TLS13_SERVER_CERTIFICATE_VERIFY_CONTEXT{"TLS 1.3, server CertificateVerify"};
+
+class CertificateChain
+{
+public:
+    mbedtls_x509_crt value;
+
+    CertificateChain() { mbedtls_x509_crt_init(&value); }
+    ~CertificateChain() { mbedtls_x509_crt_free(&value); }
+    CertificateChain(const CertificateChain&) = delete;
+    CertificateChain& operator=(const CertificateChain&) = delete;
+};
+
+bool SetError(std::string& error, std::string message)
+{
+    error = std::move(message);
+    return false;
+}
+
+const mbedtls_x509_crt* RootStoreV1()
+{
+    struct RootStore {
+        CertificateChain chain;
+        bool valid{false};
+
+        RootStore()
+        {
+            if (psa_crypto_init() != PSA_SUCCESS) return;
+            std::vector<unsigned char> pem;
+            pem.reserve(consensus::p2c::data::p2c_roots_v1.size() + 1);
+            for (const std::byte value : consensus::p2c::data::p2c_roots_v1) {
+                pem.push_back(std::to_integer<unsigned char>(value));
+            }
+            pem.push_back(0);
+            valid = mbedtls_x509_crt_parse(&chain.value, pem.data(), pem.size()) == 0;
+        }
+    };
+    static const RootStore roots;
+    return roots.valid ? &roots.chain.value : nullptr;
+}
+
+bool ParseCertificateChain(const P2CTlsProofView& proof, CertificateChain& chain, std::string& error)
+{
+    if (proof.certificate_chain.empty()) return SetError(error, "P2C proof contains no leaf certificate");
+    for (const auto certificate : proof.certificate_chain) {
+        if (mbedtls_x509_crt_parse_der(&chain.value, certificate.data(), certificate.size()) != 0) {
+            return SetError(error, "P2C proof contains an invalid DER certificate");
+        }
+    }
+    return true;
+}
+
+bool IsLeapYear(int year)
+{
+    return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+}
+
+int DaysInMonth(int year, int month)
+{
+    constexpr std::array<int, 12> DAYS{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if (month < 1 || month > 12) return 0;
+    return DAYS[month - 1] + (month == 2 && IsLeapYear(year) ? 1 : 0);
+}
+
+/** Days since 1970-01-01, valid for the Gregorian calendar. */
+int64_t DaysFromCivil(int year, unsigned month, unsigned day)
+{
+    year -= month <= 2;
+    const int era{(year >= 0 ? year : year - 399) / 400};
+    const unsigned year_of_era{static_cast<unsigned>(year - era * 400)};
+    const unsigned day_of_year{(153 * (month + (month > 2 ? -3 : 9)) + 2) / 5 + day - 1};
+    const unsigned day_of_era{year_of_era * 365 + year_of_era / 4 - year_of_era / 100 + day_of_year};
+    return era * 146097LL + static_cast<int64_t>(day_of_era) - 719468;
+}
+
+bool X509TimeToUnix(const mbedtls_x509_time& time, int64_t& result)
+{
+    if (time.year < 1970 || time.mon < 1 || time.mon > 12 || time.day < 1 ||
+        time.day > DaysInMonth(time.year, time.mon) || time.hour < 0 || time.hour > 23 ||
+        time.min < 0 || time.min > 59 || time.sec < 0 || time.sec > 59) return false;
+    const int64_t days{DaysFromCivil(time.year, time.mon, time.day)};
+    if (days > (std::numeric_limits<int64_t>::max() - 86399) / 86400) return false;
+    result = days * 86400 + time.hour * 3600 + time.min * 60 + time.sec;
+    return true;
+}
+
+bool CheckSuppliedCertificateTimes(const mbedtls_x509_crt& chain, int64_t validation_time, std::string& error)
+{
+    if (validation_time <= 0) return SetError(error, "P2C certificate validation time is unavailable");
+    for (const mbedtls_x509_crt* certificate{&chain}; certificate != nullptr; certificate = certificate->next) {
+        int64_t valid_from{0};
+        int64_t valid_to{0};
+        if (!X509TimeToUnix(certificate->valid_from, valid_from) ||
+            !X509TimeToUnix(certificate->valid_to, valid_to) ||
+            validation_time < valid_from || validation_time > valid_to) {
+            return SetError(error, "P2C certificate is not valid at block median time");
+        }
+    }
+    return true;
+}
+
+int IgnoreWallClockValidity(void*, mbedtls_x509_crt*, int, uint32_t* flags)
+{
+    *flags &= ~(MBEDTLS_X509_BADCERT_EXPIRED | MBEDTLS_X509_BADCERT_FUTURE);
+    return 0;
+}
+
+bool VerifyDomainPath(mbedtls_x509_crt& chain, std::string_view domain,
+                      const mbedtls_x509_crt& roots, std::string& error)
+{
+    std::string domain_string{domain};
+    uint32_t flags{0};
+    const int result{mbedtls_x509_crt_verify_with_profile(
+        &chain, const_cast<mbedtls_x509_crt*>(&roots), /*ca_crl=*/nullptr,
+        &mbedtls_x509_crt_profile_default, domain_string.c_str(), &flags,
+        IgnoreWallClockValidity, /*p_vrfy=*/nullptr)};
+    if (result != 0 || flags != 0) return SetError(error, "P2C certificate path or domain validation failed");
+    return true;
+}
+
+bool CheckLeafUsage(const mbedtls_x509_crt& leaf, std::string& error)
+{
+    if (mbedtls_x509_crt_check_key_usage(&leaf, MBEDTLS_X509_KU_DIGITAL_SIGNATURE) != 0 ||
+        mbedtls_x509_crt_check_extended_key_usage(
+            &leaf, MBEDTLS_OID_SERVER_AUTH, MBEDTLS_OID_SIZE(MBEDTLS_OID_SERVER_AUTH)) != 0) {
+        return SetError(error, "P2C leaf certificate is not authorized for TLS server signatures");
+    }
+    return true;
+}
+
+bool VerifyCertificateVerify(const mbedtls_x509_crt& leaf, const P2CTlsProofView& proof, std::string& error)
+{
+    std::array<unsigned char, 64> prefix;
+    prefix.fill(0x20);
+    uint256 signed_hash;
+    CSHA256 digest;
+    digest.Write(prefix.data(), prefix.size());
+    digest.Write(reinterpret_cast<const unsigned char*>(TLS13_SERVER_CERTIFICATE_VERIFY_CONTEXT.data()),
+                 TLS13_SERVER_CERTIFICATE_VERIFY_CONTEXT.size());
+    const unsigned char separator{0};
+    digest.Write(&separator, 1);
+    digest.Write(proof.transcript_hash.begin(), proof.transcript_hash.size());
+    digest.Finalize(signed_hash.begin());
+
+    int result{-1};
+    if (proof.certificate_verify_scheme == TLS_ECDSA_SECP256R1_SHA256) {
+        mbedtls_ecp_keypair* ec{mbedtls_pk_ec(leaf.pk)};
+        if (!ec || mbedtls_ecp_keypair_get_group_id(ec) != MBEDTLS_ECP_DP_SECP256R1) {
+            return SetError(error, "CertificateVerify scheme does not match leaf EC key");
+        }
+        result = mbedtls_pk_verify_ext(MBEDTLS_PK_ECDSA, /*options=*/nullptr,
+                                       const_cast<mbedtls_pk_context*>(&leaf.pk), MBEDTLS_MD_SHA256,
+                                       signed_hash.begin(), signed_hash.size(),
+                                       proof.certificate_verify_signature.data(), proof.certificate_verify_signature.size());
+    } else if (proof.certificate_verify_scheme == TLS_RSA_PSS_RSAE_SHA256 ||
+               proof.certificate_verify_scheme == TLS_RSA_PSS_PSS_SHA256) {
+        const mbedtls_pk_type_t required_key_type{
+            proof.certificate_verify_scheme == TLS_RSA_PSS_PSS_SHA256 ? MBEDTLS_PK_RSASSA_PSS : MBEDTLS_PK_RSA};
+        if (!mbedtls_pk_can_do(&leaf.pk, required_key_type) || mbedtls_pk_get_bitlen(&leaf.pk) < 2048) {
+            return SetError(error, "CertificateVerify scheme does not match leaf RSA key");
+        }
+        const mbedtls_pk_rsassa_pss_options options{
+            .mgf1_hash_id = MBEDTLS_MD_SHA256,
+            .expected_salt_len = 32,
+        };
+        result = mbedtls_pk_verify_ext(MBEDTLS_PK_RSASSA_PSS, &options,
+                                       const_cast<mbedtls_pk_context*>(&leaf.pk), MBEDTLS_MD_SHA256,
+                                       signed_hash.begin(), signed_hash.size(),
+                                       proof.certificate_verify_signature.data(), proof.certificate_verify_signature.size());
+    }
+    if (result != 0) return SetError(error, "invalid P2C TLS CertificateVerify signature");
+    return true;
+}
+
+bool VerifyP2CCertificateProofImpl(const CTxOut& spent_output,
+                                   const P2CTlsProofView& proof,
+                                   int64_t validation_time,
+                                   const mbedtls_x509_crt& roots,
+                                   std::string& error)
+{
+    error.clear();
+    CertificateChain chain;
+    if (!ParseCertificateChain(proof, chain, error) ||
+        !CheckSuppliedCertificateTimes(chain.value, validation_time, error) ||
+        !CheckLeafUsage(chain.value, error)) {
+        return false;
+    }
+
+    const auto output{spent_output.GetPayToDomain()};
+    if (!output) return SetError(error, "spent output is not a canonical PAY_TO_CONNECT output");
+    if (!VerifyDomainPath(chain.value, output->domain, roots, error)) return false;
+    return VerifyCertificateVerify(chain.value, proof, error);
+}
+
+} // namespace
+
+bool P2CRootStoreAvailable()
+{
+    return RootStoreV1() != nullptr;
+}
+
+bool VerifyP2CCertificateProof(const CTxOut& spent_output,
+                               const P2CTlsProofView& proof,
+                               int64_t validation_time,
+                               std::string& error)
+{
+    const auto output{spent_output.GetPayToDomain()};
+    if (!output || !IsSupportedP2CRootCertificatesVersion(output->root_certificates_version)) {
+        return SetError(error, "spent output is not a canonical PAY_TO_CONNECT output");
+    }
+    const mbedtls_x509_crt* roots{RootStoreV1()};
+    if (!roots) return SetError(error, "failed to initialize immutable P2C root store");
+    return VerifyP2CCertificateProofImpl(spent_output, proof, validation_time, *roots, error);
+}
+
+bool VerifyP2CCertificateProofForTest(const CTxOut& spent_output,
+                                      const P2CTlsProofView& proof,
+                                      int64_t validation_time,
+                                      std::span<const unsigned char> trusted_roots_pem,
+                                      std::string& error)
+{
+    CertificateChain roots;
+    std::vector<unsigned char> nul_terminated{trusted_roots_pem.begin(), trusted_roots_pem.end()};
+    nul_terminated.push_back(0);
+    if (mbedtls_x509_crt_parse(&roots.value, nul_terminated.data(), nul_terminated.size()) != 0) {
+        return SetError(error, "invalid P2C test root store");
+    }
+    return VerifyP2CCertificateProofImpl(spent_output, proof, validation_time, roots.value, error);
+}

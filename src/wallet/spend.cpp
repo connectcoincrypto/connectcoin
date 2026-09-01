@@ -7,6 +7,7 @@
 #include <common/messages.h>
 #include <common/system.h>
 #include <consensus/amount.h>
+#include <consensus/p2c.h>
 #include <consensus/validation.h>
 #include <interfaces/chain.h>
 #include <node/types.h>
@@ -1049,12 +1050,16 @@ void DiscourageFeeSniping(CMutableTransaction& tx, FastRandomContext& rng_fast,
 
 uint64_t GetSerializeSizeForRecipient(const CRecipient& recipient)
 {
-    return ::GetSerializeSize(CTxOut(recipient.nAmount, GetScriptForDestination(recipient.dest)));
+    const CTxOut output{recipient.p2c ? CTxOut{recipient.nAmount, *recipient.p2c}
+                                    : CTxOut{recipient.nAmount, GetScriptForDestination(recipient.dest)}};
+    return ::GetSerializeSize(output);
 }
 
 bool IsDust(const CRecipient& recipient, const CFeeRate& dustRelayFee)
 {
-    return ::IsDust(CTxOut(recipient.nAmount, GetScriptForDestination(recipient.dest)), dustRelayFee);
+    const CTxOut output{recipient.p2c ? CTxOut{recipient.nAmount, *recipient.p2c}
+                                    : CTxOut{recipient.nAmount, GetScriptForDestination(recipient.dest)}};
+    return ::IsDust(output, dustRelayFee);
 }
 
 static util::Result<CreatedTransactionResult> CreateTransactionInternal(
@@ -1087,9 +1092,13 @@ static util::Result<CreatedTransactionResult> CreateTransactionInternal(
 
     CAmount recipients_sum = 0;
     if (std::any_of(vecSend.begin(), vecSend.end(), [](const CRecipient& recipient) {
+            if (recipient.p2c) {
+                return !IsCanonicalP2CDomain(recipient.p2c->domain) ||
+                       !IsSupportedP2CRootCertificatesVersion(recipient.p2c->root_certificates_version);
+            }
             return !std::holds_alternative<WitnessV1Taproot>(recipient.dest) || !IsValidDestination(recipient.dest);
         })) {
-        return util::Error{_("ConnectCoin transactions support only valid type-1 P2PK (bech32m) destinations")};
+        return util::Error{_("ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs")};
     }
     const OutputType change_type = wallet.TransactionChangeType(coin_control.m_change_type ? *coin_control.m_change_type : wallet.m_default_change_type, vecSend);
     ReserveDestination reservedest(&wallet, change_type);
@@ -1267,7 +1276,11 @@ static util::Result<CreatedTransactionResult> CreateTransactionInternal(
     txNew.vout.reserve(vecSend.size() + 1); // + 1 because of possible later insert
     for (const auto& recipient : vecSend)
     {
-        txNew.vout.emplace_back(recipient.nAmount, GetScriptForDestination(recipient.dest));
+        if (recipient.p2c) {
+            txNew.vout.emplace_back(recipient.nAmount, *recipient.p2c);
+        } else {
+            txNew.vout.emplace_back(recipient.nAmount, GetScriptForDestination(recipient.dest));
+        }
     }
     const CAmount change_amount = result.GetChange(coin_selection_params.min_viable_change, coin_selection_params.m_change_fee);
     if (change_amount > 0) {

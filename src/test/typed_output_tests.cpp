@@ -2,7 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://opensource.org/license/mit/.
 
+#include <compressor.h>
 #include <consensus/amount.h>
+#include <consensus/p2c.h>
 #include <consensus/tx_check.h>
 #include <key.h>
 #include <primitives/transaction.h>
@@ -64,7 +66,8 @@ BOOST_AUTO_TEST_CASE(invalid_and_unknown_wire_types)
     BOOST_CHECK(decoded_invalid.scriptPubKey.empty());
 
     DataStream unknown_encoded;
-    unknown_encoded << CAmount{42} << uint8_t{2};
+    // Type 2 is PAY_TO_CONNECT. The next unassigned output type is 3.
+    unknown_encoded << CAmount{42} << uint8_t{3};
     CTxOut decoded_unknown;
     BOOST_CHECK_THROW(unknown_encoded >> decoded_unknown, std::ios_base::failure);
 }
@@ -81,7 +84,7 @@ BOOST_AUTO_TEST_CASE(mutable_script_view_cannot_change_consensus_payload)
     BOOST_CHECK_THROW(encoded << output, std::ios_base::failure);
 }
 
-BOOST_AUTO_TEST_CASE(only_p2pk_is_valid)
+BOOST_AUTO_TEST_CASE(p2pk_and_p2c_types_are_valid)
 {
     CKey key;
     key.MakeNewKey(/*fCompressed=*/true);
@@ -95,11 +98,70 @@ BOOST_AUTO_TEST_CASE(only_p2pk_is_valid)
     TxValidationState state;
     BOOST_CHECK(CheckTransaction(CTransaction{valid}, state));
 
+    const uint256 target{uint256::ONE};
+    valid.vout[0].SetPayToDomain(PayToDomainOutput{
+        .domain = "example.com",
+        .connection_work_target = target,
+        .root_certificates_version = P2C_ROOT_CERTIFICATES_VERSION_1,
+    });
+    TxValidationState domain_state;
+    BOOST_CHECK(CheckTransaction(CTransaction{valid}, domain_state));
+
+    // PAY_TO_CONNECT is output type 2; type 3 remains unused.
+    BOOST_CHECK(valid.vout[0].GetType() == TxOutputType::PAY_TO_CONNECT);
+    BOOST_CHECK_EQUAL(static_cast<uint8_t>(valid.vout[0].GetType()), 2U);
+
+    valid.vout[0].SetPayToDomain(PayToDomainOutput{
+        .domain = "example.com",
+        .connection_work_target = target,
+        .root_certificates_version = 2,
+    });
+    TxValidationState unsupported_roots_state;
+    BOOST_CHECK(!CheckTransaction(CTransaction{valid}, unsupported_roots_state));
+    BOOST_CHECK_EQUAL(unsupported_roots_state.GetRejectReason(), "bad-txns-vout-type");
+
     CMutableTransaction invalid{valid};
     invalid.vout[0].SetScriptPubKey(CScript{} << OP_TRUE);
     TxValidationState invalid_state;
     BOOST_CHECK(!CheckTransaction(CTransaction{invalid}, invalid_state));
     BOOST_CHECK_EQUAL(invalid_state.GetRejectReason(), "bad-txns-vout-type");
+}
+
+BOOST_AUTO_TEST_CASE(p2c_wire_format_uses_output_type_two)
+{
+    const uint256 target{uint256::ONE};
+    const std::string domain{"example.com"};
+
+    const CTxOut by_domain{42 * COIN, PayToDomainOutput{
+        .domain = domain,
+        .connection_work_target = target,
+        .root_certificates_version = P2C_ROOT_CERTIFICATES_VERSION_1,
+    }};
+    DataStream domain_encoded;
+    domain_encoded << by_domain;
+    BOOST_REQUIRE_EQUAL(domain_encoded.size(), 8U + 1U + 1U + domain.size() + 32U + 4U);
+    BOOST_CHECK_EQUAL(std::to_integer<uint8_t>(domain_encoded[8]), 2U);
+    BOOST_CHECK_EQUAL(std::to_integer<uint8_t>(domain_encoded[9]), domain.size());
+
+    CTxOut decoded_domain;
+    domain_encoded >> decoded_domain;
+    BOOST_CHECK(decoded_domain == by_domain);
+    BOOST_CHECK(decoded_domain.GetPayToDomain().has_value());
+
+    // The UTXO set and undo data use TxOutCompression, which must preserve
+    // the exact typed payload rather than attempting Script compression.
+    DataStream compressed;
+    compressed << Using<TxOutCompression>(by_domain);
+    CTxOut decoded_compressed;
+    compressed >> Using<TxOutCompression>(decoded_compressed);
+    BOOST_CHECK(compressed.empty());
+    BOOST_CHECK(decoded_compressed == by_domain);
+
+    CTxOut inconsistent{by_domain};
+    inconsistent.scriptPubKey.front() = OP_3;
+    BOOST_CHECK(!inconsistent.GetPayToDomain());
+    DataStream rejected;
+    BOOST_CHECK_THROW(rejected << inconsistent, std::ios_base::failure);
 }
 
 BOOST_AUTO_TEST_CASE(direct_schnorr_authorization)

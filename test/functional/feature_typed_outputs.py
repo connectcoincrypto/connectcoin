@@ -2,7 +2,7 @@
 # Copyright (c) 2026 The ConnectCoin developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
-"""End-to-end tests for ConnectCoin type-1 P2PK transaction outputs."""
+"""End-to-end tests for ConnectCoin typed transaction outputs."""
 
 import json
 import subprocess
@@ -41,6 +41,57 @@ class TypedOutputsTest(BitcoinTestFramework):
         node = self.nodes[0]
         address = node.getnewaddress(address_type="bech32m")
         self.generate(node, 101)
+
+        self.log.info("Check type-2 P2C wire decoding and Python framework round-trip")
+        target = "00" * 31 + "01"
+        p2c_hex = node.createrawtransaction(
+            # A dummy input avoids the legacy marker/flags ambiguity of a
+            # zero-input transaction in the Python wire decoder.
+            inputs=[{"txid": "11" * 32, "vout": 0}],
+            outputs=[{"p2c": {
+                "amount": 1,
+                "domain": "example.com",
+                "connection_work_target": target,
+                "root_certificates_version": 1,
+            }}],
+        )
+        p2c_tx = tx_from_hex(p2c_hex)
+        assert_equal(len(p2c_tx.vout), 1)
+        assert_equal(p2c_tx.vout[0].type, 2)
+        assert_equal(p2c_tx.vout[0].domain, b"example.com")
+        assert_equal(p2c_tx.vout[0].connection_work_target, bytes.fromhex(target)[::-1])
+        assert_equal(p2c_tx.vout[0].root_certificates_version, 1)
+        assert_equal(p2c_tx.serialize().hex(), p2c_hex)
+        decoded_p2c = node.decoderawtransaction(p2c_hex)["vout"][0]
+        assert_equal(decoded_p2c["type"], 2)
+        assert_equal(decoded_p2c["domain"], "example.com")
+        assert_equal(decoded_p2c["connection_work_target"], target)
+        assert_equal(decoded_p2c["root_certificates_version"], 1)
+        challenge = node.getp2cchallenge(p2c_hex, 0)
+        assert_equal(challenge["txid"], node.decoderawtransaction(p2c_hex)["txid"])
+        assert_equal(challenge["input_index"], 0)
+        assert_equal(len(challenge["clienthello_random"]), 64)
+        witnessed_p2c = node.setp2cproof(p2c_hex, 0, "01")
+        witnessed_decoded = node.decoderawtransaction(witnessed_p2c)
+        assert_equal(witnessed_decoded["txid"], challenge["txid"])
+        assert_equal(witnessed_decoded["vin"][0]["txinwitness"], ["01"])
+
+        self.log.info("Check wallet funding and signing preserve a P2C recipient")
+        funded_p2c = node.send(
+            outputs=[{"p2c": {
+                "amount": 1,
+                "domain": "example.com",
+                "connection_work_target": target,
+                "root_certificates_version": 1,
+            }}],
+            add_to_wallet=False,
+        )
+        assert_equal(funded_p2c["complete"], True)
+        funded_decoded = node.decoderawtransaction(funded_p2c["hex"])
+        p2c_outputs = [output for output in funded_decoded["vout"] if output["type"] == 2]
+        assert_equal(len(p2c_outputs), 1)
+        assert_equal(p2c_outputs[0]["domain"], "example.com")
+        assert_equal(node.testmempoolaccept([funded_p2c["hex"]])[0]["allowed"], True)
 
         self.log.info("Check wallet signing and typed wire decoding")
         txid = node.sendtoaddress(address=address, amount=1)

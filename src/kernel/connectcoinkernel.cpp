@@ -8,6 +8,8 @@
 
 #include <chain.h>
 #include <coins.h>
+#include <consensus/p2c.h>
+#include <consensus/p2c_x509.h>
 #include <consensus/tx_check.h>
 #include <consensus/validation.h>
 #include <dbwrapper.h>
@@ -603,7 +605,8 @@ void cck_script_pubkey_destroy(cck_ScriptPubkey* script_pubkey)
 cck_TransactionOutput* cck_transaction_output_create(const cck_ScriptPubkey* script_pubkey, int64_t amount)
 {
     CTxOut output{amount, cck_ScriptPubkey::get(script_pubkey)};
-    if (output.GetType() != TxOutputType::P2PK || !output.GetP2PKPubKey()) {
+    const bool p2pk{output.GetType() == TxOutputType::P2PK && output.GetP2PKPubKey().has_value()};
+    if (!p2pk && !IsCanonicalP2COutput(output)) {
         return nullptr;
     }
     return cck_TransactionOutput::create(std::move(output));
@@ -673,6 +676,19 @@ int cck_script_pubkey_verify(const cck_ScriptPubkey* script_pubkey,
                               const cck_ScriptVerificationFlags flags,
                               cck_ScriptVerifyStatus* status)
 {
+    return cck_script_pubkey_verify_with_time(script_pubkey, amount, tx_to, precomputed_txdata,
+                                               input_index, flags, /*p2c_validation_time=*/0, status);
+}
+
+int cck_script_pubkey_verify_with_time(const cck_ScriptPubkey* script_pubkey,
+                                        const int64_t amount,
+                                        const cck_Transaction* tx_to,
+                                        const cck_PrecomputedTransactionData* precomputed_txdata,
+                                        const unsigned int input_index,
+                                        const cck_ScriptVerificationFlags flags,
+                                        const int64_t p2c_validation_time,
+                                        cck_ScriptVerifyStatus* status)
+{
     // Assert that all specified flags are part of the interface before continuing
     assert((flags & ~cck_ScriptVerificationFlags_ALL) == 0);
 
@@ -697,22 +713,34 @@ int cck_script_pubkey_verify(const cck_ScriptPubkey* script_pubkey,
     if (status) *status = cck_ScriptVerifyStatus_OK;
 
     const CTxOut spent_output{amount, cck_ScriptPubkey::get(script_pubkey)};
-    const auto pubkey{spent_output.GetP2PKPubKey()};
     const CTxIn& txin{tx.vin[input_index]};
-    if (!pubkey || txdata.m_spent_outputs[input_index] != spent_output ||
-        !txin.scriptSig.empty() || txin.scriptWitness.stack.size() != 1 ||
-        txin.scriptWitness.stack.front().size() != 64) {
+    if (txdata.m_spent_outputs[input_index] != spent_output || !txin.scriptSig.empty() ||
+        txin.scriptWitness.stack.size() != 1) {
         return 0;
     }
 
-    ScriptExecutionData execdata;
-    execdata.m_annex_init = true;
-    execdata.m_annex_present = false;
-    ScriptError error{SCRIPT_ERR_OK};
-    TransactionSignatureChecker checker{&tx, input_index, amount, txdata, MissingDataBehavior::FAIL};
-    return checker.CheckSchnorrSignature(txin.scriptWitness.stack.front(),
-                                         std::span<const unsigned char>{pubkey->data(), pubkey->size()},
-                                         SigVersion::TAPROOT, execdata, &error)
+    if (const auto pubkey{spent_output.GetP2PKPubKey()}) {
+        if (txin.scriptWitness.stack.front().size() != 64) return 0;
+        ScriptExecutionData execdata;
+        execdata.m_annex_init = true;
+        execdata.m_annex_present = false;
+        ScriptError error{SCRIPT_ERR_OK};
+        TransactionSignatureChecker checker{&tx, input_index, amount, txdata, MissingDataBehavior::FAIL};
+        return checker.CheckSchnorrSignature(txin.scriptWitness.stack.front(),
+                                             std::span<const unsigned char>{pubkey->data(), pubkey->size()},
+                                             SigVersion::TAPROOT, execdata, &error)
+            ? 1
+            : 0;
+    }
+
+    const auto p2c{spent_output.GetPayToDomain()};
+    const auto& encoded_proof{txin.scriptWitness.stack.front()};
+    if (!p2c || p2c_validation_time <= 0 || encoded_proof.empty() || encoded_proof.size() > MAX_P2C_PROOF_SIZE) return 0;
+    P2CTlsProofView proof;
+    std::string error;
+    return ParseP2CTlsProof(encoded_proof, p2c->domain, P2CClaimChallenge(tx, input_index), proof, error) &&
+           P2CMeetsWorkTarget(proof.connection_work_hash, p2c->connection_work_target) &&
+           VerifyP2CCertificateProof(spent_output, proof, p2c_validation_time, error)
         ? 1
         : 0;
 }

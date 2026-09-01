@@ -16,11 +16,14 @@ the wrong digest. Only ConnectCoin-aware implementations may parse or sign
 these PSBTs. A distinct magic or mandatory dialect marker should be introduced
 before public interoperability is offered so unsupported tools fail closed.
 
-The PSBT container and descriptor machinery are compatibility infrastructure;
-the current consensus accepts only type-1 single-key outputs and one 64-byte
-Schnorr witness signature per input. Multisig and Script-based examples below
+The PSBT container and descriptor machinery are compatibility infrastructure.
+PSBTs can contain type-1 P2PK and type-2 PAY_TO_CONNECT outputs. Core's generic
+PSBT signer and finalizer authorize type-1 inputs with one 64-byte Schnorr
+witness; a P2C redemption proof is contextual external data and is attached to
+the raw transaction with `setp2cproof`. Multisig and Script-based examples below
 are inherited reference material and do not produce valid ConnectCoin
-transactions. See [typed-outputs.md](typed-outputs.md).
+transactions. See [typed-outputs.md](typed-outputs.md) and
+[pay-to-connect.md](pay-to-connect.md).
 
 This document describes the overall workflow for producing signed transactions
 through the use of PSBT, and the specific RPC commands used in typical
@@ -32,7 +35,7 @@ Within ConnectCoin-aware software, PSBT is a container for ConnectCoin
 transactions that are not fully signed yet, together with relevant metadata to
 help entities work towards signing them. The inherited workflow supports
 cooperation between components, but Bitcoin hardware-wallet, multisig, and
-CoinJoin examples are not claims of compatibility with the current type-1-only
+CoinJoin examples are not claims of compatibility with the current typed-output
 protocol.
 
 ### Overall workflow

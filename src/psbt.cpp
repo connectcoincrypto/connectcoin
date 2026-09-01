@@ -5,6 +5,7 @@
 #include <psbt.h>
 
 #include <common/types.h>
+#include <consensus/p2c.h>
 #include <node/types.h>
 #include <policy/policy.h>
 #include <primitives/transaction.h>
@@ -551,7 +552,8 @@ bool PSBTHasValidTypedOutputs(const PartiallySignedTransaction& psbt)
     if (!unsigned_tx || unsigned_tx->vout.empty()) return false;
 
     return std::ranges::all_of(unsigned_tx->vout, [](const CTxOut& output) {
-        return MoneyRange(output.nValue) && output.GetType() == TxOutputType::P2PK && output.GetP2PKPubKey().has_value();
+        const bool p2pk{output.GetType() == TxOutputType::P2PK && output.GetP2PKPubKey().has_value()};
+        return MoneyRange(output.nValue) && (p2pk || IsCanonicalP2COutput(output));
     });
 }
 

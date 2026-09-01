@@ -22,6 +22,7 @@
 #include <numeric>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -135,23 +136,42 @@ public:
     std::string ToString() const;
 };
 
-/** Consensus output types.
- *
- * Type 0 is reserved for null/invalid objects and for decoding legacy data in
- * diagnostic tools. It is never a valid transaction output. Type 1 is the
- * only spendable output type and commits directly to an x-only public key.
- */
+/** Consensus output types. Type 0 is reserved and never spendable. */
 enum class TxOutputType : uint8_t {
     INVALID = 0,
     P2PK = 1,
+    PAY_TO_CONNECT = 2,
 };
+
+/** Maximum canonical DNS name length, excluding a trailing root label. */
+inline constexpr size_t MAX_P2C_DOMAIN_LENGTH{253};
+
+/** Immutable payload for a PAY_TO_DOMAIN output. */
+struct PayToDomainOutput
+{
+    std::string domain;
+    uint256 connection_work_target;
+    uint32_t root_certificates_version{0};
+
+    friend bool operator==(const PayToDomainOutput&, const PayToDomainOutput&) = default;
+};
+
+/**
+ * Return whether a domain is in the canonical P2C wire form: lower-case ASCII
+ * DNS LDH labels, no trailing dot, labels of 1..63 bytes, and a total of at
+ * most 253 bytes. Unicode names must be converted to a lower-case ASCII DNS
+ * representation by the transaction creator before consensus serialization.
+ */
+bool IsCanonicalP2CDomain(std::string_view domain);
 
 /** An output of a transaction.
  *
  * The consensus serialization is amount + one-byte type + type payload. For
- * P2PK the payload is exactly one 32-byte x-only public key. scriptPubKey is a
- * compatibility view used by wallet, descriptor, PSBT, and RPC code; it is not
- * serialized for valid outputs and is never executed by consensus validation.
+ * P2PK the payload is exactly one 32-byte x-only public key. P2C uses a
+ * one-byte domain length followed by the canonical domain, a 32-byte work
+ * target, and a 32-bit immutable root-certificate bundle version. scriptPubKey is a
+ * compatibility view used by wallet, descriptor, PSBT, kernel, and RPC code;
+ * it is not serialized for valid outputs and is never executed by consensus.
  */
 class CTxOut
 {
@@ -170,11 +190,14 @@ public:
 
     CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn);
     CTxOut(const CAmount& nValueIn, const XOnlyPubKey& pubkeyIn);
+    CTxOut(const CAmount& nValueIn, const PayToDomainOutput& p2cIn);
 
     TxOutputType GetType() const;
     std::optional<XOnlyPubKey> GetP2PKPubKey() const;
+    std::optional<PayToDomainOutput> GetPayToDomain() const;
     void SetScriptPubKey(CScript scriptPubKeyIn);
     void SetP2PK(const XOnlyPubKey& pubkeyIn);
+    void SetPayToDomain(const PayToDomainOutput& p2cIn);
 
     template<typename Stream>
     void SerializePayload(Stream& s) const
@@ -186,6 +209,16 @@ public:
                 ::Serialize(s, *pubkey);
             } else {
                 throw std::ios_base::failure("Inconsistent P2PK transaction output");
+            }
+            break;
+        case static_cast<uint8_t>(TxOutputType::PAY_TO_CONNECT):
+            if (const auto p2c{GetPayToDomain()}) {
+                ::Serialize(s, static_cast<uint8_t>(p2c->domain.size()));
+                s.write(MakeByteSpan(p2c->domain));
+                ::Serialize(s, p2c->connection_work_target);
+                ::Serialize(s, p2c->root_certificates_version);
+            } else {
+                throw std::ios_base::failure("Inconsistent PAY_TO_CONNECT transaction output");
             }
             break;
         case static_cast<uint8_t>(TxOutputType::INVALID):
@@ -212,6 +245,21 @@ public:
             }
             SetP2PK(p2pk_pubkey);
             break;
+        case static_cast<uint8_t>(TxOutputType::PAY_TO_CONNECT): {
+            uint8_t domain_size{0};
+            ::Unserialize(s, domain_size);
+            std::string domain(domain_size, '\0');
+            if (domain_size != 0) s.read(MakeWritableByteSpan(domain));
+            if (!IsCanonicalP2CDomain(domain)) throw std::ios_base::failure("Invalid PAY_TO_CONNECT domain");
+            PayToDomainOutput p2c{.domain = std::move(domain)};
+            ::Unserialize(s, p2c.connection_work_target);
+            ::Unserialize(s, p2c.root_certificates_version);
+            if (p2c.root_certificates_version == 0) {
+                throw std::ios_base::failure("Invalid PAY_TO_CONNECT root certificate version");
+            }
+            SetPayToDomain(p2c);
+            break;
+        }
         case static_cast<uint8_t>(TxOutputType::INVALID):
             p2pk_pubkey = {};
             scriptPubKey.clear();
@@ -251,7 +299,8 @@ public:
     friend bool operator==(const CTxOut& a, const CTxOut& b)
     {
         return (a.nValue == b.nValue && a.GetType() == b.GetType() &&
-                a.GetP2PKPubKey() == b.GetP2PKPubKey());
+                a.GetP2PKPubKey() == b.GetP2PKPubKey() &&
+                a.GetPayToDomain() == b.GetPayToDomain());
     }
 
     std::string ToString() const;

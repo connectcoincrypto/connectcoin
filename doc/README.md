@@ -33,6 +33,8 @@ their original names.
 - [Windows build notes](build-windows-msvc.md)
 - [Developer notes](developer-notes.md)
 - [ConnectCoin public identity](connectcoin-branding.md)
+- [Typed transaction outputs](typed-outputs.md)
+- [Pay-to-connect protocol](pay-to-connect.md)
 - [JSON-RPC interface](JSON-RPC-interface.md)
 - [Testing](../src/test/README.md)
 

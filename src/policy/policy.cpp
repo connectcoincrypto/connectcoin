@@ -10,6 +10,7 @@
 #include <coins.h>
 #include <consensus/amount.h>
 #include <consensus/consensus.h>
+#include <consensus/p2c.h>
 #include <consensus/validation.h>
 #include <policy/feerate.h>
 #include <primitives/transaction.h>
@@ -30,11 +31,16 @@ CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
     // which has units connects per kilobyte.
     // If you'd pay more in fees than the value of the output
     // to spend something, then we consider it dust.
-    // A type-1 output is 41 bytes (amount + type + x-only public key).
-    // Its input has a 41-byte non-witness portion and a 66-byte witness
-    // containing exactly one 64-byte Schnorr signature, for 58 vbytes.
+    // A type-1 input is 58 vbytes. A P2C proof is witness data, so use the
+    // maximum canonical proof size when estimating the cost of spending a
+    // type-2 output. This is relay policy only; it is not a consensus rule.
     uint64_t nSize{GetSerializeSize(txout)};
-    nSize += 58;
+    if (txout.GetType() == TxOutputType::PAY_TO_CONNECT) {
+        const uint64_t witness_size{GetSizeOfCompactSize(1) + GetSizeOfCompactSize(MAX_P2C_PROOF_SIZE) + MAX_P2C_PROOF_SIZE};
+        nSize += 41 + (witness_size + WITNESS_SCALE_FACTOR - 1) / WITNESS_SCALE_FACTOR;
+    } else {
+        nSize += 58;
+    }
 
     return dustRelayFeeIn.GetFee(nSize);
 }
@@ -102,7 +108,8 @@ bool IsStandardTx(const CTransaction& tx, const std::optional<unsigned>& max_dat
     }
 
     for (const CTxOut& txout : tx.vout) {
-        if (txout.GetType() != TxOutputType::P2PK || !txout.GetP2PKPubKey()) {
+        const bool valid_p2pk{txout.GetType() == TxOutputType::P2PK && txout.GetP2PKPubKey().has_value()};
+        if (!valid_p2pk && !IsCanonicalP2COutput(txout)) {
             reason = "output-type";
             return false;
         }
@@ -127,11 +134,14 @@ TxValidationState ValidateInputsStandardness(const CTransaction& tx, const CCoin
     for (unsigned int i = 0; i < tx.vin.size(); i++) {
         const CTxOut& prev = mapInputs.AccessCoin(tx.vin[i].prevout).out;
         const CTxIn& input{tx.vin[i]};
-        if (prev.GetType() != TxOutputType::P2PK || !prev.GetP2PKPubKey() ||
-            !input.scriptSig.empty() || input.scriptWitness.stack.size() != 1 ||
-            input.scriptWitness.stack.front().size() != 64) {
+        const bool valid_p2pk{prev.GetType() == TxOutputType::P2PK && prev.GetP2PKPubKey().has_value() &&
+                              input.scriptWitness.stack.size() == 1 && input.scriptWitness.stack.front().size() == 64};
+        const bool valid_p2c{IsCanonicalP2COutput(prev) && input.scriptWitness.stack.size() == 1 &&
+                             !input.scriptWitness.stack.front().empty() &&
+                             input.scriptWitness.stack.front().size() <= MAX_P2C_PROOF_SIZE};
+        if (!input.scriptSig.empty() || (!valid_p2pk && !valid_p2c)) {
             state.Invalid(TxValidationResult::TX_INPUTS_NOT_STANDARD, "bad-txns-nonstandard-inputs",
-                          strprintf("input %u is not a type-1 Schnorr spend", i));
+                          strprintf("input %u is not a canonical typed-output spend", i));
             return state;
         }
     }
@@ -146,9 +156,12 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 
     for (unsigned int i = 0; i < tx.vin.size(); ++i) {
         const CTxOut& prev{mapInputs.AccessCoin(tx.vin[i].prevout).out};
-        if (prev.GetType() != TxOutputType::P2PK || !prev.GetP2PKPubKey() ||
-            tx.vin[i].scriptWitness.stack.size() != 1 ||
-            tx.vin[i].scriptWitness.stack.front().size() != 64) return false;
+        const auto& witness{tx.vin[i].scriptWitness.stack};
+        const bool valid_p2pk{prev.GetType() == TxOutputType::P2PK && prev.GetP2PKPubKey().has_value() &&
+                              witness.size() == 1 && witness.front().size() == 64};
+        const bool valid_p2c{IsCanonicalP2COutput(prev) && witness.size() == 1 && !witness.front().empty() &&
+                             witness.front().size() <= MAX_P2C_PROOF_SIZE};
+        if (!valid_p2pk && !valid_p2c) return false;
     }
     return true;
 }
@@ -161,7 +174,7 @@ bool SpendsNonAnchorWitnessProg(const CTransaction& tx, const CCoinsViewCache& p
 
     for (const auto& txin: tx.vin) {
         const CTxOut& prev{prevouts.AccessCoin(txin.prevout).out};
-        if (prev.GetType() == TxOutputType::P2PK) return true;
+        if (prev.GetType() == TxOutputType::P2PK || prev.GetType() == TxOutputType::PAY_TO_CONNECT) return true;
     }
 
     return false;

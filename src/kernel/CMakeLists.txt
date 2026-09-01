@@ -23,6 +23,8 @@ add_library(connectcoinkernel
   ../coins.cpp
   ../compressor.cpp
   ../consensus/merkle.cpp
+  ../consensus/p2c.cpp
+  ../consensus/p2c_x509.cpp
   ../consensus/tx_check.cpp
   ../consensus/tx_verify.cpp
   ../crypto/randomx_util.cpp
@@ -85,6 +87,10 @@ add_library(connectcoinkernel
   $<TARGET_OBJECTS:crc32c>
 )
 
+target_raw_data_sources(connectcoinkernel NAMESPACE consensus::p2c::data
+  ../consensus/p2c_roots_v1.pem
+)
+
 # Compiler warnings that apply only to the kernel and its dependencies.
 # These can be more strict and/or warnings that only apply to shared
 # libs.
@@ -103,6 +109,8 @@ target_link_libraries(connectcoinkernel
   PRIVATE
     core_interface
     kernel_warn_interface
+    MbedTLS::mbedx509
+    MbedTLS::mbedcrypto
     randomx
     secp256k1_objs
     $<$<PLATFORM_ID:Windows>:bcrypt>

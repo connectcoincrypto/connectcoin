@@ -7,6 +7,8 @@
 #include <chain.h>
 #include <coins.h>
 #include <consensus/amount.h>
+#include <consensus/p2c.h>
+#include <consensus/p2c_x509.h>
 #include <consensus/validation.h>
 #include <core_io.h>
 #include <index/txindex.h>
@@ -44,6 +46,7 @@
 
 #include <cstdint>
 #include <numeric>
+#include <span>
 
 #include <univalue.h>
 
@@ -98,15 +101,22 @@ static std::vector<RPCArg> CreateTxDoc()
                 },
             },
         },
-        {"outputs", RPCArg::Type::ARR, RPCArg::Optional::NO, "The outputs specified as key-value pairs.\n"
-                "Each key may only appear once, i.e. there can only be one 'data' output, and no address may be duplicated.\n"
-                "At least one output of either type must be specified.\n"
+        {"outputs", RPCArg::Type::ARR, RPCArg::Optional::NO, "Outputs specified as address/amount pairs or explicit p2c objects.\n"
+                "A p2c object has amount, domain, connection_work_target, and root_certificates_version.\n"
+                "Every p2c object serializes as output type 2.\n"
+                "Addresses may not be duplicated. At least one output must be specified.\n"
                 "For compatibility reasons, a dictionary, which holds the key-value pairs directly, is also\n"
                 "                             accepted as second parameter.",
             {
                 {"", RPCArg::Type::OBJ_USER_KEYS, RPCArg::Optional::OMITTED, "",
                     {
                         {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "A key-value pair. The key (string) is the ConnectCoin address, the value (float or string) is the amount in " + CURRENCY_UNIT},
+                        {"p2c", RPCArg::Type::OBJ, RPCArg::Optional::OMITTED, "A type-2 PAY_TO_CONNECT output", {
+                            {"amount", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "Output amount"},
+                            {"domain", RPCArg::Type::STR, RPCArg::Optional::NO, "Canonical lower-case ASCII domain"},
+                            {"connection_work_target", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "Maximum accepted connection-work hash"},
+                            {"root_certificates_version", RPCArg::Type::NUM, RPCArg::Optional::NO, "Immutable trusted-root bundle version; version 1 is currently supported"},
+                        }},
                     },
                 },
                 {"", RPCArg::Type::OBJ, RPCArg::Optional::OMITTED, "",
@@ -380,7 +390,7 @@ static RPCMethod createrawtransaction()
     return RPCMethod{
         "createrawtransaction",
         "Create a transaction spending the given inputs and creating new outputs.\n"
-                "Outputs can be addresses or data.\n"
+                "Outputs can be type-1 addresses or explicit type-2 p2c objects.\n"
                 "Returns hex-encoded raw transaction.\n"
                 "Note that the transaction's inputs are not signed, and\n"
                 "it is not stored in the wallet or transmitted to the network.\n",
@@ -390,9 +400,7 @@ static RPCMethod createrawtransaction()
                 },
                 RPCExamples{
                     HelpExampleCli("createrawtransaction", "\"[{\\\"txid\\\":\\\"myid\\\",\\\"vout\\\":0}]\" \"[{\\\"address\\\":0.01}]\"")
-            + HelpExampleCli("createrawtransaction", "\"[{\\\"txid\\\":\\\"myid\\\",\\\"vout\\\":0}]\" \"[{\\\"data\\\":\\\"00010203\\\"}]\"")
             + HelpExampleRpc("createrawtransaction", "\"[{\\\"txid\\\":\\\"myid\\\",\\\"vout\\\":0}]\", \"[{\\\"address\\\":0.01}]\"")
-            + HelpExampleRpc("createrawtransaction", "\"[{\\\"txid\\\":\\\"myid\\\",\\\"vout\\\":0}]\", \"[{\\\"data\\\":\\\"00010203\\\"}]\"")
                 },
         [](const RPCMethod& self, const JSONRPCRequest& request) -> UniValue
 {
@@ -404,6 +412,74 @@ static RPCMethod createrawtransaction()
 
     return EncodeHexTx(CTransaction(rawTx));
 },
+    };
+}
+
+static RPCMethod getp2cchallenge()
+{
+    return RPCMethod{
+        "getp2cchallenge",
+        "Return the exact 32 bytes that must appear in ClientHello.random for a P2C claim.\n"
+        "The transaction must be final except for witnesses; changing its inputs, outputs, version,\n"
+        "locktime, or the selected input index changes the challenge.\n",
+        {
+            {"hexstring", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The unsigned or partially witnessed transaction"},
+            {"input_index", RPCArg::Type::NUM, RPCArg::Optional::NO, "Index of the P2C input being claimed"},
+        },
+        RPCResult{RPCResult::Type::OBJ, "", "", {
+            {RPCResult::Type::STR_HEX, "txid", "Witness-independent transaction id"},
+            {RPCResult::Type::NUM, "input_index", "Input index committed by the challenge"},
+            {RPCResult::Type::STR_HEX, "clienthello_random", "Exact bytes for ClientHello.random"},
+        }},
+        RPCExamples{HelpExampleCli("getp2cchallenge", "\"hexstring\" 0")},
+        [](const RPCMethod&, const JSONRPCRequest& request) -> UniValue {
+            CMutableTransaction tx;
+            if (!DecodeHexTx(tx, request.params[0].get_str(), /*try_no_witness=*/true, /*try_witness=*/true)) {
+                throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
+            }
+            const uint32_t input_index{request.params[1].getInt<uint32_t>()};
+            if (input_index >= tx.vin.size()) throw JSONRPCError(RPC_INVALID_PARAMETER, "input_index is out of range");
+            const CTransaction immutable{tx};
+            const uint256 challenge{P2CClaimChallenge(immutable, input_index)};
+            UniValue result{UniValue::VOBJ};
+            result.pushKV("txid", immutable.GetHash().GetHex());
+            result.pushKV("input_index", input_index);
+            result.pushKV("clienthello_random", HexStr(std::span{challenge.begin(), challenge.end()}));
+            return result;
+        },
+    };
+}
+
+static RPCMethod setp2cproof()
+{
+    return RPCMethod{
+        "setp2cproof",
+        "Set the complete versioned P2C TLS proof as the sole witness element of one input.\n"
+        "This operation does not change the txid or the P2C challenge. Full proof validation occurs\n"
+        "when the transaction is tested, relayed, or included in a block.\n",
+        {
+            {"hexstring", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The transaction hex string"},
+            {"input_index", RPCArg::Type::NUM, RPCArg::Optional::NO, "Index of the P2C input"},
+            {"proof", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "Complete versioned P2C proof"},
+        },
+        RPCResult{RPCResult::Type::STR_HEX, "transaction", "Transaction with the P2C proof attached"},
+        RPCExamples{HelpExampleCli("setp2cproof", "\"hexstring\" 0 \"proofhex\"")},
+        [](const RPCMethod&, const JSONRPCRequest& request) -> UniValue {
+            CMutableTransaction tx;
+            if (!DecodeHexTx(tx, request.params[0].get_str(), /*try_no_witness=*/true, /*try_witness=*/true)) {
+                throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
+            }
+            const uint32_t input_index{request.params[1].getInt<uint32_t>()};
+            if (input_index >= tx.vin.size()) throw JSONRPCError(RPC_INVALID_PARAMETER, "input_index is out of range");
+            const std::string proof_hex{request.params[2].get_str()};
+            if (proof_hex.empty() || proof_hex.size() > MAX_P2C_PROOF_SIZE * 2 || !IsHex(proof_hex)) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "proof must be non-empty hexadecimal data within the P2C size limit");
+            }
+            CTxIn& input{tx.vin[input_index]};
+            if (!input.scriptSig.empty()) throw JSONRPCError(RPC_INVALID_PARAMETER, "P2C input scriptSig must be empty");
+            input.scriptWitness.stack = {ParseHex(proof_hex)};
+            return EncodeHexTx(CTransaction{tx});
+        },
     };
 }
 
@@ -644,6 +720,7 @@ static RPCMethod combinerawtransaction()
 
     // Fetch previous transactions (inputs):
     CCoinsViewCache view{&CoinsViewEmpty::Get()};
+    int64_t p2c_validation_time{0};
     {
         NodeContext& node = EnsureAnyNodeContext(request.context);
         const CTxMemPool& mempool = EnsureMemPool(node);
@@ -652,6 +729,7 @@ static RPCMethod combinerawtransaction()
         CCoinsViewCache &viewChain = chainman.ActiveChainstate().CoinsTip();
         CCoinsViewMemPool viewMempool(&viewChain, mempool);
         view.SetBackend(viewMempool); // temporarily switch cache backend to db+mempool view
+        p2c_validation_time = chainman.ActiveChainstate().m_chain.Tip()->GetMedianTimePast();
 
         for (const CTxIn& txin : mergedTx.vin) {
             view.AccessCoin(txin.prevout); // Load entries from viewChain into view; can fail.
@@ -661,8 +739,8 @@ static RPCMethod combinerawtransaction()
     }
 
     // Typed outputs have no Script program or partial Script solution to merge.
-    // Gather the complete prevout set once for the BIP341-style type-1 digest,
-    // then select the first valid canonical Schnorr witness for every input.
+    // Gather the complete prevout set once, then select the first valid complete
+    // Schnorr signature or P2C proof witness for every input.
     std::vector<CTxOut> spent_outputs;
     spent_outputs.reserve(mergedTx.vin.size());
     for (CTxIn& txin : mergedTx.vin) {
@@ -670,8 +748,9 @@ static RPCMethod combinerawtransaction()
         if (coin.IsSpent()) {
             throw JSONRPCError(RPC_VERIFY_ERROR, "Input not found or already spent");
         }
-        if (coin.out.GetType() != TxOutputType::P2PK || !coin.out.GetP2PKPubKey()) {
-            throw JSONRPCError(RPC_VERIFY_ERROR, "Input does not spend a type-1 P2PK output");
+        const bool p2pk{coin.out.GetType() == TxOutputType::P2PK && coin.out.GetP2PKPubKey().has_value()};
+        if (!p2pk && !IsCanonicalP2COutput(coin.out)) {
+            throw JSONRPCError(RPC_VERIFY_ERROR, "Input does not spend a canonical typed output");
         }
         spent_outputs.push_back(coin.out);
         txin.scriptSig.clear();
@@ -680,11 +759,13 @@ static RPCMethod combinerawtransaction()
 
     PrecomputedTransactionData txdata;
     txdata.Init(mergedTx, std::move(spent_outputs), /*force=*/true);
+    const CTransaction challenge_tx{mergedTx};
 
     for (unsigned int input_index = 0; input_index < mergedTx.vin.size(); ++input_index) {
         CTxIn& merged_input = mergedTx.vin[input_index];
         const Coin& coin = view.AccessCoin(merged_input.prevout);
-        const XOnlyPubKey pubkey{*coin.out.GetP2PKPubKey()};
+        const auto pubkey{coin.out.GetP2PKPubKey()};
+        const auto p2c{coin.out.GetPayToDomain()};
 
         for (unsigned int variant_index = 0; variant_index < txVariants.size(); ++variant_index) {
             const CTxIn& candidate = txVariants[variant_index].vin[input_index];
@@ -696,22 +777,44 @@ static RPCMethod combinerawtransaction()
             if (candidate.scriptWitness.IsNull()) {
                 continue;
             }
-            if (candidate.scriptWitness.stack.size() != 1 ||
-                candidate.scriptWitness.stack.front().size() != 64) {
+            if (candidate.scriptWitness.stack.size() != 1) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER,
-                                   strprintf("Transaction number %u input %u has a malformed type-1 witness",
+                                   strprintf("Transaction number %u input %u has a malformed typed-output witness",
                                              variant_index + 1, input_index));
             }
 
-            ScriptExecutionData execdata;
-            execdata.m_annex_init = true;
-            execdata.m_annex_present = false;
-            ScriptError error{SCRIPT_ERR_OK};
-            MutableTransactionSignatureChecker checker{&mergedTx, input_index, coin.out.nValue, txdata,
-                                                       MissingDataBehavior::FAIL};
-            if (checker.CheckSchnorrSignature(candidate.scriptWitness.stack.front(),
-                                              std::span<const unsigned char>{pubkey.data(), pubkey.size()},
-                                              SigVersion::TAPROOT, execdata, &error)) {
+            bool valid{false};
+            if (pubkey) {
+                if (candidate.scriptWitness.stack.front().size() != 64) {
+                    throw JSONRPCError(RPC_INVALID_PARAMETER,
+                                       strprintf("Transaction number %u input %u has a malformed type-1 witness",
+                                                 variant_index + 1, input_index));
+                }
+                ScriptExecutionData execdata;
+                execdata.m_annex_init = true;
+                execdata.m_annex_present = false;
+                ScriptError error{SCRIPT_ERR_OK};
+                MutableTransactionSignatureChecker checker{&mergedTx, input_index, coin.out.nValue, txdata,
+                                                           MissingDataBehavior::FAIL};
+                valid = checker.CheckSchnorrSignature(candidate.scriptWitness.stack.front(),
+                                                      std::span<const unsigned char>{pubkey->data(), pubkey->size()},
+                                                      SigVersion::TAPROOT, execdata, &error);
+            } else {
+                assert(p2c);
+                const auto& encoded_proof{candidate.scriptWitness.stack.front()};
+                if (encoded_proof.empty() || encoded_proof.size() > MAX_P2C_PROOF_SIZE) {
+                    throw JSONRPCError(RPC_INVALID_PARAMETER,
+                                       strprintf("Transaction number %u input %u has a malformed P2C witness",
+                                                 variant_index + 1, input_index));
+                }
+                P2CTlsProofView proof;
+                std::string error;
+                valid = ParseP2CTlsProof(encoded_proof, p2c->domain,
+                                         P2CClaimChallenge(challenge_tx, input_index), proof, error) &&
+                        P2CMeetsWorkTarget(proof.connection_work_hash, p2c->connection_work_target) &&
+                        VerifyP2CCertificateProof(coin.out, proof, p2c_validation_time, error);
+            }
+            if (valid) {
                 merged_input.scriptWitness = candidate.scriptWitness;
                 break;
             }
@@ -2207,6 +2310,8 @@ void RegisterRawTransactionRPCCommands(CRPCTable& t)
     static const CRPCCommand commands[]{
         {"rawtransactions", &getrawtransaction},
         {"rawtransactions", &createrawtransaction},
+        {"rawtransactions", &getp2cchallenge},
+        {"rawtransactions", &setp2cproof},
         {"rawtransactions", &decoderawtransaction},
         {"rawtransactions", &decodescript},
         {"rawtransactions", &combinerawtransaction},

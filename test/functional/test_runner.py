@@ -490,7 +490,7 @@ LEGACY_TYPED_OUTPUT_SCRIPTS = {
     # Disabled until finalized typed-output assumeutxo snapshots are published.
     "feature_assumeutxo.py",
     # These activation/encoding suites construct legacy Script outputs and
-    # cannot exercise ConnectCoin's type-1-only authorization model.
+    # cannot exercise ConnectCoin's typed-output authorization model.
     "feature_cltv.py",
     "feature_csv_activation.py",
     "feature_dersig.py",
@@ -508,7 +508,7 @@ LEGACY_TYPED_OUTPUT_SCRIPTS = {
     "wallet_address_types.py",
     # These inherited suites are centered on legacy Script output creation,
     # decoding, policy, descriptors, or wallets. They are intentionally not
-    # part of the type-1-only functional suite; native behavior is covered by
+    # part of the typed-output functional suite; native behavior is covered by
     # feature_typed_outputs.py and the typed-output unit tests.
     "feature_block.py",
     "mempool_accept.py",

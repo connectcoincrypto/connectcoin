@@ -4,8 +4,8 @@
 
 This is the developer documentation for ConnectCoin Core, an experimental UTXO
 cryptocurrency and Bitcoin Core fork. ConnectCoin uses peer-to-peer technology
-to operate without a central server; its native P2C and TLS-proof functionality
-is still under development.
+to operate without a central server. Its experimental consensus includes
+type-2 P2C outputs and bounded TLS 1.3 connection-proof verification.
 
 The software is a community-driven open source project, released under the MIT license.
 

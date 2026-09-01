@@ -300,6 +300,7 @@ struct CRecipient
     CTxDestination dest;
     CAmount nAmount;
     bool fSubtractFeeFromAmount;
+    std::optional<PayToDomainOutput> p2c;
 };
 
 class WalletRescanReserver; //forward declarations for ScanForWalletTransactions/RescanFromTime

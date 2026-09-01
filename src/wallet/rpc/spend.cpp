@@ -43,6 +43,30 @@ std::vector<CRecipient> CreateRecipients(const std::vector<std::pair<CTxDestinat
     return recipients;
 }
 
+std::vector<CRecipient> CreateRecipients(const std::vector<CTxOut>& outputs, const std::set<int>& subtract_fee_outputs)
+{
+    std::vector<CRecipient> recipients;
+    recipients.reserve(outputs.size());
+    for (size_t i{0}; i < outputs.size(); ++i) {
+        const CTxOut& output{outputs[i]};
+        if (const auto p2c{output.GetPayToDomain()}) {
+            recipients.push_back(CRecipient{
+                .dest = CNoDestination{},
+                .nAmount = output.nValue,
+                .fSubtractFeeFromAmount = subtract_fee_outputs.contains(i),
+                .p2c = *p2c,
+            });
+            continue;
+        }
+        CTxDestination destination;
+        if (!output.GetP2PKPubKey() || !ExtractDestination(output.scriptPubKey, destination)) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "transaction contains a non-canonical typed output");
+        }
+        recipients.push_back(CRecipient{destination, output.nValue, subtract_fee_outputs.contains(i)});
+    }
+    return recipients;
+}
+
 static void InterpretFeeEstimationInstructions(const UniValue& conf_target, const UniValue& estimate_mode, const UniValue& fee_rate, UniValue& options)
 {
     if (options.exists("conf_target") || options.exists("estimate_mode")) {
@@ -811,15 +835,9 @@ RPCMethod fundrawtransaction()
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
     }
     UniValue options = request.params[1];
-    std::vector<std::pair<CTxDestination, CAmount>> destinations;
-    for (const auto& tx_out : tx.vout) {
-        CTxDestination dest;
-        ExtractDestination(tx_out.scriptPubKey, dest);
-        destinations.emplace_back(dest, tx_out.nValue);
-    }
-    std::vector<std::string> dummy(destinations.size(), "dummy");
+    std::vector<std::string> dummy(tx.vout.size(), "dummy");
     std::vector<CRecipient> recipients = CreateRecipients(
-            destinations,
+            tx.vout,
             InterpretSubtractFeeFromOutputInstructions(options["subtractFeeFromOutputs"], dummy)
     );
     CCoinControl coin_control;
@@ -1277,13 +1295,13 @@ RPCMethod send()
             bool rbf{options.exists("replaceable") ? options["replaceable"].get_bool() : pwallet->m_signal_rbf};
             UniValue outputs(UniValue::VOBJ);
             outputs = NormalizeOutputs(request.params[0]);
-            std::vector<CRecipient> recipients = CreateRecipients(
-                    ParseOutputs(outputs),
-                    InterpretSubtractFeeFromOutputInstructions(options["subtract_fee_from_outputs"], outputs.getKeys())
-            );
             CCoinControl coin_control;
             coin_control.m_version = self.Arg<uint32_t>("version");
             CMutableTransaction rawTx = ConstructTransaction(options["inputs"], request.params[0], options["locktime"], rbf, coin_control.m_version);
+            std::vector<CRecipient> recipients = CreateRecipients(
+                    rawTx.vout,
+                    InterpretSubtractFeeFromOutputInstructions(options["subtract_fee_from_outputs"], outputs.getKeys())
+            );
             // Automatically select coins, unless at least one is manually selected. Can
             // be overridden by options.add_inputs.
             coin_control.m_allow_other_inputs = rawTx.vin.size() == 0;
@@ -1781,7 +1799,7 @@ RPCMethod walletcreatefundedpsbt()
     UniValue outputs(UniValue::VOBJ);
     outputs = NormalizeOutputs(request.params[1]);
     std::vector<CRecipient> recipients = CreateRecipients(
-            ParseOutputs(outputs),
+            rawTx.vout,
             InterpretSubtractFeeFromOutputInstructions(options["subtractFeeFromOutputs"], outputs.getKeys())
     );
     // Automatically select coins, unless at least one is manually selected. Can

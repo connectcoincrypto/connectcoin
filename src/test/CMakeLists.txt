@@ -79,6 +79,7 @@ add_executable(connectcoin-test
   pcp_tests.cpp
   peerman_tests.cpp
   pmt_tests.cpp
+  p2c_tests.cpp
   pool_tests.cpp
   pow_tests.cpp
   prevector_tests.cpp
@@ -166,6 +167,8 @@ target_link_libraries(connectcoin-test
   connectcoin_cli
   connectcoin_node
   connectcoin_consensus
+  MbedTLS::mbedx509
+  MbedTLS::mbedcrypto
   minisketch
   secp256k1
   Boost::headers

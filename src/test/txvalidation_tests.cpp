@@ -79,7 +79,7 @@ static inline CTransactionRef make_tx(const std::vector<COutPoint>& inputs, int3
     return MakeTransactionRef(mtx);
 }
 
-#if 0 // Ephemeral anchor outputs are not part of the type-1-only protocol.
+#if 0 // Ephemeral anchor outputs are not part of the typed-output protocol.
 static constexpr auto NUM_EPHEMERAL_TX_OUTPUTS = 3;
 static constexpr auto EPHEMERAL_DUST_INDEX = NUM_EPHEMERAL_TX_OUTPUTS - 1;
 

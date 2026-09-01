@@ -128,8 +128,8 @@ unsigned int GetP2SHSigOpCount(const CTransaction& tx, const CCoinsViewCache& in
 
 int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& inputs, script_verify_flags flags)
 {
-    // Every non-coinbase input authorizes exactly one type-1 output with one
-    // Schnorr signature, so sigop accounting is direct and exact.
+    // Every non-coinbase input performs exactly one authorization signature:
+    // Schnorr for type 1 or TLS CertificateVerify for type 2.
     return tx.IsCoinBase() ? 0 : static_cast<int64_t>(tx.vin.size());
 }
 

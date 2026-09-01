@@ -771,7 +771,8 @@ CONNECTCOINKERNEL_API cck_ScriptPubkey* CONNECTCOINKERNEL_WARN_UNUSED_RESULT cck
  * type-1 P2PK output. Consensus requires an exact OP_1/32-byte valid x-only
  * compatibility script, an empty scriptSig, and one 64-byte SIGHASH_DEFAULT
  * Schnorr witness. The flags argument is retained for API compatibility, but
- * cannot enable legacy Script forms or relax the type-1 rules.
+ * cannot enable legacy Script forms or relax the type-1 rules. Use
+ * cck_script_pubkey_verify_with_time for type-2 PAY_TO_CONNECT spends.
  *
  * @param[in] script_pubkey      Non-null, script pubkey to be spent.
  * @param[in] amount             Amount of the script pubkey's associated output.
@@ -789,6 +790,31 @@ CONNECTCOINKERNEL_API int CONNECTCOINKERNEL_WARN_UNUSED_RESULT cck_script_pubkey
     const cck_PrecomputedTransactionData* precomputed_txdata,
     unsigned int input_index,
     cck_ScriptVerificationFlags flags,
+    cck_ScriptVerifyStatus* status) CONNECTCOINKERNEL_ARG_NONNULL(1, 3);
+
+/**
+ * @brief Verify a ConnectCoin typed-output spend. Type 1 uses a Schnorr
+ * witness. Type 2 uses a P2C TLS proof and validates certificate time against
+ * p2c_validation_time, normally the previous block's median time.
+ *
+ * @param[in] script_pubkey       Non-null compatibility view of the spent output.
+ * @param[in] amount              Amount of the spent output.
+ * @param[in] tx_to               Non-null spending transaction.
+ * @param[in] precomputed_txdata  Non-null data containing every spent output.
+ * @param[in] input_index         Input being verified.
+ * @param[in] flags               Verification flags retained for API compatibility.
+ * @param[in] p2c_validation_time Previous-block median time for P2C; ignored for P2PK.
+ * @param[out] status             Nullable operation status.
+ * @return                        1 if the typed-output spend is valid, 0 otherwise.
+ */
+CONNECTCOINKERNEL_API int CONNECTCOINKERNEL_WARN_UNUSED_RESULT cck_script_pubkey_verify_with_time(
+    const cck_ScriptPubkey* script_pubkey,
+    int64_t amount,
+    const cck_Transaction* tx_to,
+    const cck_PrecomputedTransactionData* precomputed_txdata,
+    unsigned int input_index,
+    cck_ScriptVerificationFlags flags,
+    int64_t p2c_validation_time,
     cck_ScriptVerifyStatus* status) CONNECTCOINKERNEL_ARG_NONNULL(1, 3);
 
 /**
@@ -823,7 +849,7 @@ CONNECTCOINKERNEL_API void cck_script_pubkey_destroy(cck_ScriptPubkey* script_pu
  * @param[in] script_pubkey Non-null.
  * @param[in] amount        The amount associated with the script pubkey for this output.
  * @return                  The transaction output, or null if script_pubkey is not a valid
- *                          ConnectCoin type-1 P2PK compatibility script.
+ *                          ConnectCoin type-1 P2PK or type-2 PAY_TO_CONNECT compatibility view.
  */
 CONNECTCOINKERNEL_API cck_TransactionOutput* CONNECTCOINKERNEL_WARN_UNUSED_RESULT cck_transaction_output_create(
     const cck_ScriptPubkey* script_pubkey,

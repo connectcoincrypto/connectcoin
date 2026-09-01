@@ -13,6 +13,7 @@
 #include <compat/compat.h>
 #include <consensus/amount.h>
 #include <consensus/consensus.h>
+#include <consensus/p2c.h>
 #include <core_io.h>
 #include <key_io.h>
 #include <policy/policy.h>
@@ -60,9 +61,11 @@ static void SetupBitcoinTxArgs(ArgsManager &argsman)
     argsman.AddArg("nversion=N", "Set TX version to N", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
     argsman.AddArg("outaddr=VALUE:ADDRESS", "Add address-based output to TX", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
     argsman.AddArg("outdata=[VALUE:]DATA", "Unsupported: ConnectCoin has no data/Script output type", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
-    argsman.AddArg("outmultisig=...", "Unsupported: ConnectCoin currently has only type-1 P2PK outputs", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
+    argsman.AddArg("outmultisig=...", "Unsupported: ConnectCoin has no multisig output type", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
     argsman.AddArg("outpubkey=VALUE:PUBKEY", "Add a type-1 P2PK output from a 32-byte x-only or full secp256k1 public key", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
+    argsman.AddArg("outp2c=VALUE:DOMAIN:TARGET:ROOTS_VERSION", "Add a type-2 PAY_TO_CONNECT output", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
     argsman.AddArg("outscript=...", "Unsupported: ConnectCoin has no raw Script output type", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
+    argsman.AddArg("p2cproof=INPUT_INDEX:PROOF", "Set the complete P2C proof witness for one input", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
     argsman.AddArg("replaceable(=N)", "Sets Replace-By-Fee (RBF) opt-in sequence number for input N. "
         "If N is not provided, the command attempts to opt-in all available inputs for RBF. "
         "If the transaction has no inputs, this option is ignored.", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
@@ -340,18 +343,56 @@ static void MutateTxAddOutPubKey(CMutableTransaction& tx, const std::string& str
     tx.vout.push_back(txout);
 }
 
+static void MutateTxAddOutP2C(CMutableTransaction& tx, const std::string& strInput)
+{
+    const std::vector<std::string> parts{SplitString(strInput, ':')};
+    if (parts.size() != 4) {
+        throw std::runtime_error("P2C output must be VALUE:DOMAIN:TARGET:ROOTS_VERSION");
+    }
+    const CAmount value{ExtractAndValidateValue(parts[0])};
+    if (!IsCanonicalP2CDomain(parts[1])) {
+        throw std::runtime_error("P2C domain must be canonical lower-case ASCII without a trailing dot");
+    }
+    const auto target{uint256::FromHex(parts[2])};
+    if (!target) throw std::runtime_error("P2C target must be exactly 32 bytes of hex");
+    const auto roots_version{ToIntegral<uint32_t>(parts[3])};
+    if (!roots_version || !IsSupportedP2CRootCertificatesVersion(*roots_version)) {
+        throw std::runtime_error("unsupported P2C root certificate version");
+    }
+    tx.vout.emplace_back(value, PayToDomainOutput{
+        .domain = parts[1],
+        .connection_work_target = *target,
+        .root_certificates_version = *roots_version,
+    });
+}
+
+static void MutateTxSetP2CProof(CMutableTransaction& tx, const std::string& strInput)
+{
+    const size_t separator{strInput.find(':')};
+    if (separator == std::string::npos) throw std::runtime_error("P2C proof must be INPUT_INDEX:PROOF");
+    const auto input_index{ToIntegral<uint32_t>(strInput.substr(0, separator))};
+    if (!input_index || *input_index >= tx.vin.size()) throw std::runtime_error("invalid P2C proof input index");
+    const std::string_view proof_hex{strInput.c_str() + separator + 1, strInput.size() - separator - 1};
+    if (proof_hex.empty() || proof_hex.size() > MAX_P2C_PROOF_SIZE * 2 || !IsHex(proof_hex)) {
+        throw std::runtime_error("P2C proof must be non-empty hexadecimal data within the consensus size limit");
+    }
+    CTxIn& input{tx.vin[*input_index]};
+    if (!input.scriptSig.empty()) throw std::runtime_error("P2C input scriptSig must be empty");
+    input.scriptWitness.stack = {ParseHex(proof_hex)};
+}
+
 static void MutateTxAddOutMultiSig(CMutableTransaction& tx, const std::string& strInput)
 {
     (void)tx;
     (void)strInput;
-    throw std::runtime_error("ConnectCoin currently supports only type-1 P2PK outputs; multisig is unavailable");
+    throw std::runtime_error("ConnectCoin typed outputs do not support multisig");
 }
 
 static void MutateTxAddOutData(CMutableTransaction& tx, const std::string& strInput)
 {
     (void)tx;
     (void)strInput;
-    throw std::runtime_error("ConnectCoin type-1 outputs do not support data/OP_RETURN");
+    throw std::runtime_error("ConnectCoin typed outputs do not support data/OP_RETURN");
 }
 
 static void MutateTxAddOutScript(CMutableTransaction& tx, const std::string& strInput)
@@ -492,8 +533,9 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
                 }
                 Coin newcoin;
                 newcoin.out.SetScriptPubKey(scriptPubKey);
-                if (newcoin.out.GetType() != TxOutputType::P2PK || !newcoin.out.GetP2PKPubKey()) {
-                    throw std::runtime_error("prevtxs scriptPubKey must encode a ConnectCoin type-1 P2PK output");
+                const bool p2pk{newcoin.out.GetType() == TxOutputType::P2PK && newcoin.out.GetP2PKPubKey().has_value()};
+                if (!p2pk && !IsCanonicalP2COutput(newcoin.out)) {
+                    throw std::runtime_error("prevtxs scriptPubKey must encode a canonical ConnectCoin typed output");
                 }
                 newcoin.out.nValue = MAX_MONEY;
                 if (prevOut.exists("amount")) {
@@ -549,6 +591,15 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
         const CScript& prevPubKey = coin.out.scriptPubKey;
         const CAmount& amount = coin.out.nValue;
 
+        if (IsCanonicalP2COutput(coin.out)) {
+            if (!txin.scriptSig.empty() || txin.scriptWitness.stack.size() != 1 ||
+                txin.scriptWitness.stack.front().empty() ||
+                txin.scriptWitness.stack.front().size() > MAX_P2C_PROOF_SIZE) {
+                throw std::runtime_error("P2C input requires one complete proof witness");
+            }
+            continue;
+        }
+
         SignatureData sigdata = DataFromTransaction(mergedTx, i, coin.out);
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
         if (!fHashSingle || (i < mergedTx.vout.size()))
@@ -600,6 +651,8 @@ static void MutateTx(CMutableTransaction& tx, const std::string& command,
     else if (command == "outpubkey") {
         ecc.reset(new ECC_Context());
         MutateTxAddOutPubKey(tx, commandVal);
+    } else if (command == "outp2c") {
+        MutateTxAddOutP2C(tx, commandVal);
     } else if (command == "outmultisig") {
         ecc.reset(new ECC_Context());
         MutateTxAddOutMultiSig(tx, commandVal);
@@ -607,6 +660,8 @@ static void MutateTx(CMutableTransaction& tx, const std::string& command,
         MutateTxAddOutScript(tx, commandVal);
     else if (command == "outdata")
         MutateTxAddOutData(tx, commandVal);
+    else if (command == "p2cproof")
+        MutateTxSetP2CProof(tx, commandVal);
 
     else if (command == "sign") {
         ecc.reset(new ECC_Context());
