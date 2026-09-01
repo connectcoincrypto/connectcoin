@@ -20,6 +20,28 @@ BOOST_AUTO_TEST_CASE(v2_reference_vector_light)
     constexpr std::string_view input{"This is a test"};
     const RandomXOptions options{
         .try_large_pages = false,
+        .use_jit = true,
+        .secure_jit = true,
+        .dataset_init_threads = 1,
+    };
+    const RandomXContext context{
+        RandomXAlgorithm::V2,
+        std::as_bytes(std::span{key}),
+        RandomXMemoryMode::LIGHT,
+        options,
+    };
+
+    const auto hash{context.Calculate(std::as_bytes(std::span{input}))};
+    BOOST_CHECK_EQUAL(HexStr(hash), "22ec6b861b3eb23686b2efbad69513c967ecfce80983df66c9c5b4fbfb4cdb6f");
+}
+
+BOOST_AUTO_TEST_CASE(v2_reference_vector_interpreter)
+{
+    constexpr std::string_view key{"test key 000"};
+    constexpr std::string_view input{"This is a test"};
+    const RandomXOptions options{
+        .try_large_pages = false,
+        .use_jit = false,
         .secure_jit = true,
         .dataset_init_threads = 1,
     };
@@ -41,6 +63,7 @@ BOOST_AUTO_TEST_CASE(v2_reference_vector_fast_matches_light)
     constexpr std::string_view input{"This is a test"};
     const RandomXOptions options{
         .try_large_pages = false,
+        .use_jit = true,
         .secure_jit = true,
         .dataset_init_threads = 0,
     };
@@ -64,6 +87,7 @@ BOOST_AUTO_TEST_CASE(v2_context_reuse)
     constexpr std::array<std::byte, 5> input{std::byte{'b'}, std::byte{'l'}, std::byte{'o'}, std::byte{'c'}, std::byte{'k'}};
     const RandomXOptions options{
         .try_large_pages = false,
+        .use_jit = true,
         .secure_jit = true,
         .dataset_init_threads = 1,
     };

@@ -395,6 +395,10 @@ endif()
 add_library(sanitize_interface INTERFACE)
 target_link_libraries(core_interface INTERFACE sanitize_interface)
 if(SANITIZERS)
+  # Generated RandomX JIT code cannot be instrumented by compiler sanitizers.
+  # Let consensus hashing select the equivalent interpreted backend instead.
+  target_compile_definitions(sanitize_interface INTERFACE CONNECTCOIN_SANITIZER_BUILD=1)
+
   # Transform list of sanitizers into -fsanitize flags, replacing "fuzzer" with
   # "fuzzer-no-link" in sanitize_interface flags, and moving "fuzzer" to
   # fuzzer_interface flags. If -DSANITIZERS=fuzzer is specified, the fuzz test

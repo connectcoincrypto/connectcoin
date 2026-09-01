@@ -34,6 +34,9 @@ struct RandomXOptions {
     /** Try large pages for each allocation and fall back if unavailable. */
     bool try_large_pages{true};
 
+    /** Use the JIT backend when supported. The interpreter is hash-equivalent. */
+    bool use_jit{true};
+
     /** Enforce W^X for JIT pages when JIT is available. */
     bool secure_jit{true};
 

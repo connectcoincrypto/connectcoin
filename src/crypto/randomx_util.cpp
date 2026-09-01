@@ -32,6 +32,23 @@ bool HasFlag(randomx_flags flags, randomx_flags flag)
     return (static_cast<unsigned>(flags) & static_cast<unsigned>(flag)) != 0;
 }
 
+constexpr bool IsSanitizerBuild()
+{
+#if defined(CONNECTCOIN_SANITIZER_BUILD) || defined(__SANITIZE_ADDRESS__) || \
+    defined(__SANITIZE_MEMORY__) || defined(__SANITIZE_THREAD__)
+    return true;
+#elif defined(__has_feature)
+#if __has_feature(address_sanitizer) || __has_feature(memory_sanitizer) || \
+    __has_feature(thread_sanitizer) || __has_feature(undefined_behavior_sanitizer)
+    return true;
+#else
+    return false;
+#endif
+#else
+    return false;
+#endif
+}
+
 struct CacheDeleter {
     void operator()(randomx_cache* cache) const
     {
@@ -64,6 +81,15 @@ randomx_flags MakeBaseFlags(RandomXAlgorithm algorithm, RandomXMemoryMode memory
     flags = RemoveFlag(flags, RANDOMX_FLAG_FULL_MEM);
     flags = RemoveFlag(flags, RANDOMX_FLAG_LARGE_PAGES);
     flags = RemoveFlag(flags, RANDOMX_FLAG_SECURE);
+
+    // RandomX's generated machine code is opaque to compiler sanitizers and
+    // has crashed ASan while executing a LIGHT VM. Use the instrumented,
+    // consensus-equivalent interpreter in sanitizer builds. Keeping this
+    // decision here covers every real RandomX caller, including chain-parameter
+    // and genesis validation, rather than weakening individual tests.
+    if (!options.use_jit || IsSanitizerBuild()) {
+        flags = RemoveFlag(flags, RANDOMX_FLAG_JIT);
+    }
 
 #if defined(_MSC_VER) && defined(_DEBUG)
     // MSVC's debug STL changes randomx_cache's layout. Upstream documents
