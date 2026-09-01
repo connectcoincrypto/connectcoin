@@ -437,6 +437,8 @@ jobs:
     env:
       DANGER_CI_ON_HOST_FOLDERS: 1
       FILE_ENV: ${{ matrix.file-env }}
+      FUZZ_SHARD_COUNT: ${{ matrix.fuzz-shard-count }}
+      FUZZ_SHARD_INDEX: ${{ matrix.fuzz-shard-index }}
 
     strategy:
       fail-fast: false
@@ -492,10 +494,19 @@ jobs:
             timeout-minutes: 360
             file-env: './ci/test/00_setup_env_i686_no_ipc.sh'
 
-          - name: 'fuzzer,address,undefined,integer'
+          - name: 'fuzzer,address,undefined,integer (1/2)'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 360
             file-env: './ci/test/00_setup_env_native_fuzz.sh'
+            fuzz-shard-count: 2
+            fuzz-shard-index: 0
+
+          - name: 'fuzzer,address,undefined,integer (2/2)'
+            fallback-runner: 'ubuntu-latest'
+            timeout-minutes: 360
+            file-env: './ci/test/00_setup_env_native_fuzz.sh'
+            fuzz-shard-count: 2
+            fuzz-shard-index: 1
 
           - name: 'Alpine (musl)'
             fallback-runner: 'ubuntu-latest'

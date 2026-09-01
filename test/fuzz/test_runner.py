@@ -65,6 +65,18 @@ def main():
         help='How many targets to merge or execute in parallel.',
     )
     parser.add_argument(
+        '--shard-count',
+        type=int,
+        default=1,
+        help='Split the sorted fuzz target list into this many shards.',
+    )
+    parser.add_argument(
+        '--shard-index',
+        type=int,
+        default=0,
+        help='Zero-based shard of the sorted fuzz target list to execute.',
+    )
+    parser.add_argument(
         'corpus_dir',
         help='The corpus to run on (must contain subfolders for each fuzz target).',
     )
@@ -134,7 +146,23 @@ def main():
             test_list_selection.remove(excluded_target)
     test_list_selection.sort()
 
-    logging.info("{} of {} detected fuzz target(s) selected: {}".format(len(test_list_selection), len(test_list_all), " ".join(test_list_selection)))
+    if args.shard_count < 1:
+        parser.error('--shard-count must be at least 1')
+    if not 0 <= args.shard_index < args.shard_count:
+        parser.error('--shard-index must be between 0 and --shard-count - 1')
+    test_list_selection = test_list_selection[args.shard_index::args.shard_count]
+    if not test_list_selection:
+        parser.error('Selected fuzz shard contains no targets')
+
+    logging.info(
+        "{} of {} detected fuzz target(s) selected for shard {}/{}: {}".format(
+            len(test_list_selection),
+            len(test_list_all),
+            args.shard_index + 1,
+            args.shard_count,
+            " ".join(test_list_selection),
+        )
+    )
 
     if not args.generate:
         test_list_missing_corpus = []

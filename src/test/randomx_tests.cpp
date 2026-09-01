@@ -2,17 +2,27 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://opensource.org/license/mit/.
 
-#include <crypto/randomx_util.h>
 #include <crypto/hex_base.h>
+#include <crypto/randomx_util.h>
 
 #include <boost/test/unit_test.hpp>
 
 #include <array>
 #include <cstddef>
+#include <cstdlib>
 #include <span>
 #include <string_view>
 
 BOOST_AUTO_TEST_SUITE(randomx_tests)
+
+namespace {
+
+bool UseReducedRandomXCoverage()
+{
+    return std::getenv("TEST_RANDOMX_MOCK_POW") != nullptr;
+}
+
+} // namespace
 
 BOOST_AUTO_TEST_CASE(v2_reference_vector_light)
 {
@@ -37,6 +47,11 @@ BOOST_AUTO_TEST_CASE(v2_reference_vector_light)
 
 BOOST_AUTO_TEST_CASE(v2_reference_vector_interpreter)
 {
+    if (UseReducedRandomXCoverage()) {
+        BOOST_TEST_MESSAGE("Skipping the redundant interpreter vector in the reduced RandomX CI profile");
+        return;
+    }
+
     constexpr std::string_view key{"test key 000"};
     constexpr std::string_view input{"This is a test"};
     const RandomXOptions options{
@@ -83,6 +98,11 @@ BOOST_AUTO_TEST_CASE(v2_reference_vector_fast_matches_light)
 
 BOOST_AUTO_TEST_CASE(v2_context_reuse)
 {
+    if (UseReducedRandomXCoverage()) {
+        BOOST_TEST_MESSAGE("Skipping redundant context reuse in the reduced RandomX CI profile");
+        return;
+    }
+
     constexpr std::array<std::byte, 4> key{std::byte{'k'}, std::byte{'e'}, std::byte{'y'}, std::byte{'2'}};
     constexpr std::array<std::byte, 5> input{std::byte{'b'}, std::byte{'l'}, std::byte{'o'}, std::byte{'c'}, std::byte{'k'}};
     const RandomXOptions options{

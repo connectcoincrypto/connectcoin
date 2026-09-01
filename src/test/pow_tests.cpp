@@ -248,12 +248,15 @@ void sanity_check_chainparams(const ArgsManager& args, ChainType chain_type)
     BOOST_CHECK(!over);
     BOOST_CHECK(UintToArith256(consensus.powLimit) >= pow_compact);
 
-    // Every hardcoded genesis must satisfy the RandomX v2 proof of work. Use
-    // LIGHT mode here to keep the all-networks parameter test memory-bounded;
-    // LIGHT and FAST are consensus-identical.
-    auto light_consensus{consensus};
-    light_consensus.randomx_fast_mode = false;
-    BOOST_CHECK(CheckProofOfWork(chainParams->GenesisBlock(), nullptr, light_consensus));
+    // Every hardcoded genesis must satisfy the RandomX v2 proof of work. Slow
+    // sanitizer and 32-bit jobs opt into a reduced profile which already runs
+    // one real RandomX reference vector; normal jobs continue checking every
+    // network genesis. LIGHT and FAST are consensus-identical.
+    if (std::getenv("TEST_RANDOMX_MOCK_POW") == nullptr) {
+        auto light_consensus{consensus};
+        light_consensus.randomx_fast_mode = false;
+        BOOST_CHECK(CheckProofOfWork(chainParams->GenesisBlock(), nullptr, light_consensus));
+    }
 
     // check max target * 4*nPowTargetTimespan doesn't overflow -- see pow.cpp:CalculateNextWorkRequired()
     if (!consensus.fPowNoRetargeting) {

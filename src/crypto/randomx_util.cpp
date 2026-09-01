@@ -32,14 +32,12 @@ bool HasFlag(randomx_flags flags, randomx_flags flag)
     return (static_cast<unsigned>(flags) & static_cast<unsigned>(flag)) != 0;
 }
 
-constexpr bool IsSanitizerBuild()
+constexpr bool IsAddressSanitizerBuild()
 {
-#if defined(CONNECTCOIN_SANITIZER_BUILD) || defined(__SANITIZE_ADDRESS__) || \
-    defined(__SANITIZE_MEMORY__) || defined(__SANITIZE_THREAD__)
+#if defined(__SANITIZE_ADDRESS__)
     return true;
 #elif defined(__has_feature)
-#if __has_feature(address_sanitizer) || __has_feature(memory_sanitizer) || \
-    __has_feature(thread_sanitizer) || __has_feature(undefined_behavior_sanitizer)
+#if __has_feature(address_sanitizer)
     return true;
 #else
     return false;
@@ -82,12 +80,11 @@ randomx_flags MakeBaseFlags(RandomXAlgorithm algorithm, RandomXMemoryMode memory
     flags = RemoveFlag(flags, RANDOMX_FLAG_LARGE_PAGES);
     flags = RemoveFlag(flags, RANDOMX_FLAG_SECURE);
 
-    // RandomX's generated machine code is opaque to compiler sanitizers and
-    // has crashed ASan while executing a LIGHT VM. Use the instrumented,
-    // consensus-equivalent interpreter in sanitizer builds. Keeping this
-    // decision here covers every real RandomX caller, including chain-parameter
-    // and genesis validation, rather than weakening individual tests.
-    if (!options.use_jit || IsSanitizerBuild()) {
+    // RandomX's generated machine code has crashed ASan while executing a
+    // LIGHT VM. Use the consensus-equivalent interpreter only with ASan;
+    // disabling JIT for TSan and MSan makes their real-hash smoke tests
+    // prohibitively slow without improving coverage of generated code.
+    if (!options.use_jit || IsAddressSanitizerBuild()) {
         flags = RemoveFlag(flags, RANDOMX_FLAG_JIT);
     }
 
