@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <span>
 #include <string>
+#include <string_view>
 #include <vector>
 
 inline constexpr uint8_t P2C_PROOF_VERSION{1};

@@ -7,6 +7,7 @@
 #define CONNECTCOIN_NODE_MINER_H
 
 #include <consensus/amount.h>
+#include <kernel/cs_main.h>
 #include <node/mining_types.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
@@ -104,7 +105,7 @@ private:
       *
       * @pre BlockAssembler::m_mempool must not be nullptr
     */
-    void addChunks() EXCLUSIVE_LOCKS_REQUIRED(m_mempool->cs);
+    void addChunks() EXCLUSIVE_LOCKS_REQUIRED(::cs_main, m_mempool->cs);
 
     // helper functions for addChunks()
     /** Test if a new chunk would "fit" in the block */
@@ -112,7 +113,7 @@ private:
     /** Perform locktime checks on each transaction in a chunk:
       * This check should always succeed, and is here
       * only as an extra check in case of a bug */
-    bool TestChunkTransactions(const std::vector<CTxMemPoolEntryRef>& txs) const;
+    bool TestChunkTransactions(const std::vector<CTxMemPoolEntryRef>& txs) const EXCLUSIVE_LOCKS_REQUIRED(::cs_main, m_mempool->cs);
 };
 
 /**

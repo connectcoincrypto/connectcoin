@@ -63,6 +63,10 @@ echo -e "#include <sys/stat.h>
     "${BASE_BUILD_DIR}"/lib/libconnectcoin_crypto.a \
     "${BASE_BUILD_DIR}"/src/secp256k1/lib/libsecp256k1.a \
     -Wl,--no-whole-archive \
+    "${BASE_BUILD_DIR}"/_deps/connectcoin_mbedtls-build/library/libmbedx509.a \
+    "${BASE_BUILD_DIR}"/_deps/connectcoin_mbedtls-build/library/libmbedcrypto.a \
+    "${BASE_BUILD_DIR}"/_deps/connectcoin_mbedtls-build/3rdparty/everest/libeverest.a \
+    "${BASE_BUILD_DIR}"/_deps/connectcoin_mbedtls-build/3rdparty/p256-m/libp256m.a \
     "${LIBSTDCXX}" \
     "${LIBC}" \
     "${LIBM}" \
@@ -70,4 +74,3 @@ echo -e "#include <sys/stat.h>
     -o test.elf
 
 file test.elf
-

@@ -3,6 +3,7 @@
 # file COPYING or https://opensource.org/license/mit/.
 
 include(AddWindowsResources)
+include(TargetDataSources)
 
 configure_file(${PROJECT_SOURCE_DIR}/cmake/connectcoin-build-config.h.in connectcoin-build-config.h USE_SOURCE_PERMISSIONS @ONLY)
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
@@ -34,12 +35,48 @@ set(ENABLE_PROGRAMS OFF CACHE BOOL "Build Mbed TLS programs" FORCE)
 set(ENABLE_TESTING OFF CACHE BOOL "Build Mbed TLS tests" FORCE)
 set(MBEDTLS_FATAL_WARNINGS OFF CACHE BOOL "Treat Mbed TLS warnings as errors" FORCE)
 set(DISABLE_PACKAGE_CONFIG_AND_INSTALL ON CACHE BOOL "Disable Mbed TLS installation" FORCE)
+
+# Mbed TLS 3.6.7 still declares compatibility with CMake 3.5. CMake 4
+# requires consumers to opt in to a newer policy floor before adding it as a
+# subproject, and the Windows CI treats the otherwise emitted deprecation as
+# a fatal developer warning. Keep the override scoped to the dependency.
+set(connectcoin_mbedtls_policy_version_minimum_was_defined FALSE)
+if(DEFINED CMAKE_POLICY_VERSION_MINIMUM)
+  set(connectcoin_mbedtls_policy_version_minimum_was_defined TRUE)
+  set(connectcoin_mbedtls_parent_policy_version_minimum "${CMAKE_POLICY_VERSION_MINIMUM}")
+endif()
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.0 AND
+   (NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM OR CMAKE_POLICY_VERSION_MINIMUM VERSION_LESS 3.10))
+  set(CMAKE_POLICY_VERSION_MINIMUM 3.10)
+endif()
 FetchContent_Declare(connectcoin_mbedtls
   URL https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-3.6.7/mbedtls-3.6.7.tar.bz2
   URL_HASH SHA256=a7e8bcbec0e6f761b4af24f25677626b35f762f68eef79c08677a363212d11f6
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 FetchContent_MakeAvailable(connectcoin_mbedtls)
+if(connectcoin_mbedtls_policy_version_minimum_was_defined)
+  set(CMAKE_POLICY_VERSION_MINIMUM "${connectcoin_mbedtls_parent_policy_version_minimum}")
+else()
+  unset(CMAKE_POLICY_VERSION_MINIMUM)
+endif()
+unset(connectcoin_mbedtls_parent_policy_version_minimum)
+unset(connectcoin_mbedtls_policy_version_minimum_was_defined)
+
+# Third-party diagnostics must not become fatal when the parent project uses
+# CMAKE_COMPILE_WARNING_AS_ERROR. ConnectCoin's own targets retain the policy.
+foreach(mbedtls_target IN ITEMS mbedcrypto mbedx509 mbedtls everest p256m)
+  if(TARGET ${mbedtls_target})
+    set_property(TARGET ${mbedtls_target} PROPERTY COMPILE_WARNING_AS_ERROR OFF)
+    target_compile_options(${mbedtls_target} PRIVATE
+      "$<$<COMPILE_LANGUAGE:C,CXX>:$<TARGET_PROPERTY:sanitize_interface,INTERFACE_COMPILE_OPTIONS>>"
+    )
+    if(CMAKE_SYSTEM_NAME STREQUAL "Generic")
+      target_compile_definitions(${mbedtls_target} PRIVATE MBEDTLS_NO_PLATFORM_ENTROPY)
+    endif()
+  endif()
+endforeach()
+unset(mbedtls_target)
 
 set(RANDOMX_BUILD_TESTS OFF CACHE BOOL "Build RandomX tests and benchmark tools" FORCE)
 set(RANDOMX_INSTALL OFF CACHE BOOL "Install the RandomX library and public header" FORCE)
@@ -163,9 +200,16 @@ target_link_libraries(connectcoin_consensus
     MbedTLS::mbedcrypto
     secp256k1
 )
+target_include_directories(connectcoin_consensus SYSTEM PRIVATE
+  ${connectcoin_mbedtls_SOURCE_DIR}/include
+)
 target_raw_data_sources(connectcoin_consensus NAMESPACE consensus::p2c::data
   consensus/p2c_roots_v1.pem
 )
+add_custom_target(generate_p2c_roots_v1_header
+  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/consensus/p2c_roots_v1.pem.h
+)
+add_dependencies(connectcoin_consensus generate_p2c_roots_v1_header)
 
 if(WITH_ZMQ)
   add_subdirectory(zmq)

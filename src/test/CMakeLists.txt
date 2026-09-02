@@ -174,6 +174,9 @@ target_link_libraries(connectcoin-test
   Boost::headers
   $<TARGET_NAME_IF_EXISTS:USDT::headers>
 )
+target_include_directories(connectcoin-test SYSTEM PRIVATE
+  ${connectcoin_mbedtls_SOURCE_DIR}/include
+)
 
 if(ENABLE_RANDOMX_FAST_TEST)
   if(CMAKE_SIZEOF_VOID_P LESS 8)

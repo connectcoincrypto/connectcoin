@@ -87,9 +87,10 @@ add_library(connectcoinkernel
   $<TARGET_OBJECTS:crc32c>
 )
 
-target_raw_data_sources(connectcoinkernel NAMESPACE consensus::p2c::data
-  ../consensus/p2c_roots_v1.pem
-)
+# The generation rule is owned by connectcoin_consensus. Depend on its single
+# code-generation target instead of registering another command for the same
+# output when the kernel library is enabled.
+add_dependencies(connectcoinkernel generate_p2c_roots_v1_header)
 
 # Compiler warnings that apply only to the kernel and its dependencies.
 # These can be more strict and/or warnings that only apply to shared
@@ -116,6 +117,10 @@ target_link_libraries(connectcoinkernel
     $<$<PLATFORM_ID:Windows>:bcrypt>
     $<TARGET_NAME_IF_EXISTS:USDT::headers>
     Boost::headers
+)
+
+target_include_directories(connectcoinkernel SYSTEM PRIVATE
+  ${connectcoin_mbedtls_SOURCE_DIR}/include
 )
 
 target_include_directories(connectcoinkernel PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/leveldb/include>)
@@ -155,6 +160,15 @@ install(TARGETS randomx
     COMPONENT libconnectcoinkernel
   PUBLIC_HEADER
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/connectcoin/randomx
+    COMPONENT libconnectcoinkernel
+)
+
+# A static libconnectcoinkernel exposes the P2C verifier's private archive
+# dependencies at final link time. Install the pinned Mbed TLS archives named
+# by libconnectcoinkernel.pc so downstream static consumers remain linkable.
+install(TARGETS mbedx509 mbedcrypto everest p256m
+  ARCHIVE
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
     COMPONENT libconnectcoinkernel
 )
 

@@ -800,7 +800,7 @@ static RPCMethod combinerawtransaction()
                                                       std::span<const unsigned char>{pubkey->data(), pubkey->size()},
                                                       SigVersion::TAPROOT, execdata, &error);
             } else {
-                assert(p2c);
+                CHECK_NONFATAL(p2c);
                 const auto& encoded_proof{candidate.scriptWitness.stack.front()};
                 if (encoded_proof.empty() || encoded_proof.size() > MAX_P2C_PROOF_SIZE) {
                     throw JSONRPCError(RPC_INVALID_PARAMETER,

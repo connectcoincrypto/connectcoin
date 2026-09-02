@@ -251,7 +251,11 @@ public:
             std::string domain(domain_size, '\0');
             if (domain_size != 0) s.read(MakeWritableByteSpan(domain));
             if (!IsCanonicalP2CDomain(domain)) throw std::ios_base::failure("Invalid PAY_TO_CONNECT domain");
-            PayToDomainOutput p2c{.domain = std::move(domain)};
+            PayToDomainOutput p2c{
+                .domain = std::move(domain),
+                .connection_work_target = {},
+                .root_certificates_version = 0,
+            };
             ::Unserialize(s, p2c.connection_work_target);
             ::Unserialize(s, p2c.root_certificates_version);
             if (p2c.root_certificates_version == 0) {

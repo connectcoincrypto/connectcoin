@@ -218,7 +218,8 @@ if [ "${RUN_TIDY}" = "true" ]; then
   # Filter out:
   # * qt qrc and moc generated files
   # * vendored RandomX sources, which follow the upstream project's style
-  jq 'map(select(.file | test("src/(qt/.*_autogen/.*\\.cpp$|randomx/)") | not))' "${BASE_BUILD_DIR}/compile_commands.json" > tmp.json
+  # * vendored Mbed TLS sources, which follow the upstream project's style
+  jq 'map(select(.file | test("src/(qt/.*_autogen/.*\\.cpp$|randomx/)|_deps/connectcoin_mbedtls-src/") | not))' "${BASE_BUILD_DIR}/compile_commands.json" > tmp.json
   mv tmp.json "${BASE_BUILD_DIR}/compile_commands.json"
 
   cd "${BASE_BUILD_DIR}/src/"

@@ -8,7 +8,7 @@ export LC_ALL=C.UTF-8
 
 export CONTAINER_NAME=ci_native_riscv_bare
 
-export GOAL="connectcoin_consensus connectcoin_crypto secp256k1"
+export GOAL="connectcoin_consensus connectcoin_crypto secp256k1 mbedx509 mbedcrypto everest p256m"
 export CI_IMAGE_NAME_TAG="mirror.gcr.io/ubuntu:26.04"
 export HOST="riscv32-unknown-elf-gcc"
 export PACKAGES="autoconf automake autotools-dev curl python3 python3-pip libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build git cmake libglib2.0-dev libslirp-dev"
