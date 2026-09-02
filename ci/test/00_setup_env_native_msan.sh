@@ -24,6 +24,8 @@ export CI_LIMIT_STACK_SIZE=1
 export CONNECTCOIN_CONFIG="\
  --preset=dev-mode \
  -DBUILD_GUI=OFF \
+ -DBUILD_BENCH=OFF \
+ -DBUILD_FUZZ_BINARY=OFF \
  -DCMAKE_BUILD_TYPE=Debug \
  -DCMAKE_C_FLAGS_DEBUG='' \
  -DCMAKE_CXX_FLAGS_DEBUG='' \
@@ -32,4 +34,6 @@ export CONNECTCOIN_CONFIG="\
 "
 export USE_INSTRUMENTED_LIBCPP="MemoryWithOrigins"
 export TEST_RANDOMX_MOCK_POW=1  # Keep generic test processes below the MSan memory limit.
+# Dedicated sanitizer-fuzz jobs cover every fuzz harness, and native jobs cover
+# benchmark smoke tests. Avoid rebuilding and running both in this slow job.
 export MAKEJOBS="-j2"  # Avoid MSan OOMs from four concurrent wallet test binaries.

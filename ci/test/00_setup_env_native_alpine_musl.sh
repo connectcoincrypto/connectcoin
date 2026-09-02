@@ -6,6 +6,8 @@
 
 export LC_ALL=C.UTF-8
 
+export TEST_RANDOMX_MOCK_POW=1  # Keep the musl job within its memory limit; randomx_tests still checks one real vector.
+
 export CONTAINER_NAME=ci_native_alpine_musl
 export CI_IMAGE_NAME_TAG="mirror.gcr.io/alpine:3.24"
 export CI_BASE_PACKAGES="build-base musl-dev pkgconf curl ccache make ninja git python3-dev py3-pip which patch xz procps rsync util-linux bison e2fsprogs cmake dash linux-headers"

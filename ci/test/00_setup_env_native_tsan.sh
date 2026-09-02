@@ -20,9 +20,13 @@ export CI_LIMIT_STACK_SIZE=1
 export CONNECTCOIN_CONFIG="\
   --preset=dev-mode \
   -DBUILD_GUI=OFF \
+  -DBUILD_BENCH=OFF \
+  -DBUILD_FUZZ_BINARY=OFF \
   -DSANITIZERS=thread \
   -DAPPEND_CPPFLAGS='-DARENA_DEBUG -DDEBUG_LOCKCONTENTION -D_LIBCPP_REMOVE_TRANSITIVE_INCLUDES -U_FORTIFY_SOURCE' \
 "
 export USE_INSTRUMENTED_LIBCPP="Thread"
 export TEST_RANDOMX_MOCK_POW=1  # Dedicated RandomX tests still exercise the real implementation.
+# Dedicated sanitizer-fuzz jobs cover every fuzz harness, and native jobs cover
+# benchmark smoke tests. Avoid rebuilding and running both in this slow job.
 export MAKEJOBS="-j2"  # Keep instrumented build and test concurrency responsive on hosted runners.

@@ -6,6 +6,7 @@
 
 from decimal import Decimal, getcontext
 
+from test_framework.blocktools import COINBASE_MATURITY
 from test_framework.messages import SEQUENCE_FINAL
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
@@ -478,7 +479,9 @@ class SendallTest(BitcoinTestFramework):
         self.nodes[0].createwallet("activewallet")
         self.wallet = self.nodes[0].get_wallet_rpc("activewallet")
         self.def_wallet = self.nodes[0].get_wallet_rpc(self.default_wallet_name)
-        self.generate(self.nodes[0], 101)
+        # Keep enough mature funds for the fixture amounts after reducing the
+        # initial subsidy from 50 CC to 15 CC.
+        self.generate(self.nodes[0], COINBASE_MATURITY + 3)
         self.recipient = self.def_wallet.getnewaddress() # payee for a specific amount
         self.remainder_target = self.def_wallet.getnewaddress() # address that receives everything left after payments and fees
         self.split_target = self.def_wallet.getnewaddress() # 2nd target when splitting rest

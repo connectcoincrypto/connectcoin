@@ -81,9 +81,10 @@ class TransactionTimeRescanTest(BitcoinTestFramework):
         # synchronize nodes and time
         self.sync_all()
         set_node_times(self.nodes, cur_time + ten_days)
-        # send 10 btc to user's first watch-only address
-        self.log.info('Send 10 btc to user')
-        miner_wallet.sendtoaddress(wo1, 10)
+        # At cached height 200, regtest has crossed its short test-only halving
+        # interval, so only 7.5 CC is mature after the initial mining batch.
+        self.log.info('Send 5 CC to user')
+        miner_wallet.sendtoaddress(wo1, 5)
 
         # generate blocks and check blockcount
         self.generatetoaddress(minernode, COINBASE_MATURITY, m1)
@@ -92,9 +93,9 @@ class TransactionTimeRescanTest(BitcoinTestFramework):
         # synchronize nodes and time
         self.sync_all()
         set_node_times(self.nodes, cur_time + ten_days + ten_days)
-        # send 5 btc to our second watch-only address
-        self.log.info('Send 5 btc to user')
-        miner_wallet.sendtoaddress(wo2, 5)
+        # send 2 CC to our second watch-only address
+        self.log.info('Send 2 CC to user')
+        miner_wallet.sendtoaddress(wo2, 2)
 
         # generate blocks and check blockcount
         self.generatetoaddress(minernode, COINBASE_MATURITY, m1)
@@ -103,8 +104,8 @@ class TransactionTimeRescanTest(BitcoinTestFramework):
         # synchronize nodes and time
         self.sync_all()
         set_node_times(self.nodes, cur_time + ten_days + ten_days + ten_days)
-        # send 1 btc to our third watch-only address
-        self.log.info('Send 1 btc to user')
+        # send 1 CC to our third watch-only address
+        self.log.info('Send 1 CC to user')
         miner_wallet.sendtoaddress(wo3, 1)
 
         # generate more blocks and check blockcount
@@ -112,7 +113,7 @@ class TransactionTimeRescanTest(BitcoinTestFramework):
         assert_equal(minernode.getblockcount(), initial_mine + 500)
 
         self.log.info('Check user\'s final balance and transaction count')
-        assert_equal(wo_wallet.getbalance(), 16)
+        assert_equal(wo_wallet.getbalance(), 8)
         assert_equal(len(wo_wallet.listtransactions()), 3)
 
         self.log.info('Check transaction times')
@@ -162,7 +163,7 @@ class TransactionTimeRescanTest(BitcoinTestFramework):
         restorewo_wallet.rescanblockchain()
 
         self.log.info('Check user\'s final balance and transaction count after restoration')
-        assert_equal(restorewo_wallet.getbalance(), 16)
+        assert_equal(restorewo_wallet.getbalance(), 8)
         assert_equal(len(restorewo_wallet.listtransactions()), 3)
 
         self.log.info('Check transaction times after restoration')

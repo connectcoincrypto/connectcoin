@@ -6,6 +6,8 @@
 
 export LC_ALL=C.UTF-8
 
+export TEST_RANDOMX_MOCK_POW=1  # This generic suite does not need to repeat slow RandomX integration coverage.
+
 export CONTAINER_NAME=ci_native_nowallet
 export CI_IMAGE_NAME_TAG="mirror.gcr.io/ubuntu:24.04"
 # Use minimum supported python3.10 (or best-effort 3.12) and clang-17, see doc/dependencies.md
