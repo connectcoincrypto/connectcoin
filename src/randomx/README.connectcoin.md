@@ -26,10 +26,12 @@ memory-intensive FAST/LIGHT equivalence vector on one 64-bit native job.
 
 ## ConnectCoin key schedule
 
-Public networks use 2,048-block key epochs and a 64-block lag. For candidate
+Public networks use 12,288-block key epochs and a 64-block lag. For candidate
 height `h`, the key-block height is
-`floor((h - 64) / 2048) * 2048` once `h > 64`; height zero selects the
-network-specific bootstrap key. Consequently, the block at height 2,048 first
-becomes the key for the candidate at height 2,112. Regtest uses its fixed
+`floor((h - 64) / 12288) * 12288` once `h > 64`; height zero selects the
+network-specific bootstrap key. Consequently, the block at height 12,288 first
+becomes the key for the candidate at height 12,352. With the public-network
+target spacing reduced from 60 to 10 seconds, this sixfold increase preserves
+the previous epoch duration in wall-clock time. Regtest uses its fixed
 bootstrap key for every height. This schedule is ConnectCoin consensus and is
 deliberately documented rather than inferred from another RandomX user.

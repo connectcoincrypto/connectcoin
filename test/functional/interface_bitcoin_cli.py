@@ -21,11 +21,11 @@ from test_framework.util import (
 )
 import time
 
-# The block reward of coinbaseoutput.nValue (100) CC/block matures after
+# The block reward of coinbaseoutput.nValue (15) CC/block matures after
 # COINBASE_MATURITY (100) blocks. Therefore, after mining 101 blocks we expect
-# node 0 to have a balance of (BLOCKS - COINBASE_MATURITY) * 100 CC/block.
+# node 0 to have a balance of (BLOCKS - COINBASE_MATURITY) * 15 CC/block.
 BLOCKS = COINBASE_MATURITY + 1
-BALANCE = (BLOCKS - COINBASE_MATURITY) * 100
+BALANCE = (BLOCKS - COINBASE_MATURITY) * 15
 
 JSON_PARSING_ERROR = 'error: Error parsing JSON: foo'
 BLOCKS_VALUE_OF_ZERO = 'error: the first argument (number of blocks to generate, default: 1) must be an integer value greater than zero'
@@ -262,7 +262,7 @@ class TestBitcoinCli(BitcoinTestFramework):
 
             # Setup to test -getinfo, -generate, and -rpcwallet= with multiple wallets.
             wallets = [self.default_wallet_name, 'Encrypted', 'secret']
-            amounts = [None, Decimal(9), Decimal(31)]
+            amounts = [None, Decimal(1), Decimal(4)]
             self.nodes[0].createwallet(wallet_name=wallets[1])
             self.nodes[0].createwallet(wallet_name=wallets[2])
             w1 = self.nodes[0].get_wallet_rpc(wallets[0])
@@ -275,11 +275,11 @@ class TestBitcoinCli(BitcoinTestFramework):
             txid_w2 = w1.sendtoaddress(w2.getnewaddress(), amounts[1])
             txid_w3 = w1.sendtoaddress(w3.getnewaddress(), amounts[2])
 
-            # Mine a block to confirm; adds a block reward (100 CC) to the default wallet.
+            # Mine a block to confirm; adds a block reward (15 CC) to the default wallet.
             self.generate(self.nodes[0], 1)
             amounts[0] = (
                 BALANCE
-                + Decimal(100)
+                + Decimal(15)
                 - amounts[1]
                 - amounts[2]
                 + w1.gettransaction(txid_w2)["fee"]

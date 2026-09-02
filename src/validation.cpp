@@ -1856,7 +1856,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
     if (halvings >= 64)
         return 0;
 
-    CAmount nSubsidy = 100 * COIN;
+    CAmount nSubsidy = 15 * COIN;
     // Subsidy is cut in half according to the interval configured for the selected network.
     nSubsidy >>= halvings;
     return nSubsidy;

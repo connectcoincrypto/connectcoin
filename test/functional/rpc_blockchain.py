@@ -354,11 +354,11 @@ class BlockchainTest(BitcoinTestFramework):
         node = self.nodes[0]
         res = node.gettxoutsetinfo()
 
-        assert_equal(res['total_amount'], Decimal('10017450.00000000'))
+        assert_equal(res['total_amount'], Decimal('10002617.5000000000'))
         assert_equal(res['transactions'], HEIGHT + 1)
         assert_equal(res['height'], HEIGHT)
         assert_equal(res['txouts'], HEIGHT + 1)
-        assert_equal(res['bogosize'], 16917),
+        assert_equal(res['bogosize'], 16884),
         assert_equal(res['bestblock'], node.getblockhash(HEIGHT))
         size = res['disk_size']
         assert size > 6400
@@ -375,7 +375,7 @@ class BlockchainTest(BitcoinTestFramework):
         assert_equal(res2['total_amount'], Decimal('10000000'))
         assert_equal(res2['height'], 0)
         assert_equal(res2['txouts'], 1)
-        assert_equal(res2['bogosize'], 117),
+        assert_equal(res2['bogosize'], 84),
         assert_equal(res2['bestblock'], node.getblockhash(0))
         assert_equal(len(res2['hash_serialized_3']), 64)
 
@@ -429,7 +429,7 @@ class BlockchainTest(BitcoinTestFramework):
         # Validate the gettxout response
         assert_equal(txout['bestblock'], best_block_hash)
         assert_equal(txout['confirmations'], 1)
-        assert_equal(txout['value'], 50)
+        assert_equal(txout['value'], Decimal('7.5'))
         assert_equal(txout['scriptPubKey']['address'], self.wallet.get_address())
         assert_equal(txout['scriptPubKey']['hex'], self.wallet.get_output_script().hex())
         decoded_script = node.decodescript(self.wallet.get_output_script().hex())
@@ -679,7 +679,8 @@ class BlockchainTest(BitcoinTestFramework):
             total_vout = Decimal("0.00000000")
             for vin in tx["vin"]:
                 assert "prevout" in vin
-                assert_equal(set(vin["prevout"].keys()), set(("value", "height", "generated", "scriptPubKey")))
+                assert_equal(set(vin["prevout"].keys()), set(("value", "height", "generated", "type", "pubkey", "scriptPubKey")))
+                assert_equal(vin["prevout"]["type"], 1)
                 assert_equal(vin["prevout"]["generated"], True)
                 total_vin += vin["prevout"]["value"]
             for vout in tx["vout"]:

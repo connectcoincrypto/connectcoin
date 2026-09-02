@@ -111,7 +111,7 @@ public:
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
         consensus.genesis_coinbase_spendable = true;
-        consensus.nSubsidyHalvingInterval = 450000;
+        consensus.nSubsidyHalvingInterval = 3'000'000;
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256{};
         consensus.BIP65Height = 1;
@@ -121,11 +121,11 @@ public:
         consensus.MinBIP9WarningHeight = 0;
         consensus.powLimit = uint256{"0000ffff00000000000000000000000000000000000000000000000000000000"};
         consensus.randomx_bootstrap_key = uint256{"d91b262aecaac2c4868b2cbe1563538f107c33fbee8c5d373bdaa8e551567fe5"};
-        consensus.randomx_epoch_blocks = 2048;
+        consensus.randomx_epoch_blocks = 12'288;
         consensus.randomx_epoch_lag = 64;
         consensus.randomx_fast_mode = opts.randomx_fast;
         consensus.nPowTargetTimespan = 4 * 60 * 60; // four hours
-        consensus.nPowTargetSpacing = 60;
+        consensus.nPowTargetSpacing = 10;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.enforce_BIP94 = false;
         consensus.fPowNoRetargeting = false;
@@ -210,7 +210,7 @@ public:
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
         consensus.genesis_coinbase_spendable = true;
-        consensus.nSubsidyHalvingInterval = 450000;
+        consensus.nSubsidyHalvingInterval = 3'000'000;
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256{};
         consensus.BIP65Height = 1;
@@ -220,11 +220,11 @@ public:
         consensus.MinBIP9WarningHeight = 0;
         consensus.powLimit = uint256{"0000ffff00000000000000000000000000000000000000000000000000000000"};
         consensus.randomx_bootstrap_key = uint256{"50baa475cea61a44ccd0bda1646a957e11d4e973746b47384a299e2003f8732a"};
-        consensus.randomx_epoch_blocks = 2048;
+        consensus.randomx_epoch_blocks = 12'288;
         consensus.randomx_epoch_lag = 64;
         consensus.randomx_fast_mode = opts.randomx_fast;
         consensus.nPowTargetTimespan = 4 * 60 * 60; // four hours
-        consensus.nPowTargetSpacing = 60;
+        consensus.nPowTargetSpacing = 10;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.enforce_BIP94 = false;
         consensus.fPowNoRetargeting = false;
@@ -296,7 +296,7 @@ public:
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
         consensus.genesis_coinbase_spendable = true;
-        consensus.nSubsidyHalvingInterval = 450000;
+        consensus.nSubsidyHalvingInterval = 3'000'000;
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256{};
         consensus.BIP65Height = 1;
@@ -306,11 +306,11 @@ public:
         consensus.MinBIP9WarningHeight = 0;
         consensus.powLimit = uint256{"0000ffff00000000000000000000000000000000000000000000000000000000"};
         consensus.randomx_bootstrap_key = uint256{"5f594825538aa326f645f024473b140479f43dd072714ba353341d69178616ab"};
-        consensus.randomx_epoch_blocks = 2048;
+        consensus.randomx_epoch_blocks = 12'288;
         consensus.randomx_epoch_lag = 64;
         consensus.randomx_fast_mode = opts.randomx_fast;
         consensus.nPowTargetTimespan = 4 * 60 * 60; // four hours
-        consensus.nPowTargetSpacing = 60;
+        consensus.nPowTargetSpacing = 10;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.enforce_BIP94 = true;
         consensus.fPowNoRetargeting = false;
@@ -405,7 +405,7 @@ public:
         consensus.signet_blocks = true;
         consensus.signet_challenge.assign(bin.begin(), bin.end());
         consensus.genesis_coinbase_spendable = true;
-        consensus.nSubsidyHalvingInterval = 450000;
+        consensus.nSubsidyHalvingInterval = 3'000'000;
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256{};
         consensus.BIP65Height = 1;
@@ -413,14 +413,14 @@ public:
         consensus.CSVHeight = 1;
         consensus.SegwitHeight = 1;
         consensus.nPowTargetTimespan = 4 * 60 * 60; // four hours
-        consensus.nPowTargetSpacing = 60;
+        consensus.nPowTargetSpacing = 10;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.enforce_BIP94 = false;
         consensus.fPowNoRetargeting = false;
         consensus.MinBIP9WarningHeight = 0;
         consensus.powLimit = uint256{"0000ffff00000000000000000000000000000000000000000000000000000000"};
         consensus.randomx_bootstrap_key = uint256{"34b9e892605c061b7c1846232f615e1a3118e4bf859afe1a5a4a0cb89300f5db"};
-        consensus.randomx_epoch_blocks = 2048;
+        consensus.randomx_epoch_blocks = 12'288;
         consensus.randomx_epoch_lag = 64;
         consensus.randomx_fast_mode = options.randomx_fast;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -542,11 +542,11 @@ public:
             {
                 // Deterministic regtest commitment used by the utxo_snapshot fuzz targets.
                 .height = 200,
-                .hash_serialized = AssumeutxoHash{uint256{"b9ea4c5f1e0cd6d3d9780cc86c44a26e3308165d22cadf86ea9886e82a1026ca"}},
+                .hash_serialized = AssumeutxoHash{uint256{"3fd7b22c0fa827f8119a9ae5a203481c3bcffd5d7dd74d9594ad87756b8434de"}},
                 .m_chain_tx_count = 201,
                 .blockhash = opts.randomx_mock_pow
-                    ? uint256{"1ccff6d470035e3da4f35f5cad803bb01c257368d1322fd671e01d3f6a7e6253"}
-                    : uint256{"8fe93355b748d8cacf210853ac520751c3cc6d7ecaf85aadea165c492b806fd9"},
+                    ? uint256{"290319d9129f74fd13351f4df418434d4319579d66afb03f98f52a48981a11ff"}
+                    : uint256{"799750eee344c6bb269406c29e150138f7c56f3908c195edb25532083327f90b"},
             },
         };
 

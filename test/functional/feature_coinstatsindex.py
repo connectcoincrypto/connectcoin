@@ -51,7 +51,7 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         self._test_init_index_after_reorg()
         self._test_genesis_spend_reorg()
 
-    def block_sanity_check(self, block_info, block_subsidy=100):
+    def block_sanity_check(self, block_info, block_subsidy=15):
         assert_equal(
             block_info['prevout_spent'] + block_subsidy,
             block_info['new_outputs_ex_coinbase'] + block_info['coinbase'] + block_info['unspendable']
@@ -132,9 +132,9 @@ class CoinStatsIndexTest(BitcoinTestFramework):
             assert_equal(res5['total_unspendable_amount'], 0)
             assert_equal(res5['block_info'], {
                 'unspendable': 0,
-                'prevout_spent': 100,
-                'new_outputs_ex_coinbase': Decimal('99.9999967300'),
-                'coinbase': Decimal('100.0000032700'),
+                'prevout_spent': 15,
+                'new_outputs_ex_coinbase': Decimal('14.9999967300'),
+                'coinbase': Decimal('15.0000032700'),
                 'unspendables': {
                     'genesis_block': 0,
                     'bip30': 0,
@@ -148,17 +148,17 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         tx1 = self.wallet.send_to(
             from_node=node,
             scriptPubKey=self.wallet.get_output_script(),
-            amount=21 * COIN,
+            amount=11 * COIN,
         )
 
-        # Find the right position of the 21 BTC output
-        tx1_out_21 = self.wallet.get_utxo(txid=tx1["txid"], vout=tx1["sent_vout"])
+        # Find the right position of the 11 CC output.
+        tx1_out_11 = self.wallet.get_utxo(txid=tx1["txid"], vout=tx1["sent_vout"])
 
         # Generate and send another type-1 transaction with a 0.01 fee.
         # ConnectCoin deliberately has no provably-unspendable Script output
         # type, so the output remains part of the UTXO set.
         tx2 = self.wallet.create_self_transfer(
-            utxo_to_spend=tx1_out_21,
+            utxo_to_spend=tx1_out_11,
             fee=Decimal('0.0100000000'),
         )
         self.nodes[0].sendrawtransaction(tx2['hex'])
@@ -172,9 +172,9 @@ class CoinStatsIndexTest(BitcoinTestFramework):
             assert_equal(res6['total_unspendable_amount'], 0)
             assert_equal(res6['block_info'], {
                 'unspendable': 0,
-                'prevout_spent': 121,
-                'new_outputs_ex_coinbase': Decimal('120.9899999000'),
-                'coinbase': Decimal('100.0100001000'),
+                'prevout_spent': 26,
+                'new_outputs_ex_coinbase': Decimal('25.9899999000'),
+                'coinbase': Decimal('15.0100001000'),
                 'unspendables': {
                     'genesis_block': 0,
                     'bip30': 0,
@@ -186,8 +186,8 @@ class CoinStatsIndexTest(BitcoinTestFramework):
 
         # Create a coinbase that does not claim full subsidy and also
         # has two outputs
-        cb = create_coinbase(109, nValue=35)
-        cb.vout.append(CTxOut(5 * COIN, cb.vout[0].scriptPubKey))
+        cb = create_coinbase(109, nValue=10)
+        cb.vout.append(CTxOut(2 * COIN, cb.vout[0].scriptPubKey))
 
         # Generate a block that includes previous coinbase
         tip = self.nodes[0].getbestblockhash()
@@ -199,17 +199,17 @@ class CoinStatsIndexTest(BitcoinTestFramework):
 
         for hash_option in index_hash_options:
             res7 = index_node.gettxoutsetinfo(hash_option, 109)
-            assert_equal(res7['total_unspendable_amount'], 60)
+            assert_equal(res7['total_unspendable_amount'], 3)
             assert_equal(res7['block_info'], {
-                'unspendable': 60,
+                'unspendable': 3,
                 'prevout_spent': 0,
                 'new_outputs_ex_coinbase': 0,
-                'coinbase': 40,
+                'coinbase': 12,
                 'unspendables': {
                     'genesis_block': 0,
                     'bip30': 0,
                     'scripts': 0,
-                    'unclaimed_rewards': 60
+                    'unclaimed_rewards': 3
                 }
             })
             self.block_sanity_check(res7['block_info'])
@@ -367,7 +367,7 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         self.sync_index_node()
         after_spend = index_node.gettxoutsetinfo('muhash')
         assert index_node.gettxout(genesis_outpoint['txid'], 0, False) is None
-        assert_equal(after_spend['total_amount'], before_spend['total_amount'] + Decimal('100.0000000000'))
+        assert_equal(after_spend['total_amount'], before_spend['total_amount'] + Decimal('15.0000000000'))
 
         index_node.invalidateblock(spend_block)
         self.sync_index_node()

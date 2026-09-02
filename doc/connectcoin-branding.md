@@ -103,11 +103,11 @@ external applications must not assume global ownership of it.
 
 The development monetary policy caps individual monetary values at
 `100,000,000 CC`. On mainnet, testnet3, testnet4, and signet, the recurring
-block subsidy begins at `100 CC` and halves every 450,000 blocks. Their separate
-spendable genesis output allocates `10,000,000 CC` to the development fund. If
-every available subsidy is claimed, integer rounding produces a maximum
-mainnet issuance of
-`99,999,899.9994150000 CC`. One CC is subdivided into `10,000,000,000`
+block subsidy begins at `15 CC` and halves every 3,000,000 blocks. Public-network
+blocks target a 10-second interval. Their separate spendable genesis output
+allocates `10,000,000 CC` to the development fund. If every available subsidy
+is claimed, integer rounding produces a maximum mainnet issuance of
+`99,999,984.9955000000 CC`. One CC is subdivided into `10,000,000,000`
 connects, so wallet and RPC amounts use up to ten decimal places. Regtest keeps
 its 150-block halving interval.
 

@@ -147,11 +147,11 @@ BOOST_AUTO_TEST_CASE(randomx_epoch_schedule)
     const auto& main_consensus{main_params->GetConsensus()};
     BOOST_CHECK_EQUAL(RandomXSeedHeight(0, main_consensus), 0);
     BOOST_CHECK_EQUAL(RandomXSeedHeight(64, main_consensus), 0);
-    BOOST_CHECK_EQUAL(RandomXSeedHeight(2048, main_consensus), 0);
-    BOOST_CHECK_EQUAL(RandomXSeedHeight(2111, main_consensus), 0);
-    BOOST_CHECK_EQUAL(RandomXSeedHeight(2112, main_consensus), 2048);
-    BOOST_CHECK_EQUAL(RandomXSeedHeight(4159, main_consensus), 2048);
-    BOOST_CHECK_EQUAL(RandomXSeedHeight(4160, main_consensus), 4096);
+    BOOST_CHECK_EQUAL(RandomXSeedHeight(12'288, main_consensus), 0);
+    BOOST_CHECK_EQUAL(RandomXSeedHeight(12'351, main_consensus), 0);
+    BOOST_CHECK_EQUAL(RandomXSeedHeight(12'352, main_consensus), 12'288);
+    BOOST_CHECK_EQUAL(RandomXSeedHeight(24'639, main_consensus), 12'288);
+    BOOST_CHECK_EQUAL(RandomXSeedHeight(24'640, main_consensus), 24'576);
 
     const auto regtest_params{CreateChainParams(*m_node.args, ChainType::REGTEST)};
     BOOST_CHECK_EQUAL(RandomXSeedHeight(1000000, regtest_params->GetConsensus()), 0);

@@ -2,16 +2,16 @@
   "chain": "main",
   "test_chain": false,
   "genesis": "c576f52f38df9cb14fc2623118b69eaf43c1cfbace37294f31b6d25a2073638b",
-  "subsidy_halving_interval": 450000,
+  "subsidy_halving_interval": 3000000,
   "pow": {
     "algorithm": "randomx-v2",
     "limit": "0000ffff00000000000000000000000000000000000000000000000000000000",
     "randomx_bootstrap_key": "e57f5651e5a8da3b375d8ceefb337c108f536315be2c8b86c4c2aaec2a261bd9",
-    "randomx_epoch_blocks": 2048,
+    "randomx_epoch_blocks": 12288,
     "randomx_epoch_lag": 64,
     "randomx_mode": "fast",
-    "target_spacing": 60,
-    "difficulty_retarget_interval": 240,
+    "target_spacing": 10,
+    "difficulty_retarget_interval": 1440,
     "mindiff_blocks": "no"
   },
   "net": {

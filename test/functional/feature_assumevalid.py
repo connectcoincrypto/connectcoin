@@ -53,6 +53,7 @@ from test_framework.messages import (
 from test_framework.p2p import P2PInterface
 from test_framework.script import (
     CScript,
+    OP_1,
     OP_TRUE,
 )
 from test_framework.test_framework import BitcoinTestFramework
@@ -113,7 +114,7 @@ class AssumeValidTest(BitcoinTestFramework):
         # Create a transaction spending the coinbase output with an invalid (null) signature
         tx = CTransaction()
         tx.vin.append(CTxIn(COutPoint(self.block1.vtx[0].txid_int, 0), scriptSig=b""))
-        tx.vout.append(CTxOut(49 * COIN, CScript([OP_TRUE])))
+        tx.vout.append(CTxOut(14 * COIN, CScript([OP_1, coinbase_pubkey[1:]])))
 
         block102 = create_block(self.tip, height=height, ntime=self.block_time, txlist=[tx])
         self.block_time += 1

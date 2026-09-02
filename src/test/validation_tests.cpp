@@ -37,7 +37,7 @@ static CTxOut DeterministicP2PKOutput(CAmount amount)
 static void TestBlockSubsidyHalvings(const Consensus::Params& consensusParams)
 {
     int maxHalvings = 64;
-    CAmount nInitialSubsidy = 100 * COIN;
+    CAmount nInitialSubsidy = 15 * COIN;
 
     CAmount nPreviousSubsidy = nInitialSubsidy * 2; // for height == 0
     BOOST_CHECK_EQUAL(nPreviousSubsidy, nInitialSubsidy * 2);
@@ -72,11 +72,11 @@ BOOST_AUTO_TEST_CASE(subsidy_limit_test)
     CAmount nSum = 0;
     for (int nHeight = 0; nHeight < 14000000; nHeight += 1000) {
         CAmount nSubsidy = GetBlockSubsidy(nHeight, chainParams->GetConsensus());
-        BOOST_CHECK(nSubsidy <= 100 * COIN);
+        BOOST_CHECK(nSubsidy <= 15 * COIN);
         nSum += nSubsidy * 1000;
         BOOST_CHECK(MoneyRange(nSum));
     }
-    BOOST_CHECK_EQUAL(nSum, CAmount{899'999'999'601'150'000});
+    BOOST_CHECK_EQUAL(nSum, CAmount{862'500'000'000'000'000});
 }
 
 static CAmount MaximumSupply(const CChainParams& chain_params)
@@ -100,15 +100,15 @@ BOOST_AUTO_TEST_CASE(maximum_network_supply_test)
         const auto& consensus = chain_params->GetConsensus();
         const CAmount total{MaximumSupply(*chain_params)};
 
-        // Height 0 is the 10 million CC genesis output, not a regular 100 CC
-        // subsidy. The remaining blocks and integer rounding leave 100.000585
-        // CC below MAX_MONEY on every public network.
+        // Height 0 is the 10 million CC genesis output, not a regular 15 CC
+        // subsidy. The remaining blocks and integer rounding leave 15.0045 CC
+        // below MAX_MONEY on every public network.
         BOOST_CHECK_EQUAL(chain_params->GenesisBlock().vtx.front()->GetValueOut(), 10'000'000 * COIN);
-        BOOST_CHECK_EQUAL(GetBlockSubsidy(1, consensus), 100 * COIN);
-        BOOST_CHECK_EQUAL(GetBlockSubsidy(39 * consensus.nSubsidyHalvingInterval, consensus), 1);
-        BOOST_CHECK_EQUAL(GetBlockSubsidy(40 * consensus.nSubsidyHalvingInterval, consensus), 0);
-        BOOST_CHECK_EQUAL(total, CAmount{999'998'999'994'150'000});
-        BOOST_CHECK_EQUAL(MAX_MONEY - total, CAmount{1'000'005'850'000});
+        BOOST_CHECK_EQUAL(GetBlockSubsidy(1, consensus), 15 * COIN);
+        BOOST_CHECK_EQUAL(GetBlockSubsidy(37 * consensus.nSubsidyHalvingInterval, consensus), 1);
+        BOOST_CHECK_EQUAL(GetBlockSubsidy(38 * consensus.nSubsidyHalvingInterval, consensus), 0);
+        BOOST_CHECK_EQUAL(total, CAmount{999'999'849'955'000'000});
+        BOOST_CHECK_EQUAL(MAX_MONEY - total, CAmount{150'045'000'000});
     }
 
     // Regtest deliberately halves every 150 blocks to make subsidy transitions
@@ -116,10 +116,10 @@ BOOST_AUTO_TEST_CASE(maximum_network_supply_test)
     const auto regtest_params = CreateChainParams(*m_node.args, ChainType::REGTEST);
     const auto& regtest_consensus = regtest_params->GetConsensus();
     BOOST_CHECK_EQUAL(regtest_params->GenesisBlock().vtx.front()->GetValueOut(), 10'000'000 * COIN);
-    BOOST_CHECK_EQUAL(GetBlockSubsidy(1, regtest_consensus), 100 * COIN);
-    BOOST_CHECK_EQUAL(GetBlockSubsidy(39 * regtest_consensus.nSubsidyHalvingInterval, regtest_consensus), 1);
-    BOOST_CHECK_EQUAL(GetBlockSubsidy(40 * regtest_consensus.nSubsidyHalvingInterval, regtest_consensus), 0);
-    BOOST_CHECK_EQUAL(MaximumSupply(*regtest_params), CAmount{100'298'999'999'998'050});
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(1, regtest_consensus), 15 * COIN);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(37 * regtest_consensus.nSubsidyHalvingInterval, regtest_consensus), 1);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(38 * regtest_consensus.nSubsidyHalvingInterval, regtest_consensus), 0);
+    BOOST_CHECK_EQUAL(MaximumSupply(*regtest_params), CAmount{100'044'849'999'997'750});
 }
 
 BOOST_AUTO_TEST_CASE(signet_parse_tests)
@@ -196,10 +196,10 @@ BOOST_AUTO_TEST_CASE(test_assumeutxo)
 
     const auto out200{params->AssumeutxoForHeight(200)};
     BOOST_REQUIRE(out200);
-    BOOST_CHECK_EQUAL(out200->hash_serialized.ToString(), "b9ea4c5f1e0cd6d3d9780cc86c44a26e3308165d22cadf86ea9886e82a1026ca");
+    BOOST_CHECK_EQUAL(out200->hash_serialized.ToString(), "3fd7b22c0fa827f8119a9ae5a203481c3bcffd5d7dd74d9594ad87756b8434de");
     BOOST_CHECK_EQUAL(out200->m_chain_tx_count, 201U);
 
-    const uint256 expected_blockhash{params->GetConsensus().randomx_mock_pow ? uint256{"1ccff6d470035e3da4f35f5cad803bb01c257368d1322fd671e01d3f6a7e6253"} : uint256{"8fe93355b748d8cacf210853ac520751c3cc6d7ecaf85aadea165c492b806fd9"}};
+    const uint256 expected_blockhash{params->GetConsensus().randomx_mock_pow ? uint256{"290319d9129f74fd13351f4df418434d4319579d66afb03f98f52a48981a11ff"} : uint256{"799750eee344c6bb269406c29e150138f7c56f3908c195edb25532083327f90b"}};
     BOOST_CHECK(out200->blockhash == expected_blockhash);
     const auto out200_by_hash{params->AssumeutxoForBlockhash(expected_blockhash)};
     BOOST_REQUIRE(out200_by_hash);
