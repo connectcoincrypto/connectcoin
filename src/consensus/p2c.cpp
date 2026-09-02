@@ -7,12 +7,16 @@
 #include <arith_uint256.h>
 #include <crypto/sha256.h>
 #include <hash.h>
-#include <serialize.h>
+#include <primitives/transaction.h>
 
 #include <algorithm>
 #include <array>
+#include <compare>
 #include <cstddef>
 #include <cstdint>
+#include <initializer_list>
+#include <optional>
+#include <ranges>
 #include <span>
 #include <string>
 #include <string_view>

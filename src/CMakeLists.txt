@@ -38,61 +38,20 @@ set(DISABLE_PACKAGE_CONFIG_AND_INSTALL ON CACHE BOOL "Disable Mbed TLS installat
 set(MBEDTLS_USER_CONFIG_FILE "${CMAKE_CURRENT_SOURCE_DIR}/crypto/mbedtls_user_config.h"
   CACHE FILEPATH "ConnectCoin's pinned Mbed TLS feature overrides" FORCE)
 
-# Mbed TLS 3.6.7 still declares compatibility with CMake 3.5. CMake 4
-# requires consumers to opt in to a newer policy floor before adding it as a
-# subproject, and cross-platform CI treats the otherwise emitted deprecation as
-# a fatal developer warning. Keep the override scoped to the dependency.
-set(connectcoin_mbedtls_policy_version_minimum_was_defined FALSE)
-set(connectcoin_mbedtls_warn_deprecated_was_defined FALSE)
-set(connectcoin_mbedtls_error_deprecated_was_defined FALSE)
-if(DEFINED CMAKE_POLICY_VERSION_MINIMUM)
-  set(connectcoin_mbedtls_policy_version_minimum_was_defined TRUE)
-  set(connectcoin_mbedtls_parent_policy_version_minimum "${CMAKE_POLICY_VERSION_MINIMUM}")
-endif()
-if(DEFINED CMAKE_WARN_DEPRECATED)
-  set(connectcoin_mbedtls_warn_deprecated_was_defined TRUE)
-  set(connectcoin_mbedtls_parent_warn_deprecated "${CMAKE_WARN_DEPRECATED}")
-endif()
-if(DEFINED CMAKE_ERROR_DEPRECATED)
-  set(connectcoin_mbedtls_error_deprecated_was_defined TRUE)
-  set(connectcoin_mbedtls_parent_error_deprecated "${CMAKE_ERROR_DEPRECATED}")
-endif()
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.0 AND
-   (NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM OR CMAKE_POLICY_VERSION_MINIMUM VERSION_LESS 3.10))
-  set(CMAKE_POLICY_VERSION_MINIMUM 3.10)
-endif()
-# The parent intentionally promotes its own deprecated CMake usage to errors.
-# Mbed TLS 3.6.7 still advertises an older compatibility floor, so suppress
-# only that third-party diagnostic while its pinned subproject is configured.
-set(CMAKE_WARN_DEPRECATED OFF)
-set(CMAKE_ERROR_DEPRECATED OFF)
+# Mbed TLS 3.6.7 requires CMake 3.10.2 but temporarily advertises compatibility
+# with 3.5.1 for its own infrastructure. Patch that declaration to the stated
+# requirement so CMake 3.31+ does not emit a fatal deprecation diagnostic. This
+# avoids changing the parent project's warning policy and works with both the
+# legacy variables and CMake 4.4's diagnostic framework.
 FetchContent_Declare(connectcoin_mbedtls
   URL https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-3.6.7/mbedtls-3.6.7.tar.bz2
   URL_HASH SHA256=a7e8bcbec0e6f761b4af24f25677626b35f762f68eef79c08677a363212d11f6
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+  PATCH_COMMAND ${CMAKE_COMMAND}
+    "-DMBEDTLS_SOURCE_DIR=<SOURCE_DIR>"
+    -P "${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSCMakePolicy.cmake"
 )
 FetchContent_MakeAvailable(connectcoin_mbedtls)
-if(connectcoin_mbedtls_policy_version_minimum_was_defined)
-  set(CMAKE_POLICY_VERSION_MINIMUM "${connectcoin_mbedtls_parent_policy_version_minimum}")
-else()
-  unset(CMAKE_POLICY_VERSION_MINIMUM)
-endif()
-if(connectcoin_mbedtls_warn_deprecated_was_defined)
-  set(CMAKE_WARN_DEPRECATED "${connectcoin_mbedtls_parent_warn_deprecated}")
-else()
-  unset(CMAKE_WARN_DEPRECATED)
-endif()
-if(connectcoin_mbedtls_error_deprecated_was_defined)
-  set(CMAKE_ERROR_DEPRECATED "${connectcoin_mbedtls_parent_error_deprecated}")
-else()
-  unset(CMAKE_ERROR_DEPRECATED)
-endif()
-unset(connectcoin_mbedtls_parent_policy_version_minimum)
-unset(connectcoin_mbedtls_parent_warn_deprecated)
-unset(connectcoin_mbedtls_parent_error_deprecated)
-unset(connectcoin_mbedtls_policy_version_minimum_was_defined)
-unset(connectcoin_mbedtls_warn_deprecated_was_defined)
-unset(connectcoin_mbedtls_error_deprecated_was_defined)
 
 # Third-party diagnostics must not become fatal when the parent project uses
 # CMAKE_COMPILE_WARNING_AS_ERROR. ConnectCoin's own targets retain the policy.

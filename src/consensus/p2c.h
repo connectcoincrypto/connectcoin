@@ -5,7 +5,6 @@
 #ifndef CONNECTCOIN_CONSENSUS_P2C_H
 #define CONNECTCOIN_CONSENSUS_P2C_H
 
-#include <primitives/transaction.h>
 #include <uint256.h>
 
 #include <cstddef>
@@ -14,6 +13,9 @@
 #include <string>
 #include <string_view>
 #include <vector>
+
+class CTransaction;
+class CTxOut;
 
 inline constexpr uint8_t P2C_PROOF_VERSION{1};
 inline constexpr uint32_t P2C_ROOT_CERTIFICATES_VERSION_1{1};

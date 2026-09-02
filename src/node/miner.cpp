@@ -7,8 +7,8 @@
 
 #include <chain.h>
 #include <chainparams.h>
-#include <common/args.h>
 #include <coins.h>
+#include <common/args.h>
 #include <consensus/amount.h>
 #include <consensus/consensus.h>
 #include <consensus/merkle.h>
@@ -43,6 +43,8 @@
 #include <validation.h>
 #include <validationinterface.h>
 #include <versionbits.h>
+
+#include <boost/multi_index/detail/hash_index_iterator.hpp>
 
 #include <algorithm>
 #include <compare>

@@ -12,6 +12,8 @@
 #include <pubkey.h>
 #include <script/script.h>
 #include <serialize.h>
+#include <span.h>
+#include <uint256.h>
 
 #include <compare>
 #include <cstddef>

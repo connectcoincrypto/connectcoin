@@ -5,12 +5,12 @@
 #ifndef CONNECTCOIN_CONSENSUS_P2C_X509_H
 #define CONNECTCOIN_CONSENSUS_P2C_X509_H
 
-#include <consensus/p2c.h>
-#include <primitives/transaction.h>
-
 #include <cstdint>
 #include <span>
 #include <string>
+
+class CTxOut;
+struct P2CTlsProofView;
 
 /** Return whether the immutable version-1 trust store parsed successfully. */
 bool P2CRootStoreAvailable();

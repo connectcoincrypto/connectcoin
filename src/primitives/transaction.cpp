@@ -15,6 +15,7 @@
 #include <tinyformat.h>
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <span>
 #include <stdexcept>

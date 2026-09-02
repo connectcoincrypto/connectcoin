@@ -27,11 +27,14 @@
 #undef MBEDTLS_TIMING_C
 #endif
 
-// Mbed TLS deliberately rejects assembly in MemorySanitizer builds because the
-// sanitizer cannot observe it. Use the portable implementation in that build.
+// MemorySanitizer cannot observe Mbed TLS's assembly. Disabling assembly alone
+// leaves AES-NI enabled without an implementation on x86-64, while VIA PadLock
+// also requires assembly on x86. Use the portable AES implementation instead.
 #if defined(__has_feature)
 #if __has_feature(memory_sanitizer)
 #undef MBEDTLS_HAVE_ASM
+#undef MBEDTLS_AESNI_C
+#undef MBEDTLS_PADLOCK_C
 #endif
 #endif
 

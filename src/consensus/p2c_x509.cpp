@@ -4,18 +4,26 @@
 
 #include <consensus/p2c_x509.h>
 
+#include <consensus/p2c.h>
 #include <consensus/p2c_roots_v1.pem.h>
+#include <crypto/sha256.h>
+#include <mbedtls/asn1.h>
 #include <mbedtls/ecp.h>
+#include <mbedtls/md.h>
 #include <mbedtls/oid.h>
 #include <mbedtls/pk.h>
-#include <mbedtls/rsa.h>
+#include <mbedtls/x509.h>
 #include <mbedtls/x509_crt.h>
+#include <primitives/transaction.h>
 #include <psa/crypto.h>
+#include <psa/crypto_values.h>
+#include <uint256.h>
 
 #include <array>
 #include <cstddef>
 #include <cstdint>
 #include <limits>
+#include <optional>
 #include <span>
 #include <string>
 #include <string_view>
