@@ -22,6 +22,10 @@
 #include <utility>
 #include <vector>
 
+#if defined(MBEDTLS_HAVE_TIME) || defined(MBEDTLS_HAVE_TIME_DATE)
+#error "P2C consensus validation must not depend on the node's local clock"
+#endif
+
 namespace {
 
 constexpr uint16_t TLS_ECDSA_SECP256R1_SHA256{0x0403};
