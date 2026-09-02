@@ -187,7 +187,7 @@ jobs:
 
       - name: Save Ccache cache
         uses: actions/cache/save@v5
-        if: github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch && steps.ccache-cache.outputs.cache-hit != 'true'
+        if: ${{ always() && github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch && steps.ccache-cache.outputs.cache-hit != 'true' }}
         with:
           path: ${{ env.CCACHE_DIR }}
           # https://github.com/actions/cache/blob/main/tips-and-workarounds.md#update-a-cache
@@ -353,6 +353,14 @@ jobs:
 
       - name: CI script
         run: ./ci/test_run_all.sh
+
+      - name: Save Ccache cache after failure
+        uses: ./.github/actions/cache/save/internal
+        if: ${{ failure() && github.event_name == 'push' && github.ref_name == github.event.repository.default_branch }}
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-${{ env.CI_CACHE_NAME }}-${{ github.run_id }}-${{ env.CONTAINER_NAME }}
+          provider: gha
 
       - name: Save caches
         uses: ./.github/actions/cache/save
@@ -582,6 +590,14 @@ jobs:
 
       - name: CI script
         run: ./ci/test_run_all.sh
+
+      - name: Save Ccache cache after failure
+        uses: ./.github/actions/cache/save/internal
+        if: ${{ failure() && github.event_name == 'push' && github.ref_name == github.event.repository.default_branch }}
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-${{ env.CI_CACHE_NAME }}-${{ github.run_id }}-${{ env.CONTAINER_NAME }}
+          provider: gha
 
       - name: Save caches
         uses: ./.github/actions/cache/save

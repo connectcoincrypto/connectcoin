@@ -36,15 +36,15 @@ using Bytes = std::vector<unsigned char>;
 
 void U16(Bytes& out, uint16_t value)
 {
-    out.push_back(value >> 8);
-    out.push_back(value);
+    out.push_back(static_cast<unsigned char>(value >> 8));
+    out.push_back(static_cast<unsigned char>(value));
 }
 
 void U24(Bytes& out, uint32_t value)
 {
-    out.push_back(value >> 16);
-    out.push_back(value >> 8);
-    out.push_back(value);
+    out.push_back(static_cast<unsigned char>(value >> 16));
+    out.push_back(static_cast<unsigned char>(value >> 8));
+    out.push_back(static_cast<unsigned char>(value));
 }
 
 void Extension(Bytes& out, uint16_t type, const Bytes& data)
