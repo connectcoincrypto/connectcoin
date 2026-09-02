@@ -37,6 +37,10 @@ class SignetMinerTest(BitcoinTestFramework):
             ["-signetchallenge=60"], # OP_16
             ["-signetchallenge=202cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"], # sha256("hello")
         ]
+        if os.getenv("TEST_RANDOMX_MOCK_POW") is not None:
+            # Exercise the daemon's signet-specific -test validation path in
+            # addition to the environment fallback used by test binaries.
+            self.extra_args[0].append("-test=randomx_mock_pow")
 
     def skip_test_if_missing_module(self):
         self.skip_if_no_cli()
@@ -53,7 +57,11 @@ class SignetMinerTest(BitcoinTestFramework):
         base_dir = self.config["environment"]["SRCDIR"]
         signet_miner_path = os.path.join(base_dir, "contrib", "signet", "miner")
         rpc_argv = node.binaries.rpc_argv() + [f"-datadir={node.datadir_path}"]
-        util_argv = node.binaries.util_argv() + ["grind"]
+        # Select signet explicitly so the grinder uses the same consensus
+        # parameters (including the functional-suite mock PoW mode) as the node.
+        # The utility reads TEST_RANDOMX_MOCK_POW directly; unlike the daemon,
+        # its reduced argument set deliberately does not expose -test.
+        util_argv = node.binaries.util_argv() + ["-signet", "grind"]
         result = subprocess.run([
                 sys.executable,
                 signet_miner_path,
@@ -87,6 +95,13 @@ class SignetMinerTest(BitcoinTestFramework):
         self.log.info("Signet node with trivial challenge (push sha256 hash)")
         self.mine_block(node)
         assert get_signet_commitment(get_coinbase_metadata(node)) is None
+
+        self.log.info("Only the RandomX mock test option is permitted on signet")
+        self.stop_node(1)
+        self.nodes[1].assert_start_raises_init_error(
+            extra_args=["-signetchallenge=60", "-test=addrman"],
+            expected_msg="Error: -test=<option> can only be used with regtest, except randomx_mock_pow on signet",
+        )
 
 
 if __name__ == "__main__":

@@ -94,6 +94,16 @@ def prepare_tests():
 def run_functional_tests():
     workspace = Path.cwd()
     num_procs = str(os.process_cpu_count())
+    # The cross-built unit suite has already exercised real RandomX on each
+    # Windows CRT. Functional tests mine thousands of regtest blocks, so use
+    # deterministic mock proof-of-work to avoid repeating that cost.
+    os.environ["TEST_RANDOMX_MOCK_POW"] = "1"
+    extra_args = shlex.split(os.environ.get("TEST_RUNNER_EXTRA", "").strip())
+    if "--extended" in extra_args:
+        # The native Windows job retains the expensive database-crash test.
+        # Running its 100,000 transactions again under both cross-built CRTs
+        # adds substantial latency without adding distinct consensus coverage.
+        extra_args.extend(["--exclude", "feature_dbcrash.py"])
     test_runner_cmd = [
         sys.executable,
         str(workspace / "test" / "functional" / "test_runner.py"),
@@ -102,7 +112,7 @@ def run_functional_tests():
         "--quiet",
         f"--tmpdirprefix={workspace / '_ _'}",
         "--combinedlogslen=99999999",
-        *shlex.split(os.environ.get("TEST_RUNNER_EXTRA", "").strip()),
+        *extra_args,
     ]
     run(test_runner_cmd)
 

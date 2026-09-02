@@ -32,6 +32,7 @@ implicit-unsigned-integer-truncation:leveldb/
 implicit-unsigned-integer-truncation:secp256k1/
 implicit-unsigned-integer-truncation:test/fuzz/crypto_diff_fuzz_chacha20.cpp
 shift-base:*/include/c++/
+shift-base:*mbedtls*/library/aes.c
 shift-base:leveldb/
 shift-base:minisketch/
 shift-base:secp256k1/

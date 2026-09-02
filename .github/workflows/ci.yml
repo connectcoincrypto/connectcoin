@@ -523,10 +523,19 @@ jobs:
             timeout-minutes: 360
             file-env: './ci/test/00_setup_env_native_tsan.sh'
 
-          - name: 'MSan, fuzz'
+          - name: 'MSan, fuzz (1/2)'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 360
             file-env: './ci/test/00_setup_env_native_fuzz_with_msan.sh'
+            fuzz-shard-count: 2
+            fuzz-shard-index: 0
+
+          - name: 'MSan, fuzz (2/2)'
+            fallback-runner: 'ubuntu-latest'
+            timeout-minutes: 360
+            file-env: './ci/test/00_setup_env_native_fuzz_with_msan.sh'
+            fuzz-shard-count: 2
+            fuzz-shard-index: 1
 
           - name: 'MSan'
             fallback-runner: 'ubuntu-latest'
@@ -567,7 +576,7 @@ jobs:
         run: sed -i "s|\${INSTALL_BCC_TRACING_TOOLS}|true|g" ./ci/test/00_setup_env_native_asan.sh
 
       - name: Set mmap_rnd_bits
-        if: ${{ env.CONTAINER_NAME == 'ci_native_tsan' || env.CONTAINER_NAME == 'ci_native_msan' || env.CONTAINER_NAME == 'ci_native_fuzz_msan' }}
+        if: ${{ env.CONTAINER_NAME == 'ci_native_tsan' || env.CONTAINER_NAME == 'ci_native_msan' || startsWith(env.CONTAINER_NAME, 'ci_native_fuzz_msan_') }}
         # Prevents crashes due to high ASLR entropy
         run: sudo sysctl -w vm.mmap_rnd_bits=28
 

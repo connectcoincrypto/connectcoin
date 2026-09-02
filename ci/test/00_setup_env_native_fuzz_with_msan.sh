@@ -13,7 +13,11 @@ export MSAN_FLAGS="-fsanitize=memory -fsanitize-memory-track-origins=2 -fno-omit
 LIBCXX_FLAGS="-nostdinc++ -nostdlib++ -isystem ${LIBCXX_DIR}include/c++/v1 -L${LIBCXX_DIR}lib -Wl,-rpath,${LIBCXX_DIR}lib -lc++ -lc++abi -lpthread -Wno-unused-command-line-argument"
 export MSAN_AND_LIBCXX_FLAGS="${MSAN_FLAGS} ${LIBCXX_FLAGS}"
 
-export CONTAINER_NAME="ci_native_fuzz_msan"
+export FUZZ_SHARD_COUNT="${FUZZ_SHARD_COUNT:-1}"
+export FUZZ_SHARD_INDEX="${FUZZ_SHARD_INDEX:-0}"
+export CONTAINER_NAME="ci_native_fuzz_msan_${FUZZ_SHARD_INDEX}"
+export CI_CACHE_NAME="ci_native_fuzz_msan"
+export FUZZ_TESTS_CONFIG="--shard-count=${FUZZ_SHARD_COUNT} --shard-index=${FUZZ_SHARD_INDEX}"
 export PACKAGES="clang-${APT_LLVM_V} llvm-${APT_LLVM_V} llvm-${APT_LLVM_V}-dev libclang-${APT_LLVM_V}-dev libclang-rt-${APT_LLVM_V}-dev"
 export DEP_OPTS="DEBUG=1 NO_QT=1 CC=clang CXX=clang++ CFLAGS='${MSAN_FLAGS}' CXXFLAGS='${MSAN_AND_LIBCXX_FLAGS}'"
 export GOAL="all"

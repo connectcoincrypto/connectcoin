@@ -178,6 +178,11 @@ def run_tests(ci_type):
         ]
         run(ctest_cmd)
 
+        # CTest above exercises the real RandomX implementation. Functional
+        # tests mine thousands of regtest blocks and only need deterministic
+        # proof-of-work here; using the mock avoids hours of duplicate hashing.
+        os.environ["TEST_RANDOMX_MOCK_POW"] = "1"
+
         test_cmd = [
             sys.executable,
             str(build_dir / "test" / "functional" / "test_runner.py"),

@@ -364,6 +364,22 @@ void BaseIndex::BlockConnected(const ChainstateRole& role, const std::shared_ptr
             return;
         }
     } else {
+        // The validation-interface queue can still contain notifications that
+        // the synchronous initial scan has already indexed. This includes the
+        // genesis block now that ConnectCoin's genesis transaction is indexed.
+        // Reprocessing an active-chain ancestor is unnecessary, and height 0
+        // would otherwise make the ancestor lookup below use height -1.
+        if (pindex->nHeight <= best_block_index->nHeight &&
+            best_block_index->GetAncestor(pindex->nHeight) == pindex) {
+            return;
+        }
+        if (pindex->nHeight == 0) {
+            LogWarning("Genesis block %s is not part of the known best chain (tip=%s); not updating index",
+                       pindex->GetBlockHash().ToString(),
+                       best_block_index->GetBlockHash().ToString());
+            return;
+        }
+
         // Ensure block connects to an ancestor of the current best block. This should be the case
         // most of the time, but may not be immediately after the sync thread catches up and sets
         // m_synced. Consider the case where there is a reorg and the blocks on the stale branch are

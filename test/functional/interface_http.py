@@ -240,8 +240,8 @@ class HTTPBasicsTest (BitcoinTestFramework):
                 conn.post_raw('/', f'{{"jsonrpc": "2.0", "id": "0", "method": "submitblock", "params": ["{"0" * bytes_above_limit}"]}}')
                 # On some platforms (e.g. Windows) the whole request may be
                 # accepted into the OS send buffer before the server disconnects.
-                # It's ok to allow that, the server-side behavior is asserted in
-                # the foreground thread via the 413 response.
+                # It's ok to allow that; the foreground thread checks that the
+                # server rejects the request via either a 413 response or reset.
                 self.log.info("Client finished sending request before connection was terminated")
             except NETWORK_ERRORS:
                 self.log.info("Client did not finish sending request before connection was terminated")
@@ -249,15 +249,23 @@ class HTTPBasicsTest (BitcoinTestFramework):
         send_thread = threading.Thread(target=send_excessive_body, args=(self, conn))
         send_thread.start()
 
-        response5 = conn.recv_raw().decode()
-        assert "413 Content too large" in response5
-
         try:
-            conn.conn.sock.shutdown(socket.SHUT_RDWR)
-            self.log.info("Send thread force-closed by test framework")
-        except OSError:
-            self.log.info("Send thread was already closed by RST from server")
-        send_thread.join()
+            try:
+                response5 = conn.recv_raw().decode()
+            except NETWORK_ERRORS:
+                # Windows may deliver the server's RST before the queued 413
+                # response. Either result proves that the oversized request was
+                # rejected, so accept the platform-dependent socket outcome.
+                self.log.info("Server reset connection while rejecting excessive request body")
+            else:
+                assert "413 Content too large" in response5
+        finally:
+            try:
+                conn.conn.sock.shutdown(socket.SHUT_RDWR)
+                self.log.info("Send thread force-closed by test framework")
+            except OSError:
+                self.log.info("Send thread was already closed by RST from server")
+            send_thread.join()
 
 
     def check_pipelining(self, with_invalid_second_request):
@@ -367,8 +375,8 @@ class HTTPBasicsTest (BitcoinTestFramework):
                     encode_chunked=True)
                 # On some platforms (e.g. Windows) the whole request may be
                 # accepted into the OS send buffer before the server disconnects.
-                # It's ok to allow that, the server-side behavior is asserted in
-                # the foreground thread via the 413 response.
+                # It's ok to allow that; the foreground thread checks that the
+                # server rejects the request via either a 413 response or reset.
                 self.log.info("Client finished sending request before connection was terminated")
             except NETWORK_ERRORS:
                 self.log.info("Client did not finish sending request before connection was terminated")
@@ -376,15 +384,20 @@ class HTTPBasicsTest (BitcoinTestFramework):
         send_thread = threading.Thread(target=send_excessive_chunked, args=(self, conn))
         send_thread.start()
 
-        response2 = conn.recv_raw().decode()
-        assert "413 Content too large" in response2
-
         try:
-            conn.conn.sock.shutdown(socket.SHUT_RDWR)
-            self.log.info("Send thread force-closed by test framework")
-        except OSError:
-            self.log.info("Send thread was already closed by RST from server")
-        send_thread.join()
+            try:
+                response2 = conn.recv_raw().decode()
+            except NETWORK_ERRORS:
+                self.log.info("Server reset connection while rejecting excessive chunked request body")
+            else:
+                assert "413 Content too large" in response2
+        finally:
+            try:
+                conn.conn.sock.shutdown(socket.SHUT_RDWR)
+                self.log.info("Send thread force-closed by test framework")
+            except OSError:
+                self.log.info("Send thread was already closed by RST from server")
+            send_thread.join()
 
 
     def check_idle_timeout(self):

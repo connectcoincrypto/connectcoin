@@ -106,6 +106,8 @@ void ReadTestNetArgs(const ArgsManager& args, CChainParams::TestNetOptions& opti
 void ReadSigNetArgs(const ArgsManager& args, CChainParams::SigNetOptions& options)
 {
     options.randomx_fast = args.GetBoolArg("-randomxfast", DEFAULT_RANDOMX_FAST);
+    options.randomx_mock_pow =
+        HasTestOption(args, "randomx_mock_pow") || std::getenv("TEST_RANDOMX_MOCK_POW") != nullptr;
     if (!args.GetArgs("-signetseednode").empty()) {
         options.seeds.emplace(args.GetArgs("-signetseednode"));
     }

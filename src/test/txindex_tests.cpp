@@ -16,6 +16,7 @@
 #include <index/txindex_key.h>
 #include <interfaces/chain.h>
 #include <key.h>
+#include <kernel/types.h>
 #include <node/blockstorage.h>
 #include <primitives/block.h>
 #include <script/script.h>
@@ -140,7 +141,21 @@ BOOST_FIXTURE_TEST_CASE(txindex_includes_spendable_mainnet_genesis, TestingSetup
     BOOST_REQUIRE(txindex.Init());
     txindex.Sync();
 
+    // Drain any setup notifications, then deliberately queue another genesis
+    // notification after synchronous catch-up. The index must recognize that
+    // genesis is already indexed instead of trying to process it a second time.
+    m_node.validation_signals->SyncWithValidationInterfaceQueue();
+
     const CBlock& genesis{Params().GenesisBlock()};
+    const CBlockIndex* genesis_index;
+    {
+        LOCK(cs_main);
+        genesis_index = Assert(m_node.chainman)->ActiveChain().Genesis();
+    }
+    m_node.validation_signals->BlockConnected(
+        kernel::ChainstateRole{}, std::make_shared<CBlock>(genesis), Assert(genesis_index));
+    m_node.validation_signals->SyncWithValidationInterfaceQueue();
+
     BOOST_REQUIRE_EQUAL(genesis.vtx.size(), 1U);
     BOOST_CHECK(LookupTx(txindex, genesis.vtx.front()->GetHash()) == genesis.GetHash());
 

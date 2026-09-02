@@ -423,6 +423,7 @@ public:
         consensus.randomx_epoch_blocks = 12'288;
         consensus.randomx_epoch_lag = 64;
         consensus.randomx_fast_mode = options.randomx_fast;
+        consensus.randomx_mock_pow = options.randomx_mock_pow;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;

@@ -1173,8 +1173,12 @@ bool AppInitParameterInteraction(const ArgsManager& args)
 
     const std::vector<std::string> test_options = args.GetArgs("-test");
     if (!test_options.empty()) {
-        if (chainparams.GetChainType() != ChainType::REGTEST) {
-            return InitError(Untranslated("-test=<option> can only be used with regtest"));
+        const bool signet_mock_pow_only{
+            chainparams.GetChainType() == ChainType::SIGNET &&
+            std::ranges::all_of(test_options, [](const std::string& option) { return option == "randomx_mock_pow"; })};
+        if (chainparams.GetChainType() != ChainType::REGTEST && !signet_mock_pow_only) {
+            return InitError(Untranslated(
+                "-test=<option> can only be used with regtest, except randomx_mock_pow on signet"));
         }
         for (const std::string& option : test_options) {
             auto it = std::find_if(TEST_OPTIONS_DOC.begin(), TEST_OPTIONS_DOC.end(), [&option](const std::string& doc_option) {

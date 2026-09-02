@@ -31,7 +31,7 @@ def get_fuzz_env(*, target, source_dir):
 
 
 def select_fuzz_shard(*, targets, corpus_dir, shard_count, shard_index):
-    """Balance targets by corpus input count and return one deterministic shard."""
+    """Balance targets by estimated corpus work and return one deterministic shard."""
     if shard_count == 1:
         return targets, None
 
@@ -40,11 +40,20 @@ def select_fuzz_shard(*, targets, corpus_dir, shard_count, shard_index):
         target_corpus = corpus_dir / target
         try:
             with os.scandir(target_corpus) as entries:
-                input_count = sum(1 for entry in entries if entry.is_file())
+                corpus_files = [entry for entry in entries if entry.is_file()]
         except FileNotFoundError:
-            input_count = 0
-        # Empty corpora run for --empty_min_time, so they still represent work.
-        weighted_targets.append((target, max(input_count, 1)))
+            corpus_files = []
+
+        input_count = len(corpus_files)
+        input_bytes = sum(entry.stat(follow_symlinks=False).st_size for entry in corpus_files)
+        # Every input has fixed harness/setup cost, while larger inputs also take
+        # longer to deserialize and execute. Counting only files put several of
+        # the most expensive corpora on the same shard despite equal file-count
+        # totals. One extra work unit per 4 KiB is a deterministic approximation
+        # that balances both costs. Empty corpora run for --empty_min_time, so
+        # they still represent work.
+        estimated_work = max(input_count + (input_bytes + 4095) // 4096, 1)
+        weighted_targets.append((target, estimated_work))
 
     shards = [[] for _ in range(shard_count)]
     shard_loads = [0] * shard_count
@@ -94,7 +103,7 @@ def main():
         '--shard-count',
         type=int,
         default=1,
-        help='Balance the fuzz target list by corpus input count across this many shards.',
+        help='Balance the fuzz target list by estimated corpus work across this many shards.',
     )
     parser.add_argument(
         '--shard-index',
@@ -187,7 +196,7 @@ def main():
 
     load_description = ''
     if shard_loads is not None:
-        load_description = ' (estimated corpus inputs: {})'.format(shard_loads[args.shard_index])
+        load_description = ' (estimated corpus work units: {})'.format(shard_loads[args.shard_index])
     logging.info(
         "{} of {} detected fuzz target(s) selected for shard {}/{}{}: {}".format(
             len(test_list_selection),

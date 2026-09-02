@@ -521,13 +521,13 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
 
     def _install_pow_hash_callback(self):
         def randomx_pow_hash(header):
-            if self.chain == "regtest" and os.getenv("TEST_RANDOMX_MOCK_POW") is not None:
+            if self.chain in ("regtest", "signet") and os.getenv("TEST_RANDOMX_MOCK_POW") is not None:
                 return header.hash_int
             header_hex = header._serialize_header().hex()
             for node in self.nodes:
                 if node.running and node.rpc_connected:
                     return int(node.getpowhash(header_hex), 16)
-            raise RuntimeError("No running regtest node is available to calculate RandomX proof of work")
+            raise RuntimeError("No running node is available to calculate RandomX proof of work")
 
         set_pow_hash_callback(randomx_pow_hash)
 

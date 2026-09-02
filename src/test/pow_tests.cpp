@@ -188,6 +188,7 @@ BOOST_AUTO_TEST_CASE(randomx_mock_pow)
     ArgsManager mock_args;
     mock_args.ForceSetArg("-test", "randomx_mock_pow");
     BOOST_CHECK(CreateChainParams(mock_args, ChainType::REGTEST)->GetConsensus().randomx_mock_pow);
+    BOOST_CHECK(CreateChainParams(mock_args, ChainType::SIGNET)->GetConsensus().randomx_mock_pow);
     BOOST_CHECK(!CreateChainParams(mock_args, ChainType::MAIN)->GetConsensus().randomx_mock_pow);
 
     consensus.randomx_mock_pow = true;

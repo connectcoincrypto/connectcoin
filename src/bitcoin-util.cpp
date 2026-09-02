@@ -105,7 +105,9 @@ static void grind_task(const Consensus::Params& consensus, const uint256& random
     while (!found && header.nNonce < finish) {
         const uint32_t next = (finish - header.nNonce < 5000*step) ? finish : header.nNonce + 5000*step;
         do {
-            if (CheckProofOfWorkImpl(GetPoWHash(header, randomx_key, consensus), nBits, consensus)) {
+            const uint256 pow_hash{
+                consensus.randomx_mock_pow ? header.GetHash() : GetPoWHash(header, randomx_key, consensus)};
+            if (CheckProofOfWorkImpl(pow_hash, nBits, consensus)) {
                 if (!found.exchange(true)) {
                     proposed_nonce = header.nNonce;
                 }

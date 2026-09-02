@@ -149,6 +149,7 @@ public:
         std::optional<std::vector<uint8_t>> challenge{};
         std::optional<std::vector<std::string>> seeds{};
         bool randomx_fast{sizeof(void*) >= 8};
+        bool randomx_mock_pow{false};
     };
 
     /**
