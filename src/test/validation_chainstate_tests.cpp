@@ -138,8 +138,25 @@ BOOST_FIXTURE_TEST_CASE(regtest_genesis_coinbase_can_be_spent, TestChain100Setup
 
 BOOST_FIXTURE_TEST_CASE(regtest_assumeutxo_commitments_match_chainstate, TestChain100Setup)
 {
-    // Height 110 has not yet been regenerated for typed outputs.
-    BOOST_CHECK(!Params().AssumeutxoForHeight(110));
+    mineBlocks(10);
+
+    LOCK(cs_main);
+    ChainstateManager& chainman{*Assert(m_node.chainman)};
+    Chainstate& chainstate{chainman.ActiveChainstate()};
+    chainstate.ForceFlushStateToDisk(/*wipe_cache=*/false);
+    const auto stats{kernel::ComputeUTXOStats(
+        kernel::CoinStatsHashType::HASH_SERIALIZED,
+        chainstate.CoinsDB(),
+        chainman.m_blockman)};
+    BOOST_REQUIRE(stats);
+
+    const auto assumeutxo{Params().AssumeutxoForHeight(110)};
+    BOOST_REQUIRE(assumeutxo);
+    BOOST_CHECK_EQUAL(stats->nHeight, assumeutxo->height);
+    BOOST_CHECK_EQUAL(stats->hashBlock.ToString(), assumeutxo->blockhash.ToString());
+    BOOST_CHECK_EQUAL(stats->hashSerialized.ToString(), assumeutxo->hash_serialized.ToString());
+    BOOST_CHECK_EQUAL(stats->nTransactions, assumeutxo->m_chain_tx_count);
+    BOOST_CHECK_EQUAL(stats->coins_count, 111U);
 }
 
 BOOST_FIXTURE_TEST_CASE(regtest_fuzz_assumeutxo_commitment_matches_chainstate, RegtestTestingSetup)
@@ -241,10 +258,6 @@ BOOST_FIXTURE_TEST_CASE(connect_tip_does_not_cache_inputs_on_failed_connect, Tes
 //! of what it does for the active chainstate.
 BOOST_FIXTURE_TEST_CASE(chainstate_update_tip, TestChain100Setup)
 {
-    if (!Params().AssumeutxoForHeight(110)) {
-        BOOST_TEST_MESSAGE("height-110 assumeutxo commitment not regenerated for typed outputs");
-        return;
-    }
     ChainstateManager& chainman = *Assert(m_node.chainman);
     const auto get_notify_tip{[&]() {
         LOCK(m_node.notifications->m_tip_block_mutex);

@@ -110,6 +110,15 @@ if ((CMAKE_SIZEOF_VOID_P EQUAL 8) AND (ARCH_ID STREQUAL "x86_64" OR ARCH_ID STRE
     set_property(SOURCE src/jit_compiler_x86_static.asm PROPERTY LANGUAGE ASM_MASM)
 
     set_source_files_properties(src/argon2_avx2.c COMPILE_FLAGS /arch:AVX2)
+    if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+      # Unlike MSVC, clang-cl does not enable SSSE3 intrinsics by default on
+      # x86-64. Enable AES for RandomX and keep the optimized Argon2 source
+      # isolated to its additional feature.
+      add_compile_options(
+        "$<$<COMPILE_LANGUAGE:C>:/clang:-maes>"
+        "$<$<COMPILE_LANGUAGE:CXX>:/clang:-maes>")
+      set_source_files_properties(src/argon2_ssse3.c COMPILE_FLAGS /clang:-mssse3)
+    endif()
 
     set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} /DRELWITHDEBINFO")
     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /DRELWITHDEBINFO")

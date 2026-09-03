@@ -467,10 +467,6 @@ struct SnapshotTestSetup : TestChain100Setup {
 //! Test basic snapshot activation.
 BOOST_FIXTURE_TEST_CASE(chainstatemanager_activate_snapshot, SnapshotTestSetup)
 {
-    if (!Params().AssumeutxoForHeight(110)) {
-        BOOST_TEST_MESSAGE("height-110 assumeutxo commitment not regenerated for typed outputs");
-        return;
-    }
     this->SetupSnapshot();
 }
 
@@ -515,7 +511,7 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_loadblockindex, TestChain100Setup)
             cs->ClearBlockIndexCandidates();
             BOOST_CHECK(cs->setBlockIndexCandidates.empty());
         }
-        chainman.LoadBlockIndex();
+        BOOST_REQUIRE(chainman.LoadBlockIndex());
         for (const auto& cs : chainman.m_chainstates) {
             cs->PopulateBlockIndexCandidates();
         }
@@ -729,10 +725,6 @@ BOOST_FIXTURE_TEST_CASE(invalidate_block_and_reconsider_fork, TestChain100Setup)
 //! restart, and that new blocks can be connected to both chainstates.
 BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_init, SnapshotTestSetup)
 {
-    if (!Params().AssumeutxoForHeight(110)) {
-        BOOST_TEST_MESSAGE("height-110 assumeutxo commitment not regenerated for typed outputs");
-        return;
-    }
     ChainstateManager& chainman = *Assert(m_node.chainman);
     Chainstate& bg_chainstate = chainman.ActiveChainstate();
 
@@ -807,10 +799,6 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_init, SnapshotTestSetup)
 
 BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_completion, SnapshotTestSetup)
 {
-    if (!Params().AssumeutxoForHeight(110)) {
-        BOOST_TEST_MESSAGE("height-110 assumeutxo commitment not regenerated for typed outputs");
-        return;
-    }
     this->SetupSnapshot();
 
     ChainstateManager& chainman = *Assert(m_node.chainman);
@@ -891,10 +879,6 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_completion, SnapshotTestSetup
 
 BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_completion_hash_mismatch, SnapshotTestSetup)
 {
-    if (!Params().AssumeutxoForHeight(110)) {
-        BOOST_TEST_MESSAGE("height-110 assumeutxo commitment not regenerated for typed outputs");
-        return;
-    }
     auto chainstates = this->SetupSnapshot();
     Chainstate& validation_chainstate = *std::get<0>(chainstates);
     Chainstate& unvalidated_cs = *std::get<1>(chainstates);

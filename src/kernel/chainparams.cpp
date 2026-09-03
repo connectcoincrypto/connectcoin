@@ -541,6 +541,15 @@ public:
 
         m_assumeutxo_data = {
             {
+                // Deterministic snapshot used by the chainstate manager unit tests.
+                .height = 110,
+                .hash_serialized = AssumeutxoHash{uint256{"e45ed18a928f9fa879bda51e00f492bfa7ba6b138f9fdf71f2bb29123af83507"}},
+                .m_chain_tx_count = 111,
+                .blockhash = opts.randomx_mock_pow
+                    ? uint256{"307561b922859b22c518aaefd7c802d2571706a4e0ca1d0f506f24591607bef5"}
+                    : uint256{"fd2d86f0bfb22dba48758d291f89eb8f64bedaf13932350f3da84bbbf32fc260"},
+            },
+            {
                 // Deterministic regtest commitment used by the utxo_snapshot fuzz targets.
                 .height = 200,
                 .hash_serialized = AssumeutxoHash{uint256{"3fd7b22c0fa827f8119a9ae5a203481c3bcffd5d7dd74d9594ad87756b8434de"}},

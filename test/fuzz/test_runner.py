@@ -423,11 +423,16 @@ def merge_inputs(*, fuzz_pool, corpus, test_list, src_dir, fuzz_bin, merge_dirs)
 
 def partition_corpus(*, corpus_path, shard_count, min_files):
     """Hardlink a large corpus into deterministic temporary shard directories."""
-    corpus_files = sorted(path for path in corpus_path.iterdir() if path.is_file())
-    if shard_count == 1 or len(corpus_files) < min_files:
+    weighted_files = []
+    for path in corpus_path.iterdir():
+        if path.is_file():
+            size = path.stat(follow_symlinks=False).st_size
+            estimated_work = 1 + (size + 4095) // 4096
+            weighted_files.append((path, estimated_work))
+    if shard_count == 1 or len(weighted_files) < min_files:
         return [corpus_path], []
 
-    shard_count = min(shard_count, len(corpus_files))
+    shard_count = min(shard_count, len(weighted_files))
     temporary_directories = []
     try:
         for _ in range(shard_count):
@@ -435,8 +440,14 @@ def partition_corpus(*, corpus_path, shard_count, min_files):
                 tempfile.TemporaryDirectory(prefix=f'.{corpus_path.name}-shard-', dir=corpus_path.parent)
             )
         shard_paths = [Path(directory.name) for directory in temporary_directories]
-        for index, corpus_file in enumerate(corpus_files):
-            os.link(corpus_file, shard_paths[index % shard_count] / corpus_file.name)
+        shard_loads = [0] * shard_count
+        # Corpus names are content hashes and therefore unrelated to replay
+        # cost. Assign the largest inputs first to the currently lightest shard
+        # so a few large inputs cannot create a long serial tail by chance.
+        for corpus_file, estimated_work in sorted(weighted_files, key=lambda item: (-item[1], item[0].name)):
+            lightest_shard = min(range(shard_count), key=lambda index: (shard_loads[index], index))
+            os.link(corpus_file, shard_paths[lightest_shard] / corpus_file.name)
+            shard_loads[lightest_shard] += estimated_work
     except OSError as error:
         for directory in temporary_directories:
             directory.cleanup()

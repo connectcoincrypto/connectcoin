@@ -15,8 +15,6 @@
 #include <mbedtls/x509.h>
 #include <mbedtls/x509_crt.h>
 #include <primitives/transaction.h>
-#include <psa/crypto.h>
-#include <psa/crypto_values.h>
 #include <uint256.h>
 
 #include <array>
@@ -66,7 +64,6 @@ const mbedtls_x509_crt* RootStoreV1()
 
         RootStore()
         {
-            if (psa_crypto_init() != PSA_SUCCESS) return;
             std::vector<unsigned char> pem;
             pem.reserve(consensus::p2c::data::p2c_roots_v1.size() + 1);
             for (const std::byte value : consensus::p2c::data::p2c_roots_v1) {

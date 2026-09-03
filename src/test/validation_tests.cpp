@@ -190,18 +190,28 @@ BOOST_AUTO_TEST_CASE(test_assumeutxo)
     const auto params = CreateChainParams(*m_node.args, ChainType::REGTEST);
 
     const auto heights{params->GetAvailableSnapshotHeights()};
-    BOOST_REQUIRE_EQUAL(heights.size(), 1U);
-    BOOST_CHECK_EQUAL(heights.front(), 200);
-    BOOST_CHECK(!params->AssumeutxoForHeight(110));
+    BOOST_REQUIRE_EQUAL(heights.size(), 2U);
+    BOOST_CHECK_EQUAL(heights[0], 110);
+    BOOST_CHECK_EQUAL(heights[1], 200);
+
+    const auto out110{params->AssumeutxoForHeight(110)};
+    BOOST_REQUIRE(out110);
+    BOOST_CHECK_EQUAL(out110->hash_serialized.ToString(), "e45ed18a928f9fa879bda51e00f492bfa7ba6b138f9fdf71f2bb29123af83507");
+    BOOST_CHECK_EQUAL(out110->m_chain_tx_count, 111U);
+    const uint256 expected_blockhash110{params->GetConsensus().randomx_mock_pow ? uint256{"307561b922859b22c518aaefd7c802d2571706a4e0ca1d0f506f24591607bef5"} : uint256{"fd2d86f0bfb22dba48758d291f89eb8f64bedaf13932350f3da84bbbf32fc260"}};
+    BOOST_CHECK(out110->blockhash == expected_blockhash110);
+    const auto out110_by_hash{params->AssumeutxoForBlockhash(expected_blockhash110)};
+    BOOST_REQUIRE(out110_by_hash);
+    BOOST_CHECK_EQUAL(out110_by_hash->height, 110);
 
     const auto out200{params->AssumeutxoForHeight(200)};
     BOOST_REQUIRE(out200);
     BOOST_CHECK_EQUAL(out200->hash_serialized.ToString(), "3fd7b22c0fa827f8119a9ae5a203481c3bcffd5d7dd74d9594ad87756b8434de");
     BOOST_CHECK_EQUAL(out200->m_chain_tx_count, 201U);
 
-    const uint256 expected_blockhash{params->GetConsensus().randomx_mock_pow ? uint256{"290319d9129f74fd13351f4df418434d4319579d66afb03f98f52a48981a11ff"} : uint256{"799750eee344c6bb269406c29e150138f7c56f3908c195edb25532083327f90b"}};
-    BOOST_CHECK(out200->blockhash == expected_blockhash);
-    const auto out200_by_hash{params->AssumeutxoForBlockhash(expected_blockhash)};
+    const uint256 expected_blockhash200{params->GetConsensus().randomx_mock_pow ? uint256{"290319d9129f74fd13351f4df418434d4319579d66afb03f98f52a48981a11ff"} : uint256{"799750eee344c6bb269406c29e150138f7c56f3908c195edb25532083327f90b"}};
+    BOOST_CHECK(out200->blockhash == expected_blockhash200);
+    const auto out200_by_hash{params->AssumeutxoForBlockhash(expected_blockhash200)};
     BOOST_REQUIRE(out200_by_hash);
     BOOST_CHECK_EQUAL(out200_by_hash->height, 200);
     BOOST_CHECK(!params->AssumeutxoForBlockhash(uint256::ONE));
