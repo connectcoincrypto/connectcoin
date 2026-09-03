@@ -68,6 +68,17 @@ foreach(mbedtls_target IN ITEMS mbedcrypto mbedx509 mbedtls everest p256m)
 endforeach()
 unset(mbedtls_target)
 
+# SHA-512 uses defined unsigned left shifts to implement rotations. Clang's
+# optional integer sanitizer diagnoses those operations even though unsigned
+# arithmetic is well-defined. Limit the exception to the primitive library;
+# keep every integer check enabled for the X.509 and TLS parsers.
+if(TARGET mbedcrypto)
+  target_compile_options(mbedcrypto PRIVATE
+    "$<$<COMPILE_LANG_AND_ID:C,Clang,AppleClang>:-fno-sanitize=unsigned-shift-base>"
+    "$<$<COMPILE_LANG_AND_ID:CXX,Clang,AppleClang>:-fno-sanitize=unsigned-shift-base>"
+  )
+endif()
+
 set(RANDOMX_BUILD_TESTS OFF CACHE BOOL "Build RandomX tests and benchmark tools" FORCE)
 set(RANDOMX_INSTALL OFF CACHE BOOL "Install the RandomX library and public header" FORCE)
 # The project's Debug flags enable -ftrapv globally, while RandomX relies on

@@ -32,9 +32,6 @@ def get_fuzz_env(*, target, source_dir):
 
 def select_fuzz_shard(*, targets, corpus_dir, shard_count, shard_index):
     """Balance targets by estimated corpus work and return one deterministic shard."""
-    if shard_count == 1:
-        return targets, None
-
     weighted_targets = []
     for target in targets:
         target_corpus = corpus_dir / target
@@ -57,12 +54,15 @@ def select_fuzz_shard(*, targets, corpus_dir, shard_count, shard_index):
 
     shards = [[] for _ in range(shard_count)]
     shard_loads = [0] * shard_count
-    for target, input_count in sorted(weighted_targets, key=lambda item: (-item[1], item[0])):
+    for target, estimated_work in sorted(weighted_targets, key=lambda item: (-item[1], item[0])):
         lightest_shard = min(range(shard_count), key=lambda index: (shard_loads[index], index))
         shards[lightest_shard].append(target)
-        shard_loads[lightest_shard] += input_count
+        shard_loads[lightest_shard] += estimated_work
 
-    return sorted(shards[shard_index]), shard_loads
+    # Targets were assigned in decreasing estimated-work order. Preserve that
+    # order inside each shard so expensive corpora start first and do not create
+    # a long serial tail after all smaller targets have completed.
+    return shards[shard_index], shard_loads
 
 
 def main():

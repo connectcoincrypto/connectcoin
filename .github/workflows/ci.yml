@@ -502,19 +502,33 @@ jobs:
             timeout-minutes: 360
             file-env: './ci/test/00_setup_env_i686_no_ipc.sh'
 
-          - name: 'fuzzer,address,undefined,integer (1/2)'
+          - name: 'fuzzer,address,undefined,integer (1/4)'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 360
             file-env: './ci/test/00_setup_env_native_fuzz.sh'
-            fuzz-shard-count: 2
+            fuzz-shard-count: 4
             fuzz-shard-index: 0
 
-          - name: 'fuzzer,address,undefined,integer (2/2)'
+          - name: 'fuzzer,address,undefined,integer (2/4)'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 360
             file-env: './ci/test/00_setup_env_native_fuzz.sh'
-            fuzz-shard-count: 2
+            fuzz-shard-count: 4
             fuzz-shard-index: 1
+
+          - name: 'fuzzer,address,undefined,integer (3/4)'
+            fallback-runner: 'ubuntu-latest'
+            timeout-minutes: 360
+            file-env: './ci/test/00_setup_env_native_fuzz.sh'
+            fuzz-shard-count: 4
+            fuzz-shard-index: 2
+
+          - name: 'fuzzer,address,undefined,integer (4/4)'
+            fallback-runner: 'ubuntu-latest'
+            timeout-minutes: 360
+            file-env: './ci/test/00_setup_env_native_fuzz.sh'
+            fuzz-shard-count: 4
+            fuzz-shard-index: 3
 
           - name: 'Alpine (musl)'
             fallback-runner: 'ubuntu-latest'
@@ -531,19 +545,33 @@ jobs:
             timeout-minutes: 360
             file-env: './ci/test/00_setup_env_native_tsan.sh'
 
-          - name: 'MSan, fuzz (1/2)'
+          - name: 'MSan, fuzz (1/4)'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 360
             file-env: './ci/test/00_setup_env_native_fuzz_with_msan.sh'
-            fuzz-shard-count: 2
+            fuzz-shard-count: 4
             fuzz-shard-index: 0
 
-          - name: 'MSan, fuzz (2/2)'
+          - name: 'MSan, fuzz (2/4)'
             fallback-runner: 'ubuntu-latest'
             timeout-minutes: 360
             file-env: './ci/test/00_setup_env_native_fuzz_with_msan.sh'
-            fuzz-shard-count: 2
+            fuzz-shard-count: 4
             fuzz-shard-index: 1
+
+          - name: 'MSan, fuzz (3/4)'
+            fallback-runner: 'ubuntu-latest'
+            timeout-minutes: 360
+            file-env: './ci/test/00_setup_env_native_fuzz_with_msan.sh'
+            fuzz-shard-count: 4
+            fuzz-shard-index: 2
+
+          - name: 'MSan, fuzz (4/4)'
+            fallback-runner: 'ubuntu-latest'
+            timeout-minutes: 360
+            file-env: './ci/test/00_setup_env_native_fuzz_with_msan.sh'
+            fuzz-shard-count: 4
+            fuzz-shard-index: 3
 
           - name: 'MSan'
             fallback-runner: 'ubuntu-latest'
@@ -593,7 +621,7 @@ jobs:
 
       - name: Save Ccache cache after failure
         uses: ./.github/actions/cache/save/internal
-        if: ${{ failure() && github.event_name == 'push' && github.ref_name == github.event.repository.default_branch }}
+        if: ${{ failure() && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') && github.event_name == 'push' && github.ref_name == github.event.repository.default_branch }}
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ccache-${{ env.CI_CACHE_NAME }}-${{ github.run_id }}-${{ env.CONTAINER_NAME }}
@@ -601,6 +629,7 @@ jobs:
 
       - name: Save caches
         uses: ./.github/actions/cache/save
+        if: ${{ env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0' }}
         with:
           provider: gha
 
