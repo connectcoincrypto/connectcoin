@@ -116,13 +116,13 @@ def main():
         '--corpus-shards',
         type=int,
         default=1,
-        help='For non-libFuzzer replay, split sufficiently large target corpora across this many processes.',
+        help='For replay, split sufficiently large target corpora across this many processes.',
     )
     parser.add_argument(
         '--corpus-shard-min-files',
         type=int,
         default=750,
-        help='Minimum input count before --corpus-shards splits a non-libFuzzer target corpus.',
+        help='Minimum input count before --corpus-shards splits a target corpus.',
     )
     parser.add_argument(
         'corpus_dir',
@@ -455,15 +455,8 @@ def run_once(
         corpus_path = corpus / t
         os.makedirs(corpus_path, exist_ok=True)
         empty_dir = not any(corpus_path.iterdir())
-        if using_libfuzzer:
-            input_groups = [[]]
-            if empty_min_time and empty_dir:
-                input_groups[0].append(f"-max_total_time={empty_min_time}")
-            else:
-                input_groups[0] += [
-                    "-runs=1",
-                    corpus_path,
-                ]
+        if using_libfuzzer and empty_min_time and empty_dir:
+            input_groups = [[f"-max_total_time={empty_min_time}"]]
         else:
             corpus_paths, temporary_directories = partition_corpus(
                 corpus_path=corpus_path,
@@ -471,7 +464,6 @@ def run_once(
                 min_files=corpus_shard_min_files,
             )
             temporary_corpus_directories.extend(temporary_directories)
-            input_groups = [[path] for path in corpus_paths]
             if len(corpus_paths) > 1:
                 logging.info(
                     "Split {} inputs for {} across {} replay processes".format(
@@ -480,6 +472,10 @@ def run_once(
                         len(corpus_paths),
                     )
                 )
+            if using_libfuzzer:
+                input_groups = [["-runs=1", path] for path in corpus_paths]
+            else:
+                input_groups = [[path] for path in corpus_paths]
 
         def job(t, args):
             output = 'Run {} with args {}'.format(t, args)

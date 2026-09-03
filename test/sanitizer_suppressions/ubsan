@@ -11,6 +11,10 @@
 unsigned-integer-overflow:*/include/c++/
 unsigned-integer-overflow:FuzzedDataProvider::ConsumeIntegralInRange
 unsigned-integer-overflow:leveldb/
+unsigned-integer-overflow:*mbedtls*/library/bignum.c
+unsigned-integer-overflow:*mbedtls*/library/bignum_core.c
+unsigned-integer-overflow:*mbedtls*/library/constant_time_impl.h
+unsigned-integer-overflow:*mbedtls*/library/sha256.c
 unsigned-integer-overflow:*mbedtls*/library/sha512.c
 unsigned-integer-overflow:minisketch/
 unsigned-integer-overflow:secp256k1/

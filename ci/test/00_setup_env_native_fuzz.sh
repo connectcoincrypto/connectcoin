@@ -13,7 +13,7 @@ export CONTAINER_NAME="ci_native_fuzz_${FUZZ_SHARD_INDEX}"
 # All shards compile the same configuration. Share their Docker and compiler
 # cache namespace while retaining distinct container names for execution.
 export CI_CACHE_NAME="ci_native_fuzz"
-export FUZZ_TESTS_CONFIG="--shard-count=${FUZZ_SHARD_COUNT} --shard-index=${FUZZ_SHARD_INDEX}"
+export FUZZ_TESTS_CONFIG="--shard-count=${FUZZ_SHARD_COUNT} --shard-index=${FUZZ_SHARD_INDEX} --corpus-shards=4 --corpus-shard-min-files=512"
 export APT_LLVM_V="22"
 export PACKAGES="clang-${APT_LLVM_V} llvm-${APT_LLVM_V} libclang-rt-${APT_LLVM_V}-dev libboost-dev libsqlite3-dev libcapnp-dev capnproto"
 export NO_DEPENDS=1
