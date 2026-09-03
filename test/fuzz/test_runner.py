@@ -14,6 +14,7 @@ import os
 import random
 import subprocess
 import sys
+import tempfile
 
 
 def get_fuzz_env(*, target, source_dir):
@@ -112,6 +113,18 @@ def main():
         help='Zero-based shard of the sorted fuzz target list to execute.',
     )
     parser.add_argument(
+        '--corpus-shards',
+        type=int,
+        default=1,
+        help='For non-libFuzzer replay, split sufficiently large target corpora across this many processes.',
+    )
+    parser.add_argument(
+        '--corpus-shard-min-files',
+        type=int,
+        default=750,
+        help='Minimum input count before --corpus-shards splits a non-libFuzzer target corpus.',
+    )
+    parser.add_argument(
         'corpus_dir',
         help='The corpus to run on (must contain subfolders for each fuzz target).',
     )
@@ -185,6 +198,10 @@ def main():
         parser.error('--shard-count must be at least 1')
     if not 0 <= args.shard_index < args.shard_count:
         parser.error('--shard-index must be between 0 and --shard-count - 1')
+    if args.corpus_shards < 1:
+        parser.error('--corpus-shards must be at least 1')
+    if args.corpus_shard_min_files < 1:
+        parser.error('--corpus-shard-min-files must be at least 1')
     test_list_selection, shard_loads = select_fuzz_shard(
         targets=test_list_selection,
         corpus_dir=args.corpus_dir,
@@ -273,6 +290,8 @@ def main():
             using_libfuzzer=using_libfuzzer,
             use_valgrind=args.valgrind,
             empty_min_time=args.empty_min_time,
+            corpus_shards=args.corpus_shards,
+            corpus_shard_min_files=args.corpus_shard_min_files,
         )
 
 
@@ -402,27 +421,65 @@ def merge_inputs(*, fuzz_pool, corpus, test_list, src_dir, fuzz_bin, merge_dirs)
         future.result()
 
 
-def run_once(*, fuzz_pool, corpus, test_list, src_dir, fuzz_bin, using_libfuzzer, use_valgrind, empty_min_time):
+def partition_corpus(*, corpus_path, shard_count, min_files):
+    """Hardlink a large corpus into deterministic temporary shard directories."""
+    corpus_files = sorted(path for path in corpus_path.iterdir() if path.is_file())
+    if shard_count == 1 or len(corpus_files) < min_files:
+        return [corpus_path], []
+
+    shard_count = min(shard_count, len(corpus_files))
+    temporary_directories = []
+    try:
+        for _ in range(shard_count):
+            temporary_directories.append(
+                tempfile.TemporaryDirectory(prefix=f'.{corpus_path.name}-shard-', dir=corpus_path.parent)
+            )
+        shard_paths = [Path(directory.name) for directory in temporary_directories]
+        for index, corpus_file in enumerate(corpus_files):
+            os.link(corpus_file, shard_paths[index % shard_count] / corpus_file.name)
+    except OSError as error:
+        for directory in temporary_directories:
+            directory.cleanup()
+        logging.warning("Unable to shard %s with hardlinks; replaying it serially: %s", corpus_path.name, error)
+        return [corpus_path], []
+    return shard_paths, temporary_directories
+
+
+def run_once(
+    *, fuzz_pool, corpus, test_list, src_dir, fuzz_bin, using_libfuzzer,
+    use_valgrind, empty_min_time, corpus_shards, corpus_shard_min_files,
+):
     jobs = []
+    temporary_corpus_directories = []
     for t in test_list:
         corpus_path = corpus / t
         os.makedirs(corpus_path, exist_ok=True)
-        args = [
-            fuzz_bin,
-        ]
         empty_dir = not any(corpus_path.iterdir())
         if using_libfuzzer:
+            input_groups = [[]]
             if empty_min_time and empty_dir:
-                args += [f"-max_total_time={empty_min_time}"]
+                input_groups[0].append(f"-max_total_time={empty_min_time}")
             else:
-                args += [
+                input_groups[0] += [
                     "-runs=1",
                     corpus_path,
                 ]
         else:
-            args += [corpus_path]
-        if use_valgrind:
-            args = ['valgrind', '--quiet', '--error-exitcode=1'] + args
+            corpus_paths, temporary_directories = partition_corpus(
+                corpus_path=corpus_path,
+                shard_count=corpus_shards,
+                min_files=corpus_shard_min_files,
+            )
+            temporary_corpus_directories.extend(temporary_directories)
+            input_groups = [[path] for path in corpus_paths]
+            if len(corpus_paths) > 1:
+                logging.info(
+                    "Split {} inputs for {} across {} replay processes".format(
+                        sum(1 for path in corpus_path.iterdir() if path.is_file()),
+                        t,
+                        len(corpus_paths),
+                    )
+                )
 
         def job(t, args):
             output = 'Run {} with args {}'.format(t, args)
@@ -435,25 +492,46 @@ def run_once(*, fuzz_pool, corpus, test_list, src_dir, fuzz_bin, using_libfuzzer
             output += result.stderr
             return output, result, t
 
-        jobs.append(fuzz_pool.submit(job, t, args))
+        for inputs in input_groups:
+            args = [fuzz_bin, *inputs]
+            if use_valgrind:
+                args = ['valgrind', '--quiet', '--error-exitcode=1'] + args
+            jobs.append(fuzz_pool.submit(job, t, args))
 
     stats = []
-    for future in as_completed(jobs):
-        output, result, target = future.result()
-        logging.debug(output)
-        try:
-            result.check_returncode()
-        except subprocess.CalledProcessError as e:
-            if e.stdout:
-                logging.info(e.stdout)
-            if e.stderr:
-                logging.info(e.stderr)
-            logging.info(f"⚠️ Failure generated from target with exit code {e.returncode}: {result.args}")
-            sys.exit(1)
-        if using_libfuzzer:
-            done_stat = [l for l in output.splitlines() if "DONE" in l]
-            assert len(done_stat) == 1
-            stats.append((target, done_stat[0]))
+    failed = False
+    first_exception = None
+    try:
+        for future in as_completed(jobs):
+            try:
+                output, result, target = future.result()
+            except Exception as error:
+                if first_exception is None:
+                    first_exception = error
+                continue
+            logging.debug(output)
+            try:
+                result.check_returncode()
+            except subprocess.CalledProcessError as e:
+                if e.stdout:
+                    logging.info(e.stdout)
+                if e.stderr:
+                    logging.info(e.stderr)
+                logging.info(f"⚠️ Failure generated from target with exit code {e.returncode}: {result.args}")
+                failed = True
+                continue
+            if using_libfuzzer:
+                done_stat = [l for l in output.splitlines() if "DONE" in l]
+                assert len(done_stat) == 1
+                stats.append((target, done_stat[0]))
+    finally:
+        for directory in temporary_corpus_directories:
+            directory.cleanup()
+
+    if first_exception is not None:
+        raise first_exception
+    if failed:
+        sys.exit(1)
 
     if using_libfuzzer:
         print("Summary:")

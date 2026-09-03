@@ -202,6 +202,8 @@ def run_tests(ci_type):
             str(build_dir / "test" / "fuzz" / "test_runner.py"),
             "--par",
             num_procs,
+            "--corpus-shards",
+            num_procs,
             "--loglevel",
             "DEBUG",
             str(workspace / "qa-assets" / "fuzz_corpora"),

@@ -17,7 +17,9 @@ export FUZZ_SHARD_COUNT="${FUZZ_SHARD_COUNT:-1}"
 export FUZZ_SHARD_INDEX="${FUZZ_SHARD_INDEX:-0}"
 export CONTAINER_NAME="ci_native_fuzz_msan_${FUZZ_SHARD_INDEX}"
 export CI_CACHE_NAME="ci_native_fuzz_msan"
-export FUZZ_TESTS_CONFIG="--shard-count=${FUZZ_SHARD_COUNT} --shard-index=${FUZZ_SHARD_INDEX}"
+# Split large corpora across the same two workers already allowed below. This
+# avoids a single target such as txorphan becoming a two-hour serial tail.
+export FUZZ_TESTS_CONFIG="--shard-count=${FUZZ_SHARD_COUNT} --shard-index=${FUZZ_SHARD_INDEX} --corpus-shards=2 --corpus-shard-min-files=512"
 export PACKAGES="clang-${APT_LLVM_V} llvm-${APT_LLVM_V} llvm-${APT_LLVM_V}-dev libclang-${APT_LLVM_V}-dev libclang-rt-${APT_LLVM_V}-dev"
 export DEP_OPTS="DEBUG=1 NO_QT=1 CC=clang CXX=clang++ CFLAGS='${MSAN_FLAGS}' CXXFLAGS='${MSAN_AND_LIBCXX_FLAGS}'"
 export GOAL="all"

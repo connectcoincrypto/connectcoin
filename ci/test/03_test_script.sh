@@ -134,6 +134,18 @@ cmake --build "${BASE_BUILD_DIR}" "$MAKEJOBS" --target $GOAL || (
   false
 )
 
+if [[ "${RUN_IWYU}" == true ]]; then
+  # CMake's codegen target does not include the custom Cap'n Proto/mpgen
+  # commands. Generate their outputs explicitly so IWYU can inspect every
+  # compile command without failing on headers and sources that do not exist.
+  cmake --build "${BASE_BUILD_DIR}" "$MAKEJOBS" --target \
+    mp_headers \
+    mptest_headers \
+    connectcoin_ipc_headers \
+    connectcoin_ipc_test_headers \
+    connectcoin_ipc_fuzz_headers
+fi
+
 ccache --version | head -n 1 && ccache --show-stats --verbose
 ccache --print-stats | python3 -c '
 import os

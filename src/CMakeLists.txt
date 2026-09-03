@@ -70,8 +70,9 @@ unset(mbedtls_target)
 
 # SHA-512 uses defined unsigned left shifts to implement rotations. Clang's
 # optional integer sanitizer diagnoses those operations even though unsigned
-# arithmetic is well-defined. Limit the exception to the primitive library;
-# keep every integer check enabled for the X.509 and TLS parsers.
+# arithmetic is well-defined. Limit the compile-time exception to the primitive
+# library; expected modular-addition overflows are suppressed by source path in
+# test/sanitizer_suppressions/ubsan.
 if(TARGET mbedcrypto)
   target_compile_options(mbedcrypto PRIVATE
     "$<$<COMPILE_LANG_AND_ID:C,Clang,AppleClang>:-fno-sanitize=unsigned-shift-base>"
