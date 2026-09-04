@@ -758,6 +758,19 @@ public:
         if (!m_node.mempool) return CFeeRate{DEFAULT_MIN_RELAY_TX_FEE};
         return m_node.mempool->m_opts.min_relay_feerate;
     }
+    CFeeRate miningMinFee() override
+    {
+        constexpr int32_t SAMPLE_VSIZE{1000};
+        constexpr uint64_t SAMPLE_WEIGHT{SAMPLE_VSIZE * WITNESS_SCALE_FACTOR};
+        const int next_height{WITH_LOCK(::cs_main, return chainman().ActiveChain().Height() + 1)};
+        const CAmount base_subsidy{GetBlockSubsidy(next_height, chainman().GetParams().GetConsensus())};
+
+        // Block assembly requires fees to be strictly greater than the subsidy
+        // destroyed by the added weight. Quote the marginal cost per kvB and
+        // add one connect/vB so ordinary wallet transactions clear that strict
+        // comparison despite integer rounding at arbitrary transaction sizes.
+        return CFeeRate{GetBlockSubsidyPenalty(base_subsidy, SAMPLE_WEIGHT) + SAMPLE_VSIZE};
+    }
     CFeeRate relayIncrementalFee() override
     {
         if (!m_node.mempool) return CFeeRate{DEFAULT_INCREMENTAL_RELAY_FEE};

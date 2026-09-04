@@ -161,7 +161,7 @@ struct CoinbaseTx {
      */
     std::optional<uint256> witness;
     /**
-     * Block subsidy plus fees, minus any non-zero required_outputs.
+     * Weight-adjusted block subsidy plus fees, minus any non-zero required_outputs.
      *
      * Currently there are no non-zero required_outputs, so block_reward_remaining
      * is the entire block reward. See also required_outputs.

@@ -55,7 +55,7 @@ SipHasher13UJ ReadOrCreateTxidHasher(CDBWrapper& db)
 }
 } // namespace
 
-/** Access to the txindex database (indexes/txindex/) */
+/** Access to the current txindex database (indexes/txindex/v3/). */
 class TxIndex::DB : public BaseIndex::DB
 {
 public:
@@ -77,7 +77,10 @@ private:
     DB(size_t n_cache_size, bool f_memory, bool f_wipe, bool has_legacy);
 };
 
-static fs::path TxIndexDBPath() { return gArgs.GetDataDirNet() / "indexes" / "txindex"; }
+// Version the on-disk database because v3 widened transaction offsets from
+// three to four bytes. Opening old keys with the new serializer would silently
+// misinterpret their trailing bytes.
+static fs::path TxIndexDBPath() { return gArgs.GetDataDirNet() / "indexes" / "txindex" / "v3"; }
 
 TxIndex::DB::DB(size_t n_cache_size, bool f_memory, bool f_wipe) :
     // Bloom filters are built for every key but only consulted by point reads,

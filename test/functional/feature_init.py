@@ -142,7 +142,7 @@ class InitTest(BitcoinTestFramework):
                 'startup_args': ['-checkblocks=200', '-checklevel=4'],
             },
             {
-                'filepath_glob': 'indexes/txindex/MANIFEST*',
+                'filepath_glob': 'indexes/txindex/v3/MANIFEST*',
                 'error_message': 'LevelDB error: Corruption: CURRENT points to a non-existent file',
                 'startup_args': ['-txindex=1'],
             },
@@ -152,8 +152,8 @@ class InitTest(BitcoinTestFramework):
                 'startup_args': ['-txospenderindex=1'],
             },
             # Removing these files does not result in a startup error:
-            # 'indexes/blockfilter/basic/*.dat', 'indexes/blockfilter/basic/db/*.*', 'indexes/coinstatsindex/db/*.*',
-            # 'indexes/txindex/*.log', 'indexes/txindex/CURRENT', 'indexes/txindex/LOCK'
+            # 'indexes/blockfilter/basic/*.dat', 'indexes/blockfilter/basic/db/*.*', 'indexes/coinstatsindex/v2/db/*.*',
+            # 'indexes/txindex/v3/*.log', 'indexes/txindex/v3/CURRENT', 'indexes/txindex/v3/LOCK'
         ]
 
         perturbation_rounds = [
@@ -178,17 +178,17 @@ class InitTest(BitcoinTestFramework):
                 'startup_args': ['-blockfilterindex=1'],
             },
             {
-                'filepath_glob': 'indexes/coinstatsindex/db/*.*',
+                'filepath_glob': 'indexes/coinstatsindex/v2/db/*.*',
                 'error_message': 'LevelDB error: Corruption',
                 'startup_args': ['-coinstatsindex=1'],
             },
             {
-                'filepath_glob': 'indexes/txindex/*.log',
+                'filepath_glob': 'indexes/txindex/v3/*.log',
                 'error_message': 'LevelDB error: Corruption',
                 'startup_args': ['-txindex=1'],
             },
             {
-                'filepath_glob': 'indexes/txindex/CURRENT',
+                'filepath_glob': 'indexes/txindex/v3/CURRENT',
                 'error_message': 'LevelDB error: Corruption',
                 'startup_args': ['-txindex=1'],
             },
@@ -198,7 +198,7 @@ class InitTest(BitcoinTestFramework):
                 'startup_args': ['-txospenderindex=1'],
             },
             # Perturbing these files does not result in a startup error:
-            # 'indexes/blockfilter/basic/*.dat', 'indexes/txindex/MANIFEST*', 'indexes/txindex/LOCK'
+            # 'indexes/blockfilter/basic/*.dat', 'indexes/txindex/v3/MANIFEST*', 'indexes/txindex/v3/LOCK'
         ]
 
         for round_info in deletion_rounds:

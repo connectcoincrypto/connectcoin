@@ -285,7 +285,7 @@ class MiniWallet:
         self.sendrawtransaction(from_node=from_node, tx_hex=tx['hex'])
         return tx
 
-    def send_to(self, *, from_node, scriptPubKey, amount, fee=1000):
+    def send_to(self, *, from_node, scriptPubKey, amount, fee=300_000):
         """
         Create and send a tx with an output to a given scriptPubKey/amount,
         plus a change output to our internal address. To keep things simple, a
@@ -382,7 +382,10 @@ class MiniWallet:
     def create_self_transfer(
             self,
             *,
-            fee_rate=Decimal("0.00003"),
+            # Outbid ConnectCoin's block-weight subsidy penalty so routine
+            # MiniWallet transactions are selected by the miner. Tests of
+            # low-fee policy continue to pass an explicit fee_rate.
+            fee_rate=Decimal("0.00020"),
             fee=Decimal("0"),
             utxo_to_spend=None,
             target_vsize=0,

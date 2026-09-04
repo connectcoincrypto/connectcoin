@@ -80,6 +80,7 @@ void BIP324Cipher::Encrypt(std::span<const std::byte> contents, std::span<const 
     len[0] = std::byte{(uint8_t)(contents.size() & 0xFF)};
     len[1] = std::byte{(uint8_t)((contents.size() >> 8) & 0xFF)};
     len[2] = std::byte{(uint8_t)((contents.size() >> 16) & 0xFF)};
+    len[3] = std::byte{(uint8_t)((contents.size() >> 24) & 0xFF)};
     m_send_l_cipher->Crypt(len, output.first(LENGTH_LEN));
 
     // Encrypt plaintext.
@@ -95,7 +96,8 @@ uint32_t BIP324Cipher::DecryptLength(std::span<const std::byte> input) noexcept
     // Decrypt length
     m_recv_l_cipher->Crypt(input, buf);
     // Convert to number.
-    return uint32_t(buf[0]) + (uint32_t(buf[1]) << 8) + (uint32_t(buf[2]) << 16);
+    return uint32_t(buf[0]) + (uint32_t(buf[1]) << 8) + (uint32_t(buf[2]) << 16) +
+           (uint32_t(buf[3]) << 24);
 }
 
 bool BIP324Cipher::Decrypt(std::span<const std::byte> input, std::span<const std::byte> aad, bool& ignore, std::span<std::byte> contents) noexcept

@@ -10,6 +10,7 @@
 #include <wallet/coincontrol.h>
 #include <wallet/wallet.h>
 
+#include <algorithm>
 #include <optional>
 
 namespace wallet {
@@ -78,6 +79,17 @@ MinimumFeeRateResult GetMinimumFeeRate(const CWallet& wallet, const CCoinControl
     if (fee_rate < min_mempool_feerate) {
         fee_rate = min_mempool_feerate;
         fee_reason = FeeReason::MEMPOOL_MIN;
+        returned_target = std::nullopt;
+    }
+
+    // Automatic wallet fees should clear the miner's subsidy-penalty floor.
+    // Keep this separate from GetRequiredFeeRate so callers can still request
+    // an intentionally uneconomical explicit fee rate for testing or use with
+    // an operator-supplied prioritisation delta.
+    CFeeRate min_mining_feerate = wallet.chain().miningMinFee();
+    if (min_mining_feerate > fee_rate) {
+        fee_rate = min_mining_feerate;
+        fee_reason = FeeReason::REQUIRED;
         returned_target = std::nullopt;
     }
 

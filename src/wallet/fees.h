@@ -27,14 +27,14 @@ CAmount GetRequiredFee(const CWallet& wallet, unsigned int nTxBytes);
 CAmount GetMinimumFee(const MinimumFeeRateResult& min_fee_rate, unsigned int nTxBytes);
 
 /**
- * Return the minimum required feerate taking into account the
- * minimum relay feerate and user set minimum transaction feerate
+ * Return the minimum required feerate taking into account the minimum relay
+ * feerate and the user-set minimum transaction feerate.
  */
 CFeeRate GetRequiredFeeRate(const CWallet& wallet);
 
 /**
- * Estimate the minimum fee rate considering user set parameters
- * and the required fee
+ * Estimate the minimum fee rate considering user-set parameters, the required
+ * fee, and the economic mining floor for automatically selected rates.
  */
 MinimumFeeRateResult GetMinimumFeeRate(const CWallet& wallet, const CCoinControl& coin_control);
 

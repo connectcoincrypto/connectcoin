@@ -10,6 +10,7 @@ from test_framework.blocktools import (
     WITNESS_COMMITMENT_HEADER,
     add_witness_commitment,
     create_block,
+    update_block_subsidy,
 )
 from test_framework.messages import (
     MAX_BIP125_RBF_SEQUENCE,
@@ -236,6 +237,7 @@ class SegWitTest(BitcoinTestFramework):
     def update_witness_block_with_transactions(self, block, tx_list, nonce=0):
         """Add list of transactions to block, adds witness commitment, then solves."""
         block.vtx.extend(tx_list)
+        update_block_subsidy(block)
         add_witness_commitment(block, nonce)
         block.solve()
 
@@ -805,6 +807,7 @@ class SegWitTest(BitcoinTestFramework):
         tx3.vin.append(CTxIn(COutPoint(tx2.txid_int, 0), b""))
         tx3.vout.append(CTxOut(tx.vout[0].nValue - 1000, witness_script))
         block_4.vtx.append(tx3)
+        update_block_subsidy(block_4)
         block_4.hashMerkleRoot = block_4.calc_merkle_root()
         block_4.solve()
         test_witness_block(self.nodes[0], self.test_node, block_4, with_witness=False, accepted=True)
@@ -816,17 +819,16 @@ class SegWitTest(BitcoinTestFramework):
     @subtest
     def test_block_malleability(self):
 
-        # Make sure that a block that has too big a virtual size
-        # because of a too-large coinbase witness is not permanently
-        # marked bad.
+        # Make sure that a block with an invalid oversized coinbase witness
+        # element is not permanently marked bad. The element need not also
+        # exceed the much larger block-weight limit to exercise this rule.
         block = self.build_next_block()
         add_witness_commitment(block)
         block.solve()
 
         block.vtx[0].wit.vtxinwit[0].scriptWitness.stack.append(b'a' * 5000000)
-        assert block.get_weight() > MAX_BLOCK_WEIGHT
+        assert block.get_weight() < MAX_BLOCK_WEIGHT
 
-        # We can't send over the p2p network, because this is too big to relay
         assert_equal('bad-witness-nonce-size', self.nodes[0].submitblock(block.serialize().hex()))
 
         assert_not_equal(self.nodes[0].getbestblockhash(), block.hash_hex)
@@ -897,7 +899,10 @@ class SegWitTest(BitcoinTestFramework):
         # This should give us plenty of room to tweak the spending tx's
         # virtual size.
         NUM_DROPS = 200  # 201 max ops per script!
-        NUM_OUTPUTS = 50
+        # Use many inputs and start close to the per-element limit so reaching
+        # 50,000,000 weight does not require hundreds of thousands of Python
+        # resize operations.
+        NUM_OUTPUTS = 400
 
         witness_script = CScript([OP_2DROP] * NUM_DROPS + [OP_TRUE])
         script_pubkey = script_to_p2wsh_script(witness_script)
@@ -919,7 +924,7 @@ class SegWitTest(BitcoinTestFramework):
         child_tx.vout = [CTxOut(value - 100000, CScript([OP_TRUE]))]
         for _ in range(NUM_OUTPUTS):
             child_tx.wit.vtxinwit.append(CTxInWitness())
-            child_tx.wit.vtxinwit[-1].scriptWitness.stack = [b'a' * 195] * (2 * NUM_DROPS) + [witness_script]
+            child_tx.wit.vtxinwit[-1].scriptWitness.stack = [b'a' * 290] * (2 * NUM_DROPS) + [witness_script]
         self.update_witness_block_with_transactions(block, [parent_tx, child_tx])
 
         additional_bytes = MAX_BLOCK_WEIGHT - block.get_weight()
@@ -927,7 +932,7 @@ class SegWitTest(BitcoinTestFramework):
         while additional_bytes > 0:
             # Add some more bytes to each input until we hit MAX_BLOCK_WEIGHT+1
             extra_bytes = min(additional_bytes + 1, 55)
-            block.vtx[-1].wit.vtxinwit[int(i / (2 * NUM_DROPS))].scriptWitness.stack[i % (2 * NUM_DROPS)] = b'a' * (195 + extra_bytes)
+            block.vtx[-1].wit.vtxinwit[int(i / (2 * NUM_DROPS))].scriptWitness.stack[i % (2 * NUM_DROPS)] = b'a' * (290 + extra_bytes)
             additional_bytes -= extra_bytes
             i += 1
 

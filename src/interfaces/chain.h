@@ -269,6 +269,10 @@ public:
     //! Relay current minimum fee (from -minrelaytxfee and -incrementalrelayfee settings).
     virtual CFeeRate relayMinFee() = 0;
 
+    //! Minimum fee rate at which adding transaction weight is economical for
+    //! the next block, after accounting for the block subsidy weight penalty.
+    virtual CFeeRate miningMinFee() = 0;
+
     //! Relay incremental fee setting (-incrementalrelayfee), reflecting cost of relay.
     virtual CFeeRate relayIncrementalFee() = 0;
 

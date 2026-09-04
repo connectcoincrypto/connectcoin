@@ -5,7 +5,7 @@
 """Test node responses to invalid transactions.
 
 In this test we connect to one node over p2p, and test tx requests."""
-from test_framework.blocktools import create_block
+from test_framework.blocktools import create_block, update_block_subsidy
 from test_framework.messages import (
     COIN,
     COutPoint,
@@ -173,6 +173,7 @@ class InvalidTxRequestTest(BitcoinTestFramework):
         height = node.getblockcount() + 1
         block_A = create_block(tip, height=height)
         block_A.vtx.extend([tx_withhold, tx_withhold_until_block_A, tx_orphan_include_by_block_A])
+        update_block_subsidy(block_A)
         block_A.hashMerkleRoot = block_A.calc_merkle_root()
         block_A.solve()
 
@@ -200,6 +201,7 @@ class InvalidTxRequestTest(BitcoinTestFramework):
         height = node.getblockcount() + 1
         block_B = create_block(tip, height=height)
         block_B.vtx.extend([tx_withhold_until_block_B, tx_orphan_include_by_block_B])
+        update_block_subsidy(block_B)
         block_B.hashMerkleRoot = block_B.calc_merkle_root()
         block_B.solve()
 

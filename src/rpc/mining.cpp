@@ -437,6 +437,15 @@ static RPCMethod generateblock()
 
         // Add transactions
         block.vtx.insert(block.vtx.end(), txs.begin(), txs.end());
+        if (!txs.empty()) {
+            // The template was assembled without mempool transactions and
+            // therefore contains the empty-block subsidy. Account for the
+            // weight of the transactions explicitly requested by this RPC.
+            CMutableTransaction coinbase{*block.vtx.front()};
+            coinbase.vout.front().nValue = GetBlockSubsidyForBlock(
+                chainman.ActiveHeight() + 1, block, chainman.GetConsensus());
+            block.vtx.front() = MakeTransactionRef(std::move(coinbase));
+        }
         RegenerateCommitments(block, chainman);
 
         if (BlockValidationState state{TestBlockValidity(chainman.ActiveChainstate(), block, /*check_pow=*/false, /*check_merkle_root=*/false)}; !state.IsValid()) {
@@ -732,7 +741,7 @@ static RPCMethod getblocktemplate()
                 {
                     {RPCResult::Type::STR_HEX, "key", "values must be in the coinbase (keys may be ignored)"},
                 }},
-                {RPCResult::Type::NUM, "coinbasevalue", "maximum allowable input to coinbase transaction, including the generation award and transaction fees (in connects)"},
+                {RPCResult::Type::NUM, "coinbasevalue", "maximum allowable input to coinbase transaction, including the weight-adjusted generation award and transaction fees (in connects)"},
                 {RPCResult::Type::STR, "longpollid", "an id to include with a request to longpoll on an update to this template"},
                 {RPCResult::Type::STR, "target", "The hash target"},
                 {RPCResult::Type::NUM_TIME, "mintime", "The minimum timestamp appropriate for the next block time, expressed in " + UNIX_EPOCH_TIME + ". Adjusted for the proposed BIP94 timewarp rule."},

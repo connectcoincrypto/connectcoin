@@ -47,6 +47,7 @@ class GetTxSpendingPrevoutTest(BitcoinTestFramework):
         txid_root_utxo = root_utxo['txid']
 
         def create_tx(**kwargs):
+            kwargs.setdefault("fee_per_output", 300_000)
             return self.wallet.send_self_transfer_multi(from_node=node0, **kwargs)
 
         # Create a tree of unconfirmed transactions in the mempool:
@@ -189,7 +190,9 @@ class GetTxSpendingPrevoutTest(BitcoinTestFramework):
         for node in self.nodes:
             node.invalidateblock(blockhash)
 
-        tx3 = create_tx(utxos_to_spend=[reorg_cancel_utxo], num_outputs=2, fee_per_output=2000)
+        # Replace both tx1 and its child tx2, so pay more than their combined
+        # fees as required by package-RBF incremental relay policy.
+        tx3 = create_tx(utxos_to_spend=[reorg_cancel_utxo], num_outputs=2, fee_per_output=400_000)
         node0_mempool = node0.getrawmempool()
         assert tx3["txid"] in node0_mempool
         assert tx1["txid"] not in node0_mempool

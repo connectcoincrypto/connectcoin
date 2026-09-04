@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <chrono>
 #include <future>
+#include <limits>
 #include <memory>
 #include <mutex>
 #include <vector>
@@ -139,6 +140,18 @@ RandomXMemoryMode GetRandomXMemoryMode(const Consensus::Params& params)
     return params.randomx_fast_mode ? RandomXMemoryMode::FAST : RandomXMemoryMode::LIGHT;
 }
 
+/** Compute floor(value * multiplier / divisor) without overflowing the
+ *  256-bit intermediate when the final result fits. */
+arith_uint256 MultiplyDivide(const arith_uint256& value, uint32_t multiplier, uint32_t divisor)
+{
+    assert(divisor > 0);
+    const arith_uint256 quotient{value / arith_uint256{divisor}};
+    arith_uint256 remainder{value - quotient * divisor};
+    remainder *= multiplier;
+    remainder /= arith_uint256{divisor};
+    return quotient * multiplier + remainder;
+}
+
 } // namespace
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
@@ -168,7 +181,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         return pindexLast->nBits;
     }
 
-    // Go back by what we want to be 14 days worth of blocks
+    // Go back by one difficulty-adjustment interval.
     int nHeightFirst = pindexLast->nHeight - (params.DifficultyAdjustmentInterval()-1);
     assert(nHeightFirst >= 0);
     const CBlockIndex* pindexFirst = pindexLast->GetAncestor(nHeightFirst);
@@ -205,8 +218,10 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
         bnNew.SetCompact(pindexLast->nBits);
     }
 
-    bnNew *= nActualTimespan;
-    bnNew /= params.nPowTargetTimespan;
+    assert(nActualTimespan > 0 && nActualTimespan <= std::numeric_limits<uint32_t>::max());
+    assert(params.nPowTargetTimespan > 0 && params.nPowTargetTimespan <= std::numeric_limits<uint32_t>::max());
+    bnNew = MultiplyDivide(bnNew, static_cast<uint32_t>(nActualTimespan),
+                           static_cast<uint32_t>(params.nPowTargetTimespan));
 
     if (bnNew > bnPowLimit)
         bnNew = bnPowLimit;
@@ -231,8 +246,11 @@ bool PermittedDifficultyTransition(const Consensus::Params& params, int64_t heig
         // Calculate the largest difficulty value possible:
         arith_uint256 largest_difficulty_target;
         largest_difficulty_target.SetCompact(old_nbits);
-        largest_difficulty_target *= largest_timespan;
-        largest_difficulty_target /= params.nPowTargetTimespan;
+        assert(largest_timespan > 0 && largest_timespan <= std::numeric_limits<uint32_t>::max());
+        assert(params.nPowTargetTimespan > 0 && params.nPowTargetTimespan <= std::numeric_limits<uint32_t>::max());
+        largest_difficulty_target = MultiplyDivide(
+            largest_difficulty_target, static_cast<uint32_t>(largest_timespan),
+            static_cast<uint32_t>(params.nPowTargetTimespan));
 
         if (largest_difficulty_target > pow_limit) {
             largest_difficulty_target = pow_limit;
@@ -247,8 +265,10 @@ bool PermittedDifficultyTransition(const Consensus::Params& params, int64_t heig
         // Calculate the smallest difficulty value possible:
         arith_uint256 smallest_difficulty_target;
         smallest_difficulty_target.SetCompact(old_nbits);
-        smallest_difficulty_target *= smallest_timespan;
-        smallest_difficulty_target /= params.nPowTargetTimespan;
+        assert(smallest_timespan > 0 && smallest_timespan <= std::numeric_limits<uint32_t>::max());
+        smallest_difficulty_target = MultiplyDivide(
+            smallest_difficulty_target, static_cast<uint32_t>(smallest_timespan),
+            static_cast<uint32_t>(params.nPowTargetTimespan));
 
         if (smallest_difficulty_target > pow_limit) {
             smallest_difficulty_target = pow_limit;

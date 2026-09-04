@@ -9,6 +9,7 @@ Test the DERSIG soft-fork activation on regtest.
 
 from test_framework.blocktools import (
     create_block,
+    update_block_subsidy,
 )
 from test_framework.messages import msg_block
 from test_framework.p2p import P2PInterface
@@ -129,6 +130,7 @@ class BIP66Test(BitcoinTestFramework):
 
         # Now we verify that a block with this transaction is also invalid.
         block.vtx.append(spendtx)
+        update_block_subsidy(block)
         block.hashMerkleRoot = block.calc_merkle_root()
         block.solve()
 
@@ -139,6 +141,7 @@ class BIP66Test(BitcoinTestFramework):
 
         self.log.info("Test that a block with a DERSIG-compliant transaction is accepted")
         block.vtx[1] = self.create_tx(self.coinbase_txids[1])
+        update_block_subsidy(block)
         block.hashMerkleRoot = block.calc_merkle_root()
         block.solve()
 

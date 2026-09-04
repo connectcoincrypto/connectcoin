@@ -249,6 +249,13 @@ class BIP68Test(BitcoinTestFramework):
 
             return tx
 
+        def prioritize_mempool_for_mining():
+            # Earlier sequence-lock cases intentionally leave low-fee valid
+            # transactions behind. Raise every current entry above the
+            # subsidy-penalty floor when this test explicitly needs a block.
+            for txid, entry in self.nodes[0].getrawmempool(verbose=True).items():
+                self.nodes[0].prioritisetransaction(txid=txid, fee_delta=entry['vsize'] * 2000)
+
         test_nonzero_locks(tx2, self.nodes[0], self.relayfee, use_height_lock=True)
         test_nonzero_locks(tx2, self.nodes[0], self.relayfee, use_height_lock=False)
 
@@ -267,7 +274,8 @@ class BIP68Test(BitcoinTestFramework):
         test_nonzero_locks(tx2, self.nodes[0], self.relayfee, use_height_lock=False)
 
         # Mine tx2, and then try again
-        self.nodes[0].prioritisetransaction(txid=tx2.txid_hex, fee_delta=int(self.relayfee*COIN))
+        self.nodes[0].prioritisetransaction(txid=tx2.txid_hex, fee_delta=int(self.relayfee * COIN))
+        prioritize_mempool_for_mining()
 
         # Advance the time on the node so that we can test timelocks
         self.nodes[0].setmocktime(cur_time+600)
@@ -281,6 +289,7 @@ class BIP68Test(BitcoinTestFramework):
         tx3 = test_nonzero_locks(tx2, self.nodes[0], self.relayfee, use_height_lock=False)
         assert tx3.txid_hex in self.nodes[0].getrawmempool()
 
+        prioritize_mempool_for_mining()
         self.generate(self.nodes[0], 1)
         assert tx3.txid_hex not in self.nodes[0].getrawmempool()
 
@@ -335,6 +344,7 @@ class BIP68Test(BitcoinTestFramework):
         # Reset the chain and get rid of the mocktimed-blocks
         self.nodes[0].setmocktime(0)
         self.nodes[0].invalidateblock(self.nodes[0].getblockhash(cur_height+1))
+        prioritize_mempool_for_mining()
         self.generate(self.wallet, 10, sync_fun=self.no_op)
 
     # Make sure that BIP68 isn't being used to validate blocks prior to

@@ -119,6 +119,12 @@ FUZZ_TARGET(utxo_total_supply)
         // Check that miner can't print more money than they are allowed to
         assert(circulation == utxo_stats.total_amount);
     };
+    const auto SetCoinbaseSubsidy = [&](CBlock& block) {
+        CMutableTransaction coinbase{*block.vtx.front()};
+        coinbase.vout.at(0).nValue = GetBlockSubsidyForBlock(
+            ActiveHeight() + 1, block, Params().GetConsensus());
+        block.vtx.front() = MakeTransactionRef(std::move(coinbase));
+    };
 
 
     // Update internal state to chain tip
@@ -148,9 +154,10 @@ FUZZ_TARGET(utxo_total_supply)
         // Mine block and create next block template
         current_block->vtx.front() = MakeTransactionRef(tx);
     }
+    SetCoinbaseSubsidy(*current_block);
     current_block->hashMerkleRoot = BlockMerkleRoot(*current_block);
     assert(!MineBlock(node, current_block).IsNull());
-    circulation += GetBlockSubsidy(ActiveHeight(), Params().GetConsensus());
+    circulation += current_block->vtx.front()->GetValueOut();
 
     assert(ActiveHeight() == 1);
     UpdateUtxoStats(/*wipe_cache=*/fuzzed_data_provider.ConsumeBool());
@@ -178,6 +185,7 @@ FUZZ_TARGET(utxo_total_supply)
             },
             [&] {
                 // Append the current block to the active chain
+                SetCoinbaseSubsidy(*current_block);
                 node::RegenerateCommitments(*current_block, chainman);
                 if (duplicate_coinbase_height == ActiveHeight() + 1) {
                     // ConnectCoin stores the witness commitment in the coinbase
@@ -199,7 +207,7 @@ FUZZ_TARGET(utxo_total_supply)
                         assert(current_block->vtx.at(0)->vin.at(0).scriptSig == duplicate_coinbase_script);
                     }
 
-                    circulation += GetBlockSubsidy(ActiveHeight(), Params().GetConsensus());
+                    circulation += current_block->vtx.front()->GetValueOut();
                 }
 
                 UpdateUtxoStats(/*wipe_cache=*/fuzzed_data_provider.ConsumeBool());

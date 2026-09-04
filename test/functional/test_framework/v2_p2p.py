@@ -18,7 +18,8 @@ from .util import assert_equal
 CHACHA20POLY1305_EXPANSION = 16
 HEADER_LEN = 1
 IGNORE_BIT_POS = 7
-LENGTH_FIELD_LEN = 3
+# ConnectCoin extends BIP324's packet length so 50 MB messages fit.
+LENGTH_FIELD_LEN = 4
 MAX_GARBAGE_LEN = 4095
 
 SHORTID = {
@@ -90,7 +91,7 @@ class EncryptedP2PState:
         self.received_garbage = b""
         self.received_prefix = b""  # received ellswift bytes till the first mismatch from 16 bytes v1_prefix
         self.tried_v2_handshake = False  # True when the initial handshake is over
-        # stores length of packet contents to detect whether first 3 bytes (which contains length of packet contents)
+        # stores length of packet contents to detect whether the first length-field bytes
         # has been decrypted. set to -1 if decryption hasn't been done yet.
         self.contents_len = -1
         self.found_garbage_terminator = False
@@ -253,7 +254,7 @@ class EncryptedP2PState:
         Returns:
         bytes - encrypted packet contents
         """
-        assert len(contents) <= 2**24 - 1
+        assert len(contents) <= 2**32 - 1
         header = (ignore << IGNORE_BIT_POS).to_bytes(HEADER_LEN, 'little')
         plaintext = header + contents
         aead_ciphertext = self.peer['send_P'].encrypt(aad, plaintext)

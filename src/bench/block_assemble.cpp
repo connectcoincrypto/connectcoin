@@ -10,7 +10,6 @@
 #include <script/script.h>
 #include <sync.h>
 #include <test/util/mining.h>
-#include <test/util/script.h>
 #include <test/util/setup_common.h>
 #include <util/check.h>
 #include <validation.h>
@@ -26,10 +25,8 @@ static void AssembleBlock(benchmark::Bench& bench)
 {
     const auto test_setup = MakeNoLogFileContext<const TestingSetup>();
 
-    CScriptWitness witness;
-    witness.stack.push_back(WITNESS_STACK_ELEM_OP_TRUE);
     BlockCreateOptions options{
-        .coinbase_output_script = P2WSH_OP_TRUE,
+        .coinbase_output_script = DeterministicP2PKScript(),
     };
 
     // Collect some loose transactions that spend the coinbases of our mined blocks
@@ -37,9 +34,19 @@ static void AssembleBlock(benchmark::Bench& bench)
     std::array<CTransactionRef, NUM_BLOCKS - COINBASE_MATURITY + 1> txs;
     for (size_t b{0}; b < NUM_BLOCKS; ++b) {
         CMutableTransaction tx;
-        tx.vin.emplace_back(MineBlock(test_setup->m_node, options));
-        tx.vin.back().scriptWitness = witness;
-        tx.vout.emplace_back(1337, P2WSH_OP_TRUE);
+        const COutPoint coinbase_outpoint{MineBlock(test_setup->m_node, options)};
+        tx.vin.emplace_back(coinbase_outpoint);
+        tx.vout.emplace_back(1337, DeterministicP2PKScript());
+        CTxOut spent_output;
+        {
+            LOCK(::cs_main);
+            spent_output = Assert(test_setup->m_node.chainman)
+                               ->ActiveChainstate()
+                               .CoinsTip()
+                               .AccessCoin(coinbase_outpoint)
+                               .out;
+        }
+        SignDeterministicP2PKInputs(tx, {spent_output});
         if (NUM_BLOCKS - b >= COINBASE_MATURITY)
             txs.at(b) = MakeTransactionRef(tx);
     }
@@ -64,7 +71,7 @@ static void BlockAssemblerAddPackageTxns(benchmark::Bench& bench)
 
     bench.run([&] {
         PrepareBlock(testing_setup->m_node, {
-            .coinbase_output_script = P2WSH_OP_TRUE,
+            .coinbase_output_script = DeterministicP2PKScript(),
             .test_block_validity = false
         });
     });

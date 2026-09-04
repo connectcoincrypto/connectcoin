@@ -52,6 +52,7 @@
 #include <vector>
 
 class Chainstate;
+class CBlock;
 class CTxMemPool;
 class ChainstateManager;
 struct ChainTxData;
@@ -103,6 +104,18 @@ enum class SynchronizationState {
 extern const std::vector<std::string> CHECKLEVEL_DOC;
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams);
+
+/**
+ * Return the amount withheld from the base subsidy for non-coinbase block
+ * weight. The penalty grows linearly from zero to 10% at MAX_BLOCK_WEIGHT.
+ */
+CAmount GetBlockSubsidyPenalty(CAmount base_subsidy, uint64_t non_coinbase_weight);
+
+/** Return the scheduled subsidy after applying the non-coinbase weight penalty. */
+CAmount GetBlockSubsidyForWeight(int nHeight, uint64_t non_coinbase_weight, const Consensus::Params& consensusParams);
+
+/** Return the scheduled subsidy after applying the penalty for a concrete block. */
+CAmount GetBlockSubsidyForBlock(int nHeight, const CBlock& block, const Consensus::Params& consensusParams);
 
 bool FatalError(kernel::Notifications& notifications, BlockValidationState& state, const bilingual_str& message);
 

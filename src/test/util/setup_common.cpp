@@ -465,6 +465,24 @@ CBlock TestChain100Setup::CreateBlock(
     for (const CMutableTransaction& tx : txns) {
         block.vtx.push_back(MakeTransactionRef(tx));
     }
+
+    // The template was intentionally built without mempool transactions, so
+    // its coinbase pays the empty-block subsidy. Once tests append transactions
+    // manually, lower the coinbase to the corresponding weight-adjusted
+    // subsidy. Test transactions may pay fees, but omitting those fees from the
+    // coinbase is valid and keeps this helper independent of prevout lookup.
+    if (!txns.empty()) {
+        auto& chainman{*Assert(m_node.chainman)};
+        const auto& consensus{chainman.GetConsensus()};
+        int height;
+        {
+            LOCK(::cs_main);
+            height = chainman.ActiveHeight() + 1;
+        }
+        CMutableTransaction coinbase{*block.vtx[0]};
+        coinbase.vout[0].nValue = GetBlockSubsidyForBlock(height, block, consensus);
+        block.vtx[0] = MakeTransactionRef(std::move(coinbase));
+    }
     RegenerateCommitments(block, *Assert(m_node.chainman));
 
     while (!CheckProofOfWork(block, nullptr, m_node.chainman->GetConsensus())) ++block.nNonce;

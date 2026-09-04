@@ -25,11 +25,11 @@ class WalletGroupTest(BitcoinTestFramework):
             [],
             [],
             ["-avoidpartialspends"],
-            ["-maxapsfee=0.0000002319"],
-            ["-maxapsfee=0.0000002320"],
+            ["-maxapsfee=0.0000231999"],
+            ["-maxapsfee=0.0000232000"],
         ]
 
-        self.fee_rate = 20  # apply feerate of 20 connects/vB across all nodes
+        self.fee_rate = 2000  # Stay above the subsidy-penalty mining floor.
 
         self.rpc_timeout = 480
 
@@ -113,10 +113,10 @@ class WalletGroupTest(BitcoinTestFramework):
         assert_equal(input_addrs[0], input_addrs[1])
         # Node 2 enforces avoidpartialspends so needs no checking here
 
-        tx4_ungrouped_fee = 3020
-        tx4_grouped_fee = 4160
-        tx5_6_ungrouped_fee = 5320
-        tx5_6_grouped_fee = 7640
+        tx4_ungrouped_fee = 302000
+        tx4_grouped_fee = 416000
+        tx5_6_ungrouped_fee = 532000
+        tx5_6_grouped_fee = 764000
 
         self.log.info("Test wallet option maxapsfee")
         addr_aps = self.nodes[3].getnewaddress()

@@ -124,7 +124,7 @@ public:
         consensus.randomx_epoch_blocks = 12'288;
         consensus.randomx_epoch_lag = 64;
         consensus.randomx_fast_mode = opts.randomx_fast;
-        consensus.nPowTargetTimespan = 4 * 60 * 60; // four hours
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // one day
         consensus.nPowTargetSpacing = 10;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.enforce_BIP94 = false;
@@ -223,7 +223,7 @@ public:
         consensus.randomx_epoch_blocks = 12'288;
         consensus.randomx_epoch_lag = 64;
         consensus.randomx_fast_mode = opts.randomx_fast;
-        consensus.nPowTargetTimespan = 4 * 60 * 60; // four hours
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // one day
         consensus.nPowTargetSpacing = 10;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.enforce_BIP94 = false;
@@ -309,7 +309,7 @@ public:
         consensus.randomx_epoch_blocks = 12'288;
         consensus.randomx_epoch_lag = 64;
         consensus.randomx_fast_mode = opts.randomx_fast;
-        consensus.nPowTargetTimespan = 4 * 60 * 60; // four hours
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // one day
         consensus.nPowTargetSpacing = 10;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.enforce_BIP94 = true;
@@ -412,7 +412,7 @@ public:
         consensus.BIP66Height = 1;
         consensus.CSVHeight = 1;
         consensus.SegwitHeight = 1;
-        consensus.nPowTargetTimespan = 4 * 60 * 60; // four hours
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // one day
         consensus.nPowTargetSpacing = 10;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.enforce_BIP94 = false;

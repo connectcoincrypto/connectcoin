@@ -15,10 +15,13 @@ from test_framework.blocktools import (
     COINBASE_MATURITY,
     create_block,
     create_coinbase,
+    get_block_subsidy,
+    get_block_subsidy_penalty,
 )
 from test_framework.messages import (
     COIN,
     CTxOut,
+    tx_from_hex,
 )
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
@@ -51,9 +54,9 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         self._test_init_index_after_reorg()
         self._test_genesis_spend_reorg()
 
-    def block_sanity_check(self, block_info, block_subsidy=15):
+    def block_sanity_check(self, block_info, block_subsidy=15, subsidy_penalty=0):
         assert_equal(
-            block_info['prevout_spent'] + block_subsidy,
+            block_info['prevout_spent'] + block_subsidy - subsidy_penalty,
             block_info['new_outputs_ex_coinbase'] + block_info['coinbase'] + block_info['unspendable']
         )
 
@@ -68,8 +71,9 @@ class CoinStatsIndexTest(BitcoinTestFramework):
 
         # Generate a normal transaction and mine it
         self.generate(self.wallet, COINBASE_MATURITY + 1)
-        self.wallet.send_self_transfer(from_node=node)
+        normal_tx = self.wallet.send_self_transfer(from_node=node)
         self.generate(node, 1)
+        normal_penalty = Decimal(get_block_subsidy_penalty(102, normal_tx['tx'].get_weight())) / COIN
 
         self.log.info("Test that gettxoutsetinfo() output is consistent with or without coinstatsindex option")
         res0 = node.gettxoutsetinfo('none')
@@ -133,8 +137,8 @@ class CoinStatsIndexTest(BitcoinTestFramework):
             assert_equal(res5['block_info'], {
                 'unspendable': 0,
                 'prevout_spent': 15,
-                'new_outputs_ex_coinbase': Decimal('14.9999967300'),
-                'coinbase': Decimal('15.0000032700'),
+                'new_outputs_ex_coinbase': Decimal(15) - normal_tx['fee'],
+                'coinbase': Decimal(15) + normal_tx['fee'] - normal_penalty,
                 'unspendables': {
                     'genesis_block': 0,
                     'bip30': 0,
@@ -142,13 +146,15 @@ class CoinStatsIndexTest(BitcoinTestFramework):
                     'unclaimed_rewards': 0,
                 }
             })
-            self.block_sanity_check(res5['block_info'])
+            self.block_sanity_check(res5['block_info'], subsidy_penalty=normal_penalty)
 
         # Generate and send a normal tx with two outputs
+        tx1_fee = 300_000
         tx1 = self.wallet.send_to(
             from_node=node,
             scriptPubKey=self.wallet.get_output_script(),
             amount=11 * COIN,
+            fee=tx1_fee,
         )
 
         # Find the right position of the 11 CC output.
@@ -163,6 +169,12 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         )
         self.nodes[0].sendrawtransaction(tx2['hex'])
 
+        total_fees = Decimal(tx1_fee) / COIN + tx2['fee']
+        block_penalty = Decimal(get_block_subsidy_penalty(
+            108,
+            tx1['tx'].get_weight() + tx2['tx'].get_weight(),
+        )) / COIN
+
         # Include both txs in a block
         self.generate(self.nodes[0], 1)
 
@@ -173,8 +185,8 @@ class CoinStatsIndexTest(BitcoinTestFramework):
             assert_equal(res6['block_info'], {
                 'unspendable': 0,
                 'prevout_spent': 26,
-                'new_outputs_ex_coinbase': Decimal('25.9899999000'),
-                'coinbase': Decimal('15.0100001000'),
+                'new_outputs_ex_coinbase': Decimal(26) - total_fees,
+                'coinbase': Decimal(15) + total_fees - block_penalty,
                 'unspendables': {
                     'genesis_block': 0,
                     'bip30': 0,
@@ -182,7 +194,7 @@ class CoinStatsIndexTest(BitcoinTestFramework):
                     'unclaimed_rewards': 0,
                 }
             })
-            self.block_sanity_check(res6['block_info'])
+            self.block_sanity_check(res6['block_info'], subsidy_penalty=block_penalty)
 
         # Create a coinbase that does not claim full subsidy and also
         # has two outputs
@@ -356,18 +368,23 @@ class CoinStatsIndexTest(BitcoinTestFramework):
         )
         raw_tx = index_node.createrawtransaction(
             [{'txid': genesis_outpoint['txid'], 'vout': 0}],
-            {getnewdestination()[2]: Decimal('9999999.9999900000')},
+            {getnewdestination()[2]: Decimal('9999999.9999000000')},
         )
         signed_tx = index_node.signrawtransactionwithkey(raw_tx, [genesis_wif], [genesis_outpoint])
         assert_equal(signed_tx['complete'], True)
         index_node.sendrawtransaction(signed_tx['hex'])
 
         before_spend = index_node.gettxoutsetinfo('muhash')
+        spend_height = index_node.getblockcount() + 1
+        spend_weight = tx_from_hex(signed_tx['hex']).get_weight()
+        minted_subsidy = Decimal(
+            get_block_subsidy(spend_height) - get_block_subsidy_penalty(spend_height, spend_weight)
+        ) / COIN
         spend_block = self.generate(index_node, 1, sync_fun=self.no_op)[0]
         self.sync_index_node()
         after_spend = index_node.gettxoutsetinfo('muhash')
         assert index_node.gettxout(genesis_outpoint['txid'], 0, False) is None
-        assert_equal(after_spend['total_amount'], before_spend['total_amount'] + Decimal('15.0000000000'))
+        assert_equal(after_spend['total_amount'], before_spend['total_amount'] + minted_subsidy)
 
         index_node.invalidateblock(spend_block)
         self.sync_index_node()

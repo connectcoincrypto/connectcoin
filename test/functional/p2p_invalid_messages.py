@@ -27,12 +27,13 @@ from test_framework.p2p import (
     P2PDataStore,
     P2PInterface,
 )
+from test_framework.v2_p2p import LENGTH_FIELD_LEN
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
 )
 
-VALID_DATA_LIMIT = MAX_PROTOCOL_MESSAGE_LENGTH - 5  # Account for the 5-byte length prefix
+RESOURCE_EXHAUSTION_MESSAGE_SIZE = 4_000_000
 
 
 class msg_unrecognized:
@@ -144,13 +145,23 @@ class InvalidMessagesTest(BitcoinTestFramework):
         self.log.info("Test message with oversized payload disconnects peer")
         conn = self.nodes[0].add_p2p_connection(P2PDataStore())
         error_msg = (
-            ['V2 transport error: packet too large (4000014 bytes)'] if self.options.v2transport
-            else ['Header error: Size too large (badmsg, 4000001 bytes)']
+            [f'V2 transport error: packet too large ({MAX_PROTOCOL_MESSAGE_LENGTH + 14} bytes)'] if self.options.v2transport
+            else [f'Header error: Size too large (badmsg, {MAX_PROTOCOL_MESSAGE_LENGTH + 1} bytes)']
         )
         with self.nodes[0].assert_debug_log(error_msg):
-            msg = msg_unrecognized(str_data="d" * (VALID_DATA_LIMIT + 1))
-            msg = conn.build_message(msg)
-            conn.send_raw_message(msg)
+            if self.options.v2transport:
+                # An unknown v2 message uses a 1-byte long-type marker and a
+                # 12-byte type. The receiver rejects the encrypted length
+                # before waiting for or allocating the oversized payload.
+                contents_len = MAX_PROTOCOL_MESSAGE_LENGTH + 14
+                encrypted_len = conn.v2_state.peer['send_L'].crypt(contents_len.to_bytes(LENGTH_FIELD_LEN, 'little'))
+                conn.send_raw_message(encrypted_len)
+            else:
+                # Likewise, a v1 peer can advertise the invalid size in its
+                # header without constructing a 50 MB Python object.
+                msg = conn.build_message(msg_unrecognized(str_data=b""))
+                msg = msg[:16] + (MAX_PROTOCOL_MESSAGE_LENGTH + 1).to_bytes(4, 'little') + msg[20:24]
+                conn.send_raw_message(msg)
             conn.wait_for_disconnect(timeout=1)
         self.nodes[0].disconnect_p2ps()
 
@@ -165,8 +176,9 @@ class InvalidMessagesTest(BitcoinTestFramework):
             with self.nodes[0].assert_debug_log(['V2 transport error: invalid message type']):
                 conn.send_raw_message(tmsg)
                 conn.sync_with_ping(timeout=1)
-            # Check that traffic is accounted for (20 bytes plus 3 bytes contents)
-            assert_equal(self.nodes[0].getpeerinfo()[0]['bytesrecv_per_msg']['*other*'], 23)
+            # Four-byte length + one-byte header + 16-byte tag, plus three
+            # content bytes.
+            assert_equal(self.nodes[0].getpeerinfo()[0]['bytesrecv_per_msg']['*other*'], 24)
         else:
             with self.nodes[0].assert_debug_log(['Header error: Invalid message type']):
                 msg = msg_unrecognized(str_data="d")
@@ -332,10 +344,10 @@ class InvalidMessagesTest(BitcoinTestFramework):
         # the large messages
         conn = self.nodes[0].add_p2p_connection(P2PDataStore(), supports_v2_p2p=False)
         conn2 = self.nodes[0].add_p2p_connection(P2PDataStore(), supports_v2_p2p=False)
-        msg_at_size = msg_unrecognized(str_data="b" * VALID_DATA_LIMIT)
-        assert_equal(len(msg_at_size.serialize()), MAX_PROTOCOL_MESSAGE_LENGTH)
+        msg_at_size = msg_unrecognized(str_data="b" * (RESOURCE_EXHAUSTION_MESSAGE_SIZE - 5))
+        assert_equal(len(msg_at_size.serialize()), RESOURCE_EXHAUSTION_MESSAGE_SIZE)
 
-        self.log.info("(a) Send 80 messages, each of maximum valid data size (4MB)")
+        self.log.info("(a) Send 80 large 4 MB messages")
         for _ in range(80):
             conn.send_without_ping(msg_at_size)
 

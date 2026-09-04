@@ -23,6 +23,7 @@ from .messages import (
     CTxIn,
     CTxInWitness,
     CTxOut,
+    MAX_BLOCK_WEIGHT,
     SEQUENCE_FINAL,
     hash256,
     ser_uint256,
@@ -61,6 +62,10 @@ COINBASE_MATURITY = 100
 
 # Initial non-genesis block subsidy, in whole CC.
 INITIAL_BLOCK_REWARD = 15
+
+# A full block withholds one tenth of its scheduled subsidy. Intermediate
+# weights use a linear interpolation rounded down, matching consensus.
+BLOCK_SUBSIDY_PENALTY_DIVISOR = 10
 
 # From BIP141
 WITNESS_COMMITMENT_HEADER = b"\xaa\x21\xa9\xed"
@@ -118,8 +123,29 @@ def create_block(hashprev=None, coinbase=None, *, ntime=None, height=None, versi
             if type(tx) is str:
                 tx = tx_from_hex(tx)
             block.vtx.append(tx)
+    update_block_subsidy(block, previous_non_coinbase_weight=0)
     block.hashMerkleRoot = block.calc_merkle_root()
     return block
+
+def get_block_subsidy(height, halving_period=REGTEST_RETARGET_PERIOD):
+    return INITIAL_BLOCK_REWARD * COIN >> (height // halving_period)
+
+def get_block_subsidy_penalty(height, non_coinbase_weight, halving_period=REGTEST_RETARGET_PERIOD):
+    bounded_weight = min(non_coinbase_weight, MAX_BLOCK_WEIGHT)
+    return get_block_subsidy(height, halving_period) * bounded_weight // (MAX_BLOCK_WEIGHT * BLOCK_SUBSIDY_PENALTY_DIVISOR)
+
+def update_block_subsidy(block, previous_non_coinbase_weight=None, *, height=None, halving_period=REGTEST_RETARGET_PERIOD):
+    """Adjust coinbase by the penalty delta after changing a block's tx list."""
+    if previous_non_coinbase_weight is None:
+        previous_non_coinbase_weight = getattr(block, "_subsidy_penalty_weight", 0)
+    if height is None:
+        # ConnectCoin coinbases commit to height - 1 in nLockTime.
+        height = block.vtx[0].nLockTime + 1
+    non_coinbase_weight = sum(tx.get_weight() for tx in block.vtx[1:])
+    old_penalty = get_block_subsidy_penalty(height, previous_non_coinbase_weight, halving_period)
+    new_penalty = get_block_subsidy_penalty(height, non_coinbase_weight, halving_period)
+    block.vtx[0].vout[0].nValue -= new_penalty - old_penalty
+    block._subsidy_penalty_weight = non_coinbase_weight
 
 def create_empty_fork(node, fork_length=FORK_LENGTH):
     '''

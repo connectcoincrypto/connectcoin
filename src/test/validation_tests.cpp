@@ -79,6 +79,27 @@ BOOST_AUTO_TEST_CASE(subsidy_limit_test)
     BOOST_CHECK_EQUAL(nSum, CAmount{862'500'000'000'000'000});
 }
 
+BOOST_AUTO_TEST_CASE(block_subsidy_weight_penalty_test)
+{
+    const auto chain_params{CreateChainParams(*m_node.args, ChainType::MAIN)};
+    const auto& consensus{chain_params->GetConsensus()};
+    const CAmount base_subsidy{15 * COIN};
+
+    BOOST_CHECK_EQUAL(GetBlockSubsidyForWeight(1, 0, consensus), base_subsidy);
+    BOOST_CHECK_EQUAL(GetBlockSubsidyForWeight(1, MAX_BLOCK_WEIGHT / 2, consensus), base_subsidy * 95 / 100);
+    BOOST_CHECK_EQUAL(GetBlockSubsidyForWeight(1, MAX_BLOCK_WEIGHT, consensus), base_subsidy * 90 / 100);
+    BOOST_CHECK_EQUAL(GetBlockSubsidyForWeight(1, MAX_BLOCK_WEIGHT + 1ULL, consensus), base_subsidy * 90 / 100);
+
+    // This specifically exercises a value for which the naive intermediate
+    // MAX_MONEY * MAX_BLOCK_WEIGHT cannot fit in CAmount.
+    BOOST_CHECK_EQUAL(GetBlockSubsidyPenalty(MAX_MONEY, MAX_BLOCK_WEIGHT), MAX_MONEY / 10);
+
+    // Integer division rounds the withheld amount down. At the very end of
+    // the subsidy schedule, a fraction of one connect cannot be withheld.
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(37 * consensus.nSubsidyHalvingInterval, consensus), 1);
+    BOOST_CHECK_EQUAL(GetBlockSubsidyForWeight(37 * consensus.nSubsidyHalvingInterval, MAX_BLOCK_WEIGHT, consensus), 1);
+}
+
 static CAmount MaximumSupply(const CChainParams& chain_params)
 {
     const auto& consensus = chain_params.GetConsensus();

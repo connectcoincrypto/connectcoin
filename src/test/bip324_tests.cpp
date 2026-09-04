@@ -86,10 +86,16 @@ void TestBIP324PacketVector(
     std::vector<std::byte> ciphertext(contents.size() + cipher.EXPANSION);
     cipher.Encrypt(contents, in_aad, in_ignore, ciphertext);
 
-    // Verify ciphertext. Note that the test vectors specify either out_ciphertext (for short
-    // messages) or out_ciphertext_endswith (for long messages), so only check the relevant one.
+    // Verify ciphertext. The published BIP324 vectors have a three-byte
+    // encrypted length. ConnectCoin uses four bytes, but the independently
+    // keyed AEAD payload must remain byte-for-byte identical.
     if (!out_ciphertext.empty()) {
-        BOOST_CHECK(out_ciphertext == ciphertext);
+        constexpr size_t BIP324_LENGTH_LEN{3};
+        BOOST_REQUIRE(out_ciphertext.size() >= BIP324_LENGTH_LEN);
+        BOOST_REQUIRE(ciphertext.size() >= cipher.LENGTH_LEN);
+        BOOST_CHECK(std::ranges::equal(
+            std::span{out_ciphertext}.subspan(BIP324_LENGTH_LEN),
+            std::span{ciphertext}.subspan(cipher.LENGTH_LEN)));
     } else {
         BOOST_CHECK(ciphertext.size() >= out_ciphertext_endswith.size());
         BOOST_CHECK(std::ranges::equal(out_ciphertext_endswith, std::span{ciphertext}.last(out_ciphertext_endswith.size())));

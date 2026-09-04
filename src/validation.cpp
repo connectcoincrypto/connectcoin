@@ -53,6 +53,7 @@
 #include <undo.h>
 #include <util/byte_units.h>
 #include <util/check.h>
+#include <util/feefrac.h>
 #include <util/fs.h>
 #include <util/fs_helpers.h>
 #include <util/hasher.h>
@@ -73,6 +74,7 @@
 #include <cassert>
 #include <chrono>
 #include <deque>
+#include <limits>
 #include <numeric>
 #include <optional>
 #include <ranges>
@@ -1862,6 +1864,36 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
     return nSubsidy;
 }
 
+CAmount GetBlockSubsidyPenalty(CAmount base_subsidy, uint64_t non_coinbase_weight)
+{
+    Assume(base_subsidy >= 0);
+    static_assert(MAX_BLOCK_WEIGHT <= std::numeric_limits<int32_t>::max() / BLOCK_SUBSIDY_PENALTY_DIVISOR);
+    constexpr int32_t penalty_weight_denominator{
+        static_cast<int32_t>(MAX_BLOCK_WEIGHT * BLOCK_SUBSIDY_PENALTY_DIVISOR)};
+    const int32_t bounded_weight{static_cast<int32_t>(std::min<uint64_t>(non_coinbase_weight, MAX_BLOCK_WEIGHT))};
+
+    // FeeFrac performs a portable 64x32-bit multiply followed by division,
+    // including on MSVC where __int128 is unavailable. Do not rewrite this as
+    // base_subsidy * bounded_weight / penalty_weight_denominator: valid money
+    // amounts can overflow int64_t in that intermediate multiplication.
+    return FeeFrac{base_subsidy, penalty_weight_denominator}.EvaluateFeeDown(bounded_weight);
+}
+
+CAmount GetBlockSubsidyForWeight(int nHeight, uint64_t non_coinbase_weight, const Consensus::Params& consensusParams)
+{
+    const CAmount base_subsidy{GetBlockSubsidy(nHeight, consensusParams)};
+    return base_subsidy - GetBlockSubsidyPenalty(base_subsidy, non_coinbase_weight);
+}
+
+CAmount GetBlockSubsidyForBlock(int nHeight, const CBlock& block, const Consensus::Params& consensusParams)
+{
+    uint64_t non_coinbase_weight{0};
+    for (size_t i{1}; i < block.vtx.size(); ++i) {
+        non_coinbase_weight += GetTransactionWeight(*block.vtx[i]);
+    }
+    return GetBlockSubsidyForWeight(nHeight, non_coinbase_weight, consensusParams);
+}
+
 CoinsViews::CoinsViews(DBParams db_params, CoinsViewOptions options)
     : m_dbview{std::move(db_params), std::move(options)},
       m_catcherview(&m_dbview) {}
@@ -2597,6 +2629,7 @@ bool Chainstate::ConnectBlock(const CBlock& block, BlockValidationState& state, 
 
     std::vector<int> prevheights;
     CAmount nFees = 0;
+    uint64_t non_coinbase_weight{0};
     int nInputs = 0;
     int64_t nSigOpsCost = 0;
     blockundo.vtxundo.reserve(block.vtx.size() - 1);
@@ -2609,6 +2642,7 @@ bool Chainstate::ConnectBlock(const CBlock& block, BlockValidationState& state, 
 
         if (!tx.IsCoinBase())
         {
+            non_coinbase_weight += static_cast<uint64_t>(GetTransactionWeight(tx));
             CAmount txfee = 0;
             TxValidationState tx_state;
             if (!Consensus::CheckTxInputs(tx, tx_state, view, pindex->nHeight, txfee)) {
@@ -2690,7 +2724,7 @@ bool Chainstate::ConnectBlock(const CBlock& block, BlockValidationState& state, 
              Ticks<SecondsDouble>(m_chainman.time_connect),
              Ticks<MillisecondsDouble>(m_chainman.time_connect) / m_chainman.num_blocks_total);
 
-    CAmount blockReward = nFees + GetBlockSubsidy(pindex->nHeight, params.GetConsensus());
+    const CAmount blockReward{nFees + GetBlockSubsidyForWeight(pindex->nHeight, non_coinbase_weight, params.GetConsensus())};
     if (block.vtx[0]->GetValueOut() > blockReward && state.IsValid()) {
         state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cb-amount",
                       strprintf("coinbase pays too much (actual=%d vs limit=%d)", block.vtx[0]->GetValueOut(), blockReward));

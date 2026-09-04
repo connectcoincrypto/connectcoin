@@ -228,9 +228,17 @@ class WalletBackupTest(BitcoinTestFramework):
         balance3 = self.nodes[3].getbalance()
         total = balance0 + balance1 + balance2 + balance3
 
-        # At this point, there are 214 blocks (103 for setup, then 10 rounds, then 101.)
-        # 114 are mature, so the sum of all wallets should be 114 * 15 = 1710.
-        assert_equal(total, 1710)
+        # At this point, there are 214 blocks (103 for setup, then 10 rounds,
+        # then 101). Coinbase outputs through height 114 are mature. Sum their
+        # actual values because transaction-bearing blocks burn a weight-based
+        # fraction of subsidy and include the corresponding transaction fees.
+        expected_total = 0
+        for height in range(1, 115):
+            block = self.nodes[3].getblock(self.nodes[3].getblockhash(height), 2)
+            coinbase_value = sum(output['value'] for output in block['tx'][0]['vout'])
+            fees = sum(tx['fee'] for tx in block['tx'][1:])
+            expected_total += coinbase_value - fees
+        assert_equal(total, expected_total)
 
         ##
         # Test restoring spender wallets from backups

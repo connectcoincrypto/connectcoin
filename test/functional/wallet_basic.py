@@ -6,7 +6,10 @@
 from decimal import Decimal
 from itertools import product
 
-from test_framework.blocktools import COINBASE_MATURITY
+from test_framework.blocktools import (
+    COINBASE_MATURITY,
+    get_block_subsidy_penalty,
+)
 from test_framework.messages import (
     COIN,
     DEFAULT_ANCESTOR_LIMIT,
@@ -56,6 +59,11 @@ class WalletTest(BitcoinTestFramework):
 
     def get_vsize(self, txn):
         return self.nodes[0].decoderawtransaction(txn)['vsize']
+
+    def prioritize_for_mining(self, node, txid):
+        """Compensate a deliberately tiny test fee for the subsidy penalty."""
+        tx_vsize = self.get_vsize(node.gettransaction(txid)["hex"])
+        node.prioritisetransaction(txid=txid, fee_delta=tx_vsize * 2_000)
 
     def run_test(self):
 
@@ -120,7 +128,9 @@ class WalletTest(BitcoinTestFramework):
         assert_equal(self.nodes[0].getbalances()["mine"]["immature"], 0)
 
         # Have node0 mine a block, thus it will collect its own fee.
-        self.generate(self.nodes[0], 1, sync_fun=lambda: self.sync_all(self.nodes[0:3]))
+        node0_mined_block = self.generate(
+            self.nodes[0], 1, sync_fun=lambda: self.sync_all(self.nodes[0:3])
+        )[0]
 
         # Exercise locking of unspent outputs
         unspent_0 = self.nodes[2].listunspent()[0]
@@ -201,9 +211,14 @@ class WalletTest(BitcoinTestFramework):
         # Have node1 generate 100 blocks (so node0 can recover the fee)
         self.generate(self.nodes[1], COINBASE_MATURITY, sync_fun=lambda: self.sync_all(self.nodes[0:3]))
 
-        # node0 should end up with two 15 CC block rewards plus fees, but
-        # minus the 7 CC plus fees sent to node2
-        assert_equal(self.nodes[0].getbalance(), 30 - 7)
+        # Node0 recovers its transaction fees by mining them, but ConnectCoin's
+        # second block reward is reduced by the weight of those transactions.
+        mined_block = self.nodes[0].getblock(node0_mined_block, 2)
+        non_coinbase_weight = sum(tx["weight"] for tx in mined_block["tx"][1:])
+        subsidy_penalty = Decimal(get_block_subsidy_penalty(
+            mined_block["height"], non_coinbase_weight
+        )) / COIN
+        assert_equal(self.nodes[0].getbalance(), Decimal(30 - 7) - subsidy_penalty)
         assert_equal(self.nodes[2].getbalance(), 7)
 
         # Node0 should have two unspent outputs.
@@ -230,7 +245,8 @@ class WalletTest(BitcoinTestFramework):
         self.generate(self.nodes[1], 1, sync_fun=lambda: self.sync_all(self.nodes[0:3]))
 
         assert_equal(self.nodes[0].getbalance(), 0)
-        assert_equal(self.nodes[2].getbalance(), 28)
+        node_2_bal = Decimal(7) + sum(utxo["amount"] - 1 for utxo in node0utxos)
+        assert_equal(self.nodes[2].getbalance(), node_2_bal)
 
         # Verify that a spent output cannot be locked anymore
         spent_0 = {"txid": node0utxos[0]["txid"], "vout": node0utxos[0]["vout"]}
@@ -242,7 +258,7 @@ class WalletTest(BitcoinTestFramework):
         fee_rate_sat_vb = fee_per_byte * COIN
         txid = self.nodes[2].sendtoaddress(address, 2, "", "", False, fee_rate=fee_rate_sat_vb)
         self.generate(self.nodes[2], 1, sync_fun=lambda: self.sync_all(self.nodes[0:3]))
-        node_2_bal = self.check_fee_amount(self.nodes[2].getbalance(), Decimal('26'), fee_per_byte, self.get_vsize(self.nodes[2].gettransaction(txid)['hex']))
+        node_2_bal = self.check_fee_amount(self.nodes[2].getbalance(), node_2_bal - Decimal('2'), fee_per_byte, self.get_vsize(self.nodes[2].gettransaction(txid)['hex']))
         assert_equal(self.nodes[0].getbalance(), Decimal('2'))
 
         # Send 2 CC with the fee subtracted from the amount.
@@ -289,6 +305,7 @@ class WalletTest(BitcoinTestFramework):
 
         # Test passing fee_rate as a string
         txid = self.nodes[2].sendmany(amounts={address: 2}, fee_rate=str(fee_rate_sat_vb))
+        self.prioritize_for_mining(self.nodes[2], txid)
         self.generate(self.nodes[2], 1, sync_fun=lambda: self.sync_all(self.nodes[0:3]))
         balance = self.nodes[2].getbalance()
         node_2_bal = self.check_fee_amount(balance, node_2_bal - Decimal('2'), explicit_fee_rate_btc_kvb, self.get_vsize(self.nodes[2].gettransaction(txid)['hex']))
@@ -299,6 +316,7 @@ class WalletTest(BitcoinTestFramework):
         # Test passing fee_rate as an integer
         amount = Decimal("0.0001")
         txid = self.nodes[2].sendmany(amounts={address: amount}, fee_rate=fee_rate_sat_vb)
+        self.prioritize_for_mining(self.nodes[2], txid)
         self.generate(self.nodes[2], 1, sync_fun=lambda: self.sync_all(self.nodes[0:3]))
         balance = self.nodes[2].getbalance()
         node_2_bal = self.check_fee_amount(balance, node_2_bal - amount, explicit_fee_rate_btc_kvb, self.get_vsize(self.nodes[2].gettransaction(txid)['hex']))

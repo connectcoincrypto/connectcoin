@@ -1272,8 +1272,9 @@ bool V2Transport::ProcessReceivedPacketBytes() noexcept
         // In all but APP_READY state, we can wipe the decoded contents.
         if (m_recv_state != RecvState::APP_READY) ClearShrink(m_recv_decode_buffer);
     } else {
-        // We either have less than 3 bytes, so we don't know the packet's length yet, or more
-        // than 3 bytes but less than the packet's full ciphertext. Wait until those arrive.
+        // We either have less than the complete length descriptor, so we don't
+        // know the packet's length yet, or less than the packet's full
+        // ciphertext. Wait until those arrive.
     }
     return true;
 }
@@ -1310,7 +1311,7 @@ size_t V2Transport::GetMaxBytesToProcess() noexcept
             return BIP324Cipher::LENGTH_LEN - m_recv_buffer.size();
         } else {
             // Note that BIP324Cipher::EXPANSION is the total difference between contents size
-            // and encoded packet size, which includes the 3 bytes due to the packet length.
+            // and encoded packet size, including the packet length descriptor.
             // When transitioning from receiving the packet length to receiving its ciphertext,
             // the encrypted packet length is left in the receive buffer.
             return BIP324Cipher::EXPANSION + m_recv_len - m_recv_buffer.size();
@@ -4021,9 +4022,10 @@ bool CConnman::OutboundTargetReached(bool historicalBlockServingLimit) const
 
     if (historicalBlockServingLimit)
     {
-        // keep a large enough buffer to at least relay each block once
+        // Keep a large enough buffer to relay one maximum-size block per
+        // target-spacing interval for the rest of the upload cycle.
         const std::chrono::seconds timeLeftInCycle = GetMaxOutboundTimeLeftInCycle_();
-        const uint64_t buffer = timeLeftInCycle / std::chrono::minutes{10} * MAX_BLOCK_SERIALIZED_SIZE;
+        const uint64_t buffer = timeLeftInCycle / m_params.GetConsensus().PowTargetSpacing() * MAX_BLOCK_SERIALIZED_SIZE;
         if (buffer >= nMaxOutboundLimit || nMaxOutboundTotalBytesSentInCycle >= nMaxOutboundLimit - buffer)
             return true;
     }

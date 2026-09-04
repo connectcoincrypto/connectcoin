@@ -182,6 +182,8 @@ class AbandonConflictTest(BitcoinTestFramework):
         tx = alice.createrawtransaction(inputs, outputs)
         signed = alice.signrawtransactionwithwallet(tx)
         double_spend_txid = self.nodes[1].sendrawtransaction(signed["hex"])
+        double_spend_vsize = self.nodes[1].decoderawtransaction(signed["hex"])["vsize"]
+        self.nodes[1].prioritisetransaction(txid=double_spend_txid, fee_delta=double_spend_vsize * 2000)
         self.connect_nodes(0, 1)
         self.generate(self.nodes[1], 1)
 

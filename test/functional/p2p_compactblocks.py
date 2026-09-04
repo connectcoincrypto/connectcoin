@@ -10,6 +10,7 @@ from test_framework.blocktools import (
     NORMAL_GBT_REQUEST_PARAMS,
     add_witness_commitment,
     create_block,
+    update_block_subsidy,
 )
 from test_framework.messages import (
     BlockTransactions,
@@ -184,6 +185,7 @@ class CompactBlocksTest(BitcoinTestFramework):
 
         block2 = self.build_block_on_tip(self.nodes[0])
         block2.vtx.append(tx)
+        update_block_subsidy(block2)
         block2.hashMerkleRoot = block2.calc_merkle_root()
         block2.solve()
         self.segwit_node.send_and_ping(msg_no_witness_block(block2))
@@ -476,6 +478,7 @@ class CompactBlocksTest(BitcoinTestFramework):
             utxo = [tx.txid_int, 0, tx.vout[0].nValue]
             block.vtx.append(tx)
 
+        update_block_subsidy(block)
         block.hashMerkleRoot = block.calc_merkle_root()
         block.solve()
         return block

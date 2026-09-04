@@ -10,6 +10,7 @@ Test that the CHECKLOCKTIMEVERIFY soft-fork activates.
 from test_framework.blocktools import (
     TIME_GENESIS_BLOCK,
     create_block,
+    update_block_subsidy,
 )
 from test_framework.messages import (
     CTransaction,
@@ -178,6 +179,7 @@ class BIP65Test(BitcoinTestFramework):
 
             # Now we verify that a block with this transaction is also invalid.
             block.vtx[1] = spendtx
+            update_block_subsidy(block)
             block.hashMerkleRoot = block.calc_merkle_root()
             block.solve()
 
@@ -191,6 +193,7 @@ class BIP65Test(BitcoinTestFramework):
 
         block.vtx.pop(1)
         block.vtx.append(spendtx)
+        update_block_subsidy(block)
         block.hashMerkleRoot = block.calc_merkle_root()
         block.solve()
 

@@ -106,10 +106,23 @@ The development monetary policy caps individual monetary values at
 block subsidy begins at `15 CC` and halves every 3,000,000 blocks. Public-network
 blocks target a 10-second interval. Their separate spendable genesis output
 allocates `10,000,000 CC` to the development fund. If every available subsidy
-is claimed, integer rounding produces a maximum mainnet issuance of
+is claimed by empty blocks, integer rounding produces a maximum mainnet issuance of
 `99,999,984.9955000000 CC`. One CC is subdivided into `10,000,000,000`
 connects, so wallet and RPC amounts use up to ten decimal places. Regtest keeps
 its 150-block halving interval.
+
+The consensus block-weight limit is `50,000,000`. An empty block may claim the
+entire scheduled subsidy. Non-coinbase transaction weight linearly reduces the
+claimable subsidy to 90% at the full limit, with the withheld amount rounded
+down to whole connects. The native block
+assembler therefore includes a transaction package only when its modified fees
+exceed the marginal subsidy penalty. The theoretical serialized-data ceiling is
+50 MB per 10-second block (5 MB/s); non-witness data consumes four weight units
+per byte and reaches a lower byte throughput.
+
+Encrypted v2 transport uses ConnectCoin's four-byte extension of the BIP324
+packet-length descriptor. This is necessary for 50 MB messages and makes the
+wire format intentionally incompatible with stock Bitcoin BIP324 peers.
 
 The largest atomic amount is `10^18` connects, which is greater than the largest
 integer (`2^53 - 1`) represented exactly by an IEEE-754 binary64 value such as a

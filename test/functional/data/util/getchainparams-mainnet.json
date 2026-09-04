@@ -11,7 +11,7 @@
     "randomx_epoch_lag": 64,
     "randomx_mode": "fast",
     "target_spacing": 10,
-    "difficulty_retarget_interval": 1440,
+    "difficulty_retarget_interval": 8640,
     "mindiff_blocks": "no"
   },
   "net": {

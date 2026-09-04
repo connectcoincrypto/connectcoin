@@ -2191,7 +2191,7 @@ static RPCMethod getblockstats()
     ret_all.pushKV("outs", outputs);
     const CAmount block_subsidy{pindex.nHeight == 0 && chainman.GetConsensus().genesis_coinbase_spendable
             ? block.vtx.front()->GetValueOut()
-            : GetBlockSubsidy(pindex.nHeight, chainman.GetParams().GetConsensus())};
+            : GetBlockSubsidyForBlock(pindex.nHeight, block, chainman.GetParams().GetConsensus())};
     ret_all.pushKV("subsidy", block_subsidy);
     ret_all.pushKV("swtotal_size", swtotal_size);
     ret_all.pushKV("swtotal_weight", swtotal_weight);

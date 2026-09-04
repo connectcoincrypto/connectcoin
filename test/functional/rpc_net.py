@@ -447,9 +447,20 @@ class NetTest(BitcoinTestFramework):
         node.sendmsgtopeer(peer_id=0, msg_type="addr", msg="FF")
 
         self.log.debug("Test that oversized messages are allowed, but get us disconnected")
-        zero_byte_string = b'\x00' * 4000001
-        node.sendmsgtopeer(peer_id=0, msg_type="addr", msg=zero_byte_string.hex())
-        self.wait_until(lambda: len(self.nodes[0].getpeerinfo()) == 0, timeout=10)
+        # sendmsgtopeer receives a hex string, so the request needs more than
+        # twice the wire-message size. With ConnectCoin's 50 MB protocol limit,
+        # an oversized message cannot fit in the RPC server's 32 MiB HTTP body.
+        # p2p_invalid_messages.py covers the actual wire-size disconnect path.
+        max_rpc_body_size = 32 * 1024 * 1024
+        oversized_length = test_framework.messages.MAX_PROTOCOL_MESSAGE_LENGTH + 1
+        if 2 * oversized_length < max_rpc_body_size:
+            zero_byte_string = b'\x00' * oversized_length
+            node.sendmsgtopeer(peer_id=0, msg_type="addr", msg=zero_byte_string.hex())
+            # The connection manager may immediately replace the disconnected
+            # outbound peer. Verify that the offending connection itself is gone.
+            self.wait_until(lambda: all(peer["id"] != 0 for peer in node.getpeerinfo()), timeout=20)
+        else:
+            self.log.debug("Skipping oversized sendmsgtopeer subcase: hex payload exceeds RPC HTTP body limit")
 
     def test_getaddrmaninfo(self):
         self.log.info("Test getaddrmaninfo")

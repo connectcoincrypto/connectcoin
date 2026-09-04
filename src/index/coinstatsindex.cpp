@@ -100,7 +100,10 @@ CoinStatsIndex::CoinStatsIndex(std::unique_ptr<interfaces::Chain> chain, size_t 
         LogWarning("Old version of coinstatsindex found at %s. This folder can be safely deleted unless you " \
             "plan to downgrade your node to version 29 or lower.", fs::PathToString(old_path));
     }
-    fs::path path{gArgs.GetDataDirNet() / "indexes" / "coinstatsindex"};
+    // v2 accounts for ConnectCoin's weight-adjusted block subsidy. Reusing a
+    // pre-v2 database would leave total subsidy and unclaimed reward figures
+    // internally consistent-looking but wrong.
+    fs::path path{gArgs.GetDataDirNet() / "indexes" / "coinstatsindex" / "v2"};
     fs::create_directories(path);
 
     m_db = std::make_unique<CoinStatsIndex::DB>(path / "db", n_cache_size, f_memory, f_wipe);
@@ -113,7 +116,7 @@ bool CoinStatsIndex::CustomAppend(const interfaces::BlockInfo& block)
     // and may intentionally differ from the recurring block subsidy schedule.
     const CAmount block_subsidy{spendable_genesis
             ? Assert(block.data)->vtx.front()->GetValueOut()
-            : GetBlockSubsidy(block.height, Params().GetConsensus())};
+            : GetBlockSubsidyForBlock(block.height, *Assert(block.data), Params().GetConsensus())};
     m_total_subsidy += block_subsidy;
 
     const bool process_outputs{block.height > 0 || spendable_genesis};

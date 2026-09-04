@@ -116,6 +116,7 @@ void BlockAssembler::resetBlock()
 {
     // Reserve space for fixed-size block header, txs count, and coinbase tx.
     nBlockWeight = *Assert(m_options.block_reserved_weight);
+    nBlockTxWeight = 0;
     nBlockSigOpsCost = 0;
 
     // These counters do not include coinbase tx
@@ -179,7 +180,8 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock()
     coinbaseTx.vout.resize(1);
     coinbaseTx.vout[0].SetScriptPubKey(m_options.coinbase_output_script);
     // Block subsidy + fees
-    const CAmount block_reward{nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus())};
+    const CAmount block_reward{
+        nFees + GetBlockSubsidyForWeight(nHeight, nBlockTxWeight, chainparams.GetConsensus())};
     coinbaseTx.vout[0].nValue = block_reward;
     coinbase_tx.block_reward_remaining = block_reward;
 
@@ -314,6 +316,7 @@ void BlockAssembler::AddToBlock(const CTxMemPoolEntry& entry)
     pblocktemplate->vTxFees.push_back(entry.GetFee());
     pblocktemplate->vTxSigOpsCost.push_back(entry.GetSigOpCost());
     nBlockWeight += entry.GetTxWeight();
+    nBlockTxWeight += entry.GetTxWeight();
     ++nBlockTx;
     nBlockSigOpsCost += entry.GetSigOpCost();
     nFees += entry.GetFee();
@@ -351,9 +354,24 @@ void BlockAssembler::addChunks()
 
         int64_t chunk_sig_ops = 0;
         int64_t chunk_weight = 0;
+        CAmount chunk_modified_fees{0};
         for (const auto& tx : selected_transactions) {
             chunk_sig_ops += tx.get().GetSigOpCost();
             chunk_weight += tx.get().GetTxWeight();
+            chunk_modified_fees += tx.get().GetModifiedFee();
+        }
+
+        // Including transactions destroys subsidy. Compare against the exact
+        // integer loss for this package, rather than chunk_feerate: the latter
+        // uses sigops-adjusted weight, while the consensus penalty uses actual
+        // serialized transaction weight. Modified fees remain intentional
+        // operator input here, as in ordinary block-template fee ordering.
+        const CAmount base_subsidy{GetBlockSubsidy(nHeight, chainparams.GetConsensus())};
+        const CAmount current_penalty{GetBlockSubsidyPenalty(base_subsidy, nBlockTxWeight)};
+        const CAmount package_penalty{GetBlockSubsidyPenalty(
+            base_subsidy, nBlockTxWeight + static_cast<uint64_t>(chunk_weight)) - current_penalty};
+        if (chunk_modified_fees <= package_penalty) {
+            return;
         }
 
         // Check to see if this chunk will fit.

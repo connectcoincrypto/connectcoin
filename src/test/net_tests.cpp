@@ -29,6 +29,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include <algorithm>
+#include <array>
+#include <cstddef>
 #include <cstdint>
 #include <ios>
 #include <memory>
@@ -1230,6 +1232,19 @@ public:
         Send(ciphertext);
     }
 
+    /** Schedule only an encrypted packet-length descriptor. This permits
+     *  oversized-length rejection tests without allocating the advertised
+     *  payload. The tested transport disconnects before reading the payload. */
+    void SendPacketLength(uint32_t length)
+    {
+        std::array<std::byte, BIP324Cipher::EXPANSION> ciphertext;
+        m_cipher.Encrypt({}, {}, false, ciphertext);
+        for (size_t i{0}; i < BIP324Cipher::LENGTH_LEN; ++i) {
+            ciphertext[i] ^= std::byte{static_cast<uint8_t>(length >> (8 * i))};
+        }
+        Send(std::span{ciphertext}.first(BIP324Cipher::LENGTH_LEN));
+    }
+
     /** Schedule garbage terminator to be sent to the transport (only after ReceiveKey). */
     void SendGarbageTerm()
     {
@@ -1458,8 +1473,7 @@ BOOST_AUTO_TEST_CASE(v2transport_test)
         BOOST_CHECK(std::ranges::equal((*ret)[1]->m_recv, MakeByteSpan(msg_data_2)));
 
         // Then send a too-large message.
-        auto msg_data_3 = m_rng.randbytes<uint8_t>(4005000);
-        tester.SendMessage(uint8_t(11), msg_data_3); // getdata short id
+        tester.SendPacketLength(MAX_PROTOCOL_MESSAGE_LENGTH + CMessageHeader::MESSAGE_TYPE_SIZE + 2);
         ret = tester.Interact();
         BOOST_CHECK(!ret);
     }

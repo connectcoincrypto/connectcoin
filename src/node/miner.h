@@ -66,6 +66,8 @@ private:
 
     // Information on the current status of the block
     uint64_t nBlockWeight;
+    /** Exact weight of selected non-coinbase transactions. */
+    uint64_t nBlockTxWeight;
     uint64_t nBlockTx;
     uint64_t nBlockSigOpsCost;
     CAmount nFees;

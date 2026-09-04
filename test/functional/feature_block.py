@@ -14,6 +14,7 @@ from test_framework.blocktools import (
     get_legacy_sigopcount_block,
     MAX_BLOCK_SIGOPS,
     REGTEST_N_BITS,
+    update_block_subsidy,
 )
 from test_framework.messages import (
     CBlock,
@@ -84,6 +85,10 @@ class CBrokenBlock(CBlock):
 
 
 DUPLICATE_COINBASE_SCRIPT_SIG = b'\x01\x78'  # Valid for block at height 120
+
+# Keep tests that create thousands of blocks or outputs at the historical size.
+# Dedicated boundary cases below still exercise the 50,000,000 consensus limit.
+EXPENSIVE_TEST_BLOCK_WEIGHT = 4_000_000
 
 
 class FullBlockTest(BitcoinTestFramework):
@@ -523,11 +528,11 @@ class FullBlockTest(BitcoinTestFramework):
         tx_new = None
         tx_last = tx
         total_weight = b39.get_weight()
-        while total_weight < MAX_BLOCK_WEIGHT:
+        while total_weight < EXPENSIVE_TEST_BLOCK_WEIGHT:
             tx_new = self.create_tx(tx_last, 1, 1, p2sh_script)
             tx_new.vout.append(CTxOut(tx_last.vout[1].nValue - 1, CScript([OP_TRUE])))
             total_weight += tx_new.get_weight()
-            if total_weight >= MAX_BLOCK_WEIGHT:
+            if total_weight >= EXPENSIVE_TEST_BLOCK_WEIGHT:
                 break
             b39.vtx.append(tx_new)  # add tx to block
             tx_last = tx_new
@@ -538,7 +543,7 @@ class FullBlockTest(BitcoinTestFramework):
         # Make sure we didn't accidentally make too big a block. Note that the
         # size of the block has non-determinism due to the ECDSA signature in
         # the first transaction.
-        while b39.get_weight() >= MAX_BLOCK_WEIGHT:
+        while b39.get_weight() >= EXPENSIVE_TEST_BLOCK_WEIGHT:
             del b39.vtx[-1]
 
         b39 = self.update_block(39, [])
@@ -623,6 +628,7 @@ class FullBlockTest(BitcoinTestFramework):
         b44.vtx.append(coinbase)
         tx = self.create_and_sign_transaction(out[14], 1)
         b44.vtx.append(tx)
+        update_block_subsidy(b44, height=height)
         b44.hashMerkleRoot = b44.calc_merkle_root()
         b44.solve()
         self.tip = b44
@@ -1300,12 +1306,12 @@ class FullBlockTest(BitcoinTestFramework):
             for i in range(89, LARGE_REORG_SIZE + 89):
                 b = self.next_block(i, spend)
                 tx = CTransaction()
-                script_length = (MAX_BLOCK_WEIGHT - b.get_weight() - 276) // 4
+                script_length = (EXPENSIVE_TEST_BLOCK_WEIGHT - b.get_weight() - 276) // 4
                 script_output = CScript([b'\x00' * script_length])
                 tx.vout.append(CTxOut(0, script_output))
                 tx.vin.append(CTxIn(COutPoint(b.vtx[1].txid_int, 0)))
                 b = self.update_block(i, [tx])
-                assert_equal(b.get_weight(), MAX_BLOCK_WEIGHT)
+                assert_equal(b.get_weight(), EXPENSIVE_TEST_BLOCK_WEIGHT)
                 blocks.append(b)
                 self.save_spendable_output()
                 spend = self.get_spendable_output()
@@ -1409,6 +1415,7 @@ class FullBlockTest(BitcoinTestFramework):
     def update_block(self, block_number, new_transactions, *, nTime=None):
         block = self.blocks[block_number]
         self.add_transactions_to_block(block, new_transactions)
+        update_block_subsidy(block)
         old_hash_int = block.hash_int
         if nTime is not None:
             block.nTime = nTime

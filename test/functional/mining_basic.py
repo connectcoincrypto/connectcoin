@@ -15,7 +15,10 @@ from decimal import Decimal
 
 from test_framework.blocktools import (
     add_witness_commitment,
+    BLOCK_SUBSIDY_PENALTY_DIVISOR,
     create_coinbase,
+    get_block_subsidy,
+    get_block_subsidy_penalty,
     get_witness_script,
     NORMAL_GBT_REQUEST_PARAMS,
     TIME_GENESIS_BLOCK,
@@ -57,6 +60,11 @@ MAX_TIMEWARP = 600
 VERSIONBITS_TOP_BITS = 0x20000000
 VERSIONBITS_DEPLOYMENT_TESTDUMMY_BIT = 28
 DEFAULT_BLOCK_MIN_TX_FEE = 1 # default `-blockmintxfee` setting [con/kvB]
+
+# Filling the complete 50,000,000-weight consensus allowance would make this
+# policy-behaviour test needlessly expensive. Consensus boundary tests live in
+# feature_block.py.
+TEST_BLOCK_MAX_WEIGHT = 4_000_000
 
 
 def typed_output_vsize_at_most(target):
@@ -113,25 +121,25 @@ class MiningTest(BitcoinTestFramework):
 
         # Generate three transactions that must be mined in sequence
         #
-        #      tx_a (1 con/vbyte)
+        #      tx_a (2000 con/vbyte)
         #        |
         #        |
-        #      tx_b (2 con/vbyte)
+        #      tx_b (3000 con/vbyte)
         #        |
         #        |
-        #      tx_c (3 con/vbyte)
+        #      tx_c (4000 con/vbyte)
         #
         tx_a = wallet_sigops.send_self_transfer(from_node=node,
-                                                fee_rate=Decimal("0.00001"))
+                                                fee_rate=Decimal("0.00020"))
         tx_b = wallet_sigops.send_self_transfer(from_node=node,
-                                                fee_rate=Decimal("0.00002"),
+                                                fee_rate=Decimal("0.00030"),
                                                 utxo_to_spend=tx_a["new_utxo"])
         tx_c = wallet_sigops.send_self_transfer(from_node=node,
-                                                fee_rate=Decimal("0.00003"),
+                                                fee_rate=Decimal("0.00040"),
                                                 utxo_to_spend=tx_b["new_utxo"])
 
         # Generate transaction without sigops. It will go first because it pays
-        # higher fees (100 con/vbyte) and descends from a different coinbase.
+        # higher fees (10,000 con/vbyte) and descends from a different coinbase.
         tx_d = self.wallet.send_self_transfer(from_node=node,
                                               fee_rate=Decimal("0.00100"))
 
@@ -145,9 +153,12 @@ class MiningTest(BitcoinTestFramework):
             tx_b["fee"] * COIN,
             tx_c["fee"] * COIN
         ])
-        # verify that coinbasevalue field is set to claim full block reward (subsidy + fees)
+        # Verify that coinbasevalue claims fees plus the weight-adjusted subsidy.
+        template_tx_weight = sum(tx['weight'] for tx in block_template_txs)
         expected_block_reward = create_coinbase(
             height=int(block_template["height"]), fees=sum(block_template_fees)).vout[0].nValue
+        expected_block_reward -= get_block_subsidy_penalty(
+            int(block_template["height"]), template_tx_weight)
         assert_equal(block_template["coinbasevalue"], expected_block_reward)
 
         # Every native type-1 output has exactly one P2PK authorization cost,
@@ -190,6 +201,7 @@ class MiningTest(BitcoinTestFramework):
             # check that tx below specified fee-rate is neither in template nor in the actual block
             block_template = node.getblocktemplate(NORMAL_GBT_REQUEST_PARAMS)
             block_template_txids = [tx['txid'] for tx in block_template['transactions']]
+            candidate_height = block_template['height']
 
             # Unless blockmintxfee is 0, the template shouldn't contain free transactions.
             # Note that the real block assembler uses package feerates, but we didn't create dependent transactions so it's ok to use base feerate.
@@ -202,8 +214,21 @@ class MiningTest(BitcoinTestFramework):
             block = node.getblock(node.getbestblockhash(), verbosity=2)
             block_txids = [tx['txid'] for tx in block['tx']]
 
-            assert tx_with_min_feerate['txid'] in block_template_txids
-            assert tx_with_min_feerate['txid'] in block_txids
+            # The rational inclusion floor follows the subsidy (and therefore
+            # regtest halvings). Compare the same integer fee/weight ratios as
+            # the block assembler instead of approximating a CC/kvB value.
+            tx_fee = int(tx_with_min_feerate['fee'] * COIN)
+            economic_denominator = MAX_BLOCK_WEIGHT * BLOCK_SUBSIDY_PENALTY_DIVISOR
+            economically_profitable = (
+                tx_fee * economic_denominator
+                > get_block_subsidy(candidate_height) * tx_with_min_feerate['tx'].get_weight()
+            )
+            if economically_profitable:
+                assert tx_with_min_feerate['txid'] in block_template_txids
+                assert tx_with_min_feerate['txid'] in block_txids
+            else:
+                assert tx_with_min_feerate['txid'] not in block_template_txids
+                assert tx_with_min_feerate['txid'] not in block_txids
             assert tx_below_min_feerate['txid'] not in block_template_txids
             assert tx_below_min_feerate['txid'] not in block_txids
 
@@ -313,9 +338,11 @@ class MiningTest(BitcoinTestFramework):
     def test_block_max_weight(self):
         self.log.info("Testing default and custom -blockmaxweight startup options.")
 
+        self.restart_node(0, extra_args=[f"-blockmaxweight={TEST_BLOCK_MAX_WEIGHT}"])
+
         LARGE_TXS_COUNT = 10
         LARGE_VSIZE = typed_output_vsize_at_most(
-            int(((MAX_BLOCK_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT) / WITNESS_SCALE_FACTOR) / LARGE_TXS_COUNT)
+            int(((TEST_BLOCK_MAX_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT) / WITNESS_SCALE_FACTOR) / LARGE_TXS_COUNT)
         )
         HIGH_FEERATE = Decimal("0.0003")
 
@@ -328,7 +355,9 @@ class MiningTest(BitcoinTestFramework):
 
         # Send 2 normal transactions with a lower fee rate
         NORMAL_VSIZE = typed_output_vsize_at_most(int(2000 / WITNESS_SCALE_FACTOR))
-        NORMAL_FEERATE = Decimal("0.0001")
+        # Remain below HIGH_FEERATE but above the subsidy-penalty break-even
+        # rate so capacity, rather than the economic floor, drives this test.
+        NORMAL_FEERATE = Decimal("0.0002")
         self.send_transactions(utxos[LARGE_TXS_COUNT:LARGE_TXS_COUNT + 2], NORMAL_FEERATE, NORMAL_VSIZE)
 
         # Check that the mempool contains all transactions
@@ -339,47 +368,47 @@ class MiningTest(BitcoinTestFramework):
         self.log.info("Testing that the block template includes only the 10 large transactions.")
         self.verify_block_template(
             expected_tx_count=LARGE_TXS_COUNT,
-            expected_weight=MAX_BLOCK_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT,
+            expected_weight=TEST_BLOCK_MAX_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT,
         )
 
         # Test block template creation with custom -blockmaxweight
-        custom_block_weight = MAX_BLOCK_WEIGHT - 2000
+        custom_block_weight = TEST_BLOCK_MAX_WEIGHT - 2000
         # Reducing the weight by 2000 units will prevent 1 large transaction from fitting into the block.
         self.restart_node(0, extra_args=[f"-blockmaxweight={custom_block_weight}"])
 
         self.log.info("Testing the block template with custom -blockmaxweight to include 9 large and 2 normal transactions.")
         self.verify_block_template(
             expected_tx_count=11,
-            expected_weight=MAX_BLOCK_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT - 2000,
+            expected_weight=TEST_BLOCK_MAX_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT - 2000,
         )
 
         # Ensure the block weight does not exceed the maximum
-        self.log.info(f"Testing that the block weight will never exceed {MAX_BLOCK_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT}.")
-        self.restart_node(0, extra_args=[f"-blockmaxweight={MAX_BLOCK_WEIGHT}"])
+        self.log.info(f"Testing that the block weight will never exceed {TEST_BLOCK_MAX_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT}.")
+        self.restart_node(0, extra_args=[f"-blockmaxweight={TEST_BLOCK_MAX_WEIGHT}"])
         self.log.info("Sending 2 additional normal transactions to fill the mempool to the maximum block weight.")
         self.send_transactions(utxos[LARGE_TXS_COUNT + 2:], NORMAL_FEERATE, NORMAL_VSIZE)
-        self.log.info(f"Testing that the mempool's weight closely approaches the maximum block weight: {MAX_BLOCK_WEIGHT}.")
+        self.log.info(f"Testing that the mempool's weight closely approaches the test block weight: {TEST_BLOCK_MAX_WEIGHT}.")
         mempool_weight = self.nodes[0].getmempoolinfo()['bytes'] * WITNESS_SCALE_FACTOR
-        assert_greater_than_or_equal(MAX_BLOCK_WEIGHT, mempool_weight)
+        assert_greater_than_or_equal(TEST_BLOCK_MAX_WEIGHT, mempool_weight)
         # Fixed-size outputs make some exact transaction sizes impossible. The
         # aggregate may be short by less than one output per transaction.
         assert_greater_than_or_equal(
             mempool_weight,
-            MAX_BLOCK_WEIGHT - WITNESS_SCALE_FACTOR * 41 * (LARGE_TXS_COUNT + 4),
+            TEST_BLOCK_MAX_WEIGHT - WITNESS_SCALE_FACTOR * 41 * (LARGE_TXS_COUNT + 4),
         )
 
         self.log.info("Testing that the block template includes only 10 transactions and cannot reach full block weight.")
         self.verify_block_template(
             expected_tx_count=LARGE_TXS_COUNT,
-            expected_weight=MAX_BLOCK_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT,
+            expected_weight=TEST_BLOCK_MAX_WEIGHT - DEFAULT_BLOCK_RESERVED_WEIGHT,
         )
 
         self.log.info("Test -blockreservedweight startup option.")
         # Lowering the -blockreservedweight by 4000 will allow for two more transactions.
-        self.restart_node(0, extra_args=["-blockreservedweight=4000"])
+        self.restart_node(0, extra_args=[f"-blockmaxweight={TEST_BLOCK_MAX_WEIGHT}", "-blockreservedweight=4000"])
         self.verify_block_template(
             expected_tx_count=12,
-            expected_weight=MAX_BLOCK_WEIGHT - 4000,
+            expected_weight=TEST_BLOCK_MAX_WEIGHT - 4000,
         )
 
         self.log.info("Test that node will fail to start when user provide invalid -blockreservedweight")
@@ -440,7 +469,12 @@ class MiningTest(BitcoinTestFramework):
         assert_equal(mining_info['pooledtx'], 0)
 
         self.log.info("getblocktemplate: Test default witness commitment")
-        txid = int(self.wallet.send_self_transfer(from_node=node)['wtxid'], 16)
+        # Pay more than the weight-adjusted subsidy loss so the default
+        # template rationally includes this transaction.
+        txid = int(self.wallet.send_self_transfer(
+            from_node=node,
+            fee_rate=Decimal("0.0002"),
+        )['wtxid'], 16)
         tmpl = node.getblocktemplate(NORMAL_GBT_REQUEST_PARAMS)
 
         # Check that default_witness_commitment is present.

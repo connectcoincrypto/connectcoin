@@ -195,10 +195,13 @@ static void OrphanageEraseAll(benchmark::Bench& bench, bool block_or_disconnect)
 {
     FastRandomContext det_rand{true};
     const auto orphanage{node::MakeTxOrphanage(/*max_global_latency_score=*/node::DEFAULT_MAX_ORPHANAGE_LATENCY_SCORE, /*reserved_peer_usage=*/node::DEFAULT_RESERVED_ORPHAN_WEIGHT_PER_PEER)};
-    // This is an unrealistically large number of inputs for a block, as there is almost no room given to witness data,
-    // outputs, and overhead for individual transactions. The entire block is 1 transaction with 20,000 inputs.
-    constexpr unsigned int NUM_BLOCK_INPUTS{MAX_BLOCK_WEIGHT / APPROX_WEIGHT_PER_INPUT};
-    const auto block_tx{MakeTransactionBulkedTo(NUM_BLOCK_INPUTS, MAX_BLOCK_WEIGHT - 4000, det_rand)};
+    // Keep this computational benchmark at its historical 4,000,000-weight
+    // profile. Scaling it with ConnectCoin's 50,000,000 consensus ceiling
+    // would create far more inputs than the bounded orphanage workload below
+    // can cover and would benchmark allocation size rather than erase logic.
+    constexpr unsigned int BENCHMARK_BLOCK_WEIGHT{std::min(MAX_BLOCK_WEIGHT, 4'000'000U)};
+    constexpr unsigned int NUM_BLOCK_INPUTS{BENCHMARK_BLOCK_WEIGHT / APPROX_WEIGHT_PER_INPUT};
+    const auto block_tx{MakeTransactionBulkedTo(NUM_BLOCK_INPUTS, BENCHMARK_BLOCK_WEIGHT - 4000, det_rand)};
     CBlock block;
     block.vtx.push_back(block_tx);
 

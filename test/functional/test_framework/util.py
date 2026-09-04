@@ -546,7 +546,10 @@ def write_config(config_path, *, n, chain, extra_config="", disable_autoconnect=
         f.write("rpcdoccheck=1\n")
         f.write("rpcthreads=2\n")
         # 20 connects/vB expressed in CC/kvB.
-        f.write("fallbackfee=0.000002\n")
+        # Routine wallet transactions must outbid the subsidy destroyed when
+        # their weight is added to a block (about 0.00012 CC/kvB at the
+        # initial 15 CC subsidy and 50,000,000 WU limit).
+        f.write("fallbackfee=0.00020000\n")
         f.write("server=1\n")
         f.write("keypool=1\n")
         f.write("discover=0\n")
@@ -660,14 +663,19 @@ def check_node_connections(*, node, num_in, num_out):
 #############################
 
 
-# Create large OP_RETURN txouts that can be appended to a transaction
-# to make it large (helper for constructing large transactions). The
-# total serialized size of the txouts is about 66k vbytes.
+# Create valid typed txouts that can be appended to a transaction to make it
+# large. ConnectCoin has no arbitrary Script/OP_RETURN output, so use 1,645
+# fixed-size P2PK outputs, totalling 67,445 serialized bytes.
 def gen_return_txouts():
     from .messages import CTxOut
-    from .script import CScript, OP_RETURN
-    txouts = [CTxOut(nValue=0, scriptPubKey=CScript([OP_RETURN, b'\x01'*67437]))]
-    assert_equal(sum([len(txout.serialize()) for txout in txouts]), 67456)
+    from .script import CScript
+    # A type-1 output's dust threshold is below 1,000 connects, and the full
+    # padding set must also fit in small test UTXOs.
+    output_value = 1_000
+    generator_x = bytes.fromhex("79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798")
+    p2pk_script = CScript(b"\x51\x20" + generator_x)
+    txouts = [CTxOut(nValue=output_value, scriptPubKey=p2pk_script) for _ in range(1_645)]
+    assert_equal(sum([len(txout.serialize()) for txout in txouts]), 67445)
     return txouts
 
 
@@ -681,8 +689,13 @@ def create_lots_of_big_transactions(mini_wallet, node, fee, tx_batch_size, txout
             utxo_to_spend=None if use_internal_utxos else utxos.pop(),
             fee=fee,
         )["tx"]
+        # Preserve the requested fee after adding positive-valued typed
+        # outputs, then refresh the SIGHASH_DEFAULT authorization.
+        tx.vout[0].nValue -= sum(txout.nValue for txout in txouts)
         tx.vout.extend(txouts)
+        mini_wallet.sign_tx(tx)
         res = node.testmempoolaccept([tx.serialize().hex()])[0]
+        assert res['allowed'], res
         assert_equal(res['fees']['base'], fee)
         txids.append(node.sendrawtransaction(tx.serialize().hex()))
     return txids
@@ -692,7 +705,9 @@ def mine_large_block(test_framework, mini_wallet, node):
     # generate a 66k transaction,
     # and 14 of them is close to the 1MB block limit
     txouts = gen_return_txouts()
-    fee = 100 * node.getnetworkinfo()["relayfee"]
+    # ConnectCoin's block-weight subsidy penalty makes the miner require a fee
+    # above both the relay floor and the subsidy lost by including the package.
+    fee = max(100 * node.getnetworkinfo()["relayfee"], Decimal("0.01"))
     create_lots_of_big_transactions(mini_wallet, node, fee, 14, txouts)
     test_framework.generate(node, 1)
 

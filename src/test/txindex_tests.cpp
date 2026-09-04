@@ -104,10 +104,10 @@ void InvalidateBlock(ChainstateManager& chainman, const uint256& block_hash)
 BOOST_AUTO_TEST_CASE(txindex_position_encoding)
 {
     constexpr struct { txindex::BlockTxPosition position; std::string_view encoded; } test_vectors[]{
-        {{0, 0}, "00000000"},
-        {{1, 2}, "01000002"},
-        {{10'000'000, 123}, "83e1ac0000007b"},
-        {{456, 3'999'999}, "82483d08ff"},
+        {{0, 0}, "0000000000"},
+        {{1, 2}, "0100000002"},
+        {{10'000'000, 123}, "83e1ac000000007b"},
+        {{456, 49'999'999}, "824802faf07f"},
     };
 
     for (const auto& [position, encoded] : test_vectors) {
@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE(txindex_position_encoding)
     // Pin the full key encodings, including the type prefixes.
     BOOST_CHECK_EQUAL(HexStr(DataStream{} << txindex::BlockSeqKey{1}), "7301");
     BOOST_CHECK_EQUAL(HexStr(DataStream{} << txindex::DBKey{0x0102030405, {1, 2}}),
-                      "78010203040501000002");
+                      "7801020304050100000002");
 
     BOOST_CHECK_EQUAL(txindex::BLOCK_HEADER_SIZE, GetSerializeSize(CBlockHeader{}));
 }
@@ -265,7 +265,7 @@ BOOST_FIXTURE_TEST_CASE(txindex_legacy_fallback, TestChain100Setup)
     // the header and the 1-byte tx count.
     const CDiskTxPos legacy_pos{BlockFilePos(*m_node.chainman, 1), 1};
     {
-        CDBWrapper db{DBParams{.path = gArgs.GetDataDirNet() / "indexes" / "txindex", .cache_bytes = 1_MiB}};
+        CDBWrapper db{DBParams{.path = gArgs.GetDataDirNet() / "indexes" / "txindex" / "v3", .cache_bytes = 1_MiB}};
         db.Write(txindex::LegacyTxKey(legacy_txid), legacy_pos);
     }
 
@@ -295,7 +295,7 @@ BOOST_FIXTURE_TEST_CASE(txindex_locator_upgrade, TestChain100Setup)
         new_hash = Assert(m_node.chainman->ActiveChain().Tip())->GetBlockHash();
     }
     CBlockLocator legacy_locator{{legacy_hash}}, new_locator{{new_hash}};
-    { CDBWrapper{DBParams{.path = gArgs.GetDataDirNet() / "indexes" / "txindex", .cache_bytes = 1_MiB}}.Write(uint8_t{'B'}, legacy_locator); }
+    { CDBWrapper{DBParams{.path = gArgs.GetDataDirNet() / "indexes" / "txindex" / "v3", .cache_bytes = 1_MiB}}.Write(uint8_t{'B'}, legacy_locator); }
 
     TxIndex txindex(interfaces::MakeChain(m_node), /*n_cache_size=*/1_MiB, /*f_memory=*/false);
     BOOST_CHECK(TxIndexTest::ReadBestBlock(txindex).vHave == legacy_locator.vHave);

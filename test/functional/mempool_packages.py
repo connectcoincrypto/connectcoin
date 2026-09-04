@@ -40,6 +40,11 @@ class MempoolPackagesTest(BitcoinTestFramework):
             node.submitblock(block.serialize().hex())
         assert_equal(node.getbestblockhash(), fork_blocks[-1].hash_hex)
 
+    def prioritize_mempool_for_mining(self, node):
+        """Keep package tests focused on topology, above the subsidy-penalty floor."""
+        for txid, entry in node.getrawmempool(verbose=True).items():
+            node.prioritisetransaction(txid=txid, fee_delta=entry["vsize"] * 2000)
+
     def run_test(self):
         self.wallet = MiniWallet(self.nodes[0])
         self.wallet.rescan_utxos()
@@ -236,6 +241,7 @@ class MempoolPackagesTest(BitcoinTestFramework):
         # First, the basics:
         fork_blocks = create_empty_fork(self.nodes[0])
         mempool0 = self.nodes[0].getrawmempool(False)
+        self.prioritize_mempool_for_mining(self.nodes[0])
         self.generate(self.nodes[0], 1)
         self.trigger_reorg(fork_blocks, self.nodes[0])
 
@@ -244,6 +250,7 @@ class MempoolPackagesTest(BitcoinTestFramework):
         assert_equal(self.nodes[0].getrawmempool(), mempool0)
 
         # Clean-up the mempool
+        self.prioritize_mempool_for_mining(self.nodes[0])
         self.generate(self.nodes[0], 1)
 
         # Now test the case where node1 has a transaction T in its mempool that
@@ -272,6 +279,7 @@ class MempoolPackagesTest(BitcoinTestFramework):
         tx7 = self.wallet.send_self_transfer_chain(from_node=self.nodes[0], utxo_to_spend=tx0["new_utxos"][1], chain_length=6)[-1]
 
         # Mine these in a block
+        self.prioritize_mempool_for_mining(self.nodes[0])
         self.generate(self.nodes[0], 1)
 
         # Now generate tx8, with a big fee

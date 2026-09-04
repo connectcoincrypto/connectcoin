@@ -8,6 +8,7 @@
 #include <policy/policy.h>
 #include <primitives/block.h>
 #include <random.h>
+#include <test/util/mining.h>
 #include <test/util/setup_common.h>
 #include <test/util/txmempool.h>
 #include <txmempool.h>
@@ -20,6 +21,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <string>
+#include <vector>
 
 BOOST_FIXTURE_TEST_SUITE(mempool_fee_estimator_tests, TestingSetup)
 
@@ -31,9 +33,13 @@ static inline CTransactionRef MakeRandomTx()
     tx.vout.resize(1);
     tx.vin[0].prevout.hash = Txid::FromUint256(rng.rand256());
     tx.vin[0].prevout.n = 0;
-    tx.vin[0].scriptSig << OP_TRUE;
-    tx.vout[0].scriptPubKey = CScript() << OP_TRUE;
+    tx.vin[0].scriptSig.resize(25'000);
+    tx.vin[0].scriptWitness.stack = {std::vector<unsigned char>(64)};
+    tx.vout[0].SetScriptPubKey(DeterministicP2PKScript());
     tx.vout[0].nValue = COIN;
+    // Keep the number of synthetic entries bounded when policy block weight
+    // is large. Fee tiers below are chosen so even the lowest tier exceeds
+    // ConnectCoin's marginal subsidy penalty at this transaction weight.
     return MakeTransactionRef(tx);
 }
 
@@ -260,9 +266,9 @@ BOOST_AUTO_TEST_CASE(MempoolFeeRateEstimator)
     }
     TestMemPoolEntryHelper entry;
     const auto tx_vsize = entry.FromTx(MakeRandomTx()).GetTxSize();
-    const CAmount low_fee{CENT / 3000};
-    const CAmount med_fee{CENT / 100};
-    const CAmount high_fee{CENT / 10};
+    const CAmount low_fee{CENT * 2 / 5};
+    const CAmount med_fee{CENT * 3 / 5};
+    const CAmount high_fee{CENT * 4 / 5};
     const CAmount very_high_fee{CENT};
     // A mempool that cannot fill 50% of a block leaves both percentiles empty,
     // so both estimate still fall back to the floor.
@@ -327,7 +333,7 @@ BOOST_AUTO_TEST_CASE(MempoolFeeRateEstimator)
         {
             LOCK2(cs_main, m_node.mempool->cs);
             while ((m_node.mempool->GetTotalTxSize() * WITNESS_SCALE_FACTOR) <=
-                   (DEFAULT_BLOCK_MAX_WEIGHT * 105 / 100)) {
+                   (uint64_t{DEFAULT_BLOCK_MAX_WEIGHT} * 105 / 100)) {
                 TryAddToMempool(*m_node.mempool, entry.Fee(very_high_fee).FromTx(MakeRandomTx()));
             }
         }

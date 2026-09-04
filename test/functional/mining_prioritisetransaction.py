@@ -10,7 +10,6 @@ import time
 from test_framework.blocktools import NORMAL_GBT_REQUEST_PARAMS
 from test_framework.messages import (
     COIN,
-    MAX_BLOCK_WEIGHT,
 )
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
@@ -22,12 +21,15 @@ from test_framework.util import (
 )
 from test_framework.wallet import MiniWallet
 
+TEST_BLOCK_MAX_WEIGHT = 4_000_000
+
 
 class PrioritiseTransactionTest(BitcoinTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.extra_args = [[
             "-printpriority=1",
+            f"-blockmaxweight={TEST_BLOCK_MAX_WEIGHT}",
         ]] * self.num_nodes
         self.supports_cli = False
 
@@ -125,12 +127,14 @@ class PrioritiseTransactionTest(BitcoinTestFramework):
         tx_o_a = self.wallet.send_self_transfer_multi(
             from_node=self.nodes[0],
             num_outputs=2,
+            fee_per_output=100_000,
         )
         txid_a = tx_o_a["txid"]
 
         tx_o_b, tx_o_c = [self.wallet.send_self_transfer(
             from_node=self.nodes[0],
             utxo_to_spend=u,
+            fee_rate=Decimal("0.0002"),
         ) for u in tx_o_a["new_utxos"]]
         txid_b = tx_o_b["txid"]
         txid_c = tx_o_c["txid"]
@@ -141,6 +145,7 @@ class PrioritiseTransactionTest(BitcoinTestFramework):
                 self.wallet.get_utxo(txid=txid_b),
                 self.wallet.get_utxo(txid=txid_c),
             ],
+            fee_per_output=200_000,
         )
         txid_d = tx_o_d["txid"]
 
@@ -235,11 +240,17 @@ class PrioritiseTransactionTest(BitcoinTestFramework):
         self.relayfee = self.nodes[0].getnetworkinfo()['relayfee']
 
         utxo_count = 90
-        utxos = self.wallet.send_self_transfer_multi(from_node=self.nodes[0], num_outputs=utxo_count)['new_utxos']
+        utxos = self.wallet.send_self_transfer_multi(
+            from_node=self.nodes[0],
+            num_outputs=utxo_count,
+            fee_per_output=100_000,
+        )['new_utxos']
         self.generate(self.wallet, 1)
         assert_equal(len(self.nodes[0].getrawmempool()), 0)
 
-        base_fee = self.relayfee*100 # our transactions are smaller than 100kb
+        # These ~67 kB typed-output transactions must also pay more than the
+        # weight-adjusted subsidy loss, not merely the relay minimum.
+        base_fee = max(self.relayfee * 100, Decimal("0.01"))
         txids = []
 
         # Create 3 batches of transactions at 3 different fee rate levels
@@ -257,7 +268,7 @@ class PrioritiseTransactionTest(BitcoinTestFramework):
                 utxos[start_range:end_range])
 
         # Make sure that the size of each group of transactions exceeds
-        # MAX_BLOCK_WEIGHT // 4 -- otherwise the test needs to be revised to
+        # TEST_BLOCK_MAX_WEIGHT // 4 -- otherwise the test needs to be revised to
         # create more transactions.
         mempool = self.nodes[0].getrawmempool(True)
         sizes = [0, 0, 0]
@@ -265,7 +276,7 @@ class PrioritiseTransactionTest(BitcoinTestFramework):
             for j in txids[i]:
                 assert j in mempool
                 sizes[i] += mempool[j]['vsize']
-            assert sizes[i] > MAX_BLOCK_WEIGHT // 4  # Fail => raise utxo_count
+            assert sizes[i] > TEST_BLOCK_MAX_WEIGHT // 4  # Fail => raise utxo_count
 
         assert_equal(self.nodes[0].getprioritisedtransactions(), {})
         # add a fee delta to something in the cheapest bucket and make sure it gets mined

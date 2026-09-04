@@ -16,6 +16,7 @@ import time
 
 from test_framework.messages import (
     CInv,
+    MAX_BLOCK_SERIALIZED_SIZE,
     MSG_BLOCK,
     msg_getdata,
     msg_mempool,
@@ -24,12 +25,22 @@ from test_framework.p2p import P2PInterface
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
+    assert_greater_than,
     mine_large_block,
 )
 from test_framework.wallet import MiniWallet
 
 
-UPLOAD_TARGET_MB = 800
+# This functional test runs on regtest, whose target spacing remains ten
+# minutes even though the public ConnectCoin networks target ten seconds.
+TARGET_SPACING_SECONDS = 10 * 60
+MIB = 1024 * 1024
+DAILY_RELAY_BUFFER = (24 * 60 * 60 // TARGET_SPACING_SECONDS) * MAX_BLOCK_SERIALIZED_SIZE
+# A modest historical-block headroom is enough to exercise both serving and
+# disconnect behavior without transferring hundreds of MiB through the Python
+# P2P implementation on every CI run.
+HISTORICAL_BLOCK_HEADROOM_MB = 32
+UPLOAD_TARGET_MB = (DAILY_RELAY_BUFFER + MIB - 1) // MIB + HISTORICAL_BLOCK_HEADROOM_MB
 
 
 class TestP2PConn(P2PInterface):
@@ -87,6 +98,9 @@ class MaxUploadTest(BitcoinTestFramework):
         # Store the hash; we'll request this later
         big_old_block = self.nodes[0].getbestblockhash()
         old_block_size = self.nodes[0].getblock(big_old_block, True)['size']
+        # A nearly empty block would make success_count enormous and turn a
+        # useful regression test into a very long sequence of P2P requests.
+        assert_greater_than(old_block_size, 900_000)
         big_old_block = int(big_old_block, 16)
 
         # Advance to two days ago
@@ -105,23 +119,30 @@ class MaxUploadTest(BitcoinTestFramework):
         getdata_request = msg_getdata()
         getdata_request.inv.append(CInv(MSG_BLOCK, big_old_block))
 
-        max_bytes_per_day = UPLOAD_TARGET_MB * 1024 *1024
-        daily_buffer = 144 * 4000000
+        max_bytes_per_day = UPLOAD_TARGET_MB * MIB
+        daily_buffer = DAILY_RELAY_BUFFER
         max_bytes_available = max_bytes_per_day - daily_buffer
         success_count = max_bytes_available // old_block_size
 
-        # 576MB will be reserved for relaying new blocks, so expect this to
-        # succeed for ~235 tries.
+        # The remaining headroom is used for historical blocks.
         for i in range(success_count):
             p2p_conns[0].send_and_ping(getdata_request)
             assert_equal(p2p_conns[0].block_receive_map[big_old_block], i+1)
 
         assert_equal(len(self.nodes[0].getpeerinfo()), 3)
-        # At most a couple more tries should succeed (depending on how long
-        # the test has been running so far).
+        # Serialize the final requests so the send accounting is visible
+        # before the next request is evaluated. Queuing several requests at
+        # once can let all of them pass the pre-send limit check.
         with self.nodes[0].assert_debug_log(expected_msgs=["historical block serving limit reached, disconnecting peer=0"]):
             for _ in range(3):
+                blocks_received = p2p_conns[0].block_receive_map[big_old_block]
                 p2p_conns[0].send_without_ping(getdata_request)
+                p2p_conns[0].wait_until(
+                    lambda: not p2p_conns[0].is_connected or p2p_conns[0].block_receive_map[big_old_block] > blocks_received,
+                    check_connected=False,
+                )
+                if not p2p_conns[0].is_connected:
+                    break
             p2p_conns[0].wait_for_disconnect()
         assert_equal(len(self.nodes[0].getpeerinfo()), 2)
         self.log.info("Peer 0 disconnected after downloading old block too many times")
@@ -129,16 +150,15 @@ class MaxUploadTest(BitcoinTestFramework):
         # Historical blocks serving limit is reached by now, but total limit still isn't
         self.assert_uploadtarget_state(target_reached=False, serve_historical_blocks=False)
 
-        # Requesting the current block on p2p_conns[1] should succeed indefinitely,
-        # even when over the max upload target.
-        # We'll try 800 times
+        # Recent blocks remain available after the historical-block reserve is
+        # reached. The separate small-target phase below exercises behavior
+        # after the total limit is reached without transferring hundreds of GB.
         getdata_request.inv = [CInv(MSG_BLOCK, big_new_block)]
-        for i in range(800):
+        for i in range(3):
             p2p_conns[1].send_and_ping(getdata_request)
             assert_equal(p2p_conns[1].block_receive_map[big_new_block], i+1)
 
-        # Both historical blocks serving limit and total limit are reached
-        self.assert_uploadtarget_state(target_reached=True, serve_historical_blocks=False)
+        self.assert_uploadtarget_state(target_reached=False, serve_historical_blocks=False)
 
         self.log.info("Peer 1 able to repeatedly download new block")
 

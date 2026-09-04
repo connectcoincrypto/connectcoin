@@ -26,6 +26,11 @@ from test_framework.wallet import MiniWallet
 MAX_FILE_AGE = 60
 SECONDS_PER_HOUR = 60 * 60
 MIN_BUCKET_FEERATE = Decimal(100) / Decimal(COIN)
+# Functional fee-estimator tests intentionally exercise feerates far below the
+# economic break-even point introduced by ConnectCoin's block-weight subsidy
+# penalty. Add the same per-vbyte delta to every candidate on the test miner so
+# selection order is preserved while the transactions can still be confirmed.
+MINING_FEE_DELTA_PER_VBYTE = 2_000
 TXS_COUNT = 24
 BLOCK_POLICY_ESTIMATOR_ERROR = "Insufficient data or no feerate found"
 BLOCK_POLICY_ESTIMATOR_FILE_PATH = "fees/block_policy_estimates.dat"
@@ -75,7 +80,7 @@ def small_txpuzzle_randfee(
     unconflist.append({"txid": txid, "vout": 0, "value": total_in - amount - fee})
     unconflist.append({"txid": txid, "vout": 1, "value": amount})
 
-    return (tx.get_vsize(), fee)
+    return (txid, tx.get_vsize(), fee)
 
 
 def check_raw_estimates(node, fees_seen):
@@ -200,7 +205,7 @@ class EstimateFeeTest(BitcoinTestFramework):
             batch_sendtx_reqs = []
             for _ in range(random.randrange(100 - 50, 100 + 50)):
                 from_index = random.randint(1, 2)
-                (tx_bytes, fee) = small_txpuzzle_randfee(
+                (txid, tx_bytes, fee) = small_txpuzzle_randfee(
                     self.wallet,
                     self.nodes[from_index],
                     self.confutxo,
@@ -212,6 +217,11 @@ class EstimateFeeTest(BitcoinTestFramework):
                 )
                 tx_kbytes = tx_bytes / 1000.0
                 self.fees_per_kb.append(float(fee) / tx_kbytes)
+                for node in self.nodes:
+                    node.prioritisetransaction(
+                        txid=txid,
+                        fee_delta=tx_bytes * MINING_FEE_DELTA_PER_VBYTE,
+                    )
             for node in self.nodes:
                 node.batch(batch_sendtx_reqs)
             self.sync_mempools(wait=0.1)
@@ -223,7 +233,11 @@ class EstimateFeeTest(BitcoinTestFramework):
         self.confutxo = self.wallet.send_self_transfer_multi(
             from_node=node,
             utxos_to_spend=[self.wallet.get_utxo() for _ in range(2)],
-            num_outputs=2048)['new_utxos']
+            num_outputs=2048,
+            # This setup transaction is not part of the estimator sample. Give
+            # it enough fee to compensate the miner's subsidy loss directly.
+            fee_per_output=300_000,
+        )['new_utxos']
         while len(node.getrawmempool()) > 0:
             self.generate(node, 1, sync_fun=self.no_op)
 
@@ -273,8 +287,8 @@ class EstimateFeeTest(BitcoinTestFramework):
         node = self.nodes[0]
         miner = self.nodes[1]
         # In con/vb
-        low_feerate = 1
-        high_feerate = 10
+        low_feerate = 2_000
+        high_feerate = 20_000
         # Cache the utxos of which to replace the spender after it failed to get
         # confirmed
         utxos_to_respend = []
@@ -474,17 +488,26 @@ class EstimateFeeTest(BitcoinTestFramework):
                 node.batch(batch_send_tx)
             self.sync_mempools(wait=0.1, nodes=[self.nodes[0], self.nodes[1], self.nodes[2]])
             if miner:
+                # Include any low-fee samples left in the mempool by an earlier
+                # call without a miner as well as this call's transactions.
+                for txid, entry in miner.getrawmempool(verbose=True).items():
+                    miner.prioritisetransaction(
+                        txid=txid,
+                        fee_delta=entry["vsize"] * MINING_FEE_DELTA_PER_VBYTE,
+                    )
                 mined = miner.getblock(self.generate(miner, 1)[0], True)["tx"]
                 self.update_utxo(mined)
 
     def send_transactions(self, utxos, fee_rate, target_vsize):
+        txs = []
         for utxo in utxos:
-            self.wallet.send_self_transfer(
+            txs.append(self.wallet.send_self_transfer(
                 from_node=self.nodes[0],
                 utxo_to_spend=utxo,
                 fee_rate=fee_rate,
                 target_vsize=target_vsize,
-            )
+            ))
+        return txs
 
     def test_estimation_modes(self):
         # Preserve the original raw connects/vB after increasing COIN precision
@@ -522,17 +545,25 @@ class EstimateFeeTest(BitcoinTestFramework):
         verify_estimate_response(estimate_after_restart, None, [BLOCK_POLICY_ESTIMATOR_ERROR])
         self.log.info("Populate block policy estimator with high-feerate history")
         # Generate high-feerate transactions and mine them over 6 blocks to give block policy data.
-        high_feerate = Decimal("0.00004")
+        high_feerate = Decimal("0.00020")
         self.broadcast_and_maybe_mine(node0, high_feerate, TXS_COUNT, 6, miner)
         self.log.info("Test estimatesmartfee returns block policy estimator estimate when mempool is higher")
-        # Add 10 large insane-feerate transactions enough to generate a block template
-        num_txs = 10
+        # Fill more than 75% of ConnectCoin's 50,000,000-weight block so both
+        # mempool-policy percentiles are populated.
+        num_txs = 100
+        if len(self.wallet.get_utxos(mark_as_spent=False, confirmed_only=True)) < num_txs:
+            self.wallet.send_self_transfer_multi(
+                from_node=node0,
+                num_outputs=num_txs,
+                fee_per_output=300_000,
+            )
+            self.generate(self.wallet, 1)
         # With a fixed 41-byte output payload, not every arbitrary vsize is
         # representable. 99,772 vB is the largest one-input type-1 transaction
         # below the original per-transaction target.
         target_vsize = 99_782
         utxos = [self.wallet.get_utxo(confirmed_only=True) for _ in range(num_txs)]
-        insane_feerate = Decimal("0.0001")
+        insane_feerate = Decimal("0.001")
         self.send_transactions(utxos, insane_feerate, target_vsize)
         estimate_after_spike = node0.estimatesmartfee(1, "economical", {"verbosity": 2, "fee_rate_estimator": "none"})
         assert_equal(len(estimate_after_spike["mempool_health_statistics"]), 6)
@@ -550,10 +581,11 @@ class EstimateFeeTest(BitcoinTestFramework):
         # keeps the mempool representation healthy. Then broadcast fresh low-feerate
         # transactions so the mempool estimate is now the lower of the two.
         self.generate(node0, 1, sync_fun=lambda: None)
+        self.wallet.rescan_utxos()
         assert_equal(node0.getmempoolinfo()['size'], 0)
-        low_feerate = Decimal("0.0000004")
+        low_feerate = Decimal("0.00010")
         low_utxos = [self.wallet.get_utxo(confirmed_only=True) for _ in range(num_txs)]
-        self.send_transactions(low_utxos, low_feerate, target_vsize)
+        low_txs = self.send_transactions(low_utxos, low_feerate, target_vsize)
         lower_estimate = node0.estimatesmartfee(1, "economical", {"fee_rate_estimator": "none"})
         verify_estimate_response(lower_estimate, low_feerate, [])
         # The mempool block stats are persisted across restarts, so the mempool
@@ -565,6 +597,11 @@ class EstimateFeeTest(BitcoinTestFramework):
         verify_estimate_response(estimate_post_restart, low_feerate, [])
 
         self.log.info("Test estimatesmartfee returns the fee rate floor when the mempool is empty but healthy")
+        for tx in low_txs:
+            node0.prioritisetransaction(
+                txid=tx["txid"],
+                fee_delta=tx["tx"].get_vsize() * MINING_FEE_DELTA_PER_VBYTE,
+            )
         self.generate(node0, 1, sync_fun=lambda: None)
         assert_equal(node0.getmempoolinfo()['size'], 0)
         block_policy_estimate = node0.estimatesmartfee(1, "economical", {"fee_rate_estimator": "block_policy"})
