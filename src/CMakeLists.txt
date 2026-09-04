@@ -55,11 +55,19 @@ FetchContent_MakeAvailable(connectcoin_mbedtls)
 
 # Third-party diagnostics must not become fatal when the parent project uses
 # CMAKE_COMPILE_WARNING_AS_ERROR. ConnectCoin's own targets retain the policy.
+# Mbed TLS also deliberately uses defined unsigned wraparound, unsigned shifts,
+# narrowing conversions, and unsigned post-decrement loop idioms. Clang's
+# optional integer sanitizer diagnoses those operations even though they are not
+# undefined behavior. Disable only those noisy checks for the vendored package;
+# ASan, LSan, signed-overflow, invalid-shift, divide-by-zero, and all other
+# true-UB checks inherited from sanitize_interface remain enabled.
 foreach(mbedtls_target IN ITEMS mbedcrypto mbedx509 mbedtls everest p256m)
   if(TARGET ${mbedtls_target})
     set_property(TARGET ${mbedtls_target} PROPERTY COMPILE_WARNING_AS_ERROR OFF)
     target_compile_options(${mbedtls_target} PRIVATE
       "$<$<COMPILE_LANGUAGE:C,CXX>:$<TARGET_PROPERTY:sanitize_interface,INTERFACE_COMPILE_OPTIONS>>"
+      "$<$<COMPILE_LANG_AND_ID:C,Clang,AppleClang>:-fno-sanitize=unsigned-integer-overflow,unsigned-shift-base,implicit-integer-sign-change,implicit-integer-truncation>"
+      "$<$<COMPILE_LANG_AND_ID:CXX,Clang,AppleClang>:-fno-sanitize=unsigned-integer-overflow,unsigned-shift-base,implicit-integer-sign-change,implicit-integer-truncation>"
     )
     if(CMAKE_SYSTEM_NAME STREQUAL "Generic")
       target_compile_definitions(${mbedtls_target} PUBLIC MBEDTLS_NO_PLATFORM_ENTROPY)
@@ -67,18 +75,6 @@ foreach(mbedtls_target IN ITEMS mbedcrypto mbedx509 mbedtls everest p256m)
   endif()
 endforeach()
 unset(mbedtls_target)
-
-# SHA-512 uses defined unsigned left shifts to implement rotations. Clang's
-# optional integer sanitizer diagnoses those operations even though unsigned
-# arithmetic is well-defined. Limit the compile-time exception to the primitive
-# library; expected modular-addition overflows are suppressed by source path in
-# test/sanitizer_suppressions/ubsan.
-if(TARGET mbedcrypto)
-  target_compile_options(mbedcrypto PRIVATE
-    "$<$<COMPILE_LANG_AND_ID:C,Clang,AppleClang>:-fno-sanitize=unsigned-shift-base>"
-    "$<$<COMPILE_LANG_AND_ID:CXX,Clang,AppleClang>:-fno-sanitize=unsigned-shift-base>"
-  )
-endif()
 
 set(RANDOMX_BUILD_TESTS OFF CACHE BOOL "Build RandomX tests and benchmark tools" FORCE)
 set(RANDOMX_INSTALL OFF CACHE BOOL "Install the RandomX library and public header" FORCE)
