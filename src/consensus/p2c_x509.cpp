@@ -144,7 +144,11 @@ bool CheckSuppliedCertificateTimes(const mbedtls_x509_crt& chain, int64_t valida
 
 int IgnoreWallClockValidity(void*, mbedtls_x509_crt*, int, uint32_t* flags)
 {
-    *flags &= ~(MBEDTLS_X509_BADCERT_EXPIRED | MBEDTLS_X509_BADCERT_FUTURE);
+    constexpr uint32_t WALL_CLOCK_VALIDITY_FLAGS{
+        static_cast<uint32_t>(MBEDTLS_X509_BADCERT_EXPIRED) |
+        static_cast<uint32_t>(MBEDTLS_X509_BADCERT_FUTURE),
+    };
+    *flags &= ~WALL_CLOCK_VALIDITY_FLAGS;
     return 0;
 }
 
