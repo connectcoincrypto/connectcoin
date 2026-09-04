@@ -148,7 +148,8 @@ def prepare_tests(ci_type):
 def run_tests(ci_type):
     workspace = Path.cwd()
     build_dir = workspace / "build"
-    num_procs = str(os.process_cpu_count())
+    num_procs_int = os.process_cpu_count() or 1
+    num_procs = str(num_procs_int)
     release_bin = build_dir / "bin" / "Release"
 
     if ci_type == "standard":
@@ -203,7 +204,7 @@ def run_tests(ci_type):
             "--par",
             num_procs,
             "--corpus-shards",
-            num_procs,
+            str(num_procs_int * 4),
             "--loglevel",
             "DEBUG",
             str(workspace / "qa-assets" / "fuzz_corpora"),

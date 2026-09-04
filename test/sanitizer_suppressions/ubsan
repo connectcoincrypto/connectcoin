@@ -11,6 +11,7 @@
 unsigned-integer-overflow:*/include/c++/
 unsigned-integer-overflow:FuzzedDataProvider::ConsumeIntegralInRange
 unsigned-integer-overflow:leveldb/
+unsigned-integer-overflow:asn1_get_tagged_int
 unsigned-integer-overflow:*mbedtls*/library/bignum.c
 unsigned-integer-overflow:*mbedtls*/library/bignum_core.c
 unsigned-integer-overflow:*mbedtls*/library/constant_time_impl.h

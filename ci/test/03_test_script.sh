@@ -245,8 +245,11 @@ fi
 if [[ "${RUN_IWYU}" == true ]]; then
   # TODO: Consider enforcing IWYU across the entire codebase.
   FILES_WITH_ENFORCED_IWYU='/src/((bench|common|consensus|crypto|index|kernel|primitives|script|univalue/(lib|test)|util|zmq)/.*|node/(blockstorage|interfaces|miner|mining_args|utxo_snapshot)|rpc/mining|clientversion|core_io|signet|init)\.cpp'
-  jq --arg patterns "$FILES_WITH_ENFORCED_IWYU" 'map(select(.file | test($patterns)))' "${BASE_BUILD_DIR}/compile_commands.json" > "${BASE_BUILD_DIR}/compile_commands_iwyu_errors.json"
-  jq --arg patterns "$FILES_WITH_ENFORCED_IWYU" 'map(select(.file | test($patterns) | not))' "${BASE_BUILD_DIR}/compile_commands.json" > "${BASE_BUILD_DIR}/compile_commands_iwyu_warnings.json"
+  # Vendored dependencies follow their upstream projects' include style. Keep
+  # IWYU focused on ConnectCoin sources, as the clang-tidy job does above.
+  jq 'map(select(.file | test("src/randomx/|_deps/connectcoin_mbedtls-src/") | not))' "${BASE_BUILD_DIR}/compile_commands.json" > "${BASE_BUILD_DIR}/compile_commands_iwyu.json"
+  jq --arg patterns "$FILES_WITH_ENFORCED_IWYU" 'map(select(.file | test($patterns)))' "${BASE_BUILD_DIR}/compile_commands_iwyu.json" > "${BASE_BUILD_DIR}/compile_commands_iwyu_errors.json"
+  jq --arg patterns "$FILES_WITH_ENFORCED_IWYU" 'map(select(.file | test($patterns) | not))' "${BASE_BUILD_DIR}/compile_commands_iwyu.json" > "${BASE_BUILD_DIR}/compile_commands_iwyu_warnings.json"
 
   cd "${BASE_ROOT_DIR}"
 
