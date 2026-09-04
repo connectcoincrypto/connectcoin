@@ -101,15 +101,20 @@ int DaysInMonth(int year, int month)
 }
 
 /** Days since 1970-01-01, valid for the Gregorian calendar. */
-int64_t DaysFromCivil(int year, unsigned month, unsigned day)
+constexpr int64_t DaysFromCivil(int year, int month, int day)
 {
-    year -= month <= 2;
-    const int era{(year >= 0 ? year : year - 399) / 400};
-    const unsigned year_of_era{static_cast<unsigned>(year - era * 400)};
-    const unsigned day_of_year{(153 * (month + (month > 2 ? -3 : 9)) + 2) / 5 + day - 1};
-    const unsigned day_of_era{year_of_era * 365 + year_of_era / 4 - year_of_era / 100 + day_of_year};
-    return era * 146097LL + static_cast<int64_t>(day_of_era) - 719468;
+    const int64_t adjusted_year{static_cast<int64_t>(year) - (month <= 2 ? 1 : 0)};
+    const int64_t era{(adjusted_year >= 0 ? adjusted_year : adjusted_year - 399) / 400};
+    const int64_t year_of_era{adjusted_year - era * 400};
+    const int64_t adjusted_month{month > 2 ? month - 3 : month + 9};
+    const int64_t day_of_year{(153 * adjusted_month + 2) / 5 + day - 1};
+    const int64_t day_of_era{year_of_era * 365 + year_of_era / 4 - year_of_era / 100 + day_of_year};
+    return era * 146097 + day_of_era - 719468;
 }
+
+static_assert(DaysFromCivil(1970, 1, 1) == 0);
+static_assert(DaysFromCivil(2000, 3, 1) - DaysFromCivil(2000, 2, 28) == 2);
+static_assert(DaysFromCivil(2100, 3, 1) - DaysFromCivil(2100, 2, 28) == 1);
 
 bool X509TimeToUnix(const mbedtls_x509_time& time, int64_t& result)
 {
@@ -118,7 +123,7 @@ bool X509TimeToUnix(const mbedtls_x509_time& time, int64_t& result)
         time.min < 0 || time.min > 59 || time.sec < 0 || time.sec > 59) return false;
     const int64_t days{DaysFromCivil(time.year, time.mon, time.day)};
     if (days > (std::numeric_limits<int64_t>::max() - 86399) / 86400) return false;
-    result = days * 86400 + time.hour * 3600 + time.min * 60 + time.sec;
+    result = days * 86400 + int64_t{time.hour} * 3600 + int64_t{time.min} * 60 + time.sec;
     return true;
 }
 

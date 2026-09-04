@@ -19,10 +19,10 @@ class CTxOut;
 
 inline constexpr uint8_t P2C_PROOF_VERSION{1};
 inline constexpr uint32_t P2C_ROOT_CERTIFICATES_VERSION_1{1};
-inline constexpr size_t MAX_P2C_PROOF_SIZE{64 * 1024};
-inline constexpr size_t MAX_P2C_CERTIFICATE_MESSAGE_SIZE{48 * 1024};
+inline constexpr size_t MAX_P2C_PROOF_SIZE{size_t{64} * 1024};
+inline constexpr size_t MAX_P2C_CERTIFICATE_MESSAGE_SIZE{size_t{48} * 1024};
 inline constexpr size_t MAX_P2C_CERTIFICATES{8};
-inline constexpr size_t MAX_P2C_CERTIFICATE_SIZE{16 * 1024};
+inline constexpr size_t MAX_P2C_CERTIFICATE_SIZE{size_t{16} * 1024};
 
 /** Versions are consensus identifiers for immutable root bundles. */
 constexpr bool IsSupportedP2CRootCertificatesVersion(uint32_t version)
