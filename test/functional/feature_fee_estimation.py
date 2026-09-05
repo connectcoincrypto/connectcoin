@@ -164,10 +164,14 @@ class EstimateFeeTest(BitcoinTestFramework):
         self.num_nodes = 3
         # whitelist peers to speed up tx relay / mempool sync
         self.noban_tx_relay = True
+        # This estimator-mechanics test intentionally populates the historical
+        # buckets below ConnectCoin's production economic relay floor. Keep a
+        # low node-local floor here; ordinary functional tests use the default.
+        low_relay = f"-minrelaytxfee={MIN_BUCKET_FEERATE:.10f}"
         self.extra_args = [
-            [],
-            ["-blockmaxweight=72000"],
-            ["-blockmaxweight=36000"],
+            [low_relay],
+            [low_relay, "-blockmaxweight=72000"],
+            [low_relay, "-blockmaxweight=36000"],
         ]
 
     def setup_network(self):
@@ -459,7 +463,10 @@ class EstimateFeeTest(BitcoinTestFramework):
         os.utime(fee_dat, (last_modified_time, last_modified_time))
 
         # Restart node with -acceptstalefeeestimates option to ensure block policy estimator file is read
-        self.start_node(0,extra_args=["-acceptstalefeeestimates"])
+        self.start_node(0, extra_args=[
+            "-acceptstalefeeestimates",
+            f"-minrelaytxfee={MIN_BUCKET_FEERATE:.10f}",
+        ])
         assert_equal(self.nodes[0].estimatesmartfee(1, "economical", {"fee_rate_estimator": "block_policy"})["feerate"], fee_rate)
 
     def clear_estimates(self):

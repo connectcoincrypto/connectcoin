@@ -66,11 +66,11 @@ util::Result<void> ApplyArgsManOptions(const ArgsManager& argsman, const CChainP
         }
     }
 
-    static_assert(DEFAULT_MIN_RELAY_TX_FEE == DEFAULT_INCREMENTAL_RELAY_FEE);
     if (const auto arg{argsman.GetArg("-minrelaytxfee")}) {
         if (std::optional<CAmount> min_relay_feerate = ParseMoney(*arg)) {
             // High fee check is done afterward in CWallet::Create()
             mempool_opts.min_relay_feerate = CFeeRate{min_relay_feerate.value()};
+            mempool_opts.min_relay_feerate_is_explicit = true;
         } else {
             return util::Error{AmountErrMsg("minrelaytxfee", *arg)};
         }

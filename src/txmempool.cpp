@@ -174,7 +174,8 @@ static CTxMemPool::Options&& Flatten(CTxMemPool::Options&& opts, bilingual_str& 
 }
 
 CTxMemPool::CTxMemPool(Options opts, bilingual_str& error)
-    : m_opts{Flatten(std::move(opts), error)}
+    : m_opts{Flatten(std::move(opts), error)},
+      m_min_relay_fee_per_kvb{m_opts.min_relay_feerate.GetFeePerK()}
 {
     m_txgraph = MakeTxGraph(
         /*max_cluster_count=*/m_opts.limits.cluster_count,
@@ -185,6 +186,19 @@ CTxMemPool::CTxMemPool(Options opts, bilingual_str& error)
             const Txid& txid_b = static_cast<const CTxMemPoolEntry&>(b).GetTx().GetHash();
             return txid_a <=> txid_b;
         });
+}
+
+CFeeRate CTxMemPool::GetMinRelayFee() const
+{
+    return CFeeRate{m_min_relay_fee_per_kvb.load()};
+}
+
+void CTxMemPool::UpdateMinRelayFee(const CFeeRate& economic_relay_feerate)
+{
+    if (m_opts.min_relay_feerate_is_explicit) return;
+
+    const CFeeRate effective_feerate{std::max(economic_relay_feerate, m_opts.incremental_relay_feerate)};
+    m_min_relay_fee_per_kvb.store(effective_feerate.GetFeePerK());
 }
 
 bool CTxMemPool::isSpent(const COutPoint& outpoint) const

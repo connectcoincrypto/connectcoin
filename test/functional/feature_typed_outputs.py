@@ -270,7 +270,9 @@ class TypedOutputsTest(BitcoinTestFramework):
                 {"txid": funding_a, "vout": find_output(funding_a, address_a)},
                 {"txid": funding_b, "vout": find_output(funding_b, address_b)},
             ],
-            outputs={default_wallet.getnewaddress(address_type="bech32m"): 1.99999},
+            # Leave a normal relayable fee. This test is about combining typed
+            # signatures, not acceptance below the economic relay floor.
+            outputs={default_wallet.getnewaddress(address_type="bech32m"): 1.9998},
         )
         partial_a = wallet_a.signrawtransactionwithwallet(unsigned)
         partial_b = wallet_b.signrawtransactionwithwallet(unsigned)

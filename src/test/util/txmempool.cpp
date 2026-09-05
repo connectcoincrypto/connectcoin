@@ -24,6 +24,11 @@ CTxMemPool::Options MemPoolOptionsForTest(const NodeContext& node)
         // Default to always checking mempool regardless of
         // chainparams.DefaultConsistencyChecks for tests
         .check_ratio = 1,
+        // Most inherited unit tests exercise mempool topology with deliberately
+        // tiny synthetic fees. Keep their fixture floor low; product defaults
+        // are checked directly in validation_tests.
+        .min_relay_feerate = CFeeRate{100},
+        .min_relay_feerate_is_explicit = true,
         .signals = node.validation_signals.get(),
     };
     const auto result{ApplyArgsManOptions(*node.args, ::Params(), mempool_opts)};
@@ -231,7 +236,7 @@ void MockMempoolMinFee(const CFeeRate& target_feerate, CTxMemPool& mempool)
     // ...otherwise the transaction's feerate will need to be negative.
     assert(target_feerate > mempool.m_opts.incremental_relay_feerate);
     // ...otherwise this is not meaningful. The feerate policy uses the maximum of both feerates.
-    assert(target_feerate > mempool.m_opts.min_relay_feerate);
+    assert(target_feerate > mempool.GetMinRelayFee());
 
     // Manually create an invalid transaction. Manually set the fee in the CTxMemPoolEntry to
     // achieve the exact target feerate.

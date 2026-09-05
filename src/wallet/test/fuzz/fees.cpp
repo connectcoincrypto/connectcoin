@@ -83,6 +83,7 @@ FUZZ_TARGET(wallet_fees, .init = initialize_setup)
     CTxMemPool::Options mempool_opts{
         .incremental_relay_feerate = CFeeRate{ConsumeMoney(fuzzed_data_provider, 1'000'000)},
         .min_relay_feerate = CFeeRate{ConsumeMoney(fuzzed_data_provider, 1'000'000)},
+        .min_relay_feerate_is_explicit = true,
         .dust_relay_feerate = CFeeRate{ConsumeMoney(fuzzed_data_provider, 1'000'000)}
     };
     node.mempool = std::make_unique<CTxMemPool>(mempool_opts, error);
@@ -90,7 +91,7 @@ FUZZ_TARGET(wallet_fees, .init = initialize_setup)
     g_setup->SetFeeEstimatorMan(std::move(fee_estimator_man));
     auto target_feerate{CFeeRate{ConsumeMoney(fuzzed_data_provider, /*max=*/1'000'000)}};
     if (target_feerate > node.mempool->m_opts.incremental_relay_feerate &&
-        target_feerate > node.mempool->m_opts.min_relay_feerate) {
+        target_feerate > node.mempool->GetMinRelayFee()) {
         MockMempoolMinFee(target_feerate, *node.mempool);
     }
     std::unique_ptr<CWallet> wallet_ptr{std::make_unique<CWallet>(node.chain.get(), "", CreateMockableWalletDatabase())};

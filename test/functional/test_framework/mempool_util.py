@@ -30,7 +30,7 @@ from .wallet import (
 )
 
 # Default for -minrelaytxfee in con/kvB
-DEFAULT_MIN_RELAY_TX_FEE = 100
+DEFAULT_MIN_RELAY_TX_FEE = 1_201_000
 # Default for -incrementalrelayfee in con/kvB
 DEFAULT_INCREMENTAL_RELAY_FEE = 100
 DEFAULT_CLUSTER_LIMIT = 64

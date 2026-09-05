@@ -251,7 +251,7 @@ BOOST_AUTO_TEST_CASE(MempoolFeeRateEstimator)
     // With an empty mempool there is nothing to build a feerate estimate from, so both
     // estimates fall back to the floor fee rate: the higher of the minimum relay fee rate
     // and the current mempool minimum fee rate.
-    const FeePerVSize floor{std::max(m_node.mempool->m_opts.min_relay_feerate, m_node.mempool->GetMinFee()).GetFeePerVSize()};
+    const FeePerVSize floor{std::max(m_node.mempool->GetMinRelayFee(), m_node.mempool->GetMinFee()).GetFeePerVSize()};
     {
         const auto result = mempool_estimator.EstimateFeeRate(/*conservative=*/true);
         BOOST_REQUIRE(result.has_value());

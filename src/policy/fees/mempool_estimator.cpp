@@ -396,7 +396,7 @@ util::Expected<FeeRateEstimation, FeeRateEstimationError> MemPoolFeeRateEstimato
     const auto percentiles = CalculateMaxWeightPercentiles(blocktemplate->m_package_feerates);
     // Fall back to a relayable floor (the higher of the min relay fee and the current
     // mempool min fee) for any percentile the mempool was too sparse to fill.
-    const FeePerVSize floor{std::max(m_mempool.m_opts.min_relay_feerate, m_mempool.GetMinFee()).GetFeePerVSize()};
+    const FeePerVSize floor{std::max(m_mempool.GetMinRelayFee(), m_mempool.GetMinFee()).GetFeePerVSize()};
     const FeePerVSize p50{percentiles.p50.IsEmpty() ? floor : percentiles.p50};
     const FeePerVSize p75{percentiles.p75.IsEmpty() ? floor : percentiles.p75};
     WITH_LOCK(cs, m_cache.Update(p50, p75, blocktemplate->block.hashPrevBlock));

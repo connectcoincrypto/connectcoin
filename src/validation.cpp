@@ -721,9 +721,10 @@ private:
             return state.Invalid(TxValidationResult::TX_RECONSIDERABLE, "mempool min fee not met", strprintf("%d < %d", package_fee, mempoolRejectFee));
         }
 
-        if (package_fee < m_pool.m_opts.min_relay_feerate.GetFee(package_size)) {
+        const CFeeRate min_relay_feerate{m_pool.GetMinRelayFee()};
+        if (package_fee < min_relay_feerate.GetFee(package_size)) {
             return state.Invalid(TxValidationResult::TX_RECONSIDERABLE, "min relay fee not met",
-                                 strprintf("%d < %d", package_fee, m_pool.m_opts.min_relay_feerate.GetFee(package_size)));
+                                 strprintf("%d < %d", package_fee, min_relay_feerate.GetFee(package_size)));
         }
         return true;
     }
@@ -1879,6 +1880,14 @@ CAmount GetBlockSubsidyPenalty(CAmount base_subsidy, uint64_t non_coinbase_weigh
     return FeeFrac{base_subsidy, penalty_weight_denominator}.EvaluateFeeDown(bounded_weight);
 }
 
+CFeeRate GetEconomicRelayFeeRate(int nHeight, const Consensus::Params& consensusParams)
+{
+    constexpr int32_t sample_vsize{1000};
+    constexpr uint64_t sample_weight{sample_vsize * WITNESS_SCALE_FACTOR};
+    const CAmount base_subsidy{GetBlockSubsidy(nHeight, consensusParams)};
+    return CFeeRate{GetBlockSubsidyPenalty(base_subsidy, sample_weight) + ECONOMIC_RELAY_FEE_MARGIN};
+}
+
 CAmount GetBlockSubsidyForWeight(int nHeight, uint64_t non_coinbase_weight, const Consensus::Params& consensusParams)
 {
     const CAmount base_subsidy{GetBlockSubsidy(nHeight, consensusParams)};
@@ -3028,6 +3037,8 @@ void Chainstate::UpdateTip(const CBlockIndex* pindexNew)
 
     // New best block
     if (m_mempool) {
+        m_mempool->UpdateMinRelayFee(GetEconomicRelayFeeRate(
+            pindexNew->nHeight + 1, m_chainman.GetConsensus()));
         m_mempool->AddTransactionsUpdated(1);
     }
 
@@ -4734,6 +4745,10 @@ bool Chainstate::LoadChainTip()
     CBlockIndex* tip = m_chain.Tip();
 
     if (tip && tip->GetBlockHash() == coins_cache.GetBestBlock()) {
+        if (m_mempool) {
+            m_mempool->UpdateMinRelayFee(GetEconomicRelayFeeRate(
+                tip->nHeight + 1, m_chainman.GetConsensus()));
+        }
         return true;
     }
 
@@ -4743,6 +4758,10 @@ bool Chainstate::LoadChainTip()
         return false;
     }
     m_chain.SetTip(*pindex);
+    if (m_mempool) {
+        m_mempool->UpdateMinRelayFee(GetEconomicRelayFeeRate(
+            pindex->nHeight + 1, m_chainman.GetConsensus()));
+    }
     m_chainman.UpdateIBDStatus();
     m_last_flushed_block = pindex;
     tip = m_chain.Tip();

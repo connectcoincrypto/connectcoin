@@ -176,17 +176,15 @@ private:
     /** Require an avg of 0.5 tx when using short decay since there are fewer blocks considered*/
     static constexpr double SUFFICIENT_TXS_SHORT = 0.5;
 
-    /** Minimum and Maximum values for tracking feerates
-     * The MIN_BUCKET_FEERATE should just be set to the lowest reasonable feerate.
-     * MIN_BUCKET_FEERATE has historically inherited DEFAULT_MIN_RELAY_TX_FEE.
-     * It is hardcoded because changing it is disruptive, as it invalidates existing fee
-     * estimate files.
-     *
-     * Whenever DEFAULT_MIN_RELAY_TX_FEE changes, this value should be updated
-     * accordingly. At the same time CURRENT_FEES_FILE_VERSION should be bumped.
+    /** Minimum and Maximum values for tracking feerates.
+     * Keep the historical lower bound so nodes that explicitly choose a lower
+     * -minrelaytxfee can still estimate fees. The upper bound preserves ample
+     * headroom above ConnectCoin's default economic relay floor.
+     * Changing either bound invalidates existing fee estimate files and must
+     * be accompanied by a CURRENT_FEES_FILE_VERSION bump.
      */
     static constexpr double MIN_BUCKET_FEERATE = 100;
-    static constexpr double MAX_BUCKET_FEERATE = 1e7;
+    static constexpr double MAX_BUCKET_FEERATE = 1.201e11;
 
     /** Spacing of FeeRate buckets
      * We have to lump transactions into buckets based on feerate, but we want to be able

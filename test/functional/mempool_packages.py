@@ -28,9 +28,11 @@ class MempoolPackagesTest(BitcoinTestFramework):
         self.noban_tx_relay = True
         self.extra_args = [
             [
+                "-minrelaytxfee=0.00000010",
             ],
             [
                 "-limitclustercount={}".format(CUSTOM_CLUSTER_LIMIT),
+                "-minrelaytxfee=0.00000010",
             ],
         ]
 

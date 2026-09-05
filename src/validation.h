@@ -111,6 +111,12 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams);
  */
 CAmount GetBlockSubsidyPenalty(CAmount base_subsidy, uint64_t non_coinbase_weight);
 
+/**
+ * Return the default relay floor for transactions targeting the given block
+ * height: its marginal subsidy-weight cost plus ECONOMIC_RELAY_FEE_MARGIN.
+ */
+CFeeRate GetEconomicRelayFeeRate(int nHeight, const Consensus::Params& consensusParams);
+
 /** Return the scheduled subsidy after applying the non-coinbase weight penalty. */
 CAmount GetBlockSubsidyForWeight(int nHeight, uint64_t non_coinbase_weight, const Consensus::Params& consensusParams);
 

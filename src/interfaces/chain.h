@@ -266,7 +266,7 @@ public:
     //! Mempool minimum fee.
     virtual CFeeRate mempoolMinFee() = 0;
 
-    //! Relay current minimum fee (from -minrelaytxfee and -incrementalrelayfee settings).
+    //! Current relay floor (dynamic economic default, or explicit -minrelaytxfee).
     virtual CFeeRate relayMinFee() = 0;
 
     //! Minimum fee rate at which adding transaction weight is economical for

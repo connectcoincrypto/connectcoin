@@ -7,7 +7,10 @@
 #include <consensus/merkle.h>
 #include <core_io.h>
 #include <hash.h>
+#include <kernel/mempool_options.h>
 #include <net.h>
+#include <policy/feerate.h>
+#include <policy/policy.h>
 #include <signet.h>
 #include <uint256.h>
 #include <util/chaintype.h>
@@ -89,6 +92,32 @@ BOOST_AUTO_TEST_CASE(block_subsidy_weight_penalty_test)
     BOOST_CHECK_EQUAL(GetBlockSubsidyForWeight(1, MAX_BLOCK_WEIGHT / 2, consensus), base_subsidy * 95 / 100);
     BOOST_CHECK_EQUAL(GetBlockSubsidyForWeight(1, MAX_BLOCK_WEIGHT, consensus), base_subsidy * 90 / 100);
     BOOST_CHECK_EQUAL(GetBlockSubsidyForWeight(1, MAX_BLOCK_WEIGHT + 1ULL, consensus), base_subsidy * 90 / 100);
+
+    // The dynamic relay floor follows the subsidy while keeping one
+    // connect/vB above its marginal weight cost, as block assembly uses a
+    // strict profitability comparison.
+    constexpr int32_t sample_vsize{1000};
+    constexpr uint64_t sample_weight{sample_vsize * WITNESS_SCALE_FACTOR};
+    const CAmount initial_economic_fee{GetBlockSubsidyPenalty(base_subsidy, sample_weight) + ECONOMIC_RELAY_FEE_MARGIN};
+    BOOST_CHECK_EQUAL(initial_economic_fee, 1'201'000);
+    BOOST_CHECK_EQUAL(GetEconomicRelayFeeRate(1, consensus).GetFeePerK(), initial_economic_fee);
+    BOOST_CHECK_EQUAL(CFeeRate{DEFAULT_MIN_RELAY_TX_FEE}.GetFeePerK(), initial_economic_fee);
+    BOOST_CHECK_EQUAL(GetEconomicRelayFeeRate(consensus.nSubsidyHalvingInterval, consensus).GetFeePerK(), 601'000);
+    BOOST_CHECK_EQUAL(GetEconomicRelayFeeRate(37 * consensus.nSubsidyHalvingInterval, consensus).GetFeePerK(), ECONOMIC_RELAY_FEE_MARGIN);
+
+    bilingual_str error;
+    CTxMemPool dynamic_pool{kernel::MemPoolOptions{}, error};
+    BOOST_REQUIRE(error.empty());
+    dynamic_pool.UpdateMinRelayFee(GetEconomicRelayFeeRate(consensus.nSubsidyHalvingInterval, consensus));
+    BOOST_CHECK_EQUAL(dynamic_pool.GetMinRelayFee().GetFeePerK(), 601'000);
+
+    kernel::MemPoolOptions explicit_options{};
+    explicit_options.min_relay_feerate = CFeeRate{42'000};
+    explicit_options.min_relay_feerate_is_explicit = true;
+    CTxMemPool explicit_pool{explicit_options, error};
+    BOOST_REQUIRE(error.empty());
+    explicit_pool.UpdateMinRelayFee(GetEconomicRelayFeeRate(consensus.nSubsidyHalvingInterval, consensus));
+    BOOST_CHECK_EQUAL(explicit_pool.GetMinRelayFee().GetFeePerK(), 42'000);
 
     // This specifically exercises a value for which the naive intermediate
     // MAX_MONEY * MAX_BLOCK_WEIGHT cannot fit in CAmount.

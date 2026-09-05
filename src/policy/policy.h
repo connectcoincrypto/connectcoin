@@ -44,7 +44,15 @@ inline constexpr unsigned int MAX_P2SH_SIGOPS{15};
 inline constexpr unsigned int MAX_STANDARD_TX_SIGOPS_COST{MAX_BLOCK_SIGOPS_COST/5};
 /** The maximum number of potentially executed legacy signature operations in a single standard tx */
 inline constexpr unsigned int MAX_TX_LEGACY_SIGOPS{2'500};
-/** Default for -incrementalrelayfee, which sets the minimum feerate increase for mempool limiting or replacement **/
+/** Margin above the next block's subsidy-weight cost, in connects per kvB. */
+inline constexpr unsigned int ECONOMIC_RELAY_FEE_MARGIN{1'000};
+/**
+ * Initial default economic relay floor in connects per kvB. Once the active
+ * tip is known, the default follows the next block's subsidy and decreases at
+ * halvings. An explicit -minrelaytxfee remains fixed.
+ */
+inline constexpr unsigned int DEFAULT_MIN_RELAY_TX_FEE{1'201'000};
+/** Default for -incrementalrelayfee, which sets the minimum feerate increase for mempool limiting or replacement. **/
 inline constexpr unsigned int DEFAULT_INCREMENTAL_RELAY_FEE{100};
 /** Default for -bytespersigop */
 inline constexpr unsigned int DEFAULT_BYTES_PER_SIGOP{20};
@@ -66,8 +74,6 @@ inline constexpr unsigned int MAX_STANDARD_SCRIPTSIG_SIZE{1650};
  * only increase the dust limit after prior releases were already not creating
  * outputs below the new threshold */
 inline constexpr unsigned int DUST_RELAY_TX_FEE{3000};
-/** Default for -minrelaytxfee, minimum relay fee for transactions */
-inline constexpr unsigned int DEFAULT_MIN_RELAY_TX_FEE{100};
 /** Maximum number of transactions per cluster (default) */
 inline constexpr unsigned int DEFAULT_CLUSTER_LIMIT{64};
 /** Maximum size of cluster in virtual kilobytes */

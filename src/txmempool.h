@@ -300,12 +300,27 @@ public:
 
     const Options m_opts;
 
+private:
+    /** Effective relay floor, updated when the subsidy era changes. */
+    std::atomic<CAmount> m_min_relay_fee_per_kvb;
+
+public:
     /** Create a new CTxMemPool.
      * Sanity checks will be off by default for performance, because otherwise
      * accepting transactions becomes O(N^2) where N is the number of transactions
      * in the pool.
      */
     explicit CTxMemPool(Options opts, bilingual_str& error);
+
+    /** Return the effective relay floor for the current active-chain tip. */
+    CFeeRate GetMinRelayFee() const;
+
+    /**
+     * Update the default relay floor. An explicit -minrelaytxfee is never
+     * changed, and the incremental relay fee remains a lower bound when the
+     * default is dynamic.
+     */
+    void UpdateMinRelayFee(const CFeeRate& economic_relay_feerate);
 
     /**
      * If sanity-checking is turned on, check makes sure the pool is

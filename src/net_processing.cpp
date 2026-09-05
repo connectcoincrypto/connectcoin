@@ -2131,7 +2131,7 @@ PeerManagerImpl::PeerManagerImpl(CConnman& connman, AddrMan& addrman,
                                  BanMan* banman, ChainstateManager& chainman,
                                  CTxMemPool& pool, node::Warnings& warnings, Options opts)
     : m_rng{opts.deterministic_rng},
-      m_fee_filter_rounder{CFeeRate{DEFAULT_MIN_RELAY_TX_FEE}, m_rng},
+      m_fee_filter_rounder{CFeeRate{DEFAULT_INCREMENTAL_RELAY_FEE}, m_rng},
       m_chainparams(chainman.GetParams()),
       m_connman(connman),
       m_addrman(addrman),
@@ -5861,7 +5861,7 @@ void PeerManagerImpl::MaybeSendFeefilter(CNode& pto, Peer& peer, std::chrono::mi
     // transactions to us, regardless of feefilter state.
     if (pto.IsBlockOnlyConn()) return;
 
-    CAmount currentFilter = m_mempool.GetMinFee().GetFeePerK();
+    CAmount currentFilter = std::max(m_mempool.GetMinFee(), m_mempool.GetMinRelayFee()).GetFeePerK();
 
     if (m_chainman.IsInitialBlockDownload()) {
         // Received tx-inv messages are discarded when the active
@@ -5878,7 +5878,7 @@ void PeerManagerImpl::MaybeSendFeefilter(CNode& pto, Peer& peer, std::chrono::mi
     if (current_time > peer.m_next_send_feefilter) {
         CAmount filterToSend = m_fee_filter_rounder.round(currentFilter);
         // We always have a fee filter of at least the min relay fee
-        filterToSend = std::max(filterToSend, m_mempool.m_opts.min_relay_feerate.GetFeePerK());
+        filterToSend = std::max(filterToSend, m_mempool.GetMinRelayFee().GetFeePerK());
         if (filterToSend != peer.m_fee_filter_sent) {
             MakeAndPushMessage(pto, NetMsgType::FEEFILTER, filterToSend);
             peer.m_fee_filter_sent = filterToSend;

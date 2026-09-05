@@ -767,7 +767,7 @@ BOOST_AUTO_TEST_CASE(package_witness_swap_tests)
     CTransactionRef ptx_parent3 = MakeTransactionRef(mtx_parent3);
     package_mixed.push_back(ptx_parent3);
     BOOST_CHECK(m_node.mempool->GetMinFee().GetFee(GetVirtualTransactionSize(*ptx_parent3)) > low_fee_amt);
-    BOOST_CHECK(m_node.mempool->m_opts.min_relay_feerate.GetFee(GetVirtualTransactionSize(*ptx_parent3)) <= low_fee_amt);
+    BOOST_CHECK(m_node.mempool->GetMinRelayFee().GetFee(GetVirtualTransactionSize(*ptx_parent3)) <= low_fee_amt);
 
     // child spends parent1, parent2, and parent3
     CKey mixed_grandchild_key = GenerateRandomKey();
@@ -914,7 +914,7 @@ BOOST_AUTO_TEST_CASE(package_cpfp_tests)
     CTransactionRef tx_parent_cheap = MakeTransactionRef(mtx_parent_cheap);
     package_still_too_low.push_back(tx_parent_cheap);
     BOOST_CHECK(m_node.mempool->GetMinFee().GetFee(GetVirtualTransactionSize(*tx_parent_cheap)) > parent_fee);
-    BOOST_CHECK(m_node.mempool->m_opts.min_relay_feerate.GetFee(GetVirtualTransactionSize(*tx_parent_cheap)) <= parent_fee);
+    BOOST_CHECK(m_node.mempool->GetMinRelayFee().GetFee(GetVirtualTransactionSize(*tx_parent_cheap)) <= parent_fee);
 
     auto mtx_child_cheap = CreateValidMempoolTransaction(/*input_transaction=*/tx_parent_cheap, /*input_vout=*/0,
                                                          /*input_height=*/101, /*input_signing_key=*/child_key,

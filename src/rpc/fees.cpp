@@ -112,7 +112,7 @@ static RPCMethod estimatesmartfee()
             const auto estimate{fee_estimator_man.GetFeeRateEstimate(fee_rate_estimator, conf_target, conservative)};
             if (estimate) {
                 const CFeeRate min_mempool_feerate{mempool.GetMinFee()};
-                const CFeeRate min_relay_feerate{mempool.m_opts.min_relay_feerate};
+                const CFeeRate min_relay_feerate{mempool.GetMinRelayFee()};
                 const auto fee_rate{std::max({CFeeRate(estimate->feerate), min_mempool_feerate, min_relay_feerate})};
                 result.pushKV("feerate", ValueFromAmount(fee_rate.GetFeePerK()));
             } else {

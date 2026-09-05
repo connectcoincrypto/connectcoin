@@ -1083,8 +1083,9 @@ UniValue MempoolInfoToJSON(const CTxMemPool& pool)
     ret.pushKV("usage", pool.DynamicMemoryUsage());
     ret.pushKV("total_fee", ValueFromAmount(pool.GetTotalFee()));
     ret.pushKV("maxmempool", pool.m_opts.max_size_bytes);
-    ret.pushKV("mempoolminfee", ValueFromAmount(std::max(pool.GetMinFee(), pool.m_opts.min_relay_feerate).GetFeePerK()));
-    ret.pushKV("minrelaytxfee", ValueFromAmount(pool.m_opts.min_relay_feerate.GetFeePerK()));
+    const CFeeRate min_relay_feerate{pool.GetMinRelayFee()};
+    ret.pushKV("mempoolminfee", ValueFromAmount(std::max(pool.GetMinFee(), min_relay_feerate).GetFeePerK()));
+    ret.pushKV("minrelaytxfee", ValueFromAmount(min_relay_feerate.GetFeePerK()));
     ret.pushKV("incrementalrelayfee", ValueFromAmount(pool.m_opts.incremental_relay_feerate.GetFeePerK()));
     ret.pushKV("unbroadcastcount", pool.GetUnbroadcastTxs().size());
     ret.pushKV("permitbaremultisig", pool.m_opts.permit_bare_multisig);
