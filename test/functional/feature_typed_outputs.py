@@ -95,18 +95,24 @@ class TypedOutputsTest(BitcoinTestFramework):
 
         self.log.info("Create P2C bounties through the dedicated wallet RPC")
 
-        def get_p2c_output(txid):
+        def get_p2c_outputs(txid):
             decoded = node.gettransaction(txid=txid, verbose=True)["decoded"]
-            outputs = [output for output in decoded["vout"] if output["type"] == 2]
+            return [output for output in decoded["vout"] if output["type"] == 2]
+
+        def get_p2c_output(txid):
+            outputs = get_p2c_outputs(txid)
             assert_equal(len(outputs), 1)
             return outputs[0]
 
-        explicit_txid = node.sendtop2c(
+        explicit_result = node.sendtop2c(
             domain="example.com",
             amount=1,
             work={"target": target},
         )
-        explicit_output = get_p2c_output(explicit_txid)
+        assert_equal(explicit_result["output_count"], 1)
+        assert_equal(explicit_result["transaction_count"], 1)
+        assert_equal(len(explicit_result["txids"]), 1)
+        explicit_output = get_p2c_output(explicit_result["txids"][0])
         assert_equal(explicit_output["domain"], "example.com")
         assert_equal(explicit_output["connection_work_target"], target)
         assert_equal(explicit_output["root_certificates_version"], 1)
@@ -117,17 +123,49 @@ class TypedOutputsTest(BitcoinTestFramework):
             work={"work_bits": 10},
             verbose=True,
         )
-        assert "fee_reason" in bits_result
-        bits_output = get_p2c_output(bits_result["txid"])
+        assert "fee_reason" in bits_result["transactions"][0]
+        bits_output = get_p2c_output(bits_result["txids"][0])
         assert_equal(
             bits_output["connection_work_target"],
             "003f" + "ff" * 30,
         )
 
-        zero_bits_output = get_p2c_output(node.cli.sendtop2c("example.com", 1, {"work_bits": 0}))
+        zero_bits_result = node.cli.sendtop2c("example.com", 1, {"work_bits": 0})
+        zero_bits_output = get_p2c_output(zero_bits_result["txids"][0])
         assert_equal(zero_bits_output["connection_work_target"], "ff" * 32)
-        full_bits_output = get_p2c_output(node.sendtop2c("example.com", 1, {"work_bits": 256}))
+        full_bits_result = node.sendtop2c("example.com", 1, {"work_bits": 256})
+        full_bits_output = get_p2c_output(full_bits_result["txids"][0])
         assert_equal(full_bits_output["connection_work_target"], "00" * 32)
+
+        multi_result = node.cli.sendtop2c(
+            domain="example.com",
+            amount=0.001,
+            work={"work_bits": 10},
+            output_count=3,
+        )
+        assert_equal(multi_result["output_count"], 3)
+        assert_equal(multi_result["transaction_count"], 1)
+        assert_equal(len(get_p2c_outputs(multi_result["txids"][0])), 3)
+
+        self.log.info("Split an unrestricted P2C output count across standard transactions")
+        self.generate(node, 1)
+        split_result = node.sendtop2c(
+            domain="example.com",
+            amount=0.001,
+            work={"work_bits": 10},
+            output_count=2000,
+        )
+        assert_equal(split_result["output_count"], 2000)
+        assert split_result["transaction_count"] > 1
+        assert_equal(split_result["transaction_count"], len(split_result["txids"]))
+        split_txids = set(split_result["txids"])
+        split_output_count = 0
+        for txid in split_result["txids"]:
+            decoded = node.gettransaction(txid=txid, verbose=True)["decoded"]
+            assert decoded["weight"] <= 400_000
+            assert not any(txin["txid"] in split_txids for txin in decoded["vin"])
+            split_output_count += sum(output["type"] == 2 for output in decoded["vout"])
+        assert_equal(split_output_count, 2000)
 
         self.log.info("Reject ambiguous and malformed P2C wallet requests")
         assert_raises_rpc_error(
@@ -149,6 +187,21 @@ class TypedOutputsTest(BitcoinTestFramework):
             -8, "between 0 and 256", node.sendtop2c, "example.com", 1, {"work_bits": 257}
         )
         assert_raises_rpc_error(
+            -8, "positive integer", node.sendtop2c, "example.com", 1, {"work_bits": 10}, 0
+        )
+        assert_raises_rpc_error(
+            -8, "positive integer", node.sendtop2c, "example.com", 1, {"work_bits": 10}, -1
+        )
+        assert_raises_rpc_error(
+            -8,
+            "maximum money range",
+            node.sendtop2c,
+            "example.com",
+            1,
+            {"work_bits": 10},
+            2**63 - 1,
+        )
+        assert_raises_rpc_error(
             -8, "32 bytes of hex", node.sendtop2c, "example.com", 1, {"target": "ff"}
         )
         assert_raises_rpc_error(
@@ -161,6 +214,7 @@ class TypedOutputsTest(BitcoinTestFramework):
             "example.com",
             1,
             {"work_bits": 10},
+            1,
             2,
         )
         assert_raises_rpc_error(
@@ -170,6 +224,7 @@ class TypedOutputsTest(BitcoinTestFramework):
             "example.com",
             1,
             {"work_bits": 10},
+            1,
             -1,
         )
         assert_raises_rpc_error(
@@ -179,6 +234,7 @@ class TypedOutputsTest(BitcoinTestFramework):
             "example.com",
             1,
             {"work_bits": 10},
+            1,
             2**32,
         )
 

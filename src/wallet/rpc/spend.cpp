@@ -4,6 +4,7 @@
 
 #include <arith_uint256.h>
 #include <common/messages.h>
+#include <consensus/consensus.h>
 #include <consensus/p2c.h>
 #include <consensus/validation.h>
 #include <core_io.h>
@@ -196,7 +197,7 @@ static void PreventOutdatedOptions(const UniValue& options)
     }
 }
 
-UniValue SendMoney(CWallet& wallet, const CCoinControl &coin_control, std::vector<CRecipient> &recipients, std::optional<std::string> comment, std::optional<std::string> comment_to, bool verbose, const char* external_signer_rpc = nullptr)
+static void EnsureWalletCanSend(CWallet& wallet, const char* external_signer_rpc = nullptr)
 {
     EnsureWalletIsUnlocked(wallet);
 
@@ -212,6 +213,11 @@ UniValue SendMoney(CWallet& wallet, const CCoinControl &coin_control, std::vecto
     if (wallet.IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS)) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Error: Private keys are disabled for this wallet");
     }
+}
+
+UniValue SendMoney(CWallet& wallet, const CCoinControl &coin_control, std::vector<CRecipient> &recipients, std::optional<std::string> comment, std::optional<std::string> comment_to, bool verbose)
+{
+    EnsureWalletCanSend(wallet);
 
     // Shuffle recipient list
     std::shuffle(recipients.begin(), recipients.end(), FastRandomContext());
@@ -414,14 +420,16 @@ RPCMethod sendtop2c()
 {
     return RPCMethod{
         "sendtop2c",
-        "Create and send a PAY_TO_CONNECT bounty for a domain." + HELP_REQUIRING_PASSPHRASE,
+        "Create and send one or more PAY_TO_CONNECT bounties for a domain. "
+        "Bounties are split across standard-size transactions when necessary." + HELP_REQUIRING_PASSPHRASE,
         {
             {"domain", RPCArg::Type::STR, RPCArg::Optional::NO, "Canonical lower-case ASCII domain to connect to."},
-            {"amount", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "Bounty amount in " + CURRENCY_UNIT + "."},
+            {"amount", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "Bounty amount per output in " + CURRENCY_UNIT + "."},
             {"work", RPCArg::Type::OBJ, RPCArg::Optional::NO, "Required connection work, expressed in exactly one form.", {
                 {"target", RPCArg::Type::STR_HEX, RPCArg::Optional::OMITTED, "Maximum accepted 256-bit connection-work hash."},
                 {"work_bits", RPCArg::Type::NUM, RPCArg::Optional::OMITTED, "Required leading zero bits, from 0 through 256. Converted to target = 2^(256-work_bits)-1."},
             }},
+            {"output_count", RPCArg::Type::NUM, RPCArg::Default{1}, "Number of independent P2C outputs to create. There is no RPC-specific maximum; large requests are split across transactions backed by disjoint confirmed inputs."},
             {"root_certificates_version", RPCArg::Type::NUM, RPCArg::Default{P2C_ROOT_CERTIFICATES_VERSION_1}, "Immutable trusted-root bundle version."},
             {"comment", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "A comment stored in the wallet only."},
             {"comment_to", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "A recipient comment stored in the wallet only."},
@@ -433,16 +441,27 @@ RPCMethod sendtop2c()
             {"fee_rate", RPCArg::Type::AMOUNT, RPCArg::DefaultHint{"not set, fall back to wallet fee estimation"}, "Fee rate in " + CURRENCY_ATOM + "/vB."},
             {"verbose", RPCArg::Type::BOOL, RPCArg::Default{false}, "Return the fee-selection reason in addition to the transaction id."},
         },
-        {
-            RPCResult{"if verbose is false", RPCResult::Type::STR_HEX, "txid", "The transaction id."},
-            RPCResult{"if verbose is true", RPCResult::Type::OBJ, "", "", {
+        RPCResult{RPCResult::Type::OBJ, "", "", {
+            {RPCResult::Type::ARR, "txids", "Transactions created for the requested outputs.", {
                 {RPCResult::Type::STR_HEX, "txid", "The transaction id."},
-                {RPCResult::Type::STR, "fee_reason", "Why the wallet selected the transaction fee rate."},
             }},
-        },
+            {RPCResult::Type::NUM, "output_count", "Total number of P2C outputs created."},
+            {RPCResult::Type::NUM, "transaction_count", "Number of transactions created."},
+            {RPCResult::Type::STR_AMOUNT, "total_fee", "Total transaction fees in " + CURRENCY_UNIT + "."},
+            {RPCResult::Type::ARR, "transactions", /*optional=*/true, "Per-transaction details, present when verbose is true.", {
+                {RPCResult::Type::OBJ, "", "", {
+                    {RPCResult::Type::STR_HEX, "txid", "The transaction id."},
+                    {RPCResult::Type::NUM, "output_count", "Number of P2C outputs in this transaction."},
+                    {RPCResult::Type::STR_AMOUNT, "fee", "Transaction fee in " + CURRENCY_UNIT + "."},
+                    {RPCResult::Type::STR, "fee_reason", "Why the wallet selected the transaction fee rate."},
+                }},
+            }},
+        }},
         RPCExamples{
             "\nCreate a bounty requiring ten leading zero bits\n"
             + HelpExampleCli("sendtop2c", "\"example.com\" 1 '{\"work_bits\":10}'")
+            + "\nCreate 1000 independent bounties of 1 CC each\n"
+            + HelpExampleCli("sendtop2c", "\"example.com\" 1 '{\"work_bits\":10}' 1000")
             + "\nCreate the same bounty using its explicit 256-bit target\n"
             + HelpExampleCli("sendtop2c", "\"example.com\" 1 '{\"target\":\"003fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\"}'")
         },
@@ -458,9 +477,14 @@ RPCMethod sendtop2c()
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "domain must be canonical lower-case ASCII without a trailing dot");
             }
             const uint256 target{ParseP2CWorkTarget(request.params[2])};
+            const int64_t output_count{
+                request.params[3].isNull() ? 1 : request.params[3].getInt<int64_t>()};
+            if (output_count <= 0) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "output_count must be a positive integer");
+            }
             const int64_t roots_version_value{
-                request.params[3].isNull() ? P2C_ROOT_CERTIFICATES_VERSION_1
-                                           : request.params[3].getInt<int64_t>()};
+                request.params[4].isNull() ? P2C_ROOT_CERTIFICATES_VERSION_1
+                                           : request.params[4].getInt<int64_t>()};
             if (roots_version_value < 0 || roots_version_value > std::numeric_limits<uint32_t>::max()) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "unsupported root_certificates_version");
             }
@@ -471,41 +495,168 @@ RPCMethod sendtop2c()
 
             std::optional<std::string> comment;
             std::optional<std::string> comment_to;
-            if (!request.params[4].isNull() && !request.params[4].get_str().empty()) {
-                comment = request.params[4].get_str();
-            }
             if (!request.params[5].isNull() && !request.params[5].get_str().empty()) {
-                comment_to = request.params[5].get_str();
+                comment = request.params[5].get_str();
+            }
+            if (!request.params[6].isNull() && !request.params[6].get_str().empty()) {
+                comment_to = request.params[6].get_str();
             }
 
             CCoinControl coin_control;
-            if (!request.params[7].isNull()) {
-                coin_control.m_signal_bip125_rbf = request.params[7].get_bool();
+            if (!request.params[8].isNull()) {
+                coin_control.m_signal_bip125_rbf = request.params[8].get_bool();
             }
-            coin_control.m_avoid_address_reuse = GetAvoidReuseFlag(*pwallet, request.params[10]);
+            coin_control.m_avoid_address_reuse = GetAvoidReuseFlag(*pwallet, request.params[11]);
             coin_control.m_avoid_partial_spends |= coin_control.m_avoid_address_reuse;
-            SetFeeEstimateMode(*pwallet, coin_control, request.params[8], request.params[9], request.params[11], /*override_min_fee=*/false);
+            SetFeeEstimateMode(*pwallet, coin_control, request.params[9], request.params[10], request.params[12], /*override_min_fee=*/false);
+            EnsureWalletCanSend(*pwallet, "sendtop2c");
 
-            std::vector<CRecipient> recipients{
-                CRecipient{
-                    .dest = CNoDestination{},
-                    .nAmount = AmountFromValue(request.params[1]),
-                    .fSubtractFeeFromAmount = !request.params[6].isNull() && request.params[6].get_bool(),
-                    .p2c = PayToDomainOutput{
-                        .domain = domain,
-                        .connection_work_target = target,
-                        .root_certificates_version = roots_version,
-                    },
+            const CAmount amount{AmountFromValue(request.params[1])};
+            if (amount <= 0) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "amount must be greater than zero");
+            }
+            if (output_count > MAX_MONEY / amount) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "total P2C output amount exceeds the maximum money range");
+            }
+            const bool subtract_fee{!request.params[7].isNull() && request.params[7].get_bool()};
+            const bool verbose{!request.params[13].isNull() && request.params[13].get_bool()};
+            const CRecipient recipient{
+                .dest = CNoDestination{},
+                .nAmount = amount,
+                .fSubtractFeeFromAmount = subtract_fee,
+                .p2c = PayToDomainOutput{
+                    .domain = domain,
+                    .connection_work_target = target,
+                    .root_certificates_version = roots_version,
                 },
             };
-            return SendMoney(
-                *pwallet,
-                coin_control,
-                recipients,
-                comment,
-                comment_to,
-                !request.params[12].isNull() && request.params[12].get_bool(),
-                "sendtop2c");
+
+            const uint64_t output_weight{WITNESS_SCALE_FACTOR * ::GetSerializeSize(CTxOut{amount, *recipient.p2c})};
+            const int64_t max_outputs_per_tx{
+                static_cast<int64_t>((MAX_STANDARD_TX_WEIGHT - MIN_TRANSACTION_WEIGHT) / output_weight)};
+            if (max_outputs_per_tx < 1) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "P2C output cannot fit in a standard transaction");
+            }
+            if (output_count > max_outputs_per_tx) {
+                // Keep automatically split transactions independent so their combined
+                // unconfirmed size is not constrained by mempool cluster limits.
+                coin_control.m_min_depth = 1;
+            }
+
+            const CAmount total_amount{amount * output_count};
+            if (total_amount > AvailableCoins(*pwallet, &coin_control).GetTotalAmount()) {
+                throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient confirmed funds for the P2C transaction batch");
+            }
+
+            struct TemporaryCoinLocks {
+                CWallet& wallet;
+                std::vector<COutPoint> outpoints;
+
+                ~TemporaryCoinLocks() { Unlock(); }
+
+                void Add(const COutPoint& outpoint)
+                {
+                    wallet.LockCoin(outpoint, /*persist=*/false);
+                    outpoints.push_back(outpoint);
+                }
+
+                void Unlock()
+                {
+                    for (const COutPoint& outpoint : outpoints) wallet.UnlockCoin(outpoint);
+                    outpoints.clear();
+                }
+            } temporary_locks{*pwallet};
+
+            std::vector<std::pair<CreatedTransactionResult, size_t>> prepared;
+            int64_t remaining{output_count};
+
+            while (remaining > 0) {
+                const size_t candidate_max{static_cast<size_t>(std::min(remaining, max_outputs_per_tx))};
+                std::optional<CreatedTransactionResult> selected;
+                size_t selected_count{0};
+                std::string last_error;
+
+                const auto try_create = [&](size_t count) {
+                    std::vector<CRecipient> recipients(count, recipient);
+                    return CreateTransaction(*pwallet, recipients, /*change_pos=*/std::nullopt, coin_control, /*sign=*/true);
+                };
+
+                auto candidate{try_create(candidate_max)};
+                if (candidate) {
+                    selected = *candidate;
+                    selected_count = candidate_max;
+                } else {
+                    last_error = util::ErrorString(candidate).original;
+                    size_t low{1};
+                    size_t high{candidate_max - 1};
+                    while (low <= high) {
+                        const size_t middle{low + (high - low) / 2};
+                        auto attempt{try_create(middle)};
+                        if (attempt) {
+                            selected = *attempt;
+                            selected_count = middle;
+                            low = middle + 1;
+                        } else {
+                            last_error = util::ErrorString(attempt).original;
+                            high = middle - 1;
+                        }
+                    }
+                }
+
+                if (!selected) {
+                    const std::string context{prepared.empty() ? "" : "P2C batch requires enough distinct confirmed inputs to fund every split transaction: "};
+                    throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, context + last_error);
+                }
+
+                if (prepared.empty() && selected_count < static_cast<size_t>(remaining) && coin_control.m_min_depth < 1) {
+                    // The output-only estimate fit under the standard weight limit,
+                    // but the complete transaction did not. Restart with confirmed
+                    // inputs before preparing a multi-transaction batch.
+                    coin_control.m_min_depth = 1;
+                    if (total_amount > AvailableCoins(*pwallet, &coin_control).GetTotalAmount()) {
+                        throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient confirmed funds for the P2C transaction batch");
+                    }
+                    continue;
+                }
+
+                for (const CTxIn& input : selected->tx->vin) temporary_locks.Add(input.prevout);
+                prepared.emplace_back(*selected, selected_count);
+                remaining -= selected_count;
+            }
+
+            // All transactions are valid and use disjoint confirmed inputs. Release
+            // the temporary locks while retaining cs_wallet, then commit the batch.
+            temporary_locks.Unlock();
+
+            UniValue txids{UniValue::VARR};
+            UniValue transactions{UniValue::VARR};
+            CAmount total_fee{0};
+            int64_t transaction_count{0};
+
+            for (const auto& [created, batch_output_count] : prepared) {
+                const std::string txid{created.tx->GetHash().GetHex()};
+                pwallet->CommitTransaction(created.tx, /*replaces_txid=*/std::nullopt, comment, comment_to);
+                txids.push_back(txid);
+                total_fee += created.fee;
+                ++transaction_count;
+
+                if (verbose) {
+                    UniValue detail{UniValue::VOBJ};
+                    detail.pushKV("txid", txid);
+                    detail.pushKV("output_count", static_cast<int64_t>(batch_output_count));
+                    detail.pushKV("fee", ValueFromAmount(created.fee));
+                    detail.pushKV("fee_reason", StringForFeeReason(created.fee_reason));
+                    transactions.push_back(std::move(detail));
+                }
+            }
+
+            UniValue result{UniValue::VOBJ};
+            result.pushKV("txids", std::move(txids));
+            result.pushKV("output_count", output_count);
+            result.pushKV("transaction_count", transaction_count);
+            result.pushKV("total_fee", ValueFromAmount(total_fee));
+            if (verbose) result.pushKV("transactions", std::move(transactions));
+            return result;
         },
     };
 }
