@@ -276,6 +276,8 @@ static void SetFeeEstimateMode(const CWallet& wallet, CCoinControl& cc, const Un
     }
 }
 
+static constexpr int64_t MAX_SENDTOP2C_OUTPUT_COUNT{1000};
+
 static uint256 ParseP2CWorkTarget(const UniValue& work)
 {
     if (!work.isObject()) {
@@ -429,7 +431,7 @@ RPCMethod sendtop2c()
                 {"target", RPCArg::Type::STR_HEX, RPCArg::Optional::OMITTED, "Maximum accepted 256-bit connection-work hash."},
                 {"work_bits", RPCArg::Type::NUM, RPCArg::Optional::OMITTED, "Required leading zero bits, from 0 through 256. Converted to target = 2^(256-work_bits)-1."},
             }},
-            {"output_count", RPCArg::Type::NUM, RPCArg::Default{1}, "Number of independent P2C outputs to create. There is no RPC-specific maximum; large requests are split across transactions backed by disjoint confirmed inputs."},
+            {"output_count", RPCArg::Type::NUM, RPCArg::Default{1}, strprintf("Number of independent P2C outputs to create, from 1 through %d. Large requests are split across transactions backed by disjoint confirmed inputs.", MAX_SENDTOP2C_OUTPUT_COUNT)},
             {"root_certificates_version", RPCArg::Type::NUM, RPCArg::Default{P2C_ROOT_CERTIFICATES_VERSION_1}, "Immutable trusted-root bundle version."},
             {"comment", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "A comment stored in the wallet only."},
             {"comment_to", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "A recipient comment stored in the wallet only."},
@@ -479,8 +481,8 @@ RPCMethod sendtop2c()
             const uint256 target{ParseP2CWorkTarget(request.params[2])};
             const int64_t output_count{
                 request.params[3].isNull() ? 1 : request.params[3].getInt<int64_t>()};
-            if (output_count <= 0) {
-                throw JSONRPCError(RPC_INVALID_PARAMETER, "output_count must be a positive integer");
+            if (output_count < 1 || output_count > MAX_SENDTOP2C_OUTPUT_COUNT) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("output_count must be between 1 and %d", MAX_SENDTOP2C_OUTPUT_COUNT));
             }
             const int64_t roots_version_value{
                 request.params[4].isNull() ? P2C_ROOT_CERTIFICATES_VERSION_1

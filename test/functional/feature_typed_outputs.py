@@ -147,15 +147,17 @@ class TypedOutputsTest(BitcoinTestFramework):
         assert_equal(multi_result["transaction_count"], 1)
         assert_equal(len(get_p2c_outputs(multi_result["txids"][0])), 3)
 
-        self.log.info("Split an unrestricted P2C output count across standard transactions")
-        self.generate(node, 1)
+        self.log.info("Accept the maximum P2C output count and split it by standard weight")
+        self.generate(node, 5)
+        long_domain = ".".join(["a" * 63, "b" * 63, "c" * 63, "d" * 61])
+        assert_equal(len(long_domain), 253)
         split_result = node.sendtop2c(
-            domain="example.com",
+            domain=long_domain,
             amount=0.001,
             work={"work_bits": 10},
-            output_count=2000,
+            output_count=1000,
         )
-        assert_equal(split_result["output_count"], 2000)
+        assert_equal(split_result["output_count"], 1000)
         assert split_result["transaction_count"] > 1
         assert_equal(split_result["transaction_count"], len(split_result["txids"]))
         split_txids = set(split_result["txids"])
@@ -165,7 +167,7 @@ class TypedOutputsTest(BitcoinTestFramework):
             assert decoded["weight"] <= 400_000
             assert not any(txin["txid"] in split_txids for txin in decoded["vin"])
             split_output_count += sum(output["type"] == 2 for output in decoded["vout"])
-        assert_equal(split_output_count, 2000)
+        assert_equal(split_output_count, 1000)
 
         self.log.info("Reject ambiguous and malformed P2C wallet requests")
         assert_raises_rpc_error(
@@ -187,19 +189,22 @@ class TypedOutputsTest(BitcoinTestFramework):
             -8, "between 0 and 256", node.sendtop2c, "example.com", 1, {"work_bits": 257}
         )
         assert_raises_rpc_error(
-            -8, "positive integer", node.sendtop2c, "example.com", 1, {"work_bits": 10}, 0
+            -8, "between 1 and 1000", node.sendtop2c, "example.com", 1, {"work_bits": 10}, 0
         )
         assert_raises_rpc_error(
-            -8, "positive integer", node.sendtop2c, "example.com", 1, {"work_bits": 10}, -1
+            -8, "between 1 and 1000", node.sendtop2c, "example.com", 1, {"work_bits": 10}, -1
+        )
+        assert_raises_rpc_error(
+            -8, "between 1 and 1000", node.sendtop2c, "example.com", 1, {"work_bits": 10}, 1001
         )
         assert_raises_rpc_error(
             -8,
             "maximum money range",
             node.sendtop2c,
             "example.com",
-            1,
+            1_000_000,
             {"work_bits": 10},
-            2**63 - 1,
+            1000,
         )
         assert_raises_rpc_error(
             -8, "32 bytes of hex", node.sendtop2c, "example.com", 1, {"target": "ff"}
