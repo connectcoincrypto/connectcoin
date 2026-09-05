@@ -93,6 +93,95 @@ class TypedOutputsTest(BitcoinTestFramework):
         assert_equal(p2c_outputs[0]["domain"], "example.com")
         assert_equal(node.testmempoolaccept([funded_p2c["hex"]])[0]["allowed"], True)
 
+        self.log.info("Create P2C bounties through the dedicated wallet RPC")
+
+        def get_p2c_output(txid):
+            decoded = node.gettransaction(txid=txid, verbose=True)["decoded"]
+            outputs = [output for output in decoded["vout"] if output["type"] == 2]
+            assert_equal(len(outputs), 1)
+            return outputs[0]
+
+        explicit_txid = node.sendtop2c(
+            domain="example.com",
+            amount=1,
+            work={"target": target},
+        )
+        explicit_output = get_p2c_output(explicit_txid)
+        assert_equal(explicit_output["domain"], "example.com")
+        assert_equal(explicit_output["connection_work_target"], target)
+        assert_equal(explicit_output["root_certificates_version"], 1)
+
+        bits_result = node.cli.sendtop2c(
+            domain="example.com",
+            amount=1,
+            work={"work_bits": 10},
+            verbose=True,
+        )
+        assert "fee_reason" in bits_result
+        bits_output = get_p2c_output(bits_result["txid"])
+        assert_equal(
+            bits_output["connection_work_target"],
+            "003f" + "ff" * 30,
+        )
+
+        zero_bits_output = get_p2c_output(node.cli.sendtop2c("example.com", 1, {"work_bits": 0}))
+        assert_equal(zero_bits_output["connection_work_target"], "ff" * 32)
+        full_bits_output = get_p2c_output(node.sendtop2c("example.com", 1, {"work_bits": 256}))
+        assert_equal(full_bits_output["connection_work_target"], "00" * 32)
+
+        self.log.info("Reject ambiguous and malformed P2C wallet requests")
+        assert_raises_rpc_error(
+            -8,
+            "exactly one",
+            node.sendtop2c,
+            "example.com",
+            1,
+            {"target": target, "work_bits": 10},
+        )
+        assert_raises_rpc_error(-8, "exactly one", node.sendtop2c, "example.com", 1, {})
+        assert_raises_rpc_error(
+            -8, "Unknown work field", node.sendtop2c, "example.com", 1, {"difficulty": 10}
+        )
+        assert_raises_rpc_error(
+            -8, "between 0 and 256", node.sendtop2c, "example.com", 1, {"work_bits": -1}
+        )
+        assert_raises_rpc_error(
+            -8, "between 0 and 256", node.sendtop2c, "example.com", 1, {"work_bits": 257}
+        )
+        assert_raises_rpc_error(
+            -8, "32 bytes of hex", node.sendtop2c, "example.com", 1, {"target": "ff"}
+        )
+        assert_raises_rpc_error(
+            -8, "canonical lower-case ASCII", node.sendtop2c, "Example.com", 1, {"work_bits": 10}
+        )
+        assert_raises_rpc_error(
+            -8,
+            "unsupported root_certificates_version",
+            node.sendtop2c,
+            "example.com",
+            1,
+            {"work_bits": 10},
+            2,
+        )
+        assert_raises_rpc_error(
+            -8,
+            "unsupported root_certificates_version",
+            node.sendtop2c,
+            "example.com",
+            1,
+            {"work_bits": 10},
+            -1,
+        )
+        assert_raises_rpc_error(
+            -8,
+            "unsupported root_certificates_version",
+            node.sendtop2c,
+            "example.com",
+            1,
+            {"work_bits": 10},
+            2**32,
+        )
+
         self.log.info("Check wallet signing and typed wire decoding")
         txid = node.sendtoaddress(address=address, amount=1)
         self.assert_typed_transaction(node.getrawtransaction(txid=txid, verbose=True))

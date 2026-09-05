@@ -134,6 +134,14 @@ class WalletSignerTest(BitcoinTestFramework):
             "",
             {self.nodes[0].getnewaddress(): 0.01},
         )
+        assert_raises_rpc_error(
+            -4,
+            "Error: sendtop2c is not supported for wallets with external signers; use send instead",
+            hww.sendtop2c,
+            "example.com",
+            0.01,
+            {"work_bits": 10},
+        )
 
         # Handle error thrown by script
         self.set_mock_result(self.nodes[1], "2")

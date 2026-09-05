@@ -2,7 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <arith_uint256.h>
 #include <common/messages.h>
+#include <consensus/p2c.h>
 #include <consensus/validation.h>
 #include <core_io.h>
 #include <key_io.h>
@@ -23,6 +25,8 @@
 #include <wallet/wallet.h>
 
 #include <univalue.h>
+
+#include <limits>
 
 using common::FeeModeFromString;
 using common::FeeModesDetail;
@@ -192,14 +196,17 @@ static void PreventOutdatedOptions(const UniValue& options)
     }
 }
 
-UniValue SendMoney(CWallet& wallet, const CCoinControl &coin_control, std::vector<CRecipient> &recipients, std::optional<std::string> comment, std::optional<std::string> comment_to, bool verbose)
+UniValue SendMoney(CWallet& wallet, const CCoinControl &coin_control, std::vector<CRecipient> &recipients, std::optional<std::string> comment, std::optional<std::string> comment_to, bool verbose, const char* external_signer_rpc = nullptr)
 {
     EnsureWalletIsUnlocked(wallet);
 
-    // This function is only used by sendtoaddress and sendmany.
+    // This function is used by sendtoaddress, sendmany, and sendtop2c.
     // This should always try to sign, if we don't have (all) private keys, don't
     // try to do anything here.
     if (wallet.IsWalletFlagSet(WALLET_FLAG_EXTERNAL_SIGNER)) {
+        if (external_signer_rpc != nullptr) {
+            throw JSONRPCError(RPC_WALLET_ERROR, std::string{"Error: "} + external_signer_rpc + " is not supported for wallets with external signers; use send instead");
+        }
         throw JSONRPCError(RPC_WALLET_ERROR, "Error: sendtoaddress and sendmany are not supported for wallets with external signers; use send instead");
     }
     if (wallet.IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS)) {
@@ -261,6 +268,47 @@ static void SetFeeEstimateMode(const CWallet& wallet, CCoinControl& cc, const Un
     if (!conf_target.isNull()) {
         cc.m_confirm_target = ParseConfirmTarget(conf_target, wallet.chain().maximumFeeEstimationTargetBlocks());
     }
+}
+
+static uint256 ParseP2CWorkTarget(const UniValue& work)
+{
+    if (!work.isObject()) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "work must be an object containing exactly one of target or work_bits");
+    }
+    const UniValue& object{work.get_obj()};
+    for (const std::string& key : object.getKeys()) {
+        if (key != "target" && key != "work_bits") {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Unknown work field: " + key);
+        }
+    }
+    const bool has_target{object.exists("target")};
+    const bool has_work_bits{object.exists("work_bits")};
+    if (has_target == has_work_bits) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "work must contain exactly one of target or work_bits");
+    }
+    if (has_target) {
+        const UniValue& value{object.find_value("target")};
+        if (!value.isStr()) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "target must be exactly 32 bytes of hex");
+        }
+        const auto target{uint256::FromHex(value.get_str())};
+        if (!target) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "target must be exactly 32 bytes of hex");
+        }
+        return *target;
+    }
+
+    const UniValue& value{object.find_value("work_bits")};
+    if (!value.isNum()) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "work_bits must be an integer between 0 and 256");
+    }
+    const int64_t bits{value.getInt<int64_t>()};
+    if (bits < 0 || bits > 256) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "work_bits must be an integer between 0 and 256");
+    }
+    arith_uint256 target{~arith_uint256{0}};
+    target >>= static_cast<int>(bits);
+    return ArithToUint256(target);
 }
 
 RPCMethod sendtoaddress()
@@ -359,6 +407,106 @@ RPCMethod sendtoaddress()
 
     return SendMoney(*pwallet, coin_control, recipients, comment, comment_to, verbose);
 },
+    };
+}
+
+RPCMethod sendtop2c()
+{
+    return RPCMethod{
+        "sendtop2c",
+        "Create and send a PAY_TO_CONNECT bounty for a domain." + HELP_REQUIRING_PASSPHRASE,
+        {
+            {"domain", RPCArg::Type::STR, RPCArg::Optional::NO, "Canonical lower-case ASCII domain to connect to."},
+            {"amount", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "Bounty amount in " + CURRENCY_UNIT + "."},
+            {"work", RPCArg::Type::OBJ, RPCArg::Optional::NO, "Required connection work, expressed in exactly one form.", {
+                {"target", RPCArg::Type::STR_HEX, RPCArg::Optional::OMITTED, "Maximum accepted 256-bit connection-work hash."},
+                {"work_bits", RPCArg::Type::NUM, RPCArg::Optional::OMITTED, "Required leading zero bits, from 0 through 256. Converted to target = 2^(256-work_bits)-1."},
+            }},
+            {"root_certificates_version", RPCArg::Type::NUM, RPCArg::Default{P2C_ROOT_CERTIFICATES_VERSION_1}, "Immutable trusted-root bundle version."},
+            {"comment", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "A comment stored in the wallet only."},
+            {"comment_to", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "A recipient comment stored in the wallet only."},
+            {"subtractfeefromamount", RPCArg::Type::BOOL, RPCArg::Default{false}, "Deduct the transaction fee from the bounty amount."},
+            {"replaceable", RPCArg::Type::BOOL, RPCArg::DefaultHint{"wallet default"}, "Signal that this transaction can be replaced under BIP125."},
+            {"conf_target", RPCArg::Type::NUM, RPCArg::DefaultHint{"wallet -txconfirmtarget"}, "Confirmation target in blocks."},
+            {"estimate_mode", RPCArg::Type::STR, RPCArg::Default{"unset"}, "Fee estimate mode: unset, economical, or conservative."},
+            {"avoid_reuse", RPCArg::Type::BOOL, RPCArg::Default{true}, "Avoid spending from reused addresses when the wallet flag is enabled."},
+            {"fee_rate", RPCArg::Type::AMOUNT, RPCArg::DefaultHint{"not set, fall back to wallet fee estimation"}, "Fee rate in " + CURRENCY_ATOM + "/vB."},
+            {"verbose", RPCArg::Type::BOOL, RPCArg::Default{false}, "Return the fee-selection reason in addition to the transaction id."},
+        },
+        {
+            RPCResult{"if verbose is false", RPCResult::Type::STR_HEX, "txid", "The transaction id."},
+            RPCResult{"if verbose is true", RPCResult::Type::OBJ, "", "", {
+                {RPCResult::Type::STR_HEX, "txid", "The transaction id."},
+                {RPCResult::Type::STR, "fee_reason", "Why the wallet selected the transaction fee rate."},
+            }},
+        },
+        RPCExamples{
+            "\nCreate a bounty requiring ten leading zero bits\n"
+            + HelpExampleCli("sendtop2c", "\"example.com\" 1 '{\"work_bits\":10}'")
+            + "\nCreate the same bounty using its explicit 256-bit target\n"
+            + HelpExampleCli("sendtop2c", "\"example.com\" 1 '{\"target\":\"003fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\"}'")
+        },
+        [](const RPCMethod&, const JSONRPCRequest& request) -> UniValue {
+            std::shared_ptr<CWallet> const pwallet{GetWalletForJSONRPCRequest(request)};
+            if (!pwallet) return UniValue::VNULL;
+
+            pwallet->BlockUntilSyncedToCurrentChain();
+            LOCK(pwallet->cs_wallet);
+
+            const std::string domain{request.params[0].get_str()};
+            if (!IsCanonicalP2CDomain(domain)) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "domain must be canonical lower-case ASCII without a trailing dot");
+            }
+            const uint256 target{ParseP2CWorkTarget(request.params[2])};
+            const int64_t roots_version_value{
+                request.params[3].isNull() ? P2C_ROOT_CERTIFICATES_VERSION_1
+                                           : request.params[3].getInt<int64_t>()};
+            if (roots_version_value < 0 || roots_version_value > std::numeric_limits<uint32_t>::max()) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "unsupported root_certificates_version");
+            }
+            const uint32_t roots_version{static_cast<uint32_t>(roots_version_value)};
+            if (!IsSupportedP2CRootCertificatesVersion(roots_version)) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "unsupported root_certificates_version");
+            }
+
+            std::optional<std::string> comment;
+            std::optional<std::string> comment_to;
+            if (!request.params[4].isNull() && !request.params[4].get_str().empty()) {
+                comment = request.params[4].get_str();
+            }
+            if (!request.params[5].isNull() && !request.params[5].get_str().empty()) {
+                comment_to = request.params[5].get_str();
+            }
+
+            CCoinControl coin_control;
+            if (!request.params[7].isNull()) {
+                coin_control.m_signal_bip125_rbf = request.params[7].get_bool();
+            }
+            coin_control.m_avoid_address_reuse = GetAvoidReuseFlag(*pwallet, request.params[10]);
+            coin_control.m_avoid_partial_spends |= coin_control.m_avoid_address_reuse;
+            SetFeeEstimateMode(*pwallet, coin_control, request.params[8], request.params[9], request.params[11], /*override_min_fee=*/false);
+
+            std::vector<CRecipient> recipients{
+                CRecipient{
+                    .dest = CNoDestination{},
+                    .nAmount = AmountFromValue(request.params[1]),
+                    .fSubtractFeeFromAmount = !request.params[6].isNull() && request.params[6].get_bool(),
+                    .p2c = PayToDomainOutput{
+                        .domain = domain,
+                        .connection_work_target = target,
+                        .root_certificates_version = roots_version,
+                    },
+                },
+            };
+            return SendMoney(
+                *pwallet,
+                coin_control,
+                recipients,
+                comment,
+                comment_to,
+                !request.params[12].isNull() && request.params[12].get_bool(),
+                "sendtop2c");
+        },
     };
 }
 
