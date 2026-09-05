@@ -12,6 +12,7 @@
 #include <common/args.h>
 #include <common/settings.h>
 #include <consensus/amount.h>
+#include <consensus/consensus.h>
 #include <consensus/merkle.h>
 #include <consensus/validation.h>
 #include <external_signer.h>

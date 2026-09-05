@@ -383,9 +383,11 @@ class IPCMiningTest(BitcoinTestFramework):
         """Verify that waitNext() preserves the mining policy from -blockmintxfee
         instead of falling back to defaults."""
         self.log.info("Running waitNext mining policy test")
-        block_min_tx_fee = Decimal("0.0000002000")
-        below_block_min_tx_fee = Decimal("0.0000001000")
-        above_block_min_tx_fee = Decimal("0.0000003000")
+        # These rates must also straddle the marginal subsidy-penalty cost of
+        # adding transaction weight to a block.
+        block_min_tx_fee = Decimal("0.0002000000")
+        below_block_min_tx_fee = Decimal("0.0001000000")
+        above_block_min_tx_fee = Decimal("0.0003000000")
 
         self.restart_node(0, extra_args=[
             f"-blockmintxfee={block_min_tx_fee:.10f}",
@@ -436,7 +438,7 @@ class IPCMiningTest(BitcoinTestFramework):
 
         # Cap that leaves room for only a handful of mempool transactions
         # above DEFAULT_BLOCK_RESERVED_WEIGHT (8000). Well below MAX_BLOCK_WEIGHT
-        # (4_000_000), so any truncation observed here is attributable to the
+        # (50_000_000), so any truncation observed here is attributable to the
         # cap, not to consensus limits or wallet chain limits.
         small_cap = DEFAULT_BLOCK_RESERVED_WEIGHT + 4000
         NUM_TXS = 20

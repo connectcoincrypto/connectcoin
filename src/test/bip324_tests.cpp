@@ -139,9 +139,15 @@ void TestBIP324PacketVector(
             to_decrypt[m_rng.randrange(to_decrypt.size())] ^= std::byte(1U << (error - 2));
         }
 
-        // Decrypt length and resize ciphertext to accommodate.
-        uint32_t dec_len = dec_cipher.DecryptLength(MakeByteSpan(to_decrypt).first(cipher.LENGTH_LEN));
-        to_decrypt.resize(dec_len + cipher.EXPANSION);
+        // Decrypt length and resize ciphertext to accommodate. A damaged length
+        // field is unauthenticated at this point and can decode to any uint32_t
+        // value. Keep negative test vectors from attempting a multi-gigabyte
+        // allocation; production applies its protocol message limit before
+        // allocating the receive buffer as well.
+        const uint32_t dec_len = dec_cipher.DecryptLength(MakeByteSpan(to_decrypt).first(cipher.LENGTH_LEN));
+        constexpr uint32_t MAX_CORRUPTED_LENGTH_DELTA{16'384};
+        if (error != 0 && dec_len > contents.size() + MAX_CORRUPTED_LENGTH_DELTA) continue;
+        to_decrypt.resize(static_cast<size_t>(dec_len) + cipher.EXPANSION);
 
         // Construct copied (and possibly damaged) copy of aad.
         auto dec_aad = in_aad;

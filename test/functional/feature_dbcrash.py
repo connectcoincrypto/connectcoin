@@ -175,7 +175,9 @@ class ChainstateWriteCrashTest(BitcoinTestFramework):
             assert_equal(nodei_utxo_hash, node3_utxo_hash)
 
     def generate_small_transactions(self, node, count, utxo_list):
-        FEE = 1000
+        # Keep generated transactions above the marginal subsidy-penalty cost
+        # so blocks used by the crash/recovery test are not empty.
+        FEE = 1_000_000
         num_transactions = 0
         random.shuffle(utxo_list)
         while len(utxo_list) >= 2 and num_transactions < count:
@@ -205,7 +207,11 @@ class ChainstateWriteCrashTest(BitcoinTestFramework):
         # Start by creating a lot of utxos on node3
         utxo_list = []
         for _ in range(5):
-            utxo_list.extend(self.wallet.send_self_transfer_multi(from_node=self.nodes[3], num_outputs=1000)['new_utxos'])
+            utxo_list.extend(self.wallet.send_self_transfer_multi(
+                from_node=self.nodes[3],
+                num_outputs=1000,
+                fee_per_output=100_000,
+            )['new_utxos'])
         self.generate(self.nodes[3], 1, sync_fun=self.no_op)
         assert_equal(len(self.nodes[3].getrawmempool()), 0)
         self.log.info(f"Prepped {len(utxo_list)} utxo entries")
