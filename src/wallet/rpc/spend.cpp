@@ -550,85 +550,78 @@ RPCMethod sendtop2c()
                 throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient confirmed funds for the P2C transaction batch");
             }
 
-            struct TemporaryCoinLocks {
-                CWallet& wallet;
-                std::vector<COutPoint> outpoints;
-
-                ~TemporaryCoinLocks() { Unlock(); }
-
-                void Add(const COutPoint& outpoint)
-                {
-                    wallet.LockCoin(outpoint, /*persist=*/false);
-                    outpoints.push_back(outpoint);
-                }
-
-                void Unlock()
-                {
-                    for (const COutPoint& outpoint : outpoints) wallet.UnlockCoin(outpoint);
-                    outpoints.clear();
-                }
-            } temporary_locks{*pwallet};
-
+            std::vector<COutPoint> temporarily_locked_outpoints;
             std::vector<std::pair<CreatedTransactionResult, size_t>> prepared;
             int64_t remaining{output_count};
 
-            while (remaining > 0) {
-                const size_t candidate_max{static_cast<size_t>(std::min(remaining, max_outputs_per_tx))};
-                std::optional<CreatedTransactionResult> selected;
-                size_t selected_count{0};
-                std::string last_error;
+            try {
+                while (remaining > 0) {
+                    const size_t candidate_max{static_cast<size_t>(std::min(remaining, max_outputs_per_tx))};
+                    std::optional<CreatedTransactionResult> selected;
+                    size_t selected_count{0};
+                    std::string last_error;
 
-                const auto try_create = [&](size_t count) {
-                    std::vector<CRecipient> recipients(count, recipient);
-                    return CreateTransaction(*pwallet, recipients, /*change_pos=*/std::nullopt, coin_control, /*sign=*/true);
-                };
+                    const auto try_create = [&](size_t count) {
+                        std::vector<CRecipient> recipients(count, recipient);
+                        return CreateTransaction(*pwallet, recipients, /*change_pos=*/std::nullopt, coin_control, /*sign=*/true);
+                    };
 
-                auto candidate{try_create(candidate_max)};
-                if (candidate) {
-                    selected = *candidate;
-                    selected_count = candidate_max;
-                } else {
-                    last_error = util::ErrorString(candidate).original;
-                    size_t low{1};
-                    size_t high{candidate_max - 1};
-                    while (low <= high) {
-                        const size_t middle{low + (high - low) / 2};
-                        auto attempt{try_create(middle)};
-                        if (attempt) {
-                            selected = *attempt;
-                            selected_count = middle;
-                            low = middle + 1;
-                        } else {
-                            last_error = util::ErrorString(attempt).original;
-                            high = middle - 1;
+                    auto candidate{try_create(candidate_max)};
+                    if (candidate) {
+                        selected = *candidate;
+                        selected_count = candidate_max;
+                    } else {
+                        last_error = util::ErrorString(candidate).original;
+                        size_t low{1};
+                        size_t high{candidate_max - 1};
+                        while (low <= high) {
+                            const size_t middle{low + (high - low) / 2};
+                            auto attempt{try_create(middle)};
+                            if (attempt) {
+                                selected = *attempt;
+                                selected_count = middle;
+                                low = middle + 1;
+                            } else {
+                                last_error = util::ErrorString(attempt).original;
+                                high = middle - 1;
+                            }
                         }
                     }
-                }
 
-                if (!selected) {
-                    const std::string context{prepared.empty() ? "" : "P2C batch requires enough distinct confirmed inputs to fund every split transaction: "};
-                    throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, context + last_error);
-                }
-
-                if (prepared.empty() && selected_count < static_cast<size_t>(remaining) && coin_control.m_min_depth < 1) {
-                    // The output-only estimate fit under the standard weight limit,
-                    // but the complete transaction did not. Restart with confirmed
-                    // inputs before preparing a multi-transaction batch.
-                    coin_control.m_min_depth = 1;
-                    if (total_amount > AvailableCoins(*pwallet, &coin_control).GetTotalAmount()) {
-                        throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient confirmed funds for the P2C transaction batch");
+                    if (!selected) {
+                        const std::string context{prepared.empty() ? "" : "P2C batch requires enough distinct confirmed inputs to fund every split transaction: "};
+                        throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, context + last_error);
                     }
-                    continue;
-                }
 
-                for (const CTxIn& input : selected->tx->vin) temporary_locks.Add(input.prevout);
-                prepared.emplace_back(*selected, selected_count);
-                remaining -= selected_count;
+                    if (prepared.empty() && selected_count < static_cast<size_t>(remaining) && coin_control.m_min_depth < 1) {
+                        // The output-only estimate fit under the standard weight limit,
+                        // but the complete transaction did not. Restart with confirmed
+                        // inputs before preparing a multi-transaction batch.
+                        coin_control.m_min_depth = 1;
+                        if (total_amount > AvailableCoins(*pwallet, &coin_control).GetTotalAmount()) {
+                            throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient confirmed funds for the P2C transaction batch");
+                        }
+                        continue;
+                    }
+
+                    for (const CTxIn& input : selected->tx->vin) {
+                        temporarily_locked_outpoints.push_back(input.prevout);
+                        if (!pwallet->LockCoin(input.prevout, /*persist=*/false)) {
+                            temporarily_locked_outpoints.pop_back();
+                            throw JSONRPCError(RPC_WALLET_ERROR, "Unable to reserve an input for the P2C transaction batch");
+                        }
+                    }
+                    prepared.emplace_back(*selected, selected_count);
+                    remaining -= selected_count;
+                }
+            } catch (...) {
+                for (const COutPoint& outpoint : temporarily_locked_outpoints) pwallet->UnlockCoin(outpoint);
+                throw;
             }
 
             // All transactions are valid and use disjoint confirmed inputs. Release
             // the temporary locks while retaining cs_wallet, then commit the batch.
-            temporary_locks.Unlock();
+            for (const COutPoint& outpoint : temporarily_locked_outpoints) pwallet->UnlockCoin(outpoint);
 
             UniValue txids{UniValue::VARR};
             UniValue transactions{UniValue::VARR};
