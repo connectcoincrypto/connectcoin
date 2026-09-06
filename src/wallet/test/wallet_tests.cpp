@@ -28,6 +28,7 @@
 #include <validationinterface.h>
 #include <wallet/coincontrol.h>
 #include <wallet/context.h>
+#include <wallet/p2c.h>
 #include <wallet/receive.h>
 #include <wallet/spend.h>
 #include <wallet/test/util.h>
@@ -46,6 +47,66 @@ static_assert(DEFAULT_TRANSACTION_MINFEE == ECONOMIC_RELAY_FEE_MARGIN, "wallet m
 static_assert(WALLET_INCREMENTAL_RELAY_FEE >= DEFAULT_INCREMENTAL_RELAY_FEE, "wallet incremental fee is smaller than default incremental relay fee");
 
 BOOST_FIXTURE_TEST_SUITE(wallet_tests, WalletTestingSetup)
+
+BOOST_AUTO_TEST_CASE(p2c_fee_arithmetic_limits)
+{
+    auto wallet = std::make_shared<CWallet>(m_node.chain.get(), "p2c-fee-limits", CreateMockableWalletDatabase());
+    const CRecipient recipient{
+        .dest = CNoDestination{}, .nAmount = COIN / 1000, .fSubtractFeeFromAmount = false,
+        .p2c = PayToDomainOutput{"example.com", uint256{}, 1},
+    };
+    CCoinControl control;
+    const auto check_rejected = [&] {
+        auto result = P2CTransactionBatch::Prepare(wallet, recipient, 1000, control);
+        BOOST_REQUIRE(!result);
+        BOOST_CHECK(util::ErrorString(result).original.find("Fee rate") != std::string::npos);
+        std::vector<COutPoint> locked;
+        WITH_LOCK(wallet->cs_wallet, wallet->ListLockedCoins(locked));
+        BOOST_CHECK(locked.empty());
+    };
+    control.m_feerate = CFeeRate{MAX_MONEY};
+    check_rejected();
+    control.m_feerate = CFeeRate{-1};
+    control.fOverrideFeeRate = true;
+    check_rejected();
+    control.fOverrideFeeRate = false;
+    control.m_feerate.reset();
+    wallet->m_fallback_fee = CFeeRate{MAX_MONEY};
+    check_rejected();
+    control.m_feerate = CFeeRate{2'000'000};
+    const auto discard_rate = wallet->m_discard_rate;
+    wallet->m_discard_rate = CFeeRate{MAX_MONEY};
+    check_rejected();
+    wallet->m_discard_rate = discard_rate;
+    wallet->m_consolidate_feerate = CFeeRate{MAX_MONEY};
+    check_rejected();
+}
+
+BOOST_AUTO_TEST_CASE(temporary_coin_lock_ownership)
+{
+    LOCK(m_wallet.cs_wallet);
+    const COutPoint coin{Txid{}, 0};
+    const int first_owner{0};
+    const int second_owner{0};
+    BOOST_CHECK(m_wallet.LockCoin(coin, false, &first_owner));
+    BOOST_CHECK(m_wallet.OwnsCoinLock(coin, &first_owner));
+    BOOST_CHECK(!m_wallet.UnlockCoin(coin, &second_owner));
+    BOOST_CHECK(m_wallet.IsLockedCoin(coin));
+    // A manual replacement must outlive the original temporary holder.
+    BOOST_CHECK(m_wallet.UnlockCoin(coin));
+    BOOST_CHECK(m_wallet.LockCoin(coin, true));
+    BOOST_CHECK(!m_wallet.OwnsCoinLock(coin, &first_owner));
+    BOOST_CHECK(!m_wallet.UnlockCoin(coin, &first_owner));
+    BOOST_CHECK(m_wallet.IsLockedCoin(coin));
+    BOOST_CHECK(m_wallet.UnlockCoin(coin));
+    BOOST_CHECK(m_wallet.LockCoin(coin, false, &first_owner));
+    BOOST_CHECK(m_wallet.UnlockAllCoins());
+    BOOST_CHECK(!m_wallet.OwnsCoinLock(coin, &first_owner));
+    BOOST_CHECK(m_wallet.LockCoin(coin, false, &second_owner));
+    BOOST_CHECK(!m_wallet.UnlockCoin(coin, &first_owner));
+    BOOST_CHECK(m_wallet.UnlockCoin(coin, &second_owner));
+    BOOST_CHECK(!m_wallet.IsLockedCoin(coin));
+}
 
 static CMutableTransaction TestSimpleSpend(const CTransaction& from, uint32_t index, const CKey& key, const CScript& pubkey)
 {

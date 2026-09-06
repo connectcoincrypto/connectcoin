@@ -24,6 +24,7 @@
 #include <wallet/feebumper.h>
 #include <wallet/fees.h>
 #include <wallet/load.h>
+#include <wallet/p2c.h>
 #include <wallet/receive.h>
 #include <wallet/rpc/wallet.h>
 #include <wallet/spend.h>
@@ -265,6 +266,18 @@ public:
     {
         LOCK(m_wallet->cs_wallet);
         return CreateTransaction(*m_wallet, recipients, change_pos, coin_control, sign);
+    }
+    util::Result<std::unique_ptr<P2CTransactionBatch>> prepareP2CTransactions(
+        const CRecipient& recipient, int64_t output_count, const CCoinControl& coin_control) override
+    {
+        LOCK(m_wallet->cs_wallet);
+        auto control = coin_control;
+        // The GUI has no override for the wallet's avoid-reuse preference.
+        if (m_wallet->IsWalletFlagSet(WALLET_FLAG_AVOID_REUSE)) {
+            control.m_avoid_address_reuse = true;
+            control.m_avoid_partial_spends = true;
+        }
+        return P2CTransactionBatch::Prepare(m_wallet, recipient, output_count, control);
     }
     void commitTransaction(CTransactionRef tx, const std::vector<std::string>& messages) override
     {

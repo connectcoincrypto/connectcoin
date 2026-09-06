@@ -210,7 +210,9 @@ QString TransactionDesc::toHTML(interfaces::Node& node, interfaces::Wallet& wall
                 if (toSelf && all_from_me)
                     continue;
 
-                if (!wtx.comment_to) {
+                if (const auto p2c = txout.GetPayToDomain()) {
+                    strHTML += "<b>" + tr("P2C domain") + ":</b> " + GUIUtil::HtmlEscape(p2c->domain) + "<br>";
+                } else if (!wtx.comment_to) {
                     // Offline transaction
                     CTxDestination address;
                     if (ExtractDestination(txout.scriptPubKey, address))

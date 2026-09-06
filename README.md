@@ -20,6 +20,8 @@ The experimental consensus format and its compatibility boundaries are in
 [doc/typed-outputs.md](doc/typed-outputs.md).
 The P2C payload and proof profile are specified in
 [doc/pay-to-connect.md](doc/pay-to-connect.md).
+Creating bounties from the graphical wallet is described in
+[doc/p2c-wallet.md](doc/p2c-wallet.md).
 
 License
 -------

@@ -170,6 +170,15 @@ class TypedOutputsTest(BitcoinTestFramework):
         assert_equal(split_output_count, 1000)
 
         self.log.info("Reject ambiguous and malformed P2C wallet requests")
+        mempool_before = set(node.getrawmempool())
+        locks_before = node.listlockunspent()
+        assert_raises_rpc_error(
+            -6, "Fee rate", node.sendtop2c,
+            domain="example.com", amount=0.001, work={"work_bits": 10},
+            output_count=1000, fee_rate=1_000_000_000_000_000,
+        )
+        assert_equal(set(node.getrawmempool()), mempool_before)
+        assert_equal(node.listlockunspent(), locks_before)
         assert_raises_rpc_error(
             -8,
             "exactly one",

@@ -66,7 +66,12 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const interface
                 TransactionRecord sub(hash, nTime);
                 sub.idx = i;
 
-                if (!std::get_if<CNoDestination>(&wtx.txout_address[i]))
+                if (const auto p2c = txout.GetPayToDomain())
+                {
+                    sub.type = TransactionRecord::SendToOther;
+                    sub.p2c_domain = p2c->domain;
+                }
+                else if (!std::get_if<CNoDestination>(&wtx.txout_address[i]))
                 {
                     // Sent to ConnectCoin address
                     sub.type = TransactionRecord::SendToAddress;

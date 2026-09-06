@@ -402,6 +402,9 @@ QVariant TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx
 
 QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, bool tooltip) const
 {
+    if (!wtx->p2c_domain.empty()) {
+        return tr("P2C: %1").arg(QString::fromStdString(wtx->p2c_domain));
+    }
     switch(wtx->type)
     {
     case TransactionRecord::RecvFromOther:
@@ -577,6 +580,7 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
     case AddressRole:
         return QString::fromStdString(rec->address);
     case LabelRole:
+        if (!rec->p2c_domain.empty()) return formatTxToAddress(rec, false);
         return walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(rec->address));
     case AmountRole:
         return qint64(rec->credit + rec->debit);
@@ -598,7 +602,10 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
                 details.append(formatTxType(rec));
                 details.append(" ");
             }
-            if(!rec->address.empty()) {
+            if (!rec->p2c_domain.empty()) {
+                details.append(formatTxToAddress(rec, false));
+                details.append(" ");
+            } else if(!rec->address.empty()) {
                 if(txLabel.isEmpty())
                     details.append(tr("(no label)") + " ");
                 else {
@@ -645,7 +652,7 @@ QVariant TransactionTableModel::headerData(int section, Qt::Orientation orientat
             case Type:
                 return tr("Type of transaction.");
             case ToAddress:
-                return tr("User-defined intent/purpose of the transaction.");
+                return tr("User-defined intent/purpose of the transaction, or the P2C domain.");
             case Amount:
                 return tr("Amount removed from or added to balance.");
             }

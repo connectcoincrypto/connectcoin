@@ -269,6 +269,13 @@ void BitcoinGUI::createActions()
     sendCoinsAction->setShortcut(QKeySequence(QStringLiteral("Alt+2")));
     tabGroup->addAction(sendCoinsAction);
 
+    p2cAction = new QAction(platformStyle->SingleColorIcon(":/icons/send"), tr("&P2C"), this);
+    p2cAction->setStatusTip(tr("Create pay-to-connect bounties"));
+    p2cAction->setToolTip(p2cAction->statusTip());
+    p2cAction->setCheckable(true);
+    p2cAction->setShortcut(QKeySequence(QStringLiteral("Alt+5")));
+    tabGroup->addAction(p2cAction);
+
     receiveCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/receiving_addresses"), tr("&Receive"), this);
     receiveCoinsAction->setStatusTip(tr("Request payments (generates QR codes and connectcoin: URIs)"));
     receiveCoinsAction->setToolTip(receiveCoinsAction->statusTip());
@@ -290,6 +297,8 @@ void BitcoinGUI::createActions()
     connect(overviewAction, &QAction::triggered, this, &BitcoinGUI::gotoOverviewPage);
     connect(sendCoinsAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
     connect(sendCoinsAction, &QAction::triggered, [this]{ gotoSendCoinsPage(); });
+    connect(p2cAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
+    connect(p2cAction, &QAction::triggered, this, &BitcoinGUI::gotoP2CPage);
     connect(receiveCoinsAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
     connect(receiveCoinsAction, &QAction::triggered, this, &BitcoinGUI::gotoReceiveCoinsPage);
     connect(historyAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
@@ -656,6 +665,7 @@ void BitcoinGUI::createToolBars()
         toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         toolbar->addAction(overviewAction);
         toolbar->addAction(sendCoinsAction);
+        toolbar->addAction(p2cAction);
         toolbar->addAction(receiveCoinsAction);
         toolbar->addAction(historyAction);
         overviewAction->setChecked(true);
@@ -876,6 +886,7 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
 {
     overviewAction->setEnabled(enabled);
     sendCoinsAction->setEnabled(enabled);
+    p2cAction->setEnabled(enabled);
     receiveCoinsAction->setEnabled(enabled);
     historyAction->setEnabled(enabled && !isPrivacyModeActivated());
     encryptWalletAction->setEnabled(enabled);
@@ -1050,6 +1061,12 @@ void BitcoinGUI::gotoSendCoinsPage(QString addr)
 {
     sendCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
+}
+
+void BitcoinGUI::gotoP2CPage()
+{
+    p2cAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoP2CPage();
 }
 
 void BitcoinGUI::gotoSignMessageTab(QString addr)
@@ -1348,6 +1365,7 @@ void BitcoinGUI::changeEvent(QEvent *e)
     if (e->type() == QEvent::PaletteChange) {
         overviewAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/overview")));
         sendCoinsAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/send")));
+        p2cAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/send")));
         receiveCoinsAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/receiving_addresses")));
         historyAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/history")));
     }

@@ -45,6 +45,7 @@ namespace wallet {
 struct CreatedTransactionResult;
 class CCoinControl;
 class CWallet;
+class P2CTransactionBatch;
 enum class AddressPurpose;
 struct CRecipient;
 struct WalletContext;
@@ -146,6 +147,10 @@ public:
         const wallet::CCoinControl& coin_control,
         bool sign,
         std::optional<unsigned int> change_pos) = 0;
+
+    //! Prepare a signed P2C batch, reserving inputs until confirmation/cancellation.
+    virtual util::Result<std::unique_ptr<wallet::P2CTransactionBatch>> prepareP2CTransactions(
+        const wallet::CRecipient& recipient, int64_t output_count, const wallet::CCoinControl& coin_control) = 0;
 
     //! Commit transaction.
     virtual void commitTransaction(CTransactionRef tx, const std::vector<std::string>& messages) = 0;

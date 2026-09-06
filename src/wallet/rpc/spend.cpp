@@ -21,6 +21,7 @@
 #include <wallet/coincontrol.h>
 #include <wallet/feebumper.h>
 #include <wallet/fees.h>
+#include <wallet/p2c.h>
 #include <wallet/rpc/util.h>
 #include <wallet/spend.h>
 #include <wallet/wallet.h>
@@ -276,8 +277,6 @@ static void SetFeeEstimateMode(const CWallet& wallet, CCoinControl& cc, const Un
     }
 }
 
-static constexpr int64_t MAX_SENDTOP2C_OUTPUT_COUNT{1000};
-
 static uint256 ParseP2CWorkTarget(const UniValue& work)
 {
     if (!work.isObject()) {
@@ -431,7 +430,7 @@ RPCMethod sendtop2c()
                 {"target", RPCArg::Type::STR_HEX, RPCArg::Optional::OMITTED, "Maximum accepted 256-bit connection-work hash."},
                 {"work_bits", RPCArg::Type::NUM, RPCArg::Optional::OMITTED, "Required leading zero bits, from 0 through 256. Converted to target = 2^(256-work_bits)-1."},
             }},
-            {"output_count", RPCArg::Type::NUM, RPCArg::Default{1}, strprintf("Number of independent P2C outputs to create, from 1 through %d. Large requests are split across transactions backed by disjoint confirmed inputs.", MAX_SENDTOP2C_OUTPUT_COUNT)},
+            {"output_count", RPCArg::Type::NUM, RPCArg::Default{1}, strprintf("Number of independent P2C outputs to create, from 1 through %d. Large requests are split across transactions backed by disjoint confirmed inputs.", MAX_P2C_OUTPUT_COUNT)},
             {"root_certificates_version", RPCArg::Type::NUM, RPCArg::Default{P2C_ROOT_CERTIFICATES_VERSION_1}, "Immutable trusted-root bundle version."},
             {"comment", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "A comment stored in the wallet only."},
             {"comment_to", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "A recipient comment stored in the wallet only."},
@@ -481,8 +480,8 @@ RPCMethod sendtop2c()
             const uint256 target{ParseP2CWorkTarget(request.params[2])};
             const int64_t output_count{
                 request.params[3].isNull() ? 1 : request.params[3].getInt<int64_t>()};
-            if (output_count < 1 || output_count > MAX_SENDTOP2C_OUTPUT_COUNT) {
-                throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("output_count must be between 1 and %d", MAX_SENDTOP2C_OUTPUT_COUNT));
+            if (output_count < 1 || output_count > MAX_P2C_OUTPUT_COUNT) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("output_count must be between 1 and %d", MAX_P2C_OUTPUT_COUNT));
             }
             const int64_t roots_version_value{
                 request.params[4].isNull() ? P2C_ROOT_CERTIFICATES_VERSION_1
@@ -533,104 +532,22 @@ RPCMethod sendtop2c()
                 },
             };
 
-            const uint64_t output_weight{WITNESS_SCALE_FACTOR * ::GetSerializeSize(CTxOut{amount, *recipient.p2c})};
-            const int64_t max_outputs_per_tx{
-                static_cast<int64_t>((MAX_STANDARD_TX_WEIGHT - MIN_TRANSACTION_WEIGHT) / output_weight)};
-            if (max_outputs_per_tx < 1) {
-                throw JSONRPCError(RPC_INVALID_PARAMETER, "P2C output cannot fit in a standard transaction");
+            auto prepared{P2CTransactionBatch::Prepare(pwallet, recipient, output_count, coin_control)};
+            if (!prepared) {
+                throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, util::ErrorString(prepared).original);
             }
-            if (output_count > max_outputs_per_tx) {
-                // Keep automatically split transactions independent so their combined
-                // unconfirmed size is not constrained by mempool cluster limits.
-                coin_control.m_min_depth = 1;
+            auto committed{(*prepared)->Commit(comment, comment_to)};
+            if (!committed) {
+                throw JSONRPCError(RPC_WALLET_ERROR, util::ErrorString(committed).original);
             }
-
-            const CAmount total_amount{amount * output_count};
-            if (total_amount > AvailableCoins(*pwallet, &coin_control).GetTotalAmount()) {
-                throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient confirmed funds for the P2C transaction batch");
-            }
-
-            std::vector<COutPoint> temporarily_locked_outpoints;
-            std::vector<std::pair<CreatedTransactionResult, size_t>> prepared;
-            int64_t remaining{output_count};
-
-            try {
-                while (remaining > 0) {
-                    const size_t candidate_max{static_cast<size_t>(std::min(remaining, max_outputs_per_tx))};
-                    std::optional<CreatedTransactionResult> selected;
-                    size_t selected_count{0};
-                    std::string last_error;
-
-                    const auto try_create = [&](size_t count) {
-                        std::vector<CRecipient> recipients(count, recipient);
-                        return CreateTransaction(*pwallet, recipients, /*change_pos=*/std::nullopt, coin_control, /*sign=*/true);
-                    };
-
-                    auto candidate{try_create(candidate_max)};
-                    if (candidate) {
-                        selected = *candidate;
-                        selected_count = candidate_max;
-                    } else {
-                        last_error = util::ErrorString(candidate).original;
-                        size_t low{1};
-                        size_t high{candidate_max - 1};
-                        while (low <= high) {
-                            const size_t middle{low + (high - low) / 2};
-                            auto attempt{try_create(middle)};
-                            if (attempt) {
-                                selected = *attempt;
-                                selected_count = middle;
-                                low = middle + 1;
-                            } else {
-                                last_error = util::ErrorString(attempt).original;
-                                high = middle - 1;
-                            }
-                        }
-                    }
-
-                    if (!selected) {
-                        const std::string context{prepared.empty() ? "" : "P2C batch requires enough distinct confirmed inputs to fund every split transaction: "};
-                        throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, context + last_error);
-                    }
-
-                    if (prepared.empty() && selected_count < static_cast<size_t>(remaining) && coin_control.m_min_depth < 1) {
-                        // The output-only estimate fit under the standard weight limit,
-                        // but the complete transaction did not. Restart with confirmed
-                        // inputs before preparing a multi-transaction batch.
-                        coin_control.m_min_depth = 1;
-                        if (total_amount > AvailableCoins(*pwallet, &coin_control).GetTotalAmount()) {
-                            throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient confirmed funds for the P2C transaction batch");
-                        }
-                        continue;
-                    }
-
-                    for (const CTxIn& input : selected->tx->vin) {
-                        temporarily_locked_outpoints.push_back(input.prevout);
-                        if (!pwallet->LockCoin(input.prevout, /*persist=*/false)) {
-                            temporarily_locked_outpoints.pop_back();
-                            throw JSONRPCError(RPC_WALLET_ERROR, "Unable to reserve an input for the P2C transaction batch");
-                        }
-                    }
-                    prepared.emplace_back(*selected, selected_count);
-                    remaining -= selected_count;
-                }
-            } catch (...) {
-                for (const COutPoint& outpoint : temporarily_locked_outpoints) pwallet->UnlockCoin(outpoint);
-                throw;
-            }
-
-            // All transactions are valid and use disjoint confirmed inputs. Release
-            // the temporary locks while retaining cs_wallet, then commit the batch.
-            for (const COutPoint& outpoint : temporarily_locked_outpoints) pwallet->UnlockCoin(outpoint);
 
             UniValue txids{UniValue::VARR};
             UniValue transactions{UniValue::VARR};
             CAmount total_fee{0};
             int64_t transaction_count{0};
 
-            for (const auto& [created, batch_output_count] : prepared) {
+            for (const auto& [created, batch_output_count] : (*prepared)->GetTransactions()) {
                 const std::string txid{created.tx->GetHash().GetHex()};
-                pwallet->CommitTransaction(created.tx, /*replaces_txid=*/std::nullopt, comment, comment_to);
                 txids.push_back(txid);
                 total_fee += created.fee;
                 ++transaction_count;

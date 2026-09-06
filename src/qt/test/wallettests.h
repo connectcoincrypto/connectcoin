@@ -22,6 +22,7 @@ class WalletTests : public QObject
 
 private Q_SLOTS:
     void walletTests();
+    void p2cTests();
 };
 
 #endif // CONNECTCOIN_QT_TEST_WALLETTESTS_H

@@ -105,6 +105,8 @@ public:
     qint64 time;
     Type type;
     std::string address;
+    //! Domain taken from this output, not a wallet address or editable label.
+    std::string p2c_domain;
     CAmount debit;
     CAmount credit;
     /**@}*/

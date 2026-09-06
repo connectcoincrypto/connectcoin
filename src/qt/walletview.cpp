@@ -10,6 +10,7 @@
 #include <qt/guiutil.h>
 #include <qt/optionsmodel.h>
 #include <qt/overviewpage.h>
+#include <qt/p2ccreatedialog.h>
 #include <qt/platformstyle.h>
 #include <qt/receivecoinsdialog.h>
 #include <qt/sendcoinsdialog.h>
@@ -63,6 +64,9 @@ WalletView::WalletView(WalletModel* wallet_model, const PlatformStyle* _platform
     sendCoinsPage = new SendCoinsDialog(platformStyle);
     sendCoinsPage->setModel(walletModel);
 
+    p2cPage = new P2CCreateDialog(this);
+    p2cPage->setModel(walletModel);
+
     usedSendingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::SendingTab, this);
     usedSendingAddressesPage->setModel(walletModel->getAddressTableModel());
 
@@ -73,6 +77,7 @@ WalletView::WalletView(WalletModel* wallet_model, const PlatformStyle* _platform
     addWidget(transactionsPage);
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
+    addWidget(p2cPage);
 
     connect(overviewPage, &OverviewPage::transactionClicked, this, &WalletView::transactionClicked);
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
@@ -89,6 +94,9 @@ WalletView::WalletView(WalletModel* wallet_model, const PlatformStyle* _platform
 
     // Pass through messages from sendCoinsPage
     connect(sendCoinsPage, &SendCoinsDialog::message, this, &WalletView::message);
+    connect(p2cPage, &P2CCreateDialog::message, this, &WalletView::message);
+    connect(p2cPage, &P2CCreateDialog::coinsSent, this, &WalletView::coinsSent);
+    connect(p2cPage, &P2CCreateDialog::coinsSent, transactionView, qOverload<const Txid&>(&TransactionView::focusTransaction));
     // Pass through messages from transactionView
     connect(transactionView, &TransactionView::message, this, &WalletView::message);
 
@@ -164,6 +172,11 @@ void WalletView::gotoSendCoinsPage(QString addr)
 
     if (!addr.isEmpty())
         sendCoinsPage->setAddress(addr);
+}
+
+void WalletView::gotoP2CPage()
+{
+    setCurrentWidget(p2cPage);
 }
 
 void WalletView::gotoSignMessageTab(QString addr)

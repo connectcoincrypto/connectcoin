@@ -2704,9 +2704,11 @@ void CWallet::LoadLockedCoin(const COutPoint& coin, bool persistent)
     m_locked_coins.emplace(coin, persistent);
 }
 
-bool CWallet::LockCoin(const COutPoint& output, bool persist)
+bool CWallet::LockCoin(const COutPoint& output, bool persist, const void* owner)
 {
     AssertLockHeld(cs_wallet);
+    m_coin_lock_owners.erase(output);
+    if (owner) m_coin_lock_owners.emplace(output, owner);
     LoadLockedCoin(output, persist);
     if (persist) {
         WalletBatch batch(GetDatabase());
@@ -2715,9 +2717,18 @@ bool CWallet::LockCoin(const COutPoint& output, bool persist)
     return true;
 }
 
-bool CWallet::UnlockCoin(const COutPoint& output)
+bool CWallet::OwnsCoinLock(const COutPoint& output, const void* owner) const
 {
     AssertLockHeld(cs_wallet);
+    const auto it = m_coin_lock_owners.find(output);
+    return owner && it != m_coin_lock_owners.end() && it->second == owner;
+}
+
+bool CWallet::UnlockCoin(const COutPoint& output, const void* owner)
+{
+    AssertLockHeld(cs_wallet);
+    if (owner && !OwnsCoinLock(output, owner)) return false;
+    m_coin_lock_owners.erase(output);
     auto locked_coin_it = m_locked_coins.find(output);
     if (locked_coin_it != m_locked_coins.end()) {
         bool persisted = locked_coin_it->second;
@@ -2739,6 +2750,7 @@ bool CWallet::UnlockAllCoins()
         if (persistent) success = success && batch.EraseLockedUTXO(coin);
     }
     m_locked_coins.clear();
+    m_coin_lock_owners.clear();
     return success;
 }
 

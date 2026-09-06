@@ -512,6 +512,8 @@ public:
      * bool to track whether this locked coin is persisted to disk.
      */
     std::map<COutPoint, bool> m_locked_coins GUARDED_BY(cs_wallet);
+    //! Non-owning identities for temporary lock holders. Never persisted or dereferenced.
+    std::map<COutPoint, const void*> m_coin_lock_owners GUARDED_BY(cs_wallet);
 
     /** Registered interfaces::Chain::Notifications handler. */
     std::unique_ptr<interfaces::Handler> m_chain_notifications_handler;
@@ -572,8 +574,10 @@ public:
 
     bool IsLockedCoin(const COutPoint& output) const EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
     void LoadLockedCoin(const COutPoint& coin, bool persistent) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
-    bool LockCoin(const COutPoint& output, bool persist) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
-    bool UnlockCoin(const COutPoint& output) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
+    bool LockCoin(const COutPoint& output, bool persist, const void* owner = nullptr) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
+    //! A non-null owner only releases the reservation still held by that owner.
+    bool UnlockCoin(const COutPoint& output, const void* owner = nullptr) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
+    bool OwnsCoinLock(const COutPoint& output, const void* owner) const EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
     bool UnlockAllCoins() EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
     void ListLockedCoins(std::vector<COutPoint>& vOutpts) const EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
 

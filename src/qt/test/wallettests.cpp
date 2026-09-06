@@ -12,8 +12,10 @@
 #include <qt/bitcoinamountfield.h>
 #include <qt/bitcoinunits.h>
 #include <qt/clientmodel.h>
+#include <qt/csvmodelwriter.h>
 #include <qt/optionsmodel.h>
 #include <qt/overviewpage.h>
+#include <qt/p2ccreatedialog.h>
 #include <qt/platformstyle.h>
 #include <qt/qvalidatedlineedit.h>
 #include <qt/receivecoinsdialog.h>
@@ -21,17 +23,26 @@
 #include <qt/recentrequeststablemodel.h>
 #include <qt/sendcoinsdialog.h>
 #include <qt/sendcoinsentry.h>
+#include <qt/transactionfilterproxy.h>
+#include <qt/transactionrecord.h>
 #include <qt/transactiontablemodel.h>
 #include <qt/transactionview.h>
 #include <qt/walletmodel.h>
 #include <script/solver.h>
+#include <support/allocators/secure.h>
 #include <test/util/setup_common.h>
 #include <validation.h>
 #include <wallet/test/util.h>
 #include <wallet/wallet.h>
+#include <wallet/walletdb.h>
 
+#include <atomic>
 #include <chrono>
 #include <memory>
+#include <set>
+#include <stdexcept>
+#include <thread>
+#include <tuple>
 
 #include <QAbstractButton>
 #include <QAbstractSpinBox>
@@ -39,8 +50,15 @@
 #include <QApplication>
 #include <QCheckBox>
 #include <QClipboard>
+#include <QComboBox>
+#include <QCoreApplication>
+#include <QEvent>
+#include <QFile>
 #include <QObject>
 #include <QPushButton>
+#include <QPixmap>
+#include <QSpinBox>
+#include <QTemporaryDir>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QTextEdit>
@@ -51,8 +69,10 @@ using wallet::AddWallet;
 using wallet::CWallet;
 using wallet::CreateMockableWalletDatabase;
 using wallet::RemoveWallet;
+using wallet::WALLET_FLAG_AVOID_REUSE;
 using wallet::WALLET_FLAG_DESCRIPTORS;
 using wallet::WALLET_FLAG_DISABLE_PRIVATE_KEYS;
+using wallet::WalletBatch;
 using wallet::WalletContext;
 using wallet::WalletDescriptor;
 using wallet::WalletRescanReserver;
@@ -197,9 +217,27 @@ void SyncUpWallet(const std::shared_ptr<CWallet>& wallet, interfaces::Node& node
     QVERIFY(result.last_failed_block.IsNull());
 }
 
-std::shared_ptr<CWallet> SetupDescriptorsWallet(interfaces::Node& node, TestChain100Setup& test, bool watch_only = false)
+class FailingP2CTestDatabase : public wallet::MockableSQLiteDatabase
 {
-    std::shared_ptr<CWallet> wallet = std::make_shared<CWallet>(node.context()->chain.get(), "", CreateMockableWalletDatabase());
+public:
+    // Fail once after this many successful GUI-thread batch creations; -1
+    // disables injection. Background wallet callbacks must not consume it.
+    std::atomic<int> batches_until_failure{-1};
+    std::unique_ptr<wallet::DatabaseBatch> MakeBatch() override
+    {
+        if (std::this_thread::get_id() == m_gui_thread && batches_until_failure.load() >= 0 && batches_until_failure.fetch_sub(1) == 0) {
+            throw std::runtime_error("Injected P2C database failure");
+        }
+        return wallet::MockableSQLiteDatabase::MakeBatch();
+    }
+
+private:
+    const std::thread::id m_gui_thread{std::this_thread::get_id()};
+};
+
+std::shared_ptr<CWallet> SetupDescriptorsWallet(interfaces::Node& node, TestChain100Setup& test, bool watch_only = false, std::unique_ptr<wallet::WalletDatabase> database = {})
+{
+    std::shared_ptr<CWallet> wallet = std::make_shared<CWallet>(node.context()->chain.get(), "", database ? std::move(database) : CreateMockableWalletDatabase());
     LOCK(wallet->cs_wallet);
     wallet->SetWalletFlag(WALLET_FLAG_DESCRIPTORS);
     if (watch_only) {
@@ -307,6 +345,8 @@ void TestGUI(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet)
     QCOMPARE(transactionTableModel->rowCount({}), 107);
     QVERIFY(FindTx(*transactionTableModel, txid1).isValid());
     QVERIFY(FindTx(*transactionTableModel, txid2).isValid());
+    QCOMPARE(FindTx(*transactionTableModel, txid1).data(TransactionTableModel::AddressRole).toString(),
+             QString::fromStdString(EncodeDestination(ExternalTestDestination())));
 
     // Call bumpfee. Test canceled fullrbf bump, canceled bip-125-rbf bump, passing bump, and then failing bump.
     BumpFee(transactionView, txid1, /*expectDisabled=*/false, /*expectError=*/{}, /*cancel=*/true);
@@ -473,9 +513,416 @@ void TestGUI(interfaces::Node& node)
     TestGUIWatchOnly(node, test);
 }
 
+void CheckP2CHistory(TransactionTableModel& history, const QString& domain, int expected_count)
+{
+    TransactionFilterProxy filtered;
+    filtered.setSourceModel(&history);
+    filtered.setSearchString(domain.toUpper()); // Domain search is case-insensitive.
+    QCOMPARE(filtered.rowCount(), expected_count);
+    const QString label = "P2C: " + domain;
+    for (int row = 0; row < filtered.rowCount(); ++row) {
+        const auto index = filtered.index(row, TransactionTableModel::ToAddress);
+        QCOMPARE(index.data(Qt::DisplayRole).toString(), label);
+        QCOMPARE(index.data(Qt::EditRole).toString(), label);
+        QCOMPARE(index.data(TransactionTableModel::LabelRole).toString(), label);
+        // A domain must not enable address-book editing or "Copy address".
+        QVERIFY(index.data(TransactionTableModel::AddressRole).toString().isEmpty());
+        QVERIFY(index.data(Qt::ToolTipRole).toString().contains(domain));
+        QVERIFY(index.data(TransactionTableModel::TxPlainTextRole).toString().contains(label));
+    }
+    QVERIFY(filtered.index(0, 0).data(TransactionTableModel::LongDescriptionRole).toString().contains(domain));
+
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString path = dir.filePath("p2c-history.csv");
+    CSVModelWriter writer(path);
+    writer.setModel(&filtered);
+    writer.addColumn("Label", 0, TransactionTableModel::LabelRole);
+    writer.addColumn("Address", 0, TransactionTableModel::AddressRole);
+    QVERIFY(writer.write());
+    QFile csv(path);
+    QVERIFY(csv.open(QIODevice::ReadOnly));
+    QCOMPARE(QString::fromUtf8(csv.readAll()).count(label), expected_count);
+    filtered.setSearchString("absent.example");
+    QCOMPARE(filtered.rowCount(), 0);
+}
+
+void TestP2CGUI(interfaces::Node& node)
+{
+    TestChain100Setup test;
+    const CScript coinbase_script{GetScriptForDestination(TestDestination(test.coinbaseKey))};
+    for (int i = 0; i < 5; ++i) test.CreateAndProcessBlock({}, coinbase_script);
+    auto loader = interfaces::MakeWalletLoader(*test.m_node.chain, *Assert(test.m_node.args));
+    test.m_node.wallet_loader = loader.get();
+    node.setContext(&test.m_node);
+    auto database = std::make_unique<FailingP2CTestDatabase>();
+    auto* failing_database = database.get();
+    auto wallet = SetupDescriptorsWallet(node, test, false, std::move(database));
+    std::unique_ptr<const PlatformStyle> style(PlatformStyle::instantiate("other"));
+    MiniGUI gui(node, style.get());
+    gui.initModelForWallet(node, wallet, style.get());
+    P2CCreateDialog page;
+    page.setModel(gui.walletModel.get());
+    auto* domain = page.findChild<QLineEdit*>("p2cDomain");
+    auto* amount = page.findChild<BitcoinAmountField*>("p2cAmount");
+    auto* count = page.findChild<QSpinBox*>("p2cOutputCount");
+    auto* mode = page.findChild<QComboBox*>("p2cWorkMode");
+    auto* bits = page.findChild<QSpinBox*>("p2cWorkBits");
+    auto* target = page.findChild<QLineEdit*>("p2cTarget");
+    auto* custom_fee = page.findChild<QCheckBox*>("p2cCustomFee");
+    auto* fee_rate = page.findChild<BitcoinAmountField*>("p2cFeeRate");
+    auto* create = page.findChild<QPushButton*>("p2cCreateButton");
+    QVERIFY(domain && amount && count && mode && bits && target && custom_fee && fee_rate && create);
+    QCOMPARE(count->maximum(), 1000);
+    QString error;
+    QObject::connect(&page, &P2CCreateDialog::message, [&error](const QString&, const QString& text, unsigned int) { error = text; });
+    std::vector<Txid> sent;
+    QObject::connect(&page, &P2CCreateDialog::coinsSent, [&sent](const Txid& txid) { sent.push_back(txid); });
+    amount->setValue(COIN);
+    domain->setText("https://example.com");
+    create->click();
+    QVERIFY(!error.isEmpty());
+    QVERIFY(sent.empty());
+    QVERIFY(!page.findChild<QMessageBox*>("p2cConfirmation"));
+
+    domain->setText("example.com");
+    mode->setCurrentIndex(1);
+    target->setText("ff");
+    error.clear();
+    create->click();
+    QVERIFY(error.contains("64"));
+    QVERIFY(sent.empty());
+    mode->setCurrentIndex(0);
+    bits->setValue(256);
+    QCOMPARE(target->text(), QString(64, '0'));
+    bits->setValue(0);
+    QCOMPARE(target->text(), QString(64, 'f'));
+    bits->setValue(10);
+    QCOMPARE(target->text(), QString("003") + QString(61, 'f'));
+
+    count->setValue(2);
+    amount->setValue(MAX_MONEY);
+    error.clear();
+    create->click();
+    QVERIFY(error.contains("money limit"));
+    amount->setValue(COIN);
+    custom_fee->setChecked(true);
+    fee_rate->setValue(2'000'000);
+
+    // Reject extreme rates before fee multiplication for a large request.
+    count->setValue(1000);
+    amount->setValue(COIN / 1000);
+    fee_rate->setValue(MAX_MONEY);
+    error.clear();
+    create->click();
+    QVERIFY(error.contains("Fee rate"));
+    QVERIFY(!page.findChild<QMessageBox*>("p2cConfirmation"));
+    QVERIFY(sent.empty());
+    count->setValue(2);
+    amount->setValue(COIN);
+    fee_rate->setValue(2'000'000);
+
+    // The GUI must honor the wallet's avoid-reuse preference.
+    {
+        LOCK(wallet->cs_wallet);
+        wallet->SetWalletFlag(WALLET_FLAG_AVOID_REUSE);
+        WalletBatch db_batch(wallet->GetDatabase());
+        QVERIFY(wallet->SetAddressPreviouslySpent(db_batch, TestDestination(test.coinbaseKey), true));
+    }
+    error.clear();
+    create->click();
+    QVERIFY(!error.isEmpty());
+    QVERIFY(!page.findChild<QMessageBox*>("p2cConfirmation"));
+    QVERIFY(sent.empty());
+    {
+        LOCK(wallet->cs_wallet);
+        WalletBatch db_batch(wallet->GetDatabase());
+        QVERIFY(wallet->SetAddressPreviouslySpent(db_batch, TestDestination(test.coinbaseKey), false));
+        wallet->UnsetWalletFlag(WALLET_FLAG_AVOID_REUSE);
+    }
+    page.setModel(gui.walletModel.get());
+
+    // Optional offscreen render for visual review; regular CI needs no files.
+    const QString screenshot_path = qEnvironmentVariable("CONNECTCOIN_TEST_P2C_SCREENSHOT");
+    if (!screenshot_path.isEmpty()) {
+        page.resize(850, 700);
+        QVERIFY(page.grab().save(screenshot_path));
+    }
+
+    // Cancel a real signed proposal; retain an unrelated user reservation.
+    auto coins = gui.walletModel->wallet().listCoins();
+    QVERIFY(!coins.empty());
+    const COutPoint user_locked = std::get<0>(coins.begin()->second.front());
+    QVERIFY(gui.walletModel->wallet().lockCoin(user_locked, false));
+    error.clear();
+    create->click();
+    QVERIFY2(error.isEmpty(), qPrintable(error));
+    auto* confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
+    QVERIFY(confirmation);
+    QVERIFY(confirmation->text().contains("Total fees"));
+    QVERIFY(confirmation->text().contains("Total debit"));
+    QVERIFY(confirmation->text().contains("example.com"));
+    QVERIFY(!confirmation->button(QMessageBox::Yes)->isEnabled());
+    std::vector<COutPoint> locks;
+    gui.walletModel->wallet().listLockedCoins(locks);
+    QVERIFY(locks.size() > 1);
+    confirmation->reject();
+    QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+    locks.clear();
+    gui.walletModel->wallet().listLockedCoins(locks);
+    QCOMPARE(locks.size(), size_t{1});
+    QVERIFY(locks.front() == user_locked);
+    QVERIFY(sent.empty());
+    QVERIFY(gui.walletModel->wallet().unlockCoin(user_locked));
+
+    // A manual unlock/relock during review belongs to the user, not the batch.
+    create->click();
+    confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
+    QVERIFY(confirmation);
+    locks.clear();
+    gui.walletModel->wallet().listLockedCoins(locks);
+    QVERIFY(!locks.empty());
+    const COutPoint replaced_lock{locks.front()};
+    QVERIFY(gui.walletModel->wallet().unlockCoin(replaced_lock));
+    QVERIFY(gui.walletModel->wallet().lockCoin(replaced_lock, /*write_to_db=*/true));
+    confirmation->done(QMessageBox::Yes);
+    QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+    QVERIFY(error.contains("reservation changed"));
+    QVERIFY(sent.empty());
+    QVERIFY(gui.walletModel->wallet().isLockedCoin(replaced_lock));
+    QVERIFY(gui.walletModel->wallet().unlockCoin(replaced_lock));
+    error.clear();
+
+    // Submit exactly the reviewed output, even if the disabled form is changed.
+    create->click();
+    QVERIFY(page.findChild<QMessageBox*>("p2cConfirmation"));
+    page.setModel(nullptr);
+    QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+    locks.clear();
+    gui.walletModel->wallet().listLockedCoins(locks);
+    QVERIFY(locks.empty());
+    QVERIFY(sent.empty());
+    page.setModel(gui.walletModel.get());
+    create->click();
+    confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
+    QVERIFY(confirmation);
+    domain->setText("changed.example");
+    confirmation->done(QMessageBox::Yes);
+    QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+    QCOMPARE(sent.size(), size_t{1});
+    QVERIFY(node.context()->chain->isInMempool(sent.front()));
+    {
+        LOCK(wallet->cs_wallet);
+        const auto* wtx = wallet->GetWalletTx(sent.front());
+        QVERIFY(wtx);
+        int p2c_count{0};
+        for (const auto& out : wtx->GetTx()->vout) {
+            if (const auto p2c = out.GetPayToDomain()) {
+                QCOMPARE(p2c->domain, std::string{"example.com"});
+                QCOMPARE(p2c->connection_work_target.GetHex(), std::string{"003"} + std::string(61, 'f'));
+                QCOMPARE(out.nValue, COIN);
+                ++p2c_count;
+            }
+        }
+        QCOMPARE(p2c_count, 2);
+    }
+    qApp->processEvents();
+    CheckP2CHistory(*gui.walletModel->getTransactionTableModel(), "example.com", 2);
+    {
+        // Reopening history reconstructs labels from existing outputs, without
+        // needing any address-book entries or GUI-specific transaction metadata.
+        TransactionTableModel reloaded(style.get(), gui.walletModel.get());
+        CheckP2CHistory(reloaded, "example.com", 2);
+    }
+    {
+        auto varied_wtx = gui.walletModel->wallet().getWalletTx(sent.front());
+        CMutableTransaction varied{*varied_wtx.tx};
+        int changed{0};
+        for (auto& output : varied.vout) {
+            if (auto p2c = output.GetPayToDomain()) {
+                p2c->domain = changed++ == 0 ? "one.example" : "two.example";
+                output = CTxOut{output.nValue, *p2c};
+            }
+        }
+        QCOMPARE(changed, 2);
+        varied_wtx.tx = MakeTransactionRef(std::move(varied));
+        varied_wtx.comment_to = "not-the-output-domain.example";
+        const auto records = TransactionRecord::decomposeTransaction(varied_wtx);
+        QCOMPARE(records.size(), 2);
+        std::set<std::string> domains;
+        for (const auto& record : records) {
+            const auto p2c = varied_wtx.tx->vout.at(record.idx).GetPayToDomain();
+            QVERIFY(p2c);
+            QCOMPARE(record.p2c_domain, p2c->domain);
+            QVERIFY(record.address.empty());
+            domains.insert(record.p2c_domain);
+        }
+        QVERIFY(domains == (std::set<std::string>{"one.example", "two.example"}));
+    }
+    QVERIFY(QMetaObject::invokeMethod(&page, "finishConfirmation", Q_ARG(int, static_cast<int>(QMessageBox::Yes))));
+    QCOMPARE(sent.size(), size_t{1});
+
+    // A real storage failure on the second transaction must report only the
+    // first committed transaction, release remaining reservations, and never
+    // automatically retry the original batch.
+    const std::string partial_domain = std::string(63, 'p') + "." + std::string(63, 'q') + "." + std::string(63, 'r') + "." + std::string(61, 's');
+    domain->setText(QString::fromStdString(partial_domain));
+    count->setValue(1000);
+    amount->setValue(COIN / 1000);
+    error.clear();
+    create->click();
+    QVERIFY2(error.isEmpty(), qPrintable(error));
+    confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
+    QVERIFY(confirmation);
+    sent.clear();
+    wallet->SetBroadcastTransactions(false);
+    failing_database->batches_until_failure = 1;
+    confirmation->done(QMessageBox::Yes);
+    failing_database->batches_until_failure = -1;
+    wallet->SetBroadcastTransactions(true);
+    QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+    QVERIFY(error.contains("Injected P2C database failure"));
+    QCOMPARE(sent.size(), size_t{1});
+    QVERIFY(QMetaObject::invokeMethod(&page, "finishConfirmation", Q_ARG(int, static_cast<int>(QMessageBox::Yes))));
+    QCOMPARE(sent.size(), size_t{1});
+    locks.clear();
+    gui.walletModel->wallet().listLockedCoins(locks);
+    QVERIFY(locks.empty());
+
+    // A long-domain 1000-output request must split, using disjoint inputs.
+    const std::string long_domain = std::string(63, 'a') + "." + std::string(63, 'b') + "." + std::string(63, 'c') + "." + std::string(61, 'd');
+    domain->setText(QString::fromStdString(long_domain));
+    mode->setCurrentIndex(1);
+    target->setText(QString(64, 'f'));
+    count->setValue(1000);
+    amount->setValue(COIN / 1000);
+    error.clear();
+    create->click();
+    QVERIFY2(error.isEmpty(), qPrintable(error));
+    confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
+    QVERIFY(confirmation);
+    sent.clear();
+    confirmation->done(QMessageBox::Yes);
+    QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+    QVERIFY2(error.isEmpty(), qPrintable(error));
+    QVERIFY(sent.size() > 1);
+    int p2c_count{0};
+    std::set<COutPoint> inputs;
+    {
+        LOCK(wallet->cs_wallet);
+        for (const auto& txid : sent) {
+            QVERIFY(node.context()->chain->isInMempool(txid));
+            const auto* wtx = wallet->GetWalletTx(txid);
+            QVERIFY(wtx);
+            for (const auto& input : wtx->GetTx()->vin) QVERIFY(inputs.insert(input.prevout).second);
+            for (const auto& out : wtx->GetTx()->vout) {
+                if (const auto p2c = out.GetPayToDomain()) {
+                    QCOMPARE(p2c->domain, long_domain);
+                    QCOMPARE(out.nValue, COIN / 1000);
+                    ++p2c_count;
+                }
+            }
+        }
+    }
+    QCOMPARE(p2c_count, 1000);
+    qApp->processEvents();
+    CheckP2CHistory(*gui.walletModel->getTransactionTableModel(), QString::fromStdString(long_domain), 1000);
+    locks.clear();
+    gui.walletModel->wallet().listLockedCoins(locks);
+    QVERIFY(locks.empty());
+
+    // Insufficient funds must neither send nor leave reservations behind.
+    amount->setValue(MAX_MONEY / 1000);
+    sent.clear();
+    error.clear();
+    create->click();
+    QVERIFY(!error.isEmpty());
+    QVERIFY(sent.empty());
+    locks.clear();
+    gui.walletModel->wallet().listLockedCoins(locks);
+    QVERIFY(locks.empty());
+
+    // Unlock only to sign; review and cancellation must leave it locked.
+    const SecureString passphrase{"test-p2c-wallet-passphrase"};
+    QVERIFY(wallet->EncryptWallet(passphrase));
+    QVERIFY(wallet->IsLocked());
+    count->setValue(1);
+    amount->setValue(COIN / 1000);
+    error.clear();
+    create->click(); // No unlock handler: equivalent to cancelling unlock.
+    QVERIFY(!page.findChild<QMessageBox*>("p2cConfirmation"));
+    QVERIFY(wallet->IsLocked());
+    QVERIFY(sent.empty());
+    auto unlock_connection = QObject::connect(gui.walletModel.get(), &WalletModel::requireUnlock, [&] {
+        QVERIFY(wallet->Unlock(passphrase));
+        page.setModel(nullptr);
+    });
+    create->click();
+    QVERIFY(!page.findChild<QMessageBox*>("p2cConfirmation"));
+    QVERIFY(wallet->IsLocked());
+    QVERIFY(sent.empty());
+    QObject::disconnect(unlock_connection);
+    page.setModel(gui.walletModel.get());
+
+    unlock_connection = QObject::connect(gui.walletModel.get(), &WalletModel::requireUnlock, [&] {
+        QVERIFY(wallet->Unlock(passphrase));
+        failing_database->batches_until_failure = 0;
+    });
+    create->click();
+    failing_database->batches_until_failure = -1;
+    QVERIFY(error.contains("Injected P2C database failure"));
+    QVERIFY(!page.findChild<QMessageBox*>("p2cConfirmation"));
+    QVERIFY(wallet->IsLocked());
+    QVERIFY(sent.empty());
+    locks.clear();
+    gui.walletModel->wallet().listLockedCoins(locks);
+    QVERIFY(locks.empty());
+    QObject::disconnect(unlock_connection);
+    error.clear();
+
+    unlock_connection = QObject::connect(gui.walletModel.get(), &WalletModel::requireUnlock, [&] {
+        QVERIFY(wallet->Unlock(passphrase));
+        // A nested unlock callback must not change what the confirmation says
+        // about the already captured request.
+        domain->setText("changed-during-unlock.example");
+        target->setText(QString(64, '0'));
+    });
+    domain->setText("original.example");
+    target->setText(QString(64, 'f'));
+    create->click();
+    QVERIFY2(error.isEmpty(), qPrintable(error));
+    confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
+    QVERIFY(confirmation);
+    QVERIFY(wallet->IsLocked());
+    QVERIFY(confirmation->text().contains("original.example"));
+    QVERIFY(!confirmation->text().contains("changed-during-unlock.example"));
+    QVERIFY(confirmation->detailedText().contains(QString(64, 'f')));
+    confirmation->reject();
+    QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+    QVERIFY(wallet->IsLocked());
+    QVERIFY(sent.empty());
+    locks.clear();
+    gui.walletModel->wallet().listLockedCoins(locks);
+    QVERIFY(locks.empty());
+    QObject::disconnect(unlock_connection);
+    page.setModel(nullptr);
+    QVERIFY(!create->isEnabled());
+
+    auto watch_wallet = SetupDescriptorsWallet(node, test, /*watch_only=*/true);
+    MiniGUI watch_gui(node, style.get());
+    watch_gui.initModelForWallet(node, watch_wallet, style.get());
+    page.setModel(watch_gui.walletModel.get());
+    QVERIFY(!create->isEnabled());
+}
+
 } // namespace
 
 void WalletTests::walletTests()
 {
     TestGUI(m_node);
+}
+
+void WalletTests::p2cTests()
+{
+    TestP2CGUI(m_node);
 }

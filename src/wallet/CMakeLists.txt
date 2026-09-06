@@ -17,6 +17,7 @@ add_library(connectcoin_wallet STATIC EXCLUDE_FROM_ALL
   interfaces.cpp
   load.cpp
   migrate.cpp
+  p2c.cpp
   receive.cpp
   rpc/addresses.cpp
   rpc/backup.cpp
