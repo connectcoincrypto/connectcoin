@@ -44,9 +44,11 @@ class BIP68Test(BitcoinTestFramework):
         self.extra_args = [
             [
                 '-testactivationheight=csv@432',
+                '-minrelaytxfee=0.0000001000',
             ],
             [
                 '-testactivationheight=csv@432',
+                '-minrelaytxfee=0.0000001000',
             ],
         ]
 

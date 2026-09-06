@@ -11,9 +11,6 @@ too-low-feerate transactions). The packages should be received and accepted by a
 
 from decimal import Decimal
 
-from test_framework.mempool_util import (
-    DEFAULT_MIN_RELAY_TX_FEE,
-)
 from test_framework.messages import (
     COIN,
     msg_tx,
@@ -30,16 +27,20 @@ from test_framework.wallet import (
     MiniWalletMode,
 )
 
+# The package fixtures use fixed fees to test relay topology, not halvings.
+MIN_RELAY_TX_FEE = 1000  # con/kvB
+
 class PackageRelayTest(BitcoinTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 4
+        self.extra_args = [[f"-minrelaytxfee={Decimal(MIN_RELAY_TX_FEE) / COIN:.10f}"]] * self.num_nodes
         # hugely speeds up the test, as it involves multiple hops of tx relay.
         self.noban_tx_relay = True
 
     def create_basic_1p1c(self, wallet):
         low_fee_parent = wallet.create_self_transfer(fee_rate=0, confirmed_only=True)
-        high_fee_child = wallet.create_self_transfer(utxo_to_spend=low_fee_parent["new_utxo"], fee_rate=999*Decimal(DEFAULT_MIN_RELAY_TX_FEE)/ COIN)
+        high_fee_child = wallet.create_self_transfer(utxo_to_spend=low_fee_parent["new_utxo"], fee_rate=999*Decimal(MIN_RELAY_TX_FEE)/ COIN)
         package_hex_basic = [low_fee_parent["hex"], high_fee_child["hex"]]
         return package_hex_basic, low_fee_parent["tx"], high_fee_child["tx"]
 
@@ -61,8 +62,8 @@ class PackageRelayTest(BitcoinTestFramework):
         return [low_fee_parent_2outs["hex"], high_fee_child_2outs["hex"]], low_fee_parent_2outs["tx"], high_fee_child_2outs["tx"]
 
     def create_package_2p1c(self, wallet):
-        parent1 = wallet.create_self_transfer(fee_rate=Decimal(DEFAULT_MIN_RELAY_TX_FEE) / COIN * 10, confirmed_only=True)
-        parent2 = wallet.create_self_transfer(fee_rate=Decimal(DEFAULT_MIN_RELAY_TX_FEE) / COIN * 20, confirmed_only=True)
+        parent1 = wallet.create_self_transfer(fee_rate=Decimal(MIN_RELAY_TX_FEE) / COIN * 10, confirmed_only=True)
+        parent2 = wallet.create_self_transfer(fee_rate=Decimal(MIN_RELAY_TX_FEE) / COIN * 20, confirmed_only=True)
         child = wallet.create_self_transfer_multi(
             utxos_to_spend=[parent1["new_utxo"], parent2["new_utxo"]],
             fee_per_output=999*parent1["tx"].get_vsize(),

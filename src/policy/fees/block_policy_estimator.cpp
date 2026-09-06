@@ -1146,3 +1146,11 @@ CAmount FeeFilterRounder::round(CAmount currentMinFee)
     }
     return static_cast<CAmount>(*it);
 }
+
+CAmount FeeFilterRounder::round(CAmount currentMinFee, CAmount minRelayFee)
+{
+    // Even a rolling minimum below the public floor could round above it.
+    // In that case the floor alone determines admission, so advertise it exactly.
+    if (currentMinFee <= minRelayFee) return minRelayFee;
+    return std::max(round(currentMinFee), minRelayFee);
+}

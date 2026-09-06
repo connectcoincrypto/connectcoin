@@ -23,7 +23,7 @@ from test_framework.util import (
 class AbandonConflictTest(BitcoinTestFramework):
     def set_test_params(self):
         self.num_nodes = 2
-        self.extra_args = [["-minrelaytxfee=0.0000001"], []]
+        self.extra_args = [["-minrelaytxfee=0.0000001"]] * self.num_nodes
         # whitelist peers to speed up tx relay / mempool sync
         self.noban_tx_relay = True
 

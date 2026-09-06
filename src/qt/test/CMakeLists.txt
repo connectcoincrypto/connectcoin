@@ -49,6 +49,9 @@ if(WIN32 AND VCPKG_TARGET_TRIPLET)
       # the "minimal" platform plugin unusable due to internal Qt bugs.
       QT_QPA_PLATFORM=set:windows
       QT_PLUGIN_PATH=set:${plugin_path}
+      # Preserve QtTest failure details in CTest/CI logs even without a console.
+      QT_FORCE_STDERR_LOGGING=set:1
+      QT_ASSUME_STDERR_HAS_CONSOLE=set:1
   )
   unset(plugin_path)
 endif()

@@ -333,6 +333,9 @@ public:
     /** Quantize a minimum fee for privacy purpose before broadcast. */
     CAmount round(CAmount currentMinFee) EXCLUSIVE_LOCKS_REQUIRED(!m_insecure_rand_mutex);
 
+    /** Randomize only a rolling minimum that exceeds the public relay floor. */
+    CAmount round(CAmount currentMinFee, CAmount minRelayFee) EXCLUSIVE_LOCKS_REQUIRED(!m_insecure_rand_mutex);
+
 private:
     const std::set<double> m_fee_set;
     Mutex m_insecure_rand_mutex;

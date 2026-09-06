@@ -16,10 +16,12 @@ from test_framework.messages import (
 )
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
+    append_config,
     assert_array_result,
     assert_equal,
     assert_fee_amount,
     assert_raises_rpc_error,
+    get_datadir_path,
 )
 from test_framework.wallet_util import test_address
 from test_framework.wallet import MiniWallet
@@ -41,6 +43,13 @@ class WalletTest(BitcoinTestFramework):
 
     def skip_test_if_missing_module(self):
         self.skip_if_no_wallet()
+
+    def setup_chain(self):
+        super().setup_chain()
+        # Fee arithmetic below uses a fixed 1 con/vB policy. Keep it across
+        # restarts with different arguments and across regtest halvings.
+        for i in range(self.num_nodes):
+            append_config(get_datadir_path(self.options.tmpdir, i), ["minrelaytxfee=0.0000001000"])
 
     def setup_network(self):
         self.setup_nodes()

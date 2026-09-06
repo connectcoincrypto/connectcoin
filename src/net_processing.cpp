@@ -287,6 +287,8 @@ struct Peer {
      *  It is *not* a p2p protocol violation for the peer to send us
      *  transactions with a lower fee rate than this. See BIP133. */
     CAmount m_fee_filter_sent GUARDED_BY(NetEventsInterface::g_msgproc_mutex){0};
+    /** Public relay floor used for the last feefilter calculation. */
+    CAmount m_min_relay_fee_sent GUARDED_BY(NetEventsInterface::g_msgproc_mutex){-1};
     /** Timestamp after which we will send the next BIP133 `feefilter` message
       * to the peer. */
     std::chrono::microseconds m_next_send_feefilter GUARDED_BY(NetEventsInterface::g_msgproc_mutex){0};
@@ -5861,7 +5863,11 @@ void PeerManagerImpl::MaybeSendFeefilter(CNode& pto, Peer& peer, std::chrono::mi
     // transactions to us, regardless of feefilter state.
     if (pto.IsBlockOnlyConn()) return;
 
-    CAmount currentFilter = std::max(m_mempool.GetMinFee(), m_mempool.GetMinRelayFee()).GetFeePerK();
+    const CAmount min_relay_fee = m_mempool.GetMinRelayFee().GetFeePerK();
+    // Only randomize the rolling mempool minimum. Rounding the public relay
+    // floor upwards can prevent peers from announcing transactions that pay
+    // exactly the fee our wallet and mempool require.
+    CAmount currentFilter = m_mempool.GetMinFee().GetFeePerK();
 
     if (m_chainman.IsInitialBlockDownload()) {
         // Received tx-inv messages are discarded when the active
@@ -5869,26 +5875,27 @@ void PeerManagerImpl::MaybeSendFeefilter(CNode& pto, Peer& peer, std::chrono::mi
         currentFilter = MAX_MONEY;
     } else {
         static const CAmount MAX_FILTER{m_fee_filter_rounder.round(MAX_MONEY)};
-        if (peer.m_fee_filter_sent == MAX_FILTER) {
-            // Send the current filter if we sent MAX_FILTER previously
-            // and made it out of IBD.
+        if (peer.m_fee_filter_sent == MAX_FILTER || peer.m_min_relay_fee_sent != min_relay_fee) {
+            // Leaving IBD or crossing a subsidy boundary must not strand
+            // transactions behind a stale filter. The height-derived floor is
+            // public, so it does not need the privacy delay of mempool changes.
             peer.m_next_send_feefilter = 0us;
         }
     }
     if (current_time > peer.m_next_send_feefilter) {
-        CAmount filterToSend = m_fee_filter_rounder.round(currentFilter);
-        // We always have a fee filter of at least the min relay fee
-        filterToSend = std::max(filterToSend, m_mempool.GetMinRelayFee().GetFeePerK());
+        const CAmount filterToSend = m_fee_filter_rounder.round(currentFilter, min_relay_fee);
         if (filterToSend != peer.m_fee_filter_sent) {
             MakeAndPushMessage(pto, NetMsgType::FEEFILTER, filterToSend);
             peer.m_fee_filter_sent = filterToSend;
         }
+        peer.m_min_relay_fee_sent = min_relay_fee;
         peer.m_next_send_feefilter = current_time + m_rng.rand_exp_duration(AVG_FEEFILTER_BROADCAST_INTERVAL);
     }
     // If the fee filter has changed substantially and it's still more than MAX_FEEFILTER_CHANGE_DELAY
     // until scheduled broadcast, then move the broadcast to within MAX_FEEFILTER_CHANGE_DELAY.
     else if (current_time + MAX_FEEFILTER_CHANGE_DELAY < peer.m_next_send_feefilter &&
-                (currentFilter < 3 * peer.m_fee_filter_sent / 4 || currentFilter > 4 * peer.m_fee_filter_sent / 3)) {
+                (std::max(currentFilter, min_relay_fee) < 3 * peer.m_fee_filter_sent / 4 ||
+                 std::max(currentFilter, min_relay_fee) > 4 * peer.m_fee_filter_sent / 3)) {
         peer.m_next_send_feefilter = current_time + m_rng.randrange<std::chrono::microseconds>(MAX_FEEFILTER_CHANGE_DELAY);
     }
 }

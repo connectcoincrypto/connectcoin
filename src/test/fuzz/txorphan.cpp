@@ -39,6 +39,10 @@ void initialize_orphanage()
 
 FUZZ_TARGET(txorphan, .init = initialize_orphanage)
 {
+    // The output is constant: validate its public key once, not once per
+    // generated output. Transaction contents and fuzz input consumption stay
+    // identical, including oversized transactions and duplicate inputs.
+    static const CTxOut p2pk_output{CAmount{0}, DeterministicP2PKScript()};
     SeedRandomStateForTest(SeedRand::ZEROS);
     FuzzedDataProvider fuzzed_data_provider(buffer.data(), buffer.size());
     FastRandomContext orphanage_rng{ConsumeUInt256(fuzzed_data_provider)};
@@ -72,11 +76,8 @@ FUZZ_TARGET(txorphan, .init = initialize_orphanage)
                 tx_mut.vin.emplace_back(prevout, CScript{}, fuzzed_data_provider.ConsumeIntegralInRange<uint32_t>(0, CTxIn::SEQUENCE_FINAL));
             }
             // output amount will not affect txorphanage
-            tx_mut.vout.reserve(num_out);
-            for (uint32_t i = 0; i < num_out; i++) {
-                tx_mut.vout.emplace_back(CAmount{0}, DeterministicP2PKScript());
-            }
-            auto new_tx = MakeTransactionRef(tx_mut);
+            tx_mut.vout.assign(num_out, p2pk_output);
+            auto new_tx = MakeTransactionRef(std::move(tx_mut));
             // add newly constructed outpoints to the coin pool
             for (uint32_t i = 0; i < num_out; i++) {
                 outpoints.emplace_back(new_tx->GetHash(), i);
@@ -87,6 +88,7 @@ FUZZ_TARGET(txorphan, .init = initialize_orphanage)
         tx_history.push_back(tx);
 
         const auto wtxid{tx->GetWitnessHash()};
+        const auto tx_weight{GetTransactionWeight(*tx)};
 
         // Trigger orphanage functions that are called using parents. ptx_potential_parent is a tx we constructed in a
         // previous loop and potentially the parent of this tx.
@@ -108,7 +110,6 @@ FUZZ_TARGET(txorphan, .init = initialize_orphanage)
             NodeId peer_id = fuzzed_data_provider.ConsumeIntegral<NodeId>();
             const auto total_bytes_start{orphanage->TotalOrphanUsage()};
             const auto total_peer_bytes_start{orphanage->UsageByPeer(peer_id)};
-            const auto tx_weight{GetTransactionWeight(*tx)};
 
             CallOneOf(
                 fuzzed_data_provider,
@@ -230,6 +231,7 @@ FUZZ_TARGET(txorphan, .init = initialize_orphanage)
 
 FUZZ_TARGET(txorphan_protected, .init = initialize_orphanage)
 {
+    static const CTxOut p2pk_output{CAmount{0}, DeterministicP2PKScript()};
     SeedRandomStateForTest(SeedRand::ZEROS);
     FuzzedDataProvider fuzzed_data_provider(buffer.data(), buffer.size());
     FastRandomContext orphanage_rng{ConsumeUInt256(fuzzed_data_provider)};
@@ -289,9 +291,9 @@ FUZZ_TARGET(txorphan_protected, .init = initialize_orphanage)
             for (uint32_t i = 0; i < num_out; i++) {
                 const auto payload_size = fuzzed_data_provider.ConsumeIntegralInRange<unsigned int>(0, 100000);
                 if (payload_size) tx_mut.vin[0].scriptWitness.stack.emplace_back(payload_size);
-                tx_mut.vout.emplace_back(0, DeterministicP2PKScript());
+                tx_mut.vout.push_back(p2pk_output);
             }
-            auto new_tx = MakeTransactionRef(tx_mut);
+            auto new_tx = MakeTransactionRef(std::move(tx_mut));
             // add newly constructed outpoints to the coin pool
             for (uint32_t i = 0; i < num_out; i++) {
                 outpoints.emplace_back(new_tx->GetHash(), i);
@@ -300,11 +302,11 @@ FUZZ_TARGET(txorphan_protected, .init = initialize_orphanage)
         }();
 
         const auto wtxid{tx->GetWitnessHash()};
+        const auto tx_weight{GetTransactionWeight(*tx)};
 
         // orphanage functions
         LIMITED_WHILE (fuzzed_data_provider.remaining_bytes(), 10 * global_latency_score_limit) {
             NodeId peer_id = fuzzed_data_provider.ConsumeIntegralInRange<NodeId>(0, num_peers - 1);
-            const auto tx_weight{GetTransactionWeight(*tx)};
 
             // This protected peer will never send orphans that would
             // exceed their own personal allotment, so is never evicted.

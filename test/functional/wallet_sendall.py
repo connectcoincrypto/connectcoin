@@ -34,6 +34,8 @@ class SendallTest(BitcoinTestFramework):
         getcontext().prec=28
         self.num_nodes = 1
         self.setup_clean_chain = True
+        # The sweep/dust cases assume a fixed 1 con/vB relay minimum.
+        self.extra_args = [["-minrelaytxfee=0.0000001000"]]
         # The type-1 oversized-transaction case creates 2,000 outputs in one
         # funding transaction and can exceed the default Windows RPC timeout.
         self.rpc_timeout = 120

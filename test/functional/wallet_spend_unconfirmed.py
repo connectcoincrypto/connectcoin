@@ -18,6 +18,8 @@ class UnconfirmedInputTest(BitcoinTestFramework):
         getcontext().prec=9
         self.setup_clean_chain = True
         self.num_nodes = 1
+        # Exercise ancestor fee accounting with fixed 1/2/30 con/vB fees.
+        self.extra_args = [["-minrelaytxfee=0.0000001000"]]
 
     def setup_and_fund_wallet(self, walletname):
         self.nodes[0].createwallet(walletname)

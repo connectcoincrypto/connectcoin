@@ -24,6 +24,8 @@
 #include <validation.h>
 #include <validationinterface.h>
 
+#include <utility>
+
 namespace {
 
 const TestingSetup* g_setup;
@@ -58,6 +60,9 @@ std::chrono::microseconds TIME_SKIPS[128];
 
 static CTransactionRef MakeTransactionSpending(const std::vector<COutPoint>& outpoints, size_t num_outputs, bool add_witness)
 {
+    // Every output has the same key and amount. Reuse its validated typed
+    // payload instead of repeating elliptic-curve key checks for each copy.
+    static const CTxOut p2pk_output{CENT, DeterministicP2PKScript()};
     CMutableTransaction tx;
     // If no outpoints are given, create a random one.
     for (const auto& outpoint : outpoints) {
@@ -66,9 +71,8 @@ static CTransactionRef MakeTransactionSpending(const std::vector<COutPoint>& out
     if (add_witness) {
         tx.vin[0].scriptWitness.stack.push_back({1});
     }
-    for (size_t o = 0; o < num_outputs; ++o)
-        tx.vout.emplace_back(CENT, DeterministicP2PKScript());
-    return MakeTransactionRef(tx);
+    tx.vout.assign(num_outputs, p2pk_output);
+    return MakeTransactionRef(std::move(tx));
 }
 static std::vector<COutPoint> PickCoins(FuzzedDataProvider& fuzzed_data_provider)
 {

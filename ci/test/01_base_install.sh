@@ -29,7 +29,8 @@ fi
 if [ -n "${APT_LLVM_V}" ]; then
   ${CI_RETRY_EXE} apt-get update
   ${CI_RETRY_EXE} apt-get install curl -y
-  curl "https://apt.llvm.org/llvm-snapshot.gpg.key" | tee "/etc/apt/trusted.gpg.d/apt.llvm.org.asc"
+  ${CI_RETRY_EXE} curl --fail --location --connect-timeout 20 --max-time 90 \
+    --output "/etc/apt/trusted.gpg.d/apt.llvm.org.asc" "https://apt.llvm.org/llvm-snapshot.gpg.key"
   (
     # shellcheck disable=SC1091,SC2034
     source /etc/os-release
