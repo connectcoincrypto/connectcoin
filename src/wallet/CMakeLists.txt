@@ -18,11 +18,16 @@ add_library(connectcoin_wallet STATIC EXCLUDE_FROM_ALL
   load.cpp
   migrate.cpp
   p2c.cpp
+  p2c_claim.cpp
+  p2c_tls.cpp
+  p2c_tls_private.c
+  p2c_worker_impl.cpp
   receive.cpp
   rpc/addresses.cpp
   rpc/backup.cpp
   rpc/coins.cpp
   rpc/encrypt.cpp
+  rpc/p2c.cpp
   rpc/signmessage.cpp
   rpc/spend.cpp
   rpc/transactions.cpp
@@ -43,5 +48,9 @@ target_link_libraries(connectcoin_wallet
     SQLite3::SQLite3
     univalue
     Boost::headers
+    MbedTLS::mbedtls
     $<TARGET_NAME_IF_EXISTS:USDT::headers>
+)
+target_include_directories(connectcoin_wallet SYSTEM PRIVATE
+  ${connectcoin_mbedtls_SOURCE_DIR}/library
 )

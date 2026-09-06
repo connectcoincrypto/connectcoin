@@ -1112,6 +1112,10 @@ RPCMethod encryptwallet();
 // spend
 RPCMethod sendtoaddress();
 RPCMethod sendtop2c();
+RPCMethod preparep2cclaim();
+RPCMethod submitp2cclaim();
+RPCMethod setp2cclaiming();
+RPCMethod getp2cclaimstatus();
 RPCMethod sendmany();
 RPCMethod fundrawtransaction();
 RPCMethod bumpfee();
@@ -1185,6 +1189,10 @@ std::span<const CRPCCommand> GetWalletRPCCommands()
         {"wallet", &sendmany},
         {"wallet", &sendtoaddress},
         {"wallet", &sendtop2c},
+        {"wallet", &preparep2cclaim},
+        {"wallet", &submitp2cclaim},
+        {"wallet", &setp2cclaiming},
+        {"wallet", &getp2cclaimstatus},
         {"wallet", &setlabel},
         {"wallet", &setwalletflag},
         {"wallet", &signmessage},

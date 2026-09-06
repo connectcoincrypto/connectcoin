@@ -563,6 +563,19 @@ void TestP2CGUI(interfaces::Node& node)
     gui.initModelForWallet(node, wallet, style.get());
     P2CCreateDialog page;
     page.setModel(gui.walletModel.get());
+    auto* claim_rate = page.findChild<QSpinBox*>("p2cClaimRate");
+    auto* claim_unlimited = page.findChild<QCheckBox*>("p2cClaimUnlimited");
+    auto* claim_stop = page.findChild<QPushButton*>("p2cClaimStop");
+    QVERIFY(claim_rate && claim_unlimited && claim_stop);
+    QCOMPARE(claim_rate->value(), 0);
+    QVERIFY(!claim_unlimited->isChecked());
+    claim_unlimited->setChecked(true);
+    QVERIFY(!claim_rate->isEnabled());
+    claim_stop->click(); // Zero must disable, never mean unlimited.
+    QTRY_VERIFY(claim_stop->isEnabled());
+    QCOMPARE(claim_rate->value(), 0);
+    QVERIFY(!claim_unlimited->isChecked());
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 0);
     auto* domain = page.findChild<QLineEdit*>("p2cDomain");
     auto* amount = page.findChild<BitcoinAmountField*>("p2cAmount");
     auto* count = page.findChild<QSpinBox*>("p2cOutputCount");

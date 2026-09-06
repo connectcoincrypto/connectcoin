@@ -177,6 +177,17 @@ public:
     //! populates the values.
     virtual void findCoins(std::map<COutPoint, Coin>& coins) = 0;
 
+    //! Unlike findCoins, detect a competing spend already in the mempool.
+    virtual bool isSpentByMempool(const COutPoint& outpoint) = 0;
+
+    //! Run current mempool/consensus checks without storing or relaying a transaction.
+    virtual util::Result<void> checkTransaction(const CTransactionRef& tx) = 0;
+
+    //! Scan a flushed UTXO snapshot off the wallet/UI thread. A false visitor
+    //! result stops a bounded batch; cancellation is checked between entries.
+    virtual bool scanP2CBounties(const std::function<bool(const COutPoint&, const CTxOut&)>& visitor,
+                                const std::function<bool()>& cancelled) = 0;
+
     //! Estimate fraction of total transactions verified if blocks up to
     //! the specified block hash are verified.
     virtual double guessVerificationProgress(const uint256& block_hash) = 0;

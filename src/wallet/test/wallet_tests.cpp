@@ -6,10 +6,12 @@
 
 #include <cstdint>
 #include <future>
+#include <map>
 #include <memory>
 #include <vector>
 
 #include <addresstype.h>
+#include <coins.h>
 #include <interfaces/chain.h>
 #include <key_io.h>
 #include <node/blockstorage.h>
@@ -22,6 +24,7 @@
 #include <test/util/random.h>
 #include <test/util/script.h>
 #include <test/util/setup_common.h>
+#include <test/util/txmempool.h>
 #include <util/strencodings.h>
 #include <util/translation.h>
 #include <validation.h>
@@ -29,6 +32,7 @@
 #include <wallet/coincontrol.h>
 #include <wallet/context.h>
 #include <wallet/p2c.h>
+#include <wallet/p2c_claim.h>
 #include <wallet/receive.h>
 #include <wallet/spend.h>
 #include <wallet/test/util.h>
@@ -134,6 +138,68 @@ static void AddKey(CWallet& wallet, const CKey& key)
     auto& desc = descs.at(0);
     WalletDescriptor w_desc(std::move(desc), 0, 0, 1, 1);
     Assert(wallet.AddWalletDescriptor(w_desc, provider, "", false));
+}
+
+BOOST_AUTO_TEST_CASE(commit_external_bounty_parent)
+{
+    LOCK(m_wallet.cs_wallet);
+    m_wallet.SetWalletFlag(WALLET_FLAG_DESCRIPTORS);
+    m_wallet.SetBroadcastTransactions(false);
+    const auto key{GenerateRandomKey()};
+    AddKey(m_wallet, key);
+    CMutableTransaction claim;
+    claim.vin.emplace_back(Txid::FromUint256(uint256::ONE), 0);
+    claim.vout.emplace_back(COIN, XOnlyPubKey{key.GetPubKey()});
+    BOOST_REQUIRE(!m_wallet.GetWalletTx(claim.vin[0].prevout.hash));
+    BOOST_REQUIRE(m_wallet.IsMine(claim.vout[0]));
+    const auto tx{MakeTransactionRef(claim)};
+    // Storage must not assume the bounty funding transaction belongs to us.
+    // This tests wallet bookkeeping only, not TLS or mempool acceptance.
+    BOOST_CHECK_NO_THROW(m_wallet.CommitTransaction(tx));
+    BOOST_REQUIRE(m_wallet.GetWalletTx(tx->GetHash()));
+    BOOST_CHECK(!m_wallet.GetWalletTx(claim.vin[0].prevout.hash));
+}
+
+BOOST_AUTO_TEST_CASE(p2c_claim_detects_mempool_competitor)
+{
+    LOCK(m_wallet.cs_wallet);
+    const COutPoint bounty{Txid::FromUint256(uint256::ONE), 0};
+    {
+        LOCK(cs_main);
+        auto& chainstate{m_node.chainman->ActiveChainstate()};
+        m_wallet.SetLastBlockProcessed(chainstate.m_chain.Height(), chainstate.m_chain.Tip()->GetBlockHash());
+        chainstate.CoinsTip().AddCoin(bounty, Coin{CTxOut{COIN, PayToDomainOutput{"example.com", uint256{}, 1}}, 0, false}, false);
+    }
+    CCoinControl control;
+    // Stop before destination reservation when the bounty is available.
+    control.m_feerate = CFeeRate{MAX_MONEY};
+    const auto check_error = [&](const std::string& expected) {
+        auto result{PrepareP2CClaim(m_wallet, bounty, control)};
+        BOOST_REQUIRE(!result);
+        BOOST_CHECK(util::ErrorString(result).original.find(expected) != std::string::npos);
+    };
+    check_error("Fee rate");
+    BOOST_CHECK(!m_node.chain->isSpentByMempool(bounty));
+
+    CMutableTransaction competitor;
+    competitor.vin.emplace_back(bounty);
+    competitor.vout.emplace_back(COIN - 1000, XOnlyPubKey{GenerateRandomKey().GetPubKey()});
+    // Inject only for testing mempool-spend visibility, not proof validity.
+    auto& pool{*Assert(m_node.mempool)};
+    TryAddToMempool(pool, TestMemPoolEntryHelper{}.Fee(1000).FromTx(competitor));
+    BOOST_REQUIRE(m_node.chain->isSpentByMempool(bounty));
+    std::map<COutPoint, Coin> coins{{bounty, Coin{}}};
+    m_node.chain->findCoins(coins);
+    BOOST_REQUIRE(!coins.at(bounty).IsSpent()); // findCoins alone misses this conflict.
+    check_error("unavailable or already spent");
+    {
+        LOCK2(cs_main, pool.cs);
+        pool.removeRecursive(CTransaction{competitor}, MemPoolRemovalReason::REPLACED);
+    }
+    BOOST_CHECK(!m_node.chain->isSpentByMempool(bounty));
+    check_error("Fee rate");
+    WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().SpendCoin(bounty));
+    check_error("unavailable or already spent");
 }
 
 BOOST_AUTO_TEST_CASE(psbt_empty_inputs_do_not_bypass_output_validation)

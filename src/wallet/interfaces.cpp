@@ -279,6 +279,14 @@ public:
         }
         return P2CTransactionBatch::Prepare(m_wallet, recipient, output_count, control);
     }
+    std::future<std::string> configureP2CClaiming(int rate, int concurrency, std::vector<std::string> domains) override
+    {
+        return std::async(std::launch::async, [wallet = m_wallet, rate, concurrency, domains = std::move(domains)]() mutable {
+            auto result{wallet->GetP2CClaimWorker().Configure(rate, concurrency, std::move(domains))};
+            return util::ErrorString(result).original;
+        });
+    }
+    UniValue getP2CClaimStatus() override { return m_wallet->GetP2CClaimWorker().Status(); }
     void commitTransaction(CTransactionRef tx, const std::vector<std::string>& messages) override
     {
         LOCK(m_wallet->cs_wallet);

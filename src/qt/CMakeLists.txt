@@ -198,6 +198,8 @@ if(ENABLE_WALLET)
       overviewpage.h
       p2ccreatedialog.cpp
       p2ccreatedialog.h
+      p2cclaimdialog.cpp
+      p2cclaimdialog.h
       paymentserver.cpp
       paymentserver.h
       psbtoperationsdialog.cpp

@@ -33,6 +33,7 @@
 #include <util/ui_change_type.h>
 #include <wallet/crypter.h>
 #include <wallet/db.h>
+#include <wallet/p2c_worker.h>
 #include <wallet/scriptpubkeyman.h>
 #include <wallet/transaction.h>
 #include <wallet/types.h>
@@ -397,6 +398,8 @@ private:
 
     /** Internal database handle. */
     std::unique_ptr<WalletDatabase> m_database;
+    std::unique_ptr<P2CClaimWorker> m_p2c_worker GUARDED_BY(cs_wallet);
+    bool m_p2c_closing GUARDED_BY(cs_wallet){false};
 
     /**
      * The following is used to keep track of how far behind the wallet is
@@ -483,11 +486,14 @@ public:
 
     ~CWallet()
     {
+        StopP2CClaims();
         // Should not have slots connected at this point.
         assert(NotifyUnload.empty());
     }
 
     bool IsLocked() const override;
+    P2CClaimWorker& GetP2CClaimWorker();
+    void StopP2CClaims();
     bool Lock();
 
     /** Interface to assert chain access */

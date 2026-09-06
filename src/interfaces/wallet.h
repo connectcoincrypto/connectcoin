@@ -20,6 +20,7 @@
 
 #include <cstdint>
 #include <functional>
+#include <future>
 #include <map>
 #include <memory>
 #include <optional>
@@ -31,6 +32,7 @@
 
 class CFeeRate;
 class CKey;
+class UniValue;
 enum class FeeReason;
 enum class OutputType;
 class PartiallySignedTransaction;
@@ -66,6 +68,11 @@ class Wallet
 {
 public:
     virtual ~Wallet() = default;
+
+    //! Configure HTTPS in the background, retaining the wallet until completion.
+    //! The future yields an empty string on success, otherwise an error.
+    virtual std::future<std::string> configureP2CClaiming(int rate, int concurrency, std::vector<std::string> domains) = 0;
+    virtual UniValue getP2CClaimStatus() = 0;
 
     //! Encrypt wallet.
     virtual bool encryptWallet(const SecureString& wallet_passphrase) = 0;

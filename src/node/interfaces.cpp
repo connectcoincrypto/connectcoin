@@ -13,6 +13,7 @@
 #include <common/settings.h>
 #include <consensus/amount.h>
 #include <consensus/merkle.h>
+#include <consensus/p2c.h>
 #include <consensus/validation.h>
 #include <external_signer.h>
 #include <httprpc.h>
@@ -57,6 +58,7 @@
 #include <rpc/server.h>
 #include <sync.h>
 #include <txmempool.h>
+#include <txdb.h>
 #include <uint256.h>
 #include <univalue.h>
 #include <util/btcsignals.h>
@@ -644,6 +646,41 @@ public:
                int{FillBlock(block2, block2_out, lock, active, chainman().m_blockman)};
     }
     void findCoins(std::map<COutPoint, Coin>& coins) override { return FindCoins(m_node, coins); }
+    bool isSpentByMempool(const COutPoint& outpoint) override
+    {
+        return m_node.mempool && m_node.mempool->isSpent(outpoint);
+    }
+    util::Result<void> checkTransaction(const CTransactionRef& tx) override
+    {
+        if (!m_node.mempool) return util::Error{Untranslated("Mempool is disabled")};
+        LOCK(cs_main);
+        const auto result{chainman().ProcessTransaction(tx, /*test_accept=*/true)};
+        if (result.m_result_type != MempoolAcceptResult::ResultType::VALID) {
+            return util::Error{Untranslated(result.m_state.ToString())};
+        }
+        return {};
+    }
+    bool scanP2CBounties(const std::function<bool(const COutPoint&, const CTxOut&)>& visitor,
+                        const std::function<bool()>& cancelled) override
+    {
+        std::unique_ptr<CCoinsViewCursor> cursor;
+        {
+            LOCK(cs_main);
+            if (cancelled() || chainman().IsInitialBlockDownload()) return false;
+            auto& state{chainman().ActiveChainstate()};
+            state.ForceFlushStateToDisk(/*wipe_cache=*/false);
+            cursor = state.CoinsDB().Cursor();
+        }
+        while (cursor->Valid()) {
+            if (cancelled()) return false;
+            COutPoint outpoint;
+            Coin coin;
+            if (!cursor->GetKey(outpoint) || !cursor->GetValue(coin)) return false;
+            if (IsCanonicalP2COutput(coin.out) && !visitor(outpoint, coin.out)) break;
+            cursor->Next();
+        }
+        return true;
+    }
     double guessVerificationProgress(const uint256& block_hash) override
     {
         LOCK(chainman().GetMutex());

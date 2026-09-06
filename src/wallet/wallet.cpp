@@ -174,6 +174,7 @@ bool AddWallet(WalletContext& context, const std::shared_ptr<CWallet>& wallet)
 bool RemoveWallet(WalletContext& context, const std::shared_ptr<CWallet>& wallet, std::optional<bool> load_on_start, std::vector<bilingual_str>& warnings)
 {
     assert(wallet);
+    wallet->StopP2CClaims();
 
     interfaces::Chain& chain = wallet->chain();
     std::string name = wallet->GetName();
@@ -1648,6 +1649,23 @@ CAmount CWallet::GetDebit(const CTxIn &txin) const
     return 0;
 }
 
+P2CClaimWorker& CWallet::GetP2CClaimWorker()
+{
+    LOCK(cs_wallet);
+    if (!m_p2c_worker) {
+        m_p2c_worker = MakeP2CClaimWorker(*this);
+        if (m_p2c_closing) m_p2c_worker->Shutdown();
+    }
+    return *m_p2c_worker;
+}
+
+void CWallet::StopP2CClaims()
+{
+    P2CClaimWorker* worker;
+    { LOCK(cs_wallet); m_p2c_closing = true; worker = m_p2c_worker.get(); }
+    if (worker) worker->Shutdown();
+}
+
 bool CWallet::IsMine(const CTxOut& txout) const
 {
     AssertLockHeld(cs_wallet);
@@ -2309,7 +2327,11 @@ void CWallet::CommitTransaction(
 
     // Notify that old coins are spent
     for (const CTxIn& txin : tx->vin) {
-        CWalletTx &coin = mapWallet.at(txin.prevout.hash);
+        // A P2C claim can spend a bounty funded by somebody else's wallet.
+        // The parent need not be in our transaction history.
+        const auto parent = mapWallet.find(txin.prevout.hash);
+        if (parent == mapWallet.end()) continue;
+        CWalletTx& coin = parent->second;
         coin.MarkDirty();
         NotifyTransactionChanged(coin.GetHash(), CT_UPDATED);
     }

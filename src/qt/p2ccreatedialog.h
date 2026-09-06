@@ -14,6 +14,7 @@
 
 class BitcoinAmountField;
 class WalletModel;
+class P2CClaimDialog;
 namespace wallet { class P2CTransactionBatch; }
 QT_BEGIN_NAMESPACE
 class QCheckBox;
@@ -26,7 +27,7 @@ class QPushButton;
 class QSpinBox;
 QT_END_NAMESPACE
 
-/** Create P2C bounties. Does not generate HTTPS traffic or connection proofs. */
+/** P2C wallet page: bounty creation and a separate opt-in automatic claim tab. */
 class P2CCreateDialog : public QWidget
 {
     Q_OBJECT
@@ -47,6 +48,7 @@ private Q_SLOTS:
 private:
     void showError(const QString& text);
     QPointer<WalletModel> m_model;
+    P2CClaimDialog* m_claim;
     QWidget* m_form;
     QLineEdit* m_domain;
     BitcoinAmountField* m_amount;
