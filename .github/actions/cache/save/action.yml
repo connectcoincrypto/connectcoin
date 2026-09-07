@@ -15,7 +15,9 @@ runs:
 
     - name: Save Ccache cache
       uses: ./.github/actions/cache/save/internal
-      if: ${{ (github.event_name == 'push') && (github.ref_name == github.event.repository.default_branch) }}
+      # GitHub caches are branch-scoped, so branch pushes can reuse their own
+      # builds. Keep other providers restricted to the default branch.
+      if: ${{ github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) }}
       with:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-${{ env.CI_CACHE_NAME }}-${{ github.run_id }}-${{ env.CONTAINER_NAME }}
@@ -23,7 +25,7 @@ runs:
 
     - name: Save depends sources cache
       uses: ./.github/actions/cache/save/internal
-      if: ${{ (github.event_name == 'push') && (github.ref_name == github.event.repository.default_branch) && (env.depends-sources-cache-hit != 'true') }}
+      if: ${{ github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && env.depends-sources-cache-hit != 'true' }}
       with:
         path: ${{ env.SOURCES_PATH }}
         key: depends-sources-${{ env.CONTAINER_NAME }}-${{ env.DEPENDS_HASH }}
@@ -31,7 +33,7 @@ runs:
 
     - name: Save built depends cache
       uses: ./.github/actions/cache/save/internal
-      if: ${{ (github.event_name == 'push') && (github.ref_name == github.event.repository.default_branch) && (env.depends-built-cache-hit != 'true' )}}
+      if: ${{ github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && env.depends-built-cache-hit != 'true' }}
       with:
         path: ${{ env.BASE_CACHE }}
         key: depends-built-${{ env.CONTAINER_NAME }}-${{ env.DEPENDS_HASH }}

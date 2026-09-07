@@ -187,7 +187,9 @@ jobs:
 
       - name: Save Ccache cache
         uses: actions/cache/save@v5
-        if: ${{ always() && github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch && steps.ccache-cache.outputs.cache-hit != 'true' }}
+        # Reuse successful compilation units on the same branch, even when a
+        # later compilation or test fails. Never write caches from PRs.
+        if: ${{ always() && github.event_name == 'push' && steps.ccache-cache.outputs.cache-hit != 'true' }}
         with:
           path: ${{ env.CCACHE_DIR }}
           # https://github.com/actions/cache/blob/main/tips-and-workarounds.md#update-a-cache
@@ -358,7 +360,7 @@ jobs:
 
       - name: Save Ccache cache after failure
         uses: ./.github/actions/cache/save/internal
-        if: ${{ failure() && github.event_name == 'push' && github.ref_name == github.event.repository.default_branch }}
+        if: ${{ failure() && github.event_name == 'push' }}
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ccache-${{ env.CI_CACHE_NAME }}-${{ github.run_id }}-${{ env.CONTAINER_NAME }}
@@ -623,7 +625,7 @@ jobs:
 
       - name: Save Ccache cache after failure
         uses: ./.github/actions/cache/save/internal
-        if: ${{ failure() && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') && github.event_name == 'push' && github.ref_name == github.event.repository.default_branch }}
+        if: ${{ failure() && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') && github.event_name == 'push' }}
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ccache-${{ env.CI_CACHE_NAME }}-${{ github.run_id }}-${{ env.CONTAINER_NAME }}

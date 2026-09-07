@@ -35,6 +35,8 @@ runs:
 
     - name: Construct docker build cache args
       shell: bash
+      env:
+        CI_DOCKER_CACHE_WRITE: ${{ github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') }}
       run: |
         cache_options="scope=${CI_CACHE_NAME:-$CONTAINER_NAME}"
         if [[ "${{ inputs.provider }}" == "warp" ]]; then
@@ -45,12 +47,13 @@ runs:
         # Always optimistically --cache‑from in case a cache blob exists
         args=(--cache-from "type=gha,${cache_options}")
 
-        # Only add --cache-to when pushing to the default branch.
-        if [[ ${{ github.event_name }} == "push" && ${{ github.ref_name }} == ${{ github.event.repository.default_branch }} ]]; then
+        # GitHub isolates branch caches. Export once per image on branch pushes;
+        # PRs stay read-only and other providers retain the default-branch rule.
+        if [[ "$CI_DOCKER_CACHE_WRITE" == "true" ]]; then
           args+=(--cache-to "type=gha,mode=max,ignore-error=true,${cache_options}")
         fi
 
         # Always `--load` into docker images (needed when using the `docker-container` build driver).
         args+=(--load)
 
-        echo "DOCKER_BUILD_CACHE_ARG=${args[*]}" >> $GITHUB_ENV
+        echo "DOCKER_BUILD_CACHE_ARG=${args[*]}" >> "$GITHUB_ENV"
