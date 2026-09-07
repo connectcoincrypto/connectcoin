@@ -819,6 +819,7 @@ BOOST_FIXTURE_TEST_CASE(worker_preserves_bounty_through_complete_tls_capture, Te
     for (const std::string domain : {"google.com", "lifetime-regression-long-domain.example"}) {
         CreateSock = [config, size = domain.size()](int, int, int) -> std::unique_ptr<Sock> {
             std::vector<std::string> churn;
+            churn.reserve(256);
             for (int i = 0; i < 256; ++i) churn.emplace_back(size, '!');
             return std::make_unique<test::P2CTLSSocket>(config, std::move(churn), 127);
         };

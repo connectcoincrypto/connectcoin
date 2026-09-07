@@ -306,6 +306,7 @@ struct P2CClaimWorkerImpl::Impl {
         const auto endpoint_offset{cursor.endpoint_offset % endpoints->size()};
         cursor.endpoint_offset = endpoint_offset == endpoints->size() - 1 ? 0 : endpoint_offset + 1;
         std::vector<uint256> challenges;
+        challenges.reserve(candidates.size());
         for (const auto& prepared : candidates) challenges.push_back(P2CClaimChallenge(*prepared.tx, 0));
         std::vector<std::atomic<bool>> unavailable(candidates.size());
         for (auto& value : unavailable) value = false;

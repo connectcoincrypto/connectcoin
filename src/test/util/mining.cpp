@@ -75,7 +75,8 @@ void SignDeterministicP2PKInputs(CMutableTransaction& tx, const std::vector<CTxO
     PrecomputedTransactionData txdata;
     txdata.Init(tx, std::vector<CTxOut>{spent_outputs}, /*force=*/true);
     const CKey key{DeterministicP2PKKey(/*key_id=*/1)};
-    const XOnlyPubKey expected_pubkey{key.GetPubKey()};
+    // The key is fixed; retain only context-independent public bytes between calls.
+    static const XOnlyPubKey expected_pubkey{key.GetPubKey()};
 
     for (size_t input_index{0}; input_index < tx.vin.size(); ++input_index) {
         assert(spent_outputs[input_index].GetP2PKPubKey() == expected_pubkey);
