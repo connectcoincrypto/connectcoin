@@ -38,6 +38,7 @@
 #include <memory>
 #include <mutex>
 #include <set>
+#include <stdexcept>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -55,6 +56,7 @@ struct RestoreDNSLookup {
 };
 
 class ClientHelloSocket final : public ZeroSock {
+    ClientHelloSocket& operator=(Sock&&) override { throw std::logic_error("Move of Sock into ClientHelloSocket not allowed"); }
     std::vector<unsigned char>& m_sent;
     const size_t m_chunk;
     const std::function<void()> m_eof;
@@ -371,6 +373,22 @@ BOOST_FIXTURE_TEST_CASE(worker_rotates_without_idle_delay_and_stops_during_retry
     BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for bounties"; }));
     BOOST_CHECK(worker->Status()["domain"].get_str().empty());
     worker->Stop();
+
+    // Cancellation is reset only after the previous thread was joined. Each
+    // restart must reach the idle wait, and Stop must wake that five-second
+    // wait rather than leaving a detached worker behind. Shutdown is terminal.
+    for (int restart{0}; restart < 3; ++restart) {
+        BOOST_REQUIRE(worker->Configure(1, 4));
+        BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for bounties"; }));
+        const auto before_idle_stop{std::chrono::steady_clock::now()};
+        worker->Stop();
+        BOOST_CHECK(std::chrono::steady_clock::now() - before_idle_stop < 3s);
+        BOOST_CHECK_EQUAL(worker->Status()["state"].get_str(), "disabled");
+        BOOST_CHECK_EQUAL(worker->Status()["connections_per_second"].getInt<int>(), 0);
+    }
+    worker->Shutdown();
+    BOOST_CHECK(!worker->Configure(-1, 4));
+    worker->Stop(); // Idempotent after shutdown.
 }
 
 BOOST_FIXTURE_TEST_CASE(worker_shares_domain_rounds_and_rotates_large_bounty_groups, TestChain100Setup)

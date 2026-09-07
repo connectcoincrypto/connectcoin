@@ -64,7 +64,11 @@ struct P2CClaimWorkerImpl::Impl {
     mutable std::mutex mutex;
     std::mutex control_mutex;
     std::condition_variable wake;
-    std::jthread thread;
+    // Some supported libc++ versions do not provide jthread/stop_token yet.
+    // Reset cancellation only after joining the previous worker. The control
+    // mutex serializes start/stop, and every connection joins before Run exits.
+    std::thread thread;
+    std::atomic<bool> stop_requested{false};
     bool closing{false};
     int rate{0};
     int concurrency{4};
@@ -109,7 +113,10 @@ struct P2CClaimWorkerImpl::Impl {
     void StopUnlocked()
     {
         if (thread.joinable()) {
-            thread.request_stop();
+            {
+                std::lock_guard lock{mutex};
+                stop_requested = true;
+            }
             wake.notify_all();
             thread.join();
         }
@@ -124,11 +131,11 @@ struct P2CClaimWorkerImpl::Impl {
         if (!error.empty()) last_error = std::move(error);
     }
 
-    bool Pause(std::stop_token stop, std::chrono::milliseconds delay)
+    bool Pause(const std::atomic<bool>& stop, std::chrono::milliseconds delay)
     {
         std::unique_lock lock{mutex};
-        wake.wait_for(lock, delay, [&] { return stop.stop_requested(); });
-        return !stop.stop_requested();
+        wake.wait_for(lock, delay, [&] { return stop.load(); });
+        return !stop.load();
     }
 
     void Save()
@@ -226,9 +233,9 @@ struct P2CClaimWorkerImpl::Impl {
         return !coins.at(outpoint).IsSpent();
     }
 
-    void SubmitReady(std::stop_token stop)
+    void SubmitReady(const std::atomic<bool>& stop)
     {
-        while (!stop.stop_requested() && (ready || !completed.empty())) {
+        while (!stop.load() && (ready || !completed.empty())) {
             if (!ready) {
                 ready = std::move(completed.front().tx);
                 ready_proof = std::move(completed.front().proof);
@@ -273,10 +280,10 @@ struct P2CClaimWorkerImpl::Impl {
         Save();
     }
 
-    std::optional<COutPoint> Search(std::stop_token stop, const std::vector<P2CClaimProposal>& candidates,
+    std::optional<COutPoint> Search(const std::atomic<bool>& stop, const std::vector<P2CClaimProposal>& candidates,
                                   std::optional<RoundClock::time_point>& deadline)
     {
-        if (stop.stop_requested() || (deadline && RoundClock::now() >= *deadline)) return std::nullopt;
+        if (stop.load() || (deadline && RoundClock::now() >= *deadline)) return std::nullopt;
         const auto search_domain{candidates.front().bounty.GetPayToDomain()->domain};
         {
             std::lock_guard lock{mutex};
@@ -310,13 +317,13 @@ struct P2CClaimWorkerImpl::Impl {
         std::optional<size_t> last_candidate;
         std::mutex proof_mutex;
         std::exception_ptr search_error;
-        std::vector<std::jthread> connections;
+        std::vector<std::thread> connections;
         // If allocation or thread creation fails partway through launching,
         // cancel and join every existing thread before its captures disappear.
         struct StopAndJoin {
             std::atomic<bool>& finished;
             std::condition_variable& wake;
-            std::vector<std::jthread>& connections;
+            std::vector<std::thread>& connections;
             ~StopAndJoin()
             {
                 finished = true;
@@ -326,12 +333,12 @@ struct P2CClaimWorkerImpl::Impl {
         } stop_and_join{finished, wake, connections};
         Message("searching");
         for (int i = 0; i < concurrency; ++i) {
-            if (stop.stop_requested() || finished || RoundClock::now() >= round_end) break;
+            if (stop.load() || finished || RoundClock::now() >= round_end) break;
             ++active;
             connections.emplace_back([&] {
                 try {
                     auto cancelled = [&] {
-                        return stop.stop_requested() || finished.load() || RoundClock::now() >= round_end;
+                        return stop.load() || finished.load() || RoundClock::now() >= round_end;
                     };
                     while (!cancelled()) {
                         size_t index, endpoint_index;
@@ -403,7 +410,7 @@ struct P2CClaimWorkerImpl::Impl {
             });
         }
         // Monitor even during a slow network read, not just between attempts.
-        while (!stop.stop_requested() && !finished && RoundClock::now() < round_end && active > 0) {
+        while (!stop.load() && !finished && RoundClock::now() < round_end && active > 0) {
             { std::lock_guard lock{proof_mutex}; SubmitReady(stop); }
             // A competing claim only cancels work on its own output. Other
             // bounties on the same domain remain eligible for this round.
@@ -430,7 +437,7 @@ struct P2CClaimWorkerImpl::Impl {
         return std::nullopt;
     }
 
-    void Run(std::stop_token stop)
+    void Run(const std::atomic<bool>& stop)
     {
         try {
             Load();
@@ -442,7 +449,7 @@ struct P2CClaimWorkerImpl::Impl {
             bool round_started{false};
             bool empty_windows_wrapped{false};
             bool searched_since_wrap{false};
-            while (!stop.stop_requested()) {
+            while (!stop.load()) {
                 if (active_domain && round_end && RoundClock::now() >= *round_end) active_domain.reset();
                 SubmitReady(stop);
                 Message("scanning confirmed bounties");
@@ -493,7 +500,7 @@ struct P2CClaimWorkerImpl::Impl {
                         if (window.size() > window_size) window.erase(std::prev(window.end()));
                     }
                     return true;
-                }, [&] { return stop.stop_requested(); })};
+                }, [&] { return stop.load(); })};
                 if (!scanned) { Pause(stop, std::chrono::seconds{5}); continue; }
                 std::erase_if(scan_after, [&](const auto& entry) { return !seen_cursors.contains(entry.first); });
                 if (!active_domain && prefer_reward) {
@@ -553,7 +560,7 @@ struct P2CClaimWorkerImpl::Impl {
                 std::vector<P2CClaimProposal> prepared_candidates;
                 for (const auto& [key, output] : candidates) {
                     const auto& outpoint{key.outpoint};
-                    if (stop.stop_requested()) break;
+                    if (stop.load()) break;
                     if (!Available(outpoint)) continue;
                     auto saved{proposals.find(outpoint)};
                     std::optional<P2CClaimProposal> prepared;
@@ -583,7 +590,7 @@ struct P2CClaimWorkerImpl::Impl {
                            GetP2CClaimPriority(b.bounty.GetPayToDomain()->connection_work_target, b.tx->vout[0].nValue);
                 });
                 Save(); // Persist all fixed challenges before starting HTTPS.
-                if (!stop.stop_requested() && !prepared_candidates.empty()) {
+                if (!stop.load() && !prepared_candidates.empty()) {
                     if (!round_started) {
                         { std::lock_guard lock{mutex}; ++domain_rounds; }
                         // Skipping an unusable fair domain must NOT grant an
@@ -656,7 +663,8 @@ util::Result<void> P2CClaimWorkerImpl::Configure(int rate, int concurrency, std:
     }
     if (rate != 0) {
         try {
-            m_impl->thread = std::jthread{[this](std::stop_token stop) { m_impl->Run(stop); }};
+            m_impl->stop_requested = false;
+            m_impl->thread = std::thread{[this] { m_impl->Run(m_impl->stop_requested); }};
         } catch (const std::exception& e) {
             m_impl->Message("stopped with error", e.what());
             std::lock_guard lock{m_impl->mutex};

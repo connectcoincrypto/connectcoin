@@ -15,6 +15,7 @@
 #include <psa/crypto.h>
 
 #include <algorithm>
+#include <cerrno>
 #include <memory>
 #include <span>
 #include <stdexcept>
@@ -98,6 +99,7 @@ AwEHoUQDQgAEN8xW2XYJHlpyPsdZLf8gbu58+QaRdNCtFLX3aCJZYpJO5QDYIxH/
  * connection at a time; setup/teardown also touch the library's PSA state.
  */
 class P2CTLSSocket final : public ZeroSock {
+    P2CTLSSocket& operator=(Sock&&) override { throw std::logic_error("Move of Sock into P2CTLSSocket not allowed"); }
     const std::shared_ptr<P2CTLSServer> m_config;
     // Reuse freed allocations to expose accidentally dangling domain strings.
     const std::vector<std::string> m_churn;
@@ -151,7 +153,11 @@ public:
         }
         const auto count{std::min({size, m_chunk, m_to_client.size() - m_client_pos})};
         if (count == 0) {
+            #ifdef WIN32
             WSASetLastError(WSAEWOULDBLOCK);
+            #else
+            errno = EAGAIN;
+            #endif
             return -1;
         }
         std::copy_n(m_to_client.begin() + m_client_pos, count, static_cast<unsigned char*>(bytes));
