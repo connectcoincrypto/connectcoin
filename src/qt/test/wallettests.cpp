@@ -369,6 +369,8 @@ void TestGUI(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet)
     // Check Request Payment button
     ReceiveCoinsDialog receiveCoinsDialog(platformStyle.get());
     receiveCoinsDialog.setModel(&walletModel);
+    // Receiving must not offer the unsupported Bitcoin address formats.
+    QVERIFY(!receiveCoinsDialog.findChild<QComboBox*>("addressType"));
     RecentRequestsTableModel* requestTableModel = walletModel.getRecentRequestsTableModel();
 
     // Label input
@@ -411,6 +413,13 @@ void TestGUI(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet)
             QCOMPARE(receiveRequestDialog->QObject::findChild<QLabel*>("message_content")->text(), QString("TEST_MESSAGE_1"));
         }
     }
+
+    // The generated address must represent a valid ConnectCoin type-1 P2PK output.
+    QVERIFY(!address.isEmpty());
+    const CTxDestination receive_dest{DecodeDestination(address.toStdString())};
+    QVERIFY(IsValidDestination(receive_dest));
+    const CTxOut receive_output{1, GetScriptForDestination(receive_dest)};
+    QVERIFY(receive_output.GetP2PKPubKey().has_value());
 
     // Clear button
     QPushButton* clearButton = receiveCoinsDialog.findChild<QPushButton*>("clearButton");
