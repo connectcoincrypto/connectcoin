@@ -74,9 +74,9 @@ static RPCMethod sendrawtransaction()
              "Reject transactions whose fee rate is higher than the specified value, expressed in " + CURRENCY_UNIT +
                  "/kvB.\nFee rates larger than 1CC/kvB are rejected.\nSet to 0 to accept any fee rate."},
             {"maxburnamount", RPCArg::Type::AMOUNT, RPCArg::Default{FormatMoney(DEFAULT_MAX_BURN_AMOUNT)},
-             "Reject transactions with provably unspendable outputs (e.g. 'datacarrier' outputs that use the OP_RETURN opcode) greater than the specified value, expressed in " + CURRENCY_UNIT + ".\n"
-             "If burning funds through unspendable outputs is desired, increase this value.\n"
-             "This check is based on heuristics and does not guarantee spendability of outputs.\n"},
+             "Compatibility argument, expressed in " + CURRENCY_UNIT + ". The amount is validated but has no effect.\n"
+             "ConnectCoin supports only typed P2PK and P2C outputs, not Script/OP_RETURN outputs.\n"
+             "Invalid output types are rejected regardless of this value.\n"},
         },
         RPCResult{
             RPCResult::Type::STR_HEX, "", "The transaction hash in hex"
@@ -93,17 +93,11 @@ static RPCMethod sendrawtransaction()
                 },
         [](const RPCMethod& self, const JSONRPCRequest& request) -> UniValue
         {
-            const CAmount max_burn_amount = request.params[2].isNull() ? 0 : AmountFromValue(request.params[2]);
+            if (!request.params[2].isNull()) AmountFromValue(request.params[2]);
 
             CMutableTransaction mtx;
             if (!DecodeHexTx(mtx, request.params[0].get_str())) {
                 throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed. Make sure the tx has at least one input.");
-            }
-
-            for (const auto& out : mtx.vout) {
-                if((out.scriptPubKey.IsUnspendable() || !out.scriptPubKey.HasValidOps()) && out.nValue > max_burn_amount) {
-                    throw JSONRPCTransactionError(TransactionError::MAX_BURN_EXCEEDED);
-                }
             }
 
             CTransactionRef tx(MakeTransactionRef(std::move(mtx)));
@@ -1363,9 +1357,9 @@ static RPCMethod submitpackage()
              "Reject transactions whose fee rate is higher than the specified value, expressed in " + CURRENCY_UNIT +
                  "/kvB.\nFee rates larger than 1CC/kvB are rejected.\nSet to 0 to accept any fee rate."},
             {"maxburnamount", RPCArg::Type::AMOUNT, RPCArg::Default{FormatMoney(DEFAULT_MAX_BURN_AMOUNT)},
-             "Reject transactions with provably unspendable outputs (e.g. 'datacarrier' outputs that use the OP_RETURN opcode) greater than the specified value, expressed in " + CURRENCY_UNIT + ".\n"
-             "If burning funds through unspendable outputs is desired, increase this value.\n"
-             "This check is based on heuristics and does not guarantee spendability of outputs.\n"
+             "Compatibility argument, expressed in " + CURRENCY_UNIT + ". The amount is validated but has no effect.\n"
+             "ConnectCoin supports only typed P2PK and P2C outputs, not Script/OP_RETURN outputs.\n"
+             "Invalid output types are rejected regardless of this value.\n"
             },
         },
         RPCResult{
@@ -1417,8 +1411,8 @@ static RPCMethod submitpackage()
                 client_maxfeerate = std::nullopt;
             }
 
-            // Burn sanity check is run with no context
-            const CAmount max_burn_amount = request.params[2].isNull() ? 0 : AmountFromValue(request.params[2]);
+            // Validate the legacy argument, but never interpret typed payloads as Script.
+            if (!request.params[2].isNull()) AmountFromValue(request.params[2]);
 
             std::vector<CTransactionRef> txns;
             txns.reserve(raw_transactions.size());
@@ -1427,12 +1421,6 @@ static RPCMethod submitpackage()
                 if (!DecodeHexTx(mtx, rawtx.get_str())) {
                     throw JSONRPCError(RPC_DESERIALIZATION_ERROR,
                                        "TX decode failed: " + rawtx.get_str() + " Make sure the tx has at least one input.");
-                }
-
-                for (const auto& out : mtx.vout) {
-                    if((out.scriptPubKey.IsUnspendable() || !out.scriptPubKey.HasValidOps()) && out.nValue > max_burn_amount) {
-                        throw JSONRPCTransactionError(TransactionError::MAX_BURN_EXCEEDED);
-                    }
                 }
 
                 txns.emplace_back(MakeTransactionRef(std::move(mtx)));

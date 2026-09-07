@@ -10,16 +10,23 @@
 #include <primitives/transaction.h>
 #include <rpc/blockchain.h>
 #include <rpc/client.h>
+#include <rpc/protocol.h>
+#include <rpc/request.h>
 #include <rpc/server.h>
 #include <rpc/util.h>
+#include <script/script.h>
+#include <test/data/validateaddress_main.json.h>
 #include <test/util/common.h>
 #include <test/util/setup_common.h>
 #include <test/util/time.h>
 #include <streams.h>
 #include <univalue.h>
+#include <util/strencodings.h>
 #include <util/time.h>
 
 #include <any>
+#include <stdexcept>
+#include <string>
 #include <string_view>
 
 #include <boost/test/unit_test.hpp>
@@ -79,17 +86,54 @@ UniValue RPCTestingSetup::CallRPC(std::string args)
     request.strMethod = strMethod;
     request.params = RPCConvertValues(strMethod, vArgs);
     if (RPCIsInWarmup(nullptr)) SetRPCWarmupFinished();
+    std::string error_message;
     try {
-        UniValue result = tableRPC.execute(request);
-        return result;
+        return tableRPC.execute(request);
     }
     catch (const UniValue& objError) {
-        throw std::runtime_error(objError.find_value("message").get_str());
+        error_message = objError.find_value("message").get_str();
     }
+    // Throw after leaving the handler: clang-cl ASan can miscompile exceptions
+    // escaping a catch (https://github.com/llvm/llvm-project/issues/215376).
+    // Keep the same error translation without disabling sanitizer checks.
+    throw std::runtime_error(error_message);
 }
 
 
 BOOST_FIXTURE_TEST_SUITE(rpc_tests, RPCTestingSetup)
+
+BOOST_AUTO_TEST_CASE(validateaddress_mainnet_without_public_chain)
+{
+    // Preserve all former mainnet functional vectors without starting a
+    // production mainnet node. RPCTestingSetup uses a test-only genesis.
+    const UniValue vectors{JSON(json_tests::validateaddress_main)};
+    BOOST_REQUIRE(vectors.isObject());
+    for (const auto& vector : vectors["INVALID_DATA"].getValues()) BOOST_TEST_CONTEXT(vector[0].get_str()) {
+        const auto result{CallRPC("validateaddress " + vector[0].get_str())};
+        BOOST_CHECK(!result["isvalid"].get_bool());
+        BOOST_CHECK_EQUAL(result["error"].get_str(), vector[1].get_str());
+        BOOST_CHECK_EQUAL(result["error_locations"].write(), vector[2].write());
+    }
+    for (const auto& vector : vectors["VALID_DATA"].getValues()) BOOST_TEST_CONTEXT(vector[0].get_str()) {
+        // The inherited vectors include valid Bitcoin encodings that are no
+        // longer supported outputs. Preserve decoder coverage and separately
+        // require the public RPC to reject every non-type-1 destination.
+        const std::string& script_hex{vector[1].get_str()};
+        BOOST_CHECK_EQUAL(HexStr(GetScriptForDestination(DecodeDestination(vector[0].get_str()))), script_hex);
+        const bool is_p2pk{script_hex.size() == 68 && script_hex.starts_with("5120")};
+        const auto result{CallRPC("validateaddress " + vector[0].get_str())};
+        BOOST_REQUIRE_EQUAL(result["isvalid"].get_bool(), is_p2pk);
+        if (is_p2pk) {
+            BOOST_CHECK_EQUAL(result["scriptPubKey"].get_str(), script_hex);
+            BOOST_CHECK(!result.exists("error"));
+            BOOST_CHECK(!result.exists("error_locations"));
+        } else {
+            BOOST_CHECK_EQUAL(result["error"].get_str(), "Address does not encode a ConnectCoin type-1 P2PK output");
+            BOOST_CHECK(result["error_locations"].empty());
+            BOOST_CHECK(!result.exists("scriptPubKey"));
+        }
+    }
+}
 
 BOOST_AUTO_TEST_CASE(rpc_namedparams)
 {
@@ -211,6 +255,43 @@ BOOST_AUTO_TEST_CASE(rpc_rawparams)
     BOOST_CHECK_THROW(CallRPC("sendrawtransaction null"), std::runtime_error);
     BOOST_CHECK_THROW(CallRPC("sendrawtransaction DEADBEEF"), std::runtime_error);
     BOOST_CHECK_THROW(CallRPC(std::string("sendrawtransaction ")+rawtx+" extra"), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(rpc_error_translation_preserves_message)
+{
+    BOOST_CHECK_EXCEPTION(CallRPC("getblockhash -1"), std::runtime_error, [](const std::runtime_error& error) {
+        return std::string_view{error.what()} == "Block height out of range";
+    });
+    // Handling an error must leave the RPC table usable for the next request.
+    BOOST_CHECK_EQUAL(CallRPC("getblockcount").getInt<int>(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(rpc_command_exception_translation)
+{
+    CRPCTable table;
+    CRPCCommand command{"test", "exception_test", [](const JSONRPCRequest& request, UniValue& result, bool) {
+        switch (request.params[0].getInt<int>()) {
+        case 0: throw UniValue::type_error("wrong type");
+        case 1: throw std::runtime_error("method failed");
+        case 2: throw JSONRPCError(RPC_INVALID_PARAMETER, "invalid parameter");
+        }
+        result = "ok";
+        return true;
+    }, {}, /*unique_id=*/0};
+    table.appendCommand("exception_test", &command);
+    JSONRPCRequest request;
+    request.strMethod = "exception_test";
+    if (RPCIsInWarmup(nullptr)) SetRPCWarmupFinished();
+
+    request.params = JSON("[0]");
+    BOOST_CHECK_EXCEPTION(table.execute(request), UniValue, HasJSON(R"({"code":-3,"message":"wrong type"})"));
+    request.params = JSON("[1]");
+    BOOST_CHECK_EXCEPTION(table.execute(request), UniValue, HasJSON(R"({"code":-1,"message":"method failed"})"));
+    // Already translated RPC errors must keep their original code and message.
+    request.params = JSON("[2]");
+    BOOST_CHECK_EXCEPTION(table.execute(request), UniValue, HasJSON(R"({"code":-8,"message":"invalid parameter"})"));
+    request.params = JSON("[3]");
+    BOOST_CHECK_EQUAL(table.execute(request).get_str(), "ok");
 }
 
 BOOST_AUTO_TEST_CASE(rpc_togglenetwork)

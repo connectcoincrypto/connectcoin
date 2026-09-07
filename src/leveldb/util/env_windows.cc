@@ -569,21 +569,34 @@ class WindowsEnv : public Env {
     // succeed when |to| does exist. When writing to a network share, we may not
     // be able to change the ACLs. Ignore ACL errors then
     // (REPLACEFILE_IGNORE_MERGE_ERRORS).
-    if (::ReplaceFileW(wTo.c_str(), wFrom.c_str(), /*lpBackupFileName=*/nullptr,
-                       REPLACEFILE_IGNORE_MERGE_ERRORS,
-                       /*lpExclude=*/nullptr, /*lpReserved=*/nullptr)) {
-      return Status::OK();
+    DWORD replace_error;
+    for (int retry = 0;; ++retry) {
+      if (::ReplaceFileW(wTo.c_str(), wFrom.c_str(), /*lpBackupFileName=*/nullptr,
+                         REPLACEFILE_IGNORE_MERGE_ERRORS,
+                         /*lpExclude=*/nullptr, /*lpReserved=*/nullptr)) {
+        return Status::OK();
+      }
+      replace_error = ::GetLastError();
+      // Readers outside LevelDB can briefly prevent replacing CURRENT. These
+      // errors leave both names intact, so retry the same atomic operation up
+      // to 50 times with a 10 ms delay. Never delete the destination or retry
+      // errors 1176/1177: those may have changed names (see ReplaceFileW docs).
+      const bool transient = replace_error == ERROR_UNABLE_TO_REMOVE_REPLACED ||
+                             replace_error == ERROR_SHARING_VIOLATION ||
+                             replace_error == ERROR_LOCK_VIOLATION;
+      if (!transient || retry == 50) break;
+      ::Sleep(10);
     }
-    DWORD replace_error = ::GetLastError();
     // In the case of FILE_ERROR_NOT_FOUND from ReplaceFile, it is likely that
     // |to| does not exist. In this case, the more relevant error comes from the
     // call to MoveFile.
     if (replace_error == ERROR_FILE_NOT_FOUND ||
         replace_error == ERROR_PATH_NOT_FOUND) {
-      return WindowsError(from, move_error);
-    } else {
-      return WindowsError(from, replace_error);
+      replace_error = move_error;
     }
+    return WindowsError(from + " -> " + to + " (Win32 " +
+                            std::to_string(replace_error) + ")",
+                        replace_error);
   }
 
   Status LockFile(const std::string& filename, FileLock** lock) override {

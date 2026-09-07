@@ -53,6 +53,7 @@
 #include <span.h>
 #include <streams.h>
 #include <sync.h>
+#include <test/util/chainparams.h>
 #include <test/util/coverage.h>
 #include <test/util/net.h>
 #include <test/util/random.h>
@@ -241,6 +242,9 @@ BasicTestingSetup::BasicTestingSetup(const ChainType chainType, TestOpts opts)
     gArgs.ForceSetArg("-natpmp", "0"); // NATPMP sends packets to the router.
 
     SelectParams(chainType);
+    if (chainType == ChainType::MAIN) {
+        SelectParams(CreateChainParamsForTest(*m_node.args, chainType));
+    }
     InitLogging(*m_node.args);
     AppInitParameterInteraction(*m_node.args);
     LogInstance().StartLogging();

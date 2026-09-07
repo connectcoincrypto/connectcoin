@@ -5,6 +5,7 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <pow.h>
+#include <test/util/chainparams.h>
 #include <test/util/common.h>
 #include <test/util/random.h>
 #include <test/util/setup_common.h>
@@ -13,6 +14,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <cstdlib>
+#include <optional>
 
 BOOST_FIXTURE_TEST_SUITE(pow_tests, BasicTestingSetup)
 
@@ -227,7 +229,7 @@ BOOST_AUTO_TEST_CASE(GetBlockProofEquivalentTime_test)
 
 void sanity_check_chainparams(const ArgsManager& args, ChainType chain_type)
 {
-    const auto chainParams = CreateChainParams(args, chain_type);
+    const auto chainParams = CreateChainParamsForTest(args, chain_type);
     const auto consensus = chainParams->GetConsensus();
 
     // hash genesis is correct
@@ -275,6 +277,11 @@ void sanity_check_chainparams(const ArgsManager& args, ChainType chain_type)
 
 BOOST_AUTO_TEST_CASE(ChainParams_MAIN_sanity)
 {
+    const auto unlaunched{CreateChainParams(*m_node.args, ChainType::MAIN)};
+    BOOST_CHECK(!unlaunched->HasGenesisBlock());
+    BOOST_CHECK(unlaunched->GetConsensus().hashGenesisBlock.IsNull());
+    BOOST_CHECK_THROW(unlaunched->GenesisBlock(), std::bad_optional_access);
+    // The same mainnet rules remain exercised with the test-only block.
     sanity_check_chainparams(*m_node.args, ChainType::MAIN);
 }
 

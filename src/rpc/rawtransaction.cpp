@@ -104,24 +104,24 @@ static std::vector<RPCArg> CreateTxDoc()
         {"outputs", RPCArg::Type::ARR, RPCArg::Optional::NO, "Outputs specified as address/amount pairs or explicit p2c objects.\n"
                 "A p2c object has amount, domain, connection_work_target, and root_certificates_version.\n"
                 "Every p2c object serializes as output type 2.\n"
-                "Addresses may not be duplicated. At least one output must be specified.\n"
+                "Addresses may not be duplicated. On-chain transactions require at least one output.\n"
+                "Data/OP_RETURN outputs are not supported.\n"
                 "For compatibility reasons, a dictionary, which holds the key-value pairs directly, is also\n"
                 "                             accepted as second parameter.",
             {
                 {"", RPCArg::Type::OBJ_USER_KEYS, RPCArg::Optional::OMITTED, "",
                     {
                         {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "A key-value pair. The key (string) is the ConnectCoin address, the value (float or string) is the amount in " + CURRENCY_UNIT},
-                        {"p2c", RPCArg::Type::OBJ, RPCArg::Optional::OMITTED, "A type-2 PAY_TO_CONNECT output", {
+                    },
+                },
+                {"", RPCArg::Type::OBJ, RPCArg::Optional::OMITTED, "",
+                    {
+                        {"p2c", RPCArg::Type::OBJ, RPCArg::Optional::NO, "A type-2 PAY_TO_CONNECT output", {
                             {"amount", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "Output amount"},
                             {"domain", RPCArg::Type::STR, RPCArg::Optional::NO, "Canonical lower-case ASCII domain"},
                             {"connection_work_target", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "Maximum accepted connection-work hash"},
                             {"root_certificates_version", RPCArg::Type::NUM, RPCArg::Optional::NO, "Immutable trusted-root bundle version; version 1 is currently supported"},
                         }},
-                    },
-                },
-                {"", RPCArg::Type::OBJ, RPCArg::Optional::OMITTED, "",
-                    {
-                        {"data", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "A key-value pair. The key must be \"data\", the value is hex-encoded data that becomes a part of an OP_RETURN output"},
                     },
                 },
             },

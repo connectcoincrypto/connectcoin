@@ -32,6 +32,7 @@
 
 #include <memory>
 #include <optional>
+#include <stdexcept>
 #include <vector>
 
 class CTxMemPool;
@@ -44,9 +45,32 @@ public:
 
 BOOST_FIXTURE_TEST_SUITE(validation_chainstate_tests, ChainTestingSetup)
 
-BOOST_AUTO_TEST_CASE(all_networks_have_spendable_genesis_coinbase)
+BOOST_AUTO_TEST_CASE(unlaunched_mainnet_cannot_initialize_chainstate)
 {
-    const auto public_params{CreateChainParams(m_args, ChainType::MAIN)};
+    const auto params{CreateChainParams(m_args, ChainType::MAIN)};
+    BOOST_CHECK(!params->HasGenesisBlock());
+    BOOST_CHECK(params->GetConsensus().hashGenesisBlock.IsNull());
+    // Test fixtures must not mutate the production factory or enable mainnet.
+    BOOST_REQUIRE(Params().HasGenesisBlock());
+    const auto datadir{m_path_root / "unlaunched-mainnet"};
+    const ChainstateManager::Options options{
+        .chainparams = *params,
+        .datadir = datadir,
+        .notifications = *m_node.notifications,
+    };
+    const node::BlockManager::Options block_options{
+        .chainparams = *params,
+        .blocks_dir = datadir / "blocks",
+        .notifications = *m_node.notifications,
+        .block_tree_db_params = DBParams{.path = datadir / "blocks" / "index", .cache_bytes = 0},
+    };
+    BOOST_CHECK_THROW((void)std::make_unique<ChainstateManager>(m_interrupt, options, block_options), std::runtime_error);
+    BOOST_CHECK(!fs::exists(datadir));
+}
+
+BOOST_AUTO_TEST_CASE(launched_networks_have_spendable_genesis_coinbase)
+{
+    const auto public_params{CreateChainParams(m_args, ChainType::TESTNET4)};
     const auto regtest_params{CreateChainParams(m_args, ChainType::REGTEST)};
     const CScript& public_script{public_params->GenesisBlock().vtx.front()->vout.front().scriptPubKey};
     const CScript& regtest_script{regtest_params->GenesisBlock().vtx.front()->vout.front().scriptPubKey};
@@ -57,7 +81,7 @@ BOOST_AUTO_TEST_CASE(all_networks_have_spendable_genesis_coinbase)
     BOOST_CHECK_EQUAL(public_script.size(), 34U);
     BOOST_CHECK_EQUAL(regtest_script.size(), 34U);
 
-    for (const ChainType chain_type : {ChainType::MAIN, ChainType::TESTNET, ChainType::TESTNET4, ChainType::SIGNET, ChainType::REGTEST}) {
+    for (const ChainType chain_type : {ChainType::TESTNET, ChainType::TESTNET4, ChainType::SIGNET, ChainType::REGTEST}) {
         const auto params{CreateChainParams(m_args, chain_type)};
         BOOST_CHECK(params->GetConsensus().genesis_coinbase_spendable);
         BOOST_REQUIRE_EQUAL(params->GenesisBlock().vtx.size(), 1U);
@@ -71,7 +95,7 @@ BOOST_AUTO_TEST_CASE(all_networks_have_spendable_genesis_coinbase)
     }
 }
 
-BOOST_FIXTURE_TEST_CASE(mainnet_genesis_coinbase_is_spendable, TestingSetup)
+BOOST_FIXTURE_TEST_CASE(mainnet_fixture_genesis_coinbase_is_spendable, TestingSetup)
 {
     const CBlock& genesis{Params().GenesisBlock()};
     BOOST_REQUIRE_EQUAL(genesis.vtx.size(), 1U);

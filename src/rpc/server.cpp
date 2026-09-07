@@ -873,6 +873,7 @@ UniValue CRPCTable::execute(const JSONRPCRequest &request) const
 
 static bool ExecuteCommand(const CRPCCommand& command, const JSONRPCRequest& request, UniValue& result, bool last_handler)
 {
+    UniValue error;
     try {
         RPCCommandExecution execution(request.strMethod);
         // Execute, convert arguments to array if necessary
@@ -882,10 +883,13 @@ static bool ExecuteCommand(const CRPCCommand& command, const JSONRPCRequest& req
             return command.actor(request, result, last_handler);
         }
     } catch (const UniValue::type_error& e) {
-        throw JSONRPCError(RPC_TYPE_ERROR, e.what());
+        error = JSONRPCError(RPC_TYPE_ERROR, e.what());
     } catch (const std::exception& e) {
-        throw JSONRPCError(RPC_MISC_ERROR, e.what());
+        error = JSONRPCError(RPC_MISC_ERROR, e.what());
     }
+    // Translate outside the handler to avoid a clang-cl ASan exception-unwinding
+    // bug (https://github.com/llvm/llvm-project/issues/215376).
+    throw error;
 }
 
 std::vector<std::string> CRPCTable::listCommands() const

@@ -4,6 +4,7 @@
 
 add_library(test_util STATIC EXCLUDE_FROM_ALL
   blockfilter.cpp
+  chainparams.cpp
   coins.cpp
   coverage.cpp
   json.cpp

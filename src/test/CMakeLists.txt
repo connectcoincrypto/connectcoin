@@ -155,6 +155,7 @@ target_json_data_sources(connectcoin-test
   data/siphash.json
   data/tx_invalid.json
   data/tx_valid.json
+  data/validateaddress_main.json
 )
 target_raw_data_sources(connectcoin-test NAMESPACE test::data
   data/asmap.raw
@@ -171,6 +172,7 @@ target_link_libraries(connectcoin-test
   MbedTLS::mbedx509
   MbedTLS::mbedcrypto
   minisketch
+  $<$<PLATFORM_ID:Windows>:leveldb>
   secp256k1
   Boost::headers
   $<TARGET_NAME_IF_EXISTS:USDT::headers>

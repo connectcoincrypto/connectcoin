@@ -77,9 +77,21 @@ class OpenRPCDocTest(BitcoinTestFramework):
         outputs = find_param(createrawtransaction, "outputs")
         address_description = "A key-value pair. The key (string) is the ConnectCoin address, the value (float or string) is the amount in CC"
         address_obj = {"type": "object", "additionalProperties": {"oneOf": [{"type": "number"},{"type": "string"}]}, "description": address_description}
-        data_description = "A key-value pair. The key must be \"data\", the value is hex-encoded data that becomes a part of an OP_RETURN output"
-        data_obj = {"type": "object", "properties": { "data": {"type": "string", "pattern": "^[0-9a-fA-F]+$", "description": data_description}}, "additionalProperties": False, "required": ["data"]}
-        assert_equal(outputs["schema"], {"oneOf": [{"type": "array", "items": {"anyOf": [address_obj, data_obj]}}, {"type": "object"}]})
+        p2c_schema = {
+            "type": "object",
+            "properties": {
+                "amount": {"oneOf": [{"type": "number"}, {"type": "string"}], "description": "Output amount"},
+                "domain": {"type": "string", "description": "Canonical lower-case ASCII domain"},
+                "connection_work_target": {"type": "string", "pattern": "^[0-9a-fA-F]+$", "description": "Maximum accepted connection-work hash"},
+                "root_certificates_version": {"type": "number", "description": "Immutable trusted-root bundle version; version 1 is currently supported"},
+            },
+            "additionalProperties": False,
+            "required": ["amount", "domain", "connection_work_target", "root_certificates_version"],
+            "description": "A type-2 PAY_TO_CONNECT output",
+        }
+        p2c_obj = {"type": "object", "properties": {"p2c": p2c_schema}, "additionalProperties": False, "required": ["p2c"]}
+        assert_equal(outputs["schema"], {"oneOf": [{"type": "array", "items": {"anyOf": [address_obj, p2c_obj]}}, {"type": "object"}]})
+        assert_equal(find_param(find_method(openrpc, "createpsbt"), "outputs")["schema"], outputs["schema"])
 
         getdescriptoractivity = find_method(openrpc, "getdescriptoractivity")
         activity = getdescriptoractivity["result"]["schema"]["properties"]["activity"]

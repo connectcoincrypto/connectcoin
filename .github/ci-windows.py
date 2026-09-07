@@ -177,12 +177,18 @@ def run_tests(ci_type):
             "--build-config",
             "Release",
         ]
-        run(ctest_cmd)
+        # Preserve full real-PoW coverage in the dedicated suites, even if a
+        # calling environment requested the reduced profile. Run them serially
+        # to avoid competing dataset initialization on the Windows runner.
+        real_pow_env = os.environ.copy()
+        real_pow_env.pop("TEST_RANDOMX_MOCK_POW", None)
+        run(ctest_cmd + ["-j", "1", "-R", "^(pow_tests|randomx_tests)$", "--no-tests=error"], env=real_pow_env)
 
-        # CTest above exercises the real RandomX implementation. Functional
-        # tests mine thousands of regtest blocks and only need deterministic
-        # proof-of-work here; using the mock avoids hours of duplicate hashing.
+        # Generic fixtures and functional tests exercise chain behavior, not
+        # RandomX itself. Match the other CI platforms' reduced test profile so
+        # each unrelated CTest process does not initialize a multi-GiB dataset.
         os.environ["TEST_RANDOMX_MOCK_POW"] = "1"
+        run(ctest_cmd)
 
         test_cmd = [
             sys.executable,

@@ -91,7 +91,9 @@ public:
     uint16_t GetDefaultPort() const { return nDefaultPort; }
     std::vector<int> GetAvailableSnapshotHeights() const;
 
-    const CBlock& GenesisBlock() const { return genesis; }
+    /** Unlaunched networks retain their consensus parameters but have no genesis. */
+    bool HasGenesisBlock() const { return genesis.has_value(); }
+    const CBlock& GenesisBlock() const { return genesis.value(); }
     /** Default value for -checkmempool and -checkblockindex argument */
     bool DefaultConsistencyChecks() const { return fDefaultConsistencyChecks; }
     /** If this chain is exclusively used for testing */
@@ -199,7 +201,7 @@ protected:
     std::vector<unsigned char> base58Prefixes[MAX_BASE58_TYPES];
     std::string bech32_hrp;
     ChainType m_chain_type;
-    CBlock genesis;
+    std::optional<CBlock> genesis;
     std::vector<uint8_t> vFixedSeeds;
     bool fDefaultConsistencyChecks;
     bool m_is_mockable_chain;

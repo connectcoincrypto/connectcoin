@@ -18,10 +18,8 @@ from itertools import product
 
 from test_framework.messages import (
     MAX_BIP125_RBF_SEQUENCE,
-    COIN,
     TX_MAX_STANDARD_VERSION,
     TX_MIN_STANDARD_VERSION,
-    CTransaction,
     CTxOut,
     tx_from_hex,
 )
@@ -291,19 +289,19 @@ class RawTransactionsTest(BitcoinTestFramework):
 
         # Test `createrawtransaction` invalid `outputs`
         address = getnewdestination()[2]
-        assert_raises_rpc_error(-3, "JSON value of type string is not of expected type array", self.nodes[0].createrawtransaction, [], 'foo')
+        assert_raises_rpc_error(-8, "outputs must be an array or object", self.nodes[0].createrawtransaction, [], 'foo')
         self.nodes[0].createrawtransaction(inputs=[], outputs={})  # Should not throw for backwards compatibility
         self.nodes[0].createrawtransaction(inputs=[], outputs=[])
-        assert_raises_rpc_error(-8, "Data must be hexadecimal string", self.nodes[0].createrawtransaction, [], {'data': 'foo'})
+        assert_raises_rpc_error(-8, "ConnectCoin typed outputs do not support data/OP_RETURN outputs", self.nodes[0].createrawtransaction, [], {'data': 'foo'})
         assert_raises_rpc_error(-5, "Invalid ConnectCoin address", self.nodes[0].createrawtransaction, [], {'foo': 0})
         assert_raises_rpc_error(-3, "Invalid amount", self.nodes[0].createrawtransaction, [], {address: 'foo'})
         assert_raises_rpc_error(-3, "Amount out of range", self.nodes[0].createrawtransaction, [], {address: -1})
         assert_raises_rpc_error(-8, "Invalid parameter, duplicated address: %s" % address, self.nodes[0].createrawtransaction, [], multidict([(address, 1), (address, 1)]))
         assert_raises_rpc_error(-8, "Invalid parameter, duplicated address: %s" % address, self.nodes[0].createrawtransaction, [], [{address: 1}, {address: 1}])
-        assert_raises_rpc_error(-8, "Invalid parameter, duplicate key: data", self.nodes[0].createrawtransaction, [], [{"data": 'aa'}, {"data": "bb"}])
-        assert_raises_rpc_error(-8, "Invalid parameter, duplicate key: data", self.nodes[0].createrawtransaction, [], multidict([("data", 'aa'), ("data", "bb")]))
-        assert_raises_rpc_error(-8, "Invalid parameter, key-value pair must contain exactly one key", self.nodes[0].createrawtransaction, [], [{'a': 1, 'b': 2}])
-        assert_raises_rpc_error(-8, "Invalid parameter, key-value pair not an object as expected", self.nodes[0].createrawtransaction, [], [['key-value pair1'], ['2']])
+        assert_raises_rpc_error(-8, "ConnectCoin typed outputs do not support data/OP_RETURN outputs", self.nodes[0].createrawtransaction, [], [{"data": 'aa'}, {"data": "bb"}])
+        assert_raises_rpc_error(-8, "ConnectCoin typed outputs do not support data/OP_RETURN outputs", self.nodes[0].createrawtransaction, [], multidict([("data", 'aa'), ("data", "bb")]))
+        assert_raises_rpc_error(-8, "each output must be an object containing exactly one address or p2c key", self.nodes[0].createrawtransaction, [], [{'a': 1, 'b': 2}])
+        assert_raises_rpc_error(-8, "each output must be an object containing exactly one address or p2c key", self.nodes[0].createrawtransaction, [], [['key-value pair1'], ['2']])
 
         # Test `createrawtransaction` mismatch between sequence number(s) and `replaceable` option
         assert_raises_rpc_error(-8, "Invalid parameter combination: Sequence number(s) contradict replaceable option",
@@ -333,12 +331,15 @@ class RawTransactionsTest(BitcoinTestFramework):
             tx.serialize().hex(),
             self.nodes[2].createrawtransaction(inputs=[{'txid': TXID, 'vout': 9}], outputs=[{address: 99}, {address2: 99}]),
         )
-        # Multiple mixed outputs
-        tx = tx_from_hex(self.nodes[2].createrawtransaction(inputs=[{'txid': TXID, 'vout': 9}], outputs=multidict([(address, 99), (address2, 99), ('data', '99')])))
+        # Multiple mixed native outputs, preserving their order and payload.
+        p2c = {"amount": 1, "domain": "example.com", "connection_work_target": "ff" * 32, "root_certificates_version": 1}
+        tx = tx_from_hex(self.nodes[2].createrawtransaction(inputs=[{'txid': TXID, 'vout': 9}], outputs=OrderedDict([(address, 99), (address2, 99), ('p2c', p2c)])))
         assert_equal(len(tx.vout), 3)
+        assert_equal([output.type for output in tx.vout], [1, 1, 2])
+        assert_equal(tx.vout[2].domain, b"example.com")
         assert_equal(
             tx.serialize().hex(),
-            self.nodes[2].createrawtransaction(inputs=[{'txid': TXID, 'vout': 9}], outputs=[{address: 99}, {address2: 99}, {'data': '99'}]),
+            self.nodes[2].createrawtransaction(inputs=[{'txid': TXID, 'vout': 9}], outputs=[{address: 99}, {address2: 99}, {'p2c': p2c}]),
         )
 
         for version in range(TX_MIN_STANDARD_VERSION, TX_MAX_STANDARD_VERSION + 1):
@@ -354,64 +355,54 @@ class RawTransactionsTest(BitcoinTestFramework):
         rawtx = self.nodes[2].createrawtransaction(inputs, outputs)
         assert_raises_rpc_error(-25, "bad-txns-inputs-missingorspent", self.nodes[2].sendrawtransaction, rawtx)
 
-        self.log.info("Test sendrawtransaction exceeding, falling short of, and equaling maxburnamount")
-        max_burn_exceeded = "Unspendable output exceeds maximum configured by user (maxburnamount)"
-
-
-        # Test that spendable transaction with default maxburnamount (0) gets sent
+        self.log.info("Test native outputs and compatibility maxburnamount validation")
         tx = self.wallet.create_self_transfer()['tx']
         tx_hex = tx.serialize().hex()
         self.nodes[2].sendrawtransaction(hexstring=tx_hex)
 
-        # Test that datacarrier transaction with default maxburnamount (0) does not get sent
-        tx = self.wallet.create_self_transfer()['tx']
-        tx_val = 0.001
-        tx.vout = [CTxOut(int(Decimal(tx_val) * COIN), CScript([OP_RETURN] + [OP_FALSE] * 30))]
-        tx_hex = tx.serialize().hex()
-        assert_raises_rpc_error(-25, max_burn_exceeded, self.nodes[2].sendrawtransaction, tx_hex)
+        # A P2C target is data, not Script opcodes. ff and a long domain both
+        # make its compatibility view fail the obsolete Script heuristic.
+        for domain, target in product(["example.com", "a" * 63 + "." + "b" * 63 + ".com"], ["ff" * 32, "00" * 31 + "01"]):
+            for package in [False, True]:
+                transfer = self.wallet.create_self_transfer(fee_rate=Decimal("0.01"))
+                tx = transfer['tx']
+                recipient = self.nodes[0].createrawtransaction(
+                    [{"txid": TXID, "vout": 0}],
+                    [{"p2c": {"amount": 1, "domain": domain, "connection_work_target": target, "root_certificates_version": 1}}],
+                )
+                tx.vout[0].nValue -= tx_from_hex(recipient).vout[0].nValue
+                tx.vout.append(tx_from_hex(recipient).vout[0])
+                self.wallet.sign_tx(tx)
+                tx_hex = tx.serialize().hex()
+                assert_equal(self.nodes[2].testmempoolaccept([tx_hex])[0]['allowed'], True)
+                for invalid, message in [(-1, "Amount out of range"), ("foo", "Invalid amount")]:
+                    rpc = self.nodes[2].submitpackage if package else self.nodes[2].sendrawtransaction
+                    assert_raises_rpc_error(-3, message, rpc, [tx_hex] if package else tx_hex, maxburnamount=invalid)
+                if package:
+                    assert_equal(self.nodes[2].submitpackage([tx_hex])['package_msg'], 'success')
+                else:
+                    assert_equal(self.nodes[2].sendrawtransaction(tx_hex), tx.txid_hex)
+                assert tx.txid_hex in self.nodes[2].getrawmempool()
 
-        # Test that oversized script gets rejected by sendrawtransaction
-        tx = self.wallet.create_self_transfer()['tx']
-        tx_val = 0.001
-        tx.vout = [CTxOut(int(Decimal(tx_val) * COIN), CScript([OP_FALSE] * 10001))]
-        tx_hex = tx.serialize().hex()
-        assert_raises_rpc_error(-25, max_burn_exceeded, self.nodes[2].sendrawtransaction, tx_hex)
-
-        # Test that script containing invalid opcode gets rejected by sendrawtransaction
-        tx = self.wallet.create_self_transfer()['tx']
-        tx_val = 0.01
-        tx.vout = [CTxOut(int(Decimal(tx_val) * COIN), CScript([OP_INVALIDOPCODE]))]
-        tx_hex = tx.serialize().hex()
-        assert_raises_rpc_error(-25, max_burn_exceeded, self.nodes[2].sendrawtransaction, tx_hex)
-
-        # Test a transaction where our burn exceeds maxburnamount
-        tx = self.wallet.create_self_transfer()['tx']
-        tx_val = 0.001
-        tx.vout = [CTxOut(int(Decimal(tx_val) * COIN), CScript([OP_RETURN] + [OP_FALSE] * 30))]
-        tx_hex = tx.serialize().hex()
-        assert_raises_rpc_error(-25, max_burn_exceeded, self.nodes[2].sendrawtransaction, tx_hex, 0, 0.0009)
-
-        # Test a transaction where our burn falls short of maxburnamount
-        tx = self.wallet.create_self_transfer()['tx']
-        tx_val = 0.001
-        tx.vout = [CTxOut(int(Decimal(tx_val) * COIN), CScript([OP_RETURN] + [OP_FALSE] * 30))]
-        tx_hex = tx.serialize().hex()
-        self.nodes[2].sendrawtransaction(hexstring=tx_hex, maxfeerate='0', maxburnamount='0.0011')
-
-        # Test a transaction where our burn equals maxburnamount
-        tx = self.wallet.create_self_transfer()['tx']
-        tx_val = 0.001
-        tx.vout = [CTxOut(int(Decimal(tx_val) * COIN), CScript([OP_RETURN] + [OP_FALSE] * 30))]
-        tx_hex = tx.serialize().hex()
-        self.nodes[2].sendrawtransaction(hexstring=tx_hex, maxfeerate='0', maxburnamount='0.001')
+        # Script outputs are invalid type 0 on the wire. A high maxburnamount
+        # must not make them valid, in either submission RPC.
+        for script in [CScript([OP_RETURN, OP_FALSE]), CScript([OP_FALSE] * 10001), CScript([OP_INVALIDOPCODE])]:
+            tx = self.wallet.create_self_transfer()['tx']
+            tx.vout = [CTxOut(tx.vout[0].nValue, script)]
+            tx_hex = tx.serialize().hex()
+            for maxburn in [0, 100]:
+                assert_raises_rpc_error(-26, 'bad-txns-vout-type', self.nodes[2].sendrawtransaction, tx_hex, maxburnamount=maxburn)
+                result = self.nodes[2].submitpackage([tx_hex], maxburnamount=maxburn)
+                assert_equal(result['package_msg'], 'transaction failed')
+                assert_equal(result['tx-results'][tx.wtxid_hex]['error'], 'bad-txns-vout-type, output is not canonical type 1 (P2PK) or type 2 (PAY_TO_CONNECT)')
 
     def sendrawtransaction_testmempoolaccept_tests(self):
         self.log.info("Test sendrawtransaction/testmempoolaccept with maxfeerate")
         fee_exceeds_max = "Fee exceeds maximum configured by user (e.g. -maxtxfee, maxfeerate)"
 
         # Test a transaction with a small fee.
-        # Fee rate is 0.00001000 CC/kvB
-        tx = self.wallet.create_self_transfer(fee_rate=Decimal('0.00001000'))
+        # Keep the small fee above the current economic relay floor.
+        tx = self.wallet.create_self_transfer(fee_rate=self.nodes[2].getmempoolinfo()['minrelaytxfee'] * 2)
         # Thus, testmempoolaccept should reject
         testres = self.nodes[2].testmempoolaccept([tx['hex']], 0.00000010)[0]
         assert_equal(testres['allowed'], False)
@@ -446,57 +437,45 @@ class RawTransactionsTest(BitcoinTestFramework):
             assert_raises_rpc_error(-27, 'Transaction outputs already in utxo set', node.sendrawtransaction, tx['hex'])
 
     def decoderawtransaction_tests(self):
-        self.log.info("Test decoderawtransaction")
-        # witness transaction
-        encrawtx = "010000000001010000000000000072c1a6a246ae63f74f931e8365e15a089c68d61900000000000000000000ffffffff0100e1f50500000000000102616100000000"
-        decrawtx = self.nodes[0].decoderawtransaction(encrawtx, True)  # decode as witness transaction
-        assert_equal(decrawtx['vout'][0]['value'], Decimal('0.0100000000'))
-        assert_raises_rpc_error(-22, 'TX decode failed', self.nodes[0].decoderawtransaction, encrawtx, False) # force decode as non-witness transaction
-        # non-witness transaction
-        encrawtx = "01000000010000000000000072c1a6a246ae63f74f931e8365e15a089c68d61900000000000000000000ffffffff0100e1f505000000000000000000"
-        decrawtx = self.nodes[0].decoderawtransaction(encrawtx, False)  # decode as non-witness transaction
-        assert_equal(decrawtx['vout'][0]['value'], Decimal('0.0100000000'))
-        # known ambiguous transaction in the chain (see https://github.com/bitcoin/bitcoin/issues/20579)
-        coinbase = "03c68708046ff8415c622f4254432e434f4d2ffabe6d6de1965d02c68f928e5b244ab1965115a36f56eb997633c7f690124bbf43644e23080000000ca3d3af6d005a65ff0200fd00000000"
-        encrawtx = f"020000000001010000000000000000000000000000000000000000000000000000000000000000ffffffff4b{coinbase}" \
-                   "ffffffff03f4c1fb4b0000000016001497cfc76442fe717f2a3f0cc9c175f7561b6619970000000000000000266a24aa21a9ed957d1036a80343e0d1b659497e1b48a38ebe876a056d45965fac4a85cda84e1900000000000000002952534b424c4f434b3a8e092581ab01986cbadc84f4b43f4fa4bb9e7a2e2a0caf9b7cf64d939028e22c0120000000000000000000000000000000000000000000000000000000000000000000000000"
-        decrawtx = self.nodes[0].decoderawtransaction(encrawtx)
-        decrawtx_wit = self.nodes[0].decoderawtransaction(encrawtx, True)
-        assert_raises_rpc_error(-22, 'TX decode failed', self.nodes[0].decoderawtransaction, encrawtx, False)  # fails to decode as non-witness transaction
-        assert_equal(decrawtx, decrawtx_wit)  # the witness interpretation should be chosen
-        assert_equal(decrawtx['vin'][0]['coinbase'], coinbase)
+        self.log.info("Test native transaction decoding with and without witness")
+        tx = self.wallet.create_self_transfer()['tx']
+        encrawtx = tx.serialize_with_witness().hex()
+        decoded = self.nodes[0].decoderawtransaction(encrawtx)
+        assert_equal(decoded, self.nodes[0].decoderawtransaction(encrawtx, True))
+        assert_equal(decoded['txid'], tx.txid_hex)
+        assert_equal(decoded['hash'], tx.wtxid_hex)
+        assert_equal(decoded['vout'][0]['type'], 1)
+        assert_equal(decoded['vout'][0]['pubkey'], tx.vout[0].pubkey.hex())
+        assert_raises_rpc_error(-22, 'TX decode failed', self.nodes[0].decoderawtransaction, encrawtx, False)
+        nonwitness = self.nodes[0].decoderawtransaction(tx.serialize_without_witness().hex(), False)
+        assert_equal(nonwitness['txid'], decoded['txid'])
+        assert_equal(nonwitness['vout'], decoded['vout'])
+        assert 'txinwitness' not in nonwitness['vin'][0]
+        assert_equal(nonwitness['hash'], nonwitness['txid'])
+
+        blockhash = self.nodes[0].getbestblockhash()
+        coinbase = self.nodes[0].getblock(blockhash)['tx'][0]
+        rawcoinbase = self.nodes[0].getrawtransaction(coinbase, False, blockhash)
+        decoded = self.nodes[0].decoderawtransaction(rawcoinbase)
+        assert_equal(decoded['txid'], coinbase)
+        assert 'coinbase' in decoded['vin'][0]
+        assert_equal(decoded, self.nodes[0].decoderawtransaction(rawcoinbase, True))
+
+        # An empty Script-era output can be decoded as type 0, but cannot be
+        # accepted as a valid ConnectCoin output. Decoding is not validation.
+        legacy = "010000000001010000000000000072c1a6a246ae63f74f931e8365e15a089c68d61900000000000000000000ffffffff0100e1f50500000000000102616100000000"
+        for mode in [None, True]:
+            assert_equal(self.nodes[0].decoderawtransaction(legacy, mode)['vout'][0]['type'], 0)
+        assert_raises_rpc_error(-22, 'TX decode failed', self.nodes[0].decoderawtransaction, legacy, False)
+        assert_equal(self.nodes[0].testmempoolaccept([legacy])[0]['reject-reason'], 'bad-txns-vout-type')
 
     def transaction_version_number_tests(self):
-        self.log.info("Test transaction version numbers")
-
-        # Test the minimum transaction version number that fits in a signed 32-bit integer.
-        # As transaction version is serialized unsigned, this should convert to its unsigned equivalent.
-        tx = CTransaction()
-        tx.version = 0x80000000
-        rawtx = tx.serialize().hex()
-        decrawtx = self.nodes[0].decoderawtransaction(rawtx)
-        assert_equal(decrawtx['version'], 0x80000000)
-
-        # Test the maximum transaction version number that fits in a signed 32-bit integer.
-        tx = CTransaction()
-        tx.version = 0x7fffffff
-        rawtx = tx.serialize().hex()
-        decrawtx = self.nodes[0].decoderawtransaction(rawtx)
-        assert_equal(decrawtx['version'], 0x7fffffff)
-
-        # Test the minimum transaction version number that fits in an unsigned 32-bit integer.
-        tx = CTransaction()
-        tx.version = 0
-        rawtx = tx.serialize().hex()
-        decrawtx = self.nodes[0].decoderawtransaction(rawtx)
-        assert_equal(decrawtx['version'], 0)
-
-        # Test the maximum transaction version number that fits in an unsigned 32-bit integer.
-        tx = CTransaction()
-        tx.version = 0xffffffff
-        rawtx = tx.serialize().hex()
-        decrawtx = self.nodes[0].decoderawtransaction(rawtx)
-        assert_equal(decrawtx['version'], 0xffffffff)
+        self.log.info("Test unsigned transaction version boundaries")
+        tx = self.wallet.create_self_transfer()['tx']
+        for version in [0, 0x7fffffff, 0x80000000, 0xffffffff]:
+            tx.version = version
+            decoded = self.nodes[0].decoderawtransaction(tx.serialize().hex())
+            assert_equal(decoded['version'], version)
 
 if __name__ == '__main__':
     RawTransactionsTest(__file__).main()

@@ -20,6 +20,7 @@
 #include <array>
 #include <string>
 
+#include <test/util/chainparams.h>
 #include <test/util/setup_common.h>
 
 #include <boost/test/unit_test.hpp>
@@ -146,7 +147,7 @@ static CAmount MaximumSupply(const CChainParams& chain_params)
 BOOST_AUTO_TEST_CASE(maximum_network_supply_test)
 {
     for (const ChainType chain_type : {ChainType::MAIN, ChainType::TESTNET, ChainType::TESTNET4, ChainType::SIGNET}) {
-        const auto chain_params = CreateChainParams(*m_node.args, chain_type);
+        const auto chain_params = CreateChainParamsForTest(*m_node.args, chain_type);
         const auto& consensus = chain_params->GetConsensus();
         const CAmount total{MaximumSupply(*chain_params)};
 

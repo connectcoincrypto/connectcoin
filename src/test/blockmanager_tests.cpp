@@ -14,6 +14,7 @@
 #include <validation.h>
 
 #include <boost/test/unit_test.hpp>
+#include <test/util/chainparams.h>
 #include <test/util/common.h>
 #include <test/util/logging.h>
 #include <test/util/script.h>
@@ -30,7 +31,7 @@ BOOST_FIXTURE_TEST_SUITE(blockmanager_tests, BasicTestingSetup)
 
 BOOST_AUTO_TEST_CASE(blockmanager_find_block_pos)
 {
-    const auto params {CreateChainParams(ArgsManager{}, ChainType::MAIN)};
+    const auto params {CreateChainParamsForTest(ArgsManager{}, ChainType::MAIN)};
     KernelNotifications notifications{Assert(m_node.shutdown_request), m_node.exit_status, *Assert(m_node.warnings)};
     const BlockManager::Options blockman_opts{
         .chainparams = *params,

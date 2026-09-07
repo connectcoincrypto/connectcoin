@@ -152,7 +152,7 @@ void PrintUsage(std::ostream& stream, const char* executable)
         << "       " << executable << " --help" << std::endl
         << "       " << executable << " --version" << std::endl
         << "Display DATADIR information, and process hex-encoded blocks on standard input." << std::endl
-        << "Uses mainnet parameters by default, regtest with -regtest flag." << std::endl
+        << "Mainnet has not been launched. Use -regtest for local testing." << std::endl
         << std::endl
         << "IMPORTANT: THIS EXECUTABLE IS EXPERIMENTAL, FOR TESTING ONLY, AND EXPECTED TO" << std::endl
         << "           BREAK IN FUTURE VERSIONS. DO NOT USE ON YOUR ACTUAL DATADIR." << std::endl;
@@ -177,6 +177,10 @@ int main(int argc, char* argv[])
     const bool invalid_datadir{argc >= 2 && std::string_view{argv[argc - 1]}.starts_with('-')};
     if (argc < 2 || argc > 3 || (argc == 3 && !has_regtest_flag) || invalid_datadir) {
         PrintUsage(std::cerr, argv[0]);
+        return 1;
+    }
+    if (!has_regtest_flag) {
+        std::cerr << "Mainnet has not been launched: no genesis block is defined. Use -regtest for local testing." << std::endl;
         return 1;
     }
     std::filesystem::path abs_datadir{std::filesystem::absolute(argv[argc - 1])};

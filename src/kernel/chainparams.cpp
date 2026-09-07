@@ -155,10 +155,11 @@ public:
         m_assumed_blockchain_size = 0;
         m_assumed_chain_state_size = 0;
 
-        genesis = CreateConnectCoinGenesisBlock("teste testado", 1787596781, 37316, 0x1f00ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
-        consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"8b6373205ad2b6314f2937cebacfc143af9eb6183162c24fb19cdf382ff576c5"});
-        assert(genesis.hashMerkleRoot == uint256{"1e6ec171b38c7d4b5bb150c9dfa2f9eb7eb412906a0807201792722095ac1c8a"});
+        // Mainnet has not been launched. Do not embed a provisional genesis:
+        // nodes must refuse to initialize this chain until its launch genesis
+        // is defined. The retired development block lives only in test_util.
+        assert(!HasGenesisBlock());
+        assert(consensus.hashGenesisBlock.IsNull());
 
         // Note that of those which support the service bits prefix, most only support a subset of
         // possible options.
@@ -248,8 +249,8 @@ public:
         m_assumed_chain_state_size = 0;
 
         genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin testnet3", 1787596782, 29790, 0x1f00ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
-        consensus.hashGenesisBlock = genesis.GetHash();
-        assert(genesis.hashMerkleRoot == uint256{"1df98af4c1fc04b34d14c2fc8231083428b5056975bfb51e7fad9ca2043d8cc9"});
+        consensus.hashGenesisBlock = genesis->GetHash();
+        assert(genesis->hashMerkleRoot == uint256{"1df98af4c1fc04b34d14c2fc8231083428b5056975bfb51e7fad9ca2043d8cc9"});
         assert(consensus.hashGenesisBlock == uint256{"90090317e3c15f275f86bc5b58eede9cc959d40ab8798a7df35acb9de0a5a8c9"});
 
         vFixedSeeds.clear();
@@ -335,9 +336,9 @@ public:
         m_assumed_chain_state_size = 0;
 
         genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin testnet4", 1787596783, 171441, 0x1f00ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
-        consensus.hashGenesisBlock = genesis.GetHash();
+        consensus.hashGenesisBlock = genesis->GetHash();
         assert(consensus.hashGenesisBlock == uint256{"d607fe5b7f8e498c08f34c740a3ba75af44eace9e9d9a1cbfc163cfa6ad16519"});
-        assert(genesis.hashMerkleRoot == uint256{"2fccd9d71c8cdbd5b5520f94bf29fbf7e38d5a90b4039166d2d8c86fe89028f0"});
+        assert(genesis->hashMerkleRoot == uint256{"2fccd9d71c8cdbd5b5520f94bf29fbf7e38d5a90b4039166d2d8c86fe89028f0"});
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -449,9 +450,9 @@ public:
         nPruneAfterHeight = 1000;
 
         genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin signet", 1787596784, 67056, 0x1f00ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
-        consensus.hashGenesisBlock = genesis.GetHash();
+        consensus.hashGenesisBlock = genesis->GetHash();
         assert(consensus.hashGenesisBlock == uint256{"cce9d1179afd938765c21b95b96bed6e5c018910091c855d303a5ecdf47600c5"});
-        assert(genesis.hashMerkleRoot == uint256{"5f09f9b805e8731b6d9f7410bb4404d24e5c95005ec395a47a80c45fd92024b2"});
+        assert(genesis->hashMerkleRoot == uint256{"5f09f9b805e8731b6d9f7410bb4404d24e5c95005ec395a47a80c45fd92024b2"});
 
         m_assumeutxo_data.clear();
 
@@ -528,9 +529,9 @@ public:
         ApplyDeploymentOptions(opts.dep_opts);
 
         genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin regtest", 1296688602, 3, 0x207fffff, 1, 10'000'000 * COIN, RegTestGenesisOutputScript());
-        consensus.hashGenesisBlock = genesis.GetHash();
+        consensus.hashGenesisBlock = genesis->GetHash();
         assert(consensus.hashGenesisBlock == uint256{"ccfa95619bae24b5045dbd91e4410c5279bc757ddad127a25c31d0258ee99342"});
-        assert(genesis.hashMerkleRoot == uint256{"a0d6ef2f2a981e1c00845ba4de2c34784d7724ef5fe1341fef76cf1a5367ca6b"});
+        assert(genesis->hashMerkleRoot == uint256{"a0d6ef2f2a981e1c00845ba4de2c34784d7724ef5fe1341fef76cf1a5367ca6b"});
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();

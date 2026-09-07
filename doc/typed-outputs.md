@@ -92,7 +92,9 @@ that prefix and append pool names or extra nonces after it.
 
 ## Migration boundaries
 
-- All network genesis blocks were regenerated for the typed wire format.
+- Test-network genesis blocks use the typed wire format. Mainnet has no launch
+  genesis and cannot start; its retired development genesis is test-only.
+  See [testnet-beta.md](testnet-beta.md).
 - Pre-typed transactions, blocks, undo data, and UTXO databases are invalid.
 - `assumeutxo` snapshots are disabled until fresh typed-output commitments are
   generated from finalized chains.

@@ -12,6 +12,12 @@ signature. Type `2` is PAY_TO_CONNECT for a canonical DNS domain and is spent
 with a bounded, independently verified TLS 1.3 connection proof. There is no
 certificate-specific P2C output form.
 
+Mainnet has **not** been launched and has no genesis block in the node. Start
+with `-testnet4` for the public-test-network profile or `-regtest` for local
+testing; default/mainnet node startup is deliberately rejected. Test coins do
+not become mainnet coins. See [doc/testnet-beta.md](doc/testnet-beta.md) for the
+network boundary and the remaining requirements for a public beta.
+
 The codebase retains Bitcoin Core copyright notices and upstream attribution.
 
 The current public identifier inventory and pre-launch registry warnings are in

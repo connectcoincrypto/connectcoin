@@ -28,4 +28,7 @@ const CChainParams &Params();
  */
 void SelectParams(ChainType chain);
 
+/** Select explicitly constructed parameters, including test-only chain fixtures. */
+void SelectParams(std::unique_ptr<const CChainParams> params);
+
 #endif // CONNECTCOIN_CHAINPARAMS_H

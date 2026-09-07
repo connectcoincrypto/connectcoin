@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <limits>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 using util::SplitString;
@@ -179,4 +180,11 @@ void SelectParams(const ChainType chain)
 {
     SelectBaseParams(chain);
     globalChainParams = CreateChainParams(gArgs, chain);
+}
+
+void SelectParams(std::unique_ptr<const CChainParams> params)
+{
+    assert(params);
+    SelectBaseParams(params->GetChainType());
+    globalChainParams = std::move(params);
 }

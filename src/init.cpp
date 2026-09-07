@@ -1233,6 +1233,10 @@ bool AppInitParameterInteraction(const ArgsManager& args)
         }
     }
 
+    if (!chainparams.HasGenesisBlock()) {
+        return InitError(_("Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing."));
+    }
+
     return true;
 }
 

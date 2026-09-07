@@ -30,6 +30,7 @@
 #include <condition_variable>
 #include <cstdio>
 #include <cstdlib>
+#include <exception>
 #include <memory>
 #include <optional>
 #include <span>
@@ -1155,6 +1156,7 @@ void HTTPRemoteClient::ReadRequest(HTTPRequest& req)
 
     LineReader reader(m_recv_buffer, MAX_HEADERS_SIZE);
 
+    std::exception_ptr error;
     try {
         switch (req.GetState()) {
         case HTTPRequest::State::Init:
@@ -1183,8 +1185,11 @@ void HTTPRemoteClient::ReadRequest(HTTPRequest& req)
         req.SetState(HTTPRequest::State::Error);
         // Clear the memory allocated to this client, caller must disconnect
         m_recv_buffer.clear();
-        throw;
+        error = std::current_exception();
     }
+    // Keep the original exception type, but rethrow outside the handler to avoid
+    // clang-cl ASan miscompilation (https://github.com/llvm/llvm-project/issues/215376).
+    if (error) std::rethrow_exception(error);
 
     // Remove the bytes read out of the buffer.
     m_recv_buffer.erase(

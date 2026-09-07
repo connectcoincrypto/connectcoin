@@ -79,6 +79,7 @@
 #include <optional>
 #include <ranges>
 #include <span>
+#include <stdexcept>
 #include <string>
 #include <tuple>
 #include <utility>
@@ -6333,6 +6334,11 @@ void ChainstateManager::ResetChainstates()
  */
 static ChainstateManager::Options&& Flatten(ChainstateManager::Options&& opts)
 {
+    // Enforce this below the daemon/GUI layer, including Kernel API callers.
+    // Reject before BlockManager can open, wipe or load an existing database.
+    if (!opts.chainparams.HasGenesisBlock()) {
+        throw std::runtime_error("Cannot initialize a chain without a genesis block. Mainnet has not been launched.");
+    }
     if (!opts.check_block_index.has_value()) opts.check_block_index = opts.chainparams.DefaultConsistencyChecks();
     if (!opts.minimum_chain_work.has_value()) opts.minimum_chain_work = UintToArith256(opts.chainparams.GetConsensus().nMinimumChainWork);
     if (!opts.assumed_valid_block.has_value()) opts.assumed_valid_block = opts.chainparams.GetConsensus().defaultAssumeValid;

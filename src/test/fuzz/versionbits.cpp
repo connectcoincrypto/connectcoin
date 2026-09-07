@@ -14,6 +14,7 @@
 #include <test/fuzz/FuzzedDataProvider.h>
 #include <test/fuzz/fuzz.h>
 #include <test/fuzz/util.h>
+#include <test/util/chainparams.h>
 #include <test/util/versionbits.h>
 
 #include <cstdint>
@@ -82,7 +83,7 @@ std::unique_ptr<const CChainParams> g_params;
 void initialize()
 {
     // this is actually comparatively slow, so only do it once
-    g_params = CreateChainParams(ArgsManager{}, ChainType::MAIN);
+    g_params = CreateChainParamsForTest(ArgsManager{}, ChainType::MAIN);
     assert(g_params != nullptr);
 }
 

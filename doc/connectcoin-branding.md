@@ -104,9 +104,11 @@ external applications must not assume global ownership of it.
 The development monetary policy caps individual monetary values at
 `100,000,000 CC`. On mainnet, testnet3, testnet4, and signet, the recurring
 block subsidy begins at `15 CC` and halves every 3,000,000 blocks. Public-network
-blocks target a 10-second interval. Their separate spendable genesis output
-allocates `10,000,000 CC` to the development fund. If every available subsidy
-is claimed by empty blocks, integer rounding produces a maximum mainnet issuance of
+blocks target a 10-second interval. The existing public test networks have a
+separate spendable genesis output of `10,000,000 CC`. Mainnet is unlaunched and
+has no operational genesis; the planned allocation remains covered by a
+test-only fixture. With that allocation and every available subsidy
+claimed by empty blocks, integer rounding produces a maximum planned issuance of
 `99,999,984.9955000000 CC`. One CC is subdivided into `10,000,000,000`
 connects, so wallet and RPC amounts use up to ten decimal places. Regtest keeps
 its 150-block halving interval.
@@ -130,20 +132,21 @@ JavaScript `Number`. RPC integrations must parse returned amount tokens with an
 arbitrary-precision decimal type and should submit amounts as decimal strings;
 converting monetary values through binary floating point can lose connects.
 
-The public networks use a valid compressed P2PK development-fund key whose
+The public test networks use a valid x-only P2PK development-fund key whose
 private key is deliberately absent from the source tree. Regtest alone uses a
 deterministic key with published private material so automated tests can spend
 its genesis allocation. The public-network private key requires offline backup
 and production-grade custody before launch; changing it requires regenerating
-the four public genesis blocks.
+the affected test-network genesis blocks. Mainnet's future launch genesis must
+be defined separately; see [testnet-beta.md](testnet-beta.md).
 
 | Network | RPC port | P2P port | Onion bind | Message start | Genesis hash |
 | --- | ---: | ---: | ---: | --- | --- |
-| Mainnet | 48172 | 48173 | 48174 | `d9 51 a5 e2` | `0000004b461aae33a4be0ee95ae8461155f2c48130bc8dd521adb71ec0d3e9a2` |
-| Testnet3 | 48175 | 48176 | 48177 | `03 84 8e 59` | `000001c906bb16924aaa92ab23ba23616d7916ecfdc3a256c060dbe9ead948f3` |
-| Testnet4 | 48178 | 48179 | 48180 | `bb 51 f5 e7` | `000001218f2321c9ccd0f18fe8603865e9a97ea644d8ab62c434cc39928377f1` |
-| Signet | 48181 | 48182 | 48183 | `54 d2 6f bd` (default `OP_TRUE` challenge) | `000000850a5c90845788b6f2688e27976da0ef181258378d39764f85baa64780` |
-| Regtest | 48184 | 48185 | 48186 | `a5 4f c7 d5` | `197dd70fa5df793d1b9e4684f3c9608afcdae4b86f935c04e8187a48def347f6` |
+| Mainnet (disabled) | 48172 | 48173 | 48174 | `d9 51 a5 e2` | Not defined |
+| Testnet3 | 48175 | 48176 | 48177 | `03 84 8e 59` | `90090317e3c15f275f86bc5b58eede9cc959d40ab8798a7df35acb9de0a5a8c9` |
+| Testnet4 | 48178 | 48179 | 48180 | `bb 51 f5 e7` | `d607fe5b7f8e498c08f34c740a3ba75af44eace9e9d9a1cbfc163cfa6ad16519` |
+| Signet | 48181 | 48182 | 48183 | `54 d2 6f bd` (default `OP_TRUE` challenge) | `cce9d1179afd938765c21b95b96bed6e5c018910091c855d303a5ecdf47600c5` |
+| Regtest | 48184 | 48185 | 48186 | `a5 4f c7 d5` | `ccfa95619bae24b5045dbd91e4410c5279bc757ddad127a25c31d0258ee99342` |
 
 Fixed seeds are intentionally absent during development. The inherited Bitcoin
 peer snapshots were removed from `contrib/seeds`, and the generated seed header

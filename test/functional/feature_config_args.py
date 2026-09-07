@@ -509,7 +509,12 @@ class ConfArgsTest(BitcoinTestFramework):
         conf_file = self.nodes[0].datadir_path / "connectcoin.conf"
         for chain, chain_name in {("main", ""), ("test", "testnet3"), ("signet", "signet"), ("testnet4", "testnet4")}:
             util.write_config(conf_file, n=0, chain=chain_name, extra_config='acceptstalefeeestimates=1\n')
-            self.nodes[0].assert_start_raises_init_error(expected_msg=f'Error: acceptstalefeeestimates is not supported on {chain} chain.')
+            # Mainnet is rejected before reaching fee-estimator initialization.
+            expected = (
+                'Error: Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.'
+                if chain == "main" else f'Error: acceptstalefeeestimates is not supported on {chain} chain.'
+            )
+            self.nodes[0].assert_start_raises_init_error(expected_msg=expected)
         util.write_config(conf_file, n=0, chain="regtest")  # Reset to regtest
 
     def test_testnet3_deprecation_msg(self):

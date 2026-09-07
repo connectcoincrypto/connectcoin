@@ -8,7 +8,17 @@
 #include <test/util/setup_common.h>
 #include <uint256.h>
 #include <util/byte_units.h>
+#include <util/fs.h>
 #include <util/string.h>
+
+#ifdef WIN32
+#include <windows.h>
+#include <leveldb/env.h>
+#include <chrono>
+#include <string>
+#include <thread>
+#include <utility>
+#endif
 
 #include <memory>
 #include <ranges>
@@ -18,6 +28,60 @@
 using util::ToString;
 
 BOOST_FIXTURE_TEST_SUITE(dbwrapper_tests, BasicTestingSetup)
+
+#ifdef WIN32
+BOOST_AUTO_TEST_CASE(dbwrapper_windows_replace_locked_file)
+{
+    auto* env{leveldb::Env::Default()};
+    const fs::path source{m_args.GetDataDirBase() / "replacement.dbtmp"};
+    const fs::path destination{m_args.GetDataDirBase() / "CURRENT"};
+    const auto source_name{fs::PathToString(source)};
+    const auto destination_name{fs::PathToString(destination)};
+    const auto close_handle = [](void* handle) { ::CloseHandle(handle); };
+
+    for (bool release_lock : {false, true}) {
+        BOOST_REQUIRE(leveldb::WriteStringToFile(env, "new manifest", source_name).ok());
+        BOOST_REQUIRE(leveldb::WriteStringToFile(env, "old manifest", destination_name).ok());
+        // Simulate a reader which allows reads/writes but temporarily prevents
+        // deleting/replacing CURRENT. No actual database lock is bypassed.
+        auto handle{::CreateFileW(destination.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                  nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr)};
+        BOOST_REQUIRE(handle != INVALID_HANDLE_VALUE);
+        std::unique_ptr<void, decltype(close_handle)> held_file{handle, close_handle};
+        const BOOL replaced{::ReplaceFileW(destination.c_str(), source.c_str(), nullptr,
+                                          REPLACEFILE_IGNORE_MERGE_ERRORS, nullptr, nullptr)};
+        const DWORD error{::GetLastError()};
+        BOOST_REQUIRE(!replaced);
+        BOOST_REQUIRE(error == ERROR_UNABLE_TO_REMOVE_REPLACED || error == ERROR_SHARING_VIOLATION);
+
+        leveldb::Status result;
+        if (release_lock) {
+            std::jthread release{[file = std::move(held_file)]() mutable {
+                std::this_thread::sleep_for(std::chrono::milliseconds{100});
+                file.reset();
+            }};
+            result = env->RenameFile(source_name, destination_name);
+        } else {
+            result = env->RenameFile(source_name, destination_name);
+            held_file.reset();
+        }
+        BOOST_CHECK_EQUAL(result.ok(), release_lock);
+        std::string contents;
+        BOOST_REQUIRE(leveldb::ReadFileToString(env, destination_name, &contents).ok());
+        BOOST_CHECK_EQUAL(contents, release_lock ? "new manifest" : "old manifest");
+        BOOST_CHECK_EQUAL(env->FileExists(source_name), !release_lock);
+        if (!release_lock) {
+            BOOST_REQUIRE(leveldb::ReadFileToString(env, source_name, &contents).ok());
+            BOOST_CHECK_EQUAL(contents, "new manifest");
+        }
+    }
+    // A missing source must still fail without disturbing the destination.
+    BOOST_CHECK(!env->RenameFile(source_name, destination_name).ok());
+    std::string contents;
+    BOOST_REQUIRE(leveldb::ReadFileToString(env, destination_name, &contents).ok());
+    BOOST_CHECK_EQUAL(contents, "new manifest");
+}
+#endif
 
 BOOST_AUTO_TEST_CASE(dbwrapper)
 {
