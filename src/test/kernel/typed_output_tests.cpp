@@ -9,6 +9,8 @@
 #include <primitives/transaction.h>
 #include <script/interpreter.h>
 #include <streams.h>
+#include <util/fs.h>
+#include <util/string.h>
 
 // Boost.Test's SIGSTKSZ alternate stack can be smaller than Linux requires on musl.
 #define BOOST_TEST_DISABLE_ALT_STACK
@@ -18,7 +20,6 @@
 #include <array>
 #include <chrono>
 #include <cstddef>
-#include <filesystem>
 #include <span>
 #include <string>
 #include <vector>
@@ -44,15 +45,15 @@ BOOST_AUTO_TEST_CASE(kernel_rejects_unlaunched_mainnet)
 {
     // Both implicit defaults and an explicitly selected mainnet must fail
     // before creating any chainstate database, also when wiping is requested.
-    const auto path{std::filesystem::temp_directory_path() /
-        ("connectcoin-unlaunched-kernel-" + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()))};
-    BOOST_REQUIRE(!std::filesystem::exists(path));
+    const fs::path path{fs::path{fs::temp_directory_path()} / fs::PathFromString(
+        "connectcoin-unlaunched-kernel-" + util::ToString(std::chrono::steady_clock::now().time_since_epoch().count()))};
+    BOOST_REQUIRE(!fs::exists(path));
     for (bool explicit_mainnet : {false, true}) {
         cck::ContextOptions context_options;
         cck::ChainParams params{cck::ChainType::MAINNET};
         if (explicit_mainnet) context_options.SetChainParams(params);
         cck::Context context{context_options};
-        cck::ChainstateManagerOptions options{context, path.string(), (path / "blocks").string()};
+        cck::ChainstateManagerOptions options{context, fs::PathToString(path), fs::PathToString(path / "blocks")};
         options.SetWorkerThreads(0);
         BOOST_REQUIRE(options.SetWipeDbs(true, true));
         auto* chainman{cck_chainstate_manager_create(options.get())};
@@ -60,12 +61,12 @@ BOOST_AUTO_TEST_CASE(kernel_rejects_unlaunched_mainnet)
         if (chainman) cck_chainstate_manager_destroy(chainman);
         // The options constructor creates the directories even before a
         // chainstate is requested. No block index or coin database may appear.
-        BOOST_CHECK(std::filesystem::is_empty(path / "blocks"));
-        BOOST_CHECK(!std::filesystem::exists(path / "chainstate"));
+        BOOST_CHECK(fs::is_empty(path / "blocks"));
+        BOOST_CHECK(!fs::exists(path / "chainstate"));
     }
     // Nonrecursive removal deliberately fails if a database was created.
-    BOOST_CHECK(std::filesystem::remove(path / "blocks"));
-    BOOST_CHECK(std::filesystem::remove(path));
+    BOOST_CHECK(fs::remove(path / "blocks"));
+    BOOST_CHECK(fs::remove(path));
 }
 
 BOOST_AUTO_TEST_CASE(kernel_type1_verification_matches_consensus)

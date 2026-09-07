@@ -6,6 +6,7 @@
 #include <clientversion.h>
 #include <coins.h>
 #include <consensus/amount.h>
+#include <consensus/consensus.h>
 #include <streams.h>
 #include <test/util/coins.h>
 #include <test/util/common.h>
@@ -128,6 +129,8 @@ void SimulationTest(CCoinsView* base, bool fake_best_block)
     bool missed_an_entry = false;
     bool uncached_an_entry = false;
     bool flushed_without_erase = false;
+    bool accessed_missing_by_txid = false;
+    bool accessed_found_by_txid = false;
 
     // A simple map to track what we expect the cache stack to represent.
     std::map<COutPoint, Coin> result;
@@ -157,9 +160,15 @@ void SimulationTest(CCoinsView* base, bool fake_best_block)
 
             bool result_havecoin = test_havecoin_before ? stack.back()->HaveCoin(COutPoint(txid, 0)) : false;
 
-            // Infrequently, test usage of AccessByTxid instead of AccessCoin - the
-            // former just delegates to the latter and returns the first unspent in a txn.
-            const Coin& entry = (m_rng.randrange(500) == 0) ?
+            // Exercise both hits and a full miss through this cache stack. A
+            // miss probes every possible output in a 50 MB block; repeating
+            // that identical scan dominates sanitizer runs without adding new
+            // cache operations. Keep all 40,000 randomized cache mutations.
+            const bool access_by_txid{m_rng.randrange(500) == 0 && (!coin.IsSpent() || !accessed_missing_by_txid)};
+            if (access_by_txid) {
+                (coin.IsSpent() ? accessed_missing_by_txid : accessed_found_by_txid) = true;
+            }
+            const Coin& entry = access_by_txid ?
                 AccessByTxid(*stack.back(), txid) : stack.back()->AccessCoin(COutPoint(txid, 0));
             BOOST_CHECK_EQUAL(coin, entry);
 
@@ -275,6 +284,8 @@ void SimulationTest(CCoinsView* base, bool fake_best_block)
     BOOST_CHECK(missed_an_entry);
     BOOST_CHECK(uncached_an_entry);
     BOOST_CHECK(flushed_without_erase);
+    BOOST_CHECK(accessed_missing_by_txid);
+    BOOST_CHECK(accessed_found_by_txid);
 }
 }; // struct CacheTest
 
@@ -300,6 +311,39 @@ BOOST_FIXTURE_TEST_CASE(coins_cache_dbbase_simulation_test, CacheTest)
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(coins_tests, BasicTestingSetup)
+
+BOOST_AUTO_TEST_CASE(access_by_txid_scan_boundaries)
+{
+    // Independently verify early hits, gaps, the last permitted output and a
+    // coin just beyond the bound. Counting avoids a database lookup per probe.
+    class CountingView final : public CoinsViewEmpty {
+    public:
+        const Txid txid{Txid::FromUint256(uint256::ONE)};
+        const Coin coin{CTxOut{1, CScript{} << OP_TRUE}, 1, false};
+        const uint32_t output_index;
+        mutable uint64_t probes{0};
+        mutable bool sequential{true};
+
+        explicit CountingView(uint32_t index) : output_index{index} {}
+        std::optional<Coin> GetCoin(const COutPoint& outpoint) const override
+        {
+            sequential &= outpoint.hash == txid && outpoint.n == probes;
+            ++probes;
+            if (outpoint.n == output_index) return coin;
+            return std::nullopt;
+        }
+    };
+    const uint32_t max_outputs{static_cast<uint32_t>(MAX_BLOCK_WEIGHT / (WITNESS_SCALE_FACTOR * ::GetSerializeSize(CTxOut{})))};
+    for (const uint32_t index : {0U, 3U, max_outputs - 1, max_outputs}) {
+        CountingView base{index};
+        CCoinsViewCache cache{&base};
+        const Coin& found{AccessByTxid(cache, base.txid)};
+        BOOST_CHECK_EQUAL(found.IsSpent(), index == max_outputs);
+        BOOST_CHECK_EQUAL(base.probes, index == max_outputs ? max_outputs : index + 1);
+        BOOST_CHECK(base.sequential);
+        if (index != max_outputs) BOOST_CHECK(found == base.coin);
+    }
+}
 
 BOOST_AUTO_TEST_CASE(apply_txinundo_restores_height_zero_coinbase)
 {

@@ -32,9 +32,9 @@ BOOST_FIXTURE_TEST_SUITE(dbwrapper_tests, BasicTestingSetup)
 #ifdef WIN32
 BOOST_AUTO_TEST_CASE(dbwrapper_windows_replace_locked_file)
 {
-    auto* env{leveldb::Env::Default()};
-    const fs::path source{m_args.GetDataDirBase() / "replacement.dbtmp"};
-    const fs::path destination{m_args.GetDataDirBase() / "CURRENT"};
+    auto* env{dbwrapper_private::GetDefaultEnv()};
+    const fs::path source{m_args.GetDataDirBase() / fs::path{L"replacement-\u03bc.dbtmp"}};
+    const fs::path destination{m_args.GetDataDirBase() / fs::path{L"CURRENT-\u03bc"}};
     const auto source_name{fs::PathToString(source)};
     const auto destination_name{fs::PathToString(destination)};
     const auto close_handle = [](void* handle) { ::CloseHandle(handle); };
@@ -80,6 +80,36 @@ BOOST_AUTO_TEST_CASE(dbwrapper_windows_replace_locked_file)
     std::string contents;
     BOOST_REQUIRE(leveldb::ReadFileToString(env, destination_name, &contents).ok());
     BOOST_CHECK_EQUAL(contents, "new manifest");
+}
+
+BOOST_AUTO_TEST_CASE(dbwrapper_windows_reopen_locked_current)
+{
+    const auto path{m_args.GetDataDirBase() / "locked-current-db"};
+    const DBParams params{.path = path, .cache_bytes = 1_MiB};
+    {
+        CDBWrapper db{params};
+        db.Write(uint8_t{1}, uint32_t{42}, /*fSync=*/true);
+    }
+    const auto close_handle = [](void* handle) { ::CloseHandle(handle); };
+    for (bool probe : {false, true}) {
+        auto handle{::CreateFileW((path / "CURRENT").c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                  nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr)};
+        BOOST_REQUIRE(handle != INVALID_HANDLE_VALUE);
+        std::unique_ptr<void, decltype(close_handle)> held_file{handle, close_handle};
+        std::jthread release{[file = std::move(held_file)]() mutable {
+            std::this_thread::sleep_for(std::chrono::milliseconds{100});
+            file.reset();
+        }};
+        // Both ordinary database opens and prefix probes must use the wrapper.
+        if (probe) {
+            BOOST_CHECK(CDBWrapper::HasKeyStartingWith(path, 1));
+        } else {
+            CDBWrapper db{params};
+            uint32_t value{0};
+            BOOST_REQUIRE(db.Read(uint8_t{1}, value));
+            BOOST_CHECK_EQUAL(value, 42U);
+        }
+    }
 }
 #endif
 

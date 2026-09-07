@@ -25,6 +25,11 @@
 #include <util/obfuscation.h>
 #include <util/strencodings.h>
 
+#ifdef WIN32
+#include <util/syserror.h>
+#include <windows.h>
+#endif
+
 #include <algorithm>
 #include <cassert>
 #include <cstdarg>
@@ -36,9 +41,65 @@
 
 static auto CharCast(const std::byte* data) { return reinterpret_cast<const char*>(data); }
 
+#ifdef WIN32
+namespace {
+/** Keep local filesystem safeguards outside the unmodified LevelDB subtree. */
+class WindowsDBEnv final : public leveldb::EnvWrapper
+{
+public:
+    WindowsDBEnv() : EnvWrapper{leveldb::Env::Default()} {}
+
+    leveldb::Status RenameFile(const std::string& from, const std::string& to) override
+    {
+        const auto source{fs::PathFromString(from)};
+        const auto destination{fs::PathFromString(to)};
+        // Match LevelDB's move-then-replace behavior, including ACL handling.
+        if (::MoveFileW(source.c_str(), destination.c_str())) return leveldb::Status::OK();
+        const DWORD move_error{::GetLastError()};
+        DWORD error;
+        for (int retry{0};; ++retry) {
+            if (::ReplaceFileW(destination.c_str(), source.c_str(), nullptr,
+                               REPLACEFILE_IGNORE_MERGE_ERRORS, nullptr, nullptr)) {
+                return leveldb::Status::OK();
+            }
+            error = ::GetLastError();
+            // External readers can briefly prevent replacing CURRENT. Retry
+            // only errors that leave both names intact. Never delete the
+            // destination or retry 1176/1177, which can leave a partial rename.
+            const bool transient{error == ERROR_UNABLE_TO_REMOVE_REPLACED ||
+                                 error == ERROR_SHARING_VIOLATION || error == ERROR_LOCK_VIOLATION};
+            if (!transient || retry == 50) break;
+            ::Sleep(10);
+        }
+        // If ReplaceFile found no destination/source, preserve MoveFile's more
+        // informative failure, as the upstream Windows environment does.
+        if (error == ERROR_FILE_NOT_FOUND || error == ERROR_PATH_NOT_FOUND) error = move_error;
+        const auto context{from + " -> " + to};
+        const auto message{Win32ErrorString(error)};
+        if (error == ERROR_FILE_NOT_FOUND || error == ERROR_PATH_NOT_FOUND) {
+            return leveldb::Status::NotFound(context, message);
+        }
+        return leveldb::Status::IOError(context, message);
+    }
+};
+} // namespace
+#endif
+
+leveldb::Env* dbwrapper_private::GetDefaultEnv()
+{
+#ifdef WIN32
+    static WindowsDBEnv env;
+    return &env;
+#else
+    return leveldb::Env::Default();
+#endif
+}
+
 bool DestroyDB(const std::string& path_str)
 {
-    return leveldb::DestroyDB(path_str, {}).ok();
+    leveldb::Options options;
+    options.env = dbwrapper_private::GetDefaultEnv();
+    return leveldb::DestroyDB(path_str, options).ok();
 }
 
 /** Handle database error by throwing dbwrapper_error exception.
@@ -139,6 +200,7 @@ static void SetMaxOpenFiles(leveldb::Options *options) {
 static leveldb::Options GetOptions(size_t nCacheSize, bool bloom_filter)
 {
     leveldb::Options options;
+    options.env = dbwrapper_private::GetDefaultEnv();
     options.block_cache = leveldb::NewLRUCache(nCacheSize / 2);
     options.write_buffer_size = nCacheSize / 4; // up to two write buffers may be held in memory simultaneously
     options.filter_policy = bloom_filter ? leveldb::NewBloomFilterPolicy(10) : nullptr;
@@ -159,6 +221,7 @@ bool CDBWrapper::HasKeyStartingWith(const fs::path& path, uint8_t prefix)
 
     CBitcoinLevelDBLogger logger;
     leveldb::Options options;
+    options.env = dbwrapper_private::GetDefaultEnv();
     options.paranoid_checks = true;
     // Avoid creating or rotating LevelDB's LOG files during this probe.
     options.info_log = &logger;

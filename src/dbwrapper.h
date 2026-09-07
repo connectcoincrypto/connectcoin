@@ -74,6 +74,11 @@ class CDBWrapper;
  */
 namespace dbwrapper_private {
 
+/** Process-lifetime disk environment, including platform-specific safeguards.
+ * The caller must not delete it. Exposed here for database regression tests.
+ */
+leveldb::Env* GetDefaultEnv();
+
 /** Work around circular dependency, as well as for testing in dbwrapper_tests.
  * Database obfuscation should be considered an implementation detail of the
  * specific database.
