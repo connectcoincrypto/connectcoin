@@ -112,7 +112,9 @@ class RejectLowDifficultyHeadersTest(BitcoinTestFramework):
         self.generate(self.nodes[0], NODE2_BLOCKS_REQUIRED-self.nodes[0].getblockcount(), sync_fun=self.no_op)
 
         self.log.info("Verify that node2 and node3 will sync the chain when it gets long enough")
-        self.sync_blocks()
+        # Real RandomX LIGHT verifies these headers during both presync and
+        # redownload. Allow the same budget as the multi-batch reorg below.
+        self.sync_blocks(timeout=300)
 
     def test_peerinfo_includes_headers_presync_height(self):
         self.log.info("Test that getpeerinfo() includes headers presync height")
@@ -157,8 +159,13 @@ class RejectLowDifficultyHeadersTest(BitcoinTestFramework):
         # received headers during a sync are fully between locator entries.
         BLOCKS_TO_MINE = 4110
 
-        self.generate(self.nodes[0], BLOCKS_TO_MINE, sync_fun=self.no_op)
-        self.generate(self.nodes[1], BLOCKS_TO_MINE+2, sync_fun=self.no_op)
+        # Bound individual RPC work with real RandomX LIGHT while preserving
+        # both disconnected forks and their full lengths.
+        for node, count in [(self.nodes[0], BLOCKS_TO_MINE), (self.nodes[1], BLOCKS_TO_MINE + 2)]:
+            initial_height = node.getblockcount()
+            for offset in range(0, count, 500):
+                self.generate(node, min(500, count - offset), sync_fun=self.no_op)
+            assert_equal(node.getblockcount(), initial_height + count)
 
         self.reconnect_all()
 
