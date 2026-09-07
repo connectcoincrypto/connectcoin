@@ -844,6 +844,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">అసలు సందేశం:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect బహుమతులు సృష్టించు</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -2397,6 +2405,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Amount</source>
         <translation type="unfinished">మొత్తం</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C డొమైన్</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -2415,6 +2427,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">( ఉల్లాకు లేదు )</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>వినియోగదారు పేర్కొన్న లావాదేవీ ఉద్దేశం/ప్రయోజనం లేదా P2C డొమైన్.</translation>
     </message>
     </context>
 <context>
@@ -2463,6 +2483,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">ఎగుమతి విఫలమయ్యింది</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>వెతకడానికి చిరునామా, P2C డొమైన్, లావాదేవీ ఐడీ లేదా లేబుల్ నమోదు చేయండి</translation>
     </message>
     </context>
 <context>
@@ -2661,6 +2685,312 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">సెట్టింగుల ఫైల్ వ్రాయబడదు</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>నిర్ధారించబడిన బహుమతులను స్వయంచాలకంగా కనుగొని, TLS ఆధారాలను తయారు చేసి, బహుమతులను ఈ వాలెట్‌కు పంపుతుంది. రుసుములు ప్రతి బహుమతి నుంచే తీసివేయబడతాయి. కీ పూల్‌లో స్వీకరణ చిరునామాలు ఉన్నంతవరకు ప్రైవేట్ కీలను అన్‌లాక్ చేయాల్సిన అవసరం లేదు. మీరు స్పష్టంగా ప్రారంభించే వరకు HTTPS నిలిపివేయబడి ఉంటుంది.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>సెకనుకు కనెక్షన్లు (ఈ వాలెట్):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 HTTPS‌ను నిలిపివేస్తుంది. వేగ పరిమితిని తొలగించడానికి కింద అపరిమిత వేగాన్ని ఎంచుకోండి.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>అపరిమిత వేగం (స్పష్టమైన సమ్మతి)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>ఏకకాల కనెక్షన్లు:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>ఐచ్ఛికం: example.com, another.example (ఖాళీ = అన్ని డొమైన్లు)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>అనుమతించిన డొమైన్లు:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>వర్తింపజేయి / స్వయంచాలక క్లెయిమ్ ప్రారంభించు</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>HTTPS ఆపు (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>నిలిపివేయబడింది</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>స్వయంచాలక P2C క్లెయిమ్ ప్రారంభించాలా?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>ఇది పబ్లిక్ డొమైన్లతో నేరుగా HTTPS కనెక్షన్లు ఏర్పాటు చేసి, విజయవంతమైన క్లెయిమ్‌లను స్వయంచాలకంగా సమర్పిస్తుంది. ఆ సర్వర్లకు మీ IP చిరునామా కనిపిస్తుంది. ప్రాక్సీ అమరికలను దాటవేయదు. రుసుములు బహుమతుల నుంచి తీసివేయబడతాయి.
+
+%1
+
+కొనసాగించాలా?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>మీరు సెకనుకు అపరిమిత కనెక్షన్లను ఎంచుకున్నారు.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>వేగం: ఈ వాలెట్‌కు సెకనుకు %1 కనెక్షన్లు.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>అమరికలు వర్తింపజేస్తోంది…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>ప్రారంభిస్తోంది</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>డొమైన్ చిరునామాను కనుగొంటోంది</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>డొమైన్ చిరునామాను కనుగొనడానికి మళ్లీ ప్రయత్నిస్తోంది</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>ఆధారాలను వెతుకుతోంది</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>కనెక్షన్లను మళ్లీ ప్రయత్నిస్తోంది</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>ధృవపత్రం తిరస్కరించబడింది</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>లోపం కారణంగా ఆగింది</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>బహుమతి ఇప్పటికే క్లెయిమ్ చేయబడింది</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>నిర్ధారించబడిన బహుమతులను వెతుకుతోంది</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>బహుమతుల కోసం వేచి ఉంది</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>అర్హమైన బహుమతుల కోసం వేచి ఉంది</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>బహుమతి దాటవేయబడింది</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>సమర్పించబడింది</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>భద్రపరచబడింది; వాలెట్ చరిత్రను చూడండి</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>అపరిమితం</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>నిలిపివేయబడింది (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>స్థితి: %1
+క్రియాశీల వేగం: %2 | ఏకకాల కనెక్షన్లు: %3
+డొమైన్: %4
+ప్రయత్నాలు: %5 | సమర్పించినవి: %6
+చివరి క్లెయిమ్: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>బహుమతులు సృష్టించు</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>స్వయంచాలక క్లెయిమ్‌లు</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect బహుమతులు సృష్టించు</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>చెల్లుబాటు అయ్యే TLS కనెక్షన్ ఆధారాలకు వేర్వేరు బహుమతులను నిధులతో సమకూర్చండి. అవసరాలను తీర్చిన ఎవరైనా వాటిని క్లెయిమ్ చేయవచ్చు. ఈ పేజీ HTTPS కనెక్షన్లు ఏర్పాటు చేయదు.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>చిన్న అక్షరాల ASCII డొమైన్ (అంతర్జాతీయ డొమైన్లకు punycode వాడండి), URL స్కీమ్, పాత్, పోర్ట్ లేదా చివరి చుక్క లేకుండా.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;డొమైన్:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>ప్రతి &amp;అవుట్‌పుట్‌కు బహుమతి:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>అవుట్‌పుట్‌ల &amp;సంఖ్య:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>మొదటి సున్నా బిట్లు</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>గరిష్ఠ హ్యాష్</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>కష్టతర స్థాయి &amp;ఆకృతి:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;సున్నా బిట్లు:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>కచ్చితంగా 64 హెక్సాడెసిమల్ అక్షరాలు</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>గరిష్ఠ &amp;హ్యాష్:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>వెర్షన్ %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>విశ్వసనీయ రూట్ &amp;ధృవపత్రాలు:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>అనుకూల రుసుము రేటు వాడు</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>ప్రతి 1,000 వర్చువల్ బైట్లకు రుసుము:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>P2C &amp;సమీక్షించు…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>ఆమోదానికి ముందు రుసుములు లెక్కించబడతాయి. పెద్ద అభ్యర్థనలు అనేక లావాదేవీలుగా విభజించబడవచ్చు.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>P2C సృష్టించడానికి ప్రస్తుతం స్థానిక ప్రైవేట్ కీలు గల వాలెట్ అవసరం. పరిశీలనకు మాత్రమే ఉన్న వాలెట్లు, బాహ్య సంతకదారు గల వాలెట్లు ఈ పేజీలో మద్దతు పొందవు.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>P2C సృష్టించు</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>చివరి చుక్క, స్కీమ్, పాత్ లేదా పోర్ట్ లేకుండా ప్రామాణిక చిన్న అక్షరాల ASCII డొమైన్ నమోదు చేయండి.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>మొత్తం ద్రవ్య పరిమితిని మించని ధనాత్మక బహుమతిని నమోదు చేయండి.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>గరిష్ఠ హ్యాష్‌లో కచ్చితంగా 64 హెక్సాడెసిమల్ అక్షరాలు ఉండాలి.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>ప్రతి 1,000 వర్చువల్ బైట్లకు ధనాత్మక రుసుము రేటు నమోదు చేయండి.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C లావాదేవీలను సిద్ధం చేయలేకపోయింది: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>మొత్తం బహుమతులు మరియు రుసుములు ద్రవ్య పరిమితిని మించాయి.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>వాలెట్: %1&lt;br /&gt;డొమైన్: %2&lt;br /&gt;అవుట్‌పుట్‌లు: %3&lt;br /&gt;ప్రతి అవుట్‌పుట్‌కు బహుమతి: %4&lt;br /&gt;మొత్తం బహుమతులు: %5&lt;br /&gt;లావాదేవీలు: %6&lt;br /&gt;మొత్తం రుసుములు: %7&lt;br /&gt;&lt;b&gt;మొత్తం కోత: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>గరిష్ఠ వర్క్ హ్యాష్: %1
+రూట్ ధృవపత్రాల వెర్షన్: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>అవసరమైన మొదటి సున్నా బిట్లు: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>గరిష్ఠ వర్క్ హ్యాష్: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>P2C సృష్టిని నిర్ధారించు</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>రూట్ ధృవపత్రాల వెర్షన్: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>చెల్లుబాటు అయ్యే కనెక్షన్ ఆధారం సమర్పించిన ఎవరైనా ఈ బహుమతులను క్లెయిమ్ చేయవచ్చు. సాధారణ వాలెట్ సంతకంతో వాటిని తిరిగి పొందలేరు. పంపే ముందు అన్ని లావాదేవీలను సమీక్షించండి.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>P2C పంపు</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C లావాదేవీలు వాలెట్‌కు సమర్పించబడ్డాయి (%1). లావాదేవీ ఐడీలు:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>రద్దు చేయబడింది. P2C లావాదేవీలు ఏవీ పంపబడలేదు.</translation>
     </message>
 </context>
 </TS>

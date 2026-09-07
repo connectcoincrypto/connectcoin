@@ -639,6 +639,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation type="unfinished">Veskið er &lt;b&gt;dulkóðað&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Búa til pay-to-connect-umbunir</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -1121,6 +1129,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Amount</source>
         <translation type="unfinished">Upphæð</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C-lén</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -1135,6 +1147,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(engin merking)</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Tilgangur færslu sem notandi skilgreinir, eða P2C-lénið.</translation>
     </message>
     </context>
 <context>
@@ -1167,6 +1187,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Exporting Successful</source>
         <translation type="unfinished">Útflutningur tókst</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Sláðu inn vistfang, P2C-lén, færsluauðkenni eða merkingu til að leita</translation>
     </message>
     </context>
 <context>
@@ -1277,4 +1301,310 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Villa við að hlaða %s: Ytra undirritaraveski verið hlaðið án þess að utanaðkomandi undirritarastuðningur hafi verið settur saman</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Finndu staðfestar umbunir sjálfkrafa, búðu til TLS-sannanir og sendu umbunir í þetta veski. Gjöld eru aðeins tekin af hverri umbun. Ekki þarf að aflæsa einkalyklum meðan móttökuvistföng eru enn í lyklasafninu. HTTPS er óvirkt þar til þú ræsir það sérstaklega.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Tengingar á sekúndu (þetta veski):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 slekkur á HTTPS. Veldu ótakmarkaðan hraða hér að neðan til að fjarlægja hraðatakmörkun.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Ótakmarkaður hraði (sérstakt samþykki)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Samtímis tengingar:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Valfrjálst: example.com, another.example (tómt = öll lén)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Leyfð lén:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Virkja / hefja sjálfvirka innlausn</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Stöðva HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Óvirkt</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Virkja sjálfvirka P2C-innlausn?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Þetta opnar beinar HTTPS-tengingar við opinber lén og sendir sjálfkrafa inn heppnaðar innlausnir. Þessir netþjónar sjá IP-vistfangið þitt. Ekki er farið fram hjá stillingum milliþjóns. Gjöld eru dregin frá umbunum.
+
+%1
+
+Halda áfram?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Þú valdir ÓTAKMARKAÐAN fjölda tenginga á sekúndu.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Hraði: %1 tengingar á sekúndu fyrir þetta veski.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Virkja stillingar…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Ræsir</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Flettir upp léni</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Reynir aftur að fletta upp léni</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Leitar að sönnunum</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Reynir tengingar aftur</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Vottorði hafnað</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Stöðvað vegna villu</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Umbunin hefur þegar verið innleyst</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Leitar í staðfestum umbunum</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Bíður eftir umbunum</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Bíður eftir gjaldgengum umbunum</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Umbun sleppt</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Sent inn</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Vistað; skoðaðu feril veskisins</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Ótakmarkað</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Óvirkt (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Staða: %1
+Virkur hraði: %2 | Samtímis tengingar: %3
+Lén: %4
+Tilraunir: %5 | Innsent: %6
+Síðasta innlausn: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Búa til umbunir</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Sjálfvirkar innlausnir</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Búa til pay-to-connect-umbunir</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Fjármagnaðu sjálfstæðar umbunir fyrir gildar TLS-tengisannanir. Allir sem uppfylla kröfurnar geta innleyst þær. Þessi síða opnar ekki HTTPS-tengingar.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Lén með lágstöfum í ASCII (notaðu punycode fyrir alþjóðleg lén), án URL-sniðs, slóðar, gáttar eða punkts í lokin.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Lén:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Umbun fyrir hvert út&amp;tak:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Fjöldi úttaka:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Núllbitar fremst</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Hámarkshakkgildi</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Snið erfiðleikastigs:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Núllbitar:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Nákvæmlega 64 sextándakerfisstafir</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Hámarks&amp;hakkgildi:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Útgáfa %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Traust rótar&amp;vottorð:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Nota sérsniðinn gjaldtaxta</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Gjald á hver 1.000 sýndarbæti:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Yfirfara P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Gjöld eru reiknuð áður en samþykki er gefið. Stórum beiðnum má skipta í margar færslur.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Til að búa til P2C þarf nú veski með staðbundnum einkalyklum. Veski sem aðeins fylgjast með og veski með ytri undirritara eru ekki studd á þessari síðu.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Búa til P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Sláðu inn staðlað lén með lágstöfum í ASCII án punkts í lokin, sniðs, slóðar eða gáttar.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Sláðu inn jákvæða umbun sem fer ekki samtals yfir peningamörkin.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Hámarkshakkgildið verður að innihalda nákvæmlega 64 sextándakerfisstafi.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Sláðu inn jákvæðan gjaldtaxta á hver 1.000 sýndarbæti.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Tókst ekki að undirbúa P2C-færslur: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Heildarumbun ásamt gjöldum fer yfir peningamörkin.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Veski: %1&lt;br /&gt;Lén: %2&lt;br /&gt;Úttök: %3&lt;br /&gt;Umbun fyrir hvert úttak: %4&lt;br /&gt;Heildarumbunir: %5&lt;br /&gt;Færslur: %6&lt;br /&gt;Heildargjöld: %7&lt;br /&gt;&lt;b&gt;Heildarúttekt: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Hámarks vinnuhakkgildi: %1
+Útgáfa rótarvottorða: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Nauðsynlegir núllbitar fremst: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Hámarks vinnuhakkgildi: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Staðfesta stofnun P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Útgáfa rótarvottorða: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Allir sem leggja fram gilda tengisönnun geta innleyst þessar umbunir. Þú getur ekki endurheimt þær með venjulegri undirskrift veskis. Yfirfarðu allar færslur áður en þær eru sendar.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Senda P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C-færslur sendar í veskið (%1). Auðkenni færslna:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Hætt við. Engar P2C-færslur voru sendar.</translation>
+    </message>
+</context>
 </TS>

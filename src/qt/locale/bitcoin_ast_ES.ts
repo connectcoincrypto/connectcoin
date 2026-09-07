@@ -729,6 +729,14 @@ La firma ye possible solamentu con direcciones del tipu 'legacy'.</translation>
         <translation type="unfinished">Cantidá: %1
 </translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Crear recompenses pay-to-connect</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -891,6 +899,10 @@ La firma ye possible solamentu con direcciones del tipu 'legacy'.</translation>
             <numerusform />
         </translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Dominiu P2C</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -901,6 +913,14 @@ La firma ye possible solamentu con direcciones del tipu 'legacy'.</translation>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(sin etiqueta)</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Intención/propósitu de la transaición definíu pol usuariu, o'l dominiu P2C.</translation>
     </message>
     </context>
 <context>
@@ -921,6 +941,10 @@ La firma ye possible solamentu con direcciones del tipu 'legacy'.</translation>
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">Recibiendo direcciones</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Introduz una direición, dominiu P2C, identificador de transaición o etiqueta pa buscar</translation>
     </message>
     </context>
 <context>
@@ -946,4 +970,310 @@ La firma ye possible solamentu con direcciones del tipu 'legacy'.</translation>
         <translation type="unfinished">Datos de la cartera</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Atopa automáticamente recompenses confirmaes, xenera pruebes TLS y unvia les recompenses a esta cartera. Les comisiones descuéntense namás de cada recompensa. Nun fai falta desbloquiar les claves privaes mentanto queden direiciones de recepción na reserva de claves. HTTPS ta desactiváu hasta que lu entames esplícitamente.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Conexones per segundu (esta cartera):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 desactiva HTTPS. Pa quitar la llende de velocidá, escueyi la velocidá illimitada embaxo.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Velocidá illimitada (consentimientu esplícitu)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Conexones simultánees:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Opcional: example.com, another.example (baleru = tolos dominios)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Dominios permitíos:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Aplicar / entamar reclamaciones automátiques</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Parar HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Desactiváu</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>¿Activar les reclamaciones automátiques P2C?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Esto establez conexones HTTPS direutes con dominios públicos y unvia automáticamente les reclamaciones esitoses. La to direición IP ye visible pa esos sirvidores. Nun se salta la configuración del proxy. Les comisiones descuéntense de les recompenses.
+
+%1
+
+¿Siguir?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Escoyisti conexones per segundu ILLIMITAES.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Velocidá: %1 conexones per segundu pa esta cartera.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Aplicando la configuración…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Entamando</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Resolviendo'l dominiu</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Reintentando la resolución del dominiu</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Buscando pruebes</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Reintentando les conexones</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Certificáu refugáu</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Paró por un fallu</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>La recompensa yá se reclamó</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Buscando recompenses confirmaes</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Esperando recompenses</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Esperando recompenses aptes</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Recompensa omitida</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Unviáu</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Guardáu; comprueba l'historial de la cartera</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Illimitada</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Desactiváu (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Estáu: %1
+Velocidá activa: %2 | Conexones simultánees: %3
+Dominiu: %4
+Intentos: %5 | Unviaes: %6
+Última reclamación: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Crear recompenses</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Reclamaciones automátiques</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Crear recompenses pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Financia recompenses independientes por pruebes válides de conexón TLS. Cualesquier persona que cumpla los requisitos pue reclamales. Esta páxina nun establez conexones HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Dominiu ASCII en minúscules (usa punycode pa dominios internacionales), ensin esquema URL, ruta, puertu nin puntu final.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Dominiu:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Recompensa per &amp;salida:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Númberu de salides:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Bits cero iniciales</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Hash máximu</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Formatu de dificultá:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>Bits &amp;cero:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Esautamente 64 caráuteres hexadecimales</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>&amp;Hash máximu:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Versión %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>&amp;Certificaos raíz de confianza:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Usar una tarifa de comisión personalizada</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Comisión per 1.000 bytes virtuales:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Revisar P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Les comisiones calcúlense enantes de l'aprobación. Les solicitúes grandes puen dividise en delles transaiciones.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>La creación de P2C precisa anguaño una cartera con claves privaes llocales. Esta páxina nun almite carteres namás de siguimientu nin carteres con firmante esternu.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Crear P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Introduz un dominiu ASCII canónicu en minúscules ensin puntu final, esquema, ruta nin puertu.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Introduz una recompensa positiva que'l so total nun supere la llende monetaria.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>El hash máximu ha contener esautamente 64 caráuteres hexadecimales.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Introduz una tarifa de comisión positiva per 1.000 bytes virtuales.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Nun se pudieron preparar les transaiciones P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>El total de les recompenses más les comisiones supera la llende monetaria.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Cartera: %1&lt;br /&gt;Dominiu: %2&lt;br /&gt;Salides: %3&lt;br /&gt;Recompensa per salida: %4&lt;br /&gt;Total de recompenses: %5&lt;br /&gt;Transaiciones: %6&lt;br /&gt;Total de comisiones: %7&lt;br /&gt;&lt;b&gt;Cargu total: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Hash de trabayu máximu: %1
+Versión de los certificaos raíz: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Bits cero iniciales riquíos: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Hash de trabayu máximu: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Confirmar la creación de P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Versión de los certificaos raíz: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Cualesquier persona que presente una prueba de conexón válida pue reclamar estes recompenses. Nun puedes recuperales con una firma normal de la cartera. Revisa toles transaiciones enantes d'unviales.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Unviar P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Transaiciones P2C unviaes a la cartera (%1). Identificadores de transaición:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Encaboxóse. Nun s'unvió nenguna transaición P2C.</translation>
+    </message>
+</context>
 </TS>

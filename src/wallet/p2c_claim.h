@@ -10,13 +10,29 @@
 #include <primitives/transaction.h>
 #include <util/result.h>
 
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <span>
 
+class CFeeRate;
+
 namespace wallet {
 class CCoinControl;
 class CWallet;
+
+/** Exact expected-return numerator (target + 1) * net_reward, most-significant
+ * word first. All claims share the denominator 2^256, so array ordering gives
+ * their expected-value ordering without division or floating-point rounding.
+ * Non-positive/out-of-range payouts have zero priority.
+ */
+using P2CClaimPriority = std::array<uint32_t, 10>;
+P2CClaimPriority GetP2CClaimPriority(const uint256& target, CAmount net_reward);
+
+/** Fee for a one-input P2C claim with one P2PK payout and the given proof budget.
+ * Does not reserve a wallet key or perform network access.
+ */
+util::Result<CAmount> CalculateP2CClaimFee(const CFeeRate& rate, size_t proof_size = MAX_P2C_PROOF_SIZE);
 
 /** Fixed non-witness transaction. The fee comes only from the bounty, never
  * from the claimant's other coins. Adding a TLS proof must not change its txid.

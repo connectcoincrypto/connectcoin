@@ -613,6 +613,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation type="unfinished">Rahakott on &lt;b&gt;krüpteeritud&lt;/b&gt; ning hetkel &lt;b&gt;suletud&lt;/b&gt;</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Loo pay-to-connect-tasud</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -1697,6 +1705,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>false</source>
         <translation type="unfinished">väär</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C-domeen</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -1766,6 +1778,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Jäägile lisatud või eemaldatud summa.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Kasutaja määratud tehingu eesmärk või P2C-domeen.</translation>
     </message>
 </context>
 <context>
@@ -1850,6 +1870,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>to</source>
         <translation type="unfinished">saaja</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Otsimiseks sisesta aadress, P2C-domeen, tehingu tunnus või silt</translation>
     </message>
 </context>
 <context>
@@ -1948,4 +1972,310 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Kirjeldatud tundmatu võrgustik -onlynet'is: '%s'</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Leia kinnitatud tasud automaatselt, loo TLS-tõendeid ja saada tasud sellesse rahakotti. Teenustasud arvatakse maha ainult igast tasust. Privaatvõtmeid pole vaja avada, kuni võtmevarus on vastuvõtuaadresse. HTTPS on välja lülitatud, kuni selle selgesõnaliselt käivitad.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Ühendusi sekundis (see rahakott):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 lülitab HTTPS-i välja. Kiiruspiirangu eemaldamiseks vali allpool piiramatu kiirus.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Piiramatu kiirus (selgesõnaline nõusolek)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Samaaegseid ühendusi:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Valikuline: example.com, another.example (tühi = kõik domeenid)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Lubatud domeenid:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Rakenda / alusta automaatset tasude taotlemist</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Peata HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Välja lülitatud</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Kas lubada automaatne P2C-tasude taotlemine?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>See loob otsesed HTTPS-ühendused avalike domeenidega ja esitab edukad taotlused automaatselt. Need serverid näevad sinu IP-aadressi. Puhverserveri seadistustest ei minda mööda. Teenustasud arvatakse tasudest maha.
+
+%1
+
+Kas jätkata?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Valisid PIIRAMATU arvu ühendusi sekundis.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Kiirus: %1 ühendust sekundis selle rahakoti jaoks.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Seadistuse rakendamine…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Käivitamine</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Domeeninime lahendamine</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Domeeninime lahendamise korduskatse</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Tõendite otsimine</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Ühenduste korduskatse</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Sertifikaat lükati tagasi</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Peatatud vea tõttu</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Tasu on juba taotletud</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Kinnitatud tasude otsimine</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Tasude ootamine</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Sobivate tasude ootamine</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Tasu jäeti vahele</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Esitatud</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Salvestatud; kontrolli rahakoti ajalugu</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Piiramatu</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Välja lülitatud (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Olek: %1
+Aktiivne kiirus: %2 | Samaaegseid ühendusi: %3
+Domeen: %4
+Katseid: %5 | Esitatud: %6
+Viimane taotlus: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Loo tasud</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Automaatsed taotlused</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Loo pay-to-connect-tasud</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Rahasta eraldi tasusid kehtivate TLS-ühenduse tõendite eest. Neid võib taotleda igaüks, kes täidab nõuded. See leht ei loo HTTPS-ühendusi.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Väiketähtedega ASCII-domeen (rahvusvaheliste domeenide jaoks kasuta punycode'i), ilma URL-skeemi, tee, pordi või lõpus oleva punktita.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domeen:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Tasu &amp;väljundi kohta:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>Väljundite &amp;arv:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Alguses olevad nullbitid</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Maksimaalne räsi</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>Raskuse &amp;vorming:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Nullbitid:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Täpselt 64 kuueteistkümnendsüsteemi märki</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Maksimaalne &amp;räsi:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Versioon %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Usaldatud juur&amp;sertifikaadid:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Kasuta kohandatud teenustasu määra</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Teenustasu 1 000 virtuaalbaidi kohta:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Vaata P2C üle…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Teenustasud arvutatakse enne heakskiitu. Suured päringud võidakse jagada mitmeks tehinguks.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>P2C loomine nõuab praegu kohalike privaatvõtmetega rahakotti. Ainult jälgimiseks mõeldud ja välise allkirjastajaga rahakotid pole sellel lehel toetatud.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Loo P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Sisesta kanooniline väiketähtedega ASCII-domeen ilma lõpus oleva punkti, skeemi, tee või pordita.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Sisesta positiivne tasu, mille kogusumma ei ületa rahalist piiri.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Maksimaalne räsi peab sisaldama täpselt 64 kuueteistkümnendsüsteemi märki.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Sisesta positiivne teenustasu määr 1 000 virtuaalbaidi kohta.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C-tehinguid ei saa ette valmistada: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Tasude kogusumma koos teenustasudega ületab rahalise piiri.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Rahakott: %1&lt;br /&gt;Domeen: %2&lt;br /&gt;Väljundeid: %3&lt;br /&gt;Tasu väljundi kohta: %4&lt;br /&gt;Tasud kokku: %5&lt;br /&gt;Tehinguid: %6&lt;br /&gt;Teenustasud kokku: %7&lt;br /&gt;&lt;b&gt;Kokku maha arvatav: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Maksimaalne tööräsi: %1
+Juursertifikaatide versioon: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Nõutavad alguse nullbitid: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Maksimaalne tööräsi: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Kinnita P2C loomine</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Juursertifikaatide versioon: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Neid tasusid võib taotleda igaüks, kes esitab kehtiva ühenduse tõendi. Neid ei saa tavalise rahakoti allkirjaga tagasi võtta. Vaata enne saatmist kõik tehingud üle.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Saada P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C-tehingud esitati rahakotti (%1). Tehingute tunnused:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Tühistatud. P2C-tehinguid ei saadetud.</translation>
+    </message>
+</context>
 </TS>

@@ -9,7 +9,10 @@
 #include <primitives/transaction.h>
 #include <rpc/rawtransaction_util.h>
 #include <script/sigcache.h>
+#include <test/data/p2c_fuzz_seeds.json.h>
+#include <test/util/json.h>
 #include <test/util/setup_common.h>
+#include <util/strencodings.h>
 #include <validation.h>
 
 #include <univalue.h>
@@ -160,6 +163,26 @@ CTransaction ChallengeTransaction()
 } // namespace
 
 BOOST_FIXTURE_TEST_SUITE(p2c_tests, BasicTestingSetup)
+
+BOOST_AUTO_TEST_CASE(bundled_fuzz_seeds_exercise_tls_parser)
+{
+    const auto seeds{read_json(json_tests::p2c_fuzz_seeds)};
+    BOOST_REQUIRE(!seeds.getValues().empty());
+    size_t accepted{0}, rejected{0};
+    for (const auto& seed : seeds.getValues()) {
+        const auto bytes{ParseHex(seed["hex"].get_str())};
+        uint256 challenge;
+        BOOST_REQUIRE(bytes.size() >= challenge.size());
+        std::copy_n(bytes.begin(), challenge.size(), challenge.begin());
+        P2CTlsProofView parsed;
+        std::string error;
+        const bool valid{ParseP2CTlsProof(std::span{bytes}.subspan(challenge.size()), "example.com", challenge, parsed, error)};
+        BOOST_CHECK_MESSAGE(valid == seed["valid"].get_bool(), seed["name"].get_str() + ": " + error);
+        if (valid) ++accepted; else ++rejected;
+    }
+    BOOST_CHECK_GT(accepted, 0U);
+    BOOST_CHECK_GT(rejected, 0U);
+}
 
 BOOST_AUTO_TEST_CASE(challenge_commits_txid_and_input_index_but_not_witness)
 {

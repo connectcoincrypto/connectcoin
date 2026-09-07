@@ -6,11 +6,12 @@
 #define CONNECTCOIN_WALLET_P2C_WORKER_H
 
 #include <util/result.h>
-#include <univalue.h>
 
 #include <memory>
 #include <string>
 #include <vector>
+
+class UniValue;
 
 namespace wallet {
 class CWallet;

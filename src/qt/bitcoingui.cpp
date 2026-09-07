@@ -269,7 +269,8 @@ void BitcoinGUI::createActions()
     sendCoinsAction->setShortcut(QKeySequence(QStringLiteral("Alt+2")));
     tabGroup->addAction(sendCoinsAction);
 
-    p2cAction = new QAction(platformStyle->SingleColorIcon(":/icons/send"), tr("&P2C"), this);
+    p2cAction = new QAction(platformStyle->SingleColorIcon(":/icons/p2c"), tr("&P2C"), this);
+    p2cAction->setObjectName("p2cAction");
     p2cAction->setStatusTip(tr("Create pay-to-connect bounties"));
     p2cAction->setToolTip(p2cAction->statusTip());
     p2cAction->setCheckable(true);
@@ -1365,7 +1366,7 @@ void BitcoinGUI::changeEvent(QEvent *e)
     if (e->type() == QEvent::PaletteChange) {
         overviewAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/overview")));
         sendCoinsAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/send")));
-        p2cAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/send")));
+        p2cAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/p2c")));
         receiveCoinsAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/receiving_addresses")));
         historyAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/history")));
     }

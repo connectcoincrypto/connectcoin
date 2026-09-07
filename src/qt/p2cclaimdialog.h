@@ -26,6 +26,7 @@ public:
     explicit P2CClaimDialog(QWidget* parent = nullptr);
     void setModel(WalletModel* model);
 private:
+    static QString StateText(const std::string& state);
     void Configure(bool stop);
     void Refresh();
     QPointer<WalletModel> m_model;

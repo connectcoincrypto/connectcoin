@@ -322,6 +322,14 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation type="unfinished">Maka-&lt;b&gt;encrypt&lt;/b&gt; ya ing wallet at kasalukuyan yang maka-&lt;b&gt;locked&lt;/b&gt;</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Gawang pay-to-connect a pabuya</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -925,6 +933,10 @@
         <source>false</source>
         <translation type="unfinished">e tutu</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C domain</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -986,6 +998,14 @@
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Alagang milako o miragdag king balanse.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Ing layun ning transaksyun a tinakda ning gagamit, o ing P2C domain.</translation>
     </message>
 </context>
 <context>
@@ -1054,6 +1074,10 @@
         <source>to</source>
         <translation type="unfinished">para kang</translation>
     </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Ilagay ing adres, P2C domain, ID ning transaksyun o label a panintunan</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -1115,4 +1139,310 @@
         <translation type="unfinished">E kilalang network ing mepili king -onlynet: '%s'</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Automatikung panintunan deng kumpirmadung pabuya, gawang patunay TLS at ipadala deng pabuya king pitakang ini. Deng bayad ibawas la mu king balang pabuya. E kailangan i-unlock deng pribadung susi basta atin pang adres pangtanggap king key pool. Naka-disable ya ing HTTPS angga king malinaw mu yang simulan.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Koneksyun kada segundu (ing pitakang ini):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>Ing 0 i-disable ne ing HTTPS. Para alang limitasyon ing bilis, piliin ing alang limitasyon king lalam.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Alang limitasyung bilis (malinaw a pamayag)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Sabay-sabay a koneksyun:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Opsyunal: example.com, another.example (alang laman = eganaganang domain)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Deng domain a palubusan:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Ilapat / simulan ing awtomatikung pamag-claim</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Ituknang ing HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Naka-disable</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Paganahin ing awtomatikung P2C claim?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Gagawa yang direktang HTTPS koneksyun kareng pampublikung domain at automatikung ipapadala deng matagumpeng claim. Akit da deng server a deta ing IP adres mu. E lalaktawan deng proxy setting. Deng bayad ibawas la kareng pabuya.
+
+%1
+
+Ituluy?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Pili mu ing ALANG LIMITASYUNG koneksyun kada segundu.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Bilis: %1 koneksyun kada segundu para king pitakang ini.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Ilalapat deng setting…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Magsisimula</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Panintunan ing adres ning domain</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Susubukan pasibayu ing pamagpanintun king adres ning domain</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Manintun patunay</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Susubukan pasibayu deng koneksyun</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Tiniggui ing sertipiku</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Mituknang uling atin mali</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Me-claim ne ing pabuya</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Panintunan deng kumpirmadung pabuya</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Manaya pabuya</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Manaya kareng karapat-dapat a pabuya</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Lilaktawan ing pabuya</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Mipadala</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Misalikut; lawen ing kasalesayan ning pitaka</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Alang limitasyon</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Naka-disable (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Kalagayan: %1
+Aktibung bilis: %2 | Sabay-sabay a koneksyun: %3
+Domain: %4
+Pagsubuk: %5 | Mipadala: %6
+Tauling claim: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Gawang pabuya</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Deng awtomatikung claim</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Gawang pay-to-connect a pabuya</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Lagyan pondung pabuya ing balang wastung patunay ning TLS koneksyun. Ninumang makatutuking kareng kailangan malyari yang mag-claim. Ing pahinang ini e ya gagawang HTTPS koneksyun.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Domain ASCII a malating letra (gamitang punycode para kareng internasyunal a domain), alang URL scheme, path, port o puntus king tauli.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domain:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Pabuya kada &amp;output:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Bilang da reng output:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Deng zero bit king umpisa</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Pinakamatas a hash</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Porma ning kasakit:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>Deng &amp;zero bit:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Eksaktung 64 a hexadecimal karakter</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Pinakamatas a &amp;hash:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Bersyun %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Deng mapaniwalan a root &amp;certificate:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Gamitang sariling rate ning bayad</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Bayad kada 1,000 virtual byte:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Suriin ing P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Kalkulan deng bayad bayu apruban. Deng maragul a kahilingan malyari lang hati-hatian kareng dakal a transaksyun.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Ing pamagawang P2C kailangan ne muna ing pitakang atin lokal a pribadung susi. E suportadu king pahinang ini deng pitakang pangbantay mu at deng atin panlabas a pipirma.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Gawang P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Ilagay ing kanonikal a domain ASCII a malating letra, alang puntus king tauli, scheme, path o port.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Ilagay ing positibung pabuya a ing kabilugan e lalampas king limitasyun ning salapi.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Ing pinakamatas a hash kailangan atin yang eksaktung 64 a hexadecimal karakter.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Ilagay ing positibung rate ning bayad kada 1,000 virtual byte.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>E malyaring ihanda deng P2C transaksyun: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Ing kabilugang pabuya at bayad lalampas king limitasyun ning salapi.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Pitaka: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Deng output: %3&lt;br /&gt;Pabuya kada output: %4&lt;br /&gt;Kabilugang pabuya: %5&lt;br /&gt;Deng transaksyun: %6&lt;br /&gt;Kabilugang bayad: %7&lt;br /&gt;&lt;b&gt;Kabilugang ibawas: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Pinakamatas a work hash: %1
+Bersyun da reng root certificate: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Deng kailangan a zero bit king umpisa: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Pinakamatas a work hash: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Kumpirman ing pamagawang P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Bersyun da reng root certificate: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Deng pabuyang deti malyaring i-claim ninumang magpakit wastung patunay ning koneksyun. E mo la abawi gamit ing ordinaryung lagda ning pitaka. Suriin eganaganang transaksyun bayu ipadala.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Ipadala ing P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Mipadala king pitaka deng P2C transaksyun (%1). Deng ID ning transaksyun:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Mikansela. Alang P2C transaksyun a mipadala.</translation>
+    </message>
+</context>
 </TS>

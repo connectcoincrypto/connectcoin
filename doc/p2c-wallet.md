@@ -103,18 +103,78 @@ apply. Unused proof budget stays a fee, and the chosen rate does not guarantee
 prompt confirmation if demand rises before submission.
 
 - `0` stops the worker and its HTTPS activity. It is **not** unlimited.
-- `-1` selects unlimited rate explicitly; Qt exposes a separate checkbox.
+- `-1` selects unlimited rate explicitly; Qt exposes a separate checkbox and
+  displays `Unlimited` in the status, not the RPC sentinel `-1`.
 - Positive rates limit connection starts across all workers **in this wallet**;
-  they are not a node-wide limit shared by multiple wallets. Concurrency is 1–64.
+  they are not a node-wide limit shared by multiple wallets. Concurrency accepts
+  any positive 32-bit integer, with no separate 64-connection cap. It is a maximum,
+  not guaranteed throughput: OS thread/socket limits, memory, the selected rate
+  and server responsiveness determine actual parallelism. Failure to allocate a
+  connection worker stops the search with an error, joining already-started workers.
 - An empty allowlist permits all supported public domains with confirmed bounties.
   HTTPS reveals your IP to those domains. Connections are direct, on port 443;
   private/unroutable addresses are excluded. A configured name, IPv4 or IPv6 proxy
   disables this path rather than being silently bypassed. SOCKS support is not
   implemented for the claim generator.
 
-The worker scans a UTXO snapshot outside the chain lock after flushing its cache,
-selects a rotating window of up to 256 bounties, and gives each a bounded search
-round (up to 32 attempts / 30 seconds). It then rescans after a 60-second pause.
+The worker scans a UTXO snapshot outside the chain lock after flushing its cache
+and **rotates automatically between domains**. Guaranteed round-robin turns
+alternate with extra turns for the domain with the highest expected net return.
+Economic preference does not move the round-robin cursor: even a high-reward
+server that never supplies a usable proof cannot prevent the other domains from
+being tried. For example, with three eligible domains A, B and C and A as the
+economic winner, turns are A, A, B, A, C, A, then repeat. This deliberately balances
+economic preference with fair exploration; it is not proportional allocation.
+The economic winner is recalculated between turns using its best available
+bounty, not the sum or count of its outputs. Locked or mempool-spent outputs do
+not win extra turns, and unusable proposal windows are skipped as usual.
+Skipping an unusable fair domain does not grant an extra economic turn.
+
+There is **no per-domain connection quota or configurable per-domain limit**.
+Only the wallet-wide rate and concurrency settings limit traffic. Internally the
+scheduler uses a 30-second search quantum to revisit other domains, ending early
+when the current domain's eligible bounties are exhausted (or on stop/fatal error).
+The quantum starts after discovery, proposal preparation and the first DNS lookup,
+so a slow discovery cannot repeatedly expire a turn before any TLS attempt.
+Further proposal windows and DNS lookups in that turn do not reset its deadline.
+This is not a quota of connections per 30 seconds: there is no attempt cap or
+cooldown, and a sole eligible domain resumes immediately with the wallet's full
+configured capacity. OS DNS, cancellation and saving/submitting finished work may
+delay handoff; this is not a hard wall-clock shutdown guarantee. `domain_rounds`
+is only a diagnostic count of rounds since the latest configuration.
+
+A successful proof finishes only that bounty: its duplicate attempts are cancelled,
+its proof is saved and submitted, and other bounties continue in the same round.
+This scheduling protects against monopolization by an individual domain, not an
+attacker controlling many distinct domains. Nor can it force a server to provide
+winning TLS transcripts. Claim generation remains independent of node consensus.
+
+Connections are shared round-robin among that domain's bounties, with a rotating
+window of up to 256 proposals. Exhausting a window refills it from the same domain
+without resetting the deadline or rotating away prematurely. Within each
+domain, the rotation is ordered by descending expected net return per valid
+connection: `(target + 1) / 2^256 * (reward - claim_fee)`. The inclusive `+1`
+matches consensus's `hash <= target`. Ranking uses exact 320-bit integer
+numerators, without floating-point rounding or overflowing at the maximum
+target. Existing proposals use their fixed payout/fee; new proposals use the
+same full-proof fee calculation as claim construction. This priority applies
+when selecting the window, not just after selecting outputs by transaction ID.
+Equal priorities use outpoint order. The cursor advances through this ranked
+cycle, preserving rotation rather than monopolizing all rounds with one bounty.
+This changes search priority, not rewards or consensus rules. Each attempt
+uses its own bounty-specific claim challenge; proofs are never reused for other
+outputs. More bounties alone do not buy extra domain turns. Output cursors
+also rotate after partially completed rounds so low rates cannot starve later
+bounties. These are rounds, not additional per-domain connection-rate settings:
+if only one domain remains, its next round can start immediately.
+When a round finishes with eligible work,
+it rescans and rotates immediately, without an idle delay. DNS failures back off
+for two seconds; failed TLS attempts and rejected certificates back off for one
+second per connection worker. All these waits are interruptible when stopping.
+If no matching bounties exist, the state is `waiting for bounties`; if matching
+bounties exist but no domain has searchable work (for example, all are locked or too small
+to pay the claim fee), it is `waiting for eligible bounties`. Both idle cases
+rescan after five seconds to avoid a busy loop and discover new eligible work.
 These are scheduling/memory bounds, not a lifetime attempt limit: difficult
 bounties are tried again. This implementation has no persistent bounty index;
 on a large UTXO set, discovery itself can take time. The node remains responsible
@@ -126,7 +186,9 @@ stopping until that lookup returns. HTTPS is independent of the P2P network togg
 use **Stop HTTPS (0)** to stop it.
 
 Fixed unsigned proposals and completed proofs are stored in the wallet database.
-A completed proof is saved **before** submission. Reloading/unloading the wallet
+A completed proof is saved **before** submission. Concurrent successes are queued
+durably (one per proposal), not discarded when another bounty succeeds. The saved
+state still reads older wallets' single-proof slot. Reloading/unloading the wallet
 stops the worker, and loading always starts with HTTPS disabled; explicitly enable
 it to resume. A completed proof rejected while its bounty remains available is
 retained, with a diagnostic, and the worker stops. Re-enabling retries acceptance

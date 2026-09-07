@@ -149,6 +149,7 @@ target_json_data_sources(connectcoin-test
   data/blockfilters.json
   data/key_io_invalid.json
   data/key_io_valid.json
+  data/p2c_fuzz_seeds.json
   data/script_tests.json
   data/sighash.json
   data/siphash.json

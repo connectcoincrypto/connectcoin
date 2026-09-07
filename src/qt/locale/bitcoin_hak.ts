@@ -850,6 +850,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">原消息:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>建立 pay-to-connect 懸賞</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -3496,6 +3504,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <source>false</source>
         <translation type="unfinished">否</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C 網域</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -3589,6 +3601,14 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>User-defined intent/purpose of the transaction.</source>
         <translation type="unfinished">使用者定義的交易動機或理由。</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C：%1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>使用者設定个交易用途，抑係 P2C 網域。</translation>
     </message>
     </context>
 <context>
@@ -3746,6 +3766,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>to</source>
         <translation type="unfinished">到</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>輸入地址、P2C 網域、交易 ID 抑係標籤來搜尋</translation>
     </message>
 </context>
 <context>
@@ -4720,6 +4744,312 @@ Please try running the latest software version.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">无法写入设置文件</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>自動尋著已確認个懸賞、產生 TLS 證明，再將獎勵送到這隻錢包。手續費淨在逐筆獎勵肚扣除。金鑰池還有收款地址个時節，就毋使解鎖私鑰。HTTPS 預設停用，愛你明確啟動正會開始。</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>逐秒連線數（這隻錢包）：</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 會停用 HTTPS。若係毋愛限速，請選下背个不限速選項。</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>不限速（愛明確同意）</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>同時連線數：</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>選填：example.com, another.example（留空 = 全部網域）</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>允許个網域：</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>套用 / 啟動自動領取</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>停止 HTTPS（0）</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>已停用</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>啟用 P2C 自動領取無？</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>這隻功能會直接同公開網域建立 HTTPS 連線，也會自動提交成功个領取申請。該兜伺服器做得看著你个 IP 地址。毋會繞過代理伺服器設定。手續費在獎勵肚扣除。
+
+%1
+
+繼續無？</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>你選咧逐秒連線數無上限。</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>速率：這隻錢包逐秒 %1 隻連線。</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>設定套用中…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>啟動中</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>網域解析中</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>重新試網域解析</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>證明尋緊</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>重新試連線</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>憑證分人拒絕咧</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>因為錯誤停止咧</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>懸賞已經分人領走咧</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>已確認个懸賞掃描中</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>等懸賞</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>等符合條件个懸賞</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>懸賞跳過咧</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>已提交</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>已儲存；請看錢包歷史紀錄</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>不限速</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>已停用（0）</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>狀態：%1
+目前速率：%2 | 同時連線數：%3
+網域：%4
+嘗試次數：%5 | 已提交：%6
+上尾一擺領取：%7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>建立懸賞</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>自動領取</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>建立 pay-to-connect 懸賞</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>為有效个 TLS 連線證明提供獨立獎勵。符合條件个人都做得領取。這隻頁面毋會建立 HTTPS 連線。</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>小寫 ASCII 網域（國際化網域請用 punycode），毋好有 URL 協定、路徑、連接埠抑係尾項个點號。</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>網域(&amp;D)：</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>逐隻輸出个獎勵(&amp;O)：</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>輸出數量(&amp;N)：</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>頭前為零个位元數</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>最大雜湊值</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>難度格式(&amp;F)：</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>零位元數(&amp;Z)：</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>愛正好有 64 隻十六進位字元</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>最大雜湊值(&amp;H)：</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>版本 %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>信任个根憑證(&amp;C)：</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>使用自訂費率</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>逐 1,000 虛擬位元組个手續費：</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>檢查 P2C(&amp;R)…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>核准以前會計算手續費。較大个請求可能分做幾下筆交易。</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>建立 P2C 目前需要有本機私鑰个錢包。這隻頁面毋支援淨觀察个錢包抑係使用外部簽署器个錢包。</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>建立 P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>請輸入標準小寫 ASCII 網域，毋好有尾項个點號、協定、路徑抑係連接埠。</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>請輸入正數獎勵，總額毋好超過貨幣上限。</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>最大雜湊值愛正好有 64 隻十六進位字元。</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>請輸入逐 1,000 虛擬位元組个正數費率。</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C 交易準備毋好：%1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>獎勵總額加手續費超過貨幣上限。</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>錢包：%1&lt;br /&gt;網域：%2&lt;br /&gt;輸出：%3&lt;br /&gt;逐隻輸出个獎勵：%4&lt;br /&gt;獎勵總額：%5&lt;br /&gt;交易數：%6&lt;br /&gt;手續費總額：%7&lt;br /&gt;&lt;b&gt;扣款總額：%8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>最大工作雜湊值：%1
+根憑證版本：%2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>需要个頭前零位元數：%1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>最大工作雜湊值：%1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>確認建立 P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>根憑證版本：%1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>任何提供有效連線證明个人都做得領取這兜獎勵。你毋做得用一般錢包簽章拿轉來。傳送以前請檢查全部交易。</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>傳送 P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>已向錢包提交 P2C 交易（%1）。交易 ID：</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>取消咧。無傳送任何 P2C 交易。</translation>
     </message>
 </context>
 </TS>

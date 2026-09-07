@@ -492,6 +492,14 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation type="unfinished">Maciņš ir &lt;b&gt;šifrēts&lt;/b&gt; un pašlaik &lt;b&gt;slēgts&lt;/b&gt;</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Izveidot pay-to-connect atlīdzības</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -1389,6 +1397,10 @@
         <source>Amount</source>
         <translation type="unfinished">Daudzums</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C domēns</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -1410,6 +1422,14 @@
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(bez nosaukuma)</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Lietotāja noteiktais darījuma nolūks/mērķis vai P2C domēns.</translation>
     </message>
     </context>
 <context>
@@ -1445,6 +1465,10 @@
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">Eksportēšana Neizdevās</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Meklēšanai ievadiet adresi, P2C domēnu, darījuma identifikatoru vai etiķeti</translation>
     </message>
     </context>
 <context>
@@ -1516,4 +1540,310 @@
         <translation type="unfinished">-onlynet komandā norādīts nepazīstams tīkls: '%s'</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Automātiski atrodiet apstiprinātas atlīdzības, ģenerējiet TLS pierādījumus un nosūtiet atlīdzības uz šo maku. Komisijas maksas tiek ieturētas tikai no katras atlīdzības. Privātās atslēgas nav jāatbloķē, kamēr atslēgu krājumā ir saņemšanas adreses. HTTPS ir izslēgts, līdz to skaidri ieslēdzat.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Savienojumi sekundē (šis maks):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 izslēdz HTTPS. Lai noņemtu ātruma ierobežojumu, zemāk izvēlieties neierobežotu ātrumu.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Neierobežots ātrums (skaidra piekrišana)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Vienlaicīgi savienojumi:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Neobligāti: example.com, another.example (tukšs = visi domēni)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Atļautie domēni:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Lietot / sākt automātisku atlīdzību pieprasīšanu</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Apturēt HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Izslēgts</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Ieslēgt automātisku P2C atlīdzību pieprasīšanu?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Tas izveido tiešus HTTPS savienojumus ar publiskiem domēniem un automātiski iesniedz veiksmīgus atlīdzību pieprasījumus. Šie serveri redz jūsu IP adresi. Starpniekservera iestatījumi netiek apieti. Komisijas maksas tiek ieturētas no atlīdzībām.
+
+%1
+
+Turpināt?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Jūs izvēlējāties NEIEROBEŽOTU savienojumu skaitu sekundē.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Ātrums: %1 savienojumi sekundē šim makam.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Iestatījumu lietošana…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Palaišana</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Domēna nosaukuma atrisināšana</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Atkārtota domēna nosaukuma atrisināšana</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Pierādījumu meklēšana</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Atkārtota savienojumu izveide</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Sertifikāts noraidīts</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Apturēts kļūdas dēļ</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Atlīdzība jau ir saņemta</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Apstiprinātu atlīdzību meklēšana</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Gaida atlīdzības</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Gaida atbilstošas atlīdzības</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Atlīdzība izlaista</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Iesniegts</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Saglabāts; pārbaudiet maka vēsturi</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Neierobežots</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Izslēgts (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Stāvoklis: %1
+Aktīvais ātrums: %2 | Vienlaicīgi savienojumi: %3
+Domēns: %4
+Mēģinājumi: %5 | Iesniegts: %6
+Pēdējais pieprasījums: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Izveidot atlīdzības</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Automātiski pieprasījumi</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Izveidot pay-to-connect atlīdzības</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Finansējiet neatkarīgas atlīdzības par derīgiem TLS savienojumu pierādījumiem. Tās var pieprasīt ikviens, kas izpilda prasības. Šī lapa neveido HTTPS savienojumus.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Domēns ar mazajiem ASCII burtiem (starptautiskiem domēniem izmantojiet punycode), bez URL shēmas, ceļa, porta vai punkta beigās.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domēns:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Atlīdzība par &amp;izeju:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Izeju skaits:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Sākuma nulles biti</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Maksimālā jaucējvērtība</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>Grūtības &amp;formāts:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Nulles biti:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Tieši 64 heksadecimālas rakstzīmes</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Maksimālā &amp;jaucējvērtība:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Versija %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Uzticami saknes &amp;sertifikāti:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Izmantot pielāgotu komisijas likmi</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Komisija par 1 000 virtuālajiem baitiem:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Pārskatīt P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Komisijas tiek aprēķinātas pirms apstiprināšanas. Lielus pieprasījumus var sadalīt vairākos darījumos.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>P2C izveidei pašlaik nepieciešams maks ar lokālām privātajām atslēgām. Šajā lapā netiek atbalstīti tikai novērošanas maki un maki ar ārēju parakstītāju.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Izveidot P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Ievadiet kanonisku domēnu ar mazajiem ASCII burtiem bez punkta beigās, shēmas, ceļa vai porta.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Ievadiet pozitīvu atlīdzību, kuras kopējā summa nepārsniedz naudas ierobežojumu.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Maksimālajai jaucējvērtībai jāsatur tieši 64 heksadecimālas rakstzīmes.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Ievadiet pozitīvu komisijas likmi par 1 000 virtuālajiem baitiem.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Neizdevās sagatavot P2C darījumus: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Kopējā atlīdzība kopā ar komisijām pārsniedz naudas ierobežojumu.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Maks: %1&lt;br /&gt;Domēns: %2&lt;br /&gt;Izejas: %3&lt;br /&gt;Atlīdzība par izeju: %4&lt;br /&gt;Kopējās atlīdzības: %5&lt;br /&gt;Darījumi: %6&lt;br /&gt;Kopējās komisijas: %7&lt;br /&gt;&lt;b&gt;Kopējais norakstījums: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Maksimālā darba jaucējvērtība: %1
+Saknes sertifikātu versija: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Nepieciešamie sākuma nulles biti: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Maksimālā darba jaucējvērtība: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Apstiprināt P2C izveidi</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Saknes sertifikātu versija: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Šīs atlīdzības var pieprasīt ikviens, kurš iesniedz derīgu savienojuma pierādījumu. Tās nevar atgūt ar parastu maka parakstu. Pirms nosūtīšanas pārskatiet visus darījumus.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Nosūtīt P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C darījumi iesniegti makā (%1). Darījumu identifikatori:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Atcelts. Neviens P2C darījums netika nosūtīts.</translation>
+    </message>
+</context>
 </TS>

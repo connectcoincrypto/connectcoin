@@ -894,6 +894,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">Pôvodná správa:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Vytvoriť odmeny pay-to-connect</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -3652,6 +3660,10 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
         <source>false</source>
         <translation type="unfinished">nepravda</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Doména P2C</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -3745,6 +3757,14 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Suma pridaná alebo odobraná k zostatku.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Používateľom určený zámer/účel transakcie alebo doména P2C.</translation>
     </message>
 </context>
 <context>
@@ -3898,6 +3918,10 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
     <message>
         <source>to</source>
         <translation type="unfinished">do</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Zadajte adresu, doménu P2C, ID transakcie alebo štítok na vyhľadávanie</translation>
     </message>
 </context>
 <context>
@@ -5061,6 +5085,312 @@ Spustite najnovšiu verziu softvéru.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Súbor nastavení nemohol byť zapísaný</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Automaticky vyhľadávať potvrdené odmeny, vytvárať dôkazy TLS a odosielať odmeny do tejto peňaženky. Poplatky sa odpočítavajú iba z každej odmeny. Kým sú v zásobníku kľúčov prijímacie adresy, nie je potrebné odomykať súkromné kľúče. HTTPS je vypnuté, kým ho výslovne nespustíte.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Spojení za sekundu (táto peňaženka):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 vypne HTTPS. Na odstránenie obmedzenia rýchlosti vyberte nižšie neobmedzenú rýchlosť.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Neobmedzená rýchlosť (výslovný súhlas)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Súbežné spojenia:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Voliteľné: example.com, another.example (prázdne = všetky domény)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Povolené domény:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Použiť / spustiť automatické získavanie odmien</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Zastaviť HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Vypnuté</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Povoliť automatické získavanie odmien P2C?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Tým sa budú nadväzovať priame spojenia HTTPS s verejnými doménami a automaticky odosielať úspešné nároky na odmeny. Tieto servery uvidia vašu IP adresu. Nastavenia proxy sa neobchádzajú. Poplatky sa odpočítavajú z odmien.
+
+%1
+
+Pokračovať?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Zvolili ste NEOBMEDZENÝ počet spojení za sekundu.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Rýchlosť: %1 spojení za sekundu pre túto peňaženku.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Používanie nastavení…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Spúšťanie</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Preklad doménového mena</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Opakovanie prekladu doménového mena</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Hľadanie dôkazov</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Opakovanie spojení</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Certifikát odmietnutý</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Zastavené kvôli chybe</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Odmena už bola získaná</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Prehľadávanie potvrdených odmien</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Čakanie na odmeny</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Čakanie na oprávnené odmeny</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Odmena preskočená</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Odoslané</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Uložené; skontrolujte históriu peňaženky</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Neobmedzene</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Vypnuté (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Stav: %1
+Aktuálna rýchlosť: %2 | Súbežné spojenia: %3
+Doména: %4
+Pokusy: %5 | Odoslané: %6
+Posledný nárok: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Vytvoriť odmeny</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Automatické nároky</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Vytvoriť odmeny pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Financujte nezávislé odmeny za platné dôkazy spojení TLS. Získať ich môže ktokoľvek, kto splní požiadavky. Táto stránka nenadväzuje spojenia HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Doména zapísaná malými znakmi ASCII (pre medzinárodné domény použite punycode), bez schémy URL, cesty, portu či koncovej bodky.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Doména:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Odmena za &amp;výstup:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Počet výstupov:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Úvodné nulové bity</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Maximálny hash</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Formát náročnosti:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Nulové bity:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Presne 64 hexadecimálnych znakov</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Maximálny &amp;hash:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Verzia %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Dôveryhodné koreňové &amp;certifikáty:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Použiť vlastnú sadzbu poplatku</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Poplatok za 1 000 virtuálnych bajtov:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Skontrolovať P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Poplatky sa vypočítajú pred schválením. Veľké požiadavky môžu byť rozdelené do viacerých transakcií.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Vytváranie P2C momentálne vyžaduje peňaženku s miestnymi súkromnými kľúčmi. Peňaženky iba na sledovanie a peňaženky s externým podpisovaním nie sú na tejto stránke podporované.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Vytvoriť P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Zadajte kanonickú doménu malými znakmi ASCII bez koncovej bodky, schémy, cesty či portu.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Zadajte kladnú odmenu, ktorej celková suma neprekročí peňažný limit.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Maximálny hash musí obsahovať presne 64 hexadecimálnych znakov.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Zadajte kladnú sadzbu poplatku za 1 000 virtuálnych bajtov.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Nepodarilo sa pripraviť transakcie P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Celková odmena vrátane poplatkov prekračuje peňažný limit.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Peňaženka: %1&lt;br /&gt;Doména: %2&lt;br /&gt;Výstupy: %3&lt;br /&gt;Odmena za výstup: %4&lt;br /&gt;Celkové odmeny: %5&lt;br /&gt;Transakcie: %6&lt;br /&gt;Celkové poplatky: %7&lt;br /&gt;&lt;b&gt;Celkom odpočítané: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Maximálny hash práce: %1
+Verzia koreňových certifikátov: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Požadované úvodné nulové bity: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Maximálny hash práce: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Potvrdiť vytvorenie P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Verzia koreňových certifikátov: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Tieto odmeny môže získať ktokoľvek, kto predloží platný dôkaz spojenia. Nemôžete ich získať späť bežným podpisom peňaženky. Pred odoslaním skontrolujte všetky transakcie.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Odoslať P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Transakcie P2C boli odoslané do peňaženky (%1). ID transakcií:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Zrušené. Žiadne transakcie P2C neboli odoslané.</translation>
     </message>
 </context>
 </TS>

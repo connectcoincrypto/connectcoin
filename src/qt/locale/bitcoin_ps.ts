@@ -837,6 +837,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">اصلي پیغام</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>د pay-to-connect انعامونه جوړول</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -1829,6 +1837,10 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>Amount</source>
         <translation type="unfinished">مقدار</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>د P2C ډومېن</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -1843,6 +1855,14 @@ The migration process will create a backup of the wallet before migrating. This 
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(بې ټګ)</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>د کاروونکي ټاکل شوی د راکړې ورکړې نیت/موخه، یا د P2C ډومېن.</translation>
     </message>
     </context>
 <context>
@@ -1884,6 +1904,10 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>Exporting Failed</source>
         <translation type="unfinished">صادرات ناکام شو</translation>
     </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>د لټون لپاره پته، P2C ډومېن، د راکړې ورکړې پېژندنه یا نوم ولیکئ</translation>
+    </message>
     </context>
 <context>
     <name>WalletFrame</name>
@@ -1912,4 +1936,310 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">د کڅوړې ډاټا</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>تایید شوي انعامونه په اوتومات ډول ومومئ، د TLS ثبوتونه جوړ کړئ او انعامونه دې بټوې ته واستوئ. فیس یوازې له هر انعام څخه کمېږي. تر هغه چې د کیليو په زېرمه کې د ترلاسه کولو پتې وي، د شخصي کیليو خلاصول اړین نه دي. HTTPS تر هغه بند وي چې تاسو یې په څرګند ډول پیل کړئ.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>په ثانیه کې اړیکې (دا بټوه):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0، HTTPS بندوي. د کچې د حد لرې کولو لپاره لاندې بې‌حده کچه وټاکئ.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>بې‌حده کچه (څرګنده موافقه)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>هممهاله اړیکې:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>اختیاري: example.com, another.example (تش = ټول ډومېنونه)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>اجازه لرونکي ډومېنونه:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>پلي کول / د انعام اوتومات غوښتنه پیلول</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>HTTPS بندول (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>بند</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>د P2C اوتومات غوښتنه فعاله شي؟</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>دا له عامه ډومېنونو سره مستقیمې HTTPS اړیکې جوړوي او بریالۍ غوښتنې په اوتومات ډول لېږي. ستاسو IP پته هغو سرورونو ته ښکاري. د پراکسي تنظیمات نه تېرېږي. فیسونه له انعامونو کمېږي.
+
+%1
+
+دوام ورکړئ؟</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>تاسو په ثانیه کې بې‌حده اړیکې ټاکلې دي.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>کچه: د دې بټوې لپاره په ثانیه کې %1 اړیکې.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>تنظیمات پلي کېږي…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>پیل کېږي</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>د ډومېن پته موندل کېږي</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>د ډومېن پتې موندلو بیا هڅه کېږي</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>ثبوتونه لټول کېږي</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>د اړیکو بیا هڅه کېږي</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>سند رد شو</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>د تېروتنې له امله ودرېد</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>انعام مخکې ترلاسه شوی</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>تایید شوي انعامونه لټول کېږي</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>د انعامونو په تمه</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>د وړ انعامونو په تمه</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>انعام پرېښودل شو</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>ولېږل شو</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>خوندي شو؛ د بټوې تاریخ وګورئ</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>بې‌حده</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>بند (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>حالت: %1
+فعاله کچه: %2 | هممهاله اړیکې: %3
+ډومېن: %4
+هڅې: %5 | لېږل شوي: %6
+وروستۍ غوښتنه: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>انعامونه جوړول</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>اوتومات غوښتنې</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>د pay-to-connect انعامونه جوړول</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>د معتبرو TLS اړیکې ثبوتونو لپاره جلا انعامونه تمویل کړئ. هر څوک چې شرطونه پوره کړي، غوښتنه یې کولای شي. دا پاڼه HTTPS اړیکې نه جوړوي.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>په کوچنیو تورو ASCII ډومېن (د نړیوالو ډومېنونو لپاره punycode وکاروئ)، د URL سکیم، لارې، پورټ یا وروستي ټکي پرته.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;ډومېن:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>د هر &amp;وتي انعام:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>د وتو &amp;شمېر:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>لومړني صفر بېټونه</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>تر ټولو لوی هش</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>د سختۍ &amp;بڼه:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;صفر بېټونه:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>دقیقاً 64 شپاړس‌بنسټیز توري</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>تر ټولو لوی &amp;هش:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>نسخه %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>باوري ریښې &amp;سندونه:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>ځانګړې فیس کچه کارول</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>د هر 1,000 مجازي بایټ فیس:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>د P2C &amp;بیاکتنه…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>فیسونه له منلو مخکې حسابېږي. لویې غوښتنې په څو راکړو ورکړو وېشل کېدای شي.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>د P2C جوړول اوس د محلي شخصي کیليو لرونکې بټوې ته اړتیا لري. یوازې څارونکې بټوې او د بهرني لاسلیک کوونکي بټوې په دې پاڼه کې نه ملاتړ کېږي.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>P2C جوړول</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>په کوچنیو تورو معیاري ASCII ډومېن ولیکئ، د وروستي ټکي، سکیم، لارې یا پورټ پرته.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>مثبت انعام ولیکئ چې ټولیزه اندازه یې له پولي حده زیاته نه وي.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>تر ټولو لوی هش باید دقیقاً 64 شپاړس‌بنسټیز توري ولري.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>د هر 1,000 مجازي بایټ لپاره مثبت فیس کچه ولیکئ.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>د P2C راکړې ورکړې چمتو نه شوې: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>ټول انعامونه او فیسونه له پولي حده اوړي.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>بټوه: %1&lt;br /&gt;ډومېن: %2&lt;br /&gt;وتي: %3&lt;br /&gt;د هر وتي انعام: %4&lt;br /&gt;ټول انعامونه: %5&lt;br /&gt;راکړې ورکړې: %6&lt;br /&gt;ټول فیسونه: %7&lt;br /&gt;&lt;b&gt;ټوله کسرېدونکې اندازه: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>تر ټولو لوی د کار هش: %1
+د ریښې سندونو نسخه: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>اړین لومړني صفر بېټونه: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>تر ټولو لوی د کار هش: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>د P2C جوړول تاییدول</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>د ریښې سندونو نسخه: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>هر څوک چې د اړیکې معتبر ثبوت وړاندې کړي، دا انعامونه غوښتلای شي. د بټوې په عادي لاسلیک یې بېرته نشئ اخیستلای. له لېږلو مخکې ټولې راکړې ورکړې وګورئ.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>P2C لېږل</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>د P2C راکړې ورکړې بټوې ته ولېږل شوې (%1). د راکړو ورکړو پېژندنې:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>لغوه شو. هېڅ P2C راکړه ورکړه ونه لېږل شوه.</translation>
+    </message>
+</context>
 </TS>

@@ -161,6 +161,12 @@ def verify_estimate_response(estimate, feerate, errors):
 
 class EstimateFeeTest(BitcoinTestFramework):
     def set_test_params(self):
+        # The mempool-estimator cases deliberately mine ~40-million-weight
+        # blocks (~10 MB serialized). Their
+        # full template and block validation can exceed the normal 30s RPC
+        # deadline on Windows or instrumented builds. Keep all size/estimator
+        # assertions; allow this test's real validation work to finish.
+        self.rpc_timeout = 180
         self.num_nodes = 3
         # whitelist peers to speed up tx relay / mempool sync
         self.noban_tx_relay = True
@@ -566,7 +572,7 @@ class EstimateFeeTest(BitcoinTestFramework):
             )
             self.generate(self.wallet, 1)
         # With a fixed 41-byte output payload, not every arbitrary vsize is
-        # representable. 99,772 vB is the largest one-input type-1 transaction
+        # representable. 99,782 vB is the largest one-input type-1 transaction
         # below the original per-transaction target.
         target_vsize = 99_782
         utxos = [self.wallet.get_utxo(confirmed_only=True) for _ in range(num_txs)]

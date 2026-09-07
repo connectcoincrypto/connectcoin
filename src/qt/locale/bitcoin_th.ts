@@ -866,6 +866,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">ข้อความต้นฉบับ </translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>สร้างรางวัล pay-to-connect</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -2495,6 +2503,10 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <source>Amount</source>
         <translation type="unfinished">จำนวน:</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>โดเมน P2C</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -2514,6 +2526,14 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <source>(no label)</source>
         <translation type="unfinished">ไม่มีป้ายกำกับ</translation>
     </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>เจตนา/วัตถุประสงค์ของธุรกรรมที่ผู้ใช้กำหนด หรือโดเมน P2C</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
@@ -2524,6 +2544,10 @@ If you are receiving this error you should request the merchant provide a BIP21 
     <message>
         <source>Address</source>
         <translation type="unfinished">ที่อยู่</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>ป้อนที่อยู่ โดเมน P2C รหัสธุรกรรม หรือป้ายกำกับเพื่อค้นหา</translation>
     </message>
     </context>
 <context>
@@ -2553,4 +2577,310 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <translation type="unfinished">กระเป๋าเงินเริ่มต้น</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>ค้นหารางวัลที่ได้รับการยืนยัน สร้างหลักฐาน TLS และส่งรางวัลมายังกระเป๋านี้โดยอัตโนมัติ ค่าธรรมเนียมจะหักจากรางวัลแต่ละรายการเท่านั้น ไม่ต้องปลดล็อกกุญแจส่วนตัวตราบใดที่ยังมีที่อยู่รับเงินในชุดกุญแจ HTTPS จะปิดอยู่จนกว่าคุณจะสั่งเริ่มอย่างชัดเจน</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>การเชื่อมต่อต่อวินาที (กระเป๋านี้):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 ปิด HTTPS หากไม่ต้องการจำกัดอัตรา ให้เลือกอัตราไม่จำกัดด้านล่าง</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>อัตราไม่จำกัด (ต้องยินยอมอย่างชัดเจน)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>การเชื่อมต่อพร้อมกัน:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>ไม่บังคับ: example.com, another.example (ว่าง = ทุกโดเมน)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>โดเมนที่อนุญาต:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>นำไปใช้ / เริ่มรับรางวัลอัตโนมัติ</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>หยุด HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>ปิดใช้งาน</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>เปิดการรับรางวัล P2C อัตโนมัติหรือไม่?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>การทำงานนี้จะเชื่อมต่อ HTTPS โดยตรงกับโดเมนสาธารณะและส่งคำขอรับรางวัลที่สำเร็จโดยอัตโนมัติ เซิร์ฟเวอร์เหล่านั้นจะเห็นที่อยู่ IP ของคุณ โดยจะไม่ข้ามการตั้งค่าพร็อกซี ค่าธรรมเนียมจะหักจากรางวัล
+
+%1
+
+ดำเนินการต่อหรือไม่?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>คุณเลือกการเชื่อมต่อต่อวินาทีแบบไม่จำกัด</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>อัตรา: %1 การเชื่อมต่อต่อวินาทีสำหรับกระเป๋านี้</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>กำลังใช้การตั้งค่า…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>กำลังเริ่ม</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>กำลังค้นหาที่อยู่โดเมน</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>กำลังลองค้นหาที่อยู่โดเมนอีกครั้ง</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>กำลังค้นหาหลักฐาน</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>กำลังลองเชื่อมต่ออีกครั้ง</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>ใบรับรองถูกปฏิเสธ</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>หยุดเนื่องจากข้อผิดพลาด</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>มีผู้รับรางวัลนี้ไปแล้ว</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>กำลังค้นหารางวัลที่ได้รับการยืนยัน</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>กำลังรอรางวัล</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>กำลังรอรางวัลที่เข้าเกณฑ์</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>ข้ามรางวัลแล้ว</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>ส่งแล้ว</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>บันทึกแล้ว; ตรวจสอบประวัติกระเป๋า</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>ไม่จำกัด</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>ปิดใช้งาน (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>สถานะ: %1
+อัตราที่ใช้งาน: %2 | การเชื่อมต่อพร้อมกัน: %3
+โดเมน: %4
+ครั้งที่ลอง: %5 | ส่งแล้ว: %6
+การรับรางวัลล่าสุด: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>สร้างรางวัล</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>รับรางวัลอัตโนมัติ</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>สร้างรางวัล pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>จัดสรรเงินรางวัลแยกกันสำหรับหลักฐานการเชื่อมต่อ TLS ที่ถูกต้อง ใครก็ตามที่ทำตามข้อกำหนดได้สามารถรับรางวัลได้ หน้านี้จะไม่สร้างการเชื่อมต่อ HTTPS</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>โดเมน ASCII ตัวพิมพ์เล็ก (ใช้ punycode สำหรับโดเมนสากล) โดยไม่มีรูปแบบ URL เส้นทาง พอร์ต หรือจุดท้ายชื่อ</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>โดเมน(&amp;D):</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>รางวัลต่อเอาต์พุต(&amp;O):</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>จำนวนเอาต์พุต(&amp;N):</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>บิตศูนย์นำหน้า</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>ค่าแฮชสูงสุด</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>รูปแบบความยาก(&amp;F):</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>บิตศูนย์(&amp;Z):</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>อักขระฐานสิบหกจำนวน 64 ตัวพอดี</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>ค่าแฮชสูงสุด(&amp;H):</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>รุ่น %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>ใบรับรองรากที่เชื่อถือ(&amp;C):</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>ใช้อัตราค่าธรรมเนียมที่กำหนดเอง</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>ค่าธรรมเนียมต่อ 1,000 ไบต์เสมือน:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>ตรวจสอบ P2C(&amp;R)…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>ค่าธรรมเนียมจะคำนวณก่อนอนุมัติ คำขอขนาดใหญ่อาจแบ่งเป็นหลายธุรกรรม</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>การสร้าง P2C ในขณะนี้ต้องใช้กระเป๋าที่มีกุญแจส่วนตัวอยู่ในเครื่อง หน้านี้ไม่รองรับกระเป๋าแบบดูอย่างเดียวและกระเป๋าที่ใช้ผู้ลงนามภายนอก</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>สร้าง P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>ป้อนโดเมน ASCII ตัวพิมพ์เล็กตามรูปแบบมาตรฐาน โดยไม่มีจุดท้ายชื่อ รูปแบบ เส้นทาง หรือพอร์ต</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>ป้อนรางวัลที่เป็นบวกและมีผลรวมไม่เกินขีดจำกัดจำนวนเงิน</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>ค่าแฮชสูงสุดต้องมีอักขระฐานสิบหกจำนวน 64 ตัวพอดี</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>ป้อนอัตราค่าธรรมเนียมที่เป็นบวกต่อ 1,000 ไบต์เสมือน</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>ไม่สามารถเตรียมธุรกรรม P2C ได้: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>ผลรวมของรางวัลและค่าธรรมเนียมเกินขีดจำกัดจำนวนเงิน</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>กระเป๋า: %1&lt;br /&gt;โดเมน: %2&lt;br /&gt;เอาต์พุต: %3&lt;br /&gt;รางวัลต่อเอาต์พุต: %4&lt;br /&gt;รางวัลรวม: %5&lt;br /&gt;ธุรกรรม: %6&lt;br /&gt;ค่าธรรมเนียมรวม: %7&lt;br /&gt;&lt;b&gt;ยอดหักรวม: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>ค่าแฮชงานสูงสุด: %1
+รุ่นใบรับรองราก: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>บิตศูนย์นำหน้าที่ต้องการ: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>ค่าแฮชงานสูงสุด: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>ยืนยันการสร้าง P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>รุ่นใบรับรองราก: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>ใครก็ตามที่แสดงหลักฐานการเชื่อมต่อที่ถูกต้องสามารถรับรางวัลเหล่านี้ได้ คุณไม่สามารถเรียกคืนด้วยลายเซ็นกระเป๋าตามปกติ ตรวจสอบธุรกรรมทั้งหมดก่อนส่ง</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>ส่ง P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>ส่งธุรกรรม P2C ไปยังกระเป๋าแล้ว (%1) รหัสธุรกรรม:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>ยกเลิกแล้ว ไม่มีการส่งธุรกรรม P2C</translation>
+    </message>
+</context>
 </TS>

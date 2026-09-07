@@ -63,6 +63,7 @@ P2CCreateDialog::P2CCreateDialog(QWidget* parent) : QWidget(parent)
 
     m_form = new QWidget(this);
     auto* form = new QFormLayout(m_form);
+    form->setRowWrapPolicy(QFormLayout::WrapLongRows);
     m_domain = new QLineEdit(m_form);
     m_domain->setObjectName("p2cDomain");
     m_domain->setMaxLength(253);

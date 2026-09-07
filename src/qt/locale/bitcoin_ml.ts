@@ -762,6 +762,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">യഥാർത്ഥ സന്ദേശം:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect പ്രതിഫലങ്ങൾ സൃഷ്ടിക്കുക</translation>
+    </message>
 </context>
 <context>
     <name>CoinControlDialog</name>
@@ -1479,6 +1487,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Amount</source>
         <translation type="unfinished">തുക </translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C ഡൊമെയ്ൻ</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -1497,6 +1509,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(ലേബൽ ഇല്ല)</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>ഉപയോക്താവ് നിർവചിച്ച ഇടപാടിന്റെ ഉദ്ദേശ്യം അല്ലെങ്കിൽ P2C ഡൊമെയ്ൻ.</translation>
     </message>
     </context>
 <context>
@@ -1529,6 +1549,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">കയറ്റുമതി പരാജയപ്പെട്ടു</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>തിരയാൻ വിലാസം, P2C ഡൊമെയ്ൻ, ഇടപാട് ഐഡി അല്ലെങ്കിൽ ലേബൽ നൽകുക</translation>
     </message>
     </context>
 <context>
@@ -1645,4 +1669,310 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">-blockfilterindex ന്റെ മൂല്യം %s മനസിലാക്കാൻ കഴിയുന്നില്ല.</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>സ്ഥിരീകരിച്ച പ്രതിഫലങ്ങൾ സ്വയമേവ കണ്ടെത്തി, TLS തെളിവുകൾ സൃഷ്ടിച്ച്, പ്രതിഫലങ്ങൾ ഈ വാലറ്റിലേക്ക് അയയ്ക്കുന്നു. ഫീസ് ഓരോ പ്രതിഫലത്തിൽ നിന്നു മാത്രമാണ് കുറയ്ക്കുന്നത്. കീ പൂളിൽ സ്വീകരണ വിലാസങ്ങൾ ഉള്ളിടത്തോളം സ്വകാര്യ കീകൾ അൺലോക്ക് ചെയ്യേണ്ടതില്ല. നിങ്ങൾ വ്യക്തമായി ആരംഭിക്കുന്നതുവരെ HTTPS പ്രവർത്തനരഹിതമാണ്.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>സെക്കൻഡിലെ കണക്ഷനുകൾ (ഈ വാലറ്റ്):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 HTTPS പ്രവർത്തനരഹിതമാക്കുന്നു. നിരക്കിന്റെ പരിധി നീക്കാൻ താഴെ പരിധിയില്ലാത്ത നിരക്ക് തിരഞ്ഞെടുക്കുക.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>പരിധിയില്ലാത്ത നിരക്ക് (വ്യക്തമായ സമ്മതം)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>ഒരേസമയം കണക്ഷനുകൾ:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>ഐച്ഛികം: example.com, another.example (ശൂന്യം = എല്ലാ ഡൊമെയ്‌നുകളും)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>അനുവദിച്ച ഡൊമെയ്‌നുകൾ:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>പ്രയോഗിക്കുക / സ്വയമേവ ക്ലെയിം ആരംഭിക്കുക</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>HTTPS നിർത്തുക (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>പ്രവർത്തനരഹിതം</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>സ്വയമേവ P2C ക്ലെയിം പ്രവർത്തനക്ഷമമാക്കണോ?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>ഇത് പൊതുഡൊമെയ്‌നുകളിലേക്ക് നേരിട്ടുള്ള HTTPS കണക്ഷനുകൾ സ്ഥാപിക്കുകയും വിജയകരമായ ക്ലെയിമുകൾ സ്വയമേവ സമർപ്പിക്കുകയും ചെയ്യുന്നു. ആ സെർവറുകൾക്ക് നിങ്ങളുടെ IP വിലാസം കാണാം. പ്രോക്സി ക്രമീകരണങ്ങൾ മറികടക്കുന്നില്ല. പ്രതിഫലങ്ങളിൽനിന്ന് ഫീസ് കുറയ്ക്കുന്നു.
+
+%1
+
+തുടരണോ?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>നിങ്ങൾ സെക്കൻഡിൽ പരിധിയില്ലാത്ത കണക്ഷനുകൾ തിരഞ്ഞെടുത്തു.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>നിരക്ക്: ഈ വാലറ്റിന് സെക്കൻഡിൽ %1 കണക്ഷനുകൾ.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>ക്രമീകരണങ്ങൾ പ്രയോഗിക്കുന്നു…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>ആരംഭിക്കുന്നു</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>ഡൊമെയ്ൻ വിലാസം കണ്ടെത്തുന്നു</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>ഡൊമെയ്ൻ വിലാസം കണ്ടെത്താൻ വീണ്ടും ശ്രമിക്കുന്നു</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>തെളിവുകൾ തിരയുന്നു</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>കണക്ഷനുകൾ വീണ്ടും ശ്രമിക്കുന്നു</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>സർട്ടിഫിക്കറ്റ് നിരസിച്ചു</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>പിശക് കാരണം നിർത്തി</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>പ്രതിഫലം ഇതിനകം ക്ലെയിം ചെയ്തു</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>സ്ഥിരീകരിച്ച പ്രതിഫലങ്ങൾ തിരയുന്നു</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>പ്രതിഫലങ്ങൾക്കായി കാത്തിരിക്കുന്നു</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>അർഹമായ പ്രതിഫലങ്ങൾക്കായി കാത്തിരിക്കുന്നു</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>പ്രതിഫലം ഒഴിവാക്കി</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>സമർപ്പിച്ചു</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>സംരക്ഷിച്ചു; വാലറ്റ് ചരിത്രം പരിശോധിക്കുക</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>പരിധിയില്ല</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>പ്രവർത്തനരഹിതം (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>നില: %1
+സജീവ നിരക്ക്: %2 | ഒരേസമയം കണക്ഷനുകൾ: %3
+ഡൊമെയ്ൻ: %4
+ശ്രമങ്ങൾ: %5 | സമർപ്പിച്ചത്: %6
+അവസാന ക്ലെയിം: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>പ്രതിഫലങ്ങൾ സൃഷ്ടിക്കുക</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>സ്വയമേവ ക്ലെയിമുകൾ</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect പ്രതിഫലങ്ങൾ സൃഷ്ടിക്കുക</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>സാധുവായ TLS കണക്ഷൻ തെളിവുകൾക്ക് പ്രത്യേകം പ്രതിഫലങ്ങൾക്കുള്ള പണം നൽകുക. നിബന്ധനകൾ പാലിക്കുന്ന ആർക്കും അവ ക്ലെയിം ചെയ്യാം. ഈ പേജ് HTTPS കണക്ഷനുകൾ സ്ഥാപിക്കുന്നില്ല.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>ചെറിയക്ഷരത്തിലുള്ള ASCII ഡൊമെയ്ൻ (അന്തർദേശീയ ഡൊമെയ്‌നുകൾക്ക് punycode ഉപയോഗിക്കുക), URL സ്കീം, പാത, പോർട്ട് അല്ലെങ്കിൽ അവസാന കുത്ത് ഇല്ലാതെ.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;ഡൊമെയ്ൻ:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>ഓരോ &amp;ഔട്ട്പുട്ടിനും പ്രതിഫലം:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>ഔട്ട്പുട്ടുകളുടെ &amp;എണ്ണം:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>തുടക്കത്തിലെ പൂജ്യം ബിറ്റുകൾ</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>പരമാവധി ഹാഷ്</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>കാഠിന്യത്തിന്റെ &amp;രൂപം:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;പൂജ്യം ബിറ്റുകൾ:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>കൃത്യമായി 64 ഹെക്സാഡെസിമൽ അക്ഷരങ്ങൾ</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>പരമാവധി &amp;ഹാഷ്:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>പതിപ്പ് %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>വിശ്വസനീയ റൂട്ട് &amp;സർട്ടിഫിക്കറ്റുകൾ:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>ഇഷ്ടാനുസൃത ഫീസ് നിരക്ക് ഉപയോഗിക്കുക</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>1,000 വെർച്വൽ ബൈറ്റുകൾക്കുള്ള ഫീസ്:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>P2C &amp;പരിശോധിക്കുക…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>അംഗീകാരത്തിനുമുമ്പ് ഫീസ് കണക്കാക്കുന്നു. വലിയ അഭ്യർത്ഥനകൾ ഒന്നിലധികം ഇടപാടുകളായി വിഭജിക്കാം.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>P2C സൃഷ്ടിക്കാൻ ഇപ്പോൾ പ്രാദേശിക സ്വകാര്യ കീകളുള്ള വാലറ്റ് ആവശ്യമാണ്. നിരീക്ഷണത്തിന് മാത്രമുള്ളതും ബാഹ്യ ഒപ്പിടുന്നയാളെ ഉപയോഗിക്കുന്നതുമായ വാലറ്റുകൾക്ക് ഈ പേജിൽ പിന്തുണയില്ല.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>P2C സൃഷ്ടിക്കുക</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>അവസാന കുത്ത്, സ്കീം, പാത അല്ലെങ്കിൽ പോർട്ട് ഇല്ലാത്ത മാനക ചെറിയക്ഷര ASCII ഡൊമെയ്ൻ നൽകുക.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>ആകെ തുക പണത്തിന്റെ പരിധി കവിയാത്ത ധനാത്മക പ്രതിഫലം നൽകുക.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>പരമാവധി ഹാഷിൽ കൃത്യമായി 64 ഹെക്സാഡെസിമൽ അക്ഷരങ്ങൾ ഉണ്ടായിരിക്കണം.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>1,000 വെർച്വൽ ബൈറ്റുകൾക്ക് ധനാത്മക ഫീസ് നിരക്ക് നൽകുക.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C ഇടപാടുകൾ തയ്യാറാക്കാനായില്ല: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>ആകെ പ്രതിഫലങ്ങളും ഫീസും പണത്തിന്റെ പരിധി കവിയുന്നു.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>വാലറ്റ്: %1&lt;br /&gt;ഡൊമെയ്ൻ: %2&lt;br /&gt;ഔട്ട്പുട്ടുകൾ: %3&lt;br /&gt;ഓരോ ഔട്ട്പുട്ടിനും പ്രതിഫലം: %4&lt;br /&gt;ആകെ പ്രതിഫലങ്ങൾ: %5&lt;br /&gt;ഇടപാടുകൾ: %6&lt;br /&gt;ആകെ ഫീസ്: %7&lt;br /&gt;&lt;b&gt;ആകെ കുറയ്ക്കുന്ന തുക: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>പരമാവധി വർക്ക് ഹാഷ്: %1
+റൂട്ട് സർട്ടിഫിക്കറ്റുകളുടെ പതിപ്പ്: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>ആവശ്യമായ തുടക്കത്തിലെ പൂജ്യം ബിറ്റുകൾ: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>പരമാവധി വർക്ക് ഹാഷ്: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>P2C സൃഷ്ടിക്കൽ സ്ഥിരീകരിക്കുക</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>റൂട്ട് സർട്ടിഫിക്കറ്റുകളുടെ പതിപ്പ്: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>സാധുവായ കണക്ഷൻ തെളിവ് നൽകുന്ന ആർക്കും ഈ പ്രതിഫലങ്ങൾ ക്ലെയിം ചെയ്യാം. സാധാരണ വാലറ്റ് ഒപ്പിലൂടെ അവ തിരികെ നേടാനാവില്ല. അയയ്ക്കുന്നതിനു മുമ്പ് എല്ലാ ഇടപാടുകളും പരിശോധിക്കുക.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>P2C അയയ്ക്കുക</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C ഇടപാടുകൾ വാലറ്റിലേക്ക് സമർപ്പിച്ചു (%1). ഇടപാട് ഐഡികൾ:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>റദ്ദാക്കി. P2C ഇടപാടുകളൊന്നും അയച്ചിട്ടില്ല.</translation>
+    </message>
+</context>
 </TS>

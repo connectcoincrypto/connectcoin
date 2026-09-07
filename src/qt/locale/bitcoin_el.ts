@@ -853,6 +853,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">Αρχικό μήνυμα:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Δημιουργία ανταμοιβών pay-to-connect</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -2742,6 +2750,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <source>%1 (Certificate was not verified)</source>
         <translation type="unfinished">%1 (Το πιστοποιητικό δεν επαληθεύτηκε)</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Τομέας P2C</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -2752,6 +2764,14 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Ποσό που αφαιρέθηκε ή προστέθηκε στην ισορροπία.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Η πρόθεση/ο σκοπός της συναλλαγής που όρισε ο χρήστης ή ο τομέας P2C.</translation>
     </message>
 </context>
 <context>
@@ -2905,6 +2925,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>to</source>
         <translation type="unfinished">προς</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Εισαγάγετε διεύθυνση, τομέα P2C, αναγνωριστικό συναλλαγής ή ετικέτα για αναζήτηση</translation>
     </message>
 </context>
 <context>
@@ -3631,6 +3655,312 @@ Unable to restore backup of wallet.</source>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Το αρχείο ρυθμίσεων δεν μπόρεσε να γραφτεί</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Αυτόματη εύρεση επιβεβαιωμένων ανταμοιβών, δημιουργία αποδείξεων TLS και αποστολή των ανταμοιβών σε αυτό το πορτοφόλι. Τα τέλη αφαιρούνται μόνο από κάθε ανταμοιβή. Δεν απαιτείται ξεκλείδωμα ιδιωτικών κλειδιών όσο υπάρχουν διευθύνσεις λήψης στη δεξαμενή κλειδιών. Το HTTPS είναι απενεργοποιημένο μέχρι να το ξεκινήσετε ρητά.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Συνδέσεις ανά δευτερόλεπτο (αυτό το πορτοφόλι):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>Το 0 απενεργοποιεί το HTTPS. Για άρση του ορίου ρυθμού, επιλέξτε παρακάτω απεριόριστο ρυθμό.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Απεριόριστος ρυθμός (ρητή συγκατάθεση)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Ταυτόχρονες συνδέσεις:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Προαιρετικό: example.com, another.example (κενό = όλοι οι τομείς)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Επιτρεπόμενοι τομείς:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Εφαρμογή / έναρξη αυτόματης διεκδίκησης</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Διακοπή HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Απενεργοποιημένο</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Ενεργοποίηση αυτόματης διεκδίκησης P2C;</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Αυτό δημιουργεί απευθείας συνδέσεις HTTPS με δημόσιους τομείς και υποβάλλει αυτόματα επιτυχείς διεκδικήσεις. Η διεύθυνση IP σας είναι ορατή σε αυτούς τους διακομιστές. Οι ρυθμίσεις διαμεσολαβητή δεν παρακάμπτονται. Τα τέλη αφαιρούνται από τις ανταμοιβές.
+
+%1
+
+Συνέχεια;</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Επιλέξατε ΑΠΕΡΙΟΡΙΣΤΕΣ συνδέσεις ανά δευτερόλεπτο.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Ρυθμός: %1 συνδέσεις ανά δευτερόλεπτο για αυτό το πορτοφόλι.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Εφαρμογή ρυθμίσεων…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Εκκίνηση</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Επίλυση ονόματος τομέα</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Επανάληψη επίλυσης ονόματος τομέα</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Αναζήτηση αποδείξεων</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Επανάληψη συνδέσεων</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Το πιστοποιητικό απορρίφθηκε</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Διακόπηκε λόγω σφάλματος</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Η ανταμοιβή έχει ήδη διεκδικηθεί</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Σάρωση επιβεβαιωμένων ανταμοιβών</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Αναμονή για ανταμοιβές</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Αναμονή για επιλέξιμες ανταμοιβές</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Η ανταμοιβή παραλείφθηκε</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Υποβλήθηκε</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Αποθηκεύτηκε· ελέγξτε το ιστορικό του πορτοφολιού</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Απεριόριστος</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Απενεργοποιημένο (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Κατάσταση: %1
+Ενεργός ρυθμός: %2 | Ταυτόχρονες συνδέσεις: %3
+Τομέας: %4
+Προσπάθειες: %5 | Υποβολές: %6
+Τελευταία διεκδίκηση: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Δημιουργία ανταμοιβών</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Αυτόματες διεκδικήσεις</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Δημιουργία ανταμοιβών pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Χρηματοδοτήστε ανεξάρτητες ανταμοιβές για έγκυρες αποδείξεις σύνδεσης TLS. Μπορεί να τις διεκδικήσει οποιοσδήποτε πληροί τις απαιτήσεις. Αυτή η σελίδα δεν δημιουργεί συνδέσεις HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Τομέας με πεζούς χαρακτήρες ASCII (χρησιμοποιήστε punycode για διεθνείς τομείς), χωρίς σχήμα URL, διαδρομή, θύρα ή τελική τελεία.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Τομέας:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Ανταμοιβή ανά έ&amp;ξοδο:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Αριθμός εξόδων:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Αρχικά μηδενικά bit</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Μέγιστη τιμή κατακερματισμού</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Μορφή δυσκολίας:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Μηδενικά bit:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Ακριβώς 64 δεκαεξαδικοί χαρακτήρες</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Μέγιστη τιμή &amp;κατακερματισμού:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Έκδοση %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Έμπιστα ριζικά &amp;πιστοποιητικά:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Χρήση προσαρμοσμένου συντελεστή τέλους</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Τέλος ανά 1.000 εικονικά byte:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Έλεγχος P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Τα τέλη υπολογίζονται πριν από την έγκριση. Τα μεγάλα αιτήματα μπορεί να χωριστούν σε πολλές συναλλαγές.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Η δημιουργία P2C απαιτεί προς το παρόν πορτοφόλι με τοπικά ιδιωτικά κλειδιά. Τα πορτοφόλια μόνο παρακολούθησης και όσα χρησιμοποιούν εξωτερικό υπογράφοντα δεν υποστηρίζονται σε αυτή τη σελίδα.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Δημιουργία P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Εισαγάγετε κανονικό τομέα με πεζούς χαρακτήρες ASCII χωρίς τελική τελεία, σχήμα, διαδρομή ή θύρα.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Εισαγάγετε θετική ανταμοιβή της οποίας το σύνολο δεν υπερβαίνει το χρηματικό όριο.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Η μέγιστη τιμή κατακερματισμού πρέπει να περιέχει ακριβώς 64 δεκαεξαδικούς χαρακτήρες.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Εισαγάγετε θετικό συντελεστή τέλους ανά 1.000 εικονικά byte.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Αδυναμία προετοιμασίας συναλλαγών P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Το σύνολο των ανταμοιβών μαζί με τα τέλη υπερβαίνει το χρηματικό όριο.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Πορτοφόλι: %1&lt;br /&gt;Τομέας: %2&lt;br /&gt;Έξοδοι: %3&lt;br /&gt;Ανταμοιβή ανά έξοδο: %4&lt;br /&gt;Συνολικές ανταμοιβές: %5&lt;br /&gt;Συναλλαγές: %6&lt;br /&gt;Συνολικά τέλη: %7&lt;br /&gt;&lt;b&gt;Συνολική χρέωση: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Μέγιστη τιμή κατακερματισμού εργασίας: %1
+Έκδοση ριζικών πιστοποιητικών: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Απαιτούμενα αρχικά μηδενικά bit: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Μέγιστη τιμή κατακερματισμού εργασίας: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Επιβεβαίωση δημιουργίας P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Έκδοση ριζικών πιστοποιητικών: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Αυτές τις ανταμοιβές μπορεί να διεκδικήσει οποιοσδήποτε παρουσιάσει έγκυρη απόδειξη σύνδεσης. Δεν μπορείτε να τις ανακτήσετε με μια συνηθισμένη υπογραφή πορτοφολιού. Ελέγξτε όλες τις συναλλαγές πριν από την αποστολή.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Αποστολή P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Οι συναλλαγές P2C υποβλήθηκαν στο πορτοφόλι (%1). Αναγνωριστικά συναλλαγών:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Ακυρώθηκε. Δεν στάλθηκαν συναλλαγές P2C.</translation>
     </message>
 </context>
 </TS>

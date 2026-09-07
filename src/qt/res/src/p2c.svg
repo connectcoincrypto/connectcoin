@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) 2026 The ConnectCoin developers.
+     Distributed under the MIT software license, see COPYING. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <title>Pay-to-connect</title>
+  <g fill="none" stroke="#000000" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="64" cy="64" r="48"/>
+    <ellipse cx="64" cy="64" rx="21" ry="48"/>
+    <path d="M 16,64 H 112"/>
+  </g>
+</svg>

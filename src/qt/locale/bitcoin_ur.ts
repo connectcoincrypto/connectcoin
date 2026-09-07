@@ -876,6 +876,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">اصل پیغام:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect انعامات بنائیں</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -2676,6 +2684,10 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <source>Amount</source>
         <translation type="unfinished">رقم</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C ڈومین</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -2694,6 +2706,14 @@ If you are receiving this error you should request the merchant provide a BIP21 
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(کوئی لیبل نہیں)</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>صارف کا مقرر کردہ ٹرانزیکشن کا مقصد، یا P2C ڈومین۔</translation>
     </message>
     </context>
 <context>
@@ -2742,6 +2762,10 @@ If you are receiving this error you should request the merchant provide a BIP21 
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">ایکسپورٹ ناکام ہوا</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>تلاش کے لیے پتہ، P2C ڈومین، ٹرانزیکشن شناخت یا لیبل درج کریں</translation>
     </message>
     </context>
 <context>
@@ -2793,4 +2817,310 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <translation type="unfinished">ناکافی فنڈز</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>تصدیق شدہ انعامات خودکار طور پر تلاش کریں، TLS ثبوت بنائیں اور انعامات اس والیٹ میں بھیجیں۔ فیس صرف ہر انعام سے کاٹی جاتی ہے۔ جب تک کلیدوں کے ذخیرے میں وصولی کے پتے موجود ہوں، نجی کلیدیں کھولنے کی ضرورت نہیں۔ HTTPS اس وقت تک غیر فعال رہتا ہے جب تک آپ اسے واضح طور پر شروع نہ کریں۔</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>فی سیکنڈ کنکشنز (یہ والیٹ):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0، HTTPS کو غیر فعال کرتا ہے۔ رفتار کی حد ہٹانے کے لیے نیچے لامحدود رفتار منتخب کریں۔</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>لامحدود رفتار (واضح رضامندی)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>بیک وقت کنکشنز:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>اختیاری: example.com, another.example (خالی = تمام ڈومین)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>اجازت یافتہ ڈومین:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>لاگو کریں / خودکار انعام وصولی شروع کریں</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>HTTPS روکیں (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>غیر فعال</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>خودکار P2C انعام وصولی فعال کریں؟</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>یہ عوامی ڈومینز سے براہ راست HTTPS کنکشن بناتا ہے اور کامیاب انعامی دعوے خودکار طور پر جمع کرتا ہے۔ آپ کا IP پتہ ان سرورز کو نظر آتا ہے۔ پراکسی کی ترتیبات کو نظرانداز نہیں کیا جاتا۔ فیس انعامات سے کاٹی جاتی ہے۔
+
+%1
+
+جاری رکھیں؟</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>آپ نے فی سیکنڈ لامحدود کنکشن منتخب کیے ہیں۔</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>رفتار: اس والیٹ کے لیے فی سیکنڈ %1 کنکشن۔</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>ترتیبات لاگو ہو رہی ہیں…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>شروع ہو رہا ہے</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>ڈومین کا پتہ تلاش ہو رہا ہے</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>ڈومین کا پتہ دوبارہ تلاش کیا جا رہا ہے</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>ثبوت تلاش ہو رہے ہیں</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>کنکشن کی دوبارہ کوشش ہو رہی ہے</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>سرٹیفکیٹ مسترد ہوا</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>خرابی کی وجہ سے رک گیا</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>انعام پہلے ہی وصول ہو چکا ہے</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>تصدیق شدہ انعامات تلاش ہو رہے ہیں</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>انعامات کا انتظار ہے</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>اہل انعامات کا انتظار ہے</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>انعام چھوڑ دیا گیا</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>جمع ہو گیا</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>محفوظ ہو گیا؛ والیٹ کی تاریخ دیکھیں</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>لامحدود</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>غیر فعال (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>حالت: %1
+فعال رفتار: %2 | بیک وقت کنکشنز: %3
+ڈومین: %4
+کوششیں: %5 | جمع شدہ: %6
+آخری انعامی دعویٰ: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>انعامات بنائیں</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>خودکار انعام وصولی</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect انعامات بنائیں</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>درست TLS کنکشن ثبوتوں کے لیے الگ الگ انعامات کی رقم فراہم کریں۔ شرائط پوری کرنے والا کوئی بھی شخص انہیں وصول کر سکتا ہے۔ یہ صفحہ HTTPS کنکشن نہیں بناتا۔</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>چھوٹے حروف میں ASCII ڈومین (بین الاقوامی ڈومینز کے لیے punycode استعمال کریں)، URL اسکیم، راستے، پورٹ یا آخری نقطے کے بغیر۔</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;ڈومین:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>فی &amp;آؤٹ پٹ انعام:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>آؤٹ پٹس کی &amp;تعداد:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>ابتدائی صفر بٹس</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>زیادہ سے زیادہ ہیش</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>مشکل کی &amp;شکل:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;صفر بٹس:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>بالکل 64 ہیکساڈیسیمل حروف</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>زیادہ سے زیادہ &amp;ہیش:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>ورژن %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>قابل اعتماد روٹ &amp;سرٹیفکیٹس:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>اپنی مرضی کی فیس شرح استعمال کریں</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>فی 1,000 ورچوئل بائٹس فیس:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>P2C کا &amp;جائزہ لیں…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>فیس منظوری سے پہلے شمار کی جاتی ہے۔ بڑی درخواستیں کئی ٹرانزیکشنز میں تقسیم ہو سکتی ہیں۔</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>P2C بنانے کے لیے فی الحال مقامی نجی کلیدوں والا والیٹ درکار ہے۔ صرف نگرانی والے اور بیرونی دستخط کنندہ والے والیٹ اس صفحے پر معاونت یافتہ نہیں ہیں۔</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>P2C بنائیں</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>چھوٹے حروف میں معیاری ASCII ڈومین درج کریں، آخری نقطے، اسکیم، راستے یا پورٹ کے بغیر۔</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>مثبت انعام درج کریں جس کی مجموعی رقم مالی حد سے زیادہ نہ ہو۔</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>زیادہ سے زیادہ ہیش میں بالکل 64 ہیکساڈیسیمل حروف ہونے چاہییں۔</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>فی 1,000 ورچوئل بائٹس مثبت فیس شرح درج کریں۔</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C ٹرانزیکشنز تیار نہیں ہو سکیں: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>کل انعام اور فیس مالی حد سے تجاوز کرتے ہیں۔</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>والیٹ: %1&lt;br /&gt;ڈومین: %2&lt;br /&gt;آؤٹ پٹس: %3&lt;br /&gt;فی آؤٹ پٹ انعام: %4&lt;br /&gt;کل انعامات: %5&lt;br /&gt;ٹرانزیکشنز: %6&lt;br /&gt;کل فیس: %7&lt;br /&gt;&lt;b&gt;کل کٹوتی: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>زیادہ سے زیادہ ورک ہیش: %1
+روٹ سرٹیفکیٹس کا ورژن: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>درکار ابتدائی صفر بٹس: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>زیادہ سے زیادہ ورک ہیش: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>P2C بنانے کی تصدیق کریں</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>روٹ سرٹیفکیٹس کا ورژن: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>درست کنکشن ثبوت پیش کرنے والا کوئی بھی شخص یہ انعامات وصول کر سکتا ہے۔ آپ انہیں عام والیٹ دستخط سے واپس نہیں لے سکتے۔ بھیجنے سے پہلے تمام ٹرانزیکشنز کا جائزہ لیں۔</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>P2C بھیجیں</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C ٹرانزیکشنز والیٹ میں جمع ہو گئیں (%1)۔ ٹرانزیکشن شناختیں:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>منسوخ ہو گیا۔ کوئی P2C ٹرانزیکشن نہیں بھیجی گئی۔</translation>
+    </message>
+</context>
 </TS>

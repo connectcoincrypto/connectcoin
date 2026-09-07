@@ -884,6 +884,14 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <source>Original message:</source>
         <translation type="unfinished">Mesajul original:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Creează recompense pay-to-connect</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -3119,6 +3127,10 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
         <source>false</source>
         <translation type="unfinished">fals</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Domeniu P2C</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -3216,6 +3228,14 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Suma extrasă sau adăugată la sold.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Intenția/scopul tranzacției definit de utilizator sau domeniul P2C.</translation>
     </message>
 </context>
 <context>
@@ -3349,6 +3369,10 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
     <message>
         <source>to</source>
         <translation type="unfinished">către</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Introdu adresa, domeniul P2C, identificatorul tranzacției sau eticheta de căutat</translation>
     </message>
 </context>
 <context>
@@ -3841,6 +3865,312 @@ Restaurarea copiei de rezervă a portofelului a eșuat.</translation>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Fișierul de setări nu a putut fi scris</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Descoperă automat recompensele confirmate, generează dovezi TLS și trimite recompensele în acest portofel. Comisioanele sunt luate numai din fiecare recompensă. Nu este necesară deblocarea cheilor private cât timp mai există adrese de primire în rezerva de chei. HTTPS este dezactivat până când îl pornești în mod explicit.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Conexiuni pe secundă (acest portofel):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 dezactivează HTTPS. Pentru a elimina limita de viteză, selectează mai jos viteza nelimitată.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Viteză nelimitată (acord explicit)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Conexiuni simultane:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Opțional: example.com, another.example (gol = toate domeniile)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Domenii permise:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Aplică / pornește revendicarea automată</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Oprește HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Dezactivat</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Activezi revendicarea automată P2C?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Se vor realiza conexiuni HTTPS directe către domenii publice și se vor trimite automat revendicările reușite. Adresa ta IP este vizibilă acestor servere. Configurațiile proxy nu sunt ocolite. Comisioanele se scad din recompense.
+
+%1
+
+Continui?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Ai selectat un număr NELIMITAT de conexiuni pe secundă.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Viteză: %1 conexiuni pe secundă pentru acest portofel.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Se aplică configurația…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Se pornește</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Se rezolvă domeniul</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Se reîncearcă rezolvarea domeniului</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Se caută dovezi</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Se reîncearcă conexiunile</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Certificat respins</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Oprit din cauza unei erori</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Recompensa a fost deja revendicată</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Se scanează recompensele confirmate</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Se așteaptă recompense</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Se așteaptă recompense eligibile</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Recompensă omisă</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Trimis</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Salvat; verifică istoricul portofelului</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Nelimitat</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Dezactivat (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Stare: %1
+Viteză activă: %2 | Conexiuni simultane: %3
+Domeniu: %4
+Încercări: %5 | Trimise: %6
+Ultima revendicare: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Creează recompense</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Revendicări automate</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Creează recompense pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Finanțează recompense independente pentru dovezi valide de conexiune TLS. Oricine îndeplinește cerințele le poate revendica. Această pagină nu realizează conexiuni HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Domeniu ASCII cu litere mici (folosește punycode pentru domeniile internaționale), fără schemă URL, cale, port sau punct la sfârșit.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domeniu:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Recompensă pe &amp;ieșire:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Număr de ieșiri:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Biți zero inițiali</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Hash maxim</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Formatul dificultății:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>Biți &amp;zero:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Exact 64 de caractere hexazecimale</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>&amp;Hash maxim:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Versiunea %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>&amp;Certificate rădăcină de încredere:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Folosește o rată de comision personalizată</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Comision pentru 1.000 de octeți virtuali:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Verifică P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Comisioanele sunt calculate înainte de aprobare. Cererile mari pot fi împărțite în mai multe tranzacții.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Crearea P2C necesită în prezent un portofel cu chei private locale. Portofelele doar pentru vizualizare și cele cu semnatar extern nu sunt acceptate pe această pagină.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Creează P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Introdu un domeniu ASCII canonic cu litere mici, fără punct la sfârșit, schemă, cale sau port.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Introdu o recompensă pozitivă al cărei total nu depășește limita monetară.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Hash-ul maxim trebuie să conțină exact 64 de caractere hexazecimale.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Introdu o rată de comision pozitivă pentru 1.000 de octeți virtuali.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Nu se pot pregăti tranzacțiile P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Totalul recompenselor plus comisioanele depășește limita monetară.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Portofel: %1&lt;br /&gt;Domeniu: %2&lt;br /&gt;Ieșiri: %3&lt;br /&gt;Recompensă pe ieșire: %4&lt;br /&gt;Total recompense: %5&lt;br /&gt;Tranzacții: %6&lt;br /&gt;Total comisioane: %7&lt;br /&gt;&lt;b&gt;Total debitat: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Hash de lucru maxim: %1
+Versiunea certificatelor rădăcină: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Biți zero inițiali necesari: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Hash de lucru maxim: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Confirmă crearea P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Versiunea certificatelor rădăcină: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Aceste recompense pot fi revendicate de oricine prezintă o dovadă validă de conexiune. Nu le poți recupera folosind o semnătură obișnuită a portofelului. Verifică toate tranzacțiile înainte de trimitere.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Trimite P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Tranzacții P2C trimise portofelului (%1). Identificatori de tranzacție:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Anulat. Nu s-a trimis nicio tranzacție P2C.</translation>
     </message>
 </context>
 </TS>

@@ -479,6 +479,14 @@ Fífọwọ́sowọ́pọ̀ jẹ́ ẹni pé ó ṣeé ṣe pẹ̀lú àwọn à
         <source>Error: %1</source>
         <translation type="unfinished">Àṣìṣe: %1</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Ṣẹ̀dá ẹ̀san pay-to-connect</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -637,6 +645,10 @@ Fífọwọ́sowọ́pọ̀ jẹ́ ẹni pé ó ṣeé ṣe pẹ̀lú àwọn à
             <numerusform />
         </translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Domain P2C</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -651,6 +663,14 @@ Fífọwọ́sowọ́pọ̀ jẹ́ ẹni pé ó ṣeé ṣe pẹ̀lú àwọn à
     <message>
         <source>(no label)</source>
         <translation type="unfinished">kòsí àkọlé</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Ète/ìdí ìṣòwò tí aṣàmúlò yàn, tàbí domain P2C.</translation>
     </message>
     </context>
 <context>
@@ -680,6 +700,10 @@ Fífọwọ́sowọ́pọ̀ jẹ́ ẹni pé ó ṣeé ṣe pẹ̀lú àwọn à
         <source>Exporting Failed</source>
         <translation type="unfinished">Ìkójáde Kùnà</translation>
     </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Tẹ àdírẹ́sì, domain P2C, àmì ìdánimọ̀ ìṣòwò tàbí àkọlé láti wá</translation>
+    </message>
     </context>
 <context>
     <name>WalletFrame</name>
@@ -699,4 +723,310 @@ Fífọwọ́sowọ́pọ̀ jẹ́ ẹni pé ó ṣeé ṣe pẹ̀lú àwọn à
         <translation type="unfinished">Se òkèéé dátà ní tàábù lọwọlọwọ sí fáílì kán.</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Wa àwọn ẹ̀san tí a ti fìdí múlẹ̀ láìfọwọ́ṣe, ṣẹ̀dá ẹ̀rí TLS, kí o sì fi àwọn ẹ̀san ránṣẹ́ sí àpamọ́ yìí. A máa yọ owó iṣẹ́ lára ẹ̀san kọ̀ọ̀kan nìkan. Kò sí ìdí láti ṣí àwọn kọ́kọ́rọ́ àṣírí bí àwọn àdírẹ́sì ìgbàwọlé bá ṣì wà nínú àkójọpọ̀ kọ́kọ́rọ́. HTTPS ti wa ní pípa títí tí o fi bẹ̀rẹ̀ rẹ̀ ní kedere.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Ìsopọ̀ fún ìṣẹ́jú-àáyá kan (àpamọ́ yìí):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 máa ń pa HTTPS. Láti yọ ààlà ìyára kúrò, yan ìyára aláìlópin ní ìsàlẹ̀.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Ìyára aláìlópin (ìfọwọ́sí kedere)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Àwọn ìsopọ̀ ní àkókò kan:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Kì í ṣe dandan: example.com, another.example (òfo = gbogbo domain)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Àwọn domain tí a gbà láàyè:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Lò / bẹ̀rẹ̀ ìbéèrè ẹ̀san aláìfọwọ́ṣe</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Dá HTTPS dúró (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Ó ti pa</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Ṣe kí ìbéèrè ẹ̀san P2C aláìfọwọ́ṣe ṣiṣẹ́?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Èyí ń ṣe ìsopọ̀ HTTPS tààrà sí àwọn domain gbogbogbò, ó sì ń fi àwọn ìbéèrè tó ṣàṣeyọrí ránṣẹ́ láìfọwọ́ṣe. Àwọn olupin wọ̀nyẹn lè rí àdírẹ́sì IP rẹ. A kì í kọjá àwọn ètò proxy. A máa yọ owó iṣẹ́ lára ẹ̀san.
+
+%1
+
+Tẹ̀síwájú?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>O ti yan ìsopọ̀ ALÁÌLÓPIN fún ìṣẹ́jú-àáyá kan.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Ìyára: %1 ìsopọ̀ fún ìṣẹ́jú-àáyá kan fún àpamọ́ yìí.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Ń lo àwọn ètò…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Ń bẹ̀rẹ̀</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Ń wá àdírẹ́sì domain</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Ń tún gbìyànjú láti wá àdírẹ́sì domain</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Ń wá ẹ̀rí</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Ń tún gbìyànjú àwọn ìsopọ̀</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>A kọ ìwé-ẹ̀rí</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Ó dúró nítorí àṣìṣe</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>A ti gba ẹ̀san náà tẹ́lẹ̀</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Ń wá àwọn ẹ̀san tí a ti fìdí múlẹ̀</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Ń dúró de ẹ̀san</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Ń dúró de ẹ̀san tó péye</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>A fò ẹ̀san náà</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>A ti fi ránṣẹ́</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>A ti fipamọ́; ṣàyẹ̀wò ìtàn àpamọ́</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Aláìlópin</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Ó ti pa (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Ipò: %1
+Ìyára tó ń ṣiṣẹ́: %2 | Ìsopọ̀ ní àkókò kan: %3
+Domain: %4
+Ìgbìyànjú: %5 | Tí a fi ránṣẹ́: %6
+Ìbéèrè tó kẹ́yìn: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Ṣẹ̀dá ẹ̀san</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Àwọn ìbéèrè aláìfọwọ́ṣe</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Ṣẹ̀dá ẹ̀san pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Fi owó sí ẹ̀san ọ̀tọ̀ọ̀tọ̀ fún ẹ̀rí ìsopọ̀ TLS tó wúlò. Ẹnikẹ́ni tó bá pé àwọn àdéhùn lè béèrè wọn. Ojú-ewé yìí kì í ṣe ìsopọ̀ HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Domain ASCII ní lẹ́tà kékeré (lo punycode fún àwọn domain àgbáyé), láìsí ètò URL, ọ̀nà, port tàbí àmì dọ́ọ̀tì ní ìparí.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domain:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Ẹ̀san fún &amp;output kọ̀ọ̀kan:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Iye output:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Àwọn bit òdo ní ìbẹ̀rẹ̀</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Hash tó pọ̀ jù</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Ìrísí ìṣòro:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>Àwọn bit &amp;òdo:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Àmì hexadecimal 64 gan-an</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>&amp;Hash tó pọ̀ jù:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Ẹ̀dà %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Àwọn ìwé-ẹ̀rí &amp;gbòǹgbò tí a gbẹ́kẹ̀lé:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Lo òṣùwọ̀n owó iṣẹ́ àkànṣe</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Owó iṣẹ́ fún 1,000 virtual bytes:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Ṣàyẹ̀wò P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>A máa ṣe ìṣirò owó iṣẹ́ ṣáájú ìfọwọ́sí. A lè pín ìbéèrè ńlá sí ọ̀pọ̀ ìṣòwò.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Ṣíṣẹ̀dá P2C nílò àpamọ́ tó ní kọ́kọ́rọ́ àṣírí inú ẹ̀rọ báyìí. Ojú-ewé yìí kò ṣe àtìlẹ́yìn fún àpamọ́ àbójútó nìkan àti àpamọ́ tó ní olùfọwọ́sí òde.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Ṣẹ̀dá P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Tẹ domain ASCII boṣewa ní lẹ́tà kékeré, láìsí dọ́ọ̀tì ní ìparí, ètò, ọ̀nà tàbí port.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Tẹ ẹ̀san tó ju òdo lọ tí àpapọ̀ rẹ̀ kò kọjá ààlà owó.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Hash tó pọ̀ jù gbọ́dọ̀ ní àmì hexadecimal 64 gan-an.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Tẹ òṣùwọ̀n owó iṣẹ́ tó ju òdo lọ fún 1,000 virtual bytes.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Kò ṣeé pèsè àwọn ìṣòwò P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Àpapọ̀ ẹ̀san àti owó iṣẹ́ kọjá ààlà owó.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Àpamọ́: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Output: %3&lt;br /&gt;Ẹ̀san fún output kọ̀ọ̀kan: %4&lt;br /&gt;Àpapọ̀ ẹ̀san: %5&lt;br /&gt;Ìṣòwò: %6&lt;br /&gt;Àpapọ̀ owó iṣẹ́: %7&lt;br /&gt;&lt;b&gt;Àpapọ̀ tí a máa yọ: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Hash iṣẹ́ tó pọ̀ jù: %1
+Ẹ̀dà ìwé-ẹ̀rí gbòǹgbò: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Àwọn bit òdo tí a nílò ní ìbẹ̀rẹ̀: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Hash iṣẹ́ tó pọ̀ jù: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Fọwọ́sí ṣíṣẹ̀dá P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Ẹ̀dà ìwé-ẹ̀rí gbòǹgbò: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Ẹnikẹ́ni tó bá fi ẹ̀rí ìsopọ̀ tó wúlò hàn lè gba àwọn ẹ̀san wọ̀nyí. O kò lè gba wọn padà pẹ̀lú ìbuwọ́lu àpamọ́ lásán. Ṣàyẹ̀wò gbogbo ìṣòwò ṣáájú fífiránṣẹ́.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Fi P2C ránṣẹ́</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>A ti fi àwọn ìṣòwò P2C ránṣẹ́ sí àpamọ́ (%1). Àmì ìdánimọ̀ ìṣòwò:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>A ti fagilé. Kò sí ìṣòwò P2C tí a fi ránṣẹ́.</translation>
+    </message>
+</context>
 </TS>

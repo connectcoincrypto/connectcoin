@@ -572,6 +572,14 @@
         <source>Original message:</source>
         <translation type="unfinished">මුල් පණිවිඩය:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect ත්‍යාග සාදන්න</translation>
+    </message>
 </context>
 <context>
     <name>CoinControlDialog</name>
@@ -1132,6 +1140,10 @@
         <source>Amount</source>
         <translation type="unfinished">අගය</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C වසම</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -1158,6 +1170,14 @@
     <message>
         <source>Type of transaction.</source>
         <translation type="unfinished">ගනුදෙනු වර්ග.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>පරිශීලකයා නියම කළ ගනුදෙනුවේ අරමුණ හෝ P2C වසම.</translation>
     </message>
     </context>
 <context>
@@ -1230,6 +1250,10 @@
     <message>
         <source>to</source>
         <translation type="unfinished">වෙත</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>සෙවීමට ලිපිනය, P2C වසම, ගනුදෙනු හැඳුනුම හෝ ලේබලය ඇතුළත් කරන්න</translation>
     </message>
 </context>
 <context>
@@ -1321,4 +1345,310 @@
         <translation type="unfinished">සැකසීම් ගොනුව කියවිය නොහැක</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>තහවුරු කළ ත්‍යාග ස්වයංක්‍රීයව සොයා, TLS සාක්ෂි සාදා, ත්‍යාග මෙම පසුම්බියට යවයි. ගාස්තු අඩු කරන්නේ එක් එක් ත්‍යාගයෙන් පමණි. යතුරු සංචිතයේ ලැබීමේ ලිපින පවතින තුරු පෞද්ගලික යතුරු අගුළු හැරීම අවශ්‍ය නොවේ. ඔබ පැහැදිලිව ආරම්භ කරන තුරු HTTPS අක්‍රියව පවතී.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>තත්පරයකට සම්බන්ධතා (මෙම පසුම්බිය):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 මඟින් HTTPS අක්‍රිය කරයි. වේග සීමාව ඉවත් කිරීමට පහත අසීමිත වේගය තෝරන්න.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>අසීමිත වේගය (පැහැදිලි එකඟතාව)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>එකවර සම්බන්ධතා:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>විකල්ප: example.com, another.example (හිස් = සියලු වසම්)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>අවසර දී ඇති වසම්:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>යොදන්න / ස්වයංක්‍රීය ත්‍යාග ඉල්ලීම අරඹන්න</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>HTTPS නවත්වන්න (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>අක්‍රියයි</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>ස්වයංක්‍රීය P2C ත්‍යාග ඉල්ලීම සක්‍රිය කරන්නද?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>මෙය පොදු වසම් වෙත සෘජු HTTPS සම්බන්ධතා සාදා, සාර්ථක ඉල්ලීම් ස්වයංක්‍රීයව ඉදිරිපත් කරයි. එම සේවාදායකයන්ට ඔබේ IP ලිපිනය පෙනේ. ප්‍රොක්සි සැකසුම් මඟහැර නොයයි. ගාස්තු ත්‍යාගවලින් අඩු කරයි.
+
+%1
+
+ඉදිරියට යන්නද?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>ඔබ තත්පරයකට අසීමිත සම්බන්ධතා තෝරා ඇත.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>වේගය: මෙම පසුම්බිය සඳහා තත්පරයකට සම්බන්ධතා %1.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>සැකසුම් යොදමින්…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>ආරම්භ කරමින්</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>වසම් ලිපිනය සොයමින්</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>වසම් ලිපිනය සෙවීමට නැවත උත්සාහ කරමින්</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>සාක්ෂි සොයමින්</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>සම්බන්ධතා නැවත උත්සාහ කරමින්</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>සහතිකය ප්‍රතික්ෂේප විය</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>දෝෂයක් නිසා නැවතුණි</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>ත්‍යාගය දැනටමත් ලබාගෙන ඇත</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>තහවුරු කළ ත්‍යාග සොයමින්</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>ත්‍යාග බලාපොරොත්තුවෙන්</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>සුදුසු ත්‍යාග බලාපොරොත්තුවෙන්</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>ත්‍යාගය මඟහැරියා</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>ඉදිරිපත් කළා</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>සුරැකුවා; පසුම්බි ඉතිහාසය බලන්න</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>අසීමිතයි</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>අක්‍රියයි (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>තත්ත්වය: %1
+සක්‍රිය වේගය: %2 | එකවර සම්බන්ධතා: %3
+වසම: %4
+උත්සාහ: %5 | ඉදිරිපත් කළ: %6
+අවසන් ඉල්ලීම: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>ත්‍යාග සාදන්න</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>ස්වයංක්‍රීය ඉල්ලීම්</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect ත්‍යාග සාදන්න</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>වලංගු TLS සම්බන්ධතා සාක්ෂි සඳහා වෙන්වූ ත්‍යාගවලට මුදල් සපයන්න. අවශ්‍යතා සපුරන ඕනෑම අයෙකුට ඒවා ඉල්ලාගත හැක. මෙම පිටුව HTTPS සම්බන්ධතා නොසාදයි.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>කුඩා අකුරු ASCII වසමක් (ජාත්‍යන්තර වසම් සඳහා punycode භාවිත කරන්න), URL ක්‍රමය, මාර්ගය, පෝට් එක හෝ අවසන් තිත නොමැතිව.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;වසම:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>එක් &amp;ප්‍රතිදානයකට ත්‍යාගය:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>ප්‍රතිදාන &amp;ගණන:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>ආරම්භක බිංදු බිටු</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>උපරිම හැෂ්</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>අපහසුතාවේ &amp;ආකෘතිය:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;බිංදු බිටු:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>හරියටම ෂඩ්දශම අක්ෂර 64ක්</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>උපරිම &amp;හැෂ්:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>අනුවාදය %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>විශ්වාසනීය මූල &amp;සහතික:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>අභිරුචි ගාස්තු අනුපාතයක් භාවිත කරන්න</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>අතථ්‍ය බයිට 1,000කට ගාස්තුව:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>P2C &amp;සමාලෝචනය කරන්න…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>අනුමැතියට පෙර ගාස්තු ගණනය කරයි. විශාල ඉල්ලීම් ගනුදෙනු කිහිපයකට බෙදිය හැක.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>P2C සෑදීමට දැනට දේශීය පෞද්ගලික යතුරු ඇති පසුම්බියක් අවශ්‍යය. නැරඹීමට පමණක් ඇති සහ බාහිර අත්සන්කරුවෙකු භාවිත කරන පසුම්බි මෙම පිටුවේ සහාය නොලබයි.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>P2C සාදන්න</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>අවසන් තිත, ක්‍රමය, මාර්ගය හෝ පෝට් එක නොමැති සම්මත කුඩා අකුරු ASCII වසමක් ඇතුළත් කරන්න.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>එකතුව මුදල් සීමාව නොඉක්මවන ධන ත්‍යාගයක් ඇතුළත් කරන්න.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>උපරිම හැෂ් එකේ හරියටම ෂඩ්දශම අක්ෂර 64ක් තිබිය යුතුය.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>අතථ්‍ය බයිට 1,000කට ධන ගාස්තු අනුපාතයක් ඇතුළත් කරන්න.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C ගනුදෙනු සූදානම් කළ නොහැක: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>මුළු ත්‍යාග සහ ගාස්තු මුදල් සීමාව ඉක්මවයි.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>පසුම්බිය: %1&lt;br /&gt;වසම: %2&lt;br /&gt;ප්‍රතිදාන: %3&lt;br /&gt;එක් ප්‍රතිදානයකට ත්‍යාගය: %4&lt;br /&gt;මුළු ත්‍යාග: %5&lt;br /&gt;ගනුදෙනු: %6&lt;br /&gt;මුළු ගාස්තු: %7&lt;br /&gt;&lt;b&gt;මුළු අඩු කිරීම: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>උපරිම වැඩ හැෂ්: %1
+මූල සහතික අනුවාදය: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>අවශ්‍ය ආරම්භක බිංදු බිටු: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>උපරිම වැඩ හැෂ්: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>P2C සෑදීම තහවුරු කරන්න</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>මූල සහතික අනුවාදය: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>වලංගු සම්බන්ධතා සාක්ෂියක් ඉදිරිපත් කරන ඕනෑම අයෙකුට මෙම ත්‍යාග ඉල්ලාගත හැක. සාමාන්‍ය පසුම්බි අත්සනකින් ඒවා ආපසු ලබාගත නොහැක. යැවීමට පෙර සියලු ගනුදෙනු සමාලෝචනය කරන්න.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>P2C යවන්න</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C ගනුදෙනු පසුම්බියට ඉදිරිපත් කළා (%1). ගනුදෙනු හැඳුනුම්:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>අවලංගු කළා. කිසිදු P2C ගනුදෙනුවක් යවා නැත.</translation>
+    </message>
+</context>
 </TS>

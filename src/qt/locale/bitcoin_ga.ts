@@ -944,6 +944,14 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
         <source>Original message:</source>
         <translation type="unfinished">Teachtaireacht bhunaidh:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Cruthaigh luaíochtaí pay-to-connect</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -3746,6 +3754,10 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
         <source>false</source>
         <translation type="unfinished">bréagach</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Fearann P2C</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -3843,6 +3855,14 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Méid a bhaintear as nó a chuirtear leis an iarmhéid.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Intinn/cuspóir an idirbhirt arna shainiú ag an úsáideoir, nó fearann P2C.</translation>
     </message>
 </context>
 <context>
@@ -3996,6 +4016,10 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
     <message>
         <source>to</source>
         <translation type="unfinished">go</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Cuir isteach seoladh, fearann P2C, aitheantóir idirbhirt nó lipéad le cuardach</translation>
     </message>
 </context>
 <context>
@@ -5216,6 +5240,312 @@ Déan iarracht an leagan bogearraí is déanaí a rith.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Níorbh fhéidir an comhad socruithe a scríobh</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Aimsigh luaíochtaí deimhnithe go huathoibríoch, gin cruthúnais TLS agus seol na luaíochtaí chuig an sparán seo. Baintear táillí as gach luaíocht amháin. Ní gá eochracha príobháideacha a dhíghlasáil fad atá seoltaí fála sa linn eochracha. Tá HTTPS díchumasaithe go dtí go dtosaíonn tú é go sainráite.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Naisc sa soicind (an sparán seo):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>Díchumasaíonn 0 HTTPS. Chun an teorainn ráta a bhaint, roghnaigh ráta gan teorainn thíos.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Ráta gan teorainn (toiliú sainráite)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Naisc chomhuaineacha:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Roghnach: example.com, another.example (folamh = gach fearann)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Fearainn cheadaithe:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Cuir i bhfeidhm / tosaigh éilimh uathoibríocha</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Stop HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Díchumasaithe</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Cumasaigh éilimh uathoibríocha P2C?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Déanann sé seo naisc dhíreacha HTTPS le fearainn phoiblí agus cuireann sé éilimh rathúla isteach go huathoibríoch. Tá do sheoladh IP le feiceáil ag na freastalaithe sin. Ní sheachnaítear socruithe seachfhreastalaí. Baintear táillí as na luaíochtaí.
+
+%1
+
+Lean ar aghaidh?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Roghnaigh tú naisc sa soicind GAN TEORAINN.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Ráta: %1 nasc sa soicind don sparán seo.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Socruithe á gcur i bhfeidhm…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Ag tosú</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Ainm fearainn á réiteach</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Réiteach an ainm fearainn á atriail</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Cruthúnais á lorg</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Naisc á n-atriail</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Diúltaíodh don teastas</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Stoptha de bharr earráide</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Éilíodh an luaíocht cheana</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Luaíochtaí deimhnithe á scanadh</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Ag fanacht le luaíochtaí</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Ag fanacht le luaíochtaí incháilithe</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Léimeadh thar an luaíocht</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Curtha isteach</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Sábháilte; seiceáil stair an sparáin</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Gan teorainn</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Díchumasaithe (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Stádas: %1
+Ráta gníomhach: %2 | Naisc chomhuaineacha: %3
+Fearann: %4
+Iarrachtaí: %5 | Curtha isteach: %6
+Éileamh deireanach: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Cruthaigh luaíochtaí</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Éilimh uathoibríocha</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Cruthaigh luaíochtaí pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Maoinigh luaíochtaí neamhspleácha ar chruthúnais bhailí naisc TLS. Is féidir le duine ar bith a chomhlíonann na ceanglais iad a éileamh. Ní dhéanann an leathanach seo naisc HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Fearann ASCII i litreacha beaga (úsáid punycode d'fhearainn idirnáisiúnta), gan scéim URL, conair, port ná ponc ag an deireadh.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Fearann:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Luaíocht in aghaidh an &amp;aschuir:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Líon na n-aschur:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Giotáin nialais tosaigh</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Hais uasta</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Formáid deacrachta:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>Giotáin &amp;nialais:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Go díreach 64 carachtar heicsidheachúlach</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>&amp;Hais uasta:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Leagan %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Bun&amp;teastais iontaofa:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Úsáid ráta táille saincheaptha</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Táille in aghaidh 1,000 beart fíorúil:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Athbhreithnigh P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Ríomhtar táillí roimh cheadú. D'fhéadfaí iarratais mhóra a roinnt ina n-idirbhearta éagsúla.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Éilíonn cruthú P2C sparán le heochracha príobháideacha áitiúla faoi láthair. Ní thacaítear le sparáin faire amháin ná le sparáin le sínitheoir seachtrach ar an leathanach seo.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Cruthaigh P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Cuir isteach fearann canónta ASCII i litreacha beaga gan ponc deiridh, scéim, conair ná port.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Cuir isteach luaíocht dhearfach nach sáraíonn a hiomlán an teorainn airgeadaíochta.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Ní mór don hais uasta go díreach 64 carachtar heicsidheachúlach a bheith inti.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Cuir isteach ráta táille dearfach in aghaidh 1,000 beart fíorúil.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Ní féidir idirbhearta P2C a ullmhú: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Sáraíonn iomlán na luaíochtaí agus na dtáillí an teorainn airgeadaíochta.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Sparán: %1&lt;br /&gt;Fearann: %2&lt;br /&gt;Aschuir: %3&lt;br /&gt;Luaíocht in aghaidh an aschuir: %4&lt;br /&gt;Luaíochtaí iomlána: %5&lt;br /&gt;Idirbhearta: %6&lt;br /&gt;Táillí iomlána: %7&lt;br /&gt;&lt;b&gt;Dochar iomlán: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Hais oibre uasta: %1
+Leagan na mbunteastas: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Giotáin nialais tosaigh riachtanacha: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Hais oibre uasta: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Deimhnigh cruthú P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Leagan na mbunteastas: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Is féidir le duine ar bith a chuireann cruthúnas bailí naisc ar fáil na luaíochtaí seo a éileamh. Ní féidir leat iad a aisghabháil le gnáthshíniú sparáin. Athbhreithnigh gach idirbheart sula seolann tú iad.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Seol P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Cuireadh idirbhearta P2C chuig an sparán (%1). Aitheantóirí idirbhirt:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Cealaithe. Níor seoladh aon idirbhearta P2C.</translation>
     </message>
 </context>
 </TS>

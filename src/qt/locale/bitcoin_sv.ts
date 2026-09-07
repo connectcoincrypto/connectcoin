@@ -861,6 +861,14 @@ Försök igen.</translation>
         <source>Original message:</source>
         <translation type="unfinished">Ursprungligt meddelande:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Skapa pay-to-connect-belöningar</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -3205,6 +3213,10 @@ Om den här plånboken innehåller lösbara</translation>
         <source>false</source>
         <translation type="unfinished">falsk</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C-domän</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -3298,6 +3310,14 @@ Om den här plånboken innehåller lösbara</translation>
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Belopp draget från eller tillagt till saldo.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Användarens beskrivning av transaktionens syfte, eller P2C-domänen.</translation>
     </message>
 </context>
 <context>
@@ -3426,6 +3446,10 @@ Om den här plånboken innehåller lösbara</translation>
     <message>
         <source>to</source>
         <translation type="unfinished">till</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Ange adress, P2C-domän, transaktions-ID eller etikett att söka efter</translation>
     </message>
 </context>
 <context>
@@ -3964,6 +3988,312 @@ Gå till Fil &gt; Öppna plånbok för att läsa in en plånbok.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Filen för inställningar kunde inte skapas</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Hitta automatiskt bekräftade belöningar, generera TLS-bevis och skicka belöningarna till denna plånbok. Avgifterna tas enbart från varje belöning. Privata nycklar behöver inte låsas upp så länge det finns mottagaradresser kvar i nyckelpoolen. HTTPS är avstängt tills du uttryckligen startar det.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Anslutningar per sekund (denna plånbok):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 stänger av HTTPS. Välj obegränsad hastighet nedan för att ta bort hastighetsgränsen.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Obegränsad hastighet (uttryckligt samtycke)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Samtidiga anslutningar:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Valfritt: example.com, another.example (tomt = alla domäner)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Tillåtna domäner:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Tillämpa / starta automatisk inlösen</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Stoppa HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Avstängt</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Aktivera automatisk P2C-inlösen?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Detta skapar direkta HTTPS-anslutningar till offentliga domäner och skickar automatiskt in lyckade inlösenanspråk. Din IP-adress är synlig för dessa servrar. Proxyinställningar kringgås inte. Avgifter dras från belöningarna.
+
+%1
+
+Fortsätta?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Du valde OBEGRÄNSAT antal anslutningar per sekund.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Hastighet: %1 anslutningar per sekund för denna plånbok.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Tillämpar inställningar…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Startar</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Slår upp domän</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Försöker slå upp domänen igen</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Söker efter bevis</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Försöker ansluta igen</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Certifikat avvisat</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Stoppat på grund av ett fel</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Belöningen är redan inlöst</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Söker igenom bekräftade belöningar</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Väntar på belöningar</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Väntar på berättigade belöningar</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Belöning överhoppad</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Inskickat</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Sparat; kontrollera plånbokshistoriken</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Obegränsat</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Avstängt (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Status: %1
+Aktiv hastighet: %2 | Samtidiga anslutningar: %3
+Domän: %4
+Försök: %5 | Inskickade: %6
+Senaste inlösen: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Skapa belöningar</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Automatisk inlösen</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Skapa pay-to-connect-belöningar</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Finansiera oberoende belöningar för giltiga TLS-anslutningsbevis. Alla som uppfyller kraven kan lösa in dem. Denna sida skapar inga HTTPS-anslutningar.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Domän med gemener i ASCII (använd punycode för internationella domäner), utan URL-schema, sökväg, port eller avslutande punkt.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domän:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Belöning per &amp;utgång:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Antal utgångar:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Inledande nollbitar</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Högsta hashvärde</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>Svårighets&amp;format:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Nollbitar:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Exakt 64 hexadecimala tecken</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Högsta &amp;hashvärde:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Version %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Betrodda rot&amp;certifikat:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Använd en anpassad avgiftssats</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Avgift per 1 000 virtuella byte:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Granska P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Avgifterna beräknas före godkännandet. Stora begäranden kan delas upp i flera transaktioner.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Att skapa P2C kräver för närvarande en plånbok med lokala privata nycklar. Bevakningsplånböcker och plånböcker med extern signerare stöds inte på denna sida.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Skapa P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Ange en kanonisk ASCII-domän med gemener utan avslutande punkt, schema, sökväg eller port.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Ange en positiv belöning vars totalsumma inte överstiger den monetära gränsen.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Det högsta hashvärdet måste innehålla exakt 64 hexadecimala tecken.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Ange en positiv avgiftssats per 1 000 virtuella byte.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Kunde inte förbereda P2C-transaktioner: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Den sammanlagda belöningen plus avgifter överstiger den monetära gränsen.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Plånbok: %1&lt;br /&gt;Domän: %2&lt;br /&gt;Utgångar: %3&lt;br /&gt;Belöning per utgång: %4&lt;br /&gt;Totala belöningar: %5&lt;br /&gt;Transaktioner: %6&lt;br /&gt;Totala avgifter: %7&lt;br /&gt;&lt;b&gt;Total debitering: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Högsta arbetshash: %1
+Rotcertifikatsversion: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Antal inledande nollbitar som krävs: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Högsta arbetshash: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Bekräfta skapande av P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Rotcertifikatsversion: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Dessa belöningar kan lösas in av vem som helst som visar ett giltigt anslutningsbevis. Du kan inte återfå dem med en vanlig plånbokssignatur. Granska alla transaktioner innan du skickar.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Skicka P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C-transaktioner skickade till plånboken (%1). Transaktions-ID:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Avbrutet. Inga P2C-transaktioner skickades.</translation>
     </message>
 </context>
 </TS>

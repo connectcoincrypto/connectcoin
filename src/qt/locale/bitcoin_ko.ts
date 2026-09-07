@@ -916,6 +916,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">원본 메세지:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect 보상 생성</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -3667,6 +3675,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <source>false</source>
         <translation type="unfinished">거짓</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C 도메인</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -3764,6 +3776,14 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">늘어나거나 줄어든 액수.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>사용자가 정의한 거래의 의도/목적 또는 P2C 도메인.</translation>
     </message>
 </context>
 <context>
@@ -3921,6 +3941,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>to</source>
         <translation type="unfinished">수신인</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>검색할 주소, P2C 도메인, 거래 ID 또는 라벨 입력</translation>
     </message>
 </context>
 <context>
@@ -5085,6 +5109,312 @@ Please try running the latest software version.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">설정파일이 쓰여지지 않았습니다.</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>확인된 보상을 자동으로 검색하고 TLS 증명을 생성하여 보상을 이 지갑으로 보냅니다. 수수료는 각 보상에서만 차감됩니다. 키 풀에 수신 주소가 남아 있는 동안에는 개인 키 잠금을 해제할 필요가 없습니다. HTTPS는 명시적으로 시작할 때까지 비활성화됩니다.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>초당 연결 수(이 지갑):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0은 HTTPS를 비활성화합니다. 속도 제한을 없애려면 아래에서 무제한 속도를 선택하세요.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>무제한 속도(명시적 동의)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>동시 연결 수:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>선택 사항: example.com, another.example (비어 있음 = 모든 도메인)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>허용 도메인 목록:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>적용 / 자동 청구 시작</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>HTTPS 중지 (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>비활성화됨</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>자동 P2C 청구를 활성화할까요?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>공개 도메인에 직접 HTTPS 연결을 만들고 성공한 청구를 자동으로 제출합니다. 해당 서버에서 사용자의 IP 주소를 볼 수 있습니다. 프록시 설정을 우회하지 않습니다. 수수료는 보상에서 차감됩니다.
+
+%1
+
+계속할까요?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>초당 연결 수를 무제한으로 선택했습니다.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>속도: 이 지갑에서 초당 %1회 연결.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>설정 적용 중…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>시작 중</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>도메인 이름 확인 중</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>도메인 이름 확인 재시도 중</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>증명 검색 중</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>연결 재시도 중</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>인증서 거부됨</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>오류로 중지됨</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>이미 청구된 보상</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>확인된 보상 검색 중</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>보상 대기 중</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>적격 보상 대기 중</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>보상 건너뜀</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>제출됨</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>저장됨; 지갑 기록을 확인하세요</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>무제한</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>비활성화됨 (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>상태: %1
+활성 속도: %2 | 동시 연결 수: %3
+도메인: %4
+시도: %5 | 제출: %6
+마지막 청구: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>보상 생성</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>자동 청구</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect 보상 생성</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>유효한 TLS 연결 증명에 대한 독립적인 보상을 지원합니다. 요건을 충족하는 누구나 청구할 수 있습니다. 이 페이지는 HTTPS 연결을 만들지 않습니다.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>소문자 ASCII 도메인(국제화 도메인은 punycode 사용). URL 스킴, 경로, 포트 또는 끝의 점은 포함하지 마세요.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>도메인(&amp;D):</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>출력당 보상(&amp;O):</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>출력 수(&amp;N):</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>선행 0 비트</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>최대 해시</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>난이도 형식(&amp;F):</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>0 비트(&amp;Z):</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>정확히 64자의 16진수 문자</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>최대 해시(&amp;H):</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>버전 %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>신뢰할 수 있는 루트 인증서(&amp;C):</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>사용자 지정 수수료율 사용</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>가상 바이트 1,000개당 수수료:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>P2C 검토(&amp;R)…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>수수료는 승인 전에 계산됩니다. 큰 요청은 여러 거래로 분할될 수 있습니다.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>현재 P2C 생성에는 로컬 개인 키가 있는 지갑이 필요합니다. 이 페이지는 관찰 전용 지갑과 외부 서명자를 사용하는 지갑을 지원하지 않습니다.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>P2C 생성</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>끝의 점, 스킴, 경로 또는 포트가 없는 정규 소문자 ASCII 도메인을 입력하세요.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>총액이 통화 한도를 초과하지 않는 양수 보상을 입력하세요.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>최대 해시는 정확히 64자의 16진수 문자로 구성되어야 합니다.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>가상 바이트 1,000개당 양수 수수료율을 입력하세요.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C 거래를 준비할 수 없습니다: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>보상 총액과 수수료의 합이 통화 한도를 초과합니다.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>지갑: %1&lt;br /&gt;도메인: %2&lt;br /&gt;출력: %3&lt;br /&gt;출력당 보상: %4&lt;br /&gt;총 보상: %5&lt;br /&gt;거래: %6&lt;br /&gt;총 수수료: %7&lt;br /&gt;&lt;b&gt;총 차감액: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>최대 작업 해시: %1
+루트 인증서 버전: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>필요한 선행 0 비트: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>최대 작업 해시: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>P2C 생성 확인</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>루트 인증서 버전: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>이 보상은 유효한 연결 증명을 제시하는 누구나 청구할 수 있습니다. 일반적인 지갑 서명으로 회수할 수 없습니다. 보내기 전에 모든 거래를 검토하세요.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>P2C 보내기</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C 거래를 지갑에 제출했습니다 (%1). 거래 ID:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>취소되었습니다. P2C 거래를 보내지 않았습니다.</translation>
     </message>
 </context>
 </TS>

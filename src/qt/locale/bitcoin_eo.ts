@@ -577,6 +577,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">Originala mesaĝo:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Krei pay-to-connect-rekompencojn</translation>
+    </message>
 </context>
 <context>
     <name>CoinControlDialog</name>
@@ -1883,6 +1891,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>false</source>
         <translation type="unfinished">malvera</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C-domajno</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -1956,6 +1968,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Sumo elprenita de aŭ aldonita al la saldo.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Uzant-difinita intenco/celo de la transakcio, aŭ la P2C-domajno.</translation>
     </message>
 </context>
 <context>
@@ -2040,6 +2060,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>to</source>
         <translation type="unfinished">al</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Enigu adreson, P2C-domajnon, transakcian identigilon aŭ etikedon por serĉi</translation>
     </message>
 </context>
 <context>
@@ -2154,4 +2178,310 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Eraro: monujo ne ekzistas</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Aŭtomate trovu konfirmitajn rekompencojn, generu TLS-pruvojn kaj sendu la rekompencojn al ĉi tiu monujo. Kotizoj estas deprenataj nur de ĉiu rekompenco. Ne necesas malŝlosi privatajn ŝlosilojn dum restas ricevadresoj en la ŝlosilaro. HTTPS estas malŝaltita ĝis vi eksplicite ekigas ĝin.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Konektoj sekunde (ĉi tiu monujo):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 malŝaltas HTTPS. Por forigi la rapidlimon, elektu sube senliman rapidon.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Senlima rapido (eksplicita konsento)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Samtempaj konektoj:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Nedevige: example.com, another.example (malplena = ĉiuj domajnoj)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Permesitaj domajnoj:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Apliki / komenci aŭtomatan rekompencopeton</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Haltigi HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Malŝaltita</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Ĉu ŝalti aŭtomatan P2C-rekompencopeton?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Tio faras rektajn HTTPS-konektojn al publikaj domajnoj kaj aŭtomate sendas sukcesajn rekompencopetojn. Tiuj serviloj povas vidi vian IP-adreson. Prokurilaj agordoj ne estas preterirataj. Kotizoj estas deprenataj de la rekompencoj.
+
+%1
+
+Ĉu daŭrigi?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Vi elektis SENLIMAN nombron da konektoj sekunde.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Rapido: %1 konektoj sekunde por ĉi tiu monujo.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Aplikante agordojn…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Komencante</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Solvante domajnan nomon</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Reprovante solvi domajnan nomon</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Serĉante pruvojn</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Reprovante konektojn</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Atestilo malakceptita</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Haltigita pro eraro</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Rekompenco jam prenita</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Serĉante konfirmitajn rekompencojn</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Atendante rekompencojn</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Atendante elekteblajn rekompencojn</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Rekompenco preterlasita</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Sendita</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Konservita; kontrolu la historion de la monujo</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Senlima</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Malŝaltita (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Stato: %1
+Aktiva rapido: %2 | Samtempaj konektoj: %3
+Domajno: %4
+Provoj: %5 | Senditaj: %6
+Lasta rekompencopeto: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Krei rekompencojn</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Aŭtomataj rekompencopetoj</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Krei pay-to-connect-rekompencojn</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Financu apartajn rekompencojn por validaj pruvoj de TLS-konektoj. Ĉiu, kiu plenumas la postulojn, povas peti ilin. Ĉi tiu paĝo ne faras HTTPS-konektojn.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>ASCII-domajno kun minuskloj (uzu punycode por internaciaj domajnoj), sen URL-skemo, vojo, pordo aŭ fina punkto.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domajno:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Rekompenco por ĉiu &amp;eligo:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Nombro de eligoj:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Komencaj nulbitoj</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Maksimuma haketvaloro</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Formato de malfacileco:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Nulbitoj:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Ĝuste 64 deksesumaj signoj</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Maksimuma &amp;haketvaloro:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Versio %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Fidataj radikaj &amp;atestiloj:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Uzi propran kotiztarifon</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Kotizo por 1 000 virtualaj bajtoj:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Revizii P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Kotizoj estas kalkulataj antaŭ aprobo. Grandaj petoj povas esti dividitaj en plurajn transakciojn.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Kreado de P2C nuntempe postulas monujon kun lokaj privataj ŝlosiloj. Nur-observaj monujoj kaj monujoj kun ekstera subskribanto ne estas subtenataj en ĉi tiu paĝo.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Krei P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Enigu kanonan ASCII-domajnon kun minuskloj sen fina punkto, skemo, vojo aŭ pordo.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Enigu pozitivan rekompencon, kies sumo ne superas la monlimon.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>La maksimuma haketvaloro devas enhavi ĝuste 64 deksesumajn signojn.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Enigu pozitivan kotiztarifon por 1 000 virtualaj bajtoj.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Ne eblas prepari P2C-transakciojn: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>La sumo de rekompencoj kaj kotizoj superas la monlimon.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Monujo: %1&lt;br /&gt;Domajno: %2&lt;br /&gt;Eligoj: %3&lt;br /&gt;Rekompenco por ĉiu eligo: %4&lt;br /&gt;Sumo de rekompencoj: %5&lt;br /&gt;Transakcioj: %6&lt;br /&gt;Sumo de kotizoj: %7&lt;br /&gt;&lt;b&gt;Totala debeto: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Maksimuma laborhaketvaloro: %1
+Versio de radikaj atestiloj: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Postulataj komencaj nulbitoj: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Maksimuma laborhaketvaloro: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Konfirmi kreadon de P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Versio de radikaj atestiloj: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Ĉiu, kiu prezentas validan konektopruvon, povas peti ĉi tiujn rekompencojn. Vi ne povas repreni ilin per ordinara monuja subskribo. Reviziu ĉiujn transakciojn antaŭ ol sendi.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Sendi P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C-transakcioj senditaj al la monujo (%1). Transakciaj identigiloj:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Nuligita. Neniuj P2C-transakcioj estis senditaj.</translation>
+    </message>
+</context>
 </TS>

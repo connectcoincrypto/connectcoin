@@ -425,6 +425,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">আসল বার্তা:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect পুরস্কার তৈরি করুন</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -823,6 +831,10 @@ The migration process will create a backup of the wallet before migrating. This 
             <numerusform />
         </translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C ডোমেন</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -837,6 +849,14 @@ The migration process will create a backup of the wallet before migrating. This 
     <message>
         <source>Label</source>
         <translation type="unfinished">টিকেট</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>ব্যবহারকারীর নির্ধারিত লেনদেনের অভিপ্রায়/উদ্দেশ্য, অথবা P2C ডোমেন।</translation>
     </message>
     </context>
 <context>
@@ -902,6 +922,10 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>to</source>
         <translation type="unfinished">প্রতি</translation>
     </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>খুঁজতে ঠিকানা, P2C ডোমেন, লেনদেন আইডি বা লেবেল লিখুন</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -952,4 +976,310 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">Settingsসেটিংস ফাইল পড়া যাবে না।fileসেটিংস ফাইল পড়া যাবে না।couldসেটিংস ফাইল পড়া যাবে না।notসেটিংস ফাইল পড়া যাবে না।beসেটিংস ফাইল পড়া যাবে না।read</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>স্বয়ংক্রিয়ভাবে নিশ্চিত পুরস্কার খুঁজুন, TLS প্রমাণ তৈরি করুন এবং পুরস্কার এই ওয়ালেটে পাঠান। ফি কেবল প্রতিটি পুরস্কার থেকে কাটা হয়। কী-পুলে গ্রহণের ঠিকানা থাকা পর্যন্ত ব্যক্তিগত কী আনলক করার প্রয়োজন নেই। আপনি স্পষ্টভাবে চালু না করা পর্যন্ত HTTPS বন্ধ থাকে।</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>প্রতি সেকেন্ডে সংযোগ (এই ওয়ালেট):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 দিলে HTTPS বন্ধ হয়। হারের সীমা সরাতে নিচে সীমাহীন হার বেছে নিন।</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>সীমাহীন হার (স্পষ্ট সম্মতি)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>একযোগে সংযোগ:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>ঐচ্ছিক: example.com, another.example (খালি = সব ডোমেন)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>অনুমোদিত ডোমেন:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>প্রয়োগ / স্বয়ংক্রিয় পুরস্কার দাবি শুরু</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>HTTPS থামান (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>বন্ধ</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>স্বয়ংক্রিয় P2C দাবি চালু করবেন?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>এটি সর্বজনীন ডোমেনে সরাসরি HTTPS সংযোগ করে এবং সফল দাবিগুলি স্বয়ংক্রিয়ভাবে জমা দেয়। ওই সার্ভারগুলি আপনার IP ঠিকানা দেখতে পায়। প্রক্সি সেটিংস এড়িয়ে যাওয়া হয় না। পুরস্কার থেকে ফি কাটা হয়।
+
+%1
+
+চালিয়ে যাবেন?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>আপনি প্রতি সেকেন্ডে সীমাহীন সংযোগ বেছে নিয়েছেন।</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>হার: এই ওয়ালেটের জন্য প্রতি সেকেন্ডে %1 সংযোগ।</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>সেটিংস প্রয়োগ করা হচ্ছে…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>শুরু হচ্ছে</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>ডোমেনের ঠিকানা খোঁজা হচ্ছে</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>ডোমেনের ঠিকানা খোঁজার পুনঃচেষ্টা হচ্ছে</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>প্রমাণ খোঁজা হচ্ছে</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>সংযোগের পুনঃচেষ্টা হচ্ছে</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>সনদ প্রত্যাখ্যাত</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>ত্রুটির কারণে থেমেছে</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>পুরস্কার ইতিমধ্যে দাবি করা হয়েছে</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>নিশ্চিত পুরস্কার খোঁজা হচ্ছে</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>পুরস্কারের অপেক্ষায়</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>যোগ্য পুরস্কারের অপেক্ষায়</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>পুরস্কার এড়িয়ে যাওয়া হয়েছে</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>জমা দেওয়া হয়েছে</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>সংরক্ষিত; ওয়ালেটের ইতিহাস দেখুন</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>সীমাহীন</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>বন্ধ (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>অবস্থা: %1
+সক্রিয় হার: %2 | একযোগে সংযোগ: %3
+ডোমেন: %4
+চেষ্টা: %5 | জমা দেওয়া: %6
+শেষ দাবি: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>পুরস্কার তৈরি করুন</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>স্বয়ংক্রিয় দাবি</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect পুরস্কার তৈরি করুন</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>বৈধ TLS সংযোগের প্রমাণের জন্য পৃথক পুরস্কারের অর্থ দিন। শর্ত পূরণকারী যে কেউ সেগুলি দাবি করতে পারে। এই পৃষ্ঠা HTTPS সংযোগ করে না।</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>ছোট হাতের অক্ষরে ASCII ডোমেন (আন্তর্জাতিক ডোমেনের জন্য punycode ব্যবহার করুন), URL স্কিম, পথ, পোর্ট বা শেষের বিন্দু ছাড়া।</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;ডোমেন:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>প্রতি &amp;আউটপুটে পুরস্কার:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>আউটপুটের &amp;সংখ্যা:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>শুরুর শূন্য বিট</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>সর্বোচ্চ হ্যাশ</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>কঠিনতার &amp;বিন্যাস:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;শূন্য বিট:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>ঠিক 64টি হেক্সাডেসিমাল অক্ষর</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>সর্বোচ্চ &amp;হ্যাশ:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>সংস্করণ %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>বিশ্বস্ত রুট &amp;সনদ:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>নিজস্ব ফি হার ব্যবহার করুন</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>প্রতি 1,000 ভার্চুয়াল বাইটে ফি:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>P2C &amp;পর্যালোচনা করুন…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>অনুমোদনের আগে ফি গণনা করা হয়। বড় অনুরোধ একাধিক লেনদেনে ভাগ হতে পারে।</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>P2C তৈরির জন্য বর্তমানে স্থানীয় ব্যক্তিগত কীযুক্ত ওয়ালেট দরকার। শুধু পর্যবেক্ষণের ওয়ালেট এবং বাহ্যিক স্বাক্ষরকারীযুক্ত ওয়ালেট এই পৃষ্ঠায় সমর্থিত নয়।</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>P2C তৈরি করুন</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>শেষের বিন্দু, স্কিম, পথ বা পোর্ট ছাড়া ছোট হাতের অক্ষরে মানসম্মত ASCII ডোমেন লিখুন।</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>এমন ধনাত্মক পুরস্কার লিখুন যার মোট পরিমাণ আর্থিক সীমা অতিক্রম করে না।</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>সর্বোচ্চ হ্যাশে ঠিক 64টি হেক্সাডেসিমাল অক্ষর থাকতে হবে।</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>প্রতি 1,000 ভার্চুয়াল বাইটে ধনাত্মক ফি হার লিখুন।</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C লেনদেন প্রস্তুত করা যায়নি: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>মোট পুরস্কার ও ফি আর্থিক সীমা অতিক্রম করেছে।</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>ওয়ালেট: %1&lt;br /&gt;ডোমেন: %2&lt;br /&gt;আউটপুট: %3&lt;br /&gt;প্রতি আউটপুটে পুরস্কার: %4&lt;br /&gt;মোট পুরস্কার: %5&lt;br /&gt;লেনদেন: %6&lt;br /&gt;মোট ফি: %7&lt;br /&gt;&lt;b&gt;মোট কর্তন: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>সর্বোচ্চ কাজের হ্যাশ: %1
+রুট সনদের সংস্করণ: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>প্রয়োজনীয় শুরুর শূন্য বিট: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>সর্বোচ্চ কাজের হ্যাশ: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>P2C তৈরি নিশ্চিত করুন</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>রুট সনদের সংস্করণ: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>বৈধ সংযোগের প্রমাণ দেওয়া যে কেউ এই পুরস্কারগুলি দাবি করতে পারে। সাধারণ ওয়ালেট স্বাক্ষর দিয়ে সেগুলি ফেরত নিতে পারবেন না। পাঠানোর আগে সব লেনদেন পর্যালোচনা করুন।</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>P2C পাঠান</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C লেনদেন ওয়ালেটে জমা দেওয়া হয়েছে (%1)। লেনদেন আইডি:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>বাতিল করা হয়েছে। কোনো P2C লেনদেন পাঠানো হয়নি।</translation>
+    </message>
+</context>
 </TS>

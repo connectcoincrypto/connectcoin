@@ -835,6 +835,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">សារដើម៖</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>បង្កើតរង្វាន់ pay-to-connect</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -2769,6 +2777,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <source>false</source>
         <translation type="unfinished">មិនត្រឹមត្រូវ</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>ដែន P2C</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -2854,6 +2866,14 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">ចំនួនទឹកប្រាក់បានដកចេញ ឬដាក់ចូលទៅក្នុងសមតុល្យ។</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C៖ %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>គោលបំណងប្រតិបត្តិការដែលអ្នកប្រើកំណត់ ឬដែន P2C។</translation>
     </message>
 </context>
 <context>
@@ -2974,6 +2994,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>to</source>
         <translation type="unfinished">ទៅកាន់</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>បញ្ចូលអាសយដ្ឋាន ដែន P2C លេខសម្គាល់ប្រតិបត្តិការ ឬស្លាកដើម្បីស្វែងរក</translation>
     </message>
 </context>
 <context>
@@ -3180,6 +3204,312 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">ការកំណត់ឯកសារមិនអាចសរសេរបានទេ។</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>រករង្វាន់ដែលបានបញ្ជាក់ដោយស្វ័យប្រវត្តិ បង្កើតភស្តុតាង TLS ហើយផ្ញើរង្វាន់ទៅកាបូបនេះ។ ថ្លៃសេវាត្រូវកាត់ចេញពីរង្វាន់នីមួយៗតែប៉ុណ្ណោះ។ មិនចាំបាច់ដោះសោសោឯកជនទេ ដរាបណាមានអាសយដ្ឋានទទួលក្នុងឃ្លាំងសោ។ HTTPS ត្រូវបានបិទរហូតដល់អ្នកចាប់ផ្ដើមវាដោយច្បាស់លាស់។</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>ការតភ្ជាប់ក្នុងមួយវិនាទី (កាបូបនេះ)៖</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 បិទ HTTPS។ ដើម្បីដកដែនកំណត់ល្បឿន សូមជ្រើសល្បឿនគ្មានកំណត់ខាងក្រោម។</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>ល្បឿនគ្មានកំណត់ (ការយល់ព្រមច្បាស់លាស់)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>ការតភ្ជាប់ក្នុងពេលតែមួយ៖</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>ស្រេចចិត្ត៖ example.com, another.example (ទទេ = ដែនទាំងអស់)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>ដែនដែលបានអនុញ្ញាត៖</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>អនុវត្ត / ចាប់ផ្ដើមទាមទាររង្វាន់ដោយស្វ័យប្រវត្តិ</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>បញ្ឈប់ HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>បានបិទ</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>បើកការទាមទារ P2C ដោយស្វ័យប្រវត្តិឬ?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>វាបង្កើតការតភ្ជាប់ HTTPS ដោយផ្ទាល់ទៅដែនសាធារណៈ ហើយដាក់ស្នើការទាមទារដែលជោគជ័យដោយស្វ័យប្រវត្តិ។ ម៉ាស៊ីនមេទាំងនោះអាចឃើញអាសយដ្ឋាន IP របស់អ្នក។ ការកំណត់ប្រូកស៊ីមិនត្រូវបានរំលងទេ។ ថ្លៃសេវាត្រូវកាត់ពីរង្វាន់។
+
+%1
+
+បន្តឬ?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>អ្នកបានជ្រើសការតភ្ជាប់ក្នុងមួយវិនាទីគ្មានកំណត់។</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>ល្បឿន៖ %1 ការតភ្ជាប់ក្នុងមួយវិនាទីសម្រាប់កាបូបនេះ។</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>កំពុងអនុវត្តការកំណត់…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>កំពុងចាប់ផ្ដើម</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>កំពុងរកអាសយដ្ឋានដែន</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>កំពុងព្យាយាមរកអាសយដ្ឋានដែនម្ដងទៀត</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>កំពុងស្វែងរកភស្តុតាង</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>កំពុងព្យាយាមតភ្ជាប់ម្ដងទៀត</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>វិញ្ញាបនបត្រត្រូវបានបដិសេធ</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>បានឈប់ដោយសារកំហុស</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>រង្វាន់ត្រូវបានទាមទាររួចហើយ</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>កំពុងស្វែងរករង្វាន់ដែលបានបញ្ជាក់</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>កំពុងរង់ចាំរង្វាន់</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>កំពុងរង់ចាំរង្វាន់ដែលមានលក្ខណៈសម្បត្តិគ្រប់គ្រាន់</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>បានរំលងរង្វាន់</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>បានដាក់ស្នើ</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>បានរក្សាទុក; ពិនិត្យប្រវត្តិកាបូប</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>គ្មានកំណត់</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>បានបិទ (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>ស្ថានភាព៖ %1
+ល្បឿនសកម្ម៖ %2 | ការតភ្ជាប់ក្នុងពេលតែមួយ៖ %3
+ដែន៖ %4
+ការព្យាយាម៖ %5 | បានដាក់ស្នើ៖ %6
+ការទាមទារចុងក្រោយ៖ %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>បង្កើតរង្វាន់</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>ការទាមទារស្វ័យប្រវត្តិ</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>បង្កើតរង្វាន់ pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>ផ្ដល់មូលនិធិដល់រង្វាន់ដាច់ដោយឡែកសម្រាប់ភស្តុតាងតភ្ជាប់ TLS ដែលមានសុពលភាព។ អ្នកណាដែលបំពេញលក្ខខណ្ឌអាចទាមទារបាន។ ទំព័រនេះមិនបង្កើតការតភ្ជាប់ HTTPS ទេ។</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>ដែន ASCII ជាអក្សរតូច (ប្រើ punycode សម្រាប់ដែនអន្តរជាតិ) ដោយគ្មានគ្រោង URL ផ្លូវ ច្រក ឬចំណុចនៅចុង។</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>ដែន(&amp;D)៖</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>រង្វាន់ក្នុងមួយទិន្នផល(&amp;O)៖</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>ចំនួនទិន្នផល(&amp;N)៖</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>ប៊ីតសូន្យនៅដើម</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>ហាសអតិបរមា</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>ទម្រង់ភាពលំបាក(&amp;F)៖</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>ប៊ីតសូន្យ(&amp;Z)៖</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>តួអក្សរគោលដប់ប្រាំមួយចំនួន 64 យ៉ាងពិតប្រាកដ</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>ហាសអតិបរមា(&amp;H)៖</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>កំណែ %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>វិញ្ញាបនបត្រឫសដែលទុកចិត្ត(&amp;C)៖</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>ប្រើអត្រាថ្លៃសេវាផ្ទាល់ខ្លួន</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>ថ្លៃសេវាក្នុងមួយ 1,000 បៃនិម្មិត៖</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>ពិនិត្យ P2C(&amp;R)…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>ថ្លៃសេវាត្រូវបានគណនាមុនការយល់ព្រម។ សំណើធំៗអាចបែងចែកជាប្រតិបត្តិការច្រើន។</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>ការបង្កើត P2C បច្ចុប្បន្នតម្រូវឱ្យមានកាបូបដែលមានសោឯកជនក្នុងម៉ាស៊ីន។ ទំព័រនេះមិនគាំទ្រកាបូបសម្រាប់មើលតែប៉ុណ្ណោះ និងកាបូបដែលមានអ្នកចុះហត្ថលេខាខាងក្រៅទេ។</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>បង្កើត P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>បញ្ចូលដែន ASCII ស្តង់ដារជាអក្សរតូច ដោយគ្មានចំណុចនៅចុង គ្រោង ផ្លូវ ឬច្រក។</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>បញ្ចូលរង្វាន់វិជ្ជមានដែលសរុបមិនលើសដែនកំណត់ប្រាក់។</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>ហាសអតិបរមាត្រូវមានតួអក្សរគោលដប់ប្រាំមួយចំនួន 64 យ៉ាងពិតប្រាកដ។</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>បញ្ចូលអត្រាថ្លៃសេវាវិជ្ជមានក្នុងមួយ 1,000 បៃនិម្មិត។</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>មិនអាចរៀបចំប្រតិបត្តិការ P2C បាន៖ %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>រង្វាន់សរុបបូកថ្លៃសេវាលើសដែនកំណត់ប្រាក់។</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>កាបូប៖ %1&lt;br /&gt;ដែន៖ %2&lt;br /&gt;ទិន្នផល៖ %3&lt;br /&gt;រង្វាន់ក្នុងមួយទិន្នផល៖ %4&lt;br /&gt;រង្វាន់សរុប៖ %5&lt;br /&gt;ប្រតិបត្តិការ៖ %6&lt;br /&gt;ថ្លៃសេវាសរុប៖ %7&lt;br /&gt;&lt;b&gt;ប្រាក់កាត់សរុប៖ %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>ហាសការងារអតិបរមា៖ %1
+កំណែវិញ្ញាបនបត្រឫស៖ %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>ប៊ីតសូន្យនៅដើមដែលត្រូវការ៖ %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>ហាសការងារអតិបរមា៖ %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>បញ្ជាក់ការបង្កើត P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>កំណែវិញ្ញាបនបត្រឫស៖ %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>អ្នកណាដែលបង្ហាញភស្តុតាងតភ្ជាប់មានសុពលភាពអាចទាមទាររង្វាន់ទាំងនេះបាន។ អ្នកមិនអាចយកវាត្រឡប់វិញដោយហត្ថលេខាកាបូបធម្មតាបានទេ។ ពិនិត្យប្រតិបត្តិការទាំងអស់មុនពេលផ្ញើ។</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>ផ្ញើ P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>ប្រតិបត្តិការ P2C ត្រូវបានដាក់ស្នើទៅកាបូប (%1)។ លេខសម្គាល់ប្រតិបត្តិការ៖</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>បានបោះបង់។ មិនបានផ្ញើប្រតិបត្តិការ P2C ណាមួយទេ។</translation>
     </message>
 </context>
 </TS>

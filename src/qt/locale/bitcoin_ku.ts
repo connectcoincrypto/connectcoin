@@ -269,6 +269,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
             <numerusform />
         </translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>دروستکردنی پاداشتی pay-to-connect</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -750,6 +758,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>false</source>
         <translation type="unfinished">نادروستە</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>دۆمەینی P2C</translation>
+    </message>
 </context>
 <context>
     <name>TransactionTableModel</name>
@@ -774,6 +786,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">(بێ ناونیشان)
 
 </translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>مەبەست/ئامانجی مامەڵە کە بەکارهێنەر دیاری کردووە، یان دۆمەینی P2C.</translation>
     </message>
     </context>
 <context>
@@ -809,6 +829,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>to</source>
         <translation type="unfinished">بۆ</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>بۆ گەڕان، ناونیشان، دۆمەینی P2C، ناسنامەی مامەڵە یان پێناسە بنووسە</translation>
     </message>
 </context>
 <context>
@@ -856,4 +880,310 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">هەڵە: کلیلی پوول ڕایکرد، تکایە سەرەتا پەیوەندی بکە بە پڕکردنەوەی کلیل</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>بە خۆکار پاداشتە پشتڕاستکراوەکان بدۆزەرەوە، بەڵگەی TLS دروست بکە و پاداشتەکان بۆ ئەم جزدانە بنێرە. کرێ تەنها لە هەر پاداشتێک کەم دەکرێتەوە. تا ناونیشانی وەرگرتن لە کۆگای کلیلەکاندا هەبێت، پێویست بە کردنەوەی قوفڵی کلیلە تایبەتەکان نییە. HTTPS ناچالاکە تا بە ڕوونی دەستی پێ بکەیت.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>پەیوەندی لە چرکەیەکدا (ئەم جزدانە):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0، HTTPS ناچالاک دەکات. بۆ لابردنی سنووری خێرایی، خێرایی بێ سنوور لە خوارەوە هەڵبژێرە.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>خێرایی بێ سنوور (ڕەزامەندیی ڕوون)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>پەیوەندیی هاوکات:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>ئارەزوومەندانە: example.com, another.example (بەتاڵ = هەموو دۆمەینەکان)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>دۆمەینە ڕێگەپێدراوەکان:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>جێبەجێکردن / دەستپێکردنی داواکاریی خۆکار</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>ڕاگرتنی HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>ناچالاکە</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>داواکاریی خۆکاری P2C چالاک بکرێت؟</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>ئەمە پەیوەندیی ڕاستەوخۆی HTTPS لەگەڵ دۆمەینە گشتییەکان دروست دەکات و داواکارییە سەرکەوتووەکان بە خۆکار دەنێرێت. ئەو ڕاژەکارانە ناونیشانی IP ـی تۆ دەبینن. ڕێکخستنەکانی پرۆکسی پشتگوێ ناخرێن. کرێ لە پاداشتەکان کەم دەکرێتەوە.
+
+%1
+
+بەردەوام بیت؟</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>تۆ ژمارەی بێ سنووری پەیوەندی لە چرکەیەکدا هەڵبژاردووە.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>خێرایی: %1 پەیوەندی لە چرکەیەکدا بۆ ئەم جزدانە.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>ڕێکخستنەکان جێبەجێ دەکرێن…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>دەست پێ دەکات</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>ناونیشانی دۆمەین دەدۆزرێتەوە</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>هەوڵی دووبارەی دۆزینەوەی ناونیشانی دۆمەین</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>بەڵگەکان دەگەڕێت</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>هەوڵی دووبارەی پەیوەندی</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>بڕوانامە ڕەت کرایەوە</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>بەهۆی هەڵەوە وەستا</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>پاداشتەکە پێشتر وەرگیراوە</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>پاداشتە پشتڕاستکراوەکان دەگەڕێت</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>چاوەڕوانی پاداشتەکان</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>چاوەڕوانی پاداشتە شیاوەکان</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>پاداشتەکە تێپەڕێنرا</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>نێردرا</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>پاشەکەوت کرا؛ مێژووی جزدان بپشکنە</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>بێ سنوور</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>ناچالاکە (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>دۆخ: %1
+خێرایی چالاک: %2 | پەیوەندیی هاوکات: %3
+دۆمەین: %4
+هەوڵەکان: %5 | نێردراوەکان: %6
+دوایین داواکاری: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>دروستکردنی پاداشت</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>داواکارییە خۆکارەکان</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>دروستکردنی پاداشتی pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>پارە بۆ پاداشتی سەربەخۆی بەڵگەی دروستی پەیوەندیی TLS دابین بکە. هەر کەسێک مەرجەکان پڕ بکاتەوە دەتوانێت داوایان بکات. ئەم پەڕەیە پەیوەندیی HTTPS دروست ناکات.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>دۆمەینی ASCII بە پیتی بچووک (بۆ دۆمەینی نێودەوڵەتی punycode بەکاربهێنە)، بەبێ شێوازی URL، ڕێڕەو، پۆرت یان خاڵی کۆتایی.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;دۆمەین:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>پاداشت بۆ هەر &amp;دەرچوونێک:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;ژمارەی دەرچوونەکان:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>بیتە سفرەکانی سەرەتا</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>زۆرترین هاش</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;شێوازی سەختی:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>بیتە &amp;سفرەکان:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>بە تەواوی 64 نووسەی شازدەیی</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>زۆرترین &amp;هاش:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>وەشانی %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>&amp;بڕوانامە ڕەگە باوەڕپێکراوەکان:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>بەکارهێنانی ڕێژەی کرێی تایبەت</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>کرێ بۆ هەر 1,000 بایتی مەجازی:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;پێداچوونەوەی P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>کرێ پێش پەسەندکردن حیساب دەکرێت. داواکاریی گەورە دەکرێت بۆ چەند مامەڵەیەک دابەش بکرێت.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>دروستکردنی P2C ئێستا پێویستی بە جزدانێکە کە کلیلی تایبەتی ناوخۆیی هەبێت. جزدانی تەنها چاودێری و جزدان بە واژۆکەری دەرەکی لەم پەڕەیە پشتگیری ناکرێن.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>دروستکردنی P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>دۆمەینێکی ستانداردی ASCII بە پیتی بچووک بنووسە، بەبێ خاڵی کۆتایی، شێواز، ڕێڕەو یان پۆرت.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>پاداشتێکی ئەرێنی بنووسە کە کۆی گشتییەکەی لە سنووری پارە زیاتر نەبێت.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>زۆرترین هاش دەبێت بە تەواوی 64 نووسەی شازدەیی هەبێت.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>ڕێژەیەکی ئەرێنیی کرێ بۆ هەر 1,000 بایتی مەجازی بنووسە.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>ئامادەکردنی مامەڵەکانی P2C سەرکەوتوو نەبوو: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>کۆی پاداشت و کرێ لە سنووری پارە زیاترە.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>جزدان: %1&lt;br /&gt;دۆمەین: %2&lt;br /&gt;دەرچوونەکان: %3&lt;br /&gt;پاداشت بۆ هەر دەرچوونێک: %4&lt;br /&gt;کۆی پاداشتەکان: %5&lt;br /&gt;مامەڵەکان: %6&lt;br /&gt;کۆی کرێکان: %7&lt;br /&gt;&lt;b&gt;کۆی کەمکراوە: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>زۆرترین هاشی کار: %1
+وەشانی بڕوانامە ڕەگەکان: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>بیتە سفرە پێویستەکانی سەرەتا: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>زۆرترین هاشی کار: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>پشتڕاستکردنەوەی دروستکردنی P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>وەشانی بڕوانامە ڕەگەکان: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>هەر کەسێک بەڵگەی دروستی پەیوەندی پێشکەش بکات دەتوانێت ئەم پاداشتانە وەربگرێت. ناتوانیت بە واژۆی ئاسایی جزدان بیانگەڕێنیتەوە. پێش ناردن هەموو مامەڵەکان بپشکنە.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>ناردنی P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>مامەڵەکانی P2C بۆ جزدان نێردران (%1). ناسنامەی مامەڵەکان:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>هەڵوەشایەوە. هیچ مامەڵەیەکی P2C نەنێردرا.</translation>
+    </message>
+</context>
 </TS>

@@ -834,6 +834,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">Neges wreiddiol:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Creu gwobrau pay-to-connect</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -1755,6 +1763,10 @@ Bydd y broses fudo yn creu copi wrth gefn o'r waled cyn mudo. Bydd y ffeil wrth 
         <source>Amount</source>
         <translation type="unfinished">Cyfanswm</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Parth P2C</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -1769,6 +1781,14 @@ Bydd y broses fudo yn creu copi wrth gefn o'r waled cyn mudo. Bydd y ffeil wrth 
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(dim label)</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Bwriad/diben y trafodiad a bennir gan y defnyddiwr, neu'r parth P2C.</translation>
     </message>
     </context>
 <context>
@@ -1829,6 +1849,10 @@ Bydd y broses fudo yn creu copi wrth gefn o'r waled cyn mudo. Bydd y ffeil wrth 
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">Methu Allforio</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Rhowch gyfeiriad, parth P2C, dynodwr trafodiad neu label i chwilio</translation>
     </message>
     </context>
 <context>
@@ -1974,6 +1998,312 @@ Bydd y broses fudo yn creu copi wrth gefn o'r waled cyn mudo. Bydd y ffeil wrth 
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Ni allwyd ysgrifennu ffeil y gosodiadau</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Canfod gwobrau wedi'u cadarnhau yn awtomatig, cynhyrchu proflenni TLS ac anfon y gwobrau i'r waled hon. Dim ond o bob gwobr y tynnir ffioedd. Nid oes angen datgloi allweddi preifat tra bod cyfeiriadau derbyn yn y gronfa allweddi. Mae HTTPS wedi'i analluogi nes i chi ei gychwyn yn benodol.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Cysylltiadau yr eiliad (y waled hon):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>Mae 0 yn analluogi HTTPS. I ddileu'r terfyn cyfradd, dewiswch gyfradd ddiderfyn isod.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Cyfradd ddiderfyn (cydsyniad penodol)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Cysylltiadau ar yr un pryd:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Dewisol: example.com, another.example (gwag = pob parth)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Parthau a ganiateir:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Gweithredu / dechrau hawlio'n awtomatig</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Atal HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Wedi'i analluogi</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Galluogi hawlio P2C yn awtomatig?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Mae hyn yn creu cysylltiadau HTTPS uniongyrchol â pharthau cyhoeddus ac yn cyflwyno hawliadau llwyddiannus yn awtomatig. Gall y gweinyddion hynny weld eich cyfeiriad IP. Ni chaiff gosodiadau dirprwy eu hosgoi. Tynnir ffioedd o'r gwobrau.
+
+%1
+
+Parhau?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Rydych wedi dewis cysylltiadau DIDERFYN yr eiliad.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Cyfradd: %1 cysylltiad yr eiliad ar gyfer y waled hon.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Yn gweithredu'r gosodiadau…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Yn dechrau</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Yn datrys enw'r parth</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Yn rhoi cynnig arall ar ddatrys enw'r parth</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Yn chwilio am broflenni</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Yn rhoi cynnig arall ar y cysylltiadau</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Gwrthodwyd y dystysgrif</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Wedi stopio oherwydd gwall</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Mae'r wobr eisoes wedi'i hawlio</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Yn sganio gwobrau wedi'u cadarnhau</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Yn aros am wobrau</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Yn aros am wobrau cymwys</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Hepgorwyd y wobr</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Wedi'i gyflwyno</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Wedi'i gadw; gwiriwch hanes y waled</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Diderfyn</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Wedi'i analluogi (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Cyflwr: %1
+Cyfradd weithredol: %2 | Cysylltiadau ar yr un pryd: %3
+Parth: %4
+Ymdrechion: %5 | Wedi'u cyflwyno: %6
+Hawliad diwethaf: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Creu gwobrau</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Hawliadau awtomatig</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Creu gwobrau pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Ariannwch wobrau annibynnol am broflenni cysylltiad TLS dilys. Gall unrhyw un sy'n bodloni'r gofynion eu hawlio. Nid yw'r dudalen hon yn creu cysylltiadau HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Parth ASCII mewn llythrennau bach (defnyddiwch punycode ar gyfer parthau rhyngwladol), heb gynllun URL, llwybr, porth na dot terfynol.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Parth:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Gwobr fesul &amp;allbwn:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Nifer yr allbynnau:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Didau sero arweiniol</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Hash mwyaf</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Fformat anhawster:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>Didau &amp;sero:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Yn union 64 nod hecsadegol</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>&amp;Hash mwyaf:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Fersiwn %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>&amp;Tystysgrifau gwraidd dibynadwy:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Defnyddio cyfradd ffi bersonol</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Ffi fesul 1,000 beit rhithwir:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Adolygu P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Cyfrifir ffioedd cyn cymeradwyo. Gellir rhannu ceisiadau mawr yn nifer o drafodion.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Mae creu P2C ar hyn o bryd yn gofyn am waled ag allweddi preifat lleol. Ni chefnogir waledi gwylio'n unig na waledi â llofnodwr allanol ar y dudalen hon.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Creu P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Rhowch barth ASCII canonaidd mewn llythrennau bach heb ddot terfynol, cynllun, llwybr na phorth.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Rhowch wobr bositif nad yw ei chyfanswm yn fwy na'r terfyn ariannol.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Rhaid i'r hash mwyaf gynnwys yn union 64 nod hecsadegol.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Rhowch gyfradd ffi bositif fesul 1,000 beit rhithwir.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Methu paratoi trafodion P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Mae cyfanswm y gwobrau a'r ffioedd yn fwy na'r terfyn ariannol.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Waled: %1&lt;br /&gt;Parth: %2&lt;br /&gt;Allbynnau: %3&lt;br /&gt;Gwobr fesul allbwn: %4&lt;br /&gt;Cyfanswm gwobrau: %5&lt;br /&gt;Trafodion: %6&lt;br /&gt;Cyfanswm ffioedd: %7&lt;br /&gt;&lt;b&gt;Cyfanswm debyd: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Hash gwaith mwyaf: %1
+Fersiwn y tystysgrifau gwraidd: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Didau sero arweiniol gofynnol: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Hash gwaith mwyaf: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Cadarnhau creu P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Fersiwn y tystysgrifau gwraidd: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Gall unrhyw un sy'n cyflwyno prawf cysylltiad dilys hawlio'r gwobrau hyn. Ni allwch eu hadennill â llofnod waled arferol. Adolygwch bob trafodiad cyn anfon.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Anfon P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Cyflwynwyd trafodion P2C i'r waled (%1). Dynodwyr trafodion:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Wedi canslo. Ni anfonwyd unrhyw drafodion P2C.</translation>
     </message>
 </context>
 </TS>

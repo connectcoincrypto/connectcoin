@@ -841,6 +841,14 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
         <source>Original message:</source>
         <translation type="unfinished">Origineel bericht:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Pay-to-connect-premies maken</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -2700,6 +2708,10 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
         <source>false</source>
         <translation type="unfinished">onwaar</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C-domein</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -2789,6 +2801,14 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Bedrag verwijderd van of toegevoegd aan saldo.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Door de gebruiker opgegeven transactiedoel, of het P2C-domein.</translation>
     </message>
 </context>
 <context>
@@ -2930,6 +2950,10 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     <message>
         <source>to</source>
         <translation type="unfinished">naar</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Voer een adres, P2C-domein, transactie-ID of label in om te zoeken</translation>
     </message>
 </context>
 <context>
@@ -3856,6 +3880,312 @@ Kan mislukte migratie niet opschonen</translation>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Instelling bestand kan niet opgeschreven worden</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Zoekt automatisch bevestigde premies, maakt TLS-bewijzen en stuurt de beloningen naar deze portemonnee. Kosten worden uitsluitend van elke beloning afgetrokken. Privésleutels hoeven niet te worden ontgrendeld zolang de sleutelvoorraad ontvangstadressen bevat. HTTPS blijft uitgeschakeld totdat u het uitdrukkelijk start.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Verbindingen per seconde (deze portemonnee):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 schakelt HTTPS uit. Selecteer hieronder de onbeperkte snelheid om geen limiet te gebruiken.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Onbeperkte snelheid (uitdrukkelijk inschakelen)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Gelijktijdige verbindingen:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Optioneel: example.com, another.example (leeg = alle domeinen)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Toegestane domeinen:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Toepassen / automatisch innen starten</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>HTTPS stoppen (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Uitgeschakeld</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Automatisch innen van P2C inschakelen?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Dit maakt directe HTTPS-verbindingen met openbare domeinen en dient geslaagde claims automatisch in. Uw IP-adres is zichtbaar voor deze servers. Proxy-instellingen worden niet omzeild. Kosten worden van de beloningen afgetrokken.
+
+%1
+
+Doorgaan?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>U hebt ONBEPERKTE verbindingen per seconde geselecteerd.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Snelheid: %1 verbindingen per seconde voor deze portemonnee.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Configuratie toepassen…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Starten</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Domein opzoeken</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Domein opnieuw opzoeken</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Bewijzen zoeken</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Verbindingen opnieuw proberen</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Certificaat geweigerd</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Gestopt door een fout</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Premie al geïnd</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Bevestigde premies zoeken</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Wachten op premies</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Wachten op geschikte premies</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Premie overgeslagen</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Ingediend</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Opgeslagen; controleer de portemonneegeschiedenis</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Onbeperkt</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Uitgeschakeld (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Status: %1
+Actieve snelheid: %2 | Gelijktijdige verbindingen: %3
+Domein: %4
+Pogingen: %5 | Ingediend: %6
+Laatste claim: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Premies maken</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Automatisch innen</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Pay-to-connect-premies maken</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Financier onafhankelijke beloningen voor geldige TLS-verbindingsbewijzen. Iedereen die aan de voorwaarden voldoet, kan ze innen. Deze pagina maakt geen HTTPS-verbindingen.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>ASCII-domein in kleine letters (gebruik punycode voor internationale domeinen), zonder URL-schema, pad, poort of afsluitende punt.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domein:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Beloning per &amp;uitvoer:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>Aa&amp;ntal uitvoeren:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Voorloopnulbits</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Maximale hash</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>Moeilijkheids&amp;formaat:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Nulbits:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Precies 64 hexadecimale tekens</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Maximale &amp;hash:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Versie %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Vertrouwde basis&amp;certificaten:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Een aangepast kostentarief gebruiken</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Kosten per 1.000 virtuele bytes:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>P2C &amp;controleren…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Kosten worden vóór goedkeuring berekend. Grote aanvragen kunnen over meerdere transacties worden verdeeld.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>P2C maken vereist momenteel een portemonnee met lokale privésleutels. Alleen-lezenportemonnees en portemonnees met een externe ondertekenaar worden op deze pagina niet ondersteund.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>P2C maken</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Voer een canoniek ASCII-domein in kleine letters in, zonder afsluitende punt, schema, pad of poort.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Voer een positieve beloning in waarvan het totaal de geldlimiet niet overschrijdt.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>De maximale hash moet precies 64 hexadecimale tekens bevatten.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Voer een positief kostentarief per 1.000 virtuele bytes in.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C-transacties kunnen niet worden voorbereid: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Het totaal van beloningen en kosten overschrijdt de geldlimiet.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Portemonnee: %1&lt;br /&gt;Domein: %2&lt;br /&gt;Uitvoeren: %3&lt;br /&gt;Beloning per uitvoer: %4&lt;br /&gt;Totale beloningen: %5&lt;br /&gt;Transacties: %6&lt;br /&gt;Totale kosten: %7&lt;br /&gt;&lt;b&gt;Totaal af te schrijven: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Maximale werkhash: %1
+Versie basiscertificaten: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Vereiste voorloopnulbits: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Maximale werkhash: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>P2C-aanmaak bevestigen</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Versie basiscertificaten: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Iedereen met een geldig verbindingsbewijs kan deze beloningen innen. U kunt ze niet terughalen met een normale portemonneehandtekening. Controleer alle transacties voordat u ze verstuurt.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>P2C versturen</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C-transacties ingediend bij de portemonnee (%1). Transactie-ID’s:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Geannuleerd. Er zijn geen P2C-transacties verstuurd.</translation>
     </message>
 </context>
 </TS>

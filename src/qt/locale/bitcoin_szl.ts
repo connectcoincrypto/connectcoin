@@ -508,6 +508,14 @@ once_cell = "1.18"</translation>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation type="unfinished">Portmanyj je &lt;b&gt;zaszyfrowany&lt;/b&gt; i terŏźnie &lt;b&gt;zaszperowany&lt;/b&gt;</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Stwōrz nagrody pay-to-connect</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -1493,6 +1501,10 @@ once_cell = "1.18"</translation>
         <source>Amount</source>
         <translation type="unfinished">Kwota</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Dōmyna P2C</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -1519,6 +1531,14 @@ once_cell = "1.18"</translation>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(chyba etykety)</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Cel transakcyje ôkreślōny ôd używŏcza abo dōmyna P2C.</translation>
     </message>
     </context>
 <context>
@@ -1570,6 +1590,10 @@ once_cell = "1.18"</translation>
     <message>
         <source>to</source>
         <translation type="unfinished">do</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Wpisz adres, dōmyna P2C, identyfikator transakcyje abo etyketa do szukanio</translation>
     </message>
 </context>
 <context>
@@ -1672,4 +1696,310 @@ once_cell = "1.18"</translation>
         <translation type="unfinished">Niypodpiyranŏ kategoryjŏ registrowaniŏ %s=%s.</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Automatycznie znejdź potwierdzōne nagrody, twōrz dowody TLS i posyłej nagrody do tego portmanyja. Ôpłŏcki sōm brane ino ze kożdyj nagrody. Prywatnych kluczy niy trza ôdblokowywać, pōki w zapasie kluczy sōm adresy do ôdbiyranio. HTTPS je wyłōnczōny, pōki go wyraźnie niy włōnczysz.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Połōnczynia na sekōnda (tyn portmanyj):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 wyłōnczo HTTPS. Żeby zdjōńć limit wartkości, ôbier niyôgraniczōnŏ wartkość niżyj.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Niyôgraniczōnŏ wartkość (wyraźnŏ zgoda)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Rōwnoczesne połōnczynia:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Niyôbowiōnzkowe: example.com, another.example (puste = wszyjske dōmyny)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Dozwolōne dōmyny:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Zastosuj / zaczni automatycznie ôdbiyrać nagrody</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Zatrzim HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Wyłōnczōne</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Włōnczyć automatyczne ôdbiyranie nagrōd P2C?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>To robi bezpośrednie połōnczynia HTTPS z publicznymi dōmynami i automatycznie posyło udane zgłoszynia ôdbioru nagrody. Te serwery widzōm twōj adres IP. Sztalōnki proxy niy sōm ômijane. Ôpłŏcki sōm ôdciōngane ôd nagrōd.
+
+%1
+
+Kōntynuować?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Ôbrołeś NIYÔGRANICZŌNŎ wielość połōnczyń na sekōnda.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Wartkość: %1 połōnczyń na sekōnda do tego portmanyja.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Zastosowywanie sztalōnkōw…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Sztartowanie</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Rozwiōnzowanie miana dōmyny</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Zaś rozwiōnzowanie miana dōmyny</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Szukōnie dowodōw</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Zaś prōbowanie połōnczyń</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Certyfikat ôdciepniynty</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Zatrzimane skuli feleru</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Nagroda je już ôdebranŏ</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Szukōnie potwierdzōnych nagrōd</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Czekanie na nagrody</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Czekanie na pasowne nagrody</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Nagroda pōminiynŏ</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Posłane</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Zapisane; wejzdrzij do historyje portmanyja</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Niyôgraniczōne</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Wyłōnczōne (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Stan: %1
+Aktywnŏ wartkość: %2 | Rōwnoczesne połōnczynia: %3
+Dōmyna: %4
+Prōby: %5 | Posłane: %6
+Ôstatni ôdbiōr: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Stwōrz nagrody</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Automatyczny ôdbiōr</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Stwōrz nagrody pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Ufunduj ôsobne nagrody za prawidłowe dowody połōnczynia TLS. Może je ôdebrać kożdy, kto spełni wymogi. Ta strōna niy robi połōnczyń HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Dōmyna małymi literami ASCII (do miyndzynŏrodowych dōmyn użyj punycode), bez schymatu URL, drōgi, portu ani kropki na kōńcu.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Dōmyna:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Nagroda za &amp;wyjście:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Wielość wyjść:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Zerowe bity na poczōntku</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Nŏjwiynkszy hash</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Format trudności:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Zerowe bity:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Dokładnie 64 heksadecymalne znaki</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Nŏjwiynkszy &amp;hash:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Wersyjŏ %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Zaufane głōwne &amp;certyfikaty:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Użyj włŏsnyj stŏwki ôpłŏcki</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Ôpłŏcka za 1 000 wirtualnych bajtōw:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Sprawdź P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Ôpłŏcki sōm rachowane przed zatwierdzyniym. Wielkie żōndania mogōm być podzielōne na pora transakcyji.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Tworzynie P2C terŏz wymŏgo portmanyja z lokalnymi prywatnymi kluczami. Portmanyje ino do ôglōndanio i portmanyje z zewnyntrznym podpisywaczōm niy sōm ôbsugowane na tyj strōnie.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Stwōrz P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Wpisz kanōnicznŏ dōmyna małymi literami ASCII, bez kōńcowyj kropki, schymatu, drōgi ani portu.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Wpisz dodatniŏ nagroda, keryj suma niy przekraczo limitu piniyndzy.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Nŏjwiynkszy hash musi mieć dokładnie 64 heksadecymalne znaki.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Wpisz dodatniŏ stŏwka ôpłŏcki za 1 000 wirtualnych bajtōw.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Niy idzie przirychtować transakcyji P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Suma nagrōd i ôpłŏcek przekraczo limit piniyndzy.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Portmanyj: %1&lt;br /&gt;Dōmyna: %2&lt;br /&gt;Wyjścia: %3&lt;br /&gt;Nagroda za wyjście: %4&lt;br /&gt;Nagrody razym: %5&lt;br /&gt;Transakcyje: %6&lt;br /&gt;Ôpłŏcki razym: %7&lt;br /&gt;&lt;b&gt;Ôbciōnżynie razym: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Nŏjwiynkszy hash roboty: %1
+Wersyjŏ głōwnych certyfikatōw: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Wymŏgane zerowe bity na poczōntku: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Nŏjwiynkszy hash roboty: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Potwierdź stworzynie P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Wersyjŏ głōwnych certyfikatōw: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Te nagrody może ôdebrać kożdy, kto przedstawi prawidłowy dowōd połōnczynia. Niy idzie ich ôdzyskać zwykłym podpisym portmanyja. Sprawdź wszyjske transakcyje przed posłaniym.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Poślij P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Transakcyje P2C posłano do portmanyja (%1). Identyfikatory transakcyji:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Pociepniynte. Niy posłano żŏdnych transakcyji P2C.</translation>
+    </message>
+</context>
 </TS>

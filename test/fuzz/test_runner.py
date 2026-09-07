@@ -9,6 +9,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 import argparse
 import configparser
+import hashlib
+import json
 import logging
 import os
 import random
@@ -29,6 +31,25 @@ def get_fuzz_env(*, target, source_dir):
         'MSAN_SYMBOLIZER_PATH': symbolizer,
     }
     return fuzz_env
+
+
+def install_p2c_seed_corpus(*, targets, corpus_dir, source_dir):
+    """Replay our parser seeds even when the upstream corpus lacks this target."""
+    if 'p2c_tls_proof' not in targets:
+        return set()
+    seeds = json.loads((Path(source_dir) / 'src/test/data/p2c_fuzz_seeds.json').read_text(encoding='utf-8'))
+    destination = corpus_dir / 'p2c_tls_proof'
+    destination.mkdir(parents=True, exist_ok=True)
+    was_empty = not any(destination.iterdir())
+    for seed in seeds:
+        data = bytes.fromhex(seed['hex'])
+        name = 'connectcoin-' + hashlib.sha256(data).hexdigest()
+        try:
+            with (destination / name).open('xb') as output:
+                output.write(data)
+        except FileExistsError:
+            pass  # Preserve existing corpora; repeated runs are idempotent.
+    return {'p2c_tls_proof'} if was_empty else set()
 
 
 def select_fuzz_shard(*, targets, corpus_dir, shard_count, shard_index):
@@ -202,6 +223,9 @@ def main():
         parser.error('--corpus-shards must be at least 1')
     if args.corpus_shard_min_files < 1:
         parser.error('--corpus-shard-min-files must be at least 1')
+    seeded_empty_targets = install_p2c_seed_corpus(
+        targets=test_list_selection, corpus_dir=args.corpus_dir, source_dir=config['environment']['SRCDIR'],
+    )
     test_list_selection, shard_loads = select_fuzz_shard(
         targets=test_list_selection,
         corpus_dir=args.corpus_dir,
@@ -292,6 +316,7 @@ def main():
             empty_min_time=args.empty_min_time,
             corpus_shards=args.corpus_shards,
             corpus_shard_min_files=args.corpus_shard_min_files,
+            seeded_empty_targets=seeded_empty_targets,
         )
 
 
@@ -459,6 +484,7 @@ def partition_corpus(*, corpus_path, shard_count, min_files):
 def run_once(
     *, fuzz_pool, corpus, test_list, src_dir, fuzz_bin, using_libfuzzer,
     use_valgrind, empty_min_time, corpus_shards, corpus_shard_min_files,
+    seeded_empty_targets,
 ):
     jobs = []
     temporary_corpus_directories = []
@@ -466,8 +492,11 @@ def run_once(
         corpus_path = corpus / t
         os.makedirs(corpus_path, exist_ok=True)
         empty_dir = not any(corpus_path.iterdir())
-        if using_libfuzzer and empty_min_time and empty_dir:
-            input_groups = [[f"-max_total_time={empty_min_time}"]]
+        if using_libfuzzer and empty_min_time and (empty_dir or t in seeded_empty_targets):
+            # Preserve the CI mutation budget for newly seeded targets, now
+            # exploring from our valid transcript instead of random bytes.
+            seed_args = [corpus_path] if t in seeded_empty_targets else []
+            input_groups = [[f"-max_total_time={empty_min_time}", *seed_args]]
         else:
             corpus_paths, temporary_directories = partition_corpus(
                 corpus_path=corpus_path,

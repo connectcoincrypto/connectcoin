@@ -892,6 +892,14 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <source>Original message:</source>
         <translation type="unfinished">Izvorno sporočilo:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Ustvari nagrade pay-to-connect</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -3591,6 +3599,10 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
         <source>false</source>
         <translation type="unfinished">ni</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Domena P2C</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -3688,6 +3700,14 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Višina spremembe dobroimetja.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Uporabniško določen namen transakcije ali domena P2C.</translation>
     </message>
 </context>
 <context>
@@ -3841,6 +3861,10 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
     <message>
         <source>to</source>
         <translation type="unfinished">do</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Vnesite naslov, domeno P2C, identifikator transakcije ali oznako za iskanje</translation>
     </message>
 </context>
 <context>
@@ -4595,6 +4619,312 @@ Obnovitev varnostne kopije denarnice ni bila mogoča.</translation>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">V nastavitveno datoteko ni bilo mogoče pisati</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Samodejno poiščite potrjene nagrade, ustvarite dokaze TLS in pošljite nagrade v to denarnico. Provizije se odštejejo samo od posamezne nagrade. Zasebnih ključev ni treba odkleniti, dokler so v zalogi ključev še prejemni naslovi. HTTPS je onemogočen, dokler ga izrecno ne zaženete.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Povezav na sekundo (ta denarnica):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 onemogoči HTTPS. Za odstranitev omejitve hitrosti spodaj izberite neomejeno hitrost.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Neomejena hitrost (izrecna privolitev)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Sočasne povezave:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Neobvezno: example.com, another.example (prazno = vse domene)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Dovoljene domene:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Uveljavi / zaženi samodejni prevzem nagrad</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Ustavi HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Onemogočeno</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Omogoči samodejni prevzem nagrad P2C?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>To vzpostavlja neposredne povezave HTTPS z javnimi domenami in samodejno oddaja uspešne zahtevke za nagrade. Ti strežniki vidijo vaš naslov IP. Nastavitve posredniškega strežnika se ne obidejo. Provizije se odštejejo od nagrad.
+
+%1
+
+Nadaljujem?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Izbrali ste NEOMEJENO število povezav na sekundo.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Hitrost: %1 povezav na sekundo za to denarnico.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Uveljavljanje nastavitev…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Zaganjanje</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Razreševanje domene</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Ponovno razreševanje domene</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Iskanje dokazov</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Ponovno vzpostavljanje povezav</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Potrdilo zavrnjeno</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Ustavljeno zaradi napake</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Nagrada je že prevzeta</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Pregledovanje potrjenih nagrad</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Čakanje na nagrade</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Čakanje na ustrezne nagrade</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Nagrada preskočena</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Oddano</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Shranjeno; preverite zgodovino denarnice</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Neomejeno</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Onemogočeno (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Stanje: %1
+Trenutna hitrost: %2 | Sočasne povezave: %3
+Domena: %4
+Poskusi: %5 | Oddano: %6
+Zadnji prevzem: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Ustvari nagrade</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Samodejni prevzemi</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Ustvari nagrade pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Financirajte neodvisne nagrade za veljavne dokaze povezav TLS. Prevzame jih lahko vsak, ki izpolnjuje zahteve. Ta stran ne vzpostavlja povezav HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Domena z malimi znaki ASCII (za mednarodne domene uporabite punycode), brez sheme URL, poti, vrat ali končne pike.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domena:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Nagrada na &amp;izhod:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Število izhodov:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Vodilni ničelni biti</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Največja zgoščena vrednost</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Oblika težavnosti:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Ničelni biti:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Natanko 64 šestnajstiških znakov</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Največja &amp;zgoščena vrednost:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Različica %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Zaupanja vredna korenska &amp;potrdila:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Uporabi lastno stopnjo provizije</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Provizija na 1.000 navideznih bajtov:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Preglej P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Provizije se izračunajo pred odobritvijo. Velike zahteve se lahko razdelijo na več transakcij.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Ustvarjanje P2C trenutno zahteva denarnico z lokalnimi zasebnimi ključi. Denarnice samo za opazovanje in denarnice z zunanjim podpisnikom na tej strani niso podprte.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Ustvari P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Vnesite kanonično domeno z malimi znaki ASCII brez končne pike, sheme, poti ali vrat.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Vnesite pozitivno nagrado, katere skupni znesek ne presega denarne omejitve.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Največja zgoščena vrednost mora vsebovati natanko 64 šestnajstiških znakov.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Vnesite pozitivno stopnjo provizije na 1.000 navideznih bajtov.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Transakcij P2C ni mogoče pripraviti: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Skupna nagrada s provizijami presega denarno omejitev.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Denarnica: %1&lt;br /&gt;Domena: %2&lt;br /&gt;Izhodi: %3&lt;br /&gt;Nagrada na izhod: %4&lt;br /&gt;Skupne nagrade: %5&lt;br /&gt;Transakcije: %6&lt;br /&gt;Skupne provizije: %7&lt;br /&gt;&lt;b&gt;Skupna bremenitev: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Največja zgoščena vrednost dela: %1
+Različica korenskih potrdil: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Zahtevani vodilni ničelni biti: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Največja zgoščena vrednost dela: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Potrdi ustvarjanje P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Različica korenskih potrdil: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Te nagrade lahko prevzame vsak, ki predloži veljaven dokaz povezave. Ne morete jih pridobiti nazaj z običajnim podpisom denarnice. Pred pošiljanjem preglejte vse transakcije.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Pošlji P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Transakcije P2C oddane v denarnico (%1). Identifikatorji transakcij:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Preklicano. Nobena transakcija P2C ni bila poslana.</translation>
     </message>
 </context>
 </TS>

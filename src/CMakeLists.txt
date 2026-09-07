@@ -53,6 +53,16 @@ FetchContent_Declare(connectcoin_mbedtls
 )
 FetchContent_MakeAvailable(connectcoin_mbedtls)
 
+# The public headers are third-party too: consumers such as the wallet must
+# not promote their documentation/redeclaration warnings to project errors.
+# Attach this to the dependency so every direct or transitive consumer gets
+# the same system-header treatment, while its own sources keep strict checks.
+foreach(mbedtls_target IN ITEMS mbedcrypto mbedx509 mbedtls)
+  target_include_directories(${mbedtls_target} SYSTEM INTERFACE
+    ${connectcoin_mbedtls_SOURCE_DIR}/include
+  )
+endforeach()
+
 # Third-party diagnostics must not become fatal when the parent project uses
 # CMAKE_COMPILE_WARNING_AS_ERROR. ConnectCoin's own targets retain the policy.
 # Mbed TLS also deliberately uses defined unsigned wraparound, unsigned shifts,

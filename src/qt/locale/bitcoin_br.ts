@@ -379,6 +379,14 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
         <translation type="unfinished">Adres: %1
 </translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Krouiñ dic'hoproù pay-to-connect</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -866,6 +874,10 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
         <source>Amount</source>
         <translation type="unfinished">Sammad</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Domani P2C</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -884,6 +896,14 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(label ebet)</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Pal an dreuzadenn termenet gant an implijer, pe an domani P2C.</translation>
     </message>
     </context>
 <context>
@@ -932,6 +952,10 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     <message>
         <source>to</source>
         <translation type="unfinished">da</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Enlakait ur chomlec'h, un domani P2C, un naoud treuzadenn pe ur skritell da glask</translation>
     </message>
 </context>
 <context>
@@ -1015,4 +1039,310 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
         <translation type="unfinished">Fazi: Could not add watchonly tx %s to watchonly wallet</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Kavout emgefre an dic'hoproù kadarnaet, krouiñ prouennoù TLS ha kas an dic'hoproù d'an doug-moneiz-mañ. Tennet e vez ar frejoù eus pep dic'hopr hepken. N'eus ket ezhomm da zibrennañ an alc'hwezioù prevez keit ha ma chom chomlec'hioù degemer er mirlec'h alc'hwezioù. Diweredekaet eo HTTPS betek ma loc'hit anezhañ ent splann.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Kennaskoù dre eilenn (an doug-moneiz-mañ):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>Diweredekaat a ra 0 HTTPS. Evit dilemel bevenn an tizh, dibabit an tizh divevenn amañ dindan.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Tizh divevenn (aotre splann)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Kennaskoù war un dro:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Diret: example.com, another.example (goullo = an holl domanioù)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Domanioù aotreet:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Arloañ / loc'hañ ar goulennoù dic'hopr emgefre</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Paouez gant HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Diweredekaet</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Gweredekaat ar goulennoù P2C emgefre?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Krouiñ a ra kennaskoù HTTPS war-eeun ouzh domanioù foran ha kas emgefre ar goulennoù deuet da benn. Gwelout a ra ar servijerioù-se ho chomlec'h IP. Ne vez ket tremenet dreist arventennoù ar proksi. Tennet e vez ar frejoù eus an dic'hoproù.
+
+%1
+
+Kenderc'hel?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Dibabet hoc'h eus kennaskoù DIVEVENN dre eilenn.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Tizh: %1 kennask dre eilenn evit an doug-moneiz-mañ.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>O arloañ an arventennoù…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>O loc'hañ</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>O tiskoulmañ anv an domani</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>O klask adarre diskoulmañ anv an domani</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>O klask prouennoù</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>O klask adarre ar c'hennaskoù</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Testeni nac'het</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Paouezet abalamour d'ur fazi</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Goulennet eo bet an dic'hopr dija</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>O klask dic'hoproù kadarnaet</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>O c'hortoz dic'hoproù</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>O c'hortoz dic'hoproù dereat</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Dic'hopr lezet a-gostez</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Kaset</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Enrollet; gwiriit istor an doug-moneiz</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Divevenn</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Diweredekaet (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Stad: %1
+Tizh oberiant: %2 | Kennaskoù war un dro: %3
+Domani: %4
+Taolioù-arnod: %5 | Kaset: %6
+Goulenn diwezhañ: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Krouiñ dic'hoproù</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Goulennoù emgefre</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Krouiñ dic'hoproù pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Pourchas arc'hant evit dic'hoproù dizalc'h da brouennoù kennask TLS reizh. Pep hini a glot gant an divizoù a c'hall o goulenn. Ne grou ket ar bajenn-mañ kennaskoù HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Domani ASCII e lizherennoù bihan (implijit punycode evit domanioù etrebroadel), hep skouer URL, hent, porzh pe pik e dibenn.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domani:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Dic'hopr dre &amp;ec'hank:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Niver a ec'hankoù:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Bitoù mann e penn-kentañ</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Hash uc'hek</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Stumm an diaester:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>Bitoù &amp;mann:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>64 arouezenn heksadekimal rik</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>&amp;Hash uc'hek:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Stumm %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>&amp;Testenioù gwrizienn fiziet:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Implijout ur feur fre personelaet</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Fre dre 1 000 eizhbit galloudel:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Adwelout P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Jediñ a reer ar frejoù a-raok an aotre. Gallout a ra ar goulennoù bras bezañ rannet e meur a dreuzadenn.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Ezhomm zo bremañ eus un doug-moneiz gant alc'hwezioù prevez lec'hel evit krouiñ P2C. N'eo ket skoret war ar bajenn-mañ an dougoù-moneiz evit evezhiañ hepken nag ar re gant un siner diavaez.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Krouiñ P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Enlakait un domani ASCII kanonek e lizherennoù bihan, hep pik e dibenn, skouer, hent na porzh.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Enlakait un dic'hopr pozitivel na ya ket e sammad dreist ar vevenn arc'hant.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Ret eo d'an hash uc'hek kaout 64 arouezenn heksadekimal rik.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Enlakait ur feur fre pozitivel dre 1 000 eizhbit galloudel.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>N'haller ket prientiñ an treuzadennoù P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Dreist ar vevenn arc'hant eo sammad an dic'hoproù hag ar frejoù.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Doug-moneiz: %1&lt;br /&gt;Domani: %2&lt;br /&gt;Ec'hankoù: %3&lt;br /&gt;Dic'hopr dre ec'hank: %4&lt;br /&gt;Sammad an dic'hoproù: %5&lt;br /&gt;Treuzadennoù: %6&lt;br /&gt;Sammad ar frejoù: %7&lt;br /&gt;&lt;b&gt;Sammad tennet: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Hash labour uc'hek: %1
+Stumm an testenioù gwrizienn: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Bitoù mann rekis e penn-kentañ: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Hash labour uc'hek: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Kadarnaat krouidigezh P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Stumm an testenioù gwrizienn: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>An holl re a ginnig ur brouenn kennask reizh a c'hall goulenn an dic'hoproù-mañ. N'hallit ket o adtapout gant ur sinadur boutin an doug-moneiz. Adwelit an holl dreuzadennoù a-raok o c'has.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Kas P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Treuzadennoù P2C kaset d'an doug-moneiz (%1). Naoudioù an treuzadennoù:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Nullet. N'eus bet kaset treuzadenn P2C ebet.</translation>
+    </message>
+</context>
 </TS>

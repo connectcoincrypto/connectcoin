@@ -31,6 +31,7 @@
 #include <script/solver.h>
 #include <support/allocators/secure.h>
 #include <test/util/setup_common.h>
+#include <univalue.h>
 #include <validation.h>
 #include <wallet/test/util.h>
 #include <wallet/wallet.h>
@@ -38,6 +39,7 @@
 
 #include <atomic>
 #include <chrono>
+#include <limits>
 #include <memory>
 #include <set>
 #include <stdexcept>
@@ -52,14 +54,18 @@
 #include <QClipboard>
 #include <QComboBox>
 #include <QCoreApplication>
+#include <QDir>
 #include <QEvent>
 #include <QFile>
+#include <QLabel>
 #include <QObject>
 #include <QPushButton>
 #include <QPixmap>
 #include <QSpinBox>
 #include <QTemporaryDir>
+#include <QTabWidget>
 #include <QTimer>
+#include <QTranslator>
 #include <QVBoxLayout>
 #include <QTextEdit>
 #include <QListView>
@@ -283,12 +289,12 @@ public:
         clientModel = std::make_unique<ClientModel>(node, &optionsModel);
     }
 
-    void initModelForWallet(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet, const PlatformStyle* platformStyle)
+    void initModelForWallet(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet, const PlatformStyle* platformStyle, bool unload = true)
     {
         WalletContext& context = *node.walletLoader().context();
         AddWallet(context, wallet);
         walletModel = std::make_unique<WalletModel>(interfaces::MakeWallet(context, wallet), *clientModel, platformStyle);
-        RemoveWallet(context, wallet, /* load_on_start= */ std::nullopt);
+        if (unload) RemoveWallet(context, wallet, /* load_on_start= */ std::nullopt);
         sendCoinsDialog.setModel(walletModel.get());
         transactionView.setModel(walletModel.get());
     }
@@ -558,24 +564,65 @@ void TestP2CGUI(interfaces::Node& node)
     auto database = std::make_unique<FailingP2CTestDatabase>();
     auto* failing_database = database.get();
     auto wallet = SetupDescriptorsWallet(node, test, false, std::move(database));
+    struct UnloadWallet {
+        WalletContext& context;
+        std::shared_ptr<CWallet> wallet;
+        void Unload()
+        {
+            if (wallet) RemoveWallet(context, std::exchange(wallet, {}), /*load_on_start=*/std::nullopt);
+        }
+        ~UnloadWallet() { Unload(); }
+    } unload_wallet{*node.walletLoader().context(), wallet};
     std::unique_ptr<const PlatformStyle> style(PlatformStyle::instantiate("other"));
     MiniGUI gui(node, style.get());
-    gui.initModelForWallet(node, wallet, style.get());
+    gui.initModelForWallet(node, wallet, style.get(), /*unload=*/false);
     P2CCreateDialog page;
     page.setModel(gui.walletModel.get());
     auto* claim_rate = page.findChild<QSpinBox*>("p2cClaimRate");
     auto* claim_unlimited = page.findChild<QCheckBox*>("p2cClaimUnlimited");
+    auto* claim_concurrency = page.findChild<QSpinBox*>("p2cClaimConcurrency");
     auto* claim_stop = page.findChild<QPushButton*>("p2cClaimStop");
-    QVERIFY(claim_rate && claim_unlimited && claim_stop);
+    auto* claim_status = page.findChild<QLabel*>("p2cClaimStatus");
+    QVERIFY(!page.findChild<QLabel*>("p2cClaimRoundHint"));
+    QVERIFY(!page.findChild<QSpinBox*>("p2cClaimRoundSeconds"));
+    QVERIFY(claim_rate && claim_unlimited && claim_concurrency && claim_stop && claim_status);
+    QCOMPARE(claim_concurrency->value(), 4);
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["concurrency"].getInt<int>(), 4);
+    QTRY_VERIFY(claim_status->text().contains("Concurrency: 4"));
+    QCOMPARE(claim_concurrency->maximum(), std::numeric_limits<int>::max());
+    claim_concurrency->selectAll();
+    QTest::keyClicks(claim_concurrency, "128");
+    QTest::keyClick(claim_concurrency, Qt::Key_Tab);
+    QCOMPARE(claim_concurrency->value(), 128);
     QCOMPARE(claim_rate->value(), 0);
+    QCOMPARE(claim_rate->text(), QStringLiteral("0"));
+    claim_rate->selectAll();
+    QTest::keyClicks(claim_rate, "10");
+    QTest::keyClick(claim_rate, Qt::Key_Tab);
+    QCOMPARE(claim_rate->value(), 10);
+    QCOMPARE(claim_rate->text(), QStringLiteral("10"));
     QVERIFY(!claim_unlimited->isChecked());
     claim_unlimited->setChecked(true);
     QVERIFY(!claim_rate->isEnabled());
+    // An unmatched allowlist keeps this UI test entirely offline.
+    auto configure_claims = gui.walletModel->wallet().configureP2CClaiming(-1, 128, {"unfunded.example"});
+    const auto configure_error = configure_claims.get();
+    QVERIFY2(configure_error.empty(), configure_error.c_str());
+    QTRY_VERIFY(claim_status->text().contains("Active rate: Unlimited"));
+    QVERIFY(!claim_status->text().contains("Active rate: -1"));
     claim_stop->click(); // Zero must disable, never mean unlimited.
     QTRY_VERIFY(claim_stop->isEnabled());
     QCOMPARE(claim_rate->value(), 0);
+    QCOMPARE(claim_rate->text(), QStringLiteral("0"));
     QVERIFY(!claim_unlimited->isChecked());
     QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 0);
+    QTRY_VERIFY(claim_status->text().contains("Active rate: Disabled (0)"));
+    auto configure_limited = gui.walletModel->wallet().configureP2CClaiming(10, 4, {"unfunded.example"});
+    QVERIFY(configure_limited.get().empty());
+    QTRY_VERIFY(claim_status->text().contains("Active rate: 10 |"));
+    claim_stop->click();
+    QTRY_VERIFY(claim_stop->isEnabled());
+    unload_wallet.Unload();
     auto* domain = page.findChild<QLineEdit*>("p2cDomain");
     auto* amount = page.findChild<BitcoinAmountField*>("p2cAmount");
     auto* count = page.findChild<QSpinBox*>("p2cOutputCount");
@@ -938,4 +985,40 @@ void WalletTests::walletTests()
 void WalletTests::p2cTests()
 {
     TestP2CGUI(m_node);
+}
+
+void WalletTests::p2cTranslations()
+{
+    // Test the actual compiled resources, not only the editable TS catalogs.
+    const auto locales = QDir(":/translations").entryList(QDir::Files);
+    QVERIFY(!locales.isEmpty());
+    for (const auto& locale : locales) {
+        QTranslator translator;
+        QVERIFY2(translator.load(":/translations/" + locale), qPrintable(locale));
+        for (const auto* source : {"Create bounties", "Automatic claims", "Confirm P2C creation", "Send P2C"}) {
+            QVERIFY2(!translator.translate("P2CCreateDialog", source).isEmpty(), qPrintable(locale + ": " + source));
+        }
+        for (const auto* source : {"Disabled", "Unlimited", "Waiting for bounties", "Simultaneous connections:", "Enable automatic P2C claiming?"}) {
+            QVERIFY2(!translator.translate("P2CClaimDialog", source).isEmpty(), qPrintable(locale + ": " + source));
+        }
+    }
+    for (const auto& locale : {QStringLiteral("pt"), QStringLiteral("pt_BR")}) {
+        struct ScopedTranslator {
+            QTranslator value;
+            ~ScopedTranslator() { QCoreApplication::removeTranslator(&value); }
+        } translator;
+        QVERIFY(translator.value.load(":/translations/" + locale));
+        QVERIFY(QCoreApplication::installTranslator(&translator.value));
+        P2CCreateDialog page;
+        const auto* tabs = page.findChild<QTabWidget*>();
+        QVERIFY(tabs);
+        QCOMPARE(tabs->tabText(0), QStringLiteral("Criar recompensas"));
+        QCOMPARE(tabs->tabText(1), QStringLiteral("Resgates automáticos"));
+        const auto* status = page.findChild<QLabel*>("p2cClaimStatus");
+        QVERIFY(status);
+        QCOMPARE(status->text(), QStringLiteral("Desativado"));
+        const auto* start = page.findChild<QPushButton*>("p2cClaimStart");
+        QVERIFY(start);
+        QCOMPARE(start->text(), QStringLiteral("Aplicar / iniciar resgates automáticos"));
+    }
 }

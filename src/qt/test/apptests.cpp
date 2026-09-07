@@ -15,6 +15,10 @@
 #include <validation.h>
 
 #include <QAction>
+#include <QCoreApplication>
+#include <QEvent>
+#include <QIcon>
+#include <QImage>
 #include <QLineEdit>
 #include <QRegularExpression>
 #include <QScopedPointer>
@@ -49,6 +53,23 @@ void TestRpcCommand(RPCConsole* console)
     const QString pattern = QStringLiteral("\"chain\": \"(\\w+)\"");
     QCOMPARE(FindInConsole(output, pattern), QString("regtest"));
 }
+//! P2C keeps its own recolorable glyph, including after a theme change.
+void TestP2CIcon(BitcoinGUI* window)
+{
+    auto* action = window->findChild<QAction*>("p2cAction");
+    QVERIFY(action);
+    const QImage source(":/icons/p2c");
+    QVERIFY(!source.isNull());
+    QVERIFY(source.hasAlphaChannel());
+    QCOMPARE(source.size(), QSize(128, 128));
+    const auto expected = QIcon(":/icons/p2c").pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8);
+    const auto send = QIcon(":/icons/send").pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8);
+    QVERIFY(expected != send);
+    QCOMPARE(action->icon().pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8), expected);
+    QEvent palette_change(QEvent::PaletteChange);
+    QCoreApplication::sendEvent(window, &palette_change);
+    QCOMPARE(action->icon().pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8), expected);
+}
 } // namespace
 
 //! Entry point for BitcoinApplication tests.
@@ -76,6 +97,7 @@ void AppTests::appTests()
 void AppTests::guiTests(BitcoinGUI* window)
 {
     HandleCallback callback{"guiTests", *this};
+    TestP2CIcon(window);
     connect(window, &BitcoinGUI::consoleShown, this, &AppTests::consoleTests);
     expectCallback("consoleTests");
     QAction* action = window->findChild<QAction*>("openRPCConsoleAction");

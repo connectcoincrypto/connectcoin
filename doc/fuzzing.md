@@ -160,7 +160,13 @@ the repository hosting this tree, without private data, until such a corpus is
 established. Submit an input to `bitcoin-core/qa-assets` only when it also
 applies to unmodified Bitcoin Core and follows that upstream project's rules.
 
-The current CI tests ConnectCoin against the inherited upstream corpus. A
+The current CI tests ConnectCoin against the inherited upstream corpus. The
+runner also installs the project-owned `p2c_tls_proof` seeds from
+`src/test/data/p2c_fuzz_seeds.json`, preserving existing corpus files. These small
+structurally valid and malformed transcripts ensure that replay-only builds
+exercise the P2C parser even when the upstream corpus has no such target. A unit
+test verifies their parser results; this initial corpus does not replace ongoing
+mutation fuzzing or certificate-verification tests. A
 project-owned corpus location and retention policy should be configured before
 CI claims coverage for ConnectCoin-specific protocol features.
 

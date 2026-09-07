@@ -966,6 +966,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">Оригінальне повідомлення:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Створити винагороди pay-to-connect</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -3797,6 +3805,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <source>false</source>
         <translation type="unfinished">хибний</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Домен P2C</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -3894,6 +3906,14 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Сума, додана чи знята з балансу.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Визначене користувачем призначення транзакції або домен P2C.</translation>
     </message>
 </context>
 <context>
@@ -4051,6 +4071,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>to</source>
         <translation type="unfinished">до</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Введіть адресу, домен P2C, ідентифікатор транзакції або мітку для пошуку</translation>
     </message>
 </context>
 <context>
@@ -5273,6 +5297,312 @@ Please try running the latest software version.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Не вдалося записати файл параметрів</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Автоматично знаходити підтверджені винагороди, створювати докази TLS і надсилати винагороди до цього гаманця. Комісії вираховуються лише з кожної винагороди. Розблокування приватних ключів не потрібне, поки в пулі ключів залишаються адреси отримання. HTTPS вимкнено, доки ви явно його не запустите.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>З'єднань за секунду (цей гаманець):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 вимикає HTTPS. Щоб зняти обмеження швидкості, виберіть нижче необмежену швидкість.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Необмежена швидкість (явна згода)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Одночасних з'єднань:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Необов'язково: example.com, another.example (порожньо = усі домени)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Дозволені домени:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Застосувати / почати автоматичне отримання винагород</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Зупинити HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Вимкнено</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Увімкнути автоматичне отримання винагород P2C?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Буде встановлено прямі HTTPS-з'єднання з публічними доменами та автоматично надіслано успішні заявки на винагороди. Ці сервери бачитимуть вашу IP-адресу. Налаштування проксі не обходяться. Комісії вираховуються з винагород.
+
+%1
+
+Продовжити?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Ви вибрали НЕОБМЕЖЕНУ кількість з'єднань за секунду.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Швидкість: %1 з'єднань за секунду для цього гаманця.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Застосування налаштувань…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Запуск</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Визначення адреси домену</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Повторне визначення адреси домену</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Пошук доказів</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Повторні спроби з'єднання</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Сертифікат відхилено</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Зупинено через помилку</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Винагороду вже отримано</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Сканування підтверджених винагород</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Очікування винагород</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Очікування придатних винагород</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Винагороду пропущено</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Надіслано</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Збережено; перевірте історію гаманця</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Необмежено</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Вимкнено (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Стан: %1
+Поточна швидкість: %2 | Одночасних з'єднань: %3
+Домен: %4
+Спроб: %5 | Надіслано: %6
+Остання заявка: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Створити винагороди</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Автоматичне отримання</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Створити винагороди pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Виділіть кошти на окремі винагороди за дійсні докази TLS-з'єднань. Отримати їх може кожен, хто виконає вимоги. Ця сторінка не встановлює HTTPS-з'єднань.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Домен малими символами ASCII (для міжнародних доменів використовуйте punycode), без схеми URL, шляху, порту чи крапки в кінці.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Домен:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Винагорода за &amp;вихід:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Кількість виходів:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Початкові нульові біти</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Максимальний хеш</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Формат складності:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Нульові біти:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Рівно 64 шістнадцяткові символи</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Максимальний &amp;хеш:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Версія %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Довірені кореневі &amp;сертифікати:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Використати власну ставку комісії</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Комісія за 1 000 віртуальних байтів:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Перевірити P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Комісії розраховуються до схвалення. Великі запити може бути розділено на кілька транзакцій.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Створення P2C наразі потребує гаманця з локальними приватними ключами. Гаманці лише для спостереження та гаманці із зовнішнім підписувачем на цій сторінці не підтримуються.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Створити P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Введіть канонічний домен малими символами ASCII без крапки в кінці, схеми, шляху чи порту.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Введіть додатну винагороду, загальна сума якої не перевищує грошову межу.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Максимальний хеш має містити рівно 64 шістнадцяткові символи.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Введіть додатну ставку комісії за 1 000 віртуальних байтів.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Не вдалося підготувати транзакції P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Загальна сума винагород і комісій перевищує грошову межу.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Гаманець: %1&lt;br /&gt;Домен: %2&lt;br /&gt;Виходів: %3&lt;br /&gt;Винагорода за вихід: %4&lt;br /&gt;Усього винагород: %5&lt;br /&gt;Транзакцій: %6&lt;br /&gt;Усього комісій: %7&lt;br /&gt;&lt;b&gt;Загальне списання: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Максимальний хеш роботи: %1
+Версія кореневих сертифікатів: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Потрібні початкові нульові біти: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Максимальний хеш роботи: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Підтвердити створення P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Версія кореневих сертифікатів: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Ці винагороди може отримати будь-хто, хто надасть дійсний доказ з'єднання. Ви не зможете повернути їх звичайним підписом гаманця. Перевірте всі транзакції перед надсиланням.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Надіслати P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Транзакції P2C надіслано до гаманця (%1). Ідентифікатори транзакцій:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Скасовано. Транзакції P2C не надсилались.</translation>
     </message>
 </context>
 </TS>

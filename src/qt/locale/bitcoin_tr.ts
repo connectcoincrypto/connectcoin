@@ -862,6 +862,14 @@ Cüzdan kilidini aç.</translation>
         <source>Original message:</source>
         <translation type="unfinished">Orjinal mesaj:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Pay-to-connect ödülleri oluştur</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -3261,6 +3269,10 @@ Taşıma işlemi, taşıma işleminden önce cüzdanın bir yedeğini oluşturac
         <source>false</source>
         <translation type="unfinished">yanlış</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C alan adı</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -3358,6 +3370,14 @@ Taşıma işlemi, taşıma işleminden önce cüzdanın bir yedeğini oluşturac
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Bakiyeden kaldırılan ya da bakiyeye eklenen tutar.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>İşlemin kullanıcı tarafından tanımlanan amacı veya P2C alan adı.</translation>
     </message>
 </context>
 <context>
@@ -3483,6 +3503,10 @@ Taşıma işlemi, taşıma işleminden önce cüzdanın bir yedeğini oluşturac
     <message>
         <source>to</source>
         <translation type="unfinished">Alıcı</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Aramak için adres, P2C alan adı, işlem kimliği veya etiket girin</translation>
     </message>
 </context>
 <context>
@@ -4177,6 +4201,312 @@ Cüzdan yedeği geri yüklenemiyor.</translation>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Ayarlar dosyası yazılamadı</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Onaylanmış ödülleri otomatik olarak bulur, TLS kanıtları üretir ve ödülleri bu cüzdana gönderir. Ücretler yalnızca ilgili ödülden kesilir. Anahtar havuzunda alım adresleri bulunduğu sürece özel anahtarların kilidini açmak gerekmez. HTTPS, siz açıkça başlatana kadar devre dışıdır.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Saniyedeki bağlantı sayısı (bu cüzdan):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0, HTTPS'yi devre dışı bırakır. Hız sınırını kaldırmak için aşağıdan sınırsız hızı seçin.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Sınırsız hız (açık onay gerekir)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Eşzamanlı bağlantılar:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>İsteğe bağlı: example.com, another.example (boş = tüm alan adları)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>İzin verilen alan adları:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Uygula / otomatik ödül talebini başlat</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>HTTPS'yi durdur (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Devre dışı</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Otomatik P2C ödül talebi etkinleştirilsin mi?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Bu işlem, herkese açık alan adlarına doğrudan HTTPS bağlantıları kurar ve başarılı ödül taleplerini otomatik olarak gönderir. Bu sunucular IP adresinizi görebilir. Vekil sunucu ayarları atlanmaz. Ücretler ödüllerden kesilir.
+
+%1
+
+Devam edilsin mi?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Saniyede SINIRSIZ bağlantı seçtiniz.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Hız: bu cüzdan için saniyede %1 bağlantı.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Yapılandırma uygulanıyor…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Başlatılıyor</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Alan adı çözümleniyor</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Alan adı çözümlemesi yeniden deneniyor</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Kanıtlar aranıyor</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Bağlantılar yeniden deneniyor</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Sertifika reddedildi</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Bir hata nedeniyle durdu</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Ödül zaten alınmış</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Onaylanmış ödüller taranıyor</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Ödüller bekleniyor</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Uygun ödüller bekleniyor</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Ödül atlandı</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Gönderildi</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Kaydedildi; cüzdan geçmişini kontrol edin</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Sınırsız</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Devre dışı (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Durum: %1
+Etkin hız: %2 | Eşzamanlı bağlantılar: %3
+Alan adı: %4
+Denemeler: %5 | Gönderilen: %6
+Son talep: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Ödüller oluştur</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Otomatik talepler</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Pay-to-connect ödülleri oluştur</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Geçerli TLS bağlantı kanıtları için bağımsız ödüller fonlayın. Koşulları karşılayan herkes bunları talep edebilir. Bu sayfa HTTPS bağlantıları kurmaz.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Küçük harfli ASCII alan adı (uluslararası alan adları için punycode kullanın); URL şeması, yol, bağlantı noktası veya sonda nokta olmadan.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Alan adı:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>&amp;Çıktı başına ödül:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>Çıktı &amp;sayısı:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Baştaki sıfır bitler</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>En yüksek özet değeri</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>Zorluk &amp;biçimi:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Sıfır bitler:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Tam olarak 64 onaltılık karakter</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>En yüksek &amp;özet değeri:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Sürüm %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Güvenilen kök &amp;sertifikalar:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Özel bir ücret oranı kullan</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>1.000 sanal bayt başına ücret:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>P2C'yi &amp;incele…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Ücretler onaydan önce hesaplanır. Büyük istekler birden fazla işleme bölünebilir.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>P2C oluşturmak şu anda yerel özel anahtarları olan bir cüzdan gerektirir. Yalnızca izleme cüzdanları ve harici imzalayıcılı cüzdanlar bu sayfada desteklenmez.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>P2C oluştur</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Sonunda nokta, şema, yol veya bağlantı noktası bulunmayan standart küçük harfli bir ASCII alan adı girin.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Toplamı para sınırını aşmayan pozitif bir ödül girin.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>En yüksek özet değeri tam olarak 64 onaltılık karakter içermelidir.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>1.000 sanal bayt başına pozitif bir ücret oranı girin.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C işlemleri hazırlanamadı: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Ödül toplamı ve ücretler para sınırını aşıyor.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Cüzdan: %1&lt;br /&gt;Alan adı: %2&lt;br /&gt;Çıktılar: %3&lt;br /&gt;Çıktı başına ödül: %4&lt;br /&gt;Toplam ödüller: %5&lt;br /&gt;İşlemler: %6&lt;br /&gt;Toplam ücretler: %7&lt;br /&gt;&lt;b&gt;Toplam kesinti: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>En yüksek iş özeti: %1
+Kök sertifika sürümü: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Gereken baştaki sıfır bitler: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>En yüksek iş özeti: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>P2C oluşturmayı onayla</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Kök sertifika sürümü: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Bu ödülleri geçerli bir bağlantı kanıtı sunan herkes talep edebilir. Bunları normal bir cüzdan imzasıyla geri alamazsınız. Göndermeden önce tüm işlemleri inceleyin.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>P2C gönder</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C işlemleri cüzdana gönderildi (%1). İşlem kimlikleri:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>İptal edildi. Hiçbir P2C işlemi gönderilmedi.</translation>
     </message>
 </context>
 </TS>

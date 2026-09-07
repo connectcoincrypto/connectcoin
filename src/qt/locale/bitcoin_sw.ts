@@ -809,6 +809,14 @@ Kutia sahihi kunawezekana tu kwa anwani za aina ya 'urithi'.</translation>
         <source>Original message:</source>
         <translation type="unfinished">Ujumbe asilia:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Unda zawadi za pay-to-connect</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -1422,6 +1430,10 @@ Mchakato wa uhamiaji utaunda nakala rudufu ya pochi kabla ya kuhama. Faili hii y
         <source>Amount</source>
         <translation type="unfinished">Kiasi</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Kikoa cha P2C</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -1436,6 +1448,14 @@ Mchakato wa uhamiaji utaunda nakala rudufu ya pochi kabla ya kuhama. Faili hii y
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(hamna chapa)</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Nia/lengo la muamala lililowekwa na mtumiaji, au kikoa cha P2C.</translation>
     </message>
     </context>
 <context>
@@ -1492,6 +1512,10 @@ Mchakato wa uhamiaji utaunda nakala rudufu ya pochi kabla ya kuhama. Faili hii y
     <message>
         <source>Exporting Successful</source>
         <translation type="unfinished">Utoaji Umefanikiwa</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Ingiza anwani, kikoa cha P2C, kitambulisho cha muamala au lebo ya kutafuta</translation>
     </message>
     </context>
 <context>
@@ -1580,4 +1604,310 @@ Mchakato wa uhamiaji utaunda nakala rudufu ya pochi kabla ya kuhama. Faili hii y
         <translation type="unfinished">Kuthibitisha mkoba/mikoba</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Tafuta zawadi zilizothibitishwa kiotomatiki, tengeneza thibitisho za TLS na utume zawadi kwenye pochi hii. Ada hukatwa kwenye kila zawadi pekee. Hakuna haja ya kufungua funguo za faragha ikiwa anwani za kupokea bado zipo katika hifadhi ya funguo. HTTPS imezimwa mpaka uiwashe waziwazi.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Miunganisho kwa sekunde (pochi hii):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 huzima HTTPS. Ili kuondoa kikomo cha kasi, chagua kasi isiyo na kikomo hapa chini.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Kasi isiyo na kikomo (ridhaa ya wazi)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Miunganisho ya wakati mmoja:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Si lazima: example.com, another.example (tupu = vikoa vyote)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Vikoa vinavyoruhusiwa:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Tumia / anza kudai zawadi kiotomatiki</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Simamisha HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Imezimwa</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Wezesha kudai zawadi za P2C kiotomatiki?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Hii huanzisha miunganisho ya moja kwa moja ya HTTPS kwenye vikoa vya umma na kuwasilisha madai yaliyofaulu kiotomatiki. Seva hizo zinaweza kuona anwani yako ya IP. Mipangilio ya proksi haipitwi. Ada hukatwa kwenye zawadi.
+
+%1
+
+Endelea?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Umechagua miunganisho kwa sekunde ISIYO NA KIKOMO.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Kasi: miunganisho %1 kwa sekunde kwa pochi hii.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Inatumia mipangilio…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Inaanza</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Inatafuta anwani ya kikoa</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Inajaribu tena kutafuta anwani ya kikoa</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Inatafuta thibitisho</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Inajaribu tena miunganisho</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Cheti kimekataliwa</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Imesimama kwa sababu ya hitilafu</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Zawadi tayari imedaiwa</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Inatafuta zawadi zilizothibitishwa</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Inasubiri zawadi</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Inasubiri zawadi zinazostahiki</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Zawadi imerukwa</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Imewasilishwa</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Imehifadhiwa; angalia historia ya pochi</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Bila kikomo</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Imezimwa (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Hali: %1
+Kasi inayotumika: %2 | Miunganisho ya wakati mmoja: %3
+Kikoa: %4
+Majaribio: %5 | Yaliyowasilishwa: %6
+Dai la mwisho: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Unda zawadi</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Madai ya kiotomatiki</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Unda zawadi za pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Toa fedha kwa zawadi huru kwa thibitisho halali za muunganisho wa TLS. Yeyote anayekidhi masharti anaweza kuzidai. Ukurasa huu hauanzishi miunganisho ya HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Kikoa cha ASCII kwa herufi ndogo (tumia punycode kwa vikoa vya kimataifa), bila mpango wa URL, njia, lango au nukta ya mwisho.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Kikoa:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Zawadi kwa kila &amp;tokeo:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Idadi ya matokeo:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Biti sifuri za mwanzo</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Hashi ya juu kabisa</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Muundo wa ugumu:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>Biti &amp;sifuri:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Herufi 64 za heksadesimali hasa</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>&amp;Hashi ya juu kabisa:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Toleo %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>&amp;Vyeti vya mzizi vinavyoaminika:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Tumia kiwango maalumu cha ada</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Ada kwa kila baiti pepe 1,000:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Kagua P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Ada huhesabiwa kabla ya idhini. Maombi makubwa yanaweza kugawanywa katika miamala kadhaa.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Kuunda P2C kwa sasa kunahitaji pochi yenye funguo za faragha za ndani. Pochi za kutazama tu na zenye mtia saini wa nje hazitumiki kwenye ukurasa huu.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Unda P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Ingiza kikoa sanifu cha ASCII kwa herufi ndogo bila nukta ya mwisho, mpango, njia au lango.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Ingiza zawadi chanya ambayo jumla yake haizidi kikomo cha fedha.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Hashi ya juu kabisa lazima iwe na herufi 64 za heksadesimali hasa.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Ingiza kiwango chanya cha ada kwa kila baiti pepe 1,000.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Imeshindikana kuandaa miamala ya P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Jumla ya zawadi pamoja na ada inazidi kikomo cha fedha.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Pochi: %1&lt;br /&gt;Kikoa: %2&lt;br /&gt;Matokeo: %3&lt;br /&gt;Zawadi kwa kila tokeo: %4&lt;br /&gt;Jumla ya zawadi: %5&lt;br /&gt;Miamala: %6&lt;br /&gt;Jumla ya ada: %7&lt;br /&gt;&lt;b&gt;Jumla ya makato: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Hashi ya kazi ya juu kabisa: %1
+Toleo la vyeti vya mzizi: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Biti sifuri za mwanzo zinazohitajika: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Hashi ya kazi ya juu kabisa: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Thibitisha uundaji wa P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Toleo la vyeti vya mzizi: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Zawadi hizi zinaweza kudaiwa na yeyote anayetoa thibitisho halali la muunganisho. Huwezi kuzirudisha kwa saini ya kawaida ya pochi. Kagua miamala yote kabla ya kutuma.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Tuma P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Miamala ya P2C imewasilishwa kwenye pochi (%1). Vitambulisho vya miamala:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Imeghairiwa. Hakuna miamala ya P2C iliyotumwa.</translation>
+    </message>
+</context>
 </TS>

@@ -367,6 +367,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation type="unfinished">Portofoli po &lt;b&gt; enkriptohet&lt;/b&gt; dhe është &lt;b&gt; i kyçur&lt;/b&gt;</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Krijo shpërblime pay-to-connect</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -721,6 +729,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Amount</source>
         <translation type="unfinished">Sasia</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Domeni P2C</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -771,6 +783,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(no label)</source>
         <translation type="unfinished">(pa etiketë)</translation>
     </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Synimi/qëllimi i transaksionit i përcaktuar nga përdoruesi, ose domeni P2C.</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
@@ -806,6 +826,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Exporting Failed</source>
         <translation type="unfinished">Eksportimi dështoj</translation>
     </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Vendosni adresën, domenin P2C, identifikuesin e transaksionit ose etiketën për kërkim</translation>
+    </message>
     </context>
 <context>
     <name>WalletFrame</name>
@@ -839,4 +863,310 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Fonde te pamjaftueshme</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Gjeni automatikisht shpërblime të konfirmuara, krijoni prova TLS dhe dërgojini shpërblimet në këtë portofol. Tarifat zbriten vetëm nga çdo shpërblim. Nuk nevojitet zhbllokimi i çelësave privatë për sa kohë ka adresa marrjeje në grupin e çelësave. HTTPS është i çaktivizuar derisa ta nisni shprehimisht.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Lidhje në sekondë (ky portofol):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 çaktivizon HTTPS. Për të hequr kufirin e shpejtësisë, zgjidhni më poshtë shpejtësi pa kufi.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Shpejtësi pa kufi (pëlqim i shprehur)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Lidhje të njëkohshme:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Opsionale: example.com, another.example (bosh = të gjitha domenet)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Domenet e lejuara:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Zbato / nis kërkimin automatik të shpërblimeve</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Ndalo HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>I çaktivizuar</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Të aktivizohet kërkimi automatik i shpërblimeve P2C?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Kjo krijon lidhje të drejtpërdrejta HTTPS me domene publike dhe dorëzon automatikisht kërkesat e suksesshme për shpërblim. Adresa juaj IP është e dukshme për këta serverë. Cilësimet e ndërmjetësit nuk anashkalohen. Tarifat zbriten nga shpërblimet.
+
+%1
+
+Të vazhdohet?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Zgjodhët lidhje në sekondë PA KUFI.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Shpejtësia: %1 lidhje në sekondë për këtë portofol.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Po zbatohen cilësimet…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Po niset</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Po zgjidhet emri i domenit</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Po provohet sërish zgjidhja e emrit të domenit</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Po kërkohen prova</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Po provohen sërish lidhjet</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Certifikata u refuzua</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>U ndal për shkak të një gabimi</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Shpërblimi është marrë tashmë</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Po skanohen shpërblimet e konfirmuara</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Në pritje të shpërblimeve</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Në pritje të shpërblimeve të përshtatshme</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Shpërblimi u anashkalua</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>U dorëzua</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>U ruajt; kontrolloni historikun e portofolit</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Pa kufi</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>I çaktivizuar (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Gjendja: %1
+Shpejtësia aktive: %2 | Lidhje të njëkohshme: %3
+Domeni: %4
+Përpjekje: %5 | Dorëzuar: %6
+Kërkesa e fundit: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Krijo shpërblime</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Kërkesa automatike</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Krijo shpërblime pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Financoni shpërblime të pavarura për prova të vlefshme lidhjeje TLS. Mund t'i marrë kushdo që përmbush kërkesat. Kjo faqe nuk krijon lidhje HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Domen ASCII me shkronja të vogla (përdorni punycode për domene ndërkombëtare), pa skemë URL, shteg, portë ose pikë në fund.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domeni:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Shpërblim për &amp;dalje:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Numri i daljeve:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Bitë zero në fillim</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Hash-i maksimal</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Formati i vështirësisë:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>Bitë &amp;zero:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Saktësisht 64 karaktere heksadecimale</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>&amp;Hash-i maksimal:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Versioni %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>&amp;Certifikata rrënjë të besuara:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Përdor një normë tarife të personalizuar</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Tarifa për 1 000 bajte virtuale:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Shqyrto P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Tarifat llogariten para miratimit. Kërkesat e mëdha mund të ndahen në disa transaksione.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Krijimi i P2C aktualisht kërkon një portofol me çelësa privatë lokalë. Portofolet vetëm për vëzhgim dhe ato me nënshkrues të jashtëm nuk mbështeten në këtë faqe.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Krijo P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Vendosni një domen ASCII kanonik me shkronja të vogla, pa pikë në fund, skemë, shteg apo portë.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Vendosni një shpërblim pozitiv, totali i të cilit nuk tejkalon kufirin monetar.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Hash-i maksimal duhet të përmbajë saktësisht 64 karaktere heksadecimale.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Vendosni një normë pozitive tarife për 1 000 bajte virtuale.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Nuk mund të përgatiten transaksionet P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Totali i shpërblimeve së bashku me tarifat tejkalon kufirin monetar.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Portofoli: %1&lt;br /&gt;Domeni: %2&lt;br /&gt;Daljet: %3&lt;br /&gt;Shpërblimi për dalje: %4&lt;br /&gt;Shpërblime gjithsej: %5&lt;br /&gt;Transaksione: %6&lt;br /&gt;Tarifa gjithsej: %7&lt;br /&gt;&lt;b&gt;Debitim gjithsej: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Hash-i maksimal i punës: %1
+Versioni i certifikatave rrënjë: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Bitët zero të kërkuar në fillim: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Hash-i maksimal i punës: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Konfirmo krijimin e P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Versioni i certifikatave rrënjë: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Këto shpërblime mund t'i marrë kushdo që paraqet një provë të vlefshme lidhjeje. Nuk mund t'i rikuperoni me një nënshkrim të zakonshëm të portofolit. Shqyrtoni të gjitha transaksionet përpara dërgimit.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Dërgo P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Transaksionet P2C u dorëzuan në portofol (%1). Identifikuesit e transaksioneve:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>U anulua. Nuk u dërgua asnjë transaksion P2C.</translation>
+    </message>
+</context>
 </TS>

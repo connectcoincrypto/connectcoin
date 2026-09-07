@@ -602,6 +602,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">Ang orihinal na mensahe:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Gumawa ng mga gantimpalang pay-to-connect</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -2424,6 +2432,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>false</source>
         <translation type="unfinished">mali</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Domain ng P2C</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -2513,6 +2525,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Halaga na tinanggal o idinagdag sa balanse.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Layunin ng transaksyon na itinakda ng gumagamit, o ang domain ng P2C.</translation>
     </message>
 </context>
 <context>
@@ -2616,6 +2636,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>to</source>
         <translation type="unfinished">sa</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Maglagay ng address, domain ng P2C, ID ng transaksyon, o label na hahanapin</translation>
     </message>
 </context>
 <context>
@@ -2971,4 +2995,310 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Kinakailangan na muling maisulat ang walet: i-restart ang %s upang makumpleto</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Awtomatikong maghanap ng mga nakumpirmang gantimpala, bumuo ng mga patunay na TLS, at ipadala ang mga gantimpala sa wallet na ito. Sa bawat gantimpala lamang kinukuha ang bayad. Hindi kailangang i-unlock ang mga pribadong susi habang may mga address para sa pagtanggap sa pool ng mga susi. Naka-disable ang HTTPS hangga't hindi mo ito tahasang sinisimulan.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Mga koneksyon bawat segundo (wallet na ito):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>Dini-disable ng 0 ang HTTPS. Para alisin ang limitasyon sa bilis, piliin ang walang limitasyon sa ibaba.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Walang limitasyon sa bilis (tahasang pahintulot)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Magkakasabay na koneksyon:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Opsyonal: example.com, another.example (walang laman = lahat ng domain)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Mga pinapayagang domain:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Ilapat / simulan ang awtomatikong pag-claim</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Ihinto ang HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Naka-disable</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Paganahin ang awtomatikong pag-claim ng P2C?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Gagawa ito ng direktang mga koneksyong HTTPS sa mga pampublikong domain at awtomatikong isusumite ang mga matagumpay na claim. Makikita ng mga server na iyon ang iyong IP address. Hindi nilalampasan ang mga setting ng proxy. Ibinabawas ang mga bayad sa mga gantimpala.
+
+%1
+
+Magpatuloy?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Pinili mo ang WALANG LIMITASYONG koneksyon bawat segundo.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Bilis: %1 koneksyon bawat segundo para sa wallet na ito.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Inilalapat ang mga setting…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Nagsisimula</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Hinahanap ang address ng domain</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Muling sinusubukang hanapin ang address ng domain</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Naghahanap ng mga patunay</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Muling sinusubukan ang mga koneksyon</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Tinanggihan ang sertipiko</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Huminto dahil sa error</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Na-claim na ang gantimpala</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Sinusuri ang mga nakumpirmang gantimpala</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Naghihintay ng mga gantimpala</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Naghihintay ng mga kwalipikadong gantimpala</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Nilaktawan ang gantimpala</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Naisumite</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Nai-save; tingnan ang kasaysayan ng wallet</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Walang limitasyon</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Naka-disable (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Kalagayan: %1
+Aktibong bilis: %2 | Magkakasabay na koneksyon: %3
+Domain: %4
+Mga pagsubok: %5 | Naisumite: %6
+Huling claim: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Gumawa ng mga gantimpala</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Mga awtomatikong claim</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Gumawa ng mga gantimpalang pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Pondohan ang magkakahiwalay na gantimpala para sa mga wastong patunay ng koneksyong TLS. Maaaring mag-claim ang sinumang nakatutugon sa mga kinakailangan. Hindi gumagawa ng mga koneksyong HTTPS ang pahinang ito.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Domain na gumagamit ng maliliit na titik na ASCII (gumamit ng punycode para sa mga internasyonal na domain), walang URL scheme, path, port, o tuldok sa dulo.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domain:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Gantimpala bawat &amp;output:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Bilang ng mga output:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Mga zero bit sa simula</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Pinakamataas na hash</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Format ng kahirapan:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>Mga &amp;zero bit:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Eksaktong 64 na hexadecimal na character</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Pinakamataas na &amp;hash:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Bersyon %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Mga pinagkakatiwalaang root &amp;certificate:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Gumamit ng pasadyang rate ng bayad</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Bayad bawat 1,000 virtual byte:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Suriin ang P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Kinakalkula ang mga bayad bago aprubahan. Maaaring hatiin ang malalaking kahilingan sa maraming transaksyon.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Sa kasalukuyan, kailangan ang wallet na may mga lokal na pribadong susi para gumawa ng P2C. Hindi sinusuportahan sa pahinang ito ang mga wallet na pangmasid lamang at mga wallet na may panlabas na tagapirma.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Gumawa ng P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Maglagay ng kanonikal na domain na gumagamit ng maliliit na titik na ASCII, walang tuldok sa dulo, scheme, path, o port.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Maglagay ng positibong gantimpala na ang kabuuan ay hindi lalampas sa limitasyon ng salapi.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Dapat maglaman ng eksaktong 64 na hexadecimal na character ang pinakamataas na hash.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Maglagay ng positibong rate ng bayad bawat 1,000 virtual byte.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Hindi maihanda ang mga transaksyong P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Lampas sa limitasyon ng salapi ang kabuuang gantimpala kasama ang mga bayad.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Mga output: %3&lt;br /&gt;Gantimpala bawat output: %4&lt;br /&gt;Kabuuang gantimpala: %5&lt;br /&gt;Mga transaksyon: %6&lt;br /&gt;Kabuuang bayad: %7&lt;br /&gt;&lt;b&gt;Kabuuang ibabawas: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Pinakamataas na work hash: %1
+Bersyon ng mga root certificate: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Kinakailangang mga zero bit sa simula: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Pinakamataas na work hash: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Kumpirmahin ang paggawa ng P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Bersyon ng mga root certificate: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Maaaring i-claim ang mga gantimpalang ito ng sinumang magpapakita ng wastong patunay ng koneksyon. Hindi mo mababawi ang mga ito gamit ang karaniwang lagda ng wallet. Suriin ang lahat ng transaksyon bago magpadala.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Ipadala ang P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Naisumite sa wallet ang mga transaksyong P2C (%1). Mga ID ng transaksyon:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Kinansela. Walang ipinadalang transaksyong P2C.</translation>
+    </message>
+</context>
 </TS>

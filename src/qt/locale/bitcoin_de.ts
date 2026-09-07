@@ -890,6 +890,14 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
         <source>Original message:</source>
         <translation type="unfinished">Original-Nachricht:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Pay-to-connect-Prämien erstellen</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -3582,6 +3590,10 @@ Hinweis: Da die Gebühr auf Basis der Bytes berechnet wird, führt eine Gebühre
         <source>false</source>
         <translation type="unfinished">falsch</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C-Domain</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -3679,6 +3691,14 @@ Hinweis: Da die Gebühr auf Basis der Bytes berechnet wird, führt eine Gebühre
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Der Betrag, der dem Kontostand abgezogen oder hinzugefügt wurde.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Vom Benutzer festgelegter Transaktionszweck oder die P2C-Domain.</translation>
     </message>
 </context>
 <context>
@@ -3832,6 +3852,10 @@ Hinweis: Da die Gebühr auf Basis der Bytes berechnet wird, führt eine Gebühre
     <message>
         <source>to</source>
         <translation type="unfinished">bis</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Adresse, P2C-Domain, Transaktionskennung oder Bezeichnung für die Suche eingeben</translation>
     </message>
 </context>
 <context>
@@ -5047,6 +5071,312 @@ Bitte mit der neuesten Softwareversion ausführen.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Einstellungsdatei kann nicht geschrieben werden</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Findet bestätigte Prämien automatisch, erzeugt TLS-Nachweise und sendet die Belohnungen an diese Wallet. Gebühren werden ausschließlich von der jeweiligen Prämie abgezogen. Private Schlüssel müssen nicht entsperrt werden, solange der Schlüsselvorrat Empfangsadressen enthält. HTTPS bleibt bis zum ausdrücklichen Start deaktiviert.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Verbindungen pro Sekunde (diese Wallet):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 deaktiviert HTTPS. Für eine unbegrenzte Rate wählen Sie unten die entsprechende Option.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Unbegrenzte Rate (ausdrückliche Zustimmung)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Gleichzeitige Verbindungen:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Optional: example.com, another.example (leer = alle Domains)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Zugelassene Domains:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Anwenden / automatisches Einlösen starten</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>HTTPS stoppen (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Deaktiviert</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Automatisches Einlösen von P2C aktivieren?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Dabei werden direkte HTTPS-Verbindungen zu öffentlichen Domains hergestellt und erfolgreiche Einlösungen automatisch übermittelt. Ihre IP-Adresse ist für diese Server sichtbar. Proxy-Einstellungen werden nicht umgangen. Gebühren werden von den Prämien abgezogen.
+
+%1
+
+Fortfahren?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Sie haben UNBEGRENZTE Verbindungen pro Sekunde gewählt.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Rate: %1 Verbindungen pro Sekunde für diese Wallet.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Konfiguration wird angewendet…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Wird gestartet</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Domain wird aufgelöst</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Domainauflösung wird erneut versucht</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Nachweise werden gesucht</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Verbindungen werden erneut versucht</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Zertifikat abgelehnt</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Wegen eines Fehlers gestoppt</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Prämie bereits eingelöst</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Bestätigte Prämien werden gesucht</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Warten auf Prämien</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Warten auf geeignete Prämien</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Prämie übersprungen</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Übermittelt</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Gespeichert; Wallet-Verlauf prüfen</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Unbegrenzt</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Deaktiviert (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Status: %1
+Aktive Rate: %2 | Gleichzeitige Verbindungen: %3
+Domain: %4
+Versuche: %5 | Übermittelt: %6
+Letzte Einlösung: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Prämien erstellen</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Automatisches Einlösen</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Pay-to-connect-Prämien erstellen</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Finanzieren Sie unabhängige Prämien für gültige TLS-Verbindungsnachweise. Jeder, der die Bedingungen erfüllt, kann sie einlösen. Diese Seite stellt keine HTTPS-Verbindungen her.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>ASCII-Domain in Kleinbuchstaben (punycode für internationale Domains verwenden), ohne URL-Schema, Pfad, Port oder abschließenden Punkt.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domain:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Prämie pro &amp;Ausgang:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>A&amp;nzahl der Ausgänge:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Führende Nullbits</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Maximaler Hash</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>Schwierigkeits&amp;format:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Nullbits:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Genau 64 hexadezimale Zeichen</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Maximaler &amp;Hash:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Version %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Vertrauenswürdige Stamm&amp;zertifikate:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Benutzerdefinierte Gebührenrate verwenden</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Gebühr pro 1.000 virtuelle Bytes:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>P2C &amp;prüfen…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Gebühren werden vor der Zustimmung berechnet. Große Anfragen können auf mehrere Transaktionen aufgeteilt werden.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Das Erstellen von P2C erfordert derzeit eine Wallet mit lokalen privaten Schlüsseln. Reine Beobachtungs-Wallets und Wallets mit externem Signierer werden auf dieser Seite nicht unterstützt.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>P2C erstellen</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Geben Sie eine kanonische ASCII-Domain in Kleinbuchstaben ohne abschließenden Punkt, Schema, Pfad oder Port ein.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Geben Sie eine positive Prämie ein, deren Gesamtbetrag die Geldmengengrenze nicht überschreitet.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Der maximale Hash muss genau 64 hexadezimale Zeichen enthalten.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Geben Sie eine positive Gebührenrate pro 1.000 virtuelle Bytes ein.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C-Transaktionen konnten nicht vorbereitet werden: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Die Summe der Prämien und Gebühren überschreitet die Geldmengengrenze.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Ausgänge: %3&lt;br /&gt;Prämie pro Ausgang: %4&lt;br /&gt;Prämien insgesamt: %5&lt;br /&gt;Transaktionen: %6&lt;br /&gt;Gebühren insgesamt: %7&lt;br /&gt;&lt;b&gt;Gesamtbelastung: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Maximaler Arbeits-Hash: %1
+Version der Stammzertifikate: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Erforderliche führende Nullbits: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Maximaler Arbeits-Hash: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>P2C-Erstellung bestätigen</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Version der Stammzertifikate: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Jeder, der einen gültigen Verbindungsnachweis vorlegt, kann diese Prämien einlösen. Sie können sie nicht mit einer normalen Wallet-Signatur zurückholen. Prüfen Sie alle Transaktionen vor dem Senden.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>P2C senden</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C-Transaktionen an die Wallet übermittelt (%1). Transaktionskennungen:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Abgebrochen. Es wurden keine P2C-Transaktionen gesendet.</translation>
     </message>
 </context>
 </TS>

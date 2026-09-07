@@ -527,6 +527,14 @@
         <source>Error: %1</source>
         <translation type="unfinished">Қате: %1</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Pay-to-connect сыйақыларын жасау</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -812,6 +820,10 @@
         <source>Amount</source>
         <translation type="unfinished">Сан</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C домені</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -826,6 +838,14 @@
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(белгі жоқ)</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Пайдаланушы анықтаған транзакция ниеті/мақсаты немесе P2C домені.</translation>
     </message>
     </context>
 <context>
@@ -858,6 +878,10 @@
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">Экспортталмады</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Іздеу үшін мекенжайды, P2C доменін, транзакция идентификаторын немесе белгіні енгізіңіз</translation>
     </message>
     </context>
 <context>
@@ -897,4 +921,310 @@
         <translation type="unfinished">Әмиян(дар) тексерілуде…</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Расталған сыйақыларды автоматты түрде тауып, TLS дәлелдерін жасап, сыйақыларды осы әмиянға жіберіңіз. Комиссиялар тек әр сыйақыдан ұсталады. Кілттер қорында қабылдау мекенжайлары бар кезде жеке кілттердің құлпын ашу қажет емес. HTTPS оны анық іске қосқанша өшірулі тұрады.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Секундына қосылымдар (осы әмиян):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 HTTPS-ті өшіреді. Жылдамдық шегін алып тастау үшін төменде шектеусіз жылдамдықты таңдаңыз.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Шектеусіз жылдамдық (анық келісім)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Бір мезгілдегі қосылымдар:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Міндетті емес: example.com, another.example (бос = барлық домендер)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Рұқсат етілген домендер:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Қолдану / автоматты сыйақы талап етуді бастау</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>HTTPS-ті тоқтату (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Өшірулі</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Автоматты P2C сыйақы талабы қосылсын ба?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Бұл жалпыға ашық домендерге тікелей HTTPS қосылымдарын орнатып, сәтті талаптарды автоматты түрде жібереді. IP мекенжайыңыз сол серверлерге көрінеді. Прокси параметрлері айналып өтілмейді. Комиссиялар сыйақылардан ұсталады.
+
+%1
+
+Жалғастыру керек пе?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Сіз секундына ШЕКТЕУСІЗ қосылым таңдадыңыз.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Жылдамдық: осы әмиян үшін секундына %1 қосылым.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Параметрлер қолданылуда…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Іске қосылуда</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Домен мекенжайы анықталуда</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Домен мекенжайын анықтау қайталануда</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Дәлелдер ізделуде</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Қосылымдар қайталануда</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Сертификат қабылданбады</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Қатеге байланысты тоқтады</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Сыйақы әлдеқашан алынған</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Расталған сыйақылар ізделуде</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Сыйақылар күтілуде</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Жарамды сыйақылар күтілуде</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Сыйақы өткізіліп жіберілді</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Жіберілді</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Сақталды; әмиян тарихын тексеріңіз</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Шектеусіз</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Өшірулі (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Күйі: %1
+Белсенді жылдамдық: %2 | Бір мезгілдегі қосылымдар: %3
+Домен: %4
+Әрекеттер: %5 | Жіберілген: %6
+Соңғы талап: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Сыйақылар жасау</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Автоматты талаптар</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Pay-to-connect сыйақыларын жасау</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Жарамды TLS қосылым дәлелдері үшін жеке сыйақыларды қаржыландырыңыз. Талаптарды орындаған кез келген адам оларды ала алады. Бұл бет HTTPS қосылымдарын орнатпайды.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Кіші әріппен жазылған ASCII домені (халықаралық домендер үшін punycode қолданыңыз), URL сызбасынсыз, жолсыз, портсыз немесе соңғы нүктесіз.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Домен:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Әр &amp;шығыс үшін сыйақы:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>Шығыстар &amp;саны:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Бастапқы нөл биттер</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Ең үлкен хэш</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>Күрделілік &amp;пішімі:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Нөл биттер:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Дәл 64 он алтылық таңба</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Ең үлкен &amp;хэш:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Нұсқа %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Сенімді түбірлік &amp;сертификаттар:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Жеке комиссия мөлшерлемесін қолдану</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Әр 1 000 виртуалды байт үшін комиссия:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>P2C-ті &amp;тексеру…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Комиссиялар мақұлдаудан бұрын есептеледі. Үлкен сұраулар бірнеше транзакцияға бөлінуі мүмкін.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>P2C жасау үшін қазір жергілікті жеке кілттері бар әмиян қажет. Тек бақылау әмияндары мен сыртқы қол қоюшысы бар әмияндар бұл бетте қолдау таппайды.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>P2C жасау</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Соңғы нүктесіз, сызбасыз, жолсыз немесе портсыз канондық кіші әріппен жазылған ASCII доменін енгізіңіз.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Жалпы сомасы ақша шегінен аспайтын оң сыйақыны енгізіңіз.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Ең үлкен хэш дәл 64 он алтылық таңбадан тұруы керек.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Әр 1 000 виртуалды байт үшін оң комиссия мөлшерлемесін енгізіңіз.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C транзакцияларын дайындау мүмкін болмады: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Сыйақылар мен комиссиялардың жалпы сомасы ақша шегінен асады.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Әмиян: %1&lt;br /&gt;Домен: %2&lt;br /&gt;Шығыстар: %3&lt;br /&gt;Әр шығыс үшін сыйақы: %4&lt;br /&gt;Жалпы сыйақылар: %5&lt;br /&gt;Транзакциялар: %6&lt;br /&gt;Жалпы комиссиялар: %7&lt;br /&gt;&lt;b&gt;Жалпы ұсталым: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Ең үлкен жұмыс хэші: %1
+Түбірлік сертификаттар нұсқасы: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Қажетті бастапқы нөл биттер: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Ең үлкен жұмыс хэші: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>P2C жасауды растау</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Түбірлік сертификаттар нұсқасы: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Бұл сыйақыларды жарамды қосылым дәлелін ұсынған кез келген адам ала алады. Оларды кәдімгі әмиян қолтаңбасымен қайтара алмайсыз. Жібермес бұрын барлық транзакцияларды тексеріңіз.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>P2C жіберу</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C транзакциялары әмиянға жіберілді (%1). Транзакция идентификаторлары:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Бас тартылды. Ешбір P2C транзакциясы жіберілген жоқ.</translation>
+    </message>
+</context>
 </TS>

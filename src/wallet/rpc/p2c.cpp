@@ -28,6 +28,7 @@ RPCResult ClaimWorkerResult()
     return RPCResult{RPCResult::Type::OBJ, "", "", {
         {RPCResult::Type::NUM, "connections_per_second", "Aggregate per-wallet rate; 0 disables, -1 is unlimited."},
         {RPCResult::Type::NUM, "concurrency", "Maximum simultaneous TLS handshakes."},
+        {RPCResult::Type::NUM, "domain_rounds", "Domain rounds started since the last configuration."},
         {RPCResult::Type::STR, "state", "Current worker state."},
         {RPCResult::Type::STR, "domain", "Most recently processed domain."},
         {RPCResult::Type::NUM, "attempts", "Started connection attempts, saved between rounds."},
@@ -48,7 +49,7 @@ RPCMethod setp2cclaiming()
         "Wallets start disabled after reload; saved proposals and completed proofs resume only after explicit enabling.\n",
         {
             {"connections_per_second", RPCArg::Type::NUM, RPCArg::Optional::NO, "0 to disable, -1 for unlimited, otherwise a positive aggregate rate."},
-            {"concurrency", RPCArg::Type::NUM, RPCArg::Default{4}, "Simultaneous handshakes, 1-64."},
+            {"concurrency", RPCArg::Type::NUM, RPCArg::Default{4}, "Maximum simultaneous handshakes; any positive 32-bit integer. Actual capacity depends on system resources."},
             {"domains", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "Optional allowlist. Empty means all canonical public domains with bounties.", {
                 {"domain", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "Canonical lower-case ASCII domain."},
             }},

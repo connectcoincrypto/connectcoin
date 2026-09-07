@@ -879,6 +879,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">Asl xabar:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Pay-to-connect mukofotlarini yaratish</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -2600,6 +2608,10 @@ Migratsiya jarayoni ko'chirishdan oldin hamyonning zaxira nusxasini yaratadi. Us
         <source>false</source>
         <translation type="unfinished">ёлғон</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C domeni</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -2673,6 +2685,14 @@ Migratsiya jarayoni ko'chirishdan oldin hamyonning zaxira nusxasini yaratadi. Us
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Миқдор ўчирилган ёки балансга қўшилган.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Foydalanuvchi belgilagan tranzaksiya niyati/maqsadi yoki P2C domeni.</translation>
     </message>
 </context>
 <context>
@@ -2778,6 +2798,10 @@ Migratsiya jarayoni ko'chirishdan oldin hamyonning zaxira nusxasini yaratadi. Us
         <source>to</source>
         <translation type="unfinished">Кимга</translation>
     </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Qidirish uchun manzil, P2C domeni, tranzaksiya identifikatori yoki yorliq kiriting</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -2850,6 +2874,312 @@ Migratsiya jarayoni ko'chirishdan oldin hamyonning zaxira nusxasini yaratadi. Us
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Sozlamalar fayli yaratish uchun yaroqsiz</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Tasdiqlangan mukofotlarni avtomatik toping, TLS isbotlarini yarating va mukofotlarni shu hamyonga yuboring. Komissiyalar faqat har bir mukofotdan olinadi. Kalitlar zaxirasida qabul manzillari bor ekan, maxfiy kalitlarni qulfdan chiqarish shart emas. HTTPS uni aniq ishga tushirmaguningizcha o‘chiq turadi.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Soniyadagi ulanishlar (shu hamyon):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 HTTPS’ni o‘chiradi. Tezlik chegarasini olib tashlash uchun quyida cheksiz tezlikni tanlang.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Cheksiz tezlik (aniq rozilik)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Bir vaqtdagi ulanishlar:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Ixtiyoriy: example.com, another.example (bo‘sh = barcha domenlar)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Ruxsat etilgan domenlar:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Qo‘llash / avtomatik mukofot talabini boshlash</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>HTTPS’ni to‘xtatish (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>O‘chirilgan</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Avtomatik P2C mukofot talabi yoqilsinmi?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Bu ochiq domenlarga bevosita HTTPS ulanishlarini o‘rnatadi va muvaffaqiyatli talablarni avtomatik yuboradi. IP manzilingiz o‘sha serverlarga ko‘rinadi. Proksi sozlamalari chetlab o‘tilmaydi. Komissiyalar mukofotlardan olinadi.
+
+%1
+
+Davom etilsinmi?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Siz soniyada CHEKSIZ ulanishni tanladingiz.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Tezlik: shu hamyon uchun soniyada %1 ulanish.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Sozlamalar qo‘llanmoqda…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Ishga tushirilmoqda</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Domen manzili aniqlanmoqda</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Domen manzilini aniqlash qayta urinilmoqda</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Isbotlar qidirilmoqda</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Ulanishlar qayta urinilmoqda</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Sertifikat rad etildi</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Xato sababli to‘xtadi</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Mukofot allaqachon olingan</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Tasdiqlangan mukofotlar qidirilmoqda</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Mukofotlar kutilmoqda</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Mos mukofotlar kutilmoqda</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Mukofot o‘tkazib yuborildi</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Yuborildi</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Saqlandi; hamyon tarixini tekshiring</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Cheksiz</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>O‘chirilgan (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Holat: %1
+Faol tezlik: %2 | Bir vaqtdagi ulanishlar: %3
+Domen: %4
+Urinishlar: %5 | Yuborilgan: %6
+Oxirgi talab: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Mukofotlar yaratish</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Avtomatik talablar</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Pay-to-connect mukofotlarini yaratish</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Haqiqiy TLS ulanish isbotlari uchun mustaqil mukofotlarni moliyalashtiring. Talablarni bajargan har kim ularni olishi mumkin. Bu sahifa HTTPS ulanishlarini o‘rnatmaydi.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Kichik harfli ASCII domeni (xalqaro domenlar uchun punycode ishlating), URL sxemasi, yo‘l, port yoki oxirgi nuqtasiz.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domen:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Har bir &amp;chiqish uchun mukofot:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>Chiqishlar &amp;soni:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Boshlang‘ich nol bitlar</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Eng katta xesh</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>Qiyinlik &amp;formati:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Nol bitlar:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Aynan 64 ta o‘n oltilik belgi</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Eng katta &amp;xesh:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>%1-versiya</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Ishonchli ildiz &amp;sertifikatlar:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Maxsus komissiya stavkasidan foydalanish</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Har 1 000 virtual bayt uchun komissiya:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>P2C’ni &amp;ko‘rib chiqish…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Komissiyalar tasdiqlashdan oldin hisoblanadi. Katta so‘rovlar bir nechta tranzaksiyaga bo‘linishi mumkin.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>P2C yaratish hozir mahalliy maxfiy kalitlari bor hamyonni talab qiladi. Faqat kuzatuvchi va tashqi imzolovchili hamyonlar bu sahifada qo‘llab-quvvatlanmaydi.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>P2C yaratish</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Oxirgi nuqta, sxema, yo‘l yoki portsiz kanonik kichik harfli ASCII domenini kiriting.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Jami pul chegarasidan oshmaydigan musbat mukofotni kiriting.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Eng katta xesh aynan 64 ta o‘n oltilik belgidan iborat bo‘lishi kerak.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Har 1 000 virtual bayt uchun musbat komissiya stavkasini kiriting.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C tranzaksiyalarini tayyorlab bo‘lmadi: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Mukofotlar va komissiyalar jami pul chegarasidan oshmoqda.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Hamyon: %1&lt;br /&gt;Domen: %2&lt;br /&gt;Chiqishlar: %3&lt;br /&gt;Har bir chiqish uchun mukofot: %4&lt;br /&gt;Jami mukofotlar: %5&lt;br /&gt;Tranzaksiyalar: %6&lt;br /&gt;Jami komissiyalar: %7&lt;br /&gt;&lt;b&gt;Jami yechib olish: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Eng katta ish xeshi: %1
+Ildiz sertifikatlar versiyasi: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Kerakli boshlang‘ich nol bitlar: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Eng katta ish xeshi: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>P2C yaratishni tasdiqlash</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Ildiz sertifikatlar versiyasi: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Bu mukofotlarni haqiqiy ulanish isbotini taqdim etgan har kim olishi mumkin. Ularni oddiy hamyon imzosi bilan qaytarib ololmaysiz. Yuborishdan oldin barcha tranzaksiyalarni ko‘rib chiqing.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>P2C yuborish</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C tranzaksiyalari hamyonga yuborildi (%1). Tranzaksiya identifikatorlari:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Bekor qilindi. Hech qanday P2C tranzaksiyasi yuborilmadi.</translation>
     </message>
 </context>
 </TS>

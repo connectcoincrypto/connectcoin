@@ -705,6 +705,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation type="unfinished">المحفظة &lt;b&gt;مشفرة&lt;/b&gt; و &lt;b&gt;مقفلة&lt;/b&gt; حاليا</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>إنشاء مكافآت pay-to-connect</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -1714,6 +1722,10 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <source>Amount</source>
         <translation type="unfinished">‫القيمة‬</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>نطاق P2C</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -1725,12 +1737,24 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <source>(no label)</source>
         <translation type="unfinished">(بدون وسم)</translation>
     </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>الغرض من المعاملة كما حدده المستخدم، أو نطاق P2C.</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
     <message>
         <source>Address</source>
         <translation type="unfinished">العنوان</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>أدخل عنوانًا أو نطاق P2C أو معرّف معاملة أو تسمية للبحث</translation>
     </message>
     </context>
 <context>
@@ -1940,4 +1964,310 @@ Please try running the latest software version.
         <translation type="unfinished">شبكة غير معروفة في - الوكيل='%s': '%s'</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>يعثر تلقائيًا على المكافآت المؤكدة، وينشئ إثباتات TLS ويرسل المكافآت إلى هذه المحفظة. تُخصم الرسوم من كل مكافأة فقط. لا حاجة إلى فتح قفل المفاتيح الخاصة ما دامت هناك عناوين استقبال في مخزون المفاتيح. يبقى HTTPS معطلاً حتى تبدأه صراحةً.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>الاتصالات في الثانية (هذه المحفظة):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>القيمة 0 تعطّل HTTPS. لإزالة حد المعدل، اختر المعدل غير المحدود أدناه.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>معدل غير محدود (اختيار صريح)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>الاتصالات المتزامنة:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>اختياري: example.com, another.example (فارغ = جميع النطاقات)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>النطاقات المسموح بها:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>تطبيق / بدء التحصيل التلقائي</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>إيقاف HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>معطّل</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>تفعيل التحصيل التلقائي لمكافآت P2C؟</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>يُنشئ هذا اتصالات HTTPS مباشرة بالنطاقات العامة ويرسل طلبات التحصيل الناجحة تلقائيًا. يكون عنوان IP الخاص بك مرئيًا لهذه الخوادم. لا يتم تجاوز إعدادات الوكيل. تُخصم الرسوم من المكافآت.
+
+%1
+
+هل تريد المتابعة؟</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>لقد اخترت عددًا غير محدود من الاتصالات في الثانية.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>المعدل: %1 اتصال في الثانية لهذه المحفظة.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>جارٍ تطبيق الإعدادات…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>جارٍ البدء</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>جارٍ استبانة النطاق</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>جارٍ إعادة محاولة استبانة النطاق</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>جارٍ البحث عن إثباتات</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>جارٍ إعادة محاولة الاتصالات</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>رُفضت الشهادة</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>توقف بسبب خطأ</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>تم تحصيل المكافأة بالفعل</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>جارٍ البحث عن المكافآت المؤكدة</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>في انتظار المكافآت</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>في انتظار المكافآت المؤهلة</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>تم تخطي المكافأة</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>تم الإرسال</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>تم الحفظ؛ راجع سجل المحفظة</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>غير محدود</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>معطّل (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>الحالة: %1
+المعدل النشط: %2 | الاتصالات المتزامنة: %3
+النطاق: %4
+المحاولات: %5 | المرسلة: %6
+آخر تحصيل: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>إنشاء مكافآت</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>التحصيل التلقائي</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>إنشاء مكافآت pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>موّل مكافآت مستقلة لإثباتات اتصال TLS الصالحة. يمكن لأي شخص يستوفي الشروط تحصيلها. لا تُنشئ هذه الصفحة اتصالات HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>نطاق ASCII بأحرف صغيرة (استخدم punycode للنطاقات الدولية)، دون مخطط URL أو مسار أو منفذ أو نقطة نهائية.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>ال&amp;نطاق:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>المكافأة لكل م&amp;خرج:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;عدد المخرجات:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>بتات الصفر البادئة</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>أقصى تجزئة</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;تنسيق الصعوبة:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>بتات ال&amp;صفر:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>64 محرفًا بالنظام الست عشري بالضبط</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>أقصى &amp;تجزئة:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>الإصدار %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>&amp;شهادات الجذر الموثوقة:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>استخدام معدل رسوم مخصص</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>الرسوم لكل 1,000 بايت افتراضي:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;مراجعة P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>تُحسب الرسوم قبل الموافقة. قد تُقسم الطلبات الكبيرة إلى عدة معاملات.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>يتطلب إنشاء P2C حاليًا محفظة بمفاتيح خاصة محلية. لا تدعم هذه الصفحة محافظ المراقبة فقط أو المحافظ التي تستخدم جهاز توقيع خارجيًا.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>إنشاء P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>أدخل نطاق ASCII قياسيًا بأحرف صغيرة، دون نقطة نهائية أو مخطط أو مسار أو منفذ.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>أدخل مكافأة موجبة لا يتجاوز مجموعها الحد النقدي.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>يجب أن تحتوي أقصى تجزئة على 64 محرفًا بالنظام الست عشري بالضبط.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>أدخل معدل رسوم موجبًا لكل 1,000 بايت افتراضي.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>تعذر إعداد معاملات P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>يتجاوز مجموع المكافآت والرسوم الحد النقدي.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>المحفظة: %1&lt;br /&gt;النطاق: %2&lt;br /&gt;المخرجات: %3&lt;br /&gt;المكافأة لكل مخرج: %4&lt;br /&gt;إجمالي المكافآت: %5&lt;br /&gt;المعاملات: %6&lt;br /&gt;إجمالي الرسوم: %7&lt;br /&gt;&lt;b&gt;إجمالي الخصم: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>أقصى تجزئة للعمل: %1
+إصدار شهادات الجذر: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>بتات الصفر البادئة المطلوبة: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>أقصى تجزئة للعمل: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>تأكيد إنشاء P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>إصدار شهادات الجذر: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>يمكن لأي شخص يقدم إثبات اتصال صالحًا تحصيل هذه المكافآت. لا يمكنك استردادها باستخدام توقيع عادي للمحفظة. راجع جميع المعاملات قبل الإرسال.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>إرسال P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>أُرسلت معاملات P2C إلى المحفظة (%1). معرّفات المعاملات:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>أُلغي. لم تُرسل أي معاملات P2C.</translation>
+    </message>
+</context>
 </TS>

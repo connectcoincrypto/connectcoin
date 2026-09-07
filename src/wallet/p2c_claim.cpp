@@ -6,11 +6,13 @@
 
 #include <coins.h>
 #include <consensus/consensus.h>
+#include <crypto/common.h>
 #include <interfaces/chain.h>
 #include <policy/feerate.h>
 #include <policy/policy.h>
 #include <script/solver.h>
 #include <sync.h>
+#include <util/strencodings.h>
 #include <util/translation.h>
 #include <wallet/coincontrol.h>
 #include <wallet/fees.h>
@@ -63,6 +65,54 @@ bool SafeFeeRate(const CFeeRate& rate)
 }
 } // namespace
 
+P2CClaimPriority GetP2CClaimPriority(const uint256& target, CAmount net_reward)
+{
+    P2CClaimPriority result{};
+    if (net_reward <= 0 || !MoneyRange(net_reward)) return result;
+    const auto payout{static_cast<uint64_t>(net_reward)};
+    constexpr uint64_t MASK{0xffffffff};
+    // Eight target words times two payout words, accumulated into ten words.
+    // Each multiply/add is at most (2^32-1)^2 + 2*(2^32-1) = 2^64-1.
+    for (size_t i = 0; i < 8; ++i) {
+        uint64_t carry{0};
+        const uint64_t word{ReadLE32(target.begin() + 4 * i)};
+        for (size_t j = 0; j < 2; ++j) {
+            const size_t pos{9 - (i + j)};
+            const uint64_t product{word * ((payout >> (32 * j)) & MASK) + result[pos] + carry};
+            result[pos] = static_cast<uint32_t>(product & MASK);
+            carry = product >> 32;
+        }
+        result[7 - i] = static_cast<uint32_t>(carry);
+    }
+    // T*N + N handles the inclusive target, including T=2^256-1, without
+    // wrapping a 256-bit T+1. The full result fits in 320 bits.
+    uint64_t carry{payout};
+    for (auto it = result.rbegin(); it != result.rend(); ++it) {
+        const uint64_t sum{*it + (carry & MASK)};
+        *it = static_cast<uint32_t>(sum & MASK);
+        carry = (carry >> 32) + (sum >> 32);
+    }
+    return result;
+}
+
+util::Result<CAmount> CalculateP2CClaimFee(const CFeeRate& rate, size_t proof_size)
+{
+    if (proof_size == 0 || proof_size > MAX_P2C_PROOF_SIZE) {
+        return util::Error{Untranslated("P2C proof_size must be between 1 and 65536 bytes")};
+    }
+    if (!SafeFeeRate(rate)) return util::Error{Untranslated("Fee rate is too high or invalid for safe P2C claim construction")};
+    // The outpoint, amount and 32-byte payout key do not change the wire size.
+    CMutableTransaction tx;
+    tx.vin.emplace_back();
+    static const XOnlyPubKey SIZE_KEY{ParseHex("79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798")};
+    tx.vout.emplace_back(0, SIZE_KEY);
+    tx.vin[0].scriptWitness.stack.emplace_back(proof_size, 0);
+    const auto vsize{GetVirtualTransactionSize(CTransaction{tx})};
+    const CAmount fee{rate.GetFee(static_cast<int32_t>(vsize))};
+    if (!MoneyRange(fee)) return util::Error{Untranslated("P2C claim fee is out of range")};
+    return fee;
+}
+
 util::Result<P2CClaimProposal> PrepareP2CClaim(CWallet& wallet, const COutPoint& bounty,
                                            const CCoinControl& control, size_t proof_size)
 {
@@ -103,19 +153,17 @@ util::Result<P2CClaimProposal> PrepareP2CClaim(CWallet& wallet, const COutPoint&
     if (!tx.vout[0].GetP2PKPubKey() || !wallet.IsMine(tx.vout[0])) {
         return util::Error{Untranslated("P2C payout must be a P2PK destination belonging to this wallet")};
     }
-    // Size the entire witnessed transaction, including marker/flags and the
-    // CompactSize transition at 65536 bytes. Never revise outputs after TLS.
-    tx.vin[0].scriptWitness.stack.emplace_back(proof_size, 0);
-    const auto vsize{GetVirtualTransactionSize(CTransaction{tx})};
-    const CAmount fee{rate.GetFee(static_cast<int32_t>(vsize))};
-    if (!MoneyRange(fee) || fee > wallet.m_default_max_tx_fee || fee >= coin->out.nValue) {
+    // Includes witness marker/flags and CompactSize transitions. Never revise
+    // the payout/fee after committing the ClientHello to this transaction.
+    const auto fee{CalculateP2CClaimFee(rate, proof_size)};
+    if (!fee) return util::Error{util::ErrorString(fee)};
+    if (*fee > wallet.m_default_max_tx_fee || *fee >= coin->out.nValue) {
         return util::Error{Untranslated("P2C claim fee exceeds the wallet maximum or consumes the entire bounty")};
     }
-    tx.vout[0].nValue -= fee;
+    tx.vout[0].nValue -= *fee;
     if (IsDust(tx.vout[0], dust_rate)) return util::Error{Untranslated("P2C reward after fees is dust")};
-    tx.vin[0].scriptWitness.stack.clear();
     reserved.KeepDestination();
-    return P2CClaimProposal{MakeTransactionRef(std::move(tx)), coin->out, *destination, fee, proof_size, validation_time};
+    return P2CClaimProposal{MakeTransactionRef(std::move(tx)), coin->out, *destination, *fee, proof_size, validation_time};
 }
 
 util::Result<P2CClaimProposal> ResumeP2CClaim(CWallet& wallet, const CTransaction& proposal)

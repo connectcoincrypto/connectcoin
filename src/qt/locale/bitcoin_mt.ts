@@ -856,6 +856,14 @@ L-iffirmar huwa possibbli biss b'indirizzi tat-tip 'legacy'.</translation>
         <source>Original message:</source>
         <translation type="unfinished">Messaġġ oriġinali:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Oħloq premjijiet pay-to-connect</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -2070,6 +2078,10 @@ L-iffirmar huwa possibbli biss b'indirizzi tat-tip 'legacy'.</translation>
         <source>false</source>
         <translation type="unfinished">falz</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Dominju P2C</translation>
+    </message>
 </context>
 <context>
     <name>TransactionTableModel</name>
@@ -2104,6 +2116,14 @@ L-iffirmar huwa possibbli biss b'indirizzi tat-tip 'legacy'.</translation>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(l-ebda tikketta)</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>L-intenzjoni/għan tat-tranżazzjoni definit mill-utent, jew id-dominju P2C.</translation>
     </message>
     </context>
 <context>
@@ -2177,6 +2197,10 @@ L-iffirmar huwa possibbli biss b'indirizzi tat-tip 'legacy'.</translation>
         <source>to</source>
         <translation type="unfinished">għal</translation>
     </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Daħħal indirizz, dominju P2C, identifikatur ta' tranżazzjoni jew tikketta biex tfittex</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -2227,4 +2251,310 @@ L-iffirmar huwa possibbli biss b'indirizzi tat-tip 'legacy'.</translation>
         <translation type="unfinished">Qed nerġgħu nisskenjaw...</translation>
     </message>
     </context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Sib premjijiet ikkonfermati awtomatikament, iġġenera provi TLS u ibgħat il-premjijiet lil din il-kartiera. It-tariffi jittieħdu biss minn kull premju. M'hemmx bżonn tiftaħ iċ-ċwievet privati sakemm ikun għad hemm indirizzi għar-riċeviment fil-ġabra taċ-ċwievet. HTTPS huwa diżattivat sakemm tibdieh b'mod espliċitu.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Konnessjonijiet kull sekonda (din il-kartiera):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 jiddiżattiva HTTPS. Biex tneħħi l-limitu tar-rata, agħżel rata bla limitu hawn taħt.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Rata bla limitu (kunsens espliċitu)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Konnessjonijiet simultanji:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Fakultattiv: example.com, another.example (vojt = id-dominji kollha)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Dominji permessi:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Applika / ibda talbiet awtomatiċi</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Waqqaf HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Diżattivat</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Tattiva t-talbiet awtomatiċi P2C?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Dan jagħmel konnessjonijiet HTTPS diretti ma' dominji pubbliċi u jibgħat talbiet li jirnexxu awtomatikament. L-indirizz IP tiegħek huwa viżibbli għal dawk is-servers. Is-settings tal-proxy ma jiġux evitati. It-tariffi jitnaqqsu mill-premjijiet.
+
+%1
+
+Tkompli?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Għażilt konnessjonijiet BLA LIMITU kull sekonda.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Rata: %1 konnessjonijiet kull sekonda għal din il-kartiera.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Qed jiġu applikati s-settings…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Qed jibda</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Qed jinstab l-indirizz tad-dominju</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Qed jerġa' jiġi ppruvat is-sejbien tal-indirizz tad-dominju</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Qed jitfittxu provi</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Qed jerġgħu jiġu ppruvati l-konnessjonijiet</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Ċertifikat miċħud</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Waqaf minħabba żball</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Il-premju diġà ġie mitlub</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Qed jiġu skennjati premjijiet ikkonfermati</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Qed jistenna premjijiet</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Qed jistenna premjijiet eliġibbli</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Premju maqbuż</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Mibgħut</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Issejvjat; iċċekkja l-istorja tal-kartiera</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Bla limitu</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Diżattivat (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Stat: %1
+Rata attiva: %2 | Konnessjonijiet simultanji: %3
+Dominju: %4
+Tentattivi: %5 | Mibgħuta: %6
+L-aħħar talba: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Oħloq premjijiet</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Talbiet awtomatiċi</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Oħloq premjijiet pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Iffinanzja premjijiet indipendenti għal provi validi ta' konnessjoni TLS. Kull min jissodisfa r-rekwiżiti jista' jitlobhom. Din il-paġna ma tagħmilx konnessjonijiet HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Dominju ASCII b'ittri żgħar (uża punycode għal dominji internazzjonali), mingħajr skema URL, mogħdija, port jew punt fl-aħħar.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Dominju:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Premju għal kull &amp;output:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Numru ta' outputs:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Bits żero fil-bidu</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Hash massimu</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Format tad-diffikultà:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>Bits &amp;żero:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Eżattament 64 karattru eżadeċimali</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>&amp;Hash massimu:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Verżjoni %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>&amp;Ċertifikati għerq fdati:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Uża rata ta' tariffa personalizzata</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Tariffa għal kull 1,000 byte virtwali:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Irrevedi P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>It-tariffi jiġu kkalkulati qabel l-approvazzjoni. Talbiet kbar jistgħu jinqasmu f'diversi tranżazzjonijiet.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Il-ħolqien ta' P2C bħalissa jeħtieġ kartiera b'ċwievet privati lokali. Kartieri għall-osservazzjoni biss u kartieri b'firmatarju estern mhumiex appoġġjati fuq din il-paġna.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Oħloq P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Daħħal dominju ASCII kanoniku b'ittri żgħar mingħajr punt fl-aħħar, skema, mogħdija jew port.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Daħħal premju pożittiv li t-total tiegħu ma jaqbiżx il-limitu monetarju.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Il-hash massimu jrid ikun fih eżattament 64 karattru eżadeċimali.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Daħħal rata ta' tariffa pożittiva għal kull 1,000 byte virtwali.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Ma setgħux jitħejjew it-tranżazzjonijiet P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>It-total tal-premjijiet flimkien mat-tariffi jaqbeż il-limitu monetarju.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Kartiera: %1&lt;br /&gt;Dominju: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Premju għal kull output: %4&lt;br /&gt;Premjijiet totali: %5&lt;br /&gt;Tranżazzjonijiet: %6&lt;br /&gt;Tariffi totali: %7&lt;br /&gt;&lt;b&gt;Debitu totali: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Hash massimu tax-xogħol: %1
+Verżjoni taċ-ċertifikati għerq: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Bits żero meħtieġa fil-bidu: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Hash massimu tax-xogħol: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Ikkonferma l-ħolqien ta' P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Verżjoni taċ-ċertifikati għerq: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Dawn il-premjijiet jistgħu jintalbu minn kull min jippreżenta prova valida ta' konnessjoni. Ma tistax tirkuprahom b'firma normali tal-kartiera. Irrevedi t-tranżazzjonijiet kollha qabel tibgħat.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Ibgħat P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Tranżazzjonijiet P2C mibgħuta lill-kartiera (%1). Identifikaturi tat-tranżazzjonijiet:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Ikkanċellat. Ma ntbagħtu ebda tranżazzjonijiet P2C.</translation>
+    </message>
+</context>
 </TS>

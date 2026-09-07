@@ -20,6 +20,7 @@
 
 #include <chrono>
 #include <exception>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -30,19 +31,22 @@ P2CClaimDialog::P2CClaimDialog(QWidget* parent) : QWidget(parent)
     explanation->setWordWrap(true);
     layout->addWidget(explanation);
     auto* form = new QFormLayout;
+    form->setRowWrapPolicy(QFormLayout::WrapLongRows);
     m_rate = new QSpinBox(this);
     m_rate->setObjectName("p2cClaimRate");
     m_rate->setRange(0, 1'000'000);
     m_rate->setValue(0);
-    m_rate->setSpecialValueText(tr("Disabled (0)"));
     form->addRow(tr("Connections per second (this wallet):"), m_rate);
+    auto* rate_hint = new QLabel(tr("0 disables HTTPS. For no rate limit, select Unlimited rate below."), this);
+    rate_hint->setWordWrap(true);
+    form->addRow(QString{}, rate_hint);
     m_unlimited = new QCheckBox(tr("Unlimited rate (explicit opt-in)"), this);
     m_unlimited->setObjectName("p2cClaimUnlimited");
     form->addRow(m_unlimited);
     connect(m_unlimited, &QCheckBox::toggled, this, [this](bool enabled) { m_rate->setEnabled(!enabled); });
     m_concurrency = new QSpinBox(this);
     m_concurrency->setObjectName("p2cClaimConcurrency");
-    m_concurrency->setRange(1, 64);
+    m_concurrency->setRange(1, std::numeric_limits<int>::max());
     m_concurrency->setValue(4);
     form->addRow(tr("Simultaneous connections:"), m_concurrency);
     m_domains = new QLineEdit(this);
@@ -108,6 +112,28 @@ void P2CClaimDialog::Configure(bool stop)
     m_status->setText(tr("Applying configuration…"));
 }
 
+QString P2CClaimDialog::StateText(const std::string& state)
+{
+    // RPC state identifiers stay stable and untranslated. Only the GUI maps
+    // them to localized text, so automation does not depend on the UI language.
+    if (state == "disabled") return tr("Disabled");
+    if (state == "starting") return tr("Starting");
+    if (state == "resolving") return tr("Resolving domain");
+    if (state == "retrying domain resolution") return tr("Retrying domain resolution");
+    if (state == "searching") return tr("Searching for proofs");
+    if (state == "retrying connections") return tr("Retrying connections");
+    if (state == "certificate rejected") return tr("Certificate rejected");
+    if (state == "stopped with error") return tr("Stopped with an error");
+    if (state == "bounty spent") return tr("Bounty already claimed");
+    if (state == "scanning confirmed bounties") return tr("Scanning confirmed bounties");
+    if (state == "waiting for bounties") return tr("Waiting for bounties");
+    if (state == "waiting for eligible bounties") return tr("Waiting for eligible bounties");
+    if (state == "bounty skipped") return tr("Bounty skipped");
+    if (state == "submitted") return tr("Submitted");
+    if (state == "stored; check wallet history") return tr("Stored; check wallet history");
+    return QString::fromStdString(state);
+}
+
 void P2CClaimDialog::Refresh()
 {
     if (!m_model) return;
@@ -122,9 +148,11 @@ void P2CClaimDialog::Refresh()
             }
         }
         const auto progress = m_model->wallet().getP2CClaimStatus();
+        const int rate = progress["connections_per_second"].getInt<int>();
+        const QString rate_text = rate == -1 ? tr("Unlimited") : rate == 0 ? tr("Disabled (0)") : QString::number(rate);
         m_status->setText(tr("State: %1\nActive rate: %2 | Concurrency: %3\nDomain: %4\nAttempts: %5 | Submitted: %6\nLast claim: %7\n%8")
-            .arg(QString::fromStdString(progress["state"].get_str()))
-            .arg(progress["connections_per_second"].getInt<int>())
+            .arg(StateText(progress["state"].get_str()))
+            .arg(rate_text)
             .arg(progress["concurrency"].getInt<int>())
             .arg(QString::fromStdString(progress["domain"].get_str()))
             .arg(static_cast<qulonglong>(progress["attempts"].getInt<uint64_t>()))

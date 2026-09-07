@@ -764,6 +764,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">Original besked:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Opret pay-to-connect-dusører</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -2426,6 +2434,10 @@ Bemærk: Da gebyret beregnes på per-byte-basis, ville en gebyrsats på "100 sat
         <source>false</source>
         <translation type="unfinished">falsk</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C-domæne</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -2515,6 +2527,14 @@ Bemærk: Da gebyret beregnes på per-byte-basis, ville en gebyrsats på "100 sat
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">Beløb trukket fra eller tilføjet balance.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Brugerdefineret formål med transaktionen eller P2C-domænet.</translation>
     </message>
 </context>
 <context>
@@ -2660,6 +2680,10 @@ Bemærk: Da gebyret beregnes på per-byte-basis, ville en gebyrsats på "100 sat
     <message>
         <source>to</source>
         <translation type="unfinished">til</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Indtast adresse, P2C-domæne, transaktions-id eller etiket for at søge</translation>
     </message>
 </context>
 <context>
@@ -3278,6 +3302,312 @@ Gå til Fil &gt; Åbn Pung for, at indlæse en pung.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Indstillingsfilen kunne ikke skrives</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Finder automatisk bekræftede dusører, genererer TLS-beviser og sender belønningerne til denne tegnebog. Gebyrer trækkes kun fra den enkelte belønning. Private nøgler behøver ikke at blive låst op, så længe nøglepuljen har modtageradresser. HTTPS er deaktiveret, indtil du udtrykkeligt starter det.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>Forbindelser pr. sekund (denne tegnebog):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 deaktiverer HTTPS. Vælg ubegrænset hastighed nedenfor for at fjerne hastighedsgrænsen.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Ubegrænset hastighed (udtrykkeligt tilvalg)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>Samtidige forbindelser:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Valgfrit: example.com, another.example (tomt = alle domæner)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Tilladte domæner:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Anvend / start automatisk indløsning</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Stop HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Deaktiveret</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Aktivér automatisk P2C-indløsning?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>Dette opretter direkte HTTPS-forbindelser til offentlige domæner og indsender automatisk vellykkede indløsninger. Din IP-adresse er synlig for disse servere. Proxyindstillinger omgås ikke. Gebyrer trækkes fra belønningerne.
+
+%1
+
+Fortsæt?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Du har valgt UBEGRÆNSEDE forbindelser pr. sekund.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Hastighed: %1 forbindelser pr. sekund for denne tegnebog.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>Anvender indstillinger…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Starter</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>Slår domæne op</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>Forsøger domæneopslag igen</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>Søger efter beviser</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>Forsøger forbindelser igen</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Certifikat afvist</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Stoppet på grund af en fejl</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Dusør allerede indløst</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>Søger efter bekræftede dusører</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>Venter på dusører</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>Venter på egnede dusører</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Dusør sprunget over</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Indsendt</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Gemt; kontrollér tegnebogens historik</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Ubegrænset</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Deaktiveret (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Status: %1
+Aktiv hastighed: %2 | Samtidige forbindelser: %3
+Domæne: %4
+Forsøg: %5 | Indsendt: %6
+Seneste indløsning: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Opret dusører</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Automatisk indløsning</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Opret pay-to-connect-dusører</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Finansiér uafhængige belønninger for gyldige TLS-forbindelsesbeviser. Alle, der opfylder kravene, kan indløse dem. Denne side opretter ikke HTTPS-forbindelser.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>ASCII-domæne med små bogstaver (brug punycode til internationale domæner), uden URL-skema, sti, port eller afsluttende punktum.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Domæne:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Belønning pr. &amp;output:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>A&amp;ntal outputs:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Indledende nulbit</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Maksimal hash</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>Sværheds&amp;format:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;Nulbit:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>Præcis 64 hexadecimale tegn</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>Maksimal &amp;hash:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Version %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>Betroede rod&amp;certifikater:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Brug en tilpasset gebyrsats</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Gebyr pr. 1.000 virtuelle bytes:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Gennemgå P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>Gebyrer beregnes før godkendelse. Store anmodninger kan opdeles i flere transaktioner.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>Oprettelse af P2C kræver i øjeblikket en tegnebog med lokale private nøgler. Tegnebøger kun til observation og med ekstern underskriver understøttes ikke på denne side.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Opret P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Indtast et kanonisk ASCII-domæne med små bogstaver uden afsluttende punktum, skema, sti eller port.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Indtast en positiv belønning, hvis samlede beløb ikke overstiger pengegrænsen.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>Den maksimale hash skal indeholde præcis 64 hexadecimale tegn.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Indtast en positiv gebyrsats pr. 1.000 virtuelle bytes.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Kunne ikke forberede P2C-transaktioner: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>De samlede belønninger og gebyrer overstiger pengegrænsen.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Tegnebog: %1&lt;br /&gt;Domæne: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Belønning pr. output: %4&lt;br /&gt;Samlede belønninger: %5&lt;br /&gt;Transaktioner: %6&lt;br /&gt;Samlede gebyrer: %7&lt;br /&gt;&lt;b&gt;Samlet debitering: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Maksimal arbejdshash: %1
+Rodcertifikaternes version: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Krævede indledende nulbit: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Maksimal arbejdshash: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Bekræft oprettelse af P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Rodcertifikaternes version: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>Enhver, der fremviser et gyldigt forbindelsesbevis, kan indløse disse belønninger. Du kan ikke hente dem tilbage med en normal tegnebogssignatur. Gennemgå alle transaktioner før afsendelse.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Send P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C-transaktioner indsendt til tegnebogen (%1). Transaktions-id’er:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Annulleret. Ingen P2C-transaktioner blev sendt.</translation>
     </message>
 </context>
 </TS>

@@ -830,6 +830,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">Feʻau Faʻavae:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Fai taui pay-to-connect</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -2061,6 +2069,10 @@ O le fa'amaoniga o le malaga o le a fai se kopi o le 'aofa'i a'o le'i fa'aauau l
         <source>Amount</source>
         <translation type="unfinished">Aofa'i'</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>Vaega P2C</translation>
+    </message>
     </context>
 <context>
     <name>TransactionTableModel</name>
@@ -2075,6 +2087,14 @@ O le fa'amaoniga o le malaga o le a fai se kopi o le 'aofa'i a'o le'i fa'aauau l
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(leai se fa'amaoniga)</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>Le fa'amoemoe o le fefa'ataua'iga ua filifilia e le tagata fa'aoga, po'o le vaega P2C.</translation>
     </message>
     </context>
 <context>
@@ -2116,6 +2136,10 @@ O le fa'amaoniga o le malaga o le a fai se kopi o le 'aofa'i a'o le'i fa'aauau l
         <source>Exporting Failed</source>
         <translation type="unfinished">Fa'amaonia le Fa'atauina</translation>
     </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>Tu'u se tuatusi, vaega P2C, fa'ailoga o fefa'ataua'iga po'o se igoa e su'e ai</translation>
+    </message>
     </context>
 <context>
     <name>WalletFrame</name>
@@ -2146,6 +2170,312 @@ O le fa'amaoniga o le malaga o le a fai se kopi o le 'aofa'i a'o le'i fa'aauau l
     <message>
         <source>Cancel</source>
         <translation type="unfinished">Tatala</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>Su'e otometi taui ua fa'amaonia, fai fa'amaoniga TLS ma lafo taui i lenei atotupe. E toese totogi na'o taui ta'itasi. E lē mana'omia ona tatala ki fa'alilolilo pe a iai pea tuatusi e talia ai i le fa'aputuga o ki. E tapē le HTTPS se'ia e amata maninoina.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>So'otaga i le sekone (lenei atotupe):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>E tapē e le 0 le HTTPS. Ina ia aveese le tapula'a o le saoasaoa, filifili le saoasaoa e lē fa'atapula'aina i lalo.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>Saoasaoa e lē fa'atapula'aina (maliega manino)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>So'otaga i le taimi e tasi:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>Filifiliga: example.com, another.example (avanoa = vaega uma)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>Vaega e fa'atagaina:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>Fa'aoga / amata talosaga otometi mo taui</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>Taofi HTTPS (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Ua tapē</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>Fa'agaoioi talosaga otometi P2C?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>E fai ai so'otaga tu'usa'o HTTPS i vaega lautele ma lafo otometi talosaga ua manuia. E iloa e na 'au'aunaga lou tuatusi IP. E lē aloese mai fa'atulagaga o le proxy. E toese totogi mai taui.
+
+%1
+
+Fa'aauau?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>Ua e filifilia so'otaga i le sekone E LĒ FA'ATAPULA'AINA.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>Saoasaoa: %1 so'otaga i le sekone mo lenei atotupe.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>O lo'o fa'aoga fa'atulagaga…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>O lo'o amata</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>O lo'o su'e le tuatusi o le vaega</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>O lo'o toe taumafai e su'e le tuatusi o le vaega</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>O lo'o su'e fa'amaoniga</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>O lo'o toe taumafai so'otaga</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>Ua teena le tusipasi</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>Ua taofi ona o se mea sese</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>Ua uma ona maua le taui</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>O lo'o su'e taui ua fa'amaonia</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>O lo'o fa'atali mo taui</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>O lo'o fa'atali mo taui e agava'a</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>Ua fa'ase'e le taui</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>Ua tu'uina atu</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>Ua teu; siaki le tala'aga o le atotupe</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>E lē fa'atapula'aina</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>Ua tapē (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>Tulaga: %1
+Saoasaoa galue: %2 | So'otaga i le taimi e tasi: %3
+Vaega: %4
+Taumafaiga: %5 | Ua tu'uina atu: %6
+Talosaga mulimuli: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>Fai taui</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>Talosaga otometi</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>Fai taui pay-to-connect</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>Tu'u tupe mo taui ta'itasi mo fa'amaoniga sa'o o so'otaga TLS. E mafai ona maua e so'o se tasi e ausia aiaiga. E lē fai e lenei itulau ni so'otaga HTTPS.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>Vaega ASCII i mata'itusi laiti (fa'aoga punycode mo vaega fa'avaomalo), e aunoa ma se polokalame URL, ala, port po'o se togi i le fa'ai'uga.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;Vaega:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>Taui mo &amp;output ta'itasi:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>&amp;Aofa'i o output:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>Bit selo i le amataga</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>Hash aupito maualuga</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>&amp;Faiga o le faigatā:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>Bit &amp;selo:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>E tonu 64 mata'itusi hexadecimal</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>&amp;Hash aupito maualuga:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>Lomiga %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>&amp;Tusipasi a'a fa'atuatuaina:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>Fa'aoga se fua fa'apitoa o totogi</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>Totogi mo byte fa'atusa e 1,000:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>&amp;Iloilo P2C…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>E fuafua totogi a'o le'i fa'atagaina. E mafai ona vaevae talosaga tetele i fefa'ataua'iga e tele.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>O le faia o P2C i le taimi nei e mana'omia ai se atotupe e iai ki fa'alilolilo i le masini. E lē lagolagoina i lenei itulau atotupe e na'o le mata'ituina ma atotupe e fa'aoga se saini mai fafo.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>Fai P2C</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>Tu'u se vaega ASCII masani i mata'itusi laiti, e aunoa ma se togi i le fa'ai'uga, polokalame, ala po'o se port.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>Tu'u se taui e sili i le selo e lē sili lona aofa'i i le tapula'a o tupe.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>E tatau ona iai tonu i le hash aupito maualuga ni mata'itusi hexadecimal e 64.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>Tu'u se fua o totogi e sili i le selo mo byte fa'atusa e 1,000.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>Ua lē mafai ona saunia fefa'ataua'iga P2C: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>Ua sili le aofa'i o taui ma totogi i le tapula'a o tupe.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>Atotupe: %1&lt;br /&gt;Vaega: %2&lt;br /&gt;Output: %3&lt;br /&gt;Taui mo output ta'itasi: %4&lt;br /&gt;Aofa'i o taui: %5&lt;br /&gt;Fefa'ataua'iga: %6&lt;br /&gt;Aofa'i o totogi: %7&lt;br /&gt;&lt;b&gt;Aofa'i e toese: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>Hash galue aupito maualuga: %1
+Lomiga o tusipasi a'a: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>Bit selo e mana'omia i le amataga: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>Hash galue aupito maualuga: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>Fa'amaonia le faia o P2C</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>Lomiga o tusipasi a'a: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>E mafai ona maua nei taui e so'o se tasi e tu'uina mai se fa'amaoniga sa'o o le so'otaga. E lē mafai ona e toe maua mai i se saini masani a le atotupe. Iloilo fefa'ataua'iga uma a'o le'i lafoina.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>Lafo P2C</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>Ua tu'uina atu fefa'ataua'iga P2C i le atotupe (%1). Fa'ailoga o fefa'ataua'iga:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>Ua fa'aleaogāina. E leai ni fefa'ataua'iga P2C na lafoina.</translation>
     </message>
 </context>
 </TS>

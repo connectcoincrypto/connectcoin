@@ -804,6 +804,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation type="unfinished">თავდაპირველი/ორიგინალი გზავნილი:</translation>
     </message>
+    <message>
+        <source>&amp;P2C</source>
+        <translation>&amp;P2C</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect ჯილდოების შექმნა</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -2561,6 +2569,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>false</source>
         <translation type="unfinished">მცდარი</translation>
     </message>
+    <message>
+        <source>P2C domain</source>
+        <translation>P2C დომენი</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -2646,6 +2658,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Amount removed from or added to balance.</source>
         <translation type="unfinished">ბალანსიდან მოხსნილი ან დამატებული თანხა.</translation>
+    </message>
+    <message>
+        <source>P2C: %1</source>
+        <translation>P2C: %1</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
+        <translation>მომხმარებლის მიერ განსაზღვრული ტრანზაქციის მიზანი ან P2C დომენი.</translation>
     </message>
 </context>
 <context>
@@ -2795,6 +2815,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>to</source>
         <translation type="unfinished">-</translation>
+    </message>
+    <message>
+        <source>Enter address, P2C domain, transaction id, or label to search</source>
+        <translation>საძიებლად შეიყვანეთ მისამართი, P2C დომენი, ტრანზაქციის იდენტიფიკატორი ან იარლიყი</translation>
     </message>
 </context>
 <context>
@@ -2956,6 +2980,312 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">პარამეტრების ფაილის ჩაწერა ვერ მოხერხდა</translation>
+    </message>
+</context>
+<context>
+    <name>P2CClaimDialog</name>
+    <message>
+        <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
+        <translation>ავტომატურად მოძებნეთ დადასტურებული ჯილდოები, შექმენით TLS მტკიცებულებები და გაგზავნეთ ჯილდოები ამ საფულეში. საკომისიო მხოლოდ თითოეული ჯილდოდან იჭრება. პირადი გასაღებების განბლოკვა საჭირო არ არის, სანამ გასაღებების მარაგში მიმღები მისამართებია. HTTPS გამორთულია, სანამ მას აშკარად არ გაუშვებთ.</translation>
+    </message>
+    <message>
+        <source>Connections per second (this wallet):</source>
+        <translation>კავშირები წამში (ეს საფულე):</translation>
+    </message>
+    <message>
+        <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
+        <translation>0 თიშავს HTTPS-ს. სიჩქარის შეზღუდვის მოსახსნელად ქვემოთ აირჩიეთ შეუზღუდავი სიჩქარე.</translation>
+    </message>
+    <message>
+        <source>Unlimited rate (explicit opt-in)</source>
+        <translation>შეუზღუდავი სიჩქარე (აშკარა თანხმობა)</translation>
+    </message>
+    <message>
+        <source>Simultaneous connections:</source>
+        <translation>ერთდროული კავშირები:</translation>
+    </message>
+    <message>
+        <source>Optional: example.com, another.example (empty = all domains)</source>
+        <translation>არასავალდებულო: example.com, another.example (ცარიელი = ყველა დომენი)</translation>
+    </message>
+    <message>
+        <source>Domain allowlist:</source>
+        <translation>ნებადართული დომენები:</translation>
+    </message>
+    <message>
+        <source>Apply / start automatic claiming</source>
+        <translation>გამოყენება / ავტომატური მოთხოვნის დაწყება</translation>
+    </message>
+    <message>
+        <source>Stop HTTPS (0)</source>
+        <translation>HTTPS-ის შეჩერება (0)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>გამორთულია</translation>
+    </message>
+    <message>
+        <source>Enable automatic P2C claiming?</source>
+        <translation>ჩაირთოს P2C ჯილდოების ავტომატური მოთხოვნა?</translation>
+    </message>
+    <message>
+        <source>This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.
+
+%1
+
+Continue?</source>
+        <translation>ეს ამყარებს პირდაპირ HTTPS კავშირებს საჯარო დომენებთან და ავტომატურად აგზავნის წარმატებულ მოთხოვნებს. ეს სერვერები ხედავენ თქვენს IP მისამართს. პროქსის პარამეტრების გვერდის ავლა არ ხდება. საკომისიო ჯილდოებიდან იჭრება.
+
+%1
+
+გაგრძელდეს?</translation>
+    </message>
+    <message>
+        <source>You selected UNLIMITED connections per second.</source>
+        <translation>აირჩიეთ კავშირების შეუზღუდავი რაოდენობა წამში.</translation>
+    </message>
+    <message>
+        <source>Rate: %1 connections per second for this wallet.</source>
+        <translation>სიჩქარე: %1 კავშირი წამში ამ საფულისთვის.</translation>
+    </message>
+    <message>
+        <source>Applying configuration…</source>
+        <translation>პარამეტრების გამოყენება…</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>გაშვება</translation>
+    </message>
+    <message>
+        <source>Resolving domain</source>
+        <translation>დომენის მისამართის განსაზღვრა</translation>
+    </message>
+    <message>
+        <source>Retrying domain resolution</source>
+        <translation>დომენის მისამართის განსაზღვრის ხელახალი ცდა</translation>
+    </message>
+    <message>
+        <source>Searching for proofs</source>
+        <translation>მტკიცებულებების ძიება</translation>
+    </message>
+    <message>
+        <source>Retrying connections</source>
+        <translation>კავშირების ხელახალი ცდა</translation>
+    </message>
+    <message>
+        <source>Certificate rejected</source>
+        <translation>სერტიფიკატი უარყოფილია</translation>
+    </message>
+    <message>
+        <source>Stopped with an error</source>
+        <translation>შეჩერებულია შეცდომის გამო</translation>
+    </message>
+    <message>
+        <source>Bounty already claimed</source>
+        <translation>ჯილდო უკვე მიღებულია</translation>
+    </message>
+    <message>
+        <source>Scanning confirmed bounties</source>
+        <translation>დადასტურებული ჯილდოების ძიება</translation>
+    </message>
+    <message>
+        <source>Waiting for bounties</source>
+        <translation>ჯილდოების მოლოდინი</translation>
+    </message>
+    <message>
+        <source>Waiting for eligible bounties</source>
+        <translation>შესაფერისი ჯილდოების მოლოდინი</translation>
+    </message>
+    <message>
+        <source>Bounty skipped</source>
+        <translation>ჯილდო გამოტოვებულია</translation>
+    </message>
+    <message>
+        <source>Submitted</source>
+        <translation>გაგზავნილია</translation>
+    </message>
+    <message>
+        <source>Stored; check wallet history</source>
+        <translation>შენახულია; შეამოწმეთ საფულის ისტორია</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>შეუზღუდავი</translation>
+    </message>
+    <message>
+        <source>Disabled (0)</source>
+        <translation>გამორთულია (0)</translation>
+    </message>
+    <message>
+        <source>State: %1
+Active rate: %2 | Concurrency: %3
+Domain: %4
+Attempts: %5 | Submitted: %6
+Last claim: %7
+%8</source>
+        <translation>მდგომარეობა: %1
+აქტიური სიჩქარე: %2 | ერთდროული კავშირები: %3
+დომენი: %4
+ცდები: %5 | გაგზავნილი: %6
+ბოლო მოთხოვნა: %7
+%8</translation>
+    </message>
+</context>
+<context>
+    <name>P2CCreateDialog</name>
+    <message>
+        <source>Create bounties</source>
+        <translation>ჯილდოების შექმნა</translation>
+    </message>
+    <message>
+        <source>Automatic claims</source>
+        <translation>ავტომატური მოთხოვნები</translation>
+    </message>
+    <message>
+        <source>Create pay-to-connect bounties</source>
+        <translation>pay-to-connect ჯილდოების შექმნა</translation>
+    </message>
+    <message>
+        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
+        <translation>დააფინანსეთ დამოუკიდებელი ჯილდოები TLS კავშირის მოქმედი მტკიცებულებებისთვის. მათი მოთხოვნა შეუძლია ყველას, ვინც პირობებს აკმაყოფილებს. ეს გვერდი HTTPS კავშირებს არ ამყარებს.</translation>
+    </message>
+    <message>
+        <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
+        <translation>ASCII დომენი პატარა ასოებით (საერთაშორისო დომენებისთვის გამოიყენეთ punycode), URL სქემის, ბილიკის, პორტის ან ბოლო წერტილის გარეშე.</translation>
+    </message>
+    <message>
+        <source>&amp;Domain:</source>
+        <translation>&amp;დომენი:</translation>
+    </message>
+    <message>
+        <source>Reward per &amp;output:</source>
+        <translation>ჯილდო თითოეულ &amp;გამოსავალზე:</translation>
+    </message>
+    <message>
+        <source>&amp;Number of outputs:</source>
+        <translation>გამოსავლების &amp;რაოდენობა:</translation>
+    </message>
+    <message>
+        <source>Leading zero bits</source>
+        <translation>საწყისი ნულოვანი ბიტები</translation>
+    </message>
+    <message>
+        <source>Maximum hash</source>
+        <translation>მაქსიმალური ჰეში</translation>
+    </message>
+    <message>
+        <source>Difficulty &amp;format:</source>
+        <translation>სირთულის &amp;ფორმატი:</translation>
+    </message>
+    <message>
+        <source>&amp;Zero bits:</source>
+        <translation>&amp;ნულოვანი ბიტები:</translation>
+    </message>
+    <message>
+        <source>Exactly 64 hexadecimal characters</source>
+        <translation>ზუსტად 64 თექვსმეტობითი სიმბოლო</translation>
+    </message>
+    <message>
+        <source>Maximum &amp;hash:</source>
+        <translation>მაქსიმალური &amp;ჰეში:</translation>
+    </message>
+    <message>
+        <source>Version %1</source>
+        <translation>ვერსია %1</translation>
+    </message>
+    <message>
+        <source>Trusted root &amp;certificates:</source>
+        <translation>სანდო ძირეული &amp;სერტიფიკატები:</translation>
+    </message>
+    <message>
+        <source>Use a custom fee rate</source>
+        <translation>მორგებული საკომისიოს განაკვეთის გამოყენება</translation>
+    </message>
+    <message>
+        <source>Fee per 1,000 virtual bytes:</source>
+        <translation>საკომისიო ყოველ 1 000 ვირტუალურ ბაიტზე:</translation>
+    </message>
+    <message>
+        <source>&amp;Review P2C…</source>
+        <translation>P2C-ის &amp;გადახედვა…</translation>
+    </message>
+    <message>
+        <source>Fees are calculated before approval. Large requests may be split into multiple transactions.</source>
+        <translation>საკომისიო დასტურამდე გამოითვლება. დიდი მოთხოვნები შესაძლოა რამდენიმე ტრანზაქციად დაიყოს.</translation>
+    </message>
+    <message>
+        <source>P2C creation currently requires a wallet with local private keys. Watch-only and external-signer wallets are not supported on this page.</source>
+        <translation>P2C-ის შექმნა ამჟამად ადგილობრივი პირადი გასაღებების მქონე საფულეს მოითხოვს. მხოლოდ დაკვირვების საფულეები და გარე ხელმომწერის მქონე საფულეები ამ გვერდზე მხარდაჭერილი არ არის.</translation>
+    </message>
+    <message>
+        <source>Create P2C</source>
+        <translation>P2C-ის შექმნა</translation>
+    </message>
+    <message>
+        <source>Enter a canonical lower-case ASCII domain without a trailing dot, scheme, path or port.</source>
+        <translation>შეიყვანეთ კანონიკური ASCII დომენი პატარა ასოებით, ბოლო წერტილის, სქემის, ბილიკისა და პორტის გარეშე.</translation>
+    </message>
+    <message>
+        <source>Enter a positive reward whose total does not exceed the money limit.</source>
+        <translation>შეიყვანეთ დადებითი ჯილდო, რომლის ჯამიც ფულად ზღვარს არ აჭარბებს.</translation>
+    </message>
+    <message>
+        <source>The maximum hash must contain exactly 64 hexadecimal characters.</source>
+        <translation>მაქსიმალური ჰეში ზუსტად 64 თექვსმეტობით სიმბოლოს უნდა შეიცავდეს.</translation>
+    </message>
+    <message>
+        <source>Enter a positive fee rate per 1,000 virtual bytes.</source>
+        <translation>შეიყვანეთ დადებითი საკომისიოს განაკვეთი ყოველ 1 000 ვირტუალურ ბაიტზე.</translation>
+    </message>
+    <message>
+        <source>Unable to prepare P2C transactions: %1</source>
+        <translation>P2C ტრანზაქციების მომზადება ვერ მოხერხდა: %1</translation>
+    </message>
+    <message>
+        <source>The reward total plus fees exceeds the money limit.</source>
+        <translation>ჯილდოებისა და საკომისიოს ჯამი ფულად ზღვარს აჭარბებს.</translation>
+    </message>
+    <message>
+        <source>Wallet: %1&lt;br /&gt;Domain: %2&lt;br /&gt;Outputs: %3&lt;br /&gt;Reward per output: %4&lt;br /&gt;Total rewards: %5&lt;br /&gt;Transactions: %6&lt;br /&gt;Total fees: %7&lt;br /&gt;&lt;b&gt;Total debit: %8&lt;/b&gt;</source>
+        <translation>საფულე: %1&lt;br /&gt;დომენი: %2&lt;br /&gt;გამოსავლები: %3&lt;br /&gt;ჯილდო თითოეულ გამოსავალზე: %4&lt;br /&gt;ჯილდოების ჯამი: %5&lt;br /&gt;ტრანზაქციები: %6&lt;br /&gt;საკომისიოს ჯამი: %7&lt;br /&gt;&lt;b&gt;სულ ჩამოსაჭრელი: %8&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1
+Root certificates version: %2</source>
+        <translation>მაქსიმალური სამუშაო ჰეში: %1
+ძირეული სერტიფიკატების ვერსია: %2</translation>
+    </message>
+    <message>
+        <source>Required leading zero bits: %1</source>
+        <translation>საჭირო საწყისი ნულოვანი ბიტები: %1</translation>
+    </message>
+    <message>
+        <source>Maximum work hash: %1</source>
+        <translation>მაქსიმალური სამუშაო ჰეში: %1</translation>
+    </message>
+    <message>
+        <source>Confirm P2C creation</source>
+        <translation>P2C-ის შექმნის დადასტურება</translation>
+    </message>
+    <message>
+        <source>Root certificates version: %1</source>
+        <translation>ძირეული სერტიფიკატების ვერსია: %1</translation>
+    </message>
+    <message>
+        <source>These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.</source>
+        <translation>ამ ჯილდოების მოთხოვნა შეუძლია ყველას, ვინც კავშირის მოქმედ მტკიცებულებას წარადგენს. მათ ვერ დაიბრუნებთ საფულის ჩვეულებრივი ხელმოწერით. გაგზავნამდე გადახედეთ ყველა ტრანზაქციას.</translation>
+    </message>
+    <message>
+        <source>Send P2C</source>
+        <translation>P2C-ის გაგზავნა</translation>
+    </message>
+    <message>
+        <source>P2C transactions submitted to the wallet (%1). Transaction IDs:</source>
+        <translation>P2C ტრანზაქციები საფულეს გაეგზავნა (%1). ტრანზაქციების იდენტიფიკატორები:</translation>
+    </message>
+    <message>
+        <source>Cancelled. No P2C transactions were sent.</source>
+        <translation>გაუქმებულია. P2C ტრანზაქციები არ გაგზავნილა.</translation>
     </message>
 </context>
 </TS>
