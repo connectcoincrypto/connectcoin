@@ -19,6 +19,31 @@ FUZZ_TARGET(tx_out)
         return;
     }
 
+    // Type 1 must imply a curve-valid stored public key, including after copies
+    // and explicit replacement. Getter calls intentionally do not reparse it.
+    if (const auto pubkey{tx_out.GetP2PKPubKey()}) {
+        assert(pubkey->IsFullyValid());
+        CTxOut changed{tx_out};
+        changed.scriptPubKey.back() ^= 1;
+        assert(!changed.GetP2PKPubKey());
+        changed.scriptPubKey = tx_out.scriptPubKey;
+        assert(changed.GetP2PKPubKey() == pubkey);
+    } else {
+        assert(tx_out.GetType() != TxOutputType::P2PK);
+    }
+    if (buffer.size() >= XOnlyPubKey::size()) {
+        const XOnlyPubKey candidate{buffer.last(XOnlyPubKey::size())};
+        CTxOut changed{tx_out};
+        try {
+            changed.SetP2PK(candidate);
+            assert(candidate.IsFullyValid());
+            assert(changed.GetP2PKPubKey() == candidate);
+        } catch (const std::ios_base::failure&) {
+            assert(!candidate.IsFullyValid());
+            assert(changed == tx_out);
+        }
+    }
+
     const CFeeRate dust_relay_fee{DUST_RELAY_TX_FEE};
     (void)GetDustThreshold(tx_out, dust_relay_fee);
     (void)IsDust(tx_out, dust_relay_fee);

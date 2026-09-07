@@ -178,6 +178,9 @@ bool IsCanonicalP2CDomain(std::string_view domain);
 class CTxOut
 {
 private:
+    // P2PK is assigned only after p2pk_pubkey has passed curve validation.
+    // Keep both fields private so reads/copies can rely on this invariant
+    // without reparsing the curve point during serialization or size checks.
     uint8_t type;
     XOnlyPubKey p2pk_pubkey;
 
@@ -198,6 +201,7 @@ public:
     std::optional<XOnlyPubKey> GetP2PKPubKey() const;
     std::optional<PayToDomainOutput> GetPayToDomain() const;
     void SetScriptPubKey(CScript scriptPubKeyIn);
+    /** Validate and set the key; throws on invalid input without changing this output. */
     void SetP2PK(const XOnlyPubKey& pubkeyIn);
     void SetPayToDomain(const PayToDomainOutput& p2cIn);
 
@@ -236,17 +240,20 @@ public:
     template<typename Stream>
     void UnserializePayload(Stream& s)
     {
+        // A failed read must not leave a P2PK tag attached to unvalidated bytes,
+        // including when reusing an output that previously held a valid key.
+        type = static_cast<uint8_t>(TxOutputType::INVALID);
+        p2pk_pubkey = {};
+        scriptPubKey.clear();
         uint8_t encoded_type{0};
         ::Unserialize(s, encoded_type);
-        type = encoded_type;
         switch (encoded_type) {
-        case static_cast<uint8_t>(TxOutputType::P2PK):
-            ::Unserialize(s, p2pk_pubkey);
-            if (!p2pk_pubkey.IsFullyValid()) {
-                throw std::ios_base::failure("Invalid P2PK x-only public key");
-            }
-            SetP2PK(p2pk_pubkey);
+        case static_cast<uint8_t>(TxOutputType::P2PK): {
+            XOnlyPubKey pubkey;
+            ::Unserialize(s, pubkey);
+            SetP2PK(pubkey);
             break;
+        }
         case static_cast<uint8_t>(TxOutputType::PAY_TO_CONNECT): {
             uint8_t domain_size{0};
             ::Unserialize(s, domain_size);
@@ -267,8 +274,6 @@ public:
             break;
         }
         case static_cast<uint8_t>(TxOutputType::INVALID):
-            p2pk_pubkey = {};
-            scriptPubKey.clear();
             break;
         default:
             throw std::ios_base::failure("Unknown transaction output type");

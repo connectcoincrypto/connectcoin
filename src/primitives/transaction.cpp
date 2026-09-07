@@ -125,9 +125,14 @@ std::optional<std::string_view> P2CDomainFromView(const CScript& view)
 
 std::optional<XOnlyPubKey> CTxOut::GetP2PKPubKey() const
 {
-    if (GetType() != TxOutputType::P2PK || !p2pk_pubkey.IsFullyValid()) return std::nullopt;
-    const CScript expected{CScript{} << OP_1 << std::vector<unsigned char>{p2pk_pubkey.begin(), p2pk_pubkey.end()}};
-    if (scriptPubKey != expected) return std::nullopt;
+    // Setters/deserialization validate the stored public key once. The
+    // public compatibility view can still be mutated, so check its exact
+    // encoding without curve operations or temporary script allocations.
+    if (GetType() != TxOutputType::P2PK || scriptPubKey.size() != 2 + XOnlyPubKey::size() ||
+        scriptPubKey[0] != OP_1 || scriptPubKey[1] != XOnlyPubKey::size() ||
+        !std::equal(p2pk_pubkey.begin(), p2pk_pubkey.end(), scriptPubKey.begin() + 2)) {
+        return std::nullopt;
+    }
     return p2pk_pubkey;
 }
 
@@ -158,8 +163,8 @@ void CTxOut::SetScriptPubKey(CScript scriptPubKeyIn)
     if (scriptPubKey.size() == 34 && scriptPubKey[0] == OP_1 && scriptPubKey[1] == XOnlyPubKey::size()) {
         XOnlyPubKey pubkey{std::span{scriptPubKey}.subspan(2)};
         if (!pubkey.IsFullyValid()) return;
-        type = static_cast<uint8_t>(TxOutputType::P2PK);
         p2pk_pubkey = pubkey;
+        type = static_cast<uint8_t>(TxOutputType::P2PK);
         return;
     }
     if (scriptPubKey.size() >= P2C_VIEW_PREFIX_SIZE && scriptPubKey[0] == OP_2) {
@@ -171,10 +176,13 @@ void CTxOut::SetScriptPubKey(CScript scriptPubKeyIn)
 
 void CTxOut::SetP2PK(const XOnlyPubKey& pubkeyIn)
 {
-    assert(pubkeyIn.IsFullyValid());
-    type = static_cast<uint8_t>(TxOutputType::P2PK);
+    // This is also the wire decoder's validation boundary. Do not make the
+    // invariant depend on assertions being enabled in the build.
+    if (!pubkeyIn.IsFullyValid()) throw std::ios_base::failure("Invalid P2PK x-only public key");
+    CScript view{CScript{} << OP_1 << std::vector<unsigned char>{pubkeyIn.begin(), pubkeyIn.end()}};
     p2pk_pubkey = pubkeyIn;
-    scriptPubKey = CScript{} << OP_1 << std::vector<unsigned char>{pubkeyIn.begin(), pubkeyIn.end()};
+    scriptPubKey = std::move(view);
+    type = static_cast<uint8_t>(TxOutputType::P2PK);
 }
 
 void CTxOut::SetPayToDomain(const PayToDomainOutput& p2cIn)

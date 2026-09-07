@@ -19,6 +19,8 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <span>
+#include <utility>
 #include <vector>
 
 #include <boost/test/unit_test.hpp>
@@ -82,6 +84,147 @@ BOOST_AUTO_TEST_CASE(mutable_script_view_cannot_change_consensus_payload)
     BOOST_CHECK(!output.GetP2PKPubKey());
     DataStream encoded;
     BOOST_CHECK_THROW(encoded << output, std::ios_base::failure);
+}
+
+BOOST_AUTO_TEST_CASE(p2pk_validity_survives_copies_but_not_payload_changes)
+{
+    CKey key_one;
+    key_one.MakeNewKey(/*fCompressed=*/true);
+    CKey key_two;
+    key_two.MakeNewKey(/*fCompressed=*/true);
+    const XOnlyPubKey pubkey_one{key_one.GetPubKey()};
+    const XOnlyPubKey pubkey_two{key_two.GetPubKey()};
+    const CTxOut original{42, pubkey_one};
+
+    CTxOut copied{original};
+    CTxOut moved{std::move(copied)};
+    BOOST_CHECK(moved.GetP2PKPubKey() == pubkey_one);
+    copied = original;
+    copied = std::move(moved);
+    BOOST_CHECK(copied.GetP2PKPubKey() == pubkey_one);
+
+    // Neither the caller's key nor the returned copy can change the private
+    // payload whose curve validity was established by the setter.
+    XOnlyPubKey mutable_key{pubkey_two};
+    copied.SetP2PK(mutable_key);
+    mutable_key = {};
+    auto returned_key{copied.GetP2PKPubKey()};
+    BOOST_REQUIRE(returned_key);
+    *returned_key = {};
+    BOOST_CHECK(copied.GetP2PKPubKey() == pubkey_two);
+
+    // Invalid setter input is rejected even in builds without assertions,
+    // and leaves the previous valid output unchanged.
+    const CTxOut before_failure{copied};
+    std::array<unsigned char, 32> out_of_range;
+    out_of_range.fill(0xff);
+    for (const auto& invalid_key : {XOnlyPubKey{}, XOnlyPubKey{out_of_range}}) {
+        BOOST_REQUIRE(!invalid_key.IsFullyValid());
+        BOOST_CHECK_THROW(copied.SetP2PK(invalid_key), std::ios_base::failure);
+        BOOST_CHECK(copied == before_failure);
+        BOOST_CHECK_THROW((CTxOut{42, invalid_key}), std::ios_base::failure);
+        copied.SetScriptPubKey(CScript{} << OP_1 << std::vector<unsigned char>{invalid_key.begin(), invalid_key.end()});
+        BOOST_CHECK(copied.GetType() == TxOutputType::INVALID);
+        BOOST_CHECK(!copied.GetP2PKPubKey());
+        copied = before_failure;
+    }
+
+    copied.SetScriptPubKey(original.scriptPubKey);
+    BOOST_CHECK(copied.GetP2PKPubKey() == pubkey_one);
+    copied.SetPayToDomain(PayToDomainOutput{
+        .domain = "example.com",
+        .connection_work_target = uint256::ONE,
+        .root_certificates_version = P2C_ROOT_CERTIFICATES_VERSION_1,
+    });
+    BOOST_CHECK(!copied.GetP2PKPubKey());
+    BOOST_CHECK(copied.GetPayToDomain());
+    copied.SetP2PK(pubkey_two);
+    BOOST_CHECK(copied.GetP2PKPubKey() == pubkey_two);
+    copied.SetNull();
+    BOOST_CHECK(!copied.GetP2PKPubKey());
+}
+
+BOOST_AUTO_TEST_CASE(p2pk_compatibility_view_is_checked_without_trusting_mutations)
+{
+    CKey key;
+    key.MakeNewKey(/*fCompressed=*/true);
+    const XOnlyPubKey pubkey{key.GetPubKey()};
+    const CTxOut original{42, pubkey};
+    for (size_t i{0}; i < original.scriptPubKey.size(); ++i) {
+        CTxOut changed{original};
+        changed.scriptPubKey[i] ^= 1;
+        BOOST_CHECK(!changed.GetP2PKPubKey());
+        BOOST_CHECK_THROW(GetSerializeSize(changed), std::ios_base::failure);
+        DataStream encoded;
+        BOOST_CHECK_THROW(encoded << changed, std::ios_base::failure);
+        changed.scriptPubKey = original.scriptPubKey;
+        BOOST_CHECK(changed.GetP2PKPubKey() == pubkey);
+        BOOST_CHECK_EQUAL(GetSerializeSize(changed), 41U);
+    }
+    CTxOut changed{original};
+    changed.scriptPubKey.push_back(OP_0);
+    BOOST_CHECK(!changed.GetP2PKPubKey());
+    changed.scriptPubKey.clear();
+    BOOST_CHECK(!changed.GetP2PKPubKey());
+}
+
+BOOST_AUTO_TEST_CASE(p2pk_failed_payload_read_cannot_reuse_previous_validity)
+{
+    CKey key;
+    key.MakeNewKey(/*fCompressed=*/true);
+    const CTxOut original{42, XOnlyPubKey{key.GetPubKey()}};
+    DataStream payload;
+    original.SerializePayload(payload);
+
+    // Exercise every truncated payload length on an already-valid object.
+    // UnserializePayload is shared by wire, UTXO and undo deserialization.
+    for (size_t size{0}; size < payload.size(); ++size) {
+        CTxOut reused{original};
+        SpanReader reader{std::span{payload}.first(size)};
+        BOOST_CHECK_THROW(reused.UnserializePayload(reader), std::ios_base::failure);
+        BOOST_CHECK(reused.GetType() == TxOutputType::INVALID);
+        BOOST_CHECK(!reused.GetP2PKPubKey());
+        BOOST_CHECK(reused.scriptPubKey.empty());
+    }
+
+    std::array<unsigned char, 32> out_of_range;
+    out_of_range.fill(0xff);
+    for (const auto& invalid_key : {XOnlyPubKey{}, XOnlyPubKey{out_of_range}}) {
+        for (const bool compressed : {false, true}) {
+            DataStream malformed;
+            if (compressed) {
+                malformed << Using<AmountCompression>(CAmount{42});
+            } else {
+                malformed << CAmount{42};
+            }
+            malformed << uint8_t{1} << invalid_key;
+            CTxOut reused{original};
+            if (compressed) {
+                BOOST_CHECK_THROW(malformed >> Using<TxOutCompression>(reused), std::ios_base::failure);
+            } else {
+                BOOST_CHECK_THROW(malformed >> reused, std::ios_base::failure);
+            }
+            BOOST_CHECK(reused.GetType() == TxOutputType::INVALID);
+            BOOST_CHECK(!reused.GetP2PKPubKey());
+        }
+    }
+
+    for (const uint8_t wire_type : std::array<uint8_t, 4>{0, 2, 3, 255}) {
+        DataStream malformed;
+        malformed << wire_type;
+        CTxOut reused{original};
+        if (wire_type == 0) {
+            reused.UnserializePayload(malformed);
+        } else {
+            BOOST_CHECK_THROW(reused.UnserializePayload(malformed), std::ios_base::failure);
+        }
+        BOOST_CHECK(reused.GetType() == TxOutputType::INVALID);
+        BOOST_CHECK(!reused.GetP2PKPubKey());
+        // Reusing the same object for a subsequent valid read still works.
+        SpanReader good_reader{payload};
+        reused.UnserializePayload(good_reader);
+        BOOST_CHECK(reused == original);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(p2pk_and_p2c_types_are_valid)
