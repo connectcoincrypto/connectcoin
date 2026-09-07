@@ -399,6 +399,14 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
 <context>
     <name>BitcoinGUI</name>
     <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Mineração</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>Controlar a mineração por CPU</translation>
+    </message>
+    <message>
         <source>&amp;Overview</source>
         <translation type="unfinished">&amp;Visão geral</translation>
     </message>
@@ -1554,6 +1562,18 @@ O processo de migração criará um backup da carteira antes da migração. Este
 </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Ativar notificações pop-up</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Mostrar notificações pop-up na área de trabalho, incluindo transações recebidas e enviadas. Desativadas por padrão. As caixas de diálogo de erro e confirmação continuam ativadas.</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>Definido por -popupnotifications ou por popupnotifications em connectcoin.conf.</translation>
+    </message>
     <message>
         <source>Options</source>
         <translation type="unfinished">Opções</translation>
@@ -2752,6 +2772,10 @@ Para mais informações sobre a utilização desse console. digite %6.
 </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>Usando a taxa mínima atual. O prazo de confirmação não foi estimado.</translation>
+    </message>
     <message>
         <source>Send Coins</source>
         <translation type="unfinished">Enviar moedas</translation>
@@ -5044,6 +5068,87 @@ Versão dos certificados raiz: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Cancelado. Nenhuma transação P2C foi enviada.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Minere blocos de teste com sua CPU usando RandomX. A mineração fica desligada até você iniciá-la. O minerador é compartilhado por todas as carteiras deste nó e continua ao trocar de aba ou fechar uma carteira.</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>O modo FAST compartilha cerca de 2 GiB de memória do RandomX com a validação. Mais threads usam mais CPU e energia; deixe capacidade para o nó. Inicializar o conjunto de dados pode demorar.</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Endereço de recompensa desta rede</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Novo endereço desta carteira</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Endereço de recompensa:</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>Threads da CPU:</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Aviso: %1 threads de mineração excedem as %2 CPUs lógicas detectadas. Isso pode reduzir a taxa de hashes e deixar o nó mais lento.</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Iniciar mineração</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Parar mineração</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Mineração</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Não foi possível gerar um endereço de recompensa. Verifique se a carteira pode gerar endereços de recebimento.</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Parado</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Iniciando</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Minerando / preparando RandomX</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Aguardando a sincronização do nó</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Parando (aguardando o trabalho atual)</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Erro</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Estado: %1
+Taxa de hashes: %2 H/s
+Hashes: %3 | Blocos aceitos: %4
+Endereço de recompensa ativo: %5</translation>
     </message>
 </context>
 </TS>

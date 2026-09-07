@@ -1686,11 +1686,6 @@ RPCMethod sendall()
                 }
                 throw JSONRPCError(RPC_INVALID_PARAMETER, msg);
             }
-            if (fee_reason == FeeReason::FALLBACK && !pwallet->m_allow_fallback_fee) {
-                // eventually allow a fallback fee
-                throw JSONRPCError(RPC_WALLET_ERROR, "Fee estimation failed. Fallbackfee is disabled. Wait a few blocks or enable -fallbackfee.");
-            }
-
             CMutableTransaction rawTx{ConstructTransaction(options["inputs"], recipient_key_value_pairs, options["locktime"], rbf, coin_control.m_version)};
             LOCK(pwallet->cs_wallet);
 

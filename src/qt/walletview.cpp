@@ -8,6 +8,7 @@
 #include <qt/askpassphrasedialog.h>
 #include <qt/clientmodel.h>
 #include <qt/guiutil.h>
+#include <qt/miningpage.h>
 #include <qt/optionsmodel.h>
 #include <qt/overviewpage.h>
 #include <qt/p2ccreatedialog.h>
@@ -66,6 +67,7 @@ WalletView::WalletView(WalletModel* wallet_model, const PlatformStyle* _platform
 
     p2cPage = new P2CCreateDialog(this);
     p2cPage->setModel(walletModel);
+    miningPage = new MiningPage(walletModel, this);
 
     usedSendingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::SendingTab, this);
     usedSendingAddressesPage->setModel(walletModel->getAddressTableModel());
@@ -78,6 +80,7 @@ WalletView::WalletView(WalletModel* wallet_model, const PlatformStyle* _platform
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
     addWidget(p2cPage);
+    addWidget(miningPage);
 
     connect(overviewPage, &OverviewPage::transactionClicked, this, &WalletView::transactionClicked);
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
@@ -127,6 +130,7 @@ void WalletView::setClientModel(ClientModel *_clientModel)
 
     overviewPage->setClientModel(_clientModel);
     sendCoinsPage->setClientModel(_clientModel);
+    miningPage->setClientModel(_clientModel);
     walletModel->setClientModel(_clientModel);
 }
 
@@ -177,6 +181,11 @@ void WalletView::gotoSendCoinsPage(QString addr)
 void WalletView::gotoP2CPage()
 {
     setCurrentWidget(p2cPage);
+}
+
+void WalletView::gotoMiningPage()
+{
+    setCurrentWidget(miningPage);
 }
 
 void WalletView::gotoSignMessageTab(QString addr)

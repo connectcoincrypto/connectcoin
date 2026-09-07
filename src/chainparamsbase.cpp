@@ -13,7 +13,7 @@
 
 void SetupChainParamsBaseOptions(ArgsManager& argsman)
 {
-    argsman.AddArg("-chain=<chain>", "Use the chain <chain> (default: main; node startup is disabled until the mainnet genesis is defined). Use -testnet4 for public testing or -regtest for local testing. Allowed values: " LIST_CHAIN_NAMES, ArgsManager::ALLOW_ANY, OptionsCategory::CHAINPARAMS);
+    argsman.AddArg("-chain=<chain>", "Use the chain <chain> (default: testnet4 for beta testing). Mainnet startup is disabled until its genesis is defined. Use -regtest for local testing. Allowed values: " LIST_CHAIN_NAMES, ArgsManager::ALLOW_ANY, OptionsCategory::CHAINPARAMS);
     argsman.AddArg("-regtest", "Enter regression test mode, which uses a special chain in which blocks can be solved instantly. "
                  "This is intended for regression testing tools and app development. Equivalent to -chain=regtest.", ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::CHAINPARAMS);
     argsman.AddArg("-randomxfast=<0|1>", "Use the shared full-memory RandomX dataset for proof-of-work (default: 1 on 64-bit, 0 on 32-bit). If allocation fails, verification falls back to the consensus-equivalent LIGHT mode.", ArgsManager::ALLOW_ANY, OptionsCategory::CHAINPARAMS);

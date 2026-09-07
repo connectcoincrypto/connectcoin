@@ -687,6 +687,16 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_Display">
        <item>
+        <widget class="QCheckBox" name="popupNotifications">
+         <property name="toolTip">
+          <string>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</string>
+         </property>
+         <property name="text">
+          <string>Enable pop-up notifications</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_1_Display">
          <item>
           <widget class="QLabel" name="langLabel">

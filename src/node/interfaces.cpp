@@ -37,6 +37,7 @@
 #include <node/blockstorage.h>
 #include <node/coin.h>
 #include <node/context.h>
+#include <node/cpu_miner.h>
 #include <node/interface_ui.h>
 #include <node/kernel_notifications.h>
 #include <node/miner.h>
@@ -368,6 +369,19 @@ public:
         req.strMethod = command;
         req.URI = uri;
         return ::tableRPC.execute(req);
+    }
+    void startCpuMining(const std::string& address, int threads) override
+    {
+        if (!m_context->cpu_miner) throw std::runtime_error("CPU miner is unavailable");
+        m_context->cpu_miner->Start(address, threads);
+    }
+    void stopCpuMining() override
+    {
+        if (m_context->cpu_miner) m_context->cpu_miner->Stop();
+    }
+    CpuMiningStatus getCpuMiningStatus() override
+    {
+        return m_context->cpu_miner ? m_context->cpu_miner->GetStatus() : CpuMiningStatus{};
     }
     std::vector<std::string> listRpcCommands() override { return ::tableRPC.listCommands(); }
     std::optional<Coin> getUnspentOutput(const COutPoint& output) override

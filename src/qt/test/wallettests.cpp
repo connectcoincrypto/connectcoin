@@ -9,9 +9,11 @@
 #include <interfaces/chain.h>
 #include <interfaces/node.h>
 #include <key_io.h>
+#include <node/cpu_miner.h>
 #include <qt/bitcoinamountfield.h>
 #include <qt/bitcoinunits.h>
 #include <qt/clientmodel.h>
+#include <qt/miningpage.h>
 #include <qt/csvmodelwriter.h>
 #include <qt/optionsmodel.h>
 #include <qt/overviewpage.h>
@@ -28,6 +30,8 @@
 #include <qt/transactiontablemodel.h>
 #include <qt/transactionview.h>
 #include <qt/walletmodel.h>
+#include <qt/walletframe.h>
+#include <qt/walletview.h>
 #include <script/solver.h>
 #include <support/allocators/secure.h>
 #include <test/util/setup_common.h>
@@ -58,10 +62,14 @@
 #include <QEvent>
 #include <QFile>
 #include <QLabel>
+#include <QLineEdit>
 #include <QObject>
+#include <QPalette>
 #include <QPushButton>
+#include <QRadioButton>
 #include <QPixmap>
 #include <QSpinBox>
+#include <QStackedWidget>
 #include <QTemporaryDir>
 #include <QTabWidget>
 #include <QTimer>
@@ -332,6 +340,66 @@ void TestGUI(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet)
     WalletModel& walletModel = *mini_gui.walletModel;
     SendCoinsDialog& sendCoinsDialog = mini_gui.sendCoinsDialog;
     TransactionView& transactionView = mini_gui.transactionView;
+
+    // Closing the last wallet must preserve the selected node mining controls.
+    // Reopening a wallet keeps Mining selected, and closing all views destroys
+    // their polling timers before the client model can be torn down.
+    {
+        WalletFrame frame{platformStyle.get(), nullptr};
+        frame.setClientModel(mini_gui.clientModel.get());
+        auto* fallback = frame.findChild<MiningPage*>("walletlessMiningPage");
+        auto* stack = frame.findChild<QStackedWidget*>();
+        QVERIFY(fallback);
+        QVERIFY(stack);
+        frame.gotoMiningPage();
+        QCOMPARE(stack->currentWidget(), fallback);
+        QVERIFY(fallback->findChild<QPushButton*>("startMining")->isEnabled());
+        QVERIFY(!fallback->findChild<QPushButton*>("newMiningAddress")->isEnabled());
+        for (const bool close_all : {false, true}) {
+            auto* view = new WalletView(&walletModel, platformStyle.get(), &frame);
+            QVERIFY(frame.addView(view));
+            frame.setCurrentWallet(&walletModel);
+            QCOMPARE(frame.currentWalletView(), view);
+            QVERIFY(qobject_cast<MiningPage*>(view->currentWidget()));
+            if (close_all) {
+                frame.removeAllWallets();
+            } else {
+                frame.removeWallet(&walletModel);
+            }
+            QVERIFY(!frame.currentWalletView());
+            QCOMPARE(stack->currentWidget(), fallback);
+            QCOMPARE(frame.findChildren<WalletView*>().size(), 0);
+            QCOMPARE(frame.findChildren<MiningPage*>().size(), 1);
+            QVERIFY(fallback->findChild<QPushButton*>("startMining")->isEnabled());
+            // A wallet can still emit keypool notifications after its view is
+            // gone. All callbacks capturing the deleted receive page must
+            // have been disconnected with that page.
+            QVERIFY(QMetaObject::invokeMethod(&walletModel, "canGetAddressesChanged", Qt::DirectConnection));
+        }
+        frame.setClientModel(nullptr);
+        QVERIFY(!fallback->findChild<QPushButton*>("startMining")->isEnabled());
+        QVERIFY(!fallback->findChild<QPushButton*>("stopMining")->isEnabled());
+        frame.gotoOverviewPage();
+        QVERIFY(stack->currentWidget() != fallback);
+        frame.setClientModel(mini_gui.clientModel.get());
+        auto* overview_view = new WalletView(&walletModel, platformStyle.get(), &frame);
+        QVERIFY(frame.addView(overview_view));
+        frame.setCurrentWallet(&walletModel);
+        QVERIFY(!qobject_cast<MiningPage*>(overview_view->currentWidget()));
+        frame.removeWallet(&walletModel);
+        QVERIFY(stack->currentWidget() != fallback);
+        QVERIFY(QMetaObject::invokeMethod(&walletModel, "canGetAddressesChanged", Qt::DirectConnection));
+        frame.setClientModel(nullptr);
+    }
+
+    // A fresh wallet can send automatically without fee history/fallbackfee,
+    // and the UI must not claim to have estimated a confirmation deadline.
+    wallet->m_fallback_fee = CFeeRate{0};
+    sendCoinsDialog.findChild<QRadioButton*>("radioSmartFee")->setChecked(true);
+    QVERIFY(QMetaObject::invokeMethod(&sendCoinsDialog, "updateSmartFeeLabel"));
+    QVERIFY(sendCoinsDialog.findChild<QLabel*>("fallbackFeeWarningLabel")->isHidden());
+    QCOMPARE(sendCoinsDialog.findChild<QLabel*>("labelFeeEstimation")->text(),
+             QString("Using the current minimum fee. Confirmation time is not estimated."));
 
     // Update walletModel cached balance which will trigger an update for the 'labelBalance' QLabel.
     walletModel.pollBalanceChanged();
@@ -991,6 +1059,88 @@ void WalletTests::walletTests()
     TestGUI(m_node);
 }
 
+void WalletTests::miningPage()
+{
+    TestingSetup test{ChainType::REGTEST};
+    test.m_node.cpu_miner = std::make_unique<node::CpuMiner>(test.m_node);
+    auto node{interfaces::MakeNode(test.m_node)};
+    ClientModel client{*node, nullptr};
+    MiningPage page{nullptr};
+    auto* threads{page.findChild<QSpinBox*>("miningThreads")};
+    const auto* thread_warning{page.findChild<QLabel*>("miningThreadWarning")};
+    QVERIFY(threads);
+    QVERIFY(thread_warning);
+    QCOMPARE(threads->value(), 1);
+    QCOMPARE(threads->minimum(), 1);
+    QCOMPARE(threads->maximum(), 1024);
+    QVERIFY(thread_warning->isHidden());
+    QVERIFY(page.findChild<QLineEdit*>("miningAddress")->text().isEmpty());
+    QVERIFY(!page.findChild<QPushButton*>("startMining")->isEnabled());
+    QVERIFY(!page.findChild<QPushButton*>("stopMining")->isEnabled());
+    QVERIFY(!page.findChild<QLabel*>("miningStatus")->text().isEmpty());
+    page.setClientModel(&client);
+    QCOMPARE(threads->value(), 1);
+    QVERIFY(thread_warning->isHidden());
+    const int logical_cpus{node->getCpuMiningStatus().logical_cpus};
+    QVERIFY(logical_cpus >= 1);
+    threads->setValue(logical_cpus);
+    QVERIFY(thread_warning->isHidden());
+    if (logical_cpus < threads->maximum()) {
+        threads->setValue(logical_cpus + 1);
+        QVERIFY(!thread_warning->isHidden());
+        QVERIFY(thread_warning->text().contains(QString::number(logical_cpus)));
+        // The warning is advisory: oversubscription must not disable Start.
+        QVERIFY(page.findChild<QPushButton*>("startMining")->isEnabled());
+    }
+    threads->setValue(1024);
+    QCOMPARE(threads->value(), 1024);
+    page.setClientModel(&client); // Polling must not reset a stopped selection.
+    QCOMPARE(threads->value(), 1024);
+    QCOMPARE(thread_warning->isHidden(), logical_cpus >= 1024);
+    threads->setValue(1025);
+    QCOMPARE(threads->value(), 1024);
+    threads->setValue(1);
+    QVERIFY(thread_warning->isHidden());
+    page.setClientModel(nullptr);
+    QVERIFY(thread_warning->isHidden());
+    QVERIFY(!page.findChild<QPushButton*>("startMining")->isEnabled());
+    struct PaletteGuard {
+        QPalette original{QApplication::palette()};
+        ~PaletteGuard() { QApplication::setPalette(original); }
+    } palette_guard;
+    for (const auto text_color : {Qt::black, Qt::white}) {
+        QPalette palette{palette_guard.original};
+        palette.setColor(QPalette::WindowText, text_color);
+        QApplication::setPalette(palette);
+        for (const auto* platform : {"windows", "other", "macosx"}) {
+            const std::unique_ptr<const PlatformStyle> style{PlatformStyle::instantiate(platform)};
+            const auto icon{style->MiningIcon()};
+            QVERIFY(!icon.isNull());
+            for (const auto size : {16, 32, 128}) {
+                const auto image{icon.pixmap(size, size).toImage()};
+                QVERIFY(!image.isNull());
+                bool opaque_ink{false};
+                for (int y{0}; y < image.height(); ++y) {
+                    for (int x{0}; x < image.width(); ++x) {
+                        if (qAlpha(image.pixel(x, y)) == 255) {
+                            opaque_ink = true;
+                            // Overlapping antialiased strokes can round a color
+                            // channel by one even when their combined alpha is 255.
+                            const auto actual{image.pixelColor(x, y)};
+                            const auto expected{style->SingleColor()};
+                            QVERIFY(qAbs(actual.red() - expected.red()) <= 1);
+                            QVERIFY(qAbs(actual.green() - expected.green()) <= 1);
+                            QVERIFY(qAbs(actual.blue() - expected.blue()) <= 1);
+                        }
+                    }
+                }
+                QVERIFY(opaque_ink);
+                QCOMPARE(qAlpha(image.pixel(0, 0)), 0);
+            }
+        }
+    }
+}
+
 void WalletTests::p2cTests()
 {
     TestP2CGUI(m_node);
@@ -1029,5 +1179,6 @@ void WalletTests::p2cTranslations()
         const auto* start = page.findChild<QPushButton*>("p2cClaimStart");
         QVERIFY(start);
         QCOMPARE(start->text(), QStringLiteral("Aplicar / iniciar resgates automáticos"));
+        QVERIFY(!translator.value.translate("MiningPage", "Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.").isEmpty());
     }
 }

@@ -28,7 +28,7 @@ runs:
       if: ${{ github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && env.depends-sources-cache-hit != 'true' }}
       with:
         path: ${{ env.SOURCES_PATH }}
-        key: depends-sources-${{ env.CONTAINER_NAME }}-${{ env.DEPENDS_HASH }}
+        key: depends-sources-${{ env.CI_CACHE_NAME }}-${{ env.DEPENDS_HASH }}
         provider: ${{ inputs.provider }}
 
     - name: Save built depends cache
@@ -36,5 +36,5 @@ runs:
       if: ${{ github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && env.depends-built-cache-hit != 'true' }}
       with:
         path: ${{ env.BASE_CACHE }}
-        key: depends-built-${{ env.CONTAINER_NAME }}-${{ env.DEPENDS_HASH }}
+        key: depends-built-${{ env.CI_CACHE_NAME }}-${{ env.DEPENDS_HASH }}
         provider: ${{ inputs.provider }}

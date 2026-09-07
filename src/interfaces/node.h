@@ -11,6 +11,7 @@
 #include <net_types.h>
 #include <netaddress.h>
 #include <netbase.h>
+#include <node/cpu_miner_types.h>
 #include <support/allocators/secure.h>
 #include <util/log.h>
 #include <util/translation.h>
@@ -198,6 +199,11 @@ public:
 
     //! Get dust relay fee.
     virtual CFeeRate getDustRelayFee() = 0;
+
+    //! Control the node-wide opt-in CPU miner (independent of loaded wallets).
+    virtual void startCpuMining(const std::string& address, int threads) = 0;
+    virtual void stopCpuMining() = 0;
+    virtual node::CpuMiningStatus getCpuMiningStatus() = 0;
 
     //! Execute rpc command.
     virtual UniValue executeRpc(const std::string& command, const UniValue& params, const std::string& uri) = 0;

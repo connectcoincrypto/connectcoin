@@ -34,7 +34,9 @@ CFeeRate GetRequiredFeeRate(const CWallet& wallet);
 
 /**
  * Estimate the minimum fee rate considering user-set parameters, the required
- * fee, and the economic mining floor for automatically selected rates.
+ * fee, and the economic mining floor for automatically selected rates. When
+ * estimation is unavailable and fallbackfee is zero/unset, use that floor,
+ * still respecting higher mempool, relay and wallet minimums.
  */
 MinimumFeeRateResult GetMinimumFeeRate(const CWallet& wallet, const CCoinControl& coin_control);
 

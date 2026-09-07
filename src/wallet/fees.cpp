@@ -63,15 +63,16 @@ MinimumFeeRateResult GetMinimumFeeRate(const CWallet& wallet, const CCoinControl
     const FeeRateEstimation& estimation{FeeRateEstimationRef(fee_estimation_res)};
     CFeeRate fee_rate{estimation.feerate};
     FeeReason fee_reason{FeeReason::FEE_RATE_ESTIMATOR};
+    const CFeeRate min_mining_feerate{wallet.chain().miningMinFee()};
     // Only fee rate estimator results have a returned target.
     std::optional<int> returned_target{estimation.returned_target};
     if (fee_rate == CFeeRate(0)) {
-        // if we don't have enough data for getFeeRateEstimate, then use fallback fee
-        fee_rate = wallet.m_fallback_fee;
-        fee_reason = FeeReason::FALLBACK;
+        // Without a configured fallback, use the next block's economic floor
+        // (subsidy weight cost + relay margin), not a fixed fee or a zero rate.
+        const bool has_fallback{wallet.m_fallback_fee != CFeeRate{0}};
+        fee_rate = has_fallback ? wallet.m_fallback_fee : min_mining_feerate;
+        fee_reason = has_fallback ? FeeReason::FALLBACK : FeeReason::REQUIRED;
         returned_target = std::nullopt;
-        // directly return if fallback fee is disabled (feerate 0 == disabled)
-        if (wallet.m_fallback_fee == CFeeRate(0)) return {fee_rate, FeeReason::FALLBACK, std::nullopt};
     }
 
     // Obey mempool min fee when using smart fee estimation or fallback fee
@@ -86,7 +87,6 @@ MinimumFeeRateResult GetMinimumFeeRate(const CWallet& wallet, const CCoinControl
     // Keep this separate from GetRequiredFeeRate so callers can still request
     // an intentionally uneconomical explicit fee rate for testing or use with
     // an operator-supplied prioritisation delta.
-    CFeeRate min_mining_feerate = wallet.chain().miningMinFee();
     if (min_mining_feerate > fee_rate) {
         fee_rate = min_mining_feerate;
         fee_reason = FeeReason::REQUIRED;

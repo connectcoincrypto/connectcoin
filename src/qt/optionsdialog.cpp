@@ -238,6 +238,11 @@ void OptionsDialog::setModel(OptionsModel *_model)
         setMapper();
         mapper->toFirst();
 
+        ui->popupNotifications->setEnabled(!_model->isPopupNotificationsOverridden());
+        if (_model->isPopupNotificationsOverridden()) {
+            ui->popupNotifications->setToolTip(tr("Set by -popupnotifications or popupnotifications in connectcoin.conf."));
+        }
+
         const auto& font_for_money = _model->data(_model->index(OptionsModel::FontForMoney, 0), Qt::EditRole).value<OptionsModel::FontChoice>();
         setFontChoice(ui->moneyFont, font_for_money);
 
@@ -315,6 +320,7 @@ void OptionsDialog::setMapper()
 
     /* Display */
     mapper->addMapping(ui->lang, OptionsModel::Language);
+    mapper->addMapping(ui->popupNotifications, OptionsModel::PopupNotifications);
     mapper->addMapping(ui->unit, OptionsModel::DisplayUnit);
     mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
 }

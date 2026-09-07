@@ -196,6 +196,8 @@ if(ENABLE_WALLET)
       openuridialog.h
       overviewpage.cpp
       overviewpage.h
+      miningpage.cpp
+      miningpage.h
       p2ccreatedialog.cpp
       p2ccreatedialog.h
       p2cclaimdialog.cpp

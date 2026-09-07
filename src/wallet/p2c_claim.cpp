@@ -128,9 +128,6 @@ util::Result<P2CClaimProposal> PrepareP2CClaim(CWallet& wallet, const COutPoint&
         return util::Error{Untranslated("Fee rate is too high or invalid for safe P2C claim construction")};
     }
     const auto estimate{GetMinimumFeeRate(wallet, control)};
-    if (estimate.fee_reason == FeeReason::FALLBACK && !wallet.m_allow_fallback_fee) {
-        return util::Error{Untranslated("Fee estimation failed. Set an explicit fee_rate or enable fallback fees")};
-    }
     const CFeeRate rate{std::max({estimate.fee_rate, GetRequiredFeeRate(wallet), wallet.chain().mempoolMinFee()})};
     const CFeeRate dust_rate{wallet.chain().relayDustFee()};
     if (!SafeFeeRate(estimate.fee_rate) || !SafeFeeRate(rate) || !SafeFeeRate(dust_rate)) {

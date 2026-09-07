@@ -728,10 +728,10 @@ public:
      * cannot fund the transaction otherwise. */
     bool m_spend_zero_conf_change{DEFAULT_SPEND_ZEROCONF_CHANGE};
     bool m_signal_rbf{DEFAULT_WALLET_RBF};
-    bool m_allow_fallback_fee{true}; //!< will be false if -fallbackfee=0
     CFeeRate m_min_fee{DEFAULT_TRANSACTION_MINFEE};
     /**
      * If fee estimation does not have enough data to provide estimates, use this fee instead.
+     * Zero selects the current economic network minimum rather than a fixed fallback.
      * Has no effect if not using fee estimation
      * Override with -fallbackfee
      */

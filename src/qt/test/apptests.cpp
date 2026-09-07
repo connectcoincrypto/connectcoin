@@ -4,13 +4,21 @@
 
 #include <qt/test/apptests.h>
 
+#include <connectcoin-build-config.h> // IWYU pragma: keep
+
 #include <chainparams.h>
 #include <key.h>
 #include <logging.h>
+#include <node/interface_ui.h>
 #include <qt/bitcoin.h>
 #include <qt/bitcoingui.h>
 #include <qt/networkstyle.h>
 #include <qt/rpcconsole.h>
+#ifdef ENABLE_WALLET
+#include <qt/miningpage.h>
+#include <qt/modaloverlay.h>
+#include <qt/walletframe.h>
+#endif
 #include <test/util/setup_common.h>
 #include <validation.h>
 
@@ -20,12 +28,15 @@
 #include <QIcon>
 #include <QImage>
 #include <QLineEdit>
+#include <QMessageBox>
+#include <QPushButton>
 #include <QRegularExpression>
 #include <QScopedPointer>
 #include <QSignalSpy>
 #include <QString>
 #include <QTest>
 #include <QTextEdit>
+#include <QTimer>
 #include <QtGlobal>
 #include <QtTest/QtTestWidgets>
 #include <QtTest/QtTestGui>
@@ -70,6 +81,51 @@ void TestP2CIcon(BitcoinGUI* window)
     QCoreApplication::sendEvent(window, &palette_change);
     QCOMPARE(action->icon().pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8), expected);
 }
+
+//! Disabling desktop notifications must not suppress modal errors/confirmations.
+void TestNotificationDialogs(BitcoinGUI* window)
+{
+    bool shown{false};
+    bool accepted{false};
+    QTimer timer;
+    timer.setSingleShot(true);
+    QObject::connect(&timer, &QTimer::timeout, window, [&] {
+        auto* dialog = window->findChild<QMessageBox*>();
+        if (dialog) {
+            shown = true;
+            dialog->done(QMessageBox::Ok);
+        }
+    });
+    timer.start(0);
+    window->message("Notification settings test", "Modal errors remain visible", CClientUIInterface::MSG_ERROR, &accepted);
+    QVERIFY(shown);
+    QVERIFY(accepted);
+}
+
+#ifdef ENABLE_WALLET
+//! The node's mining controls are available before any wallet is loaded.
+void TestMiningWithoutWallet(BitcoinGUI* window)
+{
+    auto* frame = window->findChild<WalletFrame*>();
+    QVERIFY(frame);
+    QVERIFY(!frame->currentWalletModel());
+    // An old genesis can display the initial-sync overlay, which disables all
+    // tab actions until the user closes it.
+    auto* overlay = window->findChild<ModalOverlay*>();
+    QVERIFY(overlay);
+    overlay->closeClicked();
+    auto* action = window->findChild<QAction*>("miningAction");
+    QVERIFY(action);
+    QVERIFY(action->isEnabled());
+    action->trigger();
+    auto* page = frame->findChild<MiningPage*>("walletlessMiningPage");
+    QVERIFY(page);
+    QVERIFY(page->isVisible());
+    QVERIFY(page->findChild<QPushButton*>("startMining")->isEnabled());
+    QVERIFY(!page->findChild<QPushButton*>("newMiningAddress")->isEnabled());
+    window->gotoOverviewPage();
+}
+#endif
 } // namespace
 
 //! Entry point for BitcoinApplication tests.
@@ -98,6 +154,10 @@ void AppTests::guiTests(BitcoinGUI* window)
 {
     HandleCallback callback{"guiTests", *this};
     TestP2CIcon(window);
+    TestNotificationDialogs(window);
+#ifdef ENABLE_WALLET
+    TestMiningWithoutWallet(window);
+#endif
     connect(window, &BitcoinGUI::consoleShown, this, &AppTests::consoleTests);
     expectCallback("consoleTests");
     QAction* action = window->findChild<QAction*>("openRPCConsoleAction");

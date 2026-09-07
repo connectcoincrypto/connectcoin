@@ -62,6 +62,7 @@
 #include <node/mempool_args.h>
 #include <node/mempool_persist.h>
 #include <node/mempool_persist_args.h>
+#include <node/cpu_miner.h>
 #include <node/mining_args.h>
 #include <node/mining_types.h>
 #include <node/peerman_args.h>
@@ -292,6 +293,7 @@ static void ShutdownNotify(const ArgsManager& args)
 
 void Interrupt(NodeContext& node)
 {
+    if (node.cpu_miner) node.cpu_miner->Stop();
 #if HAVE_SYSTEM
     ShutdownNotify(*node.args);
 #endif
@@ -331,6 +333,7 @@ void Shutdown(NodeContext& node)
     StopREST();
     StopRPC();
     StopHTTPServer();
+    node.cpu_miner.reset(); // Join mining workers before destroying chainstate.
     for (auto& client : node.chain_clients) {
         try {
             client->stop();
@@ -493,12 +496,12 @@ void SetupServerArgs(ArgsManager& argsman, bool can_listen_ipc)
 
     init::AddLoggingArgs(argsman);
 
-    const auto defaultBaseParams = CreateBaseChainParams(ChainType::MAIN);
+    const auto defaultBaseParams = CreateBaseChainParams(ChainType::TESTNET4);
     const auto testnetBaseParams = CreateBaseChainParams(ChainType::TESTNET);
     const auto testnet4BaseParams = CreateBaseChainParams(ChainType::TESTNET4);
     const auto signetBaseParams = CreateBaseChainParams(ChainType::SIGNET);
     const auto regtestBaseParams = CreateBaseChainParams(ChainType::REGTEST);
-    const auto defaultChainParams = CreateChainParams(argsman, ChainType::MAIN);
+    const auto defaultChainParams = CreateChainParams(argsman, ChainType::TESTNET4);
     const auto testnetChainParams = CreateChainParams(argsman, ChainType::TESTNET);
     const auto testnet4ChainParams = CreateChainParams(argsman, ChainType::TESTNET4);
     const auto signetChainParams = CreateChainParams(argsman, ChainType::SIGNET);
@@ -508,7 +511,7 @@ void SetupServerArgs(ArgsManager& argsman, bool can_listen_ipc)
     std::vector<std::string> hidden_args = {
         "-dbcrashratio", "-forcecompactdb",
         // GUI args. These will be overwritten by SetupUIArgs for the GUI
-        "-choosedatadir", "-lang=<lang>", "-min", "-resetguisettings", "-splash", "-uiplatform"};
+        "-choosedatadir", "-lang=<lang>", "-min", "-popupnotifications", "-resetguisettings", "-splash", "-uiplatform"};
 
     argsman.AddArg("-version", "Print version and exit", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
 #if HAVE_SYSTEM
@@ -1295,6 +1298,7 @@ bool AppInitInterfaces(NodeContext& node)
     // Specify wait_loaded=false so internal mining interface can be initialized
     // on early startup and does not need to be tied to chainstate loading.
     node.mining = interfaces::MakeMining(node, /*wait_loaded=*/false);
+    node.cpu_miner = std::make_unique<node::CpuMiner>(node);
     return true;
 }
 

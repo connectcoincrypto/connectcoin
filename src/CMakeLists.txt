@@ -367,6 +367,7 @@ add_library(connectcoin_node STATIC EXCLUDE_FROM_ALL
   node/mempool_persist.cpp
   node/mempool_persist_args.cpp
   node/miner.cpp
+  node/cpu_miner_impl.cpp
   node/mining_args.cpp
   node/mini_miner.cpp
   node/minisketchwrapper.cpp

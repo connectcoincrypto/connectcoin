@@ -36,6 +36,9 @@ public:
     /** Colorize an icon (given object) with the text color */
     QIcon TextColorIcon(const QIcon& icon) const;
 
+    /** Monochrome thick-stroke pickaxe, rendered without an SVG plugin. */
+    QIcon MiningIcon() const;
+
 private:
     PlatformStyle(const QString &name, bool imagesOnButtons, bool colorizeIcons, bool useExtraSpacing);
 

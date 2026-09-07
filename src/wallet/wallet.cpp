@@ -3033,9 +3033,6 @@ bool CWallet::LoadWalletArgs(std::shared_ptr<CWallet> wallet, const WalletContex
         wallet->m_fallback_fee = CFeeRate{fallback_fee.value()};
     }
 
-    // Disable fallback fee in case value was set to 0, enable if non-null value
-    wallet->m_allow_fallback_fee = wallet->m_fallback_fee.GetFeePerK() != 0;
-
     if (const auto arg{args.GetArg("-discardfee")}) {
         std::optional<CAmount> discard_fee = ParseMoney(*arg);
         if (!discard_fee) {

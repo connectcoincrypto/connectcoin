@@ -7,6 +7,7 @@
 #include <node/interface_ui.h>
 #include <psbt.h>
 #include <qt/guiutil.h>
+#include <qt/miningpage.h>
 #include <qt/overviewpage.h>
 #include <qt/psbtoperationsdialog.h>
 #include <qt/walletmodel.h>
@@ -53,6 +54,9 @@ WalletFrame::WalletFrame(const PlatformStyle* _platformStyle, QWidget* parent)
     no_wallet_group->setLayout(no_wallet_layout);
 
     walletStack->addWidget(no_wallet_group);
+    m_walletless_mining_page = new MiningPage(nullptr, walletStack);
+    m_walletless_mining_page->setObjectName("walletlessMiningPage");
+    walletStack->addWidget(m_walletless_mining_page);
 }
 
 WalletFrame::~WalletFrame() = default;
@@ -60,6 +64,7 @@ WalletFrame::~WalletFrame() = default;
 void WalletFrame::setClientModel(ClientModel *_clientModel)
 {
     this->clientModel = _clientModel;
+    m_walletless_mining_page->setClientModel(_clientModel);
 
     for (auto i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i) {
         i.value()->setClientModel(_clientModel);
@@ -78,6 +83,8 @@ bool WalletFrame::addView(WalletView* walletView)
     WalletView* current_wallet_view = currentWalletView();
     if (current_wallet_view) {
         walletView->setCurrentIndex(current_wallet_view->currentIndex());
+    } else if (walletStack->currentWidget() == m_walletless_mining_page) {
+        walletView->gotoMiningPage();
     } else {
         walletView->gotoOverviewPage();
     }
@@ -119,16 +126,28 @@ void WalletFrame::removeWallet(WalletModel* wallet_model)
     if (!mapWalletViews.contains(wallet_model)) return;
 
     WalletView *walletView = mapWalletViews.take(wallet_model);
+    const bool mining_selected{walletStack->currentWidget() == walletView &&
+                               qobject_cast<MiningPage*>(walletView->currentWidget())};
     walletStack->removeWidget(walletView);
     delete walletView;
+    if (mapWalletViews.isEmpty()) {
+        if (mining_selected) gotoMiningPage();
+        else walletStack->setCurrentIndex(0);
+    }
 }
 
 void WalletFrame::removeAllWallets()
 {
-    QMap<WalletModel*, WalletView*>::const_iterator i;
-    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
-        walletStack->removeWidget(i.value());
+    const auto* current_view{currentWalletView()};
+    const bool mining_selected{walletStack->currentWidget() == m_walletless_mining_page ||
+                               (current_view && qobject_cast<MiningPage*>(current_view->currentWidget()))};
+    for (auto* view : mapWalletViews) {
+        walletStack->removeWidget(view);
+        delete view;
+    }
     mapWalletViews.clear();
+    if (mining_selected) gotoMiningPage();
+    else walletStack->setCurrentIndex(0);
 }
 
 bool WalletFrame::handlePaymentRequest(const SendCoinsRecipient &recipient)
@@ -150,6 +169,7 @@ void WalletFrame::showOutOfSyncWarning(bool fShow)
 
 void WalletFrame::gotoOverviewPage()
 {
+    if (mapWalletViews.isEmpty()) walletStack->setCurrentIndex(0);
     QMap<WalletModel*, WalletView*>::const_iterator i;
     for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
         i.value()->gotoOverviewPage();
@@ -179,6 +199,15 @@ void WalletFrame::gotoSendCoinsPage(QString addr)
 void WalletFrame::gotoP2CPage()
 {
     for (auto* view : mapWalletViews) view->gotoP2CPage();
+}
+
+void WalletFrame::gotoMiningPage()
+{
+    if (mapWalletViews.isEmpty()) {
+        m_walletless_mining_page->setClientModel(clientModel);
+        walletStack->setCurrentWidget(m_walletless_mining_page);
+    }
+    for (auto* view : mapWalletViews) view->gotoMiningPage();
 }
 
 void WalletFrame::gotoSignMessageTab(QString addr)

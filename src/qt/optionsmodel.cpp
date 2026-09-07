@@ -181,6 +181,9 @@ bool OptionsModel::Init(bilingual_str& error)
     m_show_tray_icon = !settings.value("fHideTrayIcon").toBool();
     Q_EMIT showTrayIconChanged(m_show_tray_icon);
 
+    m_popup_notifications = settings.value("fPopupNotifications", false).toBool();
+    if (isPopupNotificationsOverridden()) addOverriddenOption("-popupnotifications");
+
     if (!settings.contains("fMinimizeToTray"))
         settings.setValue("fMinimizeToTray", false);
     fMinimizeToTray = settings.value("fMinimizeToTray").toBool() && m_show_tray_icon;
@@ -411,6 +414,8 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
         return GUIUtil::GetStartOnSystemStartup();
     case ShowTrayIcon:
         return m_show_tray_icon;
+    case PopupNotifications:
+        return getPopupNotifications();
     case MinimizeToTray:
         return fMinimizeToTray;
     case MapPortNatpmp:
@@ -486,6 +491,16 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
     }
 }
 
+bool OptionsModel::getPopupNotifications() const
+{
+    return gArgs.GetBoolArg("-popupnotifications", m_popup_notifications);
+}
+
+bool OptionsModel::isPopupNotificationsOverridden() const
+{
+    return gArgs.IsArgSet("-popupnotifications");
+}
+
 QFont OptionsModel::getFontForChoice(const FontChoice& fc)
 {
     QFont f;
@@ -524,6 +539,13 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
     case MinimizeToTray:
         fMinimizeToTray = value.toBool();
         settings.setValue("fMinimizeToTray", fMinimizeToTray);
+        break;
+    case PopupNotifications:
+        // Explicit config/command-line settings override the GUI preference.
+        if (!isPopupNotificationsOverridden()) {
+            m_popup_notifications = value.toBool();
+            settings.setValue("fPopupNotifications", m_popup_notifications);
+        }
         break;
     case MapPortNatpmp: // core option - can be changed on-the-fly
         if (changed()) {

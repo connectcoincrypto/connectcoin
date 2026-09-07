@@ -139,6 +139,7 @@ private:
     QAction* quitAction = nullptr;
     QAction* sendCoinsAction = nullptr;
     QAction* p2cAction = nullptr;
+    QAction* miningAction = nullptr;
     QAction* usedSendingAddressesAction = nullptr;
     QAction* usedReceivingAddressesAction = nullptr;
     QAction* signMessageAction = nullptr;
@@ -290,6 +291,7 @@ public Q_SLOTS:
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
     void gotoP2CPage();
+    void gotoMiningPage();
 
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");

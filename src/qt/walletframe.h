@@ -9,6 +9,7 @@
 #include <QMap>
 
 class ClientModel;
+class MiningPage;
 class PlatformStyle;
 class SendCoinsRecipient;
 class WalletModel;
@@ -53,10 +54,11 @@ Q_SIGNALS:
 
 private:
     QStackedWidget *walletStack;
-    ClientModel *clientModel;
+    ClientModel* clientModel{nullptr};
+    MiningPage* m_walletless_mining_page;
     QMap<WalletModel*, WalletView*> mapWalletViews;
 
-    bool bOutOfSync;
+    bool bOutOfSync{false};
 
     const PlatformStyle *platformStyle;
 
@@ -76,6 +78,7 @@ public Q_SLOTS:
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
     void gotoP2CPage();
+    void gotoMiningPage();
 
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");

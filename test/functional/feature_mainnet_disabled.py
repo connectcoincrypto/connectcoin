@@ -2,12 +2,12 @@
 # Copyright (c) 2026 The ConnectCoin developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
-"""Mainnet must not start, including with old data; testnet4 remains usable."""
+"""Mainnet must not start, including with old data; testnet4 is the beta default."""
 
 import subprocess
 
 from test_framework.test_framework import BitcoinTestFramework
-from test_framework.util import assert_equal, write_config
+from test_framework.util import assert_equal, rpc_port, write_config
 
 
 class MainnetDisabledTest(BitcoinTestFramework):
@@ -27,9 +27,8 @@ class MainnetDisabledTest(BitcoinTestFramework):
         write_config(conf, n=0, chain="")
         node.chain = ""
         error = "Error: Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing."
-        self.log.info("Default and explicit mainnet selection must fail")
-        for args in ([], ["-chain=main"]):
-            node.assert_start_raises_init_error(extra_args=args, expected_msg=error)
+        self.log.info("Explicit mainnet selection must fail")
+        node.assert_start_raises_init_error(extra_args=["-chain=main"], expected_msg=error)
         # Argument parsing may create an empty blocks directory, but must not
         # initialize a block index or write any block data.
         assert_equal(list((node.datadir_path / "blocks").iterdir()), [])
@@ -61,15 +60,38 @@ class MainnetDisabledTest(BitcoinTestFramework):
             assert "Mainnet has not been launched" in result.stderr
             assert not tool_datadir.exists()
 
-        self.log.info("The public test network still starts and connects peers")
+        self.log.info("The beta default starts in testnet4 and connects to an explicit testnet4 peer")
         write_config(conf, n=0, chain="testnet4")
+        node.replace_in_config([("testnet4=1\n", "")])
         node.chain = "testnet4"
         self.start_nodes()
         self.connect_nodes(0, 1)
         for peer in self.nodes:
             assert_equal(peer.getblockchaininfo()["chain"], "testnet4")
             assert_equal(peer.getblockcount(), 0)
-            assert_equal(peer.getbestblockhash(), "d607fe5b7f8e498c08f34c740a3ba75af44eace9e9d9a1cbfc163cfa6ad16519")
+            assert_equal(peer.getbestblockhash(), "06a1a1f822fed4a412aedb19315f1e85c963ad9b3c10e88ff12626b4b1389115")
+        for directory in (old_index, old_chainstate):
+            assert_equal(list(directory.iterdir()), [directory / "untouched"])
+
+        if self.is_cli_compiled():
+            assert_equal(node.create_new_rpc_connection(mode="CLI").getblockchaininfo()["chain"], "testnet4")
+
+        self.log.info("No config file or network flag is needed for the beta default")
+        self.stop_node(0)
+        saved_conf = conf.with_suffix(".saved")
+        conf.rename(saved_conf)
+        self.start_node(0, extra_args=[
+            "-server", f"-rpcport={rpc_port(0)}", "-listen=0", "-connect=0",
+            "-dnsseed=0", "-fixedseeds=0", "-natpmp=0", "-randomxfast=0", "-prune=550",
+        ])
+        assert_equal(node.getblockchaininfo()["chain"], "testnet4")
+        assert (node.datadir_path / "testnet4" / ".cookie").exists()
+        assert not (node.datadir_path / ".cookie").exists()
+        assert not conf.exists()
+        if self.is_cli_compiled():
+            assert_equal(node.create_new_rpc_connection(mode="CLI").getblockchaininfo()["chain"], "testnet4")
+        self.stop_node(0)
+        saved_conf.rename(conf)
 
 
 if __name__ == "__main__":

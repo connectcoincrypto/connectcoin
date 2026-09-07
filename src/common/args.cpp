@@ -940,7 +940,9 @@ std::variant<ChainType, std::string> ArgsManager::GetChainArg() const
     if (fSigNet) return ChainType::SIGNET;
     if (fTestNet) return ChainType::TESTNET;
     if (fTestNet4) return ChainType::TESTNET4;
-    return ChainType::MAIN;
+    // Beta builds default to testnet4. Explicit network selections above still
+    // take precedence; mainnet remains unavailable until its genesis is defined.
+    return ChainType::TESTNET4;
 }
 
 bool ArgsManager::UseDefaultSection(const std::string& arg) const

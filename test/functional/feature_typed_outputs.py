@@ -13,6 +13,7 @@ from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
 )
+from test_framework.wallet_util import bytes_to_wif
 
 
 class TypedOutputsTest(BitcoinTestFramework):
@@ -302,7 +303,7 @@ class TypedOutputsTest(BitcoinTestFramework):
         assert_raises_rpc_error(-5, "Invalid ConnectCoin address", node.createrawtransaction, [], {invalid_xonly_address: 1})
         assert_raises_rpc_error(-5, "Invalid ConnectCoin address", node.sendtoaddress, invalid_xonly_address, 1)
         invalid_tool_output = subprocess.run(
-            self.get_binaries().tx_argv() + ["-create", f"outaddr=1:{invalid_xonly_address}"],
+            self.get_binaries().tx_argv() + ["-regtest", "-create", f"outaddr=1:{invalid_xonly_address}"],
             capture_output=True,
             check=False,
             text=True,
@@ -328,7 +329,7 @@ class TypedOutputsTest(BitcoinTestFramework):
         self.log.info("Check connectcoin-tx signs a type-1 prevout with its complete digest context")
         prev_txid = "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"
         xonly_pubkey = "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
-        private_key = "CqPSjupy1JHzxQ4TF4aSgvZxum5BnUhA2LqRmLiaHHHwXyvr84zk"
+        private_key = bytes_to_wif((1).to_bytes(32, "big"))
         prevtxs = [{
             "txid": prev_txid,
             "vout": 0,
@@ -337,6 +338,7 @@ class TypedOutputsTest(BitcoinTestFramework):
         }]
         signed = subprocess.run(
             self.get_binaries().tx_argv() + [
+                "-regtest",
                 "-create",
                 f"in={prev_txid}:0",
                 f"set=privatekeys:{json.dumps([private_key], separators=(',', ':'))}",
@@ -348,8 +350,8 @@ class TypedOutputsTest(BitcoinTestFramework):
             check=False,
             text=True,
         )
-        assert_equal(signed.returncode, 0)
         assert_equal(signed.stderr, "")
+        assert_equal(signed.returncode, 0)
         self.assert_typed_transaction(node.decoderawtransaction(signed.stdout.strip()))
 
         self.log.info("Check connectcoin-tx rejects a well-shaped but invalid existing witness")
@@ -357,6 +359,7 @@ class TypedOutputsTest(BitcoinTestFramework):
         invalid_witness_tx.wit.vtxinwit[0].scriptWitness.stack = [b"\x00" * 64]
         rejected = subprocess.run(
             self.get_binaries().tx_argv() + [
+                "-regtest",
                 invalid_witness_tx.serialize().hex(),
                 "set=privatekeys:[]",
                 f"set=prevtxs:{json.dumps(prevtxs, separators=(',', ':'))}",

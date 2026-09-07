@@ -142,7 +142,7 @@ static void SetupCliArgs(ArgsManager& argsman)
 {
     SetupHelpOptions(argsman);
 
-    const auto defaultBaseParams = CreateBaseChainParams(ChainType::MAIN);
+    const auto defaultBaseParams = CreateBaseChainParams(ChainType::TESTNET4);
     const auto testnetBaseParams = CreateBaseChainParams(ChainType::TESTNET);
     const auto testnet4BaseParams = CreateBaseChainParams(ChainType::TESTNET4);
     const auto signetBaseParams = CreateBaseChainParams(ChainType::SIGNET);

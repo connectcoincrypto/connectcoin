@@ -52,10 +52,17 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
     return genesis;
 }
 
-/** Public-network development-fund key. The corresponding private key is not part of the source tree. */
+/** Historical testnet3/signet development-fund key. No private key is in the source tree. */
 static const CScript& PublicGenesisOutputScript()
 {
     static const CScript script = CScript() << OP_1 << "da12a44d69673e42ba95ac1d2bd4e5c76c3709a1765edbc5f52b8e5e643b0609"_hex;
+    return script;
+}
+
+/** Testnet4 beta fund key, backed by a locally generated wallet; public material only. */
+static const CScript& TestNet4GenesisOutputScript()
+{
+    static const CScript script = CScript() << OP_1 << "2ef316afd6177619f68ecfc6521fc3fcbf7faa2b25273f6ddea7971fae0de144"_hex;
     return script;
 }
 
@@ -335,10 +342,10 @@ public:
         m_assumed_blockchain_size = 0;
         m_assumed_chain_state_size = 0;
 
-        genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin testnet4", 1787596783, 171441, 0x1f00ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
+        genesis = CreateConnectCoinGenesisBlock("ConnectCoin testnet4 | 2026-09-07 | development fund", 1788814378, 60490, 0x1f00ffff, 1, 10'000'000 * COIN, TestNet4GenesisOutputScript());
         consensus.hashGenesisBlock = genesis->GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"d607fe5b7f8e498c08f34c740a3ba75af44eace9e9d9a1cbfc163cfa6ad16519"});
-        assert(genesis->hashMerkleRoot == uint256{"2fccd9d71c8cdbd5b5520f94bf29fbf7e38d5a90b4039166d2d8c86fe89028f0"});
+        assert(consensus.hashGenesisBlock == uint256{"06a1a1f822fed4a412aedb19315f1e85c963ad9b3c10e88ff12626b4b1389115"});
+        assert(genesis->hashMerkleRoot == uint256{"c20a4d5c39a400dde2e7d9eaeedc4c5df22bb2f9d4f471369ee67aa40da3a683"});
 
         vFixedSeeds.clear();
         vSeeds.clear();

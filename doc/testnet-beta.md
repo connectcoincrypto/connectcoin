@@ -2,26 +2,73 @@
 
 ConnectCoin mainnet has no operational genesis block. Its consensus and address
 parameters remain available to libraries and tests, but daemon and GUI startup
-reject default/mainnet selection with a clear error. The chainstate constructor
+reject explicit mainnet selection with a clear error. The chainstate constructor
 also rejects missing-genesis parameters, including through the Kernel API,
 before opening the block database. Existing mainnet data is not migrated,
 adopted, or erased; `-reindex` cannot enable the network.
 
 Use `-testnet4` for the public-test-network profile or `-regtest` for local
 tests. The name `testnet4` is an inherited internal identifier, not the fourth
-public ConnectCoin beta. The existing testnet3, testnet4, signet and regtest
-genesis blocks, network identifiers and consensus rules are unchanged.
+public ConnectCoin beta. Testnet4's genesis was replaced on September 7, 2026
+as described below. Testnet3, signet and regtest genesis blocks are unchanged.
 
-The default chain selector remains `main` for compatibility with offline tools
-and configuration parsing. Node startup without an explicit test-network
-selection therefore fails, rather than silently choosing a different wallet or
-data directory. A beta launcher must explicitly select `-testnet4`.
+The daemon, GUI and command-line tools default to `testnet4` during beta testing,
+even without a `connectcoin.conf` file. An explicit network selection in the
+command line or configuration still takes precedence; `-chain=main` is still
+rejected at node startup. To choose another network, use `-chain=<chain>` or its
+positive selector such as `-regtest`, not just `-testnet4=0`. No configuration
+file is generated or rewritten by this default. Wallets and chain data use the
+existing `testnet4/` subdirectory; old mainnet files are not moved or loaded.
+The Kernel API's separate mainnet default and explicit chain parameters are
+unchanged.
 
 Testnet4 uses P2P port 48179 and RPC port 48178. RPC should remain private; expose
 only the P2P service to testers. There are currently no built-in public seeds.
 A public beta additionally needs reachable peers, bootstrap discovery, ongoing
 RandomX mining, and distribution of test coins. Merely selecting `-testnet4`
 does not create those services. No test balances are promised mainnet conversion.
+
+An optional [CPU miner](cpu-mining.md) is available from the wallet's Mining
+tab or the `startmining` RPC. It supports testnet4 and regtest, is disabled at
+each startup, and does not require a loaded wallet when given a reward address.
+
+## Testnet4 genesis reset (September 7, 2026)
+
+The beta genesis allocates `10,000,000 CC` to a newly generated, wallet-owned
+type-1 public key:
+
+- Public key: `2ef316afd6177619f68ecfc6521fc3fcbf7faa2b25273f6ddea7971fae0de144`
+- Address: `tcc1p9me3dt7kzampna5welr9y87rljlhl23ty5nn7mw757t3ltsdu9zqu5cd3u`
+- Genesis: `06a1a1f822fed4a412aedb19315f1e85c963ad9b3c10e88ff12626b4b1389115`
+- Coinbase transaction / Merkle root: `c20a4d5c39a400dde2e7d9eaeedc4c5df22bb2f9d4f471369ee67aa40da3a683`
+- Header time: `1788814378`; nonce: `60490`; difficulty bits: `0x1f00ffff`.
+
+The header was mined with real RandomX v2. The private key is held in a local
+wallet, not this repository. A wallet backup was restored and its ability to
+sign for the public key was independently verified before adopting the genesis.
+The allocation remains subject to the 100-block coinbase maturity rule.
+
+This is a new chain, not a migration of old test balances. Old testnet4 block
+databases cannot be reused. Stop the node and preserve its old `testnet4/`
+directory separately before initializing the new chain; do not delete wallet
+backups. Keep backups of the fund wallet outside Git and make an offline copy.
+This testnet key must not be reused for the future mainnet allocation.
+
+## Wallet fees on a new network
+
+When fee estimation has insufficient transaction history and `fallbackfee` is
+unset or zero, automatic wallet sends use the next block's economic minimum:
+the subsidy weight cost per kvB plus 1,000 connects/kvB. This follows halvings
+and reorgs, rather than keeping the initial subsidy's fee forever. Higher
+mempool, relay or wallet minimums still apply; the maximum-fee safeguards are
+unchanged. A nonzero `fallbackfee` still selects a fixed alternative when
+estimation is unavailable, subject to the same minimums.
+
+This applies to GUI sends, funding/send RPCs and manual P2C claim preparation.
+No confirmation deadline is implied by the minimum rate. Explicit transaction
+fee rates retain their existing behavior. Fee estimation RPCs still report
+insufficient data when there is no estimate: the economic minimum is a wallet
+policy, not a fabricated estimate.
 
 ## Tests without a production mainnet
 

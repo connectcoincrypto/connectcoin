@@ -24,6 +24,7 @@ private Q_SLOTS:
     void walletTests();
     void p2cTranslations();
     void p2cTests();
+    void miningPage();
 };
 
 #endif // CONNECTCOIN_QT_TEST_WALLETTESTS_H

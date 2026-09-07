@@ -40,6 +40,7 @@ create_test_config()
 function(create_test_directory_links)
   file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/functional)
   file(GLOB functional
+    CONFIGURE_DEPENDS
     LIST_DIRECTORIES FALSE
     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     functional/*.html
@@ -48,6 +49,7 @@ function(create_test_directory_links)
 
   file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/functional/data)
   file(GLOB functional_data
+    CONFIGURE_DEPENDS
     LIST_DIRECTORIES FALSE
     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     functional/data/*.json
@@ -56,6 +58,7 @@ function(create_test_directory_links)
 
   file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/functional/mocks)
   file(GLOB functional_mocks
+    CONFIGURE_DEPENDS
     LIST_DIRECTORIES FALSE
     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     functional/mocks/*.py
@@ -63,6 +66,7 @@ function(create_test_directory_links)
 
   file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/functional/test_framework)
   file(GLOB functional_test_framework
+    CONFIGURE_DEPENDS
     LIST_DIRECTORIES FALSE
     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     functional/test_framework/*.csv
@@ -71,6 +75,7 @@ function(create_test_directory_links)
 
   file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/functional/test_framework/crypto)
   file(GLOB functional_test_framework_crypto
+    CONFIGURE_DEPENDS
     LIST_DIRECTORIES FALSE
     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     functional/test_framework/crypto/*.csv

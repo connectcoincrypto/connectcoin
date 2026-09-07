@@ -64,7 +64,7 @@ static std::optional<int> WalletAppInit(ArgsManager& args, int argc, char* argv[
         } else {
             strUsage += "\n"
                 "connectcoin-wallet is an offline tool for creating and interacting with " CLIENT_NAME " wallet files.\n\n"
-                "By default connectcoin-wallet will act on wallets in the default mainnet wallet directory in the datadir.\n\n"
+                "By default connectcoin-wallet will act on wallets in the default testnet4 wallet directory in the datadir.\n\n"
                 "To change the target wallet, use the -datadir, -wallet and (test)chain selection arguments.\n"
                 "\n"
                 "Usage: connectcoin-wallet [options] <command>\n"

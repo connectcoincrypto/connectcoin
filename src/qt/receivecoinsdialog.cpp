@@ -90,7 +90,7 @@ void ReceiveCoinsDialog::setModel(WalletModel *_model)
         ui->receiveButton->setEnabled(model->wallet().canGetAddresses());
 
         // Enable/disable the receive button if the wallet is now able/unable to give out new addresses.
-        connect(model, &WalletModel::canGetAddressesChanged, [this] {
+        connect(model, &WalletModel::canGetAddressesChanged, this, [this] {
             ui->receiveButton->setEnabled(model->wallet().canGetAddresses());
         });
     }

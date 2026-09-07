@@ -312,6 +312,8 @@ BASE_SCRIPTS = [
     'wallet_signmessagewithaddress.py',
     'rpc_signmessagewithprivkey.py',
     'rpc_generate.py',
+    'rpc_cpu_mining.py',
+    'rpc_cpu_mining.py --testnet4',
     'wallet_balance.py',
     'p2p_initial_headers_sync.py',
     'p2p_addr_selfannouncement.py',

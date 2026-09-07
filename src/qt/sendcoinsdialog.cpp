@@ -859,6 +859,8 @@ void SendCoinsDialog::updateSmartFeeLabel()
         ui->labelFeeEstimation->setText("");
         if (returned_target) {
             ui->labelFeeEstimation->setText(tr("Estimated to begin confirmation within %n block(s).", "", *returned_target));
+        } else if (reason == FeeReason::REQUIRED || reason == FeeReason::MEMPOOL_MIN) {
+            ui->labelFeeEstimation->setText(tr("Using the current minimum fee. Confirmation time is not estimated."));
         }
         ui->fallbackFeeWarningLabel->setVisible(false);
     }

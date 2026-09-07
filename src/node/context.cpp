@@ -3,6 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <node/context.h>
+#include <node/cpu_miner.h>
 
 #include <addrman.h>
 #include <banman.h>
@@ -24,5 +25,11 @@
 
 namespace node {
 NodeContext::NodeContext() = default;
-NodeContext::~NodeContext() = default;
+NodeContext::~NodeContext()
+{
+    // Also handle owners that destroy the context without the normal Shutdown
+    // path: notifications and the scheduler are declared after cpu_miner and
+    // would otherwise be destroyed before its workers had been joined.
+    cpu_miner.reset();
+}
 } // namespace node

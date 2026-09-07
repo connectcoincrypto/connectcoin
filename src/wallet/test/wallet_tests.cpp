@@ -31,6 +31,7 @@
 #include <validationinterface.h>
 #include <wallet/coincontrol.h>
 #include <wallet/context.h>
+#include <wallet/fees.h>
 #include <wallet/p2c.h>
 #include <wallet/p2c_claim.h>
 #include <wallet/receive.h>
@@ -51,6 +52,46 @@ static_assert(DEFAULT_TRANSACTION_MINFEE == ECONOMIC_RELAY_FEE_MARGIN, "wallet m
 static_assert(WALLET_INCREMENTAL_RELAY_FEE >= DEFAULT_INCREMENTAL_RELAY_FEE, "wallet incremental fee is smaller than default incremental relay fee");
 
 BOOST_FIXTURE_TEST_SUITE(wallet_tests, WalletTestingSetup)
+
+BOOST_AUTO_TEST_CASE(automatic_fee_without_fallback)
+{
+    CCoinControl control;
+    m_wallet.m_min_fee = CFeeRate{0};
+    m_wallet.m_fallback_fee = CFeeRate{0};
+    BOOST_REQUIRE(!m_node.chain->getFeeRateEstimate(m_wallet.m_confirm_target, false));
+    const CFeeRate floor{m_node.chain->miningMinFee()};
+    BOOST_CHECK_EQUAL(floor.GetFeePerK(), 1'201'000);
+    auto result{GetMinimumFeeRate(m_wallet, control)};
+    BOOST_CHECK_EQUAL(result.fee_rate.GetFeePerK(), floor.GetFeePerK());
+    BOOST_CHECK(result.fee_reason == FeeReason::REQUIRED);
+    BOOST_CHECK(!result.returned_target);
+
+    // Honor a configured fallback, but never silently fall below the floor.
+    m_wallet.m_fallback_fee = CFeeRate{floor.GetFeePerK() * 2};
+    result = GetMinimumFeeRate(m_wallet, control);
+    BOOST_CHECK_EQUAL(result.fee_rate.GetFeePerK(), m_wallet.m_fallback_fee.GetFeePerK());
+    BOOST_CHECK(result.fee_reason == FeeReason::FALLBACK);
+    BOOST_CHECK(!result.returned_target);
+    m_wallet.m_fallback_fee = CFeeRate{1};
+    BOOST_CHECK_EQUAL(GetMinimumFeeRate(m_wallet, control).fee_rate.GetFeePerK(), floor.GetFeePerK());
+
+    m_wallet.m_fallback_fee = CFeeRate{0};
+    m_wallet.m_min_fee = CFeeRate{floor.GetFeePerK() * 2};
+    BOOST_CHECK_EQUAL(GetMinimumFeeRate(m_wallet, control).fee_rate.GetFeePerK(), m_wallet.m_min_fee.GetFeePerK());
+    m_wallet.m_min_fee = CFeeRate{0};
+    const CFeeRate congested{floor.GetFeePerK() * 3};
+    MockMempoolMinFee(congested, *m_node.mempool);
+    result = GetMinimumFeeRate(m_wallet, control);
+    BOOST_CHECK_EQUAL(result.fee_rate.GetFeePerK(), congested.GetFeePerK());
+    BOOST_CHECK(result.fee_reason == FeeReason::MEMPOOL_MIN);
+    BOOST_CHECK(!result.returned_target);
+
+    // Explicit rates keep their existing semantics; only automatic fees change.
+    control.m_feerate = floor;
+    result = GetMinimumFeeRate(m_wallet, control);
+    BOOST_CHECK_EQUAL(result.fee_rate.GetFeePerK(), floor.GetFeePerK());
+    BOOST_CHECK(result.fee_reason == FeeReason::USER_SPECIFIED);
+}
 
 BOOST_AUTO_TEST_CASE(p2c_fee_arithmetic_limits)
 {

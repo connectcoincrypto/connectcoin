@@ -71,13 +71,20 @@ BOOST_AUTO_TEST_CASE(unlaunched_mainnet_cannot_initialize_chainstate)
 BOOST_AUTO_TEST_CASE(launched_networks_have_spendable_genesis_coinbase)
 {
     const auto public_params{CreateChainParams(m_args, ChainType::TESTNET4)};
+    const auto historical_params{CreateChainParams(m_args, ChainType::TESTNET)};
     const auto regtest_params{CreateChainParams(m_args, ChainType::REGTEST)};
     const CScript& public_script{public_params->GenesisBlock().vtx.front()->vout.front().scriptPubKey};
+    const CScript& historical_script{historical_params->GenesisBlock().vtx.front()->vout.front().scriptPubKey};
     const CScript& regtest_script{regtest_params->GenesisBlock().vtx.front()->vout.front().scriptPubKey};
 
     // A known private key is intentionally available for regtest. Public
     // networks must never reuse its output script.
     BOOST_CHECK(public_script != regtest_script);
+    BOOST_CHECK(public_script != historical_script);
+    BOOST_CHECK(historical_script != regtest_script);
+    BOOST_REQUIRE(public_params->GenesisBlock().vtx.front()->vout.front().GetP2PKPubKey());
+    BOOST_CHECK_EQUAL(HexStr(*public_params->GenesisBlock().vtx.front()->vout.front().GetP2PKPubKey()),
+                      "2ef316afd6177619f68ecfc6521fc3fcbf7faa2b25273f6ddea7971fae0de144");
     BOOST_CHECK_EQUAL(public_script.size(), 34U);
     BOOST_CHECK_EQUAL(regtest_script.size(), 34U);
 
@@ -90,7 +97,8 @@ BOOST_AUTO_TEST_CASE(launched_networks_have_spendable_genesis_coinbase)
         BOOST_CHECK(params->GenesisBlock().vtx.front()->vout.front().GetType() == TxOutputType::P2PK);
         BOOST_CHECK(params->GenesisBlock().vtx.front()->vout.front().GetP2PKPubKey().has_value());
         if (chain_type != ChainType::REGTEST) {
-            BOOST_CHECK(params->GenesisBlock().vtx.front()->vout.front().scriptPubKey == public_script);
+            BOOST_CHECK(params->GenesisBlock().vtx.front()->vout.front().scriptPubKey ==
+                        (chain_type == ChainType::TESTNET4 ? public_script : historical_script));
         }
     }
 }

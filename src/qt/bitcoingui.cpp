@@ -277,6 +277,15 @@ void BitcoinGUI::createActions()
     p2cAction->setShortcut(QKeySequence(QStringLiteral("Alt+5")));
     tabGroup->addAction(p2cAction);
 
+    miningAction = new QAction(platformStyle->MiningIcon(), tr("&Mining"), this);
+    miningAction->setObjectName("miningAction");
+    miningAction->setStatusTip(tr("Control CPU mining"));
+    miningAction->setToolTip(miningAction->statusTip());
+    miningAction->setCheckable(true);
+    miningAction->setEnabled(false);
+    miningAction->setShortcut(QKeySequence(QStringLiteral("Alt+6")));
+    tabGroup->addAction(miningAction);
+
     receiveCoinsAction = new QAction(platformStyle->SingleColorIcon(":/icons/receiving_addresses"), tr("&Receive"), this);
     receiveCoinsAction->setStatusTip(tr("Request payments (generates QR codes and connectcoin: URIs)"));
     receiveCoinsAction->setToolTip(receiveCoinsAction->statusTip());
@@ -300,6 +309,7 @@ void BitcoinGUI::createActions()
     connect(sendCoinsAction, &QAction::triggered, [this]{ gotoSendCoinsPage(); });
     connect(p2cAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
     connect(p2cAction, &QAction::triggered, this, &BitcoinGUI::gotoP2CPage);
+    connect(miningAction, &QAction::triggered, this, [this] { showNormalIfMinimized(); gotoMiningPage(); });
     connect(receiveCoinsAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
     connect(receiveCoinsAction, &QAction::triggered, this, &BitcoinGUI::gotoReceiveCoinsPage);
     connect(historyAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
@@ -667,6 +677,7 @@ void BitcoinGUI::createToolBars()
         toolbar->addAction(overviewAction);
         toolbar->addAction(sendCoinsAction);
         toolbar->addAction(p2cAction);
+        toolbar->addAction(miningAction);
         toolbar->addAction(receiveCoinsAction);
         toolbar->addAction(historyAction);
         overviewAction->setChecked(true);
@@ -696,6 +707,7 @@ void BitcoinGUI::createToolBars()
 void BitcoinGUI::setClientModel(ClientModel *_clientModel, interfaces::BlockAndHeaderTipInfo* tip_info)
 {
     this->clientModel = _clientModel;
+    miningAction->setEnabled(_clientModel && walletFrame);
     if(_clientModel)
     {
         // Create system tray menu (or setup the dock menu) that late to prevent users from calling actions,
@@ -844,7 +856,7 @@ void BitcoinGUI::removeWallet(WalletModel* walletModel)
     m_wallet_selector->removeItem(index);
     if (m_wallet_selector->count() == 0) {
         setWalletActionsEnabled(false);
-        overviewAction->setChecked(true);
+        if (!miningAction->isChecked()) overviewAction->setChecked(true);
     } else if (m_wallet_selector->count() == 1) {
         m_wallet_selector_label_action->setVisible(false);
         m_wallet_selector_action->setVisible(false);
@@ -1068,6 +1080,12 @@ void BitcoinGUI::gotoP2CPage()
 {
     p2cAction->setChecked(true);
     if (walletFrame) walletFrame->gotoP2CPage();
+}
+
+void BitcoinGUI::gotoMiningPage()
+{
+    miningAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoMiningPage();
 }
 
 void BitcoinGUI::gotoSignMessageTab(QString addr)
@@ -1356,7 +1374,9 @@ void BitcoinGUI::message(const QString& title, QString message, unsigned int sty
         int r = mBox.exec();
         if (ret != nullptr)
             *ret = r == QMessageBox::Ok;
-    } else {
+    } else if (clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getPopupNotifications()) {
+        // Desktop notifications are opt-in. Modal errors and confirmations above
+        // must remain visible, including before the client model is available.
         notificator->notify(static_cast<Notificator::Class>(nNotifyIcon), strTitle, message);
     }
 }
@@ -1367,6 +1387,7 @@ void BitcoinGUI::changeEvent(QEvent *e)
         overviewAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/overview")));
         sendCoinsAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/send")));
         p2cAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/p2c")));
+        miningAction->setIcon(platformStyle->MiningIcon());
         receiveCoinsAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/receiving_addresses")));
         historyAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/history")));
     }

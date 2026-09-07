@@ -12,6 +12,7 @@
 
 class ClientModel;
 class OverviewPage;
+class MiningPage;
 class P2CCreateDialog;
 class PlatformStyle;
 class ReceiveCoinsDialog;
@@ -64,6 +65,7 @@ private:
     ReceiveCoinsDialog *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
     P2CCreateDialog* p2cPage;
+    MiningPage* miningPage;
     AddressBookPage *usedSendingAddressesPage;
     AddressBookPage *usedReceivingAddressesPage;
 
@@ -83,6 +85,7 @@ public Q_SLOTS:
     void gotoSendCoinsPage(QString addr = "");
     /** Switch to P2C bounty creation. */
     void gotoP2CPage();
+    void gotoMiningPage();
 
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");

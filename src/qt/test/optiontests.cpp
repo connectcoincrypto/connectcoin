@@ -8,10 +8,14 @@
 #include <init.h>
 #include <qt/bitcoin.h>
 #include <qt/guiutil.h>
+#include <qt/optionsdialog.h>
 #include <qt/test/optiontests.h>
 #include <test/util/setup_common.h>
 
+#include <QCheckBox>
+#include <QDataWidgetMapper>
 #include <QSettings>
+#include <QTabWidget>
 #include <QTest>
 
 #include <univalue.h>
@@ -136,6 +140,88 @@ void OptionTests::parametersInteraction()
     settings.remove("fListen");
     QVERIFY(!settings.contains("fListen"));
     gArgs.ClearPathCache();
+}
+
+void OptionTests::popupNotifications()
+{
+    QSettings settings;
+    settings.remove("fPopupNotifications");
+    bilingual_str error;
+    OptionsModel options{m_node};
+    QVERIFY(options.Init(error));
+    QVERIFY(!options.getPopupNotifications());
+    QVERIFY(!options.isPopupNotificationsOverridden());
+    const auto index{options.index(OptionsModel::PopupNotifications, 0)};
+    QCOMPARE(options.data(index, Qt::EditRole).toBool(), false);
+
+    {
+        OptionsDialog dialog{nullptr, false};
+        dialog.setModel(&options);
+        auto* checkbox = dialog.findChild<QCheckBox*>("popupNotifications");
+        QVERIFY(checkbox);
+        QVERIFY(checkbox->isEnabled());
+        QVERIFY(!checkbox->isChecked());
+        // Display is available on macOS too, unlike the Window tab.
+        auto* tabs = dialog.findChild<QTabWidget*>("tabWidget");
+        QVERIFY(tabs);
+        QVERIFY(tabs->indexOf(dialog.findChild<QWidget*>("tabDisplay")) >= 0);
+        checkbox->setChecked(true);
+        QVERIFY(QMetaObject::invokeMethod(&dialog, "on_cancelButton_clicked"));
+        QVERIFY(!options.getPopupNotifications());
+    }
+    {
+        OptionsDialog dialog{nullptr, false};
+        dialog.setModel(&options);
+        auto* checkbox = dialog.findChild<QCheckBox*>("popupNotifications");
+        auto* mapper = dialog.findChild<QDataWidgetMapper*>();
+        QVERIFY(checkbox);
+        QVERIFY(mapper);
+        QCOMPARE(mapper->mappedWidgetAt(OptionsModel::PopupNotifications), checkbox);
+        // Exercise the actual OK handler without applying unrelated options
+        // such as OS auto-start registration or port mapping during the test.
+        mapper->clearMapping();
+        mapper->addMapping(checkbox, OptionsModel::PopupNotifications);
+        checkbox->setChecked(true);
+        QVERIFY(QMetaObject::invokeMethod(&dialog, "on_okButton_clicked"));
+        QVERIFY(options.getPopupNotifications());
+        QVERIFY(settings.value("fPopupNotifications").toBool());
+        QVERIFY(!options.isRestartRequired());
+    }
+
+    OptionsModel reloaded{m_node};
+    QVERIFY(reloaded.Init(error));
+    QVERIFY(reloaded.getPopupNotifications());
+    QVERIFY(reloaded.setOption(OptionsModel::PopupNotifications, false));
+    QVERIFY(!reloaded.getPopupNotifications());
+    QVERIFY(!settings.value("fPopupNotifications").toBool());
+
+    // Config opts in even with a saved false preference; CLI overrides config.
+    gArgs.LockSettings([](common::Settings& s) { s.ro_config[""]["popupnotifications"] = {"1"}; });
+    OptionsModel configured{m_node};
+    QVERIFY(configured.Init(error));
+    QVERIFY(configured.getPopupNotifications());
+    QVERIFY(configured.isPopupNotificationsOverridden());
+    QVERIFY(configured.getOverriddenByCommandLine().contains("-popupnotifications=1"));
+    {
+        OptionsDialog dialog{nullptr, false};
+        dialog.setModel(&configured);
+        const auto* checkbox = dialog.findChild<QCheckBox*>("popupNotifications");
+        QVERIFY(checkbox);
+        QVERIFY(checkbox->isChecked());
+        QVERIFY(!checkbox->isEnabled());
+    }
+    QVERIFY(configured.setOption(OptionsModel::PopupNotifications, false));
+    QVERIFY(configured.getPopupNotifications());
+    gArgs.LockSettings([](common::Settings& s) { s.command_line_options["popupnotifications"] = {false}; });
+    QVERIFY(!configured.getPopupNotifications());
+    QVERIFY(!configured.getOption(OptionsModel::PopupNotifications).toBool());
+    // An explicit 0 must also override an existing GUI opt-in.
+    settings.setValue("fPopupNotifications", true);
+    OptionsModel disabled{m_node};
+    QVERIFY(disabled.Init(error));
+    QVERIFY(!disabled.getPopupNotifications());
+    gArgs.LockSettings([&](common::Settings& s) { s = m_previous_settings; });
+    settings.remove("fPopupNotifications");
 }
 
 void OptionTests::extractFilter()

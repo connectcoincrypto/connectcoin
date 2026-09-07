@@ -25,6 +25,7 @@
 #include <netbase.h>
 #include <node/blockstorage.h>
 #include <node/context.h>
+#include <node/cpu_miner.h>
 #include <node/miner.h>
 #include <node/mining_args.h>
 #include <node/mining_types.h>
@@ -1267,11 +1268,105 @@ static RPCMethod getpowhash()
     };
 }
 
+static node::CpuMiner& EnsureCpuMiner(const JSONRPCRequest& request)
+{
+    auto& node{EnsureAnyNodeContext(request.context)};
+    if (!node.cpu_miner) throw JSONRPCError(RPC_MISC_ERROR, "CPU miner is unavailable");
+    return *node.cpu_miner;
+}
+
+static RPCMethod startmining()
+{
+    return RPCMethod{
+        "startmining",
+        "Start continuous CPU RandomX mining on testnet4 or regtest. Disabled at startup.\n"
+        "One miner is shared by the entire node, not one per wallet. No wallet is required.\n"
+        "Uses the validation RandomX dataset (FAST by default). Reserve CPU capacity for validation.\n"
+        "Call stopmining and wait for running=false before changing the address or threads.",
+        {
+            {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "Type-1 P2PK reward address on this network"},
+            {"threads", RPCArg::Type::NUM, RPCArg::Default{1}, "Hashing threads, from 1 to max_threads reported by getcpumininginfo. Exceeding logical_cpus can reduce hashrate and node responsiveness"},
+        },
+        RPCResult{RPCResult::Type::NONE, "", "Mining start requested; inspect getcpumininginfo for progress/errors"},
+        RPCExamples{HelpExampleCli("startmining", "\"address\" 2")},
+        [](const RPCMethod& self, const JSONRPCRequest& request) -> UniValue {
+            try {
+                EnsureCpuMiner(request).Start(std::string{self.Arg<std::string_view>("address")}, self.Arg<int>("threads"));
+            } catch (const std::invalid_argument& e) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, e.what());
+            } catch (const std::runtime_error& e) {
+                throw JSONRPCError(RPC_MISC_ERROR, e.what());
+            }
+            return UniValue::VNULL;
+        },
+    };
+}
+
+static RPCMethod stopmining()
+{
+    return RPCMethod{
+        "stopmining",
+        "Request CPU mining to stop. An in-flight block submission may finish.\n"
+        "The current hash or RandomX dataset initialization may still need to finish.\n"
+        "Poll getcpumininginfo until running=false; this does not stop the node.",
+        {},
+        RPCResult{RPCResult::Type::NONE, "", "Stop requested"},
+        RPCExamples{HelpExampleCli("stopmining", "")},
+        [](const RPCMethod&, const JSONRPCRequest& request) -> UniValue {
+            EnsureCpuMiner(request).Stop();
+            return UniValue::VNULL;
+        },
+    };
+}
+
+static RPCMethod getcpumininginfo()
+{
+    return RPCMethod{
+        "getcpumininginfo",
+        "Return node-wide CPU miner status. Counters reset on each start.\n"
+        "Accepted blocks can subsequently become stale; blocks is not a spendable balance.",
+        {},
+        RPCResult{RPCResult::Type::OBJ, "", "", {
+            {RPCResult::Type::BOOL, "running", "Workers/coordinator are still active"},
+            {RPCResult::Type::BOOL, "stopping", "Stop has been requested"},
+            {RPCResult::Type::STR, "state", "stopped, starting, waiting (known headers ahead), mining, stopping, or error"},
+            {RPCResult::Type::NUM, "threads", "Configured hash workers"},
+            {RPCResult::Type::NUM, "max_threads", "Maximum allowed hash workers, independent of the logical CPU count"},
+            {RPCResult::Type::NUM, "logical_cpus", "Number of logical CPUs reported by the system (at least 1)"},
+            {RPCResult::Type::NUM, "hashes", "Hashes attempted this session"},
+            {RPCResult::Type::NUM, "hashespersecond", "Recent local hashrate, including initialization time"},
+            {RPCResult::Type::NUM, "blocks", "New blocks accepted this session, possibly later stale"},
+            {RPCResult::Type::STR, "address", "Reward address"},
+            {RPCResult::Type::STR, "error", "Last error, empty when none"},
+        }},
+        RPCExamples{HelpExampleCli("getcpumininginfo", "")},
+        [](const RPCMethod&, const JSONRPCRequest& request) -> UniValue {
+            const auto status{EnsureCpuMiner(request).GetStatus()};
+            UniValue result{UniValue::VOBJ};
+            result.pushKV("running", status.running);
+            result.pushKV("stopping", status.stopping);
+            result.pushKV("state", status.state);
+            result.pushKV("threads", status.threads);
+            result.pushKV("max_threads", status.max_threads);
+            result.pushKV("logical_cpus", status.logical_cpus);
+            result.pushKV("hashes", status.hashes);
+            result.pushKV("hashespersecond", status.hashes_per_second);
+            result.pushKV("blocks", status.blocks);
+            result.pushKV("address", status.address);
+            result.pushKV("error", status.error);
+            return result;
+        },
+    };
+}
+
 void RegisterMiningRPCCommands(CRPCTable& t)
 {
     static const CRPCCommand commands[]{
         {"mining", &getnetworkhashps},
         {"mining", &getmininginfo},
+        {"mining", &startmining},
+        {"mining", &stopmining},
+        {"mining", &getcpumininginfo},
         {"mining", &prioritisetransaction},
         {"mining", &getprioritisedtransactions},
         {"mining", &getblocktemplate},

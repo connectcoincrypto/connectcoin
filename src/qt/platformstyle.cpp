@@ -7,6 +7,8 @@
 #include <QApplication>
 #include <QColor>
 #include <QImage>
+#include <QPainter>
+#include <QPainterPath>
 #include <QPalette>
 
 static const struct {
@@ -73,6 +75,27 @@ PlatformStyle::PlatformStyle(const QString &_name, bool _imagesOnButtons, bool _
     colorizeIcons(_colorizeIcons),
     useExtraSpacing(_useExtraSpacing)
 {
+}
+
+QIcon PlatformStyle::MiningIcon() const
+{
+    QIcon icon;
+    for (const int size : {16, 24, 32, 48, 64, 128}) {
+        QPixmap pixmap(size, size);
+        pixmap.fill(Qt::transparent);
+        QPainter painter(&pixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.scale(size / 32.0, size / 32.0);
+        painter.setPen(QPen(SingleColor(), 3.5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter.drawLine(QPointF(5, 27), QPointF(20, 12));
+        QPainterPath head;
+        head.moveTo(6, 7);
+        head.cubicTo(14, 4, 25, 9, 27, 23);
+        painter.drawPath(head);
+        painter.end();
+        icon.addPixmap(pixmap);
+    }
+    return icon;
 }
 
 QColor PlatformStyle::TextColor() const

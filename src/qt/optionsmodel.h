@@ -75,6 +75,7 @@ public:
         Server,                 // bool
         EnablePSBTControls,     // bool
         MaskValues,             // bool
+        PopupNotifications,     // bool
         OptionIDRowCount,
     };
 
@@ -99,6 +100,8 @@ public:
 
     /* Explicit getters */
     bool getShowTrayIcon() const { return m_show_tray_icon; }
+    bool getPopupNotifications() const;
+    bool isPopupNotificationsOverridden() const;
     bool getMinimizeToTray() const { return fMinimizeToTray; }
     bool getMinimizeOnClose() const { return fMinimizeOnClose; }
     BitcoinUnit getDisplayUnit() const { return m_display_bitcoin_unit; }
@@ -125,6 +128,7 @@ private:
     interfaces::Node& m_node;
     /* Qt-only settings */
     bool m_show_tray_icon;
+    bool m_popup_notifications{false};
     bool fMinimizeToTray;
     bool fMinimizeOnClose;
     QString language;

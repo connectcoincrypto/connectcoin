@@ -143,7 +143,7 @@ class ConfArgsTest(BitcoinTestFramework):
             self.nodes[0].assert_start_raises_init_error(expected_msg=f'Error: Config setting for -wallet only applied on {self.chain} network when in [{self.chain}] section.')
 
         main_conf_file_path = self.nodes[0].datadir_path / "bitcoin_main.conf"
-        util.write_config(main_conf_file_path, n=0, chain='', extra_config=f'includeconf={inc_conf_file_path}\n')
+        util.write_config(main_conf_file_path, n=0, chain='', extra_config=f'chain=main\nincludeconf={inc_conf_file_path}\n')
         with open(inc_conf_file_path, 'w') as conf:
             conf.write('acceptnonstdtxn=1\n')
         self.nodes[0].assert_start_raises_init_error(extra_args=[f"-conf={main_conf_file_path}", "-allowignoredconf"], expected_msg='Error: acceptnonstdtxn is not currently supported for main chain')
@@ -514,7 +514,10 @@ class ConfArgsTest(BitcoinTestFramework):
                 'Error: Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.'
                 if chain == "main" else f'Error: acceptstalefeeestimates is not supported on {chain} chain.'
             )
-            self.nodes[0].assert_start_raises_init_error(expected_msg=expected)
+            self.nodes[0].assert_start_raises_init_error(
+                extra_args=["-chain=main"] if chain == "main" else None,
+                expected_msg=expected,
+            )
         util.write_config(conf_file, n=0, chain="regtest")  # Reset to regtest
 
     def test_testnet3_deprecation_msg(self):

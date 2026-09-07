@@ -23,10 +23,11 @@ runs:
       uses: ./.github/actions/cache/restore/internal
       with:
         path: ${{ env.SOURCES_PATH }}
-        key: depends-sources-${{ env.CONTAINER_NAME }}-${{ env.DEPENDS_HASH }}
+        # Shards have different container names but identical dependencies.
+        key: depends-sources-${{ env.CI_CACHE_NAME }}-${{ env.DEPENDS_HASH }}
         restore-keys: |
-          depends-sources-${{ env.CONTAINER_NAME }}-
           depends-sources-${{ env.CI_CACHE_NAME }}-
+          depends-sources-${{ env.CONTAINER_NAME }}-
         provider: ${{ inputs.provider }}
 
     - name: Restore built depends cache
@@ -34,10 +35,10 @@ runs:
       uses: ./.github/actions/cache/restore/internal
       with:
         path: ${{ env.BASE_CACHE }}
-        key: depends-built-${{ env.CONTAINER_NAME }}-${{ env.DEPENDS_HASH }}
+        key: depends-built-${{ env.CI_CACHE_NAME }}-${{ env.DEPENDS_HASH }}
         restore-keys: |
-          depends-built-${{ env.CONTAINER_NAME }}-
           depends-built-${{ env.CI_CACHE_NAME }}-
+          depends-built-${{ env.CONTAINER_NAME }}-
         provider: ${{ inputs.provider }}
 
     - name: export cache hits
