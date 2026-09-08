@@ -19,6 +19,7 @@
 #include <validation.h>
 #include <wallet/coincontrol.h>
 #include <wallet/p2c_claim.h>
+#include <wallet/p2c_domain_stats.h>
 #include <wallet/p2c_tls.h>
 #include <wallet/p2c_worker.h>
 #include <wallet/test/p2c_tls_fixture.h>
@@ -32,6 +33,7 @@
 #include <array>
 #include <atomic>
 #include <chrono>
+#include <cmath>
 #include <condition_variable>
 #include <functional>
 #include <limits>
@@ -79,6 +81,80 @@ public:
 }
 
 BOOST_FIXTURE_TEST_SUITE(p2c_claim_tests, WalletTestingSetup)
+
+BOOST_AUTO_TEST_CASE(domain_connection_statistics_use_last_100_attempts)
+{
+    P2CDomainStats stats;
+    BOOST_CHECK_EQUAL(stats.Attempts(), 0U);
+    BOOST_CHECK_EQUAL(stats.ConnectionRate(), 5.0);
+    stats.Record(true, 0.2);
+    stats.Record(false, 0.8);
+    BOOST_CHECK_EQUAL(stats.Totals().first, 1U);
+    BOOST_CHECK_EQUAL(stats.Totals().second, 1.0);
+    BOOST_CHECK_CLOSE(stats.ConnectionRate(), 1.1 / 1.02, 1e-10);
+    for (size_t i = 0; i < 98; ++i) stats.Record(false, 0.0);
+    BOOST_CHECK_EQUAL(stats.Attempts(), 100U);
+    BOOST_CHECK_EQUAL(stats.Totals().first, 1U);
+    stats.Record(false, 0.0); // Evict the success, not the oldest failure.
+    BOOST_CHECK_EQUAL(stats.Totals().first, 0U);
+    BOOST_CHECK_CLOSE(stats.Totals().second, 0.8, 1e-10);
+    stats.Record(true, 0.1); // Evict the slow failure too.
+    BOOST_CHECK_EQUAL(stats.Attempts(), 100U);
+    BOOST_CHECK_EQUAL(stats.Totals().first, 1U);
+    BOOST_CHECK_CLOSE(stats.ConnectionRate(), 1.1 / 0.12, 1e-10);
+    for (const double invalid : {-1.0, std::numeric_limits<double>::infinity(), std::numeric_limits<double>::quiet_NaN()}) {
+        stats.Record(true, invalid);
+    }
+    BOOST_CHECK_EQUAL(stats.Attempts(), 100U);
+    BOOST_CHECK_EQUAL(stats.Totals().first, 1U);
+
+    // Compare repeated rollover to an independent last-100 reference. No
+    // subtractive cancellation after a very old, very slow attempt expires.
+    stats.Record(false, 1e12);
+    std::vector<std::pair<bool, double>> reference;
+    for (size_t i = 0; i < 1000; ++i) {
+        const bool success{i % 3 == 0};
+        const double seconds{1e-6 * (i % 7 + 1)};
+        reference.emplace_back(success, seconds);
+        stats.Record(success, seconds);
+        if (reference.size() < 100) continue;
+        size_t successes{0};
+        double total{0};
+        for (auto it = reference.end() - 100; it != reference.end(); ++it) {
+            successes += it->first;
+            total += it->second;
+        }
+        BOOST_CHECK_EQUAL(stats.Attempts(), 100U);
+        BOOST_CHECK_EQUAL(stats.Totals().first, successes);
+        BOOST_CHECK_EQUAL(stats.Totals().second, total);
+        BOOST_CHECK_EQUAL(stats.ConnectionRate(), (0.1 + successes) / (0.02 + total));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(domain_priority_rewards_success_and_low_latency)
+{
+    P2CDomainStats fresh, fast, slow, unreliable;
+    for (size_t i = 0; i < 100; ++i) {
+        fast.Record(true, 0.1);
+        slow.Record(true, 0.5);
+        unreliable.Record(i % 5 == 0, 0.1);
+    }
+    BOOST_CHECK(fast.ConnectionRate() > fresh.ConnectionRate());
+    BOOST_CHECK(fresh.ConnectionRate() > slow.ConnectionRate());
+    BOOST_CHECK(fast.ConnectionRate() > unreliable.ConnectionRate());
+    const auto maximum{uint256::FromHex(std::string(64, 'f')).value()};
+    const auto economic{GetP2CClaimPriority(maximum, COIN)};
+    const auto richer{GetP2CClaimPriority(maximum, 2 * COIN)};
+    BOOST_CHECK_EQUAL(GetP2CDomainPriority(economic, fresh.ConnectionRate()), 5.0 * COIN);
+    BOOST_CHECK(GetP2CDomainPriority(economic, fast.ConnectionRate()) > GetP2CDomainPriority(richer, slow.ConnectionRate()));
+    BOOST_CHECK(GetP2CDomainPriority(richer, fast.ConnectionRate()) > GetP2CDomainPriority(economic, fast.ConnectionRate()));
+    BOOST_CHECK(GetP2CDomainPriority(economic, fast.ConnectionRate()) > GetP2CDomainPriority(economic, unreliable.ConnectionRate()));
+    BOOST_CHECK(GetP2CDomainPriority(GetP2CClaimPriority(uint256{}, 1), slow.ConnectionRate()) > 0);
+    BOOST_CHECK_EQUAL(GetP2CDomainPriority(GetP2CClaimPriority(maximum, 0), fast.ConnectionRate()), 0);
+    for (size_t i = 0; i < 100; ++i) fast.Record(true, 0.0);
+    BOOST_CHECK_EQUAL(fast.ConnectionRate(), 5005.0);
+    BOOST_CHECK(std::isfinite(GetP2CDomainPriority(GetP2CClaimPriority(maximum, MAX_MONEY), fast.ConnectionRate())));
+}
 
 BOOST_AUTO_TEST_CASE(expected_return_priority_is_exact)
 {
@@ -242,41 +318,21 @@ BOOST_AUTO_TEST_CASE(resumed_proposal_revalidates_amounts_and_ownership)
     WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().SpendCoin(outpoint));
 }
 
-BOOST_FIXTURE_TEST_CASE(worker_rotates_without_idle_delay_and_stops_during_retry, TestChain100Setup)
+BOOST_FIXTURE_TEST_CASE(worker_retries_dns_reuses_endpoints_and_stops, TestChain100Setup)
 {
     using namespace std::chrono_literals;
-    FakeSteadyClock clock;
-    BOOST_REQUIRE(!m_node.chainman->IsInitialBlockDownload());
     auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
     auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
     wallet->SetBroadcastTransactions(true);
-    const COutPoint first{Txid::FromUint256(uint256::ONE), 0};
-    const COutPoint second{Txid::FromUint256(uint256::ONE), 1};
-    {
-        LOCK(cs_main);
-        auto& coins{m_node.chainman->ActiveChainstate().CoinsTip()};
-        for (const auto& outpoint : {first, second}) {
-            coins.AddCoin(outpoint, Coin{CTxOut{COIN, PayToDomainOutput{"example.com", uint256{}, 1}}, 100, false}, false);
-        }
-    }
-    {
-        LOCK(wallet->cs_wallet);
-        BOOST_REQUIRE(wallet->LockCoin(first, /*persist=*/false));
-        BOOST_REQUIRE(wallet->LockCoin(second, /*persist=*/false));
-    }
-
+    const COutPoint outpoint{Txid::FromUint256(uint256::ONE), 0};
+    WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint,
+        Coin{CTxOut{COIN, PayToDomainOutput{"example.com", uint256{}, 1}}, 100, false}, false));
+    WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(outpoint, false)));
     RestoreDNSLookup restore_dns;
     RestoreSocketFactory restore_sockets;
-    std::atomic<unsigned> lookups{0};
-    std::atomic<unsigned> sockets{0};
-    std::atomic<unsigned> public_lookups{0};
-    // Exercise the real scheduling loop without DNS or HTTPS traffic.
-    g_dns_lookup = [&](const std::string&, bool) {
-        ++lookups;
-        return std::vector<CNetAddr>{};
-    };
+    std::atomic<unsigned> lookups{0}, sockets{0};
+    g_dns_lookup = [&](const std::string&, bool) { ++lookups; return std::vector<CNetAddr>{}; };
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> { ++sockets; return nullptr; };
-    auto worker{MakeP2CClaimWorker(*wallet)};
     const auto wait_until = [](const auto& predicate) {
         const auto deadline{std::chrono::steady_clock::now() + 30s};
         while (!predicate()) {
@@ -285,68 +341,40 @@ BOOST_FIXTURE_TEST_CASE(worker_rotates_without_idle_delay_and_stops_during_retry
         }
         return true;
     };
-
+    auto worker{MakeP2CClaimWorker(*wallet)};
     BOOST_REQUIRE(worker->Configure(-1, 1));
     BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
     BOOST_CHECK_EQUAL(lookups.load(), 0U);
-    {
-        LOCK(wallet->cs_wallet);
-        wallet->UnlockCoin(first);
-        wallet->UnlockCoin(second);
-    }
-    // Three domain-level DNS attempts prove that subsequent passes start
-    // without the former unconditional 60-second sleep. The initial idle wait
-    // must also rediscover coins made eligible without restarting the worker.
-    BOOST_REQUIRE(wait_until([&] {
-        return lookups.load() >= 3 && worker->Status()["state"].get_str() == "retrying domain resolution";
-    }));
+    WITH_LOCK(wallet->cs_wallet, wallet->UnlockCoin(outpoint));
+    BOOST_REQUIRE(wait_until([&] { return lookups >= 2; }));
     const auto before_stop{std::chrono::steady_clock::now()};
     worker->Stop();
-    BOOST_CHECK(std::chrono::steady_clock::now() - before_stop < 5s);
-    BOOST_CHECK_EQUAL(worker->Status()["state"].get_str(), "disabled");
-    BOOST_CHECK_EQUAL(worker->Status()["connections_per_second"].getInt<int>(), 0);
+    BOOST_CHECK(std::chrono::steady_clock::now() - before_stop < 3s);
     BOOST_CHECK_EQUAL(sockets.load(), 0U);
 
-    // A resolved public address still uses the failing socket factory. More
-    // than 64 attempts in one domain round demonstrate there is no attempt cap.
-    // Real one-second connection backoffs must remain, but no minute-long idle.
-    const auto public_address{LookupHost("8.8.8.8", false, restore_dns.original)};
-    BOOST_REQUIRE(public_address);
-    g_dns_lookup = [&, address = *public_address](const std::string&, bool) { ++public_lookups; return std::vector<CNetAddr>{address}; };
-    const auto before_connections{std::chrono::steady_clock::now()};
+    const auto address{LookupHost("8.8.8.8", false, restore_dns.original)};
+    BOOST_REQUIRE(address);
+    lookups = 0;
+    g_dns_lookup = [&, address = *address](const std::string&, bool) { ++lookups; return std::vector<CNetAddr>{address}; };
     BOOST_REQUIRE(worker->Configure(-1, 16));
-    BOOST_REQUIRE(wait_until([&] { return sockets.load() > 64; }));
-    BOOST_CHECK(std::chrono::steady_clock::now() - before_connections >= 2s);
-    BOOST_CHECK(worker->Status()["state"].get_str() != "waiting for bounties");
-    BOOST_CHECK_EQUAL(public_lookups.load(), 1U);
-    // A sole domain resumes immediately after the internal scheduling quantum.
-    // The quantum is not a per-domain rate quota or a cooldown period.
-    const auto previous_sockets{sockets.load()};
-    clock += 30s;
-    BOOST_REQUIRE(wait_until([&] { return public_lookups.load() >= 2 && sockets.load() > previous_sockets; }));
-    BOOST_CHECK(worker->Status()["state"].get_str() != "waiting for bounties");
+    BOOST_REQUIRE(wait_until([&] { return sockets > 64; }));
     worker->Stop();
-    BOOST_CHECK_EQUAL(worker->Status()["connections_per_second"].getInt<int>(), 0);
+    BOOST_CHECK_EQUAL(lookups.load(), 1U); // Not once per connection/refresh.
+    BOOST_CHECK_EQUAL(worker->Status()["concurrency"].getInt<int>(), 16);
 
-    // Keep simulated connects in flight until all 65 have started. This tests
-    // actual parallelism, not just accepting a larger configuration value, and
-    // catches a hidden 32-attempt round cap. No OS/network sockets are opened.
-    struct PendingConnections {
+    // More than 64 connections may actually run at once; no real sockets.
+    struct Pending {
         std::mutex mutex;
         std::condition_variable wake;
         unsigned active{0};
         bool released{false};
-        void Release()
-        {
-            { std::lock_guard lock{mutex}; released = true; }
-            wake.notify_all();
-        }
+        void Release() { { std::lock_guard lock{mutex}; released = true; } wake.notify_all(); }
     };
-    const auto pending{std::make_shared<PendingConnections>()};
-    struct ReleaseSockets {
-        std::shared_ptr<PendingConnections> pending;
-        ~ReleaseSockets() { pending->Release(); }
-    } release_sockets{pending}; // Also unblock threads if an assertion throws.
+    const auto pending{std::make_shared<Pending>()};
+    struct Release {
+        std::shared_ptr<Pending> pending;
+        ~Release() { pending->Release(); }
+    } release{pending};
     CreateSock = [pending](int, int, int) -> std::unique_ptr<Sock> {
         std::unique_lock lock{pending->mutex};
         ++pending->active;
@@ -355,165 +383,96 @@ BOOST_FIXTURE_TEST_CASE(worker_rotates_without_idle_delay_and_stops_during_retry
         return nullptr;
     };
     BOOST_REQUIRE(worker->Configure(-1, 65));
-    const bool reached_65{wait_until([&] {
-        std::lock_guard lock{pending->mutex};
-        return pending->active == 65;
-    })};
+    const bool reached{wait_until([&] { std::lock_guard lock{pending->mutex}; return pending->active == 65; })};
     pending->Release();
     worker->Stop();
-    BOOST_CHECK(reached_65);
-    BOOST_CHECK_EQUAL(worker->Status()["concurrency"].getInt<int>(), 65);
-    {
-        LOCK(cs_main);
-        auto& coins{m_node.chainman->ActiveChainstate().CoinsTip()};
-        coins.SpendCoin(first);
-        coins.SpendCoin(second);
-    }
-    BOOST_REQUIRE(worker->Configure(-1, 1));
-    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for bounties"; }));
-    BOOST_CHECK(worker->Status()["domain"].get_str().empty());
-    worker->Stop();
-
-    // Cancellation is reset only after the previous thread was joined. Each
-    // restart must reach the idle wait, and Stop must wake that five-second
-    // wait rather than leaving a detached worker behind. Shutdown is terminal.
-    for (int restart{0}; restart < 3; ++restart) {
-        BOOST_REQUIRE(worker->Configure(1, 4));
+    BOOST_CHECK(reached);
+    for (int i = 0; i < 3; ++i) {
+        BOOST_REQUIRE(worker->Configure(1, std::numeric_limits<int>::max(), {"unfunded.example"}));
         BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for bounties"; }));
-        const auto before_idle_stop{std::chrono::steady_clock::now()};
+        const auto before{std::chrono::steady_clock::now()};
         worker->Stop();
-        BOOST_CHECK(std::chrono::steady_clock::now() - before_idle_stop < 3s);
-        BOOST_CHECK_EQUAL(worker->Status()["state"].get_str(), "disabled");
+        BOOST_CHECK(std::chrono::steady_clock::now() - before < 3s);
         BOOST_CHECK_EQUAL(worker->Status()["connections_per_second"].getInt<int>(), 0);
     }
     worker->Shutdown();
     BOOST_CHECK(!worker->Configure(-1, 4));
-    worker->Stop(); // Idempotent after shutdown.
 }
 
-BOOST_FIXTURE_TEST_CASE(worker_shares_domain_rounds_and_rotates_large_bounty_groups, TestChain100Setup)
+BOOST_FIXTURE_TEST_CASE(worker_rotates_each_connection_and_reaches_large_domain_tail, TestChain100Setup)
 {
     using namespace std::chrono_literals;
-    FakeSteadyClock clock;
-    BOOST_REQUIRE(!m_node.chainman->IsInitialBlockDownload());
+    FakeSteadyClock clock; // Never advance: rotation cannot depend on a timer.
     auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
     auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
     wallet->SetBroadcastTransactions(true);
-    const uint256 target{uint256::FromHex("003" + std::string(61, 'f')).value()}; // Ten leading zero bits.
-    {
-        LOCK(cs_main);
-        auto& coins{m_node.chainman->ActiveChainstate().CoinsTip()};
-        // More outputs than the proposal cache must not crowd out other domains.
-        for (uint32_t i = 0; i < 262; ++i) {
-            const std::string domain{i < 260 ? "alpha.example" : i == 260 ? "beta.example" : "gamma.example"};
-            // The adversarial domain has many bounties with enormous rewards,
-            // yet its server below never returns a usable proof. Neither its
-            // high expected payout nor its output count may starve beta/gamma.
-            const CAmount reward{i < 260 ? 100'000 * COIN + i * (COIN / 1000) : COIN};
-            coins.AddCoin(COutPoint{Txid::FromUint256(uint256::ONE), i},
-                          Coin{CTxOut{reward, PayToDomainOutput{domain, target, 1}}, 100, false}, false);
-        }
+    const std::vector<std::string> names{"alpha.example", "beta.example", "gamma.example"};
+    for (uint32_t i = 0; i < 262; ++i) {
+        WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(
+            COutPoint{Txid::FromUint256(uint256::ONE), i},
+            Coin{CTxOut{i < 260 ? 100'000 * COIN + i * (COIN / 1000) : COIN,
+                PayToDomainOutput{names[i < 260 ? 0 : i - 259], uint256{}, 1}}, 100, false}, false));
     }
     RestoreDNSLookup restore_dns;
     RestoreSocketFactory restore_sockets;
-    const auto public_address{LookupHost("8.8.8.8", false, restore_dns.original)};
-    BOOST_REQUIRE(public_address);
-    struct Round {
-        std::string domain;
-        std::vector<std::shared_ptr<std::vector<unsigned char>>> hellos;
-        std::shared_ptr<std::atomic<unsigned>> captures{std::make_shared<std::atomic<unsigned>>(0)};
-    };
-    std::mutex rounds_mutex;
-    std::vector<Round> rounds;
-    std::map<std::vector<unsigned char>, COutPoint> claim_outpoints;
-    g_dns_lookup = [&, address = *public_address](const std::string& domain, bool) {
-        // Proposals were persisted before resolving. Remember their challenges
-        // before a later bounded window evicts them from the live wallet cache.
-        std::string saved;
-        if (!wallet->GetDatabase().MakeBatch()->Read(std::string{"p2c_claim_worker_v1"}, saved)) return std::vector<CNetAddr>{};
-        UniValue state;
-        if (!state.read(saved)) return std::vector<CNetAddr>{};
-        for (const auto& pending : state["pending"].getValues()) {
-            CMutableTransaction tx;
-            if (!DecodeHexTx(tx, pending.get_str())) return std::vector<CNetAddr>{};
-            const auto challenge{P2CClaimChallenge(CTransaction{tx}, 0)};
-            claim_outpoints.emplace(std::vector<unsigned char>{challenge.begin(), challenge.end()}, tx.vin[0].prevout);
-        }
-        std::lock_guard lock{rounds_mutex};
-        rounds.push_back({domain, {}});
-        return std::vector<CNetAddr>{address};
-    };
+    const auto address{LookupHost("8.8.8.8", false, restore_dns.original)};
+    BOOST_REQUIRE(address);
+    std::atomic<unsigned> lookups{0};
+    g_dns_lookup = [&](const std::string&, bool) { ++lookups; return std::vector<CNetAddr>{*address}; };
+    std::mutex events_mutex;
+    std::vector<std::pair<std::string, uint32_t>> events;
+    std::set<uint32_t> alpha_outputs;
+    bool unknown_challenge{false};
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
         auto sent{std::make_shared<std::vector<unsigned char>>()};
-        std::shared_ptr<std::atomic<unsigned>> captures;
-        {
-            std::lock_guard lock{rounds_mutex};
-            rounds.back().hellos.push_back(sent);
-            captures = rounds.back().captures;
-        }
-        return std::make_unique<ClientHelloSocket>(*sent, 16384, [captures] { ++*captures; });
+        return std::make_unique<ClientHelloSocket>(*sent, 16384, [&, sent] {
+            if (sent->size() < 43) return;
+            std::string name;
+            for (const auto& candidate : names) {
+                if (std::search(sent->begin(), sent->end(), candidate.begin(), candidate.end()) != sent->end()) name = candidate;
+            }
+            std::string encoded;
+            UniValue saved;
+            uint32_t index{9999};
+            if (wallet->GetDatabase().MakeBatch()->Read(std::string{"p2c_claim_worker_v1"}, encoded) && saved.read(encoded)) {
+                for (const auto& item : saved["pending"].getValues()) {
+                    CMutableTransaction tx;
+                    if (!DecodeHexTx(tx, item.get_str())) continue;
+                    const auto challenge{P2CClaimChallenge(CTransaction{tx}, 0)};
+                    if (std::equal(challenge.begin(), challenge.end(), sent->begin() + 11)) index = tx.vin[0].prevout.n;
+                }
+            }
+            std::lock_guard lock{events_mutex};
+            if (name.empty() || index == 9999) unknown_challenge = true;
+            events.emplace_back(name, index);
+            if (name == names[0]) alpha_outputs.insert(index);
+        });
     };
     auto worker{MakeP2CClaimWorker(*wallet)};
     BOOST_REQUIRE(worker->Configure(-1, 32));
-    bool completed{false};
-    for (size_t i = 0; i < 6; ++i) {
-        const auto deadline{std::chrono::steady_clock::now() + 30s};
-        completed = false;
-        while (std::chrono::steady_clock::now() < deadline) {
-            {
-                std::lock_guard lock{rounds_mutex};
-                completed = rounds.size() == i + 1 && rounds[i].captures->load() >= 64;
-                if (rounds.size() > i + 1) break; // Rotated before the deadline.
-            }
-            if (completed) break;
-            std::this_thread::sleep_for(10ms);
-        }
-        if (!completed) break;
-        clock += 30s; // Exercise internal rotation without minutes of CI sleep.
+    const auto deadline{std::chrono::steady_clock::now() + 45s};
+    bool reached{false};
+    while (std::chrono::steady_clock::now() < deadline) {
+        { std::lock_guard lock{events_mutex}; reached = alpha_outputs.size() == 260; }
+        if (reached) break;
+        std::this_thread::sleep_for(10ms);
     }
-    worker->Stop(); // Join before inspecting each socket's captured bytes.
-    BOOST_REQUIRE(completed);
-    // Fair turns still visit every domain, while the economic winner receives
-    // extra turns. Those extras must NOT advance the fair-domain cursor.
-    const std::vector<std::string> expected{"alpha.example", "alpha.example", "beta.example",
-                                            "alpha.example", "gamma.example", "alpha.example"};
-    std::set<std::vector<unsigned char>> first_alpha;
-    uint32_t first_alpha_min{0};
-    for (size_t i = 0; i < 6; ++i) {
-        const auto& round{rounds[i]};
-        BOOST_CHECK_EQUAL(round.domain, expected[i]);
-        BOOST_CHECK(round.captures->load() >= 64U); // More than 32 and concurrency.
-        std::set<std::vector<unsigned char>> challenges;
-        for (const auto& hello : round.hellos) {
-            if (hello->size() < 43) continue; // Cancelled at the round deadline.
-            challenges.emplace(hello->begin() + 11, hello->begin() + 43);
-        }
-        if (i < 2) BOOST_CHECK(challenges.size() >= 64U);
-        if (round.domain != "alpha.example") BOOST_CHECK_EQUAL(challenges.size(), 1U);
-        if (round.domain == "alpha.example") {
-            std::set<uint32_t> indices;
-            for (const auto& challenge : challenges) {
-                const auto found{claim_outpoints.find(challenge)};
-                BOOST_REQUIRE(found != claim_outpoints.end());
-                indices.insert(found->second.n);
-            }
-            // Highest net rewards must be selected across the entire domain,
-            // including outputs beyond the first 256 in outpoint order.
-            BOOST_REQUIRE(!indices.empty());
-            if (i == 0) {
-                BOOST_CHECK_EQUAL(*indices.rbegin(), 259U);
-                first_alpha_min = *indices.begin();
-            } else if (i == 1) {
-                BOOST_CHECK(*indices.rbegin() < first_alpha_min);
-            }
-        }
-        if (i == 0) first_alpha = challenges;
-        if (i == 1) {
-            // The second domain turn must reach later outputs, not restart at
-            // its first window. Each ClientHello commits to a different fixed claim.
-            for (const auto& challenge : challenges) BOOST_CHECK(!first_alpha.contains(challenge));
-        }
-    }
+    worker->Stop();
+    BOOST_REQUIRE(reached);
+    BOOST_CHECK(!unknown_challenge);
+    BOOST_CHECK_EQUAL(lookups.load(), 3U);
+    BOOST_REQUIRE(events.size() > 300);
+    std::map<std::string, unsigned> counts;
+    for (size_t i = 0; i < std::min<size_t>(events.size(), 64); ++i) ++counts[events[i].first];
+    BOOST_CHECK(counts[names[1]] > 0); // No 30-second monopolization.
+    BOOST_CHECK(counts[names[2]] > 0);
+    counts.clear();
+    for (const auto& [name, index] : events) ++counts[name];
+    BOOST_CHECK(counts[names[0]] > counts[names[1]] * 2); // Reward still matters.
+    BOOST_CHECK(counts[names[0]] > counts[names[2]] * 2);
+    // Bounties beyond the 256-entry proposal cache were reached.
+    BOOST_CHECK(alpha_outputs.contains(0));
+    BOOST_CHECK(alpha_outputs.contains(259));
 }
 
 BOOST_FIXTURE_TEST_CASE(worker_prioritizes_difficulty_and_saved_net_payout, TestChain100Setup)
@@ -621,121 +580,219 @@ BOOST_FIXTURE_TEST_CASE(worker_extra_domain_turns_use_net_return_and_recheck_loc
     RestoreSocketFactory restore_sockets;
     const auto address{LookupHost("8.8.8.8", false, restore_dns.original)};
     BOOST_REQUIRE(address);
-    struct Round { std::string domain; unsigned attempts{0}; };
-    std::mutex rounds_mutex;
-    std::vector<Round> rounds;
-    g_dns_lookup = [&](const std::string& domain, bool) {
-        std::lock_guard lock{rounds_mutex};
-        // Discovery can exceed an entire quantum. It must not consume the
-        // first search window before even one connection starts (including
-        // the extra scan needed to select an economic-priority domain).
-        clock += 31s;
-        rounds.push_back({domain});
-        return std::vector<CNetAddr>{*address};
+    std::mutex events_mutex;
+    std::condition_variable release;
+    std::vector<std::string> events;
+    bool finish{false};
+    struct ReleaseAll {
+        std::mutex& mutex;
+        std::condition_variable& wake;
+        bool& finish;
+        ~ReleaseAll() { { std::lock_guard lock{mutex}; finish = true; } wake.notify_all(); }
     };
+    g_dns_lookup = [&](const std::string&, bool) { return std::vector<CNetAddr>{*address}; };
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
-        std::lock_guard lock{rounds_mutex};
-        ++rounds.back().attempts;
-        return nullptr; // Entirely offline; advance the scheduling clock below.
+        auto sent{std::make_shared<std::vector<unsigned char>>()};
+        return std::make_unique<ClientHelloSocket>(*sent, 16384, [&, sent] {
+            std::unique_lock lock{events_mutex};
+            for (const auto& name : domains) {
+                if (std::search(sent->begin(), sent->end(), name.begin(), name.end()) != sent->end()) events.push_back(name);
+            }
+            if (events.size() == 6 || events.size() == 8) release.wait(lock, [&] { return finish; });
+        });
     };
     auto worker{MakeP2CClaimWorker(*wallet)};
+    ReleaseAll release_all{events_mutex, release, finish};
     BOOST_REQUIRE(worker->Configure(-1, 1));
-    // Scores are 5, 8 and 12. Gamma wins extras despite the lowest gross reward.
-    // Locking gamma after turn six must redirect the next extra to beta, whose
-    // retained payout beats alpha even though alpha has the larger gross reward.
-    const std::vector<std::string> expected{"alpha.example", "gamma.example", "beta.example", "gamma.example",
-                                            "gamma.example", "gamma.example", "alpha.example", "beta.example"};
-    bool completed{false};
-    for (size_t i = 0; i < expected.size(); ++i) {
-        const auto deadline{std::chrono::steady_clock::now() + 30s};
-        completed = false;
-        while (std::chrono::steady_clock::now() < deadline) {
-            {
-                std::lock_guard lock{rounds_mutex};
-                completed = rounds.size() == i + 1 && rounds[i].attempts > 0;
-                if (rounds.size() > i + 1) break;
-            }
-            if (completed) break;
+    const auto wait_until = [](const auto& predicate) {
+        const auto deadline{std::chrono::steady_clock::now() + 20s};
+        while (!predicate()) {
+            if (std::chrono::steady_clock::now() >= deadline) return false;
             std::this_thread::sleep_for(10ms);
         }
-        if (!completed) break;
-        if (i == 5) WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(outpoints[2], /*persist=*/false)));
-        if (i + 1 < expected.size()) {
-            std::lock_guard lock{rounds_mutex};
-            clock += 30s;
-        }
+        return true;
+    };
+    const bool first_six{wait_until([&] { std::lock_guard lock{events_mutex}; return events.size() == 6; })};
+    if (first_six) {
+        // Recheck locks while the sixth connection is still in flight.
+        WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(outpoints[2], false)));
+        const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
+        clock += 5s;
+        BOOST_CHECK(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; }));
+        { std::lock_guard lock{events_mutex}; finish = true; }
+        release.notify_all();
+    } else {
+        { std::lock_guard lock{events_mutex}; finish = true; }
+        release.notify_all();
     }
+    const bool all{wait_until([&] { std::lock_guard lock{events_mutex}; return events.size() >= 8; })};
     worker->Stop();
-    BOOST_REQUIRE(completed);
-    BOOST_REQUIRE_EQUAL(rounds.size(), expected.size());
-    for (size_t i = 0; i < expected.size(); ++i) BOOST_CHECK_EQUAL(rounds[i].domain, expected[i]);
-    BOOST_CHECK_EQUAL(worker->Status()["domain_rounds"].getInt<uint64_t>(), expected.size());
+    BOOST_REQUIRE(first_six && all);
+    const std::vector<std::string> expected{"alpha.example", "gamma.example", "beta.example", "gamma.example",
+                                            "gamma.example", "gamma.example", "alpha.example"};
+    BOOST_REQUIRE(events.size() >= expected.size());
+    BOOST_CHECK_EQUAL_COLLECTIONS(events.begin(), events.begin() + expected.size(), expected.begin(), expected.end());
+    // After the refresh the extra turn also uses measured TCP/TLS performance.
+    // Neither the locked domain nor the removed one may receive that turn.
+    BOOST_CHECK(events[7] == "alpha.example" || events[7] == "beta.example");
 }
 
-BOOST_FIXTURE_TEST_CASE(worker_exhausts_all_domain_windows_before_rotating, TestChain100Setup)
+BOOST_FIXTURE_TEST_CASE(worker_weights_domain_priority_by_complete_tls_per_second, TestChain100Setup)
 {
     using namespace std::chrono_literals;
-    FakeSteadyClock clock; // The 30-second domain deadline never expires here.
+    FakeSteadyClock clock;
     auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
     auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
     wallet->SetBroadcastTransactions(true);
-    {
-        LOCK(cs_main);
-        for (uint32_t i = 0; i < 261; ++i) {
-            m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(COutPoint{Txid::FromUint256(uint256::ONE), i},
-                Coin{CTxOut{COIN, PayToDomainOutput{i < 260 ? "alpha.example" : "beta.example", uint256{}, 1}}, 100, false}, false);
-        }
+    wallet->m_default_max_tx_fee = MAX_MONEY; // Deliberately retained large fees below.
+    const std::array<std::string, 2> domains{"alpha.example", "beta.example"};
+    const auto maximum{uint256::FromHex(std::string(64, 'f')).value()};
+    CCoinControl control;
+    control.m_feerate = CFeeRate{1000};
+    UniValue saved{UniValue::VOBJ}, pending{UniValue::VARR};
+    for (uint32_t i = 0; i < domains.size(); ++i) {
+        const COutPoint outpoint{Txid::FromUint256(uint256::ONE), i};
+        WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint,
+            Coin{CTxOut{4 * COIN, PayToDomainOutput{domains[i], maximum, 1}}, 100, false}, false));
+        const auto prepared{PrepareP2CClaim(*wallet, outpoint, control)};
+        BOOST_REQUIRE(prepared);
+        CMutableTransaction tx{*prepared->tx};
+        tx.vout[0].nValue = (2 - i) * COIN; // Alpha has exactly twice the net EV.
+        pending.push_back(EncodeHexTx(CTransaction{tx}));
     }
+    saved.pushKV("pending", std::move(pending));
+    saved.pushKV("ready", "");
+    saved.pushKV("proof", "");
+    saved.pushKV("attempts", 0);
+    saved.pushKV("submitted", 0);
+    saved.pushKV("last_txid", "");
+    BOOST_REQUIRE(wallet->GetDatabase().MakeBatch()->Write(std::string{"p2c_claim_worker_v1"}, saved.write()));
     RestoreDNSLookup restore_dns;
     RestoreSocketFactory restore_sockets;
     const auto address{LookupHost("8.8.8.8", false, restore_dns.original)};
     BOOST_REQUIRE(address);
-    std::mutex pending_mutex;
-    std::vector<COutPoint> pending;
-    std::vector<std::string> windows;
-    unsigned retired{0}, retired_before_beta{0};
-    g_dns_lookup = [&](const std::string& domain, bool) {
-        std::string encoded;
-        if (!wallet->GetDatabase().MakeBatch()->Read(std::string{"p2c_claim_worker_v1"}, encoded)) return std::vector<CNetAddr>{};
-        UniValue saved;
-        if (!saved.read(encoded)) return std::vector<CNetAddr>{};
-        std::lock_guard lock{pending_mutex};
-        pending.clear();
-        windows.push_back(domain);
-        if (domain == "beta.example") retired_before_beta = retired;
-        for (const auto& proposal : saved["pending"].getValues()) {
-            CMutableTransaction tx;
-            if (!DecodeHexTx(tx, proposal.get_str())) return std::vector<CNetAddr>{};
-            pending.push_back(tx.vin[0].prevout);
-        }
-        return std::vector<CNetAddr>{*address};
-    };
+    g_dns_lookup = [&](const std::string&, bool) { return std::vector<CNetAddr>{*address}; };
+    const auto config{std::make_shared<test::P2CTLSServer>()};
+    config->Setup();
+    std::mutex events_mutex;
+    std::condition_variable release;
+    std::vector<std::string> events;
+    bool finish{false};
+    auto worker{MakeP2CClaimWorker(*wallet)};
+    struct ReleaseAll {
+        std::mutex& mutex;
+        std::condition_variable& wake;
+        bool& finish;
+        ~ReleaseAll() { { std::lock_guard lock{mutex}; finish = true; } wake.notify_all(); }
+    } release_all{events_mutex, release, finish};
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
-        std::lock_guard lock{pending_mutex};
-        if (!pending.empty()) {
-            WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().SpendCoin(pending.back()));
-            pending.pop_back();
-            ++retired;
+        // A single connection worker makes the last assignment unambiguous.
+        const auto domain{worker->Status()["domain"].get_str()};
+        {
+            std::unique_lock lock{events_mutex};
+            events.push_back(domain);
+            if (events.size() == 4) release.wait(lock, [&] { return finish; });
         }
-        return nullptr; // Simulate competing spends, never real connections.
+        if (domain == domains[0]) {
+            std::this_thread::sleep_for(1s);
+            return nullptr; // Slow TCP failure; never reached CertificateVerify.
+        }
+        // Beta is slower per attempt, but delivers CertificateVerify. If its
+        // completed capture is mistakenly counted as a failure, its quality
+        // score cannot beat Alpha's: this tests success, not latency alone.
+        std::this_thread::sleep_for(2s);
+        return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+    };
+    const auto wait_until = [](const auto& predicate) {
+        const auto deadline{std::chrono::steady_clock::now() + 30s};
+        while (!predicate()) {
+            if (std::chrono::steady_clock::now() >= deadline) return false;
+            std::this_thread::sleep_for(10ms);
+        }
+        return true;
+    };
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE_MESSAGE(wait_until([&] { std::lock_guard lock{events_mutex}; return events.size() == 4; }), worker->Status().write());
+    // No quality refresh before this point: initial extra turns favor Alpha.
+    // Beta completed TLS, though its test certificate is not trusted by Core.
+    // Capturing it must improve priority WITHOUT weakening claim verification.
+    BOOST_CHECK_EQUAL(worker->Status()["state"].get_str(), "searching");
+    BOOST_CHECK_EQUAL(worker->Status()["submitted"].getInt<uint64_t>(), 0U);
+    const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
+    clock += 5s;
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; }));
+    { std::lock_guard lock{events_mutex}; finish = true; }
+    release.notify_all();
+    BOOST_REQUIRE(wait_until([&] { std::lock_guard lock{events_mutex}; return events.size() >= 6; }));
+    worker->Stop();
+    const std::vector<std::string> expected{domains[0], domains[0], domains[1], domains[0], domains[0], domains[1]};
+    BOOST_CHECK_EQUAL_COLLECTIONS(events.begin(), events.begin() + expected.size(), expected.begin(), expected.end());
+    BOOST_CHECK_EQUAL(worker->Status()["submitted"].getInt<uint64_t>(), 0U);
+
+    // Reconfiguration and an entirely ineligible catalog must not discard the
+    // learned history. With reset priors Alpha would win the next extra turn.
+    for (uint32_t i = 0; i < domains.size(); ++i) {
+        const COutPoint outpoint{Txid::FromUint256(uint256::ONE), i};
+        WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(outpoint, false)));
+    }
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > 0; }));
+    { std::lock_guard lock{events_mutex}; BOOST_CHECK_EQUAL(events.size(), 6U); }
+    for (uint32_t i = 0; i < domains.size(); ++i) {
+        const COutPoint outpoint{Txid::FromUint256(uint256::ONE), i};
+        WITH_LOCK(wallet->cs_wallet, wallet->UnlockCoin(outpoint));
+    }
+    clock += 5s;
+    BOOST_REQUIRE_MESSAGE(wait_until([&] { std::lock_guard lock{events_mutex}; return events.size() >= 8; }), worker->Status().write());
+    worker->Stop();
+    BOOST_CHECK_EQUAL(events[6], domains[0]);
+    BOOST_CHECK_EQUAL(events[7], domains[1]);
+}
+
+BOOST_FIXTURE_TEST_CASE(worker_batches_spent_checks_and_recovers_eligibility, TestChain100Setup)
+{
+    using namespace std::chrono_literals;
+    FakeSteadyClock clock;
+    auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
+    auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
+    wallet->SetBroadcastTransactions(true);
+    const COutPoint outpoint{Txid::FromUint256(uint256::ONE), 0};
+    const CTxOut bounty{COIN, PayToDomainOutput{"example.com", uint256{}, 1}};
+    WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint, Coin{bounty, 100, false}, false));
+    RestoreDNSLookup restore_dns;
+    RestoreSocketFactory restore_sockets;
+    const auto address{LookupHost("8.8.8.8", false, restore_dns.original)};
+    BOOST_REQUIRE(address);
+    g_dns_lookup = [&](const std::string&, bool) { return std::vector<CNetAddr>{*address}; };
+    std::atomic<unsigned> attempts{0};
+    CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> { ++attempts; return nullptr; };
+    const auto wait_until = [](const auto& predicate) {
+        const auto deadline{std::chrono::steady_clock::now() + 10s};
+        while (!predicate()) {
+            if (std::chrono::steady_clock::now() >= deadline) return false;
+            std::this_thread::sleep_for(5ms);
+        }
+        return true;
     };
     auto worker{MakeP2CClaimWorker(*wallet)};
-    BOOST_REQUIRE(worker->Configure(-1, 32));
-    const auto deadline{std::chrono::steady_clock::now() + 30s};
-    bool exhausted{false};
-    while (std::chrono::steady_clock::now() < deadline) {
-        { std::lock_guard lock{pending_mutex}; exhausted = retired == 261; }
-        if (exhausted) break;
-        std::this_thread::sleep_for(10ms);
-    }
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE(wait_until([&] { return attempts >= 1; }));
+    WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().SpendCoin(outpoint));
+    // The scheduling clock is frozen: no per-connection UTXO lookup is allowed.
+    BOOST_REQUIRE(wait_until([&] { return attempts >= 2; }));
+    auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
+    clock += 5s;
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; }));
+    const auto stopped_at{attempts.load()};
+    std::this_thread::sleep_for(1200ms);
+    BOOST_CHECK_EQUAL(attempts.load(), stopped_at);
+    // Restore the same coin to model removal of a temporary competing spend.
+    WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint, Coin{bounty, 100, false}, false));
+    previous = worker->Status()["schedule_refreshes"].getInt<uint64_t>();
+    clock += 5s;
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; }));
+    BOOST_REQUIRE(wait_until([&] { return attempts > stopped_at; }));
     worker->Stop();
-    BOOST_CHECK(exhausted);
-    BOOST_CHECK_EQUAL(retired_before_beta, 260U);
-    BOOST_REQUIRE(windows.size() >= 3);
-    BOOST_CHECK_EQUAL(windows.front(), "alpha.example");
-    BOOST_CHECK_EQUAL(windows[1], "alpha.example"); // Refill within the SAME round.
-    BOOST_CHECK_EQUAL(windows.back(), "beta.example");
-    BOOST_CHECK_EQUAL(worker->Status()["domain_rounds"].getInt<uint64_t>(), 2U);
 }
 
 BOOST_FIXTURE_TEST_CASE(worker_retains_multiple_completed_proofs_on_restart, TestChain100Setup)
@@ -803,6 +860,7 @@ BOOST_FIXTURE_TEST_CASE(worker_retains_multiple_completed_proofs_on_restart, Tes
 BOOST_FIXTURE_TEST_CASE(worker_preserves_bounty_through_complete_tls_capture, TestChain100Setup)
 {
     using namespace std::chrono_literals;
+    FakeSteadyClock clock;
     auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
     auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
     wallet->SetBroadcastTransactions(true);
@@ -816,8 +874,26 @@ BOOST_FIXTURE_TEST_CASE(worker_preserves_bounty_through_complete_tls_capture, Te
         return std::vector<CNetAddr>{address};
     };
     auto worker{MakeP2CClaimWorker(*wallet)};
-    for (const std::string domain : {"google.com", "lifetime-regression-long-domain.example"}) {
-        CreateSock = [config, size = domain.size()](int, int, int) -> std::unique_ptr<Sock> {
+    std::map<std::string, COutPoint> bounties;
+    const auto maximum{uint256::FromHex(std::string(64, 'f')).value()};
+    for (const std::string name : {"google.com", "lifetime-regression-long-domain.example"}) {
+        const COutPoint outpoint{Txid::FromUint256(m_rng.rand256()), 0};
+        WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint,
+            Coin{CTxOut{COIN, PayToDomainOutput{name, maximum, 1}}, 100, false}, false));
+        bounties.emplace(name, outpoint);
+    }
+    for (const auto& [domain, outpoint] : bounties) {
+        std::atomic<bool> hold{false}, entered{false};
+        struct StopBeforeLocals {
+            P2CClaimWorker& worker;
+            ~StopBeforeLocals() { worker.Stop(); }
+        } stop_before_locals{*worker};
+        CreateSock = [&, config, size = domain.size()](int, int, int) -> std::unique_ptr<Sock> {
+            if (hold) {
+                entered = true;
+                const auto deadline{std::chrono::steady_clock::now() + 5s};
+                while (hold && std::chrono::steady_clock::now() < deadline) std::this_thread::sleep_for(5ms);
+            }
             std::vector<std::string> churn;
             churn.reserve(256);
             for (int i = 0; i < 256; ++i) churn.emplace_back(size, '!');
@@ -831,14 +907,7 @@ BOOST_FIXTURE_TEST_CASE(worker_preserves_bounty_through_complete_tls_capture, Te
         std::string error;
         BOOST_REQUIRE(ParseP2CTlsProof(*captured, domain, uint256::ONE, view, error));
         BOOST_CHECK(!view.certificate_verify_signature.empty());
-        uint256 maximum;
-        std::fill(maximum.begin(), maximum.end(), 0xff);
         const CTxOut output{COIN, PayToDomainOutput{domain, maximum, 1}};
-        const COutPoint outpoint{Txid::FromUint256(m_rng.rand256()), 0};
-        {
-            LOCK(cs_main);
-            m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint, Coin{output, 100, false}, false);
-        }
         CCoinControl control;
         control.m_feerate = CFeeRate{1000};
         const auto proposal{PrepareP2CClaim(*wallet, outpoint, control)};
@@ -849,7 +918,20 @@ BOOST_FIXTURE_TEST_CASE(worker_preserves_bounty_through_complete_tls_capture, Te
         const std::string expected_error{error};
         BOOST_REQUIRE(!expected_error.empty());
         BOOST_CHECK(expected_error != "invalid expected P2C domain");
+        hold = true;
         BOOST_REQUIRE(worker->Configure(1, 1, {domain}));
+        const auto entered_deadline{std::chrono::steady_clock::now() + 5s};
+        while (!entered && std::chrono::steady_clock::now() < entered_deadline) std::this_thread::sleep_for(5ms);
+        const bool was_entered{entered.load()};
+        const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
+        clock += 5s;
+        const auto refresh_deadline{std::chrono::steady_clock::now() + 3s};
+        while (worker->Status()["schedule_refreshes"].getInt<uint64_t>() == previous && std::chrono::steady_clock::now() < refresh_deadline) {
+            std::this_thread::sleep_for(5ms);
+        }
+        hold = false;
+        BOOST_CHECK(was_entered);
+        BOOST_CHECK(worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous);
         const auto deadline{std::chrono::steady_clock::now() + 20s};
         UniValue status;
         do {

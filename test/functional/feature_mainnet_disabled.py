@@ -6,6 +6,7 @@
 
 import subprocess
 
+from test_framework.socks5 import AddressType, Socks5Command, start_socks5_server
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import assert_equal, rpc_port, write_config
 
@@ -92,6 +93,40 @@ class MainnetDisabledTest(BitcoinTestFramework):
             assert_equal(node.create_new_rpc_connection(mode="CLI").getblockchaininfo()["chain"], "testnet4")
         self.stop_node(0)
         saved_conf.rename(conf)
+
+        self.test_beta_seed()
+
+    def test_beta_seed(self):
+        self.log.info("The beta default uses its DNS seed and respects -dnsseed=0")
+        node = self.nodes[0]
+        conf = node.datadir_path / "connectcoin.conf"
+        write_config(conf, n=0, chain="testnet4", disable_autoconnect=False)
+        node.replace_in_config([("testnet4=1\n", ""), ("dnsseed=0\n", "")])
+        # A fresh addrman makes bootstrap immediate. Only this test's peer cache
+        # is removed; no external DNS lookup or network connection is allowed.
+        (node.chain_path / "peers.dat").unlink()
+        for enabled in (True, False):
+            proxy = start_socks5_server(destinations_factory=None)
+            try:
+                args = [f"-proxy=127.0.0.1:{proxy.conf.addr[1]}", "-v2transport=0"]
+                if not enabled:
+                    args.append("-dnsseed=0")
+                with node.assert_debug_log(
+                    expected_msgs=["Loading addresses from DNS seed connectcoin1.com" if enabled else "DNS seeding disabled"],
+                    unexpected_msgs=[] if enabled else ["Loading addresses from DNS seed"],
+                ):
+                    self.start_node(0, extra_args=args)
+                    if enabled:
+                        request = proxy.queue.get(timeout=self.rpc_timeout)
+                        assert isinstance(request, Socks5Command)
+                        assert_equal(request.atyp, AddressType.DOMAINNAME)
+                        assert_equal(request.addr, b"connectcoin1.com")
+                        assert_equal(request.port, 48179)
+                    self.stop_node(0)
+                assert proxy.queue.empty()
+            finally:
+                self.stop_node(0)
+                proxy.stop()
 
 
 if __name__ == "__main__":

@@ -239,6 +239,19 @@ void sanity_check_chainparams(const ArgsManager& args, ChainType chain_type)
     // can be relaxed only when project-owned fixed seeds have been reviewed.
     BOOST_CHECK(chainParams->FixedSeeds().empty());
 
+    // Public beta discovery must stay isolated from every other network.
+    const auto& seeds{chainParams->DNSSeeds()};
+    if (chain_type == ChainType::TESTNET4) {
+        BOOST_REQUIRE_EQUAL(seeds.size(), 1U);
+        BOOST_CHECK_EQUAL(seeds.front(), "connectcoin1.com");
+        BOOST_CHECK_EQUAL(chainParams->GetDefaultPort(), 48179);
+    } else if (chain_type == ChainType::REGTEST) {
+        BOOST_REQUIRE_EQUAL(seeds.size(), 1U);
+        BOOST_CHECK_EQUAL(seeds.front(), "dummySeed.invalid.");
+    } else {
+        BOOST_CHECK(seeds.empty());
+    }
+
     // target timespan is an even multiple of spacing
     BOOST_CHECK_EQUAL(consensus.nPowTargetTimespan % consensus.nPowTargetSpacing, 0);
     if (!consensus.fPowNoRetargeting) {

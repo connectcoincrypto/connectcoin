@@ -23,10 +23,45 @@ The Kernel API's separate mainnet default and explicit chain parameters are
 unchanged.
 
 Testnet4 uses P2P port 48179 and RPC port 48178. RPC should remain private; expose
-only the P2P service to testers. There are currently no built-in public seeds.
-A public beta additionally needs reachable peers, bootstrap discovery, ongoing
-RandomX mining, and distribution of test coins. Merely selecting `-testnet4`
-does not create those services. No test balances are promised mainnet conversion.
+only the P2P service to testers. `connectcoin1.com` is the built-in testnet4 DNS
+seed; no public seed is added to mainnet, testnet3, signet or regtest. Fixed seed
+IP addresses remain empty. A public beta additionally needs reachable peers,
+operational DNS, ongoing RandomX mining, and distribution of test coins. Merely
+listing the hostname in the client does not deploy those services. No test
+balances are promised mainnet conversion.
+
+## Testnet4 bootstrap DNS
+
+On a fresh start with no known peers, the client queries the seed automatically.
+`-dnsseed=0` disables DNS seeding; `-connect` also disables it by default. Existing
+peer discovery, proxy handling and connection limits are unchanged. A seed only
+provides peer addresses: blocks and transactions still undergo normal validation.
+
+The current discovery code requests A/AAAA records for `x9.connectcoin1.com`,
+where `9` selects `NODE_NETWORK | NODE_WITNESS`. These records must point only to
+reachable, non-pruned ConnectCoin testnet4 nodes on TCP port 48179. The client
+also assumes BIP324 support for these filtered results, so advertised nodes must
+support v2 transport. Do not return website/CDN addresses or peers from another
+network. Publish AAAA only when incoming IPv6 connections actually work.
+
+For the initial single-node deployment, DNS can be hosted by the domain's DNS
+provider: point both `connectcoin1.com` and `x9.connectcoin1.com` to the seed node's
+public IP, with a TTL of at least 60 seconds. Serve these as DNS-only records,
+not through an HTTP reverse proxy. No wildcard record is needed; unsupported
+service filters should not claim capabilities the node lacks.
+
+If the filtered name has no addresses, or the client uses a name proxy, Core
+falls back to connecting to `connectcoin1.com:48179` to request peer addresses.
+Thus the base hostname must also resolve to a reachable testnet4 P2P node, not
+just a DNS server. This fallback is an address-fetch connection, not a promise
+of a permanent connection to that node.
+
+Running the authoritative DNS service on the VPS itself is optional and is
+separate from running `connectcoind`. Provider-hosted DNS does not require
+opening port 53 on the node. A dedicated crawler/DNS seeder can replace the
+static records later, returning checked testnet4 peers. See the
+[operator policy](dnsseed-policy.md); one bootstrap operator is an initial
+central dependency, not a substitute for independent seeds.
 
 An optional [CPU miner](cpu-mining.md) is available from the wallet's Mining
 tab or the `startmining` RPC. It supports testnet4 and regtest, is disabled at

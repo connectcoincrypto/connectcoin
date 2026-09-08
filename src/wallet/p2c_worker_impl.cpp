@@ -5,10 +5,12 @@
 #include <wallet/p2c_worker.h>
 
 #include <coins.h>
+#include <consensus/consensus.h>
 #include <consensus/p2c.h>
 #include <consensus/p2c_x509.h>
 #include <core_io.h>
 #include <interfaces/chain.h>
+#include <netaddress.h>
 #include <univalue.h>
 #include <util/strencodings.h>
 #include <util/time.h>
@@ -16,6 +18,7 @@
 #include <wallet/coincontrol.h>
 #include <wallet/fees.h>
 #include <wallet/p2c_claim.h>
+#include <wallet/p2c_domain_stats.h>
 #include <wallet/p2c_tls.h>
 #include <wallet/wallet.h>
 
@@ -23,25 +26,27 @@
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
+#include <cstdint>
 #include <deque>
 #include <exception>
-#include <iterator>
 #include <map>
+#include <memory>
 #include <mutex>
 #include <optional>
 #include <set>
+#include <stdexcept>
 #include <thread>
 #include <utility>
+#include <vector>
 
 namespace wallet {
 namespace {
 using Clock = std::chrono::steady_clock;
-using RoundClock = MockableSteadyClock;
+using ScheduleClock = MockableSteadyClock;
 constexpr size_t MAX_PENDING_CLAIMS{256};
 constexpr size_t MAX_SAVED_STATE{64 * 1024 * 1024};
-// Scheduling quantum, NOT a connection quota. Guaranteed fair turns alternate
-// with economic-priority turns; a sole eligible domain has no cooldown.
-constexpr auto DOMAIN_SCHEDULING_QUANTUM{std::chrono::seconds{30}};
+constexpr auto SCHEDULE_REFRESH{std::chrono::seconds{5}};
+constexpr auto DNS_REFRESH{std::chrono::seconds{60}};
 constexpr auto STATE_KEY{"p2c_claim_worker_v1"};
 }
 
@@ -76,6 +81,7 @@ struct P2CClaimWorkerImpl::Impl {
     uint64_t attempts{0};
     uint64_t submitted{0};
     uint64_t domain_rounds{0};
+    uint64_t schedule_refreshes{0};
     std::string state{"disabled"};
     std::string domain;
     std::string last_error;
@@ -91,11 +97,45 @@ struct P2CClaimWorkerImpl::Impl {
             return outpoint < other.outpoint;
         }
     };
-    struct DomainCursor {
+    struct DomainWork {
+        std::string name;
+        std::map<PriorityKey, CTxOut> bounties;
         std::optional<PriorityKey> after;
         size_t endpoint_offset{0};
+        std::vector<CService> endpoints;
+        std::shared_ptr<P2CDomainStats> statistics;
+        double connection_rate{5};
+        std::optional<std::pair<double, PriorityKey>> economic_key;
+        ScheduleClock::time_point resolve_after{};
+        bool resolving{false};
     };
-    std::map<std::string, DomainCursor> scan_after;
+    struct ClaimWork {
+        P2CClaimProposal prepared;
+        uint256 challenge;
+        std::atomic<int64_t> validation_time;
+        std::atomic<bool> unavailable{false};
+        explicit ClaimWork(P2CClaimProposal value)
+            : prepared(std::move(value)), challenge(P2CClaimChallenge(*prepared.tx, 0)), validation_time(prepared.validation_time) {}
+    };
+    struct Assignment {
+        std::shared_ptr<DomainWork> group;
+        std::shared_ptr<ClaimWork> claim;
+        bool resolve{false};
+    };
+    // No network I/O while holding this mutex. Proposals/proofs are serialized
+    // here; immutable assigned work stays alive across schedule refreshes.
+    std::mutex work_mutex;
+    std::map<std::string, std::shared_ptr<DomainWork>> groups;
+    // Shared by all bounties/endpoints of a domain. Kept through refreshes and
+    // temporary ineligibility, but not persisted when the wallet is unloaded.
+    std::map<std::string, std::shared_ptr<P2CDomainStats>> domain_statistics;
+    std::map<COutPoint, std::shared_ptr<ClaimWork>> claim_cache;
+    // Negative weighted score sorts best first; the exact bounty key breaks
+    // floating-point ties. Store immutable snapshots, not a mutable comparator.
+    std::set<std::pair<std::pair<double, PriorityKey>, std::string>> economic_order;
+    std::optional<std::string> domain_after;
+    bool prefer_reward{false};
+    CCoinControl claim_control;
     // Persist a completed proof BEFORE submitting it; resuming never repeats
     // a search whose successful result was already durably saved.
     CTransactionRef ready;
@@ -104,8 +144,8 @@ struct P2CClaimWorkerImpl::Impl {
         CTransactionRef tx;
         std::vector<unsigned char> proof;
     };
-    // At most one proof per proposal. Only the search coordinator submits;
-    // capture threads append and persist under the search's proof mutex.
+    // At most one proof per proposal. Only the coordinator submits;
+    // capture threads append and persist under work_mutex.
     std::deque<CompletedClaim> completed;
 
     explicit Impl(CWallet& value) : wallet(value) {}
@@ -250,6 +290,7 @@ struct P2CClaimWorkerImpl::Impl {
         if (!ready) return;
         // Recognize a previously submitted/confirmed claim after a crash.
         if (WITH_LOCK(wallet.cs_wallet, return wallet.GetWalletTx(ready->GetHash()) != nullptr)) {
+            claim_cache.erase(ready->vin[0].prevout);
             proposals.erase(ready->vin[0].prevout);
             ready.reset();
             ready_proof.clear();
@@ -274,342 +315,346 @@ struct P2CClaimWorkerImpl::Impl {
             last_error.clear();
             state = wallet.chain().isInMempool((*validated)->GetHash()) ? "submitted" : "stored; check wallet history";
         }
+        claim_cache.erase(ready->vin[0].prevout);
         proposals.erase(ready->vin[0].prevout);
         ready.reset();
         ready_proof.clear();
         Save();
     }
 
-    std::optional<COutPoint> Search(const std::atomic<bool>& stop, const std::vector<P2CClaimProposal>& candidates,
-                                  std::optional<RoundClock::time_point>& deadline)
+    void UpdateEconomicOrder(DomainWork& group)
     {
-        if (stop.load() || (deadline && RoundClock::now() >= *deadline)) return std::nullopt;
-        const auto search_domain{candidates.front().bounty.GetPayToDomain()->domain};
+        if (group.economic_key) economic_order.erase({*group.economic_key, group.name});
+        group.economic_key.reset();
+        if (!group.bounties.empty()) {
+            const auto& best{group.bounties.begin()->first};
+            group.economic_key = std::pair{-GetP2CDomainPriority(best.priority, group.connection_rate), best};
+            economic_order.emplace(*group.economic_key, group.name);
+        }
+    }
+
+    // Called only once per refresh, never for each connection. The node catalog
+    // itself applies block deltas; only P2C entries are visited here.
+    void Refresh(const std::atomic<bool>& stop)
+    {
+        std::map<COutPoint, CTxOut> snapshot;
+        std::set<std::string> catalog_domains;
+        if (!wallet.chain().scanP2CBounties([&](const COutPoint& outpoint, const CTxOut& output) {
+            const auto bounty{output.GetPayToDomain()};
+            if (domains.empty() || std::find(domains.begin(), domains.end(), bounty->domain) != domains.end()) {
+                snapshot.emplace(outpoint, output);
+                catalog_domains.insert(bounty->domain);
+            }
+            return true;
+        }, [&] { return stop.load(); })) return;
+
+        std::lock_guard work_lock{work_mutex};
+        int wallet_height;
+        int64_t validation_time{0};
+        bool active{false};
         {
+            LOCK(wallet.cs_wallet);
+            claim_control.m_feerate = std::max({GetRequiredFeeRate(wallet), wallet.chain().mempoolMinFee(), wallet.chain().miningMinFee()});
+            wallet_height = wallet.GetLastBlockHeight();
+            wallet.chain().findBlock(wallet.GetLastBlockHash(), interfaces::FoundBlock().mtpTime(validation_time).inActiveChain(active));
+        }
+        const bool wallet_ready{active && wallet_height >= 0 && validation_time > 0};
+        const auto fresh_fee{CalculateP2CClaimFee(*claim_control.m_feerate)};
+        if (!fresh_fee) throw std::runtime_error(util::ErrorString(fresh_fee).original);
+        // One batched availability check for cached/in-flight challenges. A
+        // competitor may waste up to one refresh interval, never redeem twice.
+        std::map<COutPoint, Coin> coins;
+        for (const auto& [outpoint, claim] : claim_cache) coins.try_emplace(outpoint);
+        wallet.chain().findCoins(coins);
+        // Retire previously cancelled work BEFORE rebuilding eligibility. Once
+        // its users have drained, an unlocked/restored bounty can rejoin this
+        // refresh rather than being excluded for an unnecessary extra interval.
+        std::erase_if(claim_cache, [&](const auto& entry) {
+            return entry.second->unavailable && entry.second.use_count() == 1 && !HasCompleted(entry.first);
+        });
+        for (auto& [name, group] : groups) group->bounties.clear();
+        economic_order.clear();
+        for (const auto& [outpoint, output] : snapshot) {
+            if (stop.load()) return;
+            const bool unavailable{!wallet_ready || wallet.chain().isSpentByMempool(outpoint) ||
+                WITH_LOCK(wallet.cs_wallet, return wallet.IsLockedCoin(outpoint))};
+            const auto cached{claim_cache.find(outpoint)};
+            if (cached != claim_cache.end()) {
+                const auto& coin{coins.at(outpoint)};
+                if (unavailable || coin.IsSpent() || coin.nHeight > static_cast<uint32_t>(wallet_height) ||
+                    (coin.IsCoinBase() && int64_t{wallet_height} + 1 - coin.nHeight < COINBASE_MATURITY)) cached->second->unavailable = true;
+                if (cached->second->unavailable) continue;
+                // Searches may run for hours. Keep certificate time current
+                // without changing the fixed transaction/challenge or TLS I/O.
+                cached->second->validation_time = validation_time;
+            }
+            if (unavailable) continue;
+            const auto saved{proposals.find(outpoint)};
+            const CAmount payout{saved != proposals.end() ? saved->second->vout[0].nValue :
+                MoneyRange(output.nValue) && output.nValue > *fresh_fee ? output.nValue - *fresh_fee : 0};
+            if (payout <= 0) continue;
+            const auto bounty{*output.GetPayToDomain()};
+            auto& group{groups[bounty.domain]};
+            if (!group) {
+                group = std::make_shared<DomainWork>();
+                group->name = bounty.domain;
+                auto& statistics{domain_statistics[bounty.domain]};
+                if (!statistics) statistics = std::make_shared<P2CDomainStats>();
+                group->statistics = statistics;
+            }
+            group->bounties.emplace(PriorityKey{GetP2CClaimPriority(bounty.connection_work_target, payout), outpoint}, output);
+        }
+        // Removal/reorg/temporary lock cancels only the affected challenge.
+        for (auto& [outpoint, claim] : claim_cache) {
+            if (!snapshot.contains(outpoint)) claim->unavailable = true;
+        }
+        std::erase_if(groups, [](const auto& entry) { return entry.second->bounties.empty(); });
+        // Preserve statistics while a domain still has confirmed bounties,
+        // even if all are temporarily locked/spent in the mempool. An old
+        // in-flight assignment keeps its history alive until capture returns.
+        std::erase_if(domain_statistics, [&](const auto& entry) {
+            return !catalog_domains.contains(entry.first) && entry.second.use_count() == 1;
+        });
+        for (auto& [name, group] : groups) {
+            group->connection_rate = group->statistics->ConnectionRate();
+            group->economic_key.reset();
+            UpdateEconomicOrder(*group);
+        }
+        if (groups.empty()) {
             std::lock_guard lock{mutex};
-            domain = search_domain;
-            state = "resolving";
+            domain.clear();
+            state = snapshot.empty() ? "waiting for bounties" : "waiting for eligible bounties";
         }
-        auto endpoints{ResolveP2CDomain(search_domain)};
-        // Discovery, proposal preparation and the first DNS lookup must not
-        // consume the entire search quantum before a connection can start.
-        // Keep this deadline across later windows, including failed lookups,
-        // so a domain cannot renew its turn indefinitely.
-        if (!deadline) deadline = RoundClock::now() + DOMAIN_SCHEDULING_QUANTUM;
-        const auto round_end{*deadline};
-        if (!endpoints) {
-            Message("retrying domain resolution", util::ErrorString(endpoints).original);
-            Pause(stop, std::chrono::seconds{2});
-            return std::nullopt;
-        }
-        auto& cursor{scan_after.at(search_domain)};
-        const auto endpoint_offset{cursor.endpoint_offset % endpoints->size()};
-        cursor.endpoint_offset = endpoint_offset == endpoints->size() - 1 ? 0 : endpoint_offset + 1;
-        std::vector<uint256> challenges;
-        challenges.reserve(candidates.size());
-        for (const auto& prepared : candidates) challenges.push_back(P2CClaimChallenge(*prepared.tx, 0));
-        std::vector<std::atomic<bool>> unavailable(candidates.size());
-        for (auto& value : unavailable) value = false;
-        std::atomic<bool> finished{false};
-        std::atomic<int> active{0};
-        // Bounded rotating indices, not an ever-growing attempt counter. There
-        // is no attempt cap, including when just one connection is configured.
-        size_t next_candidate{0}, next_endpoint{endpoint_offset};
-        std::optional<size_t> last_candidate;
-        std::mutex proof_mutex;
-        std::exception_ptr search_error;
-        std::vector<std::thread> connections;
-        // If allocation or thread creation fails partway through launching,
-        // cancel and join every existing thread before its captures disappear.
-        struct StopAndJoin {
-            std::atomic<bool>& finished;
-            std::condition_variable& wake;
-            std::vector<std::thread>& connections;
-            ~StopAndJoin()
-            {
-                finished = true;
-                wake.notify_all();
-                for (auto& connection : connections) if (connection.joinable()) connection.join();
-            }
-        } stop_and_join{finished, wake, connections};
-        Message("searching");
-        for (int i = 0; i < concurrency; ++i) {
-            if (stop.load() || finished || RoundClock::now() >= round_end) break;
-            ++active;
-            connections.emplace_back([&] {
-                try {
-                    auto cancelled = [&] {
-                        return stop.load() || finished.load() || RoundClock::now() >= round_end;
-                    };
-                    while (!cancelled()) {
-                        size_t index, endpoint_index;
-                        {
-                            std::unique_lock lock{mutex};
-                            while (rate > 0 && Clock::now() < next_connection && !cancelled()) {
-                                wake.wait_until(lock, std::min(next_connection, Clock::now() + std::chrono::milliseconds{100}));
-                            }
-                            if (cancelled()) break;
-                            bool found{false};
-                            for (size_t checked = 0; checked < candidates.size(); ++checked) {
-                                index = next_candidate;
-                                next_candidate = next_candidate + 1 == candidates.size() ? 0 : next_candidate + 1;
-                                if (!unavailable[index]) { found = true; break; }
-                            }
-                            if (!found) break;
-                            last_candidate = index;
-                            endpoint_index = next_endpoint;
-                            next_endpoint = next_endpoint + 1 == endpoints->size() ? 0 : next_endpoint + 1;
-                            if (rate > 0) next_connection = Clock::now() + std::chrono::nanoseconds{(1'000'000'000LL + rate - 1) / rate};
-                        }
-                        const auto& prepared{candidates[index]};
-                        // GetPayToDomain() returns an optional by value. Keep
-                        // an owning copy across network I/O and verification.
-                        const auto bounty{*prepared.bounty.GetPayToDomain()};
-                        const auto& challenge{challenges[index]};
-                        if (unavailable[index]) continue;
-                        if (!Available(prepared.tx->vin[0].prevout)) { unavailable[index] = true; continue; }
-                        const auto claim_cancelled = [&] { return cancelled() || unavailable[index].load(); };
-                        {
-                            std::lock_guard lock{mutex};
-                            ++attempts;
-                            state = "searching";
-                        }
-                        // Retry other resolved addresses even at concurrency=1
-                        // (for example when only one IP family is reachable).
-                        auto captured{CaptureP2CTls((*endpoints)[endpoint_index], search_domain, challenge, claim_cancelled)};
-                        if (!captured) {
-                            if (!claim_cancelled()) {
-                                Message("retrying connections", util::ErrorString(captured).original);
-                                Pause(stop, std::chrono::seconds{1});
-                            }
-                            continue;
-                        }
-                        P2CTlsProofView view;
-                        std::string error;
-                        if (!ParseP2CTlsProof(*captured, bounty.domain, challenge, view, error) ||
-                            !VerifyP2CCertificateProof(prepared.bounty, view, prepared.validation_time, error)) {
-                            Message("certificate rejected", error);
-                            Pause(stop, std::chrono::seconds{1});
-                            continue;
-                        }
-                        if (!P2CMeetsWorkTarget(view.connection_work_hash, bounty.connection_work_target)) continue;
-                        std::lock_guard lock{proof_mutex};
-                        if (!unavailable[index].exchange(true)) {
-                            // Cancel only this bounty's duplicate attempts.
-                            // Keep other bounties searching for the whole round.
-                            completed.push_back({prepared.tx, std::move(*captured)});
-                            Save(); // Persist every success before submission.
-                            wake.notify_all();
-                        }
-                    }
-                } catch (const std::exception& e) {
-                    { std::lock_guard lock{proof_mutex}; if (!search_error) search_error = std::current_exception(); }
-                    Message("stopped with error", e.what());
-                    finished = true;
+        { std::lock_guard lock{mutex}; ++schedule_refreshes; }
+        wake.notify_all();
+    }
+
+    bool HasCompleted(const COutPoint& outpoint) const
+    {
+        if (ready && ready->vin[0].prevout == outpoint) return true;
+        return std::any_of(completed.begin(), completed.end(), [&](const auto& item) { return item.tx->vin[0].prevout == outpoint; });
+    }
+
+    std::optional<Assignment> Next(const std::atomic<bool>& stop)
+    {
+        std::lock_guard work_lock{work_mutex};
+        // Do not preassign hundreds of future connections at a low rate: choose
+        // against the latest schedule only when a connection slot is due.
+        if (rate > 0 && Clock::now() < next_connection) return std::nullopt;
+        const auto usable = [](const DomainWork& group) {
+            return !group.bounties.empty() && !group.resolving &&
+                (!group.endpoints.empty() || ScheduleClock::now() >= group.resolve_after);
+        };
+        while (!stop.load() && !groups.empty()) {
+            std::shared_ptr<DomainWork> group;
+            bool economic{false};
+            if (prefer_reward) {
+                for (const auto& [key, name] : economic_order) {
+                    if (usable(*groups.at(name))) { group = groups.at(name); economic = true; break; }
                 }
-                --active;
-            });
-        }
-        // Monitor even during a slow network read, not just between attempts.
-        while (!stop.load() && !finished && RoundClock::now() < round_end && active > 0) {
-            { std::lock_guard lock{proof_mutex}; SubmitReady(stop); }
-            // A competing claim only cancels work on its own output. Other
-            // bounties on the same domain remain eligible for this round.
-            std::map<COutPoint, Coin> coins;
-            for (size_t i = 0; i < candidates.size(); ++i) {
-                if (!unavailable[i]) coins.try_emplace(candidates[i].tx->vin[0].prevout);
+            } else {
+                auto it{domain_after ? groups.upper_bound(*domain_after) : groups.begin()};
+                for (size_t checked = 0; checked < groups.size(); ++checked) {
+                    if (it == groups.end()) it = groups.begin();
+                    if (usable(*it->second)) { group = it->second; break; }
+                    ++it;
+                }
             }
-            wallet.chain().findCoins(coins);
-            bool any_available{false};
-            for (size_t i = 0; i < candidates.size(); ++i) {
-                const auto& outpoint{candidates[i].tx->vin[0].prevout};
-                if (!unavailable[i] && (coins.at(outpoint).IsSpent() || wallet.chain().isSpentByMempool(outpoint))) unavailable[i] = true;
-                if (!unavailable[i]) any_available = true;
+            if (!group) {
+                if (economic_order.empty()) Message("waiting for eligible bounties");
+                return std::nullopt;
             }
-            if (!any_available) { finished = true; Message("bounty spent"); break; }
-            Pause(stop, std::chrono::milliseconds{200});
+            auto candidate{group->after ? group->bounties.upper_bound(*group->after) : group->bounties.begin()};
+            if (candidate == group->bounties.end()) candidate = group->bounties.begin();
+            const auto key{candidate->first};
+            const auto outpoint{key.outpoint};
+            auto cached{claim_cache.find(outpoint)};
+            if (cached != claim_cache.end() && cached->second->unavailable) {
+                group->bounties.erase(candidate);
+                UpdateEconomicOrder(*group);
+                continue;
+            }
+            if (cached == claim_cache.end()) {
+                auto saved{proposals.find(outpoint)};
+                if (saved == proposals.end() && proposals.size() >= MAX_PENDING_CLAIMS) {
+                    // This is a bound on distinct persisted challenges, not
+                    // threads, connections or domains. Never evict live work.
+                    const auto old{std::find_if(proposals.begin(), proposals.end(), [&](const auto& entry) {
+                        const auto task{claim_cache.find(entry.first)};
+                        return !HasCompleted(entry.first) && (task == claim_cache.end() || task->second.use_count() == 1);
+                    })};
+                    if (old == proposals.end()) return std::nullopt;
+                    claim_cache.erase(old->first);
+                    proposals.erase(old);
+                }
+                auto prepared{saved == proposals.end() ? PrepareP2CClaim(wallet, outpoint, claim_control) :
+                    ResumeP2CClaim(wallet, *saved->second)};
+                if (!prepared) {
+                    Message("bounty skipped", util::ErrorString(prepared).original);
+                    group->bounties.erase(candidate);
+                    UpdateEconomicOrder(*group);
+                    continue;
+                }
+                proposals.insert_or_assign(outpoint, prepared->tx);
+                cached = claim_cache.emplace(outpoint, std::make_shared<ClaimWork>(std::move(*prepared))).first;
+                Save(); // Fixed challenge is durable before ANY TLS connection.
+            }
+            if (ScheduleClock::now() >= group->resolve_after) {
+                group->resolving = true;
+                return Assignment{std::move(group), cached->second, true};
+            }
+            group->after = key;
+            if (!economic) domain_after = group->name;
+            prefer_reward = !economic; // A skipped domain never buys an extra.
+            if (rate > 0) next_connection = Clock::now() + std::chrono::nanoseconds{(1'000'000'000LL + rate - 1) / rate};
+            {
+                std::lock_guard lock{mutex};
+                ++domain_rounds; // Compatibility field: now counts assignments.
+                ++attempts;
+                domain = group->name;
+                state = "searching";
+            }
+            return Assignment{std::move(group), cached->second, false};
         }
-        for (auto& connection : connections) connection.join();
-        if (search_error) std::rethrow_exception(search_error);
-        SubmitReady(stop);
-        // Continue after the last assigned bounty, including when a deadline,
-        // low connection rate ends a round early.
-        if (last_candidate) return candidates[*last_candidate].tx->vin[0].prevout;
         return std::nullopt;
+    }
+
+    void Connect(const std::atomic<bool>& stop, const std::atomic<bool>& failed)
+    {
+        const auto cancelled = [&] { return stop.load() || failed.load(); };
+        while (!cancelled()) {
+            auto assignment{Next(stop)};
+            if (!assignment) {
+                auto until{Clock::now() + std::chrono::milliseconds{100}};
+                {
+                    std::lock_guard lock{work_mutex};
+                    if (rate > 0 && next_connection > Clock::now()) until = std::min(until, next_connection);
+                }
+                std::unique_lock lock{mutex};
+                wake.wait_until(lock, until, cancelled);
+                continue;
+            }
+            const auto& group{assignment->group};
+            if (assignment->resolve) {
+                auto endpoints{ResolveP2CDomain(group->name)};
+                {
+                    std::lock_guard lock{work_mutex};
+                    group->resolving = false;
+                    group->resolve_after = ScheduleClock::now() + (endpoints ? DNS_REFRESH : std::chrono::seconds{2});
+                    group->endpoints = endpoints ? std::move(*endpoints) : std::vector<CService>{};
+                }
+                wake.notify_all();
+                if (!endpoints) {
+                    Message("retrying domain resolution", util::ErrorString(endpoints).original);
+                }
+                continue; // DNS does not consume a fair/economic connection turn.
+            }
+            const auto& claim{assignment->claim};
+            const auto claim_cancelled = [&] { return cancelled() || claim->unavailable.load(); };
+            CService endpoint;
+            {
+                std::lock_guard lock{work_mutex};
+                if (group->endpoints.empty()) continue;
+                group->endpoint_offset %= group->endpoints.size();
+                endpoint = group->endpoints[group->endpoint_offset];
+                group->endpoint_offset = group->endpoint_offset + 1 == group->endpoints.size() ? 0 : group->endpoint_offset + 1;
+            }
+            if (claim_cancelled()) continue;
+            // No chain/database lookup in the per-connection hot path.
+            const auto started{Clock::now()};
+            auto captured{CaptureP2CTls(endpoint, group->name, claim->challenge, claim_cancelled)};
+            const double seconds{std::chrono::duration<double>(Clock::now() - started).count()};
+            if (captured || !claim_cancelled()) {
+                std::lock_guard lock{work_mutex};
+                // Full TLS capture is a success even if its work hash misses
+                // the target. Local cancellation is not a server failure.
+                group->statistics->Record(bool(captured), seconds);
+            }
+            if (!captured) {
+                if (!claim_cancelled()) {
+                    Message("retrying connections", util::ErrorString(captured).original);
+                    Pause(stop, std::chrono::seconds{1});
+                }
+                continue;
+            }
+            const auto bounty{*claim->prepared.bounty.GetPayToDomain()};
+            P2CTlsProofView view;
+            std::string error;
+            if (!ParseP2CTlsProof(*captured, bounty.domain, claim->challenge, view, error) ||
+                !VerifyP2CCertificateProof(claim->prepared.bounty, view, claim->validation_time.load(), error)) {
+                Message("certificate rejected", error);
+                Pause(stop, std::chrono::seconds{1});
+                continue;
+            }
+            if (!P2CMeetsWorkTarget(view.connection_work_hash, bounty.connection_work_target)) continue;
+            std::lock_guard lock{work_mutex};
+            if (!claim->unavailable.exchange(true)) {
+                completed.push_back({claim->prepared.tx, std::move(*captured)});
+                Save(); // Only this bounty's duplicate attempts are cancelled.
+                wake.notify_all();
+            }
+        }
     }
 
     void Run(const std::atomic<bool>& stop)
     {
         try {
             Load();
-            std::optional<std::string> domain_after;
-            std::optional<std::string> active_domain;
-            std::optional<RoundClock::time_point> round_end;
-            bool prefer_reward{false};
-            bool economic_round{false};
-            bool round_started{false};
-            bool empty_windows_wrapped{false};
-            bool searched_since_wrap{false};
-            while (!stop.load()) {
-                if (active_domain && round_end && RoundClock::now() >= *round_end) active_domain.reset();
-                SubmitReady(stop);
-                Message("scanning confirmed bounties");
-                CCoinControl control;
+            groups.clear();
+            claim_cache.clear();
+            economic_order.clear();
+            domain_after.reset();
+            prefer_reward = false;
+            SubmitReady(stop);
+            Refresh(stop);
+            std::atomic<bool> failed{false};
+            std::exception_ptr search_error;
+            std::vector<std::thread> connections;
+            // Includes partial thread creation and coordinator exceptions.
+            struct StopAndJoin {
+                std::atomic<bool>& stop;
+                std::condition_variable& wake;
+                std::vector<std::thread>& connections;
+                ~StopAndJoin()
                 {
-                    LOCK(wallet.cs_wallet);
-                    control.m_feerate = std::max({GetRequiredFeeRate(wallet), wallet.chain().mempoolMinFee(), wallet.chain().miningMinFee()});
+                    stop = true;
+                    wake.notify_all();
+                    for (auto& connection : connections) if (connection.joinable()) connection.join();
                 }
-                const auto fresh_fee{CalculateP2CClaimFee(*control.m_feerate)};
-                if (!fresh_fee) throw std::runtime_error(util::ErrorString(fresh_fee).original);
-                // Select the next DOMAIN over the entire snapshot, regardless
-                // of how many outputs it owns. Keep bounded output windows for
-                // just two domains (next and wraparound), plus a cursor per
-                // existing domain so large groups cannot starve their tail.
-                struct DomainWindow {
-                    std::string name;
-                    std::map<PriorityKey, CTxOut> next, wrapped;
-                } next_domain, wrapped_domain;
-                std::string preferred_domain;
-                std::optional<PriorityKey> preferred_key;
-                // This is a memory bound, independent of attempts/concurrency.
-                constexpr size_t window_size{MAX_PENDING_CLAIMS};
-                std::set<std::string> seen_cursors;
-                const bool scanned{wallet.chain().scanP2CBounties([&](const COutPoint& outpoint, const CTxOut& output) {
-                    const auto bounty{output.GetPayToDomain()};
-                    if (domains.empty() || std::find(domains.begin(), domains.end(), bounty->domain) != domains.end()) {
-                        const auto cursor{scan_after.find(bounty->domain)};
-                        if (cursor != scan_after.end()) seen_cursors.insert(bounty->domain);
-                        if (active_domain && *active_domain != bounty->domain) return true;
-                        const auto saved{proposals.find(outpoint)};
-                        // Existing challenges retain their actual fixed fee.
-                        // New claims all have the same one-input/one-P2PK size.
-                        const CAmount payout{saved != proposals.end() ? saved->second->vout[0].nValue :
-                            MoneyRange(output.nValue) && output.nValue > *fresh_fee ? output.nValue - *fresh_fee : 0};
-                        const PriorityKey key{GetP2CClaimPriority(bounty->connection_work_target, payout), outpoint};
-                        if (!active_domain && prefer_reward && payout > 0 &&
-                            (!preferred_key || key < *preferred_key) &&
-                            !wallet.chain().isSpentByMempool(outpoint) &&
-                            !WITH_LOCK(wallet.cs_wallet, return wallet.IsLockedCoin(outpoint))) {
-                            preferred_key = key;
-                            preferred_domain = bounty->domain;
-                        }
-                        auto& group{active_domain || !domain_after || *domain_after < bounty->domain ? next_domain : wrapped_domain};
-                        if (group.name.empty() || bounty->domain < group.name) group = DomainWindow{bounty->domain, {}, {}};
-                        if (group.name != bounty->domain) return true;
-                        auto& window{cursor == scan_after.end() || !cursor->second.after || *cursor->second.after < key ? group.next : group.wrapped};
-                        window.emplace(key, output);
-                        if (window.size() > window_size) window.erase(std::prev(window.end()));
-                    }
-                    return true;
-                }, [&] { return stop.load(); })};
-                if (!scanned) { Pause(stop, std::chrono::seconds{5}); continue; }
-                std::erase_if(scan_after, [&](const auto& entry) { return !seen_cursors.contains(entry.first); });
-                if (!active_domain && prefer_reward) {
-                    prefer_reward = false;
-                    if (!preferred_domain.empty()) {
-                        // One preferential turn, then return to the fair cursor.
-                        // Never move that cursor to the economic winner, or an
-                        // unclaimable high reward could starve later domains.
-                        active_domain = std::move(preferred_domain);
-                        round_end.reset();
-                        economic_round = true;
-                        empty_windows_wrapped = false;
-                        round_started = false;
-                        continue; // Fill its bounded proposal window next.
+            } stop_and_join{stop_requested, wake, connections};
+            auto refresh_after{ScheduleClock::now() + SCHEDULE_REFRESH};
+            while (!stop.load() && !failed) {
+                // A huge configured concurrency with no eligible bounty must
+                // remain idle, not allocate OS threads speculatively.
+                const bool has_work{[&] { std::lock_guard lock{work_mutex}; return !economic_order.empty(); }()};
+                if (has_work && connections.size() < static_cast<size_t>(concurrency)) {
+                    for (size_t i = connections.size(); i < static_cast<size_t>(concurrency) && !stop.load() && !failed; ++i) {
+                        if ([&] { std::lock_guard lock{work_mutex}; return economic_order.empty(); }()) break;
+                        connections.emplace_back([&] {
+                            try {
+                                Connect(stop, failed);
+                            } catch (...) {
+                                { std::lock_guard lock{work_mutex}; if (!search_error) search_error = std::current_exception(); }
+                                failed = true;
+                                wake.notify_all();
+                            }
+                        });
                     }
                 }
-                const bool wrapped_cycle{!active_domain && next_domain.name.empty() && domain_after.has_value()};
-                auto& group{next_domain.name.empty() ? wrapped_domain : next_domain};
-                auto& candidates{group.next.empty() ? group.wrapped : group.next};
-                if (candidates.empty()) {
-                    // The active domain was exhausted. Select the next domain
-                    // immediately; do not mistake this for an empty whole UTXO set.
-                    if (active_domain) { active_domain.reset(); continue; }
-                    {
-                        std::lock_guard lock{mutex};
-                        domain.clear();
-                        state = "waiting for bounties";
-                    }
-                    domain_after.reset();
-                    searched_since_wrap = false;
-                    Pause(stop, std::chrono::seconds{5});
-                    continue;
+                {
+                    std::lock_guard lock{work_mutex};
+                    SubmitReady(stop);
                 }
-                // Only idle after visiting EVERY domain without eligible work.
-                // An unusable domain must not delay the next usable one.
-                if (wrapped_cycle) {
-                    if (!searched_since_wrap) {
-                        Message("waiting for eligible bounties");
-                        if (!Pause(stop, std::chrono::seconds{5})) break;
-                    }
-                    searched_since_wrap = false;
+                if (ScheduleClock::now() >= refresh_after) {
+                    Refresh(stop);
+                    refresh_after = ScheduleClock::now() + SCHEDULE_REFRESH;
                 }
-                if (!active_domain) {
-                    domain_after = group.name;
-                    active_domain = group.name;
-                    round_end.reset();
-                    economic_round = false;
-                    empty_windows_wrapped = false;
-                    round_started = false;
-                }
-                scan_after[group.name].after = candidates.rbegin()->first;
-                std::map<COutPoint, PriorityKey> candidate_keys;
-                for (const auto& [key, output] : candidates) candidate_keys.emplace(key.outpoint, key);
-                for (auto it = proposals.begin(); it != proposals.end();) {
-                    if (!Available(it->first)) it = proposals.erase(it); else ++it;
-                }
-                std::vector<P2CClaimProposal> prepared_candidates;
-                for (const auto& [key, output] : candidates) {
-                    const auto& outpoint{key.outpoint};
-                    if (stop.load()) break;
-                    if (!Available(outpoint)) continue;
-                    auto saved{proposals.find(outpoint)};
-                    std::optional<P2CClaimProposal> prepared;
-                    if (saved == proposals.end()) {
-                        auto result{PrepareP2CClaim(wallet, outpoint, control)};
-                        if (!result) { Message("bounty skipped", util::ErrorString(result).original); continue; }
-                        if (proposals.size() >= MAX_PENDING_CLAIMS) {
-                            // No search is in flight here. Evict an old proposal
-                            // outside this round, never a completed proof.
-                            const auto old{std::find_if(proposals.begin(), proposals.end(), [&](const auto& entry) { return !candidate_keys.contains(entry.first); })};
-                            if (old == proposals.end()) break;
-                            proposals.erase(old);
-                        }
-                        proposals.emplace(outpoint, result->tx);
-                        prepared = std::move(*result);
-                    } else {
-                        auto resumed{ResumeP2CClaim(wallet, *saved->second)};
-                        if (!resumed) { Message("bounty skipped", util::ErrorString(resumed).original); continue; }
-                        prepared = std::move(*resumed);
-                    }
-                    prepared_candidates.push_back(std::move(*prepared));
-                }
-                // Preparation rechecks current fee floors. Order by the actual
-                // payout even if fee policy changed during the snapshot scan.
-                std::stable_sort(prepared_candidates.begin(), prepared_candidates.end(), [](const auto& a, const auto& b) {
-                    return GetP2CClaimPriority(a.bounty.GetPayToDomain()->connection_work_target, a.tx->vout[0].nValue) >
-                           GetP2CClaimPriority(b.bounty.GetPayToDomain()->connection_work_target, b.tx->vout[0].nValue);
-                });
-                Save(); // Persist all fixed challenges before starting HTTPS.
-                if (!stop.load() && !prepared_candidates.empty()) {
-                    if (!round_started) {
-                        { std::lock_guard lock{mutex}; ++domain_rounds; }
-                        // Skipping an unusable fair domain must NOT grant an
-                        // extra economic turn. Otherwise many locked/dust-only
-                        // domains could amplify the winner's allocation.
-                        if (!economic_round) prefer_reward = true;
-                        round_started = true;
-                    }
-                    searched_since_wrap = true;
-                    empty_windows_wrapped = false;
-                    if (const auto last{Search(stop, prepared_candidates, round_end)}) scan_after.at(group.name).after = candidate_keys.at(*last);
-                    Save();
-                } else if (group.next.empty() && std::exchange(empty_windows_wrapped, true)) {
-                    // A full output cycle contained no eligible work. Continue
-                    // to the next domain instead of repeatedly scanning it.
-                    active_domain.reset();
-                }
+                Pause(stop, std::chrono::milliseconds{100});
             }
+            stop_requested = true;
+            wake.notify_all();
+            for (auto& connection : connections) if (connection.joinable()) connection.join();
+            if (search_error) std::rethrow_exception(search_error);
             Save();
             Message("disabled");
         } catch (const std::exception& e) {
@@ -659,6 +704,7 @@ util::Result<void> P2CClaimWorkerImpl::Configure(int rate, int concurrency, std:
         m_impl->domains = std::move(domains);
         m_impl->next_connection = {};
         m_impl->domain_rounds = 0;
+        m_impl->schedule_refreshes = 0;
         m_impl->state = rate == 0 ? "disabled" : "starting";
         m_impl->last_error.clear();
     }
@@ -683,6 +729,7 @@ UniValue P2CClaimWorkerImpl::Status() const
     result.pushKV("connections_per_second", m_impl->rate);
     result.pushKV("concurrency", m_impl->concurrency);
     result.pushKV("domain_rounds", m_impl->domain_rounds);
+    result.pushKV("schedule_refreshes", m_impl->schedule_refreshes);
     result.pushKV("state", m_impl->state);
     result.pushKV("domain", m_impl->domain);
     result.pushKV("attempts", m_impl->attempts);

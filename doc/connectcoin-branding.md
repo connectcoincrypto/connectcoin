@@ -26,14 +26,11 @@ public launch**:
   that network's exchange ticker.
 - `connectcoin.com` was already registered and resolving when checked. GitHub
   accounts using `Connectcoin` and `Connectcoinnode` also already existed.
-- No project-owned public source repository, issue tracker, security contact,
-  release-signing identity, DNS seed domain, or package-publishing account has
-  been assigned yet. The development checkout retains Bitcoin Core as its
-  `origin` fetch source, while its local push URL is deliberately set to the
-  non-resolving `connectcoin.invalid` domain. Fresh clones do not inherit that
-  local protection and must verify `git remote -v` before any push.
-  Development binaries therefore state that no project-owned public source URL
-  is configured instead of advertising Bitcoin Core's repository as their own.
+- The original rebrand had no project-owned public source repository or DNS
+  seed domain. The project now uses `connectcoincrypto/connectcoin` on GitHub
+  and `connectcoin1.com` for testnet4 bootstrap. These assignments do not by
+  themselves establish a release-signing identity, security contact or
+  package-publishing account. Verify `git remote -v` before any push.
 
 Development application identifiers use the reserved domain
 `connectcoin.invalid` and the reverse prefix `invalid.connectcoin`. Replace them
@@ -151,9 +148,10 @@ be defined separately; see [testnet-beta.md](testnet-beta.md).
 
 Fixed seeds are intentionally absent during development. The inherited Bitcoin
 peer snapshots were removed from `contrib/seeds`, and the generated seed header
-is not included by the chain parameters. DNS seed hostnames and fixed seed
-snapshots must only be added after ConnectCoin-controlled discovery
-infrastructure exists. Regtest retains only the non-resolving
+is not included by the chain parameters. Testnet4 now includes the DNS seed
+`connectcoin1.com`; its operational requirements are documented in
+[testnet-beta.md](testnet-beta.md#testnet4-bootstrap-dns). No public DNS seed is
+configured for the other networks. Regtest retains only the non-resolving
 `dummySeed.invalid.` test-framework placeholder; it is not a bootstrap server.
 
 All fifteen chosen RPC/P2P/onion-bind ports are in IANA's User Port range

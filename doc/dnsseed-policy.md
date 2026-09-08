@@ -43,11 +43,21 @@ related to the DNS seed operation.
 
 If these expectations cannot be satisfied the operator should
 discontinue providing services and contact the active ConnectCoin Core
-maintainers through the project-owned channel documented by the repository.
-No such public channel is established yet, so DNS seeds must remain disabled.
+maintainers through the [project issue tracker](https://github.com/connectcoincrypto/connectcoin/issues)
+for non-sensitive operational reports. Do not post credentials or private keys.
 
 Behavior outside of these expectations may be reasonable in some
 situations but should be discussed in public in advance.
+
+Current beta seed
+-----------------
+
+`connectcoin1.com` is configured only for ConnectCoin testnet4. Its operator must
+maintain the required DNS records and a reachable P2P bootstrap service on TCP
+48179; adding the hostname to the source does not establish service availability.
+See [testnet-beta.md](testnet-beta.md#testnet4-bootstrap-dns) for the filtered
+query and base-hostname fallback requirements. No mainnet seed or fixed peer
+snapshot is enabled by this configuration.
 
 See also
 ----------

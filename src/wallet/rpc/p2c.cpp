@@ -28,10 +28,11 @@ RPCResult ClaimWorkerResult()
     return RPCResult{RPCResult::Type::OBJ, "", "", {
         {RPCResult::Type::NUM, "connections_per_second", "Aggregate per-wallet rate; 0 disables, -1 is unlimited."},
         {RPCResult::Type::NUM, "concurrency", "Maximum simultaneous TLS handshakes."},
-        {RPCResult::Type::NUM, "domain_rounds", "Domain rounds started since the last configuration."},
+        {RPCResult::Type::NUM, "domain_rounds", "Connection assignments since the last configuration (legacy field name)."},
+        {RPCResult::Type::NUM, "schedule_refreshes", "Completed bounty/priority refreshes since the last configuration."},
         {RPCResult::Type::STR, "state", "Current worker state."},
         {RPCResult::Type::STR, "domain", "Most recently processed domain."},
-        {RPCResult::Type::NUM, "attempts", "Started connection attempts, saved between rounds."},
+        {RPCResult::Type::NUM, "attempts", "Started connection attempts, saved between worker restarts."},
         {RPCResult::Type::NUM, "submitted", "Claims stored and submitted by this worker, not necessarily confirmed."},
         {RPCResult::Type::STR, "last_error", "Last diagnostic, if any."},
         {RPCResult::Type::STR, "last_txid", "Last submitted claim transaction id, or empty."},

@@ -348,7 +348,7 @@ public:
         assert(genesis->hashMerkleRoot == uint256{"c20a4d5c39a400dde2e7d9eaeedc4c5df22bb2f9d4f471369ee67aa40da3a683"});
 
         vFixedSeeds.clear();
-        vSeeds.clear();
+        vSeeds.emplace_back("connectcoin1.com"); // ConnectCoin public testnet4 bootstrap.
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 65);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 127);

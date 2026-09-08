@@ -183,8 +183,11 @@ public:
     //! Run current mempool/consensus checks without storing or relaying a transaction.
     virtual util::Result<void> checkTransaction(const CTransactionRef& tx) = 0;
 
-    //! Scan a flushed UTXO snapshot off the wallet/UI thread. A false visitor
-    //! result stops a bounded batch; cancellation is checked between entries.
+    //! Visit a node-shared confirmed P2C catalog off the wallet/UI thread.
+    //! Initially scan a flushed UTXO snapshot, then apply only new blocks and
+    //! reorg undo. Pruned history falls back to a fresh snapshot. Mempool spends
+    //! are not removed here (they may be evicted); callers check eligibility.
+    //! A false visitor stops this visit, never construction of the catalog.
     virtual bool scanP2CBounties(const std::function<bool(const COutPoint&, const CTxOut&)>& visitor,
                                 const std::function<bool()>& cancelled) = 0;
 

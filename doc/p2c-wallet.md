@@ -117,73 +117,107 @@ prompt confirmation if demand rises before submission.
   disables this path rather than being silently bypassed. SOCKS support is not
   implemented for the claim generator.
 
-The worker scans a UTXO snapshot outside the chain lock after flushing its cache
-and **rotates automatically between domains**. Guaranteed round-robin turns
-alternate with extra turns for the domain with the highest expected net return.
-Economic preference does not move the round-robin cursor: even a high-reward
-server that never supplies a usable proof cannot prevent the other domains from
-being tried. For example, with three eligible domains A, B and C and A as the
-economic winner, turns are A, A, B, A, C, A, then repeat. This deliberately balances
-economic preference with fair exploration; it is not proportional allocation.
-The economic winner is recalculated between turns using its best available
-bounty, not the sum or count of its outputs. Locked or mempool-spent outputs do
-not win extra turns, and unusable proposal windows are skipped as usual.
-Skipping an unusable fair domain does not grant an extra economic turn.
+The node maintains a **shared in-memory catalog of confirmed P2C bounties**.
+The first lookup scans a flushed UTXO snapshot outside the chain lock. Subsequent
+lookups apply only new blocks (their outputs and spent inputs), plus block undo
+during reorganizations. If the required history was pruned, the catalog is rebuilt
+from the current UTXO snapshot. It is not persisted: restarting the node requires
+one initial scan again. Wallets sharing the node's chain interface reuse the
+catalog, rather than each flushing/scanning the entire UTXO database.
+
+Each wallet refreshes eligible bounties and expected-return priorities every
+**five seconds**, visiting this P2C-only catalog. Competing mempool spends and
+wallet coin locks temporarily exclude bounties; they can become eligible again
+after eviction/unlocking. Availability checks of cached/in-flight work are batched
+at refresh time, not performed before every repeated TLS attempt. A competitor
+can therefore cause some wasted work until the next refresh, but submission
+always rechecks current availability and every consensus/policy rule.
+
+**A domain is selected for each new connection**, not for a 30-second batch.
+Persistent connection workers share the scheduler. Guaranteed round-robin
+assignments alternate with extra assignments for the domain with the highest
+performance-weighted expected net return. Economic preference does not move the
+fair cursor: with A,
+B and C eligible and A as the economic winner, assignments are A, A, B, A, C, A,
+then repeat. Concurrent connections may start/finish in a different order.
+This balances economic preference with exploration; it is not proportional
+allocation. The economic winner uses its best eligible bounty, not the sum or
+count of its outputs. Unusable bounties do not earn extra economic assignments.
+
+Each domain keeps a rolling `deque<pair<bool, double>>` of the **last 100
+completed TCP/TLS attempts**, shared across its bounties and resolved IPs. The
+boolean records capture through **CertificateVerify**; seconds measure elapsed
+TCP/TLS effort with a monotonic clock. TCP failures, TLS errors and timeouts count
+as failures. A completed capture counts as a success regardless of whether its
+hash meets the bounty target; certificate/claim acceptance is still verified
+separately. DNS resolution, rate-limit waits, scheduler waits, retry backoff and
+subsequent certificate verification are not part of this duration. Locally
+cancelled incomplete attempts (stop, spent bounty or duplicate proof) are excluded,
+since they do not establish whether the server could complete the handshake.
+
+At each five-second refresh the domain multiplier is:
+`(0.1 + successful_captures) / (0.02 + total_attempt_seconds)`.
+An untried domain therefore starts at **5 captures/second of effort**. The score
+for extra assignments is the best bounty's expected net return multiplied by
+this rate. This favors reliable, fast connections while retaining guaranteed
+round-robin exploration. Timing scores use floating point; exact economic keys
+break rounded ties. Durations of simultaneous attempts are summed individually,
+not measured as a shared wall-clock interval, so raising concurrency alone does
+not multiply the observed efficiency.
+
+The oldest attempt is removed when the window exceeds 100. Histories survive
+priority refreshes, temporary bounty ineligibility and stop/start in the same
+loaded wallet. They are in-memory only: unloading the wallet resets them. A
+domain with no remaining matching confirmed bounties is forgotten once its
+in-flight work drains. These measurements affect local scheduling only, never
+consensus, the global connection limit or within-domain bounty ordering.
 
 There is **no per-domain connection quota or configurable per-domain limit**.
-Only the wallet-wide rate and concurrency settings limit traffic. Internally the
-scheduler uses a 30-second search quantum to revisit other domains, ending early
-when the current domain's eligible bounties are exhausted (or on stop/fatal error).
-The quantum starts after discovery, proposal preparation and the first DNS lookup,
-so a slow discovery cannot repeatedly expire a turn before any TLS attempt.
-Further proposal windows and DNS lookups in that turn do not reset its deadline.
-This is not a quota of connections per 30 seconds: there is no attempt cap or
-cooldown, and a sole eligible domain resumes immediately with the wallet's full
-configured capacity. OS DNS, cancellation and saving/submitting finished work may
-delay handoff; this is not a hard wall-clock shutdown guarantee. `domain_rounds`
-is only a diagnostic count of rounds since the latest configuration.
+Only the wallet-wide rate and concurrency settings limit traffic. A sole eligible
+domain may use all that capacity. Low-rate workers do not preassign a long queue
+of future connections: assignments are made when a connection slot is due.
+`domain_rounds` is retained for RPC compatibility, but now counts connection
+assignments since configuration, not timed rounds. `schedule_refreshes` counts
+completed catalog/priority refreshes. The displayed domain is the last assigned
+domain; other domains can be in flight simultaneously.
 
-A successful proof finishes only that bounty: its duplicate attempts are cancelled,
-its proof is saved and submitted, and other bounties continue in the same round.
-This scheduling protects against monopolization by an individual domain, not an
-attacker controlling many distinct domains. Nor can it force a server to provide
-winning TLS transcripts. Claim generation remains independent of node consensus.
+Within a domain, bounties rotate in descending expected net return:
+`(target + 1) / 2^256 * (reward - claim_fee)`. The inclusive `+1` matches consensus's
+`hash <= target`. Exact 320-bit integer numerators avoid floating-point rounding
+and overflow at the maximum target. Existing proposals retain their actual
+payout/fee; new proposals use the full-proof fee calculation. Equal priorities
+use outpoint order. A cursor preserves progress through large groups across
+refreshes, including bounties beyond the 256-entry fixed-proposal cache.
+The cache never evicts an in-flight challenge or a completed proof. This is a
+memory bound on distinct proposals, not a cap on connections or visited domains.
 
-Connections are shared round-robin among that domain's bounties, with a rotating
-window of up to 256 proposals. Exhausting a window refills it from the same domain
-without resetting the deadline or rotating away prematurely. Within each
-domain, the rotation is ordered by descending expected net return per valid
-connection: `(target + 1) / 2^256 * (reward - claim_fee)`. The inclusive `+1`
-matches consensus's `hash <= target`. Ranking uses exact 320-bit integer
-numerators, without floating-point rounding or overflowing at the maximum
-target. Existing proposals use their fixed payout/fee; new proposals use the
-same full-proof fee calculation as claim construction. This priority applies
-when selecting the window, not just after selecting outputs by transaction ID.
-Equal priorities use outpoint order. The cursor advances through this ranked
-cycle, preserving rotation rather than monopolizing all rounds with one bounty.
-This changes search priority, not rewards or consensus rules. Each attempt
-uses its own bounty-specific claim challenge; proofs are never reused for other
-outputs. More bounties alone do not buy extra domain turns. Output cursors
-also rotate after partially completed rounds so low rates cannot starve later
-bounties. These are rounds, not additional per-domain connection-rate settings:
-if only one domain remains, its next round can start immediately.
-When a round finishes with eligible work,
-it rescans and rotates immediately, without an idle delay. DNS failures back off
-for two seconds; failed TLS attempts and rejected certificates back off for one
-second per connection worker. All these waits are interruptible when stopping.
+Priority refreshes **do not cancel or restart healthy in-flight TLS handshakes**.
+Certificate validation follows the refreshed chain median time even in searches
+lasting hours; updating that time never changes the transaction or challenge.
+A successful proof cancels only duplicate attempts for that bounty, is saved
+durably, and is automatically submitted by the coordinator. A spent/locked/reorged
+bounty cancels only its affected work at the availability refresh. Every attempt
+uses its own bounty-specific challenge; proofs are never reused for other outputs.
+
+DNS results are reused for 60 seconds, with resolved addresses rotated between
+attempts (including at concurrency 1). Resolution is outside the scheduler lock:
+one slow lookup does not block other connection workers on other domains.
+Failed DNS backs off for two seconds for that domain. Failed TLS or rejected
+certificates back off for one second per connection worker. These are retry
+backoffs, not per-domain traffic quotas. All waits are interruptible on stop,
+but an OS DNS call may delay the worker using that call until it returns.
+
 If no matching bounties exist, the state is `waiting for bounties`; if matching
-bounties exist but no domain has searchable work (for example, all are locked or too small
-to pay the claim fee), it is `waiting for eligible bounties`. Both idle cases
-rescan after five seconds to avoid a busy loop and discover new eligible work.
-These are scheduling/memory bounds, not a lifetime attempt limit: difficult
-bounties are tried again. This implementation has no persistent bounty index;
-on a large UTXO set, discovery itself can take time. The node remains responsible
-for rechecking availability and all consensus/policy rules before acceptance.
-The worker detects competing mempool claims and spent outputs, cancelling their
-in-flight searches. TCP setup is bounded to one second and a TLS attempt to ten
-seconds; cancellation is checked between steps. An OS DNS lookup may still delay
-stopping until that lookup returns. HTTPS is independent of the P2P network toggle;
-use **Stop HTTPS (0)** to stop it.
+bounties exist but none are eligible (for example, locked or uneconomic), it is
+`waiting for eligible bounties`. Both recheck after five seconds. No connection
+threads are created speculatively when there is no eligible work.
+TCP setup is bounded to one second and TLS capture to ten seconds, independent
+of the ranking refresh. HTTPS is independent of the P2P network toggle; use
+**Stop HTTPS (0)** to stop it.
+
+This protects against monopolization by one domain, not an attacker controlling
+many domains. It cannot force a server to supply winning transcripts. Claim
+generation and its cached discovery metadata do not change consensus rules.
 
 Fixed unsigned proposals and completed proofs are stored in the wallet database.
 A completed proof is saved **before** submission. Concurrent successes are queued

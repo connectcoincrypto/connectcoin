@@ -45,6 +45,7 @@
 #include <node/mini_miner.h>
 #include <node/mining_args.h>
 #include <node/mining_types.h>
+#include <node/p2c_bounty_catalog.h>
 #include <node/transaction.h>
 #include <node/types.h>
 #include <node/warnings.h>
@@ -62,6 +63,7 @@
 #include <txdb.h>
 #include <txmempool.h>
 #include <uint256.h>
+#include <undo.h>
 #include <univalue.h>
 #include <util/btcsignals.h>
 #include <util/check.h>
@@ -77,12 +79,14 @@
 
 #include <any>
 #include <atomic>
+#include <chrono>
 #include <condition_variable>
 #include <cstdint>
 #include <cstdlib>
 #include <functional>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -679,21 +683,80 @@ public:
     bool scanP2CBounties(const std::function<bool(const COutPoint&, const CTxOut&)>& visitor,
                         const std::function<bool()>& cancelled) override
     {
-        std::unique_ptr<CCoinsViewCursor> cursor;
+        // All wallets share this lazy node-side catalog. Only its initial load
+        // (or recovery after pruning) scans the UTXO database. Disk reads and
+        // visitors run outside cs_main; no validation callback waits on wallets.
+        std::unique_lock catalog_lock{m_p2c_mutex, std::defer_lock};
+        while (!catalog_lock.try_lock_for(std::chrono::milliseconds{50})) {
+            if (cancelled()) return false;
+        }
+        if (cancelled() || chainman().IsInitialBlockDownload()) return false;
+        const auto rebuild = [&]() {
+            std::unique_ptr<CCoinsViewCursor> cursor;
+            {
+                LOCK(cs_main);
+                auto& state{chainman().ActiveChainstate()};
+                state.ForceFlushStateToDisk(/*wipe_cache=*/false);
+                cursor = state.CoinsDB().Cursor();
+            }
+            std::map<COutPoint, CTxOut> fresh;
+            while (cursor->Valid()) {
+                if (cancelled()) return false;
+                COutPoint outpoint;
+                Coin coin;
+                if (!cursor->GetKey(outpoint) || !cursor->GetValue(coin)) return false;
+                if (IsCanonicalP2COutput(coin.out)) fresh.emplace(outpoint, std::move(coin.out));
+                cursor->Next();
+            }
+            const auto* tip{WITH_LOCK(cs_main, return chainman().m_blockman.LookupBlockIndex(cursor->GetBestBlock()))};
+            if (!tip) return false;
+            m_p2c_bounties = std::move(fresh);
+            m_p2c_tip = tip;
+            return true;
+        };
+        if (!m_p2c_tip && !rebuild()) return false;
+        const CBlockIndex* target;
+        const CBlockIndex* fork;
         {
             LOCK(cs_main);
-            if (cancelled() || chainman().IsInitialBlockDownload()) return false;
-            auto& state{chainman().ActiveChainstate()};
-            state.ForceFlushStateToDisk(/*wipe_cache=*/false);
-            cursor = state.CoinsDB().Cursor();
+            target = chainman().ActiveChain().Tip();
+            if (!target) return false;
+            fork = LastCommonAncestor(m_p2c_tip, target);
         }
-        while (cursor->Valid()) {
+        // A partially applied block must never become a published catalog.
+        // On cancellation/error invalidate it and rebuild on the next call.
+        const auto apply = [&](const CBlockIndex* index, bool disconnect) {
+            CBlock block;
+            CBlockUndo undo;
+            if (cancelled() || !chainman().m_blockman.ReadBlock(block, *index)) return false;
+            if (disconnect && (!chainman().m_blockman.ReadBlockUndo(undo, *index) || undo.vtxundo.size() + 1 != block.vtx.size())) return false;
+            return ApplyP2CBountyBlock(m_p2c_bounties, block, disconnect ? &undo : nullptr, cancelled);
+        };
+        bool updated{true};
+        while (m_p2c_tip != fork) {
+            if (!apply(m_p2c_tip, /*disconnect=*/true)) { updated = false; break; }
+            m_p2c_tip = m_p2c_tip->pprev;
+        }
+        if (updated) {
+            std::vector<const CBlockIndex*> connected;
+            for (auto* index = target; index != fork; index = index->pprev) connected.push_back(index);
+            for (auto it = connected.rbegin(); it != connected.rend(); ++it) {
+                if (!apply(*it, /*disconnect=*/false)) { updated = false; break; }
+                m_p2c_tip = *it;
+            }
+        }
+        if (!updated) {
+            m_p2c_tip = nullptr;
+            m_p2c_bounties.clear();
+            if (cancelled() || !rebuild()) return false;
+        }
+        // Snapshot only P2C outputs, not the entire UTXO set. Release the catalog
+        // before invoking wallet code, which may take wallet/chain locks.
+        const auto snapshot{m_p2c_bounties};
+        catalog_lock.unlock();
+        for (const auto& [outpoint, output] : snapshot) {
             if (cancelled()) return false;
-            COutPoint outpoint;
-            Coin coin;
-            if (!cursor->GetKey(outpoint) || !cursor->GetValue(coin)) return false;
-            if (IsCanonicalP2COutput(coin.out) && !visitor(outpoint, coin.out)) break;
-            cursor->Next();
+            if (!visitor(outpoint, output)) break;
         }
         return true;
     }
@@ -933,6 +996,9 @@ public:
     ChainstateManager& chainman() { return *Assert(m_node.chainman); }
     ValidationSignals& validation_signals() { return *Assert(m_node.validation_signals); }
     NodeContext& m_node;
+    std::timed_mutex m_p2c_mutex;
+    const CBlockIndex* m_p2c_tip{nullptr};
+    std::map<COutPoint, CTxOut> m_p2c_bounties;
 };
 
 class BlockTemplateImpl : public BlockTemplate

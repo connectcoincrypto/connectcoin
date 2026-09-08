@@ -91,7 +91,7 @@ class P2CAutoClaimTest(BitcoinTestFramework):
                 claimant.setp2cclaiming(0)
                 self.log.info("Final live status: %s", status)
             assert_equal(status["submitted"], 3)
-            assert_equal(status["domain_rounds"], 1)
+            assert status["domain_rounds"] >= 3
             txid = status["last_txid"]
             tx = claimant.gettransaction(txid, verbose=True)["decoded"]
             assert_equal(tx["vin"][0]["txid"], funded["txids"][0])
