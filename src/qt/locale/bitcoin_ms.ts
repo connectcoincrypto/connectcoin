@@ -792,6 +792,26 @@ Jika dompet ini mengandungi sebarang skrip yang boleh diselesaikan tetapi tidak 
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Pilihan: jika kosong, dompet ini digunakan</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Alamat ganjaran:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Jika alamat ganjaran ditetapkan, alamat itu digunakan menggantikan dompet ini. Apabila anda menukar alamat, bukti yang telah lengkap tetap mengekalkan destinasi asalnya.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Destinasi ganjaran: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Dompet ini (lalai)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Cari ganjaran yang disahkan secara automatik, jana bukti TLS dan hantar ganjaran ke dompet ini. Fi hanya diambil daripada setiap ganjaran. Kunci peribadi tidak perlu dibuka selagi alamat penerimaan masih ada dalam kumpulan kunci. HTTPS dinyahdayakan sehingga anda memulakannya secara jelas.</translation>
     </message>
@@ -1093,6 +1113,13 @@ Versi sijil akar: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Dibatalkan. Tiada transaksi P2C dihantar.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Pilihan: jika kosong, dompet ini digunakan</translation>
     </message>
 </context>
 </TS>

@@ -3209,6 +3209,26 @@ Go to File &gt; Open Wallet to load a wallet.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>មិនចាំបាច់បំពេញ៖ បើទុកទទេ នឹងប្រើកាបូបនេះ</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>អាសយដ្ឋានទទួលរង្វាន់៖</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>បើអ្នកបញ្ចូលអាសយដ្ឋានទទួលរង្វាន់ វានឹងត្រូវបានប្រើជំនួសកាបូបនេះ។ ទោះបីអ្នកប្តូរអាសយដ្ឋានក៏ដោយ ភស្តុតាងដែលបានបញ្ចប់នៅតែរក្សាគោលដៅដើមរបស់វា។</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>គោលដៅរង្វាន់៖ %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>កាបូបនេះ (លំនាំដើម)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>រករង្វាន់ដែលបានបញ្ជាក់ដោយស្វ័យប្រវត្តិ បង្កើតភស្តុតាង TLS ហើយផ្ញើរង្វាន់ទៅកាបូបនេះ។ ថ្លៃសេវាត្រូវកាត់ចេញពីរង្វាន់នីមួយៗតែប៉ុណ្ណោះ។ មិនចាំបាច់ដោះសោសោឯកជនទេ ដរាបណាមានអាសយដ្ឋានទទួលក្នុងឃ្លាំងសោ។ HTTPS ត្រូវបានបិទរហូតដល់អ្នកចាប់ផ្ដើមវាដោយច្បាស់លាស់។</translation>
     </message>
@@ -3510,6 +3530,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>បានបោះបង់។ មិនបានផ្ញើប្រតិបត្តិការ P2C ណាមួយទេ។</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>មិនចាំបាច់បំពេញ៖ បើទុកទទេ នឹងប្រើកាបូបនេះ</translation>
     </message>
 </context>
 </TS>

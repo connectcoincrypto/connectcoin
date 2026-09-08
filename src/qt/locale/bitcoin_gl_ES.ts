@@ -1253,6 +1253,26 @@ Firmar é posible unicamente con enderezos de tipo 'legacy'.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opcional: baleiro utiliza esta carteira</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Enderezo da recompensa:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Un enderezo de recompensa opcional úsase no canto desta carteira. As probas completadas conservan o seu destino orixinal cando o cambias.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Destino da recompensa: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Esta carteira (predeterminada)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Descobre automaticamente recompensas confirmadas, xera probas TLS e envía as recompensas a esta carteira. As comisións descóntanse só de cada recompensa. Non é preciso desbloquear as claves privadas mentres queden enderezos de recepción na reserva de claves. HTTPS está desactivado ata que o inicies explicitamente.</translation>
     </message>
@@ -1554,6 +1574,13 @@ Versión dos certificados raíz: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Cancelado. Non se enviou ningunha transacción P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opcional: baleiro utiliza esta carteira</translation>
     </message>
 </context>
 </TS>

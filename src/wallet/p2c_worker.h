@@ -22,7 +22,7 @@ class CWallet;
 class P2CClaimWorker {
 public:
     virtual ~P2CClaimWorker() = default;
-    virtual util::Result<void> Configure(int connections_per_second, int concurrency, std::vector<std::string> domains = {}) = 0;
+    virtual util::Result<void> Configure(int connections_per_second, int concurrency, std::vector<std::string> domains = {}, std::string reward_address = {}) = 0;
     virtual void Stop() = 0;
     virtual void Shutdown() = 0;
     virtual UniValue Status() const = 0;

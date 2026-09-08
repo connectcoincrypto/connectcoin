@@ -32,6 +32,13 @@ P2CClaimDialog::P2CClaimDialog(QWidget* parent) : QWidget(parent)
     layout->addWidget(explanation);
     auto* form = new QFormLayout;
     form->setRowWrapPolicy(QFormLayout::WrapLongRows);
+    m_address = new QLineEdit(this);
+    m_address->setObjectName("p2cClaimAddress");
+    m_address->setPlaceholderText(tr("Optional: empty uses this wallet"));
+    form->addRow(tr("Reward address:"), m_address);
+    auto* destination_hint = new QLabel(tr("An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it."), this);
+    destination_hint->setWordWrap(true);
+    form->addRow(QString{}, destination_hint);
     m_rate = new QSpinBox(this);
     m_rate->setObjectName("p2cClaimRate");
     m_rate->setRange(0, 1'000'000);
@@ -67,6 +74,12 @@ P2CClaimDialog::P2CClaimDialog(QWidget* parent) : QWidget(parent)
     m_status->setTextFormat(Qt::PlainText);
     m_status->setTextInteractionFlags(Qt::TextSelectableByMouse);
     layout->addWidget(m_status);
+    m_reward_status = new QLabel(this);
+    m_reward_status->setObjectName("p2cClaimRewardStatus");
+    m_reward_status->setTextFormat(Qt::PlainText);
+    m_reward_status->setWordWrap(true);
+    m_reward_status->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    layout->addWidget(m_reward_status);
     layout->addStretch();
     connect(m_start, &QPushButton::clicked, this, [this] { Configure(false); });
     connect(m_stop, &QPushButton::clicked, this, [this] { Configure(true); });
@@ -88,20 +101,29 @@ void P2CClaimDialog::Configure(bool stop)
     if (!m_model || m_operation.valid()) return;
     m_configuration_error.clear();
     const int rate{stop ? 0 : m_unlimited->isChecked() ? -1 : m_rate->value()};
+    const QString reward_address{stop ? QString{} : m_address->text().trimmed()};
     std::vector<std::string> domains;
     for (const auto& domain : m_domains->text().split(',', Qt::SkipEmptyParts)) domains.push_back(domain.trimmed().toStdString());
     if (rate != 0) {
         const QPointer<P2CClaimDialog> guard{this};
         const QPointer<WalletModel> model{m_model};
-        const auto answer = QMessageBox::question(this, tr("Enable automatic P2C claiming?"),
+        auto* confirmation = new QMessageBox(QMessageBox::Question, tr("Enable automatic P2C claiming?"),
             tr("This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.\n\n%1\n\nContinue?")
-                .arg(rate < 0 ? tr("You selected UNLIMITED connections per second.") : tr("Rate: %1 connections per second for this wallet.").arg(rate)));
+                .arg((rate < 0 ? tr("You selected UNLIMITED connections per second.") : tr("Rate: %1 connections per second for this wallet.").arg(rate)) +
+                     QStringLiteral("\n") + tr("Reward target: %1").arg(reward_address.isEmpty() ? tr("This wallet (default)") : reward_address.toHtmlEscaped())),
+            QMessageBox::Yes | QMessageBox::No, this);
+        // The wallet/page can disappear during exec(). A stack-owned modal
+        // parented to this page would also be destroyed by its parent's teardown.
+        confirmation->setAttribute(Qt::WA_DeleteOnClose);
+        confirmation->setDefaultButton(QMessageBox::No);
+        const auto answer = confirmation->exec();
         if (!guard || !model || answer != QMessageBox::Yes) return;
         if (m_model != model) return;
     }
     if (stop) { m_unlimited->setChecked(false); m_rate->setValue(0); }
     try {
-        m_operation = m_model->wallet().configureP2CClaiming(rate, m_concurrency->value(), stop ? std::vector<std::string>{} : std::move(domains));
+        m_operation = m_model->wallet().configureP2CClaiming(rate, m_concurrency->value(), stop ? std::vector<std::string>{} : std::move(domains),
+                                                          reward_address.toStdString());
     } catch (const std::exception& error) {
         m_configuration_error = QString::fromUtf8(error.what());
         m_status->setText(m_configuration_error);
@@ -150,6 +172,8 @@ void P2CClaimDialog::Refresh()
         const auto progress = m_model->wallet().getP2CClaimStatus();
         const int rate = progress["connections_per_second"].getInt<int>();
         const QString rate_text = rate == -1 ? tr("Unlimited") : rate == 0 ? tr("Disabled (0)") : QString::number(rate);
+        const auto reward_address{QString::fromStdString(progress["reward_address"].get_str())};
+        m_reward_status->setText(tr("Reward target: %1").arg(reward_address.isEmpty() ? tr("This wallet (default)") : reward_address));
         m_status->setText(tr("State: %1\nActive rate: %2 | Concurrency: %3\nDomain: %4\nAttempts: %5 | Submitted: %6\nLast claim: %7\n%8")
             .arg(StateText(progress["state"].get_str()))
             .arg(rate_text)

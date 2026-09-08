@@ -3146,6 +3146,26 @@ For more information on using this console, type %6.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>વૈકલ્પિક: ખાલી રાખવાથી આ વૉલેટ વપરાય છે</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>ઇનામનું સરનામું:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>વૈકલ્પિક ઇનામનું સરનામું આ વૉલેટને બદલે વપરાય છે. સરનામું બદલવાથી પૂર્ણ થયેલા પુરાવા તેમનું મૂળ ગંતવ્ય જાળવી રાખે છે.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>ઇનામનું ગંતવ્ય: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>આ વૉલેટ (ડિફૉલ્ટ)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>પુષ્ટિ થયેલા ઇનામો આપમેળે શોધો, TLS પુરાવા બનાવો અને ઇનામો આ વૉલેટમાં મોકલો. ફી ફક્ત દરેક ઇનામમાંથી કાપવામાં આવે છે. કી પૂલમાં પ્રાપ્તિનાં સરનામાં હોય ત્યાં સુધી ખાનગી કીઓ અનલૉક કરવાની જરૂર નથી. તમે સ્પષ્ટ રીતે શરૂ ન કરો ત્યાં સુધી HTTPS બંધ રહે છે.</translation>
     </message>
@@ -3447,6 +3467,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>રદ કર્યું. કોઈ P2C વ્યવહાર મોકલાયો નથી.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>વૈકલ્પિક: ખાલી રાખવાથી આ વૉલેટ વપરાય છે</translation>
     </message>
 </context>
 </TS>

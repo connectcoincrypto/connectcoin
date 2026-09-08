@@ -5170,6 +5170,26 @@ Essayez d’utiliser la version la plus récente du logiciel.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Facultatif : un champ vide utilise ce portefeuille</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Adresse de récompense :</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Une adresse de récompense facultative remplace ce portefeuille. Les preuves terminées conservent leur destination d'origine lorsque vous la modifiez.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Destination de la récompense : %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Ce portefeuille (par défaut)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Détecte automatiquement les primes confirmées, génère des preuves TLS et envoie les récompenses à ce portefeuille. Les frais sont prélevés uniquement sur chaque prime. Aucun déverrouillage des clés privées n’est nécessaire tant que la réserve de clés contient des adresses de réception. HTTPS reste désactivé jusqu’à son activation explicite.</translation>
     </message>
@@ -5471,6 +5491,13 @@ Version des certificats racines : %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Annulé. Aucune transaction P2C n’a été envoyée.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Facultatif : un champ vide utilise ce portefeuille</translation>
     </message>
 </context>
 </TS>

@@ -4653,6 +4653,26 @@ Ei voinut palauttaa lompakon varmuuskopiota..</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Valinnainen: tyhjä kenttä käyttää tätä lompakkoa</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Palkkio-osoite:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Valinnaista palkkio-osoitetta käytetään tämän lompakon sijasta. Valmiit todisteet säilyttävät alkuperäisen kohteensa, kun muutat osoitetta.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Palkkion kohde: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Tämä lompakko (oletus)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Etsi vahvistetut palkkiot automaattisesti, luo TLS-todisteita ja lähetä palkkiot tähän lompakkoon. Kulut vähennetään vain kustakin palkkiosta. Yksityisiä avaimia ei tarvitse avata, kunhan avainvarannossa on vastaanotto-osoitteita. HTTPS on poissa käytöstä, kunnes käynnistät sen erikseen.</translation>
     </message>
@@ -4954,6 +4974,13 @@ Juurivarmenteiden versio: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Peruutettu. P2C-tapahtumia ei lähetetty.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Valinnainen: tyhjä kenttä käyttää tätä lompakkoa</translation>
     </message>
 </context>
 </TS>

@@ -1304,6 +1304,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Valfrjálst: auður reitur notar þetta veski</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Verðlaunavistfang:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Valfrjálst verðlaunavistfang er notað í stað þessa veskis. Fullgerðar sannanir halda upprunalegum áfangastað þegar þú breytir því.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Áfangastaður verðlauna: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Þetta veski (sjálfgefið)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Finndu staðfestar umbunir sjálfkrafa, búðu til TLS-sannanir og sendu umbunir í þetta veski. Gjöld eru aðeins tekin af hverri umbun. Ekki þarf að aflæsa einkalyklum meðan móttökuvistföng eru enn í lyklasafninu. HTTPS er óvirkt þar til þú ræsir það sérstaklega.</translation>
     </message>
@@ -1605,6 +1625,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Hætt við. Engar P2C-færslur voru sendar.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Valfrjálst: auður reitur notar þetta veski</translation>
     </message>
 </context>
 </TS>

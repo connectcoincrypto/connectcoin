@@ -1967,6 +1967,26 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>اختياري: اتركه فارغًا لاستخدام هذه المحفظة</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>عنوان المكافأة:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>يُستخدم عنوان المكافأة الاختياري بدلًا من هذه المحفظة. تحتفظ الإثباتات المكتملة بوجهتها الأصلية عند تغييره.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>وجهة المكافأة: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>هذه المحفظة (الافتراضي)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>يعثر تلقائيًا على المكافآت المؤكدة، وينشئ إثباتات TLS ويرسل المكافآت إلى هذه المحفظة. تُخصم الرسوم من كل مكافأة فقط. لا حاجة إلى فتح قفل المفاتيح الخاصة ما دامت هناك عناوين استقبال في مخزون المفاتيح. يبقى HTTPS معطلاً حتى تبدأه صراحةً.</translation>
     </message>
@@ -2268,6 +2288,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>أُلغي. لم تُرسل أي معاملات P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>اختياري: اتركه فارغًا لاستخدام هذه المحفظة</translation>
     </message>
 </context>
 </TS>

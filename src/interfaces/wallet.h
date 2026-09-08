@@ -71,7 +71,8 @@ public:
 
     //! Configure HTTPS in the background, retaining the wallet until completion.
     //! The future yields an empty string on success, otherwise an error.
-    virtual std::future<std::string> configureP2CClaiming(int rate, int concurrency, std::vector<std::string> domains) = 0;
+    //! Empty reward_address pays this wallet; an explicit address overrides new searches.
+    virtual std::future<std::string> configureP2CClaiming(int rate, int concurrency, std::vector<std::string> domains, std::string reward_address = {}) = 0;
     virtual UniValue getP2CClaimStatus() = 0;
 
     //! Encrypt wallet.

@@ -1413,6 +1413,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Незадолжително: ако е празно, се користи овој паричник</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Адреса за наградата:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Ако наведете адреса за наградата, таа ќе се користи наместо овој паричник. Кога ја менувате адресата, завршените докази ја задржуваат својата првична дестинација.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Одредиште на наградата: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Овој паричник (стандардно)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Автоматски откривајте потврдени награди, создавајте TLS докази и испраќајте ги наградите во овој паричник. Надоместоците се одземаат само од секоја награда. Не е потребно отклучување на приватните клучеви додека во збирката клучеви има адреси за примање. HTTPS е оневозможен додека изрично не го стартувате.</translation>
     </message>
@@ -1714,6 +1734,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Откажано. Не се испратени P2C трансакции.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Незадолжително: ако е празно, се користи овој паричник</translation>
     </message>
 </context>
 </TS>

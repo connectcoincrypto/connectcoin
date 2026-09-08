@@ -908,6 +908,26 @@
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Mındettı emes: bos qaldyrylsa, osy ämiian qoldanylady</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Syiaqy mekenjaiy:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Syiaqy mekenjaiy körsetılse, osy ämiianñyñ ornyna sol mekenjai qoldanylady. Mekenjaidy özgertkende, daiyn dälelder bastapqy aluşy mekenjaiyn saqtaidy.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Syiaqy aluşysy: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Osy ämiian (ädepkı)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Rastalğan syiaqylardy avtomatty türde tauyp, TLS dälelderın jasap, syiaqylardy osy ämiianğa jıberıñız. Komissiialar tek är syiaqydan ūstalady. Kıltter qorynda qabyldau mekenjailary bar kezde jeke kıltterdıñ qūlpyn aşu qajet emes. HTTPS ony anyq ıske qosqanşa öşırulı tūrady.</translation>
     </message>
@@ -1209,6 +1229,13 @@ Tübırlık sertifikattar nūsqasy: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Bas tartyldy. Eşbır P2C tranzaktsiiasy jıberılgen joq.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Mındettı emes: bos qaldyrylsa, osy ämiian qoldanylady</translation>
     </message>
 </context>
 </TS>

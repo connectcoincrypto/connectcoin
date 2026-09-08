@@ -16,6 +16,7 @@ class CpuMiningTest(BitcoinTestFramework):
         if self.options.testnet4:
             self.chain = "testnet4"
         self.wallet_names = []
+        self.uses_wallet = None  # Exercise wallet defaults when compiled, without requiring wallet support.
         self.setup_clean_chain = self.options.fresh or self.options.testnet4
         self.extra_args = [[f"-randomxfast={int(self.options.fast)}"] for _ in range(self.num_nodes)]
 
@@ -56,6 +57,7 @@ class CpuMiningTest(BitcoinTestFramework):
         self.stop_miner()  # Idempotent while stopped.
 
         self.log.info("Reject invalid parameters without starting workers")
+        assert_raises_rpc_error(-18, "specify a reward address", node.startmining)
         assert_raises_rpc_error(-8, "P2PK address", node.startmining, "not-an-address")
         for threads in (0, -1, info["max_threads"] + 1):
             assert_raises_rpc_error(-8, "Threads must be", node.startmining, address, threads)
@@ -107,6 +109,28 @@ class CpuMiningTest(BitcoinTestFramework):
         self.stop_miner()
         self.connect_nodes(0, 1)
         self.sync_blocks()
+
+        if self.is_wallet_compiled():
+            self.log.info("Default to the selected wallet, but allow an explicit payout with multiple wallets")
+            name = "mining wallet"
+            node.createwallet(name)
+            selected = node.get_wallet_rpc(name)
+            for rpc, args in ((node, ()), (selected, ("",))):
+                rpc.startmining(*args)
+                self.wait_until(lambda: node.getcpumininginfo()["blocks"] >= 1)
+                target = self.stop_miner()["address"]
+                assert_equal(selected.getaddressinfo(target)["ismine"], True)
+                assert_equal(node.getblock(node.getbestblockhash(), 2)["tx"][0]["vout"][0]["scriptPubKey"]["address"], target)
+            node.createwallet("second-miner")
+            second = node.get_wallet_rpc("second-miner")
+            assert_raises_rpc_error(-19, "wallet", node.startmining)
+            assert_raises_rpc_error(-18, "wallet", node.get_wallet_rpc("missing").startmining)
+            second.startmining()
+            self.wait_until(lambda: node.getcpumininginfo()["blocks"] >= 1)
+            assert_equal(second.getaddressinfo(self.stop_miner()["address"])["ismine"], True)
+            node.startmining(address)
+            self.wait_until(lambda: node.getcpumininginfo()["blocks"] >= 1)
+            assert_equal(self.stop_miner()["address"], address)
 
         self.log.info("Node shutdown joins active workers, and mining never auto-starts")
         node.startmining(address)

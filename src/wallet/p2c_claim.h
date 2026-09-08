@@ -13,6 +13,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <span>
 
 class CFeeRate;
@@ -36,7 +37,8 @@ util::Result<CAmount> CalculateP2CClaimFee(const CFeeRate& rate, size_t proof_si
 
 /** Fixed non-witness transaction. The fee comes only from the bounty, never
  * from the claimant's other coins. Adding a TLS proof must not change its txid.
- * The receiving destination is kept before this object is returned.
+ * A wallet-generated receiving destination is kept before this object is returned.
+ * An explicit destination does not reserve a wallet key.
  */
 struct P2CClaimProposal {
     CTransactionRef tx;
@@ -47,23 +49,30 @@ struct P2CClaimProposal {
     int64_t validation_time;
 };
 
-/** Prepare one confirmed bounty for a local-key wallet (which may be locked).
+/** Require either a wallet-owned payout or the exact explicitly authorized destination. */
+bool IsP2CClaimPayout(CWallet& wallet, const CTxOut& output,
+                     const std::optional<CTxDestination>& destination = std::nullopt);
+
+/** Prepare one confirmed bounty, defaulting to a local-key wallet (which may be locked).
  * No TLS, mempool insertion, or transaction signing happens here.
  */
 util::Result<P2CClaimProposal> PrepareP2CClaim(CWallet& wallet, const COutPoint& bounty,
-                                           const CCoinControl& control, size_t proof_size = MAX_P2C_PROOF_SIZE);
+                                           const CCoinControl& control, size_t proof_size = MAX_P2C_PROOF_SIZE,
+                                           const std::optional<CTxDestination>& destination = std::nullopt);
 
-/** Revalidate a saved unsigned proposal, including ownership, safe amounts,
+/** Revalidate a saved unsigned proposal, including payout authorization, safe amounts,
  * bounty availability and current chain time. Does not reserve another key.
  */
-util::Result<P2CClaimProposal> ResumeP2CClaim(CWallet& wallet, const CTransaction& proposal);
+util::Result<P2CClaimProposal> ResumeP2CClaim(CWallet& wallet, const CTransaction& proposal,
+                                          const std::optional<CTxDestination>& destination = std::nullopt);
 
-/** Attach the proof, require a wallet-owned P2PK payout, and run current node
+/** Attach the proof, require a wallet-owned or explicitly authorized P2PK payout, and run current node
  * acceptance checks, including certificate validation at the current tip MTP.
  * Does not store or broadcast. The caller can commit exactly this transaction.
  */
 util::Result<CTransactionRef> CompleteP2CClaim(CWallet& wallet, const CTransaction& proposal,
-                                            std::span<const unsigned char> proof);
+                                            std::span<const unsigned char> proof,
+                                            const std::optional<CTxDestination>& destination = std::nullopt);
 } // namespace wallet
 
 #endif // CONNECTCOIN_WALLET_P2C_CLAIM_H

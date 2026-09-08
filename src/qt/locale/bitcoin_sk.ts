@@ -5090,6 +5090,26 @@ Spustite najnovšiu verziu softvéru.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Voliteľné: prázdne pole použije túto peňaženku</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Adresa odmeny:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Ak zadáte adresu odmeny, použije sa namiesto tejto peňaženky. Dokončené dôkazy si pri zmene adresy zachovajú pôvodného príjemcu.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Príjemca odmeny: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Táto peňaženka (predvolená)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Automaticky vyhľadávať potvrdené odmeny, vytvárať dôkazy TLS a odosielať odmeny do tejto peňaženky. Poplatky sa odpočítavajú iba z každej odmeny. Kým sú v zásobníku kľúčov prijímacie adresy, nie je potrebné odomykať súkromné kľúče. HTTPS je vypnuté, kým ho výslovne nespustíte.</translation>
     </message>
@@ -5391,6 +5411,13 @@ Verzia koreňových certifikátov: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Zrušené. Žiadne transakcie P2C neboli odoslané.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Voliteľné: prázdne pole použije túto peňaženku</translation>
     </message>
 </context>
 </TS>

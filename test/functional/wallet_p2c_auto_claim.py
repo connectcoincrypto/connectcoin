@@ -35,12 +35,24 @@ class P2CAutoClaimTest(BitcoinTestFramework):
         initial_status = claimant.getp2cclaimstatus()
         assert_equal(initial_status["connections_per_second"], 0)
         assert_equal(initial_status["concurrency"], 4)
+        assert_equal(initial_status["reward_address"], "")
         assert "domain_round_seconds" not in initial_status
         for rate, concurrency in ((-2, 1), (1, 0), (1, -1)):
             assert_raises_rpc_error(-4, "Use rate", claimant.setp2cclaiming, rate, concurrency)
         assert_raises_rpc_error(-4, "Invalid P2C domain", claimant.setp2cclaiming, 1, 1, ["UPPER.example"])
         node.createwallet("watch-auto", disable_private_keys=True)
         assert_raises_rpc_error(-4, "requires local wallet keys", node.get_wallet_rpc("watch-auto").setp2cclaiming, 1)
+
+        external = funder.getnewaddress()
+        for rpc in (claimant, node.get_wallet_rpc("watch-auto")):
+            progress = rpc.setp2cclaiming(1, 2, ["never-funded.invalid"], external)
+            assert_equal(progress["reward_address"], external)
+            self.wait_until(lambda: rpc.getp2cclaimstatus()["state"] == "waiting for bounties")
+            assert_raises_rpc_error(-4, "P2PK reward address", rpc.setp2cclaiming, 1, 2, [], "invalid")
+            assert_equal(rpc.getp2cclaimstatus()["reward_address"], external)
+            assert_equal(rpc.getp2cclaimstatus()["connections_per_second"], 1)
+            assert_equal(rpc.setp2cclaiming(0)["reward_address"], "")
+            assert_equal(rpc.getp2cclaimstatus()["attempts"], 0)
 
         # No bounty matches this filter: the normal test never resolves a name
         # or creates a network connection, even with an unlimited rate.

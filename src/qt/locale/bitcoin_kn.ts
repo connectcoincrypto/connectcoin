@@ -848,6 +848,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>ಐಚ್ಛಿಕ: ಖಾಲಿ ಬಿಟ್ಟರೆ ಈ ವಾಲೆಟ್ ಬಳಸಲಾಗುತ್ತದೆ</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>ಬಹುಮಾನದ ವಿಳಾಸ:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>ಬಹುಮಾನದ ವಿಳಾಸವನ್ನು ನೀಡಿದರೆ, ಈ ವಾಲೆಟ್ ಬದಲಿಗೆ ಆ ವಿಳಾಸವನ್ನು ಬಳಸಲಾಗುತ್ತದೆ. ನೀವು ವಿಳಾಸವನ್ನು ಬದಲಾಯಿಸಿದರೂ ಪೂರ್ಣಗೊಂಡ ಪುರಾವೆಗಳು ತಮ್ಮ ಮೂಲ ಗಮ್ಯಸ್ಥಾನವನ್ನು ಉಳಿಸಿಕೊಳ್ಳುತ್ತವೆ.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>ಬಹುಮಾನದ ಗಮ್ಯಸ್ಥಾನ: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>ಈ ವಾಲೆಟ್ (ಪೂರ್ವನಿಯೋಜಿತ)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>ದೃಢೀಕರಿಸಿದ ಬಹುಮಾನಗಳನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಹುಡುಕಿ, TLS ಪುರಾವೆಗಳನ್ನು ರಚಿಸಿ ಮತ್ತು ಬಹುಮಾನಗಳನ್ನು ಈ ವಾಲೆಟ್‌ಗೆ ಕಳುಹಿಸಿ. ಶುಲ್ಕಗಳನ್ನು ಪ್ರತಿ ಬಹುಮಾನದಿಂದ ಮಾತ್ರ ಕಡಿತಗೊಳಿಸಲಾಗುತ್ತದೆ. ಕೀ ಪೂಲ್‌ನಲ್ಲಿ ಸ್ವೀಕರಿಸುವ ವಿಳಾಸಗಳು ಇರುವವರೆಗೆ ಖಾಸಗಿ ಕೀಗಳನ್ನು ಅನ್‌ಲಾಕ್ ಮಾಡುವ ಅಗತ್ಯವಿಲ್ಲ. ನೀವು ಸ್ಪಷ್ಟವಾಗಿ ಪ್ರಾರಂಭಿಸುವವರೆಗೆ HTTPS ನಿಷ್ಕ್ರಿಯವಾಗಿರುತ್ತದೆ.</translation>
     </message>
@@ -1149,6 +1169,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>ರದ್ದುಪಡಿಸಲಾಗಿದೆ. ಯಾವುದೇ P2C ವ್ಯವಹಾರಗಳನ್ನು ಕಳುಹಿಸಲಾಗಿಲ್ಲ.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>ಐಚ್ಛಿಕ: ಖಾಲಿ ಬಿಟ್ಟರೆ ಈ ವಾಲೆಟ್ ಬಳಸಲಾಗುತ್ತದೆ</translation>
     </message>
 </context>
 </TS>

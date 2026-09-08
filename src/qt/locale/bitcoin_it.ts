@@ -4928,6 +4928,26 @@ Errore di sistema in fase di salvataggio del blocco nel disco: %s</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Facoltativo: se vuoto, usa questo portafoglio</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Indirizzo della ricompensa:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Un indirizzo di ricompensa facoltativo viene usato al posto di questo portafoglio. Le prove completate mantengono la destinazione originale quando lo modifichi.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Destinazione della ricompensa: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Questo portafoglio (predefinito)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Trova automaticamente le ricompense confermate, genera prove TLS e invia gli importi a questo portafoglio. Le commissioni vengono detratte esclusivamente da ciascuna ricompensa. Non occorre sbloccare le chiavi private finché la riserva di chiavi contiene indirizzi di ricezione. HTTPS rimane disattivato finché non lo avvii esplicitamente.</translation>
     </message>
@@ -5229,6 +5249,13 @@ Versione dei certificati radice: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Annullato. Nessuna transazione P2C è stata inviata.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Facoltativo: se vuoto, usa questo portafoglio</translation>
     </message>
 </context>
 </TS>

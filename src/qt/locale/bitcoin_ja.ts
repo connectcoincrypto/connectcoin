@@ -5194,6 +5194,26 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>任意：空欄の場合はこのウォレットを使用します</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>報酬の受取アドレス：</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>報酬の受取アドレスを指定すると、このウォレットの代わりにそのアドレスが使用されます。アドレスを変更しても、完成済みの証明の送金先は元のままです。</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>報酬の送金先：%1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>このウォレット（既定）</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>承認済みの報酬を自動的に探し、TLS証明を生成して、このウォレットに報酬を送ります。手数料は各報酬からのみ差し引かれます。キープールに受取用アドレスが残っていれば、秘密鍵のロック解除は不要です。HTTPSは明示的に開始するまで無効です。</translation>
     </message>
@@ -5495,6 +5515,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>キャンセルしました。P2Cトランザクションは送信されていません。</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>任意：空欄の場合はこのウォレットを使用します</translation>
     </message>
 </context>
 </TS>

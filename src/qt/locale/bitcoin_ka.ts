@@ -2985,6 +2985,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>არასავალდებულო: ცარიელი ველის შემთხვევაში გამოიყენება ეს საფულე</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>ჯილდოს მისამართი:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>ჯილდოს მისამართის მითითებისას ამ საფულის ნაცვლად ის გამოიყენება. მისამართის შეცვლის შემდეგაც დასრულებული მტკიცებულებები თავდაპირველ დანიშნულების მისამართს ინარჩუნებს.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>ჯილდოს მიმღები: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>ეს საფულე (ნაგულისხმევი)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>ავტომატურად მოძებნეთ დადასტურებული ჯილდოები, შექმენით TLS მტკიცებულებები და გაგზავნეთ ჯილდოები ამ საფულეში. საკომისიო მხოლოდ თითოეული ჯილდოდან იჭრება. პირადი გასაღებების განბლოკვა საჭირო არ არის, სანამ გასაღებების მარაგში მიმღები მისამართებია. HTTPS გამორთულია, სანამ მას აშკარად არ გაუშვებთ.</translation>
     </message>
@@ -3286,6 +3306,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>გაუქმებულია. P2C ტრანზაქციები არ გაგზავნილა.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>არასავალდებულო: ცარიელი ველის შემთხვევაში გამოიყენება ეს საფულე</translation>
     </message>
 </context>
 </TS>

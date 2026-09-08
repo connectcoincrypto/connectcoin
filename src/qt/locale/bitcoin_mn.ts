@@ -1158,6 +1158,26 @@
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Заавал биш: хоосон орхивол энэ хэтэвчийг ашиглана</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Шагнал авах хаяг:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Шагнал авах хаягийг заасан бол энэ хэтэвчийн оронд тухайн хаягийг ашиглана. Хаягийг өөрчилсөн ч бэлэн болсон нотолгоонууд анхны хүлээн авах хаягаа хадгална.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Шагнал хүлээн авах хаяг: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Энэ хэтэвч (анхдагч)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Баталгаажсан шагналуудыг автоматаар олж, TLS нотолгоо үүсгэн, шагналуудыг энэ түрийвч рүү илгээнэ. Шимтгэлийг зөвхөн тухайн шагналаас суутгана. Түлхүүрийн санд хүлээн авах хаяг байгаа үед хувийн түлхүүрийн түгжээг тайлах шаардлагагүй. Та илэрхий эхлүүлэх хүртэл HTTPS идэвхгүй байна.</translation>
     </message>
@@ -1459,6 +1479,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Цуцалсан. Ямар ч P2C гүйлгээ илгээгээгүй.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Заавал биш: хоосон орхивол энэ хэтэвчийг ашиглана</translation>
     </message>
 </context>
 </TS>

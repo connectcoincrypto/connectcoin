@@ -5245,6 +5245,26 @@ Déan iarracht an leagan bogearraí is déanaí a rith.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Roghnach: úsáidtear an sparán seo má tá an réimse folamh</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Seoladh luaíochta:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Úsáidtear seoladh luaíochta roghnach in ionad an sparáin seo. Coinníonn cruthúnais chríochnaithe a gceann scríbe bunaidh nuair a athraíonn tú é.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Ceann scríbe na luaíochta: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>An sparán seo (réamhshocrú)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Aimsigh luaíochtaí deimhnithe go huathoibríoch, gin cruthúnais TLS agus seol na luaíochtaí chuig an sparán seo. Baintear táillí as gach luaíocht amháin. Ní gá eochracha príobháideacha a dhíghlasáil fad atá seoltaí fála sa linn eochracha. Tá HTTPS díchumasaithe go dtí go dtosaíonn tú é go sainráite.</translation>
     </message>
@@ -5546,6 +5566,13 @@ Leagan na mbunteastas: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Cealaithe. Níor seoladh aon idirbhearta P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Roghnach: úsáidtear an sparán seo má tá an réimse folamh</translation>
     </message>
 </context>
 </TS>

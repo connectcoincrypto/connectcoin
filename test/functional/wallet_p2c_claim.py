@@ -117,6 +117,21 @@ class P2CClaimTest(BitcoinTestFramework):
         assert_raises_rpc_error(-4, "not a supported P2C bounty", claimant.preparep2cclaim, normal["txid"], normal["vout"])
 
         self.log.info("Structural validity is not enough: consensus must reject the dummy certificate")
+        external = funder.getnewaddress()
+        for rpc in (claimant, watch):
+            keypool_before = rpc.getwalletinfo()["keypoolsize"]
+            payout = rpc.preparep2cclaim(*outpoint, address=external)
+            assert_equal(rpc.getwalletinfo()["keypoolsize"], keypool_before)
+            assert_equal(payout["address"], external)
+            assert_equal(node.decoderawtransaction(payout["hex"])["vout"][0]["scriptPubKey"]["address"], external)
+            external_proof = structural_proof(payout["domain"], payout["clienthello_random"])
+            assert_raises_rpc_error(-4, "explicitly specified reward address", claimant.submitp2cclaim, payout["hex"], external_proof)
+            assert_raises_rpc_error(-4, "explicitly specified reward address", rpc.submitp2cclaim, payout["hex"], external_proof, prepared["address"])
+            assert_raises_rpc_error(-4, "invalid DER certificate", rpc.submitp2cclaim, payout["hex"], external_proof, external)
+        assert_equal(claimant.getaddressinfo(external)["ismine"], False)
+        assert_raises_rpc_error(-5, "P2PK reward address", claimant.preparep2cclaim, *outpoint, address="invalid")
+        assert_raises_rpc_error(-5, "P2PK reward address", claimant.submitp2cclaim, payout["hex"], external_proof, "invalid")
+        assert_equal(claimant.getaddressinfo(claimant.preparep2cclaim(*outpoint, address="")["address"])["ismine"], True)
         proof = structural_proof(prepared["domain"], prepared["clienthello_random"])
         assert_raises_rpc_error(-4, "P2C proof contains an invalid DER certificate", claimant.submitp2cclaim, prepared["hex"], proof)
         assert_raises_rpc_error(-4, "Invalid P2C proof:", claimant.submitp2cclaim, prepared["hex"], "01")

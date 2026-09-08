@@ -1497,6 +1497,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opsyonal: kung walang laman, gagamitin ang wallet na ito</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Address ng gantimpala:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Kung magtatakda ka ng address ng gantimpala, iyon ang gagamitin sa halip na ang wallet na ito. Kapag binago mo ang address, mananatili ang orihinal na patutunguhan ng mga natapos nang patunay.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Patutunguhan ng gantimpala: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Ang wallet na ito (paunang pinili)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Awtomatikong maghanap ng mga nakumpirmang gantimpala, bumuo ng mga patunay na TLS, at ipadala ang mga gantimpala sa wallet na ito. Sa bawat gantimpala lamang kinukuha ang bayad. Hindi kailangang i-unlock ang mga pribadong susi habang may mga address para sa pagtanggap sa pool ng mga susi. Naka-disable ang HTTPS hangga't hindi mo ito tahasang sinisimulan.</translation>
     </message>
@@ -1798,6 +1818,13 @@ Bersyon ng mga root certificate: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Kinansela. Walang ipinadalang transaksyong P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opsyonal: kung walang laman, gagamitin ang wallet na ito</translation>
     </message>
 </context>
 </TS>

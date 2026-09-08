@@ -1675,6 +1675,26 @@ Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>İstəyə bağlı: boş olduqda bu pul kisəsi istifadə olunur</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Mükafat ünvanı:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>İstəyə bağlı mükafat ünvanı bu pul kisəsinin əvəzinə istifadə olunur. Ünvanı dəyişdikdə tamamlanmış sübutlar ilkin təyinatını saxlayır.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Mükafatın təyinatı: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Bu pul kisəsi (standart)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Təsdiqlənmiş mükafatları avtomatik tapın, TLS sübutları yaradın və mükafatları bu pul kisəsinə göndərin. Komissiyalar yalnız hər mükafatdan tutulur. Açar ehtiyatında qəbul ünvanları qaldığı müddətdə məxfi açarların kilidini açmaq lazım deyil. HTTPS siz onu açıq şəkildə başladana qədər söndürülüb.</translation>
     </message>
@@ -1976,6 +1996,13 @@ Kök sertifikatların versiyası: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Ləğv edildi. Heç bir P2C əməliyyatı göndərilmədi.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>İstəyə bağlı: boş olduqda bu pul kisəsi istifadə olunur</translation>
     </message>
 </context>
 </TS>

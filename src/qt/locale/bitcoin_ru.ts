@@ -2814,6 +2814,26 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Необязательно: пустое поле означает использование этого кошелька</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Адрес для вознаграждения:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Если указать адрес для вознаграждения, он будет использоваться вместо этого кошелька. При изменении адреса готовые доказательства сохраняют первоначального получателя.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Получатель вознаграждения: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Этот кошелёк (по умолчанию)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Автоматически находить подтверждённые награды, создавать доказательства TLS и отправлять награды в этот кошелёк. Комиссии вычитаются только из каждой награды. Разблокировка закрытых ключей не нужна, пока в пуле ключей остаются адреса для получения. HTTPS отключён, пока вы явно не запустите его.</translation>
     </message>
@@ -3115,6 +3135,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Отменено. Транзакции P2C не отправлялись.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Необязательно: пустое поле означает использование этого кошелька</translation>
     </message>
 </context>
 </TS>

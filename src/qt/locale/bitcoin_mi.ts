@@ -739,6 +739,26 @@ Ko te whakakī i ēnei whakaaronga e taea ana anake ki ngā whakararuraru o te m
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>He kōwhiringa: ki te waiho pātea, ka whakamahia tēnei pūkoro</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Wāhitau utu whiwhi:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Ki te tāuru koe i tētahi wāhitau utu whiwhi, ka whakamahia taua wāhitau hei whakakapi mō tēnei pūkoro. Ina hurihia te wāhitau, ka mau tonu ngā taunakitanga kua oti ki tō rātou wāhitau whiwhi taketake.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Wāhitau mō te utu whiwhi: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Tēnei pūkoro (taunoa)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Kimihia aunoatia ngā utu whiwhi kua whakaūngia, hangaia ngā taunakitanga TLS, ā, tukuna ngā utu whiwhi ki tēnei pūkoro. Ka tangohia ngā utu ratonga i ia utu whiwhi anake. Kāore e hiahiatia te wetewete i ngā kī tūmataiti mēnā kei te puna kī tonu ngā wāhitau whiwhi. Kua monokia a HTTPS kia āta tīmata rā anō koe.</translation>
     </message>
@@ -1040,6 +1060,13 @@ Putanga tiwhikete pūtake: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Kua whakakorea. Kāore he tauwhitinga P2C i tukuna.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>He kōwhiringa: ki te waiho pātea, ka whakamahia tēnei pūkoro</translation>
     </message>
 </context>
 </TS>

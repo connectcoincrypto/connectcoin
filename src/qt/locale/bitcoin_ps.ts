@@ -1939,6 +1939,26 @@ The migration process will create a backup of the wallet before migrating. This 
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>اختیاري: که تش پرېښودل شي، دا بټوه کارول کېږي</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>د انعام پته:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>که د انعام پته وټاکئ، د دې بټوې پر ځای هغه پته کارول کېږي. کله چې پته بدلوئ، بشپړ شوي ثبوتونه خپل اصلي منزل ساتي.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>د انعام منزل: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>دا بټوه (تلواله)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>تایید شوي انعامونه په اوتومات ډول ومومئ، د TLS ثبوتونه جوړ کړئ او انعامونه دې بټوې ته واستوئ. فیس یوازې له هر انعام څخه کمېږي. تر هغه چې د کیليو په زېرمه کې د ترلاسه کولو پتې وي، د شخصي کیليو خلاصول اړین نه دي. HTTPS تر هغه بند وي چې تاسو یې په څرګند ډول پیل کړئ.</translation>
     </message>
@@ -2240,6 +2260,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>لغوه شو. هېڅ P2C راکړه ورکړه ونه لېږل شوه.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>اختیاري: که تش پرېښودل شي، دا بټوه کارول کېږي</translation>
     </message>
 </context>
 </TS>

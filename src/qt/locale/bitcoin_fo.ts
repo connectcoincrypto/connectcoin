@@ -5231,6 +5231,26 @@ Vinaliga royn við nýggjastu útgávu av forritinum.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Valfrítt: tómt øki brúkar hesa mappuna</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Lønaradressa:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Ein valfrí lønaradressa verður brúkt í staðin fyri hesa mappuna. Liðug prógv varðveita sítt upprunaliga mál, tá tú broytir adressuna.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Móttakari av løn: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Henda mappan (standard)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Finn sjálvvirkandi váttaðar lønir, ger TLS-prógv og send lønirnar í hesa mappuna. Gjøld verða bert tikin av hvørjari løn. Tað er ikki neyðugt at læsa privatar lyklar upp, so leingi móttøkuadressur eru í lyklagoymsluni. HTTPS er óvirkið, til tú týðiliga byrjar tað.</translation>
     </message>
@@ -5532,6 +5552,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Avlýst. Eingin P2C-flyting varð send.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Valfrítt: tómt øki brúkar hesa mappuna</translation>
     </message>
 </context>
 </TS>

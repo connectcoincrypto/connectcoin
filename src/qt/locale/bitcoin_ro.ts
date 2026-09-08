@@ -3870,6 +3870,26 @@ Restaurarea copiei de rezervă a portofelului a eșuat.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opțional: dacă este gol, se folosește acest portofel</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Adresa recompensei:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Dacă specificați o adresă pentru recompensă, aceasta se folosește în locul acestui portofel. Dovezile finalizate își păstrează destinația inițială când schimbați adresa.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Destinația recompensei: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Acest portofel (implicit)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Descoperă automat recompensele confirmate, generează dovezi TLS și trimite recompensele în acest portofel. Comisioanele sunt luate numai din fiecare recompensă. Nu este necesară deblocarea cheilor private cât timp mai există adrese de primire în rezerva de chei. HTTPS este dezactivat până când îl pornești în mod explicit.</translation>
     </message>
@@ -4171,6 +4191,13 @@ Versiunea certificatelor rădăcină: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Anulat. Nu s-a trimis nicio tranzacție P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opțional: dacă este gol, se folosește acest portofel</translation>
     </message>
 </context>
 </TS>

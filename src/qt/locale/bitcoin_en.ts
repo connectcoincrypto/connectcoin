@@ -5453,6 +5453,26 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Optional: empty uses this wallet</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Reward address:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Reward target: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>This wallet (default)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</translation>
     </message>
@@ -5754,6 +5774,13 @@ Root certificates version: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Cancelled. No P2C transactions were sent.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Optional: empty uses this wallet</translation>
     </message>
 </context>
 </TS>

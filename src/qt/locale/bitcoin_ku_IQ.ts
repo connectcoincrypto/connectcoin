@@ -883,6 +883,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>ئارەزوومەندانە: ئەگەر بەتاڵ بێت، ئەم جزدانە بەکاردێت</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>ناونیشانی پاداشت:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>ئەگەر ناونیشانی پاداشت دیاری بکەیت، لەبری ئەم جزدانە بەکاردێت. تەنانەت ئەگەر ناونیشانەکە بگۆڕیت، بەڵگە تەواوکراوەکان ناونیشانی وەرگری سەرەتایی خۆیان دەپارێزن.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>وەرگری پاداشت: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>ئەم جزدانە (بنەڕەتی)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>بە خۆکار پاداشتە پشتڕاستکراوەکان بدۆزەرەوە، بەڵگەی TLS دروست بکە و پاداشتەکان بۆ ئەم جزدانە بنێرە. کرێ تەنها لە هەر پاداشتێک کەم دەکرێتەوە. تا ناونیشانی وەرگرتن لە کۆگای کلیلەکاندا هەبێت، پێویست بە کردنەوەی قوفڵی کلیلە تایبەتەکان نییە. HTTPS ناچالاکە تا بە ڕوونی دەستی پێ بکەیت.</translation>
     </message>
@@ -1184,6 +1204,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>هەڵوەشایەوە. هیچ مامەڵەیەکی P2C نەنێردرا.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>ئارەزوومەندانە: ئەگەر بەتاڵ بێت، ئەم جزدانە بەکاردێت</translation>
     </message>
 </context>
 </TS>

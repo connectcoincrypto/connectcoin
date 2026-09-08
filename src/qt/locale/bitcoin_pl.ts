@@ -5192,6 +5192,26 @@ Spróbuj uruchomić najnowszą wersję programu.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opcjonalnie: puste pole oznacza użycie tego portfela</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Adres nagrody:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Jeśli podasz adres nagrody, zostanie on użyty zamiast tego portfela. Po zmianie adresu ukończone dowody zachowują pierwotny adres docelowy.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Odbiorca nagrody: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Ten portfel (domyślnie)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Automatycznie wyszukuj potwierdzone nagrody, generuj dowody TLS i wysyłaj nagrody do tego portfela. Opłaty są pobierane wyłącznie z każdej nagrody. Odblokowanie kluczy prywatnych nie jest potrzebne, dopóki w puli kluczy pozostają adresy odbiorcze. HTTPS jest wyłączony, dopóki go wyraźnie nie uruchomisz.</translation>
     </message>
@@ -5493,6 +5513,13 @@ Wersja certyfikatów głównych: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Anulowano. Nie wysłano żadnych transakcji P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opcjonalnie: puste pole oznacza użycie tego portfela</translation>
     </message>
 </context>
 </TS>

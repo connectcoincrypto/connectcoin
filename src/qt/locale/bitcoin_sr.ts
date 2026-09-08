@@ -4038,6 +4038,26 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Необавезно: празно поље користи овај новчаник</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Адреса за награду:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Ако наведете адресу за награду, она се користи уместо овог новчаника. Када промените адресу, завршени докази задржавају своје првобитно одредиште.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Одредиште награде: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Овај новчаник (подразумевано)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Аутоматски пронађите потврђене награде, направите TLS доказе и пошаљите награде у овај новчаник. Накнаде се одузимају само од сваке награде. Приватне кључеве није потребно откључати док у залихи кључева има адреса за пријем. HTTPS је онемогућен док га изричито не покренете.</translation>
     </message>
@@ -4339,6 +4359,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Отказано. Ниједна P2C трансакција није послата.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Необавезно: празно поље користи овај новчаник</translation>
     </message>
 </context>
 </TS>

@@ -726,6 +726,26 @@ Fífọwọ́sowọ́pọ̀ jẹ́ ẹni pé ó ṣeé ṣe pẹ̀lú àwọn à
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Kì í ṣe dandan: bí ó bá ṣófo, àpamọ́ yìí ni a ó lò</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Àdírẹ́sì ẹ̀san:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Bí o bá sọ àdírẹ́sì ẹ̀san kan, àdírẹ́sì náà ni a ó lò dípò àpamọ́ yìí. Nígbà tí o bá yí àdírẹ́sì padà, àwọn ẹ̀rí tí a ti parí ṣì máa pa ibi ìfiránṣẹ́ wọn àkọ́kọ́ mọ́.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Ibi tí a ó fi ẹ̀san ránṣẹ́ sí: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Àpamọ́ yìí (èyí tí a yàn tẹ́lẹ̀)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Wa àwọn ẹ̀san tí a ti fìdí múlẹ̀ láìfọwọ́ṣe, ṣẹ̀dá ẹ̀rí TLS, kí o sì fi àwọn ẹ̀san ránṣẹ́ sí àpamọ́ yìí. A máa yọ owó iṣẹ́ lára ẹ̀san kọ̀ọ̀kan nìkan. Kò sí ìdí láti ṣí àwọn kọ́kọ́rọ́ àṣírí bí àwọn àdírẹ́sì ìgbàwọlé bá ṣì wà nínú àkójọpọ̀ kọ́kọ́rọ́. HTTPS ti wa ní pípa títí tí o fi bẹ̀rẹ̀ rẹ̀ ní kedere.</translation>
     </message>
@@ -1027,6 +1047,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>A ti fagilé. Kò sí ìṣòwò P2C tí a fi ránṣẹ́.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Kì í ṣe dandan: bí ó bá ṣófo, àpamọ́ yìí ni a ó lò</translation>
     </message>
 </context>
 </TS>

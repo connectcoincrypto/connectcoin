@@ -2852,6 +2852,26 @@ The wallet might have been tampered with or created with malicious intent.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>वैकल्पिक: खाली रखने पर इस वॉलेट का उपयोग होगा</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>इनाम का पता:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>वैकल्पिक इनाम का पता इस वॉलेट के स्थान पर उपयोग होता है। इसे बदलने पर पूरी हो चुकी प्रूफ़ अपना मूल गंतव्य बनाए रखती हैं।</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>इनाम का गंतव्य: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>यह वॉलेट (डिफ़ॉल्ट)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>पुष्ट इनाम अपने-आप खोजें, TLS प्रमाण बनाएँ और इनाम इस वॉलेट में भेजें। शुल्क केवल प्रत्येक इनाम से काटे जाते हैं। जब तक कुंजी पूल में प्राप्ति पते उपलब्ध हैं, निजी कुंजियों को अनलॉक करने की आवश्यकता नहीं है। HTTPS तब तक बंद रहता है जब तक आप उसे स्पष्ट रूप से शुरू न करें।</translation>
     </message>
@@ -3153,6 +3173,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>रद्द किया गया। कोई P2C लेन-देन नहीं भेजा गया।</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>वैकल्पिक: खाली रखने पर इस वॉलेट का उपयोग होगा</translation>
     </message>
 </context>
 </TS>

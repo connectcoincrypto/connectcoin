@@ -2879,6 +2879,26 @@ Migratsiya jarayoni ko'chirishdan oldin hamyonning zaxira nusxasini yaratadi. Us
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Ixtiyoriy: bo‘sh qoldirilsa, shu hamyon ishlatiladi</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Mukofot manzili:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Agar mukofot manzilini ko‘rsatsangiz, shu hamyon o‘rniga o‘sha manzil ishlatiladi. Manzilni o‘zgartirsangiz ham, tayyor isbotlar o‘zining dastlabki qabul qiluvchi manzilini saqlab qoladi.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Mukofotni qabul qiluvchi: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Shu hamyon (standart)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Tasdiqlangan mukofotlarni avtomatik toping, TLS isbotlarini yarating va mukofotlarni shu hamyonga yuboring. Komissiyalar faqat har bir mukofotdan olinadi. Kalitlar zaxirasida qabul manzillari bor ekan, maxfiy kalitlarni qulfdan chiqarish shart emas. HTTPS uni aniq ishga tushirmaguningizcha o‘chiq turadi.</translation>
     </message>
@@ -3180,6 +3200,13 @@ Ildiz sertifikatlar versiyasi: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Bekor qilindi. Hech qanday P2C tranzaksiyasi yuborilmadi.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Ixtiyoriy: bo‘sh qoldirilsa, shu hamyon ishlatiladi</translation>
     </message>
 </context>
 </TS>

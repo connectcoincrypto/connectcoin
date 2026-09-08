@@ -2690,6 +2690,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>ఐచ్ఛికం: ఖాళీగా వదిలితే ఈ వాలెట్ ఉపయోగించబడుతుంది</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>బహుమతి చిరునామా:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>బహుమతి చిరునామాను పేర్కొంటే, ఈ వాలెట్‌కు బదులుగా ఆ చిరునామా ఉపయోగించబడుతుంది. మీరు చిరునామాను మార్చినా పూర్తయిన రుజువులు తమ అసలు గమ్యస్థానాన్ని అలాగే ఉంచుకుంటాయి.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>బహుమతి గమ్యస్థానం: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>ఈ వాలెట్ (అప్రమేయం)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>నిర్ధారించబడిన బహుమతులను స్వయంచాలకంగా కనుగొని, TLS ఆధారాలను తయారు చేసి, బహుమతులను ఈ వాలెట్‌కు పంపుతుంది. రుసుములు ప్రతి బహుమతి నుంచే తీసివేయబడతాయి. కీ పూల్‌లో స్వీకరణ చిరునామాలు ఉన్నంతవరకు ప్రైవేట్ కీలను అన్‌లాక్ చేయాల్సిన అవసరం లేదు. మీరు స్పష్టంగా ప్రారంభించే వరకు HTTPS నిలిపివేయబడి ఉంటుంది.</translation>
     </message>
@@ -2991,6 +3011,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>రద్దు చేయబడింది. P2C లావాదేవీలు ఏవీ పంపబడలేదు.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>ఐచ్ఛికం: ఖాళీగా వదిలితే ఈ వాలెట్ ఉపయోగించబడుతుంది</translation>
     </message>
 </context>
 </TS>

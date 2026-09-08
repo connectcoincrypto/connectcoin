@@ -1672,6 +1672,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>നിർബന്ധമില്ല: ശൂന്യമായി വിട്ടാൽ ഈ വാലറ്റ് ഉപയോഗിക്കും</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>പ്രതിഫലത്തിനുള്ള വിലാസം:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>പ്രതിഫലത്തിനുള്ള വിലാസം നൽകിയാൽ, ഈ വാലറ്റിനു പകരം ആ വിലാസം ഉപയോഗിക്കും. നിങ്ങൾ വിലാസം മാറ്റിയാലും പൂർത്തിയായ തെളിവുകൾ അവയുടെ യഥാർത്ഥ ലക്ഷ്യസ്ഥാനം നിലനിർത്തും.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>പ്രതിഫലത്തിന്റെ ലക്ഷ്യസ്ഥാനം: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>ഈ വാലറ്റ് (സ്ഥിരസ്ഥിതി)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>സ്ഥിരീകരിച്ച പ്രതിഫലങ്ങൾ സ്വയമേവ കണ്ടെത്തി, TLS തെളിവുകൾ സൃഷ്ടിച്ച്, പ്രതിഫലങ്ങൾ ഈ വാലറ്റിലേക്ക് അയയ്ക്കുന്നു. ഫീസ് ഓരോ പ്രതിഫലത്തിൽ നിന്നു മാത്രമാണ് കുറയ്ക്കുന്നത്. കീ പൂളിൽ സ്വീകരണ വിലാസങ്ങൾ ഉള്ളിടത്തോളം സ്വകാര്യ കീകൾ അൺലോക്ക് ചെയ്യേണ്ടതില്ല. നിങ്ങൾ വ്യക്തമായി ആരംഭിക്കുന്നതുവരെ HTTPS പ്രവർത്തനരഹിതമാണ്.</translation>
     </message>
@@ -1973,6 +1993,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>റദ്ദാക്കി. P2C ഇടപാടുകളൊന്നും അയച്ചിട്ടില്ല.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>നിർബന്ധമില്ല: ശൂന്യമായി വിട്ടാൽ ഈ വാലറ്റ് ഉപയോഗിക്കും</translation>
     </message>
 </context>
 </TS>

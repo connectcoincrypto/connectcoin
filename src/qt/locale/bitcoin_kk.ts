@@ -924,6 +924,26 @@
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Міндетті емес: бос қалдырылса, осы әмиян қолданылады</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Сыйақы мекенжайы:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Сыйақы мекенжайы көрсетілсе, осы әмиянның орнына сол мекенжай қолданылады. Мекенжайды өзгерткенде, дайын дәлелдер бастапқы алушы мекенжайын сақтайды.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Сыйақы алушысы: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Осы әмиян (әдепкі)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Расталған сыйақыларды автоматты түрде тауып, TLS дәлелдерін жасап, сыйақыларды осы әмиянға жіберіңіз. Комиссиялар тек әр сыйақыдан ұсталады. Кілттер қорында қабылдау мекенжайлары бар кезде жеке кілттердің құлпын ашу қажет емес. HTTPS оны анық іске қосқанша өшірулі тұрады.</translation>
     </message>
@@ -1225,6 +1245,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Бас тартылды. Ешбір P2C транзакциясы жіберілген жоқ.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Міндетті емес: бос қалдырылса, осы әмиян қолданылады</translation>
     </message>
 </context>
 </TS>

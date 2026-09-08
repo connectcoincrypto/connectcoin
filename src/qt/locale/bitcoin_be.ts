@@ -1164,6 +1164,26 @@
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Неабавязкова: пустое поле азначае гэты кашалёк</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Адрас узнагароды:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Неабавязковы адрас узнагароды выкарыстоўваецца замест гэтага кашалька. Калі вы змяняеце адрас, завершаныя доказы захоўваюць першапачатковага атрымальніка.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Атрымальнік узнагароды: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Гэты кашалёк (прадвызначана)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Аўтаматычна знаходзьце пацверджаныя ўзнагароды, стварайце доказы TLS і адпраўляйце ўзнагароды ў гэты кашалёк. Камісіі вылічваюцца толькі з кожнай узнагароды. Разблакоўваць прыватныя ключы не трэба, пакуль у пуле ключоў застаюцца адрасы атрымання. HTTPS выключаны, пакуль вы яўна яго не запусціце.</translation>
     </message>
@@ -1465,6 +1485,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Скасавана. Транзакцыі P2C не адпраўляліся.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Неабавязкова: пустое поле азначае гэты кашалёк</translation>
     </message>
 </context>
 </TS>

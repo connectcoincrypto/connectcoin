@@ -3885,6 +3885,26 @@ Kan mislukte migratie niet opschonen</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Optioneel: leeg gebruikt deze portemonnee</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Beloningsadres:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Als u een beloningsadres opgeeft, wordt dat gebruikt in plaats van deze portemonnee. Voltooide bewijzen behouden hun oorspronkelijke bestemming wanneer u het adres wijzigt.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Bestemming van de beloning: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Deze portemonnee (standaard)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Zoekt automatisch bevestigde premies, maakt TLS-bewijzen en stuurt de beloningen naar deze portemonnee. Kosten worden uitsluitend van elke beloning afgetrokken. Privésleutels hoeven niet te worden ontgrendeld zolang de sleutelvoorraad ontvangstadressen bevat. HTTPS blijft uitgeschakeld totdat u het uitdrukkelijk start.</translation>
     </message>
@@ -4186,6 +4206,13 @@ Versie basiscertificaten: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Geannuleerd. Er zijn geen P2C-transacties verstuurd.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Optioneel: leeg gebruikt deze portemonnee</translation>
     </message>
 </context>
 </TS>

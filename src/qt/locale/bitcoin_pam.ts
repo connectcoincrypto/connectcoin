@@ -1142,6 +1142,26 @@
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opsiyunal: nung alang laman, gamitan ya ing pitakang ini</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Adres ning pabuya:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Nung maglagay kang adres ning pabuya, ita ing gamitan imbes ning pitakang ini. Nung alilan me ing adres, deng patunay a yari na manatili la king orihinal dang patutungulan.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Patutungulan ning pabuya: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Ing pitakang ini (kaugaliang pili)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Automatikung panintunan deng kumpirmadung pabuya, gawang patunay TLS at ipadala deng pabuya king pitakang ini. Deng bayad ibawas la mu king balang pabuya. E kailangan i-unlock deng pribadung susi basta atin pang adres pangtanggap king key pool. Naka-disable ya ing HTTPS angga king malinaw mu yang simulan.</translation>
     </message>
@@ -1443,6 +1463,13 @@ Bersyun da reng root certificate: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Mikansela. Alang P2C transaksyun a mipadala.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opsiyunal: nung alang laman, gamitan ya ing pitakang ini</translation>
     </message>
 </context>
 </TS>

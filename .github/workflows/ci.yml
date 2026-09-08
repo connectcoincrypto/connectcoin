@@ -244,6 +244,9 @@ jobs:
             ~/AppData/Local/vcpkg/downloads/*
             !~/AppData/Local/vcpkg/downloads/tools
           key: ${{ github.job }}-vcpkg-downloads-${{ hashFiles('vcpkg.json') }}
+          # Source archives are checked against their expected hashes by vcpkg.
+          restore-keys: |
+            ${{ github.job }}-vcpkg-downloads-
 
       - name: Restore vcpkg binary cache
         uses: actions/cache/restore@v5
@@ -251,6 +254,10 @@ jobs:
         with:
           path: ~/AppData/Local/vcpkg/archives
           key: ${{ github.job }}-vcpkg-binary-release-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}
+          # vcpkg still checks each package's ABI; retain compatible packages
+          # when a manifest/tool update changes only part of the dependency graph.
+          restore-keys: |
+            ${{ github.job }}-vcpkg-binary-release-
 
       - name: Generate build system
         run: |

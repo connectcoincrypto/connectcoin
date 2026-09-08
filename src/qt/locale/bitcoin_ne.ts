@@ -1091,6 +1091,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>ऐच्छिक: खाली छोडेमा यो वालेट प्रयोग हुन्छ</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>पुरस्कार प्राप्त गर्ने ठेगाना:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>पुरस्कार प्राप्त गर्ने ठेगाना तोकिएमा यो वालेटको सट्टा सो ठेगाना प्रयोग हुन्छ। तपाईंले ठेगाना परिवर्तन गरे पनि पूरा भएका प्रमाणहरूले आफ्नो मूल गन्तव्य कायम राख्छन्।</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>पुरस्कारको गन्तव्य: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>यो वालेट (पूर्वनिर्धारित)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>पुष्टि भएका पुरस्कार स्वतः खोज्नुहोस्, TLS प्रमाण बनाउनुहोस् र पुरस्कार यस वालेटमा पठाउनुहोस्। शुल्क प्रत्येक पुरस्कारबाट मात्र काटिन्छ। कुञ्जी भण्डारमा प्राप्त गर्ने ठेगाना रहेसम्म निजी कुञ्जी अनलक गर्नुपर्दैन। तपाईंले स्पष्ट रूपमा सुरु नगरेसम्म HTTPS बन्द रहन्छ।</translation>
     </message>
@@ -1392,6 +1412,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>रद्द गरियो। कुनै P2C कारोबार पठाइएन।</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>ऐच्छिक: खाली छोडेमा यो वालेट प्रयोग हुन्छ</translation>
     </message>
 </context>
 </TS>

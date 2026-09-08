@@ -3688,6 +3688,26 @@ Go to File &gt; Open Wallet to load a wallet.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>רשות: שדה ריק משתמש בארנק זה</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>כתובת התגמול:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>כתובת תגמול אופציונלית משמשת במקום ארנק זה. הוכחות שהושלמו שומרות על היעד המקורי שלהן כשמשנים את הכתובת.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>יעד התגמול: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>ארנק זה (ברירת מחדל)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>מאתר פרסים מאושרים באופן אוטומטי, יוצר הוכחות TLS ושולח את התגמולים לארנק הזה. העמלות מנוכות מכל תגמול בלבד. אין צורך לפתוח את נעילת המפתחות הפרטיים כל עוד נותרו כתובות לקבלה במאגר המפתחות. HTTPS מושבת עד להפעלתו המפורשת.</translation>
     </message>
@@ -3989,6 +4009,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>בוטל. לא נשלחו עסקאות P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>רשות: שדה ריק משתמש בארנק זה</translation>
     </message>
 </context>
 </TS>

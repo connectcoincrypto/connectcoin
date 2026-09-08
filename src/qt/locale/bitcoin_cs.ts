@@ -4280,6 +4280,26 @@ Zkuste prosím spustit nejnovější verzi softwaru.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Volitelné: prázdné pole použije tuto peněženku</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Adresa odměny:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Volitelná adresa odměny se použije místo této peněženky. Při její změně si dokončené důkazy ponechají původní cíl.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Cíl odměny: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Tato peněženka (výchozí)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Automaticky vyhledávat potvrzené odměny, vytvářet důkazy TLS a odesílat odměny do této peněženky. Poplatky se odečítají pouze z každé odměny. Dokud jsou v zásobníku klíčů přijímací adresy, není nutné odemykat soukromé klíče. HTTPS je vypnuto, dokud jej výslovně nespustíte.</translation>
     </message>
@@ -4581,6 +4601,13 @@ Verze kořenových certifikátů: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Zrušeno. Žádné transakce P2C nebyly odeslány.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Volitelné: prázdné pole použije tuto peněženku</translation>
     </message>
 </context>
 </TS>

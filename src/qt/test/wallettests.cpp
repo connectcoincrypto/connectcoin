@@ -7,6 +7,7 @@
 
 #include <wallet/coincontrol.h>
 #include <interfaces/chain.h>
+#include <interfaces/mining.h>
 #include <interfaces/node.h>
 #include <key_io.h>
 #include <node/cpu_miner.h>
@@ -65,6 +66,7 @@
 #include <QLineEdit>
 #include <QObject>
 #include <QPalette>
+#include <QPointer>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QPixmap>
@@ -660,6 +662,11 @@ void TestP2CGUI(interfaces::Node& node)
     auto* claim_concurrency = page.findChild<QSpinBox*>("p2cClaimConcurrency");
     auto* claim_stop = page.findChild<QPushButton*>("p2cClaimStop");
     auto* claim_status = page.findChild<QLabel*>("p2cClaimStatus");
+    auto* claim_address = page.findChild<QLineEdit*>("p2cClaimAddress");
+    auto* claim_reward_status = page.findChild<QLabel*>("p2cClaimRewardStatus");
+    QVERIFY(claim_address && claim_reward_status);
+    QVERIFY(claim_address->text().isEmpty());
+    QTRY_VERIFY(claim_reward_status->text().contains("This wallet (default)"));
     QVERIFY(!page.findChild<QLabel*>("p2cClaimRoundHint"));
     QVERIFY(!page.findChild<QSpinBox*>("p2cClaimRoundSeconds"));
     QVERIFY(claim_rate && claim_unlimited && claim_concurrency && claim_stop && claim_status);
@@ -694,11 +701,90 @@ void TestP2CGUI(interfaces::Node& node)
     QVERIFY(!claim_unlimited->isChecked());
     QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 0);
     QTRY_VERIFY(claim_status->text().contains("Active rate: Disabled (0)"));
-    auto configure_limited = gui.walletModel->wallet().configureP2CClaiming(10, 4, {"unfunded.example"});
+    const auto external{EncodeDestination(ExternalTestDestination())};
+    auto configure_limited = gui.walletModel->wallet().configureP2CClaiming(10, 4, {"unfunded.example"}, external);
     QVERIFY(configure_limited.get().empty());
     QTRY_VERIFY(claim_status->text().contains("Active rate: 10 |"));
+    QTRY_VERIFY(claim_reward_status->text().contains(QString::fromStdString(external)));
     claim_stop->click();
     QTRY_VERIFY(claim_stop->isEnabled());
+    QTRY_VERIFY(claim_reward_status->text().contains("This wallet (default)"));
+    claim_address->setText(QString::fromStdString(external));
+    claim_rate->setValue(1);
+    page.findChild<QLineEdit*>("p2cClaimDomains")->setText("unfunded.example");
+    QString confirmation_text;
+    QTimer::singleShot(0, [&confirmation_text] {
+        for (auto* widget : QApplication::topLevelWidgets()) {
+            if (auto* dialog{qobject_cast<QMessageBox*>(widget)}) {
+                confirmation_text = dialog->text();
+                dialog->button(QMessageBox::Yes)->click();
+            }
+        }
+    });
+    page.findChild<QPushButton*>("p2cClaimStart")->click();
+    QVERIFY(confirmation_text.contains(QString::fromStdString(external)));
+    QTRY_VERIFY(claim_stop->isEnabled());
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["reward_address"].get_str(), external);
+    claim_stop->click();
+    QTRY_VERIFY(claim_stop->isEnabled());
+
+    // Destruction during confirmation must never start HTTPS or double-delete
+    // a stack-owned dialog when its wallet page disappears.
+    auto* closing_claim_page{new P2CCreateDialog};
+    const QPointer<P2CCreateDialog> closing_claim_guard{closing_claim_page};
+    closing_claim_page->setModel(gui.walletModel.get());
+    closing_claim_page->findChild<QSpinBox*>("p2cClaimRate")->setValue(1);
+    closing_claim_page->findChild<QLineEdit*>("p2cClaimDomains")->setText("unfunded.example");
+    QTimer::singleShot(0, [closing_claim_page] { delete closing_claim_page; });
+    closing_claim_page->findChild<QPushButton*>("p2cClaimStart")->click();
+    QVERIFY(closing_claim_guard.isNull());
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 0);
+
+    {
+        // Exercise the actual Mining page start button without hashing: a
+        // header ahead keeps the miner waiting and avoids RandomX allocation.
+        CBlockIndex ahead;
+        auto* previous{WITH_LOCK(cs_main, return test.m_node.chainman->m_best_header)};
+        ahead.nChainWork = previous->nChainWork + 1;
+        struct RestoreMiner {
+            node::NodeContext& node;
+            CBlockIndex* previous;
+            std::unique_ptr<interfaces::Mining> previous_mining;
+            ~RestoreMiner()
+            {
+                node.cpu_miner.reset();
+                node.mining = std::move(previous_mining);
+                WITH_LOCK(cs_main, node.chainman->m_best_header = previous);
+            }
+        } restore_miner{test.m_node, previous, std::move(test.m_node.mining)};
+        WITH_LOCK(cs_main, test.m_node.chainman->m_best_header = &ahead);
+        test.m_node.mining = interfaces::MakeMining(test.m_node);
+        test.m_node.cpu_miner = std::make_unique<node::CpuMiner>(test.m_node);
+        ClientModel client{node, nullptr};
+        MiningPage mining{gui.walletModel.get()};
+        mining.setClientModel(&client);
+        auto* reward_address{mining.findChild<QLineEdit*>("miningAddress")};
+        QVERIFY(reward_address->text().isEmpty());
+        std::string last_address;
+        for (const auto& target : {std::string{}, std::string{}, external}) {
+            reward_address->setText(QString::fromStdString(target));
+            mining.findChild<QPushButton*>("startMining")->click();
+            QTRY_VERIFY(node.getCpuMiningStatus().state == "waiting");
+            const auto status{node.getCpuMiningStatus()};
+            QCOMPARE(status.hashes, uint64_t{0});
+            QCOMPARE(reward_address->text(), QString::fromStdString(target));
+            if (target.empty()) {
+                QVERIFY(WITH_LOCK(wallet->cs_wallet, return wallet->IsMine(CTxOut{0, GetScriptForDestination(DecodeDestination(status.address))})));
+                QVERIFY(status.address != last_address);
+            } else {
+                QCOMPARE(status.address, external);
+            }
+            last_address = status.address;
+            node.stopCpuMining();
+            QTRY_VERIFY(!node.getCpuMiningStatus().running);
+            mining.setClientModel(&client); // Refresh Start availability.
+        }
+    }
     unload_wallet.Unload();
     auto* domain = page.findChild<QLineEdit*>("p2cDomain");
     auto* amount = page.findChild<BitcoinAmountField*>("p2cAmount");
@@ -1104,6 +1190,14 @@ void WalletTests::miningPage()
     page.setClientModel(nullptr);
     QVERIFY(thread_warning->isHidden());
     QVERIFY(!page.findChild<QPushButton*>("startMining")->isEnabled());
+    // Destroying a Mining page must also safely dispose of its error modal.
+    auto* unloaded_page{new MiningPage{nullptr}};
+    const QPointer<MiningPage> unloaded_guard{unloaded_page};
+    unloaded_page->setClientModel(&client);
+    unloaded_page->findChild<QLineEdit*>("miningAddress")->setText("invalid-address");
+    QTimer::singleShot(0, [unloaded_page] { delete unloaded_page; });
+    unloaded_page->findChild<QPushButton*>("startMining")->click();
+    QTRY_VERIFY(unloaded_guard.isNull());
     struct PaletteGuard {
         QPalette original{QApplication::palette()};
         ~PaletteGuard() { QApplication::setPalette(original); }
@@ -1157,9 +1251,12 @@ void WalletTests::p2cTranslations()
         for (const auto* source : {"Create bounties", "Automatic claims", "Confirm P2C creation", "Send P2C"}) {
             QVERIFY2(!translator.translate("P2CCreateDialog", source).isEmpty(), qPrintable(locale + ": " + source));
         }
-        for (const auto* source : {"Disabled", "Unlimited", "Waiting for bounties", "Simultaneous connections:", "Enable automatic P2C claiming?"}) {
+        for (const auto* source : {"Disabled", "Unlimited", "Waiting for bounties", "Simultaneous connections:", "Enable automatic P2C claiming?",
+                 "Optional: empty uses this wallet", "Reward address:", "Reward target: %1", "This wallet (default)",
+                 "An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it."}) {
             QVERIFY2(!translator.translate("P2CClaimDialog", source).isEmpty(), qPrintable(locale + ": " + source));
         }
+        QVERIFY2(!translator.translate("MiningPage", "Optional: empty uses this wallet").isEmpty(), qPrintable(locale));
     }
     for (const auto& locale : {QStringLiteral("pt"), QStringLiteral("pt_BR")}) {
         struct ScopedTranslator {

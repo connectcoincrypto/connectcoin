@@ -3660,6 +3660,26 @@ Unable to restore backup of wallet.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Προαιρετικό: αν μείνει κενό, χρησιμοποιείται αυτό το πορτοφόλι</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Διεύθυνση ανταμοιβής:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Μια προαιρετική διεύθυνση ανταμοιβής χρησιμοποιείται αντί αυτού του πορτοφολιού. Οι ολοκληρωμένες αποδείξεις διατηρούν τον αρχικό προορισμό τους όταν την αλλάζετε.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Προορισμός ανταμοιβής: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Αυτό το πορτοφόλι (προεπιλογή)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Αυτόματη εύρεση επιβεβαιωμένων ανταμοιβών, δημιουργία αποδείξεων TLS και αποστολή των ανταμοιβών σε αυτό το πορτοφόλι. Τα τέλη αφαιρούνται μόνο από κάθε ανταμοιβή. Δεν απαιτείται ξεκλείδωμα ιδιωτικών κλειδιών όσο υπάρχουν διευθύνσεις λήψης στη δεξαμενή κλειδιών. Το HTTPS είναι απενεργοποιημένο μέχρι να το ξεκινήσετε ρητά.</translation>
     </message>
@@ -3961,6 +3981,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Ακυρώθηκε. Δεν στάλθηκαν συναλλαγές P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Προαιρετικό: αν μείνει κενό, χρησιμοποιείται αυτό το πορτοφόλι</translation>
     </message>
 </context>
 </TS>

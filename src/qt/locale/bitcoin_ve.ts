@@ -748,6 +748,26 @@ U ṱanganya ṱhoho (%1%)...</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>A si khombe-khombe: arali hu si na tshithu, hu shumiswa itshi tshipatshi</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Ḓiresi ya pfufho:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Arali na vhea ḓiresi ya pfufho, hu shumiswa yeneyo ḓiresi nṱhani ha itshi tshipatshi. Musi ni tshi shandula ḓiresi, vhuṱanzi ho fhelelaho vhu vhulunga fhethu ha u thoma ha u rumela hone.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Hune pfufho ya rumelwa hone: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Itshi tshipatshi (khetho ya u thoma)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Todani pfufho dzo khwaṱhisedzwaho nga yoṱhe, ni ite vhuṱanzi ha TLS nahone ni rumele pfufho kha itshi tshipatshi. Mbadelo dza tshumelo dzi bviswa kha pfufho iṅwe na iṅwe fhedzi. A zwi ṱoḓei u vula khii dza tshiphiri arali ḓiresi dza u ṱanganedza dzi tshi kha ḓi vha hone kha tshigwada tsha khii. HTTPS yo dzimiwa u swika ni tshi i thoma nga u tou amba.</translation>
     </message>
@@ -1049,6 +1069,13 @@ Version ya ṱhanziela dza root: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Zwo fheliswa. A hu na thengiselano ya P2C yo rumelwaho.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>A si khombe-khombe: arali hu si na tshithu, hu shumiswa itshi tshipatshi</translation>
     </message>
 </context>
 </TS>

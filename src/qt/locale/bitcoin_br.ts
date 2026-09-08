@@ -1042,6 +1042,26 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Diret: implijout a ra an doug-moneiz-mañ ma vez goullo</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Chomlec'h ar gopr:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Implijet e vez ur chomlec'h gopr diret e-lec'h an doug-moneiz-mañ. Mirout a ra ar prouennoù echuet o lec'h-pal orin pa cheñchit anezhañ.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Lec'h-pal ar gopr: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>An doug-moneiz-mañ (dre ziouer)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Kavout emgefre an dic'hoproù kadarnaet, krouiñ prouennoù TLS ha kas an dic'hoproù d'an doug-moneiz-mañ. Tennet e vez ar frejoù eus pep dic'hopr hepken. N'eus ket ezhomm da zibrennañ an alc'hwezioù prevez keit ha ma chom chomlec'hioù degemer er mirlec'h alc'hwezioù. Diweredekaet eo HTTPS betek ma loc'hit anezhañ ent splann.</translation>
     </message>
@@ -1343,6 +1363,13 @@ Stumm an testenioù gwrizienn: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Nullet. N'eus bet kaset treuzadenn P2C ebet.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Diret: implijout a ra an doug-moneiz-mañ ma vez goullo</translation>
     </message>
 </context>
 </TS>

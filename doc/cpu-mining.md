@@ -7,8 +7,10 @@ requires its additional challenge and is not supported by this miner.
 
 ## Wallet
 
-Open **Mining** (pickaxe icon, **Alt+6**), generate a reward address or paste a
-type-1 P2PK address for the current network, choose CPU threads, and start.
+Open **Mining** (pickaxe icon, **Alt+6**), choose CPU threads, and start.
+Leave the reward address empty to generate a receiving address in the selected
+wallet automatically. Optionally paste a type-1 P2PK address for this network
+to pay elsewhere, or use the button to generate and display a wallet address.
 The miner is shared by the whole node, including all open wallets. Changing
 tabs or closing a wallet does not stop it or change its reward address.
 The displayed active address is authoritative. Stop mining before changing it.
@@ -40,15 +42,20 @@ every machine can run that many workers.
 
 ## Daemon / RPC
 
-With a node running on testnet4, use these commands (replace the address):
+With a node running on testnet4, the default target is the selected wallet:
 
 ```sh
-connectcoin-cli -testnet4 startmining "YOUR_TESTNET_P2PK_ADDRESS" 2
+connectcoin-cli -testnet4 -rpcwallet=YOUR_WALLET startmining "" 2
 connectcoin-cli -testnet4 getcpumininginfo
 connectcoin-cli -testnet4 stopmining
 ```
 
-Use `-regtest` instead for a local test chain. No wallet RPC is needed. Mining
+Omitting `address` also selects the wallet. With exactly one loaded wallet,
+`-rpcwallet` is optional; with several, choose one explicitly. To pay an external
+address, use `startmining "YOUR_TESTNET_P2PK_ADDRESS" 2`; this works even without
+wallet support or a loaded wallet. Without a wallet an address is required.
+
+Use `-regtest` instead for a local test chain. Mining
 rewards obey the same subsidy, block-weight penalty, and coinbase maturity
 rules as blocks mined externally. Accepted block counts are not a balance:
 blocks can become stale after acceptance.

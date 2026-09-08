@@ -4434,6 +4434,26 @@ Ves a Arxiu &gt; Obrir Cartera per a carregar cartera.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opcional: si és buit, s'utilitza aquest moneder</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Adreça de la recompensa:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Una adreça de recompensa opcional s'utilitza en lloc d'aquest moneder. Les proves completades conserven la destinació original quan la canvieu.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Destinació de la recompensa: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Aquest moneder (per defecte)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Descobreix automàticament recompenses confirmades, genera proves TLS i envia les recompenses a aquesta cartera. Les comissions es descompten només de cada recompensa. No cal desbloquejar les claus privades mentre quedin adreces de recepció a la reserva de claus. HTTPS està desactivat fins que l'iniciïs explícitament.</translation>
     </message>
@@ -4735,6 +4755,13 @@ Versió dels certificats arrel: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Cancel·lat. No s'ha enviat cap transacció P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opcional: si és buit, s'utilitza aquest moneder</translation>
     </message>
 </context>
 </TS>

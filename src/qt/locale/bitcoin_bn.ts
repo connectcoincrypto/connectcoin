@@ -979,6 +979,26 @@ The migration process will create a backup of the wallet before migrating. This 
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>ঐচ্ছিক: খালি রাখলে এই ওয়ালেট ব্যবহার করা হবে</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>পুরস্কারের ঠিকানা:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>ঐচ্ছিক পুরস্কারের ঠিকানা এই ওয়ালেটের পরিবর্তে ব্যবহার করা হয়। ঠিকানা পরিবর্তন করলে সম্পূর্ণ হওয়া প্রমাণগুলো তাদের মূল গন্তব্য বজায় রাখে।</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>পুরস্কারের গন্তব্য: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>এই ওয়ালেট (ডিফল্ট)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>স্বয়ংক্রিয়ভাবে নিশ্চিত পুরস্কার খুঁজুন, TLS প্রমাণ তৈরি করুন এবং পুরস্কার এই ওয়ালেটে পাঠান। ফি কেবল প্রতিটি পুরস্কার থেকে কাটা হয়। কী-পুলে গ্রহণের ঠিকানা থাকা পর্যন্ত ব্যক্তিগত কী আনলক করার প্রয়োজন নেই। আপনি স্পষ্টভাবে চালু না করা পর্যন্ত HTTPS বন্ধ থাকে।</translation>
     </message>
@@ -1280,6 +1300,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>বাতিল করা হয়েছে। কোনো P2C লেনদেন পাঠানো হয়নি।</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>ঐচ্ছিক: খালি রাখলে এই ওয়ালেট ব্যবহার করা হবে</translation>
     </message>
 </context>
 </TS>

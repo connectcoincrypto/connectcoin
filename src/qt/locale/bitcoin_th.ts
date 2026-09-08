@@ -2580,6 +2580,26 @@ If you are receiving this error you should request the merchant provide a BIP21 
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>ไม่บังคับ: หากเว้นว่างจะใช้กระเป๋าเงินนี้</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>ที่อยู่รับรางวัล:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>หากระบุที่อยู่รับรางวัล ระบบจะใช้ที่อยู่นั้นแทนกระเป๋าเงินนี้ เมื่อคุณเปลี่ยนที่อยู่ หลักฐานที่สร้างเสร็จแล้วจะยังคงใช้ปลายทางเดิม</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>ปลายทางของรางวัล: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>กระเป๋าเงินนี้ (ค่าเริ่มต้น)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>ค้นหารางวัลที่ได้รับการยืนยัน สร้างหลักฐาน TLS และส่งรางวัลมายังกระเป๋านี้โดยอัตโนมัติ ค่าธรรมเนียมจะหักจากรางวัลแต่ละรายการเท่านั้น ไม่ต้องปลดล็อกกุญแจส่วนตัวตราบใดที่ยังมีที่อยู่รับเงินในชุดกุญแจ HTTPS จะปิดอยู่จนกว่าคุณจะสั่งเริ่มอย่างชัดเจน</translation>
     </message>
@@ -2881,6 +2901,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>ยกเลิกแล้ว ไม่มีการส่งธุรกรรม P2C</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>ไม่บังคับ: หากเว้นว่างจะใช้กระเป๋าเงินนี้</translation>
     </message>
 </context>
 </TS>

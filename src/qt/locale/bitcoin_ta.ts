@@ -3152,6 +3152,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>விருப்பத்திற்குரியது: காலியாக இருந்தால் இந்தப் பணப்பை பயன்படுத்தப்படும்</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>வெகுமதிக்கான முகவரி:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>வெகுமதிக்கான முகவரியைக் குறிப்பிட்டால், இந்தப் பணப்பைக்குப் பதிலாக அந்த முகவரி பயன்படுத்தப்படும். நீங்கள் முகவரியை மாற்றினாலும், முடிக்கப்பட்ட சான்றுகள் அவற்றின் அசல் இலக்கைத் தக்கவைக்கும்.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>வெகுமதியின் இலக்கு: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>இந்தப் பணப்பை (இயல்புநிலை)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>உறுதிசெய்யப்பட்ட வெகுமதிகளைத் தானாகக் கண்டறிந்து, TLS சான்றுகளை உருவாக்கி, வெகுமதிகளை இந்தப் பணப்பைக்கு அனுப்பும். கட்டணங்கள் ஒவ்வொரு வெகுமதியிலிருந்து மட்டுமே கழிக்கப்படும். விசித் தொகுப்பில் பெறும் முகவரிகள் இருக்கும் வரை தனிப்பட்ட விசிகளைத் திறக்கத் தேவையில்லை. நீங்கள் வெளிப்படையாகத் தொடங்கும் வரை HTTPS முடக்கப்பட்டிருக்கும்.</translation>
     </message>
@@ -3453,6 +3473,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>ரத்துசெய்யப்பட்டது. P2C பரிவர்த்தனைகள் எதுவும் அனுப்பப்படவில்லை.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>விருப்பத்திற்குரியது: காலியாக இருந்தால் இந்தப் பணப்பை பயன்படுத்தப்படும்</translation>
     </message>
 </context>
 </TS>

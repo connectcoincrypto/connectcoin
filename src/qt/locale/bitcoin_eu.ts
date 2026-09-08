@@ -5210,6 +5210,26 @@ Mesedez, saiatu softwarearen azken bertsioa exekutatzen.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Aukerakoa: hutsik badago, zorro hau erabiltzen da</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Sariaren helbidea:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Aukerako sari-helbidea zorro honen ordez erabiltzen da. Helbidea aldatzean, osatutako frogek jatorrizko helmuga mantentzen dute.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Sariaren helmuga: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Zorro hau (lehenetsia)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Bilatu automatikoki berretsitako sariak, sortu TLS frogak eta bidali sariak zorro honetara. Komisioak sari bakoitzetik soilik kentzen dira. Ez da gako pribatuak desblokeatu behar gako-biltegian jasotzeko helbideak dauden bitartean. HTTPS desgaituta dago berariaz abiarazi arte.</translation>
     </message>
@@ -5511,6 +5531,13 @@ Erroko ziurtagirien bertsioa: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Bertan behera utzita. Ez da P2C transakziorik bidali.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Aukerakoa: hutsik badago, zorro hau erabiltzen da</translation>
     </message>
 </context>
 </TS>

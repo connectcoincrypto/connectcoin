@@ -5114,6 +5114,26 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>선택 사항: 비워 두면 이 지갑을 사용합니다</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>보상 주소:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>보상 주소를 지정하면 이 지갑 대신 해당 주소를 사용합니다. 주소를 변경해도 이미 완성된 증명은 원래 수신 대상을 유지합니다.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>보상 수신 대상: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>이 지갑 (기본값)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>확인된 보상을 자동으로 검색하고 TLS 증명을 생성하여 보상을 이 지갑으로 보냅니다. 수수료는 각 보상에서만 차감됩니다. 키 풀에 수신 주소가 남아 있는 동안에는 개인 키 잠금을 해제할 필요가 없습니다. HTTPS는 명시적으로 시작할 때까지 비활성화됩니다.</translation>
     </message>
@@ -5415,6 +5435,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>취소되었습니다. P2C 거래를 보내지 않았습니다.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>선택 사항: 비워 두면 이 지갑을 사용합니다</translation>
     </message>
 </context>
 </TS>

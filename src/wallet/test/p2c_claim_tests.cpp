@@ -315,6 +315,10 @@ BOOST_AUTO_TEST_CASE(resumed_proposal_revalidates_amounts_and_ownership)
     }
     tx.vout[0] = CTxOut{COIN - 1000, XOnlyPubKey{GenerateRandomKey().GetPubKey()}};
     BOOST_CHECK(!ResumeP2CClaim(m_wallet, CTransaction{tx}));
+    const CTxDestination external{WitnessV1Taproot{*tx.vout[0].GetP2PKPubKey()}};
+    BOOST_REQUIRE(ResumeP2CClaim(m_wallet, CTransaction{tx}, external));
+    BOOST_CHECK(!ResumeP2CClaim(m_wallet, CTransaction{tx}, WitnessV1Taproot{XOnlyPubKey{key.GetPubKey()}}));
+    BOOST_CHECK(!IsP2CClaimPayout(m_wallet, tx.vout[0], CNoDestination{}));
     WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().SpendCoin(outpoint));
 }
 
@@ -795,6 +799,48 @@ BOOST_FIXTURE_TEST_CASE(worker_batches_spent_checks_and_recovers_eligibility, Te
     worker->Stop();
 }
 
+BOOST_FIXTURE_TEST_CASE(worker_changes_unfinished_reward_destination, TestChain100Setup)
+{
+    using namespace std::chrono_literals;
+    auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
+    auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
+    wallet->SetBroadcastTransactions(true);
+    const COutPoint outpoint{Txid::FromUint256(uint256::ONE), 0};
+    WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint,
+        Coin{CTxOut{COIN, PayToDomainOutput{"example.com", uint256{}, 1}}, 100, false}, false));
+    RestoreDNSLookup restore_dns;
+    std::atomic<unsigned> lookups{0};
+    g_dns_lookup = [&](const std::string&, bool) { ++lookups; return std::vector<CNetAddr>{}; };
+    const CTxDestination first{WitnessV1Taproot{XOnlyPubKey{GenerateRandomKey().GetPubKey()}}};
+    const CTxDestination second{WitnessV1Taproot{XOnlyPubKey{GenerateRandomKey().GetPubKey()}}};
+    auto worker{MakeP2CClaimWorker(*wallet)};
+    CTransactionRef previous;
+    for (const auto& address : {EncodeDestination(first), EncodeDestination(second), std::string{}}) {
+        lookups = 0;
+        BOOST_REQUIRE(worker->Configure(1, 1, {}, address));
+        const auto deadline{std::chrono::steady_clock::now() + 10s};
+        while (lookups == 0 && std::chrono::steady_clock::now() < deadline) std::this_thread::sleep_for(10ms);
+        worker->Stop();
+        BOOST_REQUIRE(lookups > 0);
+        std::string encoded;
+        BOOST_REQUIRE(wallet->GetDatabase().MakeBatch()->Read(std::string{"p2c_claim_worker_v1"}, encoded));
+        UniValue saved;
+        BOOST_REQUIRE(saved.read(encoded));
+        BOOST_REQUIRE_EQUAL(saved["pending"].size(), 1U);
+        CMutableTransaction tx;
+        BOOST_REQUIRE(DecodeHexTx(tx, saved["pending"][0].get_str()));
+        BOOST_CHECK_EQUAL(worker->Status()["reward_address"].get_str(), address);
+        if (address.empty()) {
+            BOOST_CHECK(IsP2CClaimPayout(*wallet, tx.vout[0]));
+        } else {
+            BOOST_CHECK(IsP2CClaimPayout(*wallet, tx.vout[0], DecodeDestination(address)));
+            BOOST_CHECK(!IsP2CClaimPayout(*wallet, tx.vout[0]));
+        }
+        if (previous) BOOST_CHECK(previous->GetHash() != CTransaction{tx}.GetHash());
+        previous = MakeTransactionRef(tx);
+    }
+}
+
 BOOST_FIXTURE_TEST_CASE(worker_retains_multiple_completed_proofs_on_restart, TestChain100Setup)
 {
     using namespace std::chrono_literals;
@@ -805,11 +851,13 @@ BOOST_FIXTURE_TEST_CASE(worker_retains_multiple_completed_proofs_on_restart, Tes
     std::vector<CTransactionRef> transactions;
     CCoinControl control;
     control.m_feerate = CFeeRate{1000};
+    const CTxDestination external{WitnessV1Taproot{XOnlyPubKey{GenerateRandomKey().GetPubKey()}}};
     for (uint32_t i = 0; i < 3; ++i) {
         const COutPoint outpoint{Txid::FromUint256(uint256::ONE), i};
         WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint,
             Coin{CTxOut{COIN, PayToDomainOutput{"example.com", uint256{}, 1}}, 100, false}, false));
-        const auto prepared{PrepareP2CClaim(*wallet, outpoint, control)};
+        const auto prepared{PrepareP2CClaim(*wallet, outpoint, control, MAX_P2C_PROOF_SIZE,
+            i == 0 ? std::nullopt : std::optional<CTxDestination>{external})};
         BOOST_REQUIRE(prepared);
         transactions.push_back(prepared->tx);
         const auto encoded{EncodeHexTx(*prepared->tx)};
@@ -821,6 +869,7 @@ BOOST_FIXTURE_TEST_CASE(worker_retains_multiple_completed_proofs_on_restart, Tes
             UniValue item{UniValue::VOBJ};
             item.pushKV("tx", encoded);
             item.pushKV("proof", "00"); // Deliberately invalid: must never submit.
+            item.pushKV("address", EncodeDestination(external));
             completed.push_back(std::move(item));
         }
         if (i < 2) {
@@ -852,6 +901,8 @@ BOOST_FIXTURE_TEST_CASE(worker_retains_multiple_completed_proofs_on_restart, Tes
         BOOST_CHECK_EQUAL(retained["completed"].size(), 1U);
         BOOST_CHECK_EQUAL(retained["completed"][0]["tx"].get_str(), EncodeHexTx(*transactions.back()));
         BOOST_CHECK_EQUAL(retained["completed"][0]["proof"].get_str(), "00");
+        BOOST_CHECK_EQUAL(retained["completed"][0]["address"].get_str(), EncodeDestination(external));
+        BOOST_CHECK(worker->Status()["last_error"].get_str().find("Invalid P2C proof:") != std::string::npos);
         BOOST_CHECK_EQUAL(retained["submitted"].getInt<uint64_t>(), 0U);
     }
     BOOST_CHECK_EQUAL(lookups, 0U);

@@ -5076,6 +5076,26 @@ Bitte mit der neuesten Softwareversion ausführen.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Optional: leer verwendet diese Wallet</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Belohnungsadresse:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Eine optionale Belohnungsadresse wird anstelle dieser Wallet verwendet. Fertige Nachweise behalten ihr ursprüngliches Ziel, wenn Sie die Adresse ändern.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Belohnungsziel: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Diese Wallet (Standard)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Findet bestätigte Prämien automatisch, erzeugt TLS-Nachweise und sendet die Belohnungen an diese Wallet. Gebühren werden ausschließlich von der jeweiligen Prämie abgezogen. Private Schlüssel müssen nicht entsperrt werden, solange der Schlüsselvorrat Empfangsadressen enthält. HTTPS bleibt bis zum ausdrücklichen Start deaktiviert.</translation>
     </message>
@@ -5377,6 +5397,13 @@ Version der Stammzertifikate: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Abgebrochen. Es wurden keine P2C-Transaktionen gesendet.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Optional: leer verwendet diese Wallet</translation>
     </message>
 </context>
 </TS>

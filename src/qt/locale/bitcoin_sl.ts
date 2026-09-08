@@ -4624,6 +4624,26 @@ Obnovitev varnostne kopije denarnice ni bila mogoča.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Neobvezno: prazno polje pomeni uporabo te denarnice</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Naslov za nagrado:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Če navedete naslov za nagrado, bo uporabljen namesto te denarnice. Ob spremembi naslova dokončana dokazila ohranijo prvotni naslov prejemnika.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Prejemnik nagrade: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Ta denarnica (privzeto)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Samodejno poiščite potrjene nagrade, ustvarite dokaze TLS in pošljite nagrade v to denarnico. Provizije se odštejejo samo od posamezne nagrade. Zasebnih ključev ni treba odkleniti, dokler so v zalogi ključev še prejemni naslovi. HTTPS je onemogočen, dokler ga izrecno ne zaženete.</translation>
     </message>
@@ -4925,6 +4945,13 @@ Različica korenskih potrdil: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Preklicano. Nobena transakcija P2C ni bila poslana.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Neobvezno: prazno polje pomeni uporabo te denarnice</translation>
     </message>
 </context>
 </TS>

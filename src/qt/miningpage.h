@@ -25,6 +25,7 @@ private:
     void refresh();
     void start();
     void newAddress();
+    QString walletAddress();
     void updateThreadWarning();
     WalletModel* m_wallet;
     ClientModel* m_client{nullptr};

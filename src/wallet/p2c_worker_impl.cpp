@@ -10,6 +10,7 @@
 #include <consensus/p2c_x509.h>
 #include <core_io.h>
 #include <interfaces/chain.h>
+#include <key_io.h>
 #include <netaddress.h>
 #include <univalue.h>
 #include <util/strencodings.h>
@@ -48,6 +49,16 @@ constexpr size_t MAX_SAVED_STATE{64 * 1024 * 1024};
 constexpr auto SCHEDULE_REFRESH{std::chrono::seconds{5}};
 constexpr auto DNS_REFRESH{std::chrono::seconds{60}};
 constexpr auto STATE_KEY{"p2c_claim_worker_v1"};
+
+std::optional<CTxDestination> RewardDestination(const std::string& address)
+{
+    if (address.empty()) return std::nullopt;
+    auto destination{DecodeDestination(address)};
+    if (!IsValidDestination(destination) || !CTxOut{0, GetScriptForDestination(destination)}.GetP2PKPubKey()) {
+        throw std::invalid_argument("P2C claiming requires a type-1 P2PK reward address for this network");
+    }
+    return destination;
+}
 }
 
 // Keep the wallet-facing lifecycle interface independent of its implementation.
@@ -55,7 +66,7 @@ class P2CClaimWorkerImpl final : public P2CClaimWorker {
 public:
     explicit P2CClaimWorkerImpl(CWallet& wallet);
     ~P2CClaimWorkerImpl() override;
-    util::Result<void> Configure(int rate, int concurrency, std::vector<std::string> domains) override;
+    util::Result<void> Configure(int rate, int concurrency, std::vector<std::string> domains, std::string reward_address) override;
     void Stop() override;
     void Shutdown() override;
     UniValue Status() const override;
@@ -78,6 +89,8 @@ struct P2CClaimWorkerImpl::Impl {
     int rate{0};
     int concurrency{4};
     std::vector<std::string> domains;
+    std::string reward_address;
+    std::optional<CTxDestination> payout_destination;
     uint64_t attempts{0};
     uint64_t submitted{0};
     uint64_t domain_rounds{0};
@@ -140,9 +153,11 @@ struct P2CClaimWorkerImpl::Impl {
     // a search whose successful result was already durably saved.
     CTransactionRef ready;
     std::vector<unsigned char> ready_proof;
+    std::optional<CTxDestination> ready_destination;
     struct CompletedClaim {
         CTransactionRef tx;
         std::vector<unsigned char> proof;
+        std::optional<CTxDestination> destination;
     };
     // At most one proof per proposal. Only the coordinator submits;
     // capture threads append and persist under work_mutex.
@@ -186,11 +201,13 @@ struct P2CClaimWorkerImpl::Impl {
         data.pushKV("pending", pending);
         data.pushKV("ready", ready ? EncodeHexTx(*ready) : "");
         data.pushKV("proof", HexStr(ready_proof));
+        data.pushKV("ready_address", ready_destination ? EncodeDestination(*ready_destination) : "");
         UniValue completed_data{UniValue::VARR};
         for (const auto& claim : completed) {
             UniValue item{UniValue::VOBJ};
             item.pushKV("tx", EncodeHexTx(*claim.tx));
             item.pushKV("proof", HexStr(claim.proof));
+            item.pushKV("address", claim.destination ? EncodeDestination(*claim.destination) : "");
             completed_data.push_back(std::move(item));
         }
         data.pushKV("completed", std::move(completed_data));
@@ -230,6 +247,7 @@ struct P2CClaimWorkerImpl::Impl {
         }
         ready.reset();
         ready_proof.clear();
+        ready_destination.reset();
         completed.clear();
         if (!data["ready"].get_str().empty()) {
             CMutableTransaction tx;
@@ -240,6 +258,7 @@ struct P2CClaimWorkerImpl::Impl {
             }
             ready = MakeTransactionRef(tx);
             ready_proof = ParseHex(data["proof"].get_str());
+            if (!data["ready_address"].isNull()) ready_destination = RewardDestination(data["ready_address"].get_str());
         }
         // Older wallets have only the single ready/proof slot.
         if (!data["completed"].isNull()) {
@@ -256,7 +275,8 @@ struct P2CClaimWorkerImpl::Impl {
                     !seen.insert(tx.vin[0].prevout).second) {
                     throw std::runtime_error("Invalid saved P2C completed claim");
                 }
-                completed.push_back({MakeTransactionRef(tx), ParseHex(item["proof"].get_str())});
+                completed.push_back({MakeTransactionRef(tx), ParseHex(item["proof"].get_str()),
+                    item["address"].isNull() ? std::nullopt : RewardDestination(item["address"].get_str())});
             }
         }
         std::lock_guard lock{mutex};
@@ -279,6 +299,7 @@ struct P2CClaimWorkerImpl::Impl {
             if (!ready) {
                 ready = std::move(completed.front().tx);
                 ready_proof = std::move(completed.front().proof);
+                ready_destination = std::move(completed.front().destination);
                 completed.pop_front();
             }
             SubmitOne();
@@ -294,10 +315,11 @@ struct P2CClaimWorkerImpl::Impl {
             proposals.erase(ready->vin[0].prevout);
             ready.reset();
             ready_proof.clear();
+            ready_destination.reset();
             Save();
             return;
         }
-        auto validated{CompleteP2CClaim(wallet, *ready, ready_proof)};
+        auto validated{CompleteP2CClaim(wallet, *ready, ready_proof, ready_destination)};
         if (!validated) {
             if (Available(ready->vin[0].prevout)) {
                 // A fee-policy change or reorg can be temporary. Do not throw
@@ -319,6 +341,7 @@ struct P2CClaimWorkerImpl::Impl {
         proposals.erase(ready->vin[0].prevout);
         ready.reset();
         ready_proof.clear();
+        ready_destination.reset();
         Save();
     }
 
@@ -487,8 +510,8 @@ struct P2CClaimWorkerImpl::Impl {
                     claim_cache.erase(old->first);
                     proposals.erase(old);
                 }
-                auto prepared{saved == proposals.end() ? PrepareP2CClaim(wallet, outpoint, claim_control) :
-                    ResumeP2CClaim(wallet, *saved->second)};
+                auto prepared{saved == proposals.end() ? PrepareP2CClaim(wallet, outpoint, claim_control, MAX_P2C_PROOF_SIZE, payout_destination) :
+                    ResumeP2CClaim(wallet, *saved->second, payout_destination)};
                 if (!prepared) {
                     Message("bounty skipped", util::ErrorString(prepared).original);
                     group->bounties.erase(candidate);
@@ -589,7 +612,7 @@ struct P2CClaimWorkerImpl::Impl {
             if (!P2CMeetsWorkTarget(view.connection_work_hash, bounty.connection_work_target)) continue;
             std::lock_guard lock{work_mutex};
             if (!claim->unavailable.exchange(true)) {
-                completed.push_back({claim->prepared.tx, std::move(*captured)});
+                completed.push_back({claim->prepared.tx, std::move(*captured), payout_destination});
                 Save(); // Only this bounty's duplicate attempts are cancelled.
                 wake.notify_all();
             }
@@ -606,6 +629,13 @@ struct P2CClaimWorkerImpl::Impl {
             domain_after.reset();
             prefer_reward = false;
             SubmitReady(stop);
+            // Completed proofs retain their original authorization above.
+            // Unfinished challenges can be replaced when the user changes the
+            // destination; never change the outputs of a successful proof.
+            std::erase_if(proposals, [&](const auto& entry) {
+                return !IsP2CClaimPayout(wallet, entry.second->vout[0], payout_destination);
+            });
+            Save();
             Refresh(stop);
             std::atomic<bool> failed{false};
             std::exception_ptr search_error;
@@ -681,7 +711,7 @@ void P2CClaimWorkerImpl::Shutdown()
     m_impl->StopUnlocked();
 }
 
-util::Result<void> P2CClaimWorkerImpl::Configure(int rate, int concurrency, std::vector<std::string> domains)
+util::Result<void> P2CClaimWorkerImpl::Configure(int rate, int concurrency, std::vector<std::string> domains, std::string reward_address)
 {
     std::lock_guard control{m_impl->control_mutex};
     if (m_impl->closing) return util::Error{Untranslated("Wallet is unloading")};
@@ -689,11 +719,17 @@ util::Result<void> P2CClaimWorkerImpl::Configure(int rate, int concurrency, std:
         return util::Error{Untranslated("Use rate -1, 0 or positive; positive concurrency; up to 256 domains")};
     }
     for (const auto& domain : domains) if (!IsCanonicalP2CDomain(domain)) return util::Error{Untranslated("Invalid P2C domain filter")};
+    std::optional<CTxDestination> destination;
+    try {
+        destination = RewardDestination(reward_address);
+    } catch (const std::invalid_argument& e) {
+        return util::Error{Untranslated(e.what())};
+    }
     if (rate != 0) {
         LOCK(m_impl->wallet.cs_wallet);
-        if (m_impl->wallet.IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS) || m_impl->wallet.IsWalletFlagSet(WALLET_FLAG_EXTERNAL_SIGNER) ||
+        if ((!destination && (m_impl->wallet.IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS) || m_impl->wallet.IsWalletFlagSet(WALLET_FLAG_EXTERNAL_SIGNER))) ||
             !m_impl->wallet.GetBroadcastTransactions()) {
-            return util::Error{Untranslated("Automatic claiming requires local wallet keys and walletbroadcast enabled")};
+            return util::Error{Untranslated("Automatic claiming requires local wallet keys or an explicit reward address, and walletbroadcast enabled")};
         }
     }
     m_impl->StopUnlocked();
@@ -702,6 +738,8 @@ util::Result<void> P2CClaimWorkerImpl::Configure(int rate, int concurrency, std:
         m_impl->rate = rate;
         m_impl->concurrency = concurrency;
         m_impl->domains = std::move(domains);
+        m_impl->reward_address = destination ? EncodeDestination(*destination) : "";
+        m_impl->payout_destination = std::move(destination);
         m_impl->next_connection = {};
         m_impl->domain_rounds = 0;
         m_impl->schedule_refreshes = 0;
@@ -728,6 +766,7 @@ UniValue P2CClaimWorkerImpl::Status() const
     UniValue result{UniValue::VOBJ};
     result.pushKV("connections_per_second", m_impl->rate);
     result.pushKV("concurrency", m_impl->concurrency);
+    result.pushKV("reward_address", m_impl->reward_address);
     result.pushKV("domain_rounds", m_impl->domain_rounds);
     result.pushKV("schedule_refreshes", m_impl->schedule_refreshes);
     result.pushKV("state", m_impl->state);

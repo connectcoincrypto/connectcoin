@@ -2254,6 +2254,26 @@ L-iffirmar huwa possibbli biss b'indirizzi tat-tip 'legacy'.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Mhux obbligatorju: jekk jitħalla vojt, tintuża din il-kartiera</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Indirizz tal-premju:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Jekk tispeċifika indirizz tal-premju, jintuża dak l-indirizz minflok din il-kartiera. Meta tibdel l-indirizz, il-provi kompluti jżommu d-destinazzjoni oriġinali tagħhom.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Destinazzjoni tal-premju: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Din il-kartiera (għażla awtomatika)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Sib premjijiet ikkonfermati awtomatikament, iġġenera provi TLS u ibgħat il-premjijiet lil din il-kartiera. It-tariffi jittieħdu biss minn kull premju. M'hemmx bżonn tiftaħ iċ-ċwievet privati sakemm ikun għad hemm indirizzi għar-riċeviment fil-ġabra taċ-ċwievet. HTTPS huwa diżattivat sakemm tibdieh b'mod espliċitu.</translation>
     </message>
@@ -2555,6 +2575,13 @@ Verżjoni taċ-ċertifikati għerq: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Ikkanċellat. Ma ntbagħtu ebda tranżazzjonijiet P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Mhux obbligatorju: jekk jitħalla vojt, tintuża din il-kartiera</translation>
     </message>
 </context>
 </TS>

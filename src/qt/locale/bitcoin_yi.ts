@@ -1167,6 +1167,26 @@ Unable to restore backup of wallet.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>נישט מחויב: אַ ליידיק פֿעלד ניצט דעם בײַטל</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>אַדרעס פֿאַר דער באַלוינונג:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>אויב איר גיט אָן אַן אַדרעס פֿאַר דער באַלוינונג, ווערט ער געניצט אַנשטאָט דעם בײַטל. ווען איר ענדערט דעם אַדרעס, האַלטן די פֿאַרענדיקטע באַווײַזן זייער אָריגינעלן ציל.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>ציל פֿון דער באַלוינונג: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>דער בײַטל (פֿעליקייַט)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>אויטאָמאַטיש געפֿינען באַשטעטיקטע באַלוינונגען, שאַפֿן TLS־באַווײַזן און שיקן די באַלוינונגען אין דעם בײַטל. אָפּצאָלן ווערן אַראָפּגערעכנט נאָר פֿון יעדער באַלוינונג. מען דאַרף נישט אויפשליסן פּריוואַטע שליסלען, אַזוי לאַנג ווי עס בלײַבן באַקומען־אַדרעסן אינעם שליסל־רעזערוו. HTTPS איז אויסגעלאָשן ביז איר הייבט עס בפירוש אָן.</translation>
     </message>
@@ -1468,6 +1488,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>אָפּגעזאָגט. קיין P2C־טראַנזאַקציעס זענען נישט געשיקט געוואָרן.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>נישט מחויב: אַ ליידיק פֿעלד ניצט דעם בײַטל</translation>
     </message>
 </context>
 </TS>

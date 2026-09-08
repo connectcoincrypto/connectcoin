@@ -3307,6 +3307,26 @@ Gå til Fil &gt; Åbn Pung for, at indlæse en pung.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Valgfrit: et tomt felt bruger denne tegnebog</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Belønningsadresse:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>En valgfri belønningsadresse bruges i stedet for denne tegnebog. Færdige beviser beholder deres oprindelige destination, når du ændrer den.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Belønningens destination: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Denne tegnebog (standard)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Finder automatisk bekræftede dusører, genererer TLS-beviser og sender belønningerne til denne tegnebog. Gebyrer trækkes kun fra den enkelte belønning. Private nøgler behøver ikke at blive låst op, så længe nøglepuljen har modtageradresser. HTTPS er deaktiveret, indtil du udtrykkeligt starter det.</translation>
     </message>
@@ -3608,6 +3628,13 @@ Rodcertifikaternes version: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Annulleret. Ingen P2C-transaktioner blev sendt.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Valgfrit: et tomt felt bruger denne tegnebog</translation>
     </message>
 </context>
 </TS>

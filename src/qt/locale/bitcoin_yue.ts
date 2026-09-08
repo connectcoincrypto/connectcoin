@@ -4725,6 +4725,26 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>可選：留空就會用呢個錢包</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>獎勵地址：</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>如果指定獎勵地址，就會用嗰個地址代替呢個錢包。就算你改咗地址，已完成嘅證明都會保留原本嘅收款目的地。</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>獎勵收款目的地：%1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>呢個錢包（預設）</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>自動搵已確認嘅懸賞、產生 TLS 證明，再將獎勵送去呢個錢包。手續費只會喺每筆獎勵扣除。只要金鑰池仲有收款地址，就唔使解鎖私鑰。HTTPS 預設停用，要你明確啟動先會開始。</translation>
     </message>
@@ -5026,6 +5046,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>已取消。冇傳送任何 P2C 交易。</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>可選：留空就會用呢個錢包</translation>
     </message>
 </context>
 </TS>

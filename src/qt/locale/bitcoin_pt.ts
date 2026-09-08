@@ -5134,6 +5134,26 @@ Não foi possível restaurar a cópia de segurança da carteira.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Reward address:</source>
+        <translation>Endereço da recompensa:</translation>
+    </message>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opcional: vazio usa esta carteira</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Um endereço opcional substitui esta carteira como destino. Ao alterá-lo, as provas concluídas mantêm o destino original.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Destino da recompensa: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Esta carteira (padrão)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Descobre recompensas confirmadas automaticamente, gera provas TLS e envia os valores para esta carteira. As taxas são descontadas exclusivamente de cada recompensa. Não é necessário desbloquear as chaves privadas enquanto houver endereços de receção na reserva de chaves. O HTTPS permanece desativado até o iniciar explicitamente.</translation>
     </message>
@@ -5439,6 +5459,10 @@ Versão dos certificados raiz: %2</translation>
 </context>
 <context>
     <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opcional: vazio usa esta carteira</translation>
+    </message>
     <message>
         <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
         <translation>Minere blocos de teste com sua CPU usando RandomX. A mineração fica desligada até você iniciá-la. O minerador é compartilhado por todas as carteiras deste nó e continua ao trocar de aba ou fechar uma carteira.</translation>

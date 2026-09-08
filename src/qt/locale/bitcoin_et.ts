@@ -1975,6 +1975,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Valikuline: tühi väli kasutab seda rahakotti</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Preemia aadress:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Valikulist preemia aadressi kasutatakse selle rahakoti asemel. Aadressi muutmisel säilitavad lõpetatud tõendid oma algse sihtkoha.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Preemia sihtkoht: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>See rahakott (vaikimisi)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Leia kinnitatud tasud automaatselt, loo TLS-tõendeid ja saada tasud sellesse rahakotti. Teenustasud arvatakse maha ainult igast tasust. Privaatvõtmeid pole vaja avada, kuni võtmevarus on vastuvõtuaadresse. HTTPS on välja lülitatud, kuni selle selgesõnaliselt käivitad.</translation>
     </message>
@@ -2276,6 +2296,13 @@ Juursertifikaatide versioon: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Tühistatud. P2C-tehinguid ei saadetud.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Valikuline: tühi väli kasutab seda rahakotti</translation>
     </message>
 </context>
 </TS>

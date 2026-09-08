@@ -2609,6 +2609,26 @@ Size bu ýalňyşlyk gelýän bolsa, siz täjirden BIP21-e gabat gelýän URI-ni
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Hökmany däl: boş goýulsa, şu gapjyk ulanylýar</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Sylag salgysy:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Sylag salgysyny görkezseňiz, şu gapjygyň ýerine şol salgy ulanylýar. Salgyny üýtgedeniňizde, tamamlanan subutnamalar öz asyl iberiljek salgysyny saklaýar.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Sylagyň iberiljek ýeri: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Şu gapjyk (deslapky)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Tassyklanan sylaglary awtomatik tapyň, TLS subutnamalaryny dörediň we sylaglary şu gapjyga iberiň. Tölegler diňe her sylagdan tutulýar. Açarlar gorunda kabul ediş salgylary bar wagty şahsy açarlaryň gulpuny açmak gerek däl. HTTPS ony aç-açan başlatýançaňyz öçürilen ýagdaýda bolýar.</translation>
     </message>
@@ -2910,6 +2930,13 @@ Kök şahadatnamalaryň wersiýasy: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Ýatyryldy. Hiç bir P2C geleşigi iberilmedi.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Hökmany däl: boş goýulsa, şu gapjyk ulanylýar</translation>
     </message>
 </context>
 </TS>

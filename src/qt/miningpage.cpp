@@ -8,6 +8,7 @@
 #include <outputtype.h>
 #include <qt/addresstablemodel.h>
 #include <qt/clientmodel.h>
+#include <qt/guiutil.h>
 #include <qt/walletmodel.h>
 
 #include <QFormLayout>
@@ -15,6 +16,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QMessageBox>
+#include <QPointer>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QTimer>
@@ -35,7 +37,7 @@ MiningPage::MiningPage(WalletModel* wallet_model, QWidget* parent)
     auto* form = new QFormLayout;
     m_address = new QLineEdit(this);
     m_address->setObjectName("miningAddress");
-    m_address->setPlaceholderText(tr("Reward address for this network"));
+    m_address->setPlaceholderText(m_wallet ? tr("Optional: empty uses this wallet") : tr("Reward address for this network"));
     m_new_address = new QPushButton(tr("New address from this wallet"), this);
     m_new_address->setObjectName("newMiningAddress");
     auto* address_row = new QHBoxLayout;
@@ -88,24 +90,41 @@ void MiningPage::setClientModel(ClientModel* model)
 
 void MiningPage::newAddress()
 {
-    if (!m_wallet) return;
+    const QPointer<MiningPage> guard{this};
+    const auto address{walletAddress()};
+    if (guard && !address.isEmpty()) m_address->setText(address);
+}
+
+QString MiningPage::walletAddress()
+{
+    if (!m_wallet) return {};
+    const QPointer<MiningPage> guard{this};
     const QString address{m_wallet->getAddressTableModel()->addRow(AddressTableModel::Receive, tr("Mining"), QString{}, OutputType::BECH32M)};
+    if (!guard) return {};
     if (address.isEmpty()) {
-        QMessageBox::warning(this, tr("Mining"), tr("Could not generate a reward address. Check that the wallet can generate receiving addresses."));
-        return;
+        GUIUtil::ShowModalDialogAsynchronously(new QMessageBox(QMessageBox::Warning, tr("Mining"),
+            tr("Could not generate a reward address. Check that the wallet can generate receiving addresses."), QMessageBox::Ok, this));
+        return {};
     }
-    m_address->setText(address);
+    return address;
 }
 
 void MiningPage::start()
 {
     if (!m_client) return;
+    const QPointer<MiningPage> guard{this};
     try {
-        m_client->node().startCpuMining(m_address->text().trimmed().toStdString(), m_threads->value());
+        QString address{m_address->text().trimmed()};
+        if (address.isEmpty() && m_wallet) {
+            address = walletAddress();
+            if (!guard || !m_client || address.isEmpty()) return;
+        }
+        m_client->node().startCpuMining(address.toStdString(), m_threads->value());
     } catch (const std::exception& e) {
-        QMessageBox::warning(this, tr("Mining"), QString::fromUtf8(e.what()));
+        if (!guard) return;
+        GUIUtil::ShowModalDialogAsynchronously(new QMessageBox(QMessageBox::Warning, tr("Mining"), QString::fromUtf8(e.what()), QMessageBox::Ok, this));
     }
-    refresh();
+    if (guard) refresh();
 }
 
 void MiningPage::updateThreadWarning()
@@ -126,7 +145,8 @@ void MiningPage::refresh()
     m_threads->setEnabled(!info.running);
     m_new_address->setEnabled(m_client && m_wallet && !info.running);
     if (info.running) {
-        m_address->setText(QString::fromStdString(info.address));
+        // Keep the empty/default choice across starts; the active address is
+        // displayed below, including mining started by another wallet or RPC.
         m_threads->setValue(info.threads);
     }
     updateThreadWarning();

@@ -79,7 +79,6 @@
 
 #include <any>
 #include <atomic>
-#include <chrono>
 #include <condition_variable>
 #include <cstdint>
 #include <cstdlib>

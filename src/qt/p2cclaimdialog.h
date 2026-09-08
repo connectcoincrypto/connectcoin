@@ -34,6 +34,8 @@ private:
     QCheckBox* m_unlimited;
     QSpinBox* m_concurrency;
     QLineEdit* m_domains;
+    QLineEdit* m_address;
+    QLabel* m_reward_status;
     QPushButton* m_start;
     QPushButton* m_stop;
     QLabel* m_status;

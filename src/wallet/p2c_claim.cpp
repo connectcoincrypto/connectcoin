@@ -113,11 +113,21 @@ util::Result<CAmount> CalculateP2CClaimFee(const CFeeRate& rate, size_t proof_si
     return fee;
 }
 
+bool IsP2CClaimPayout(CWallet& wallet, const CTxOut& output, const std::optional<CTxDestination>& destination)
+{
+    const auto key{output.GetP2PKPubKey()};
+    if (!key) return false;
+    if (destination) return key == CTxOut{0, GetScriptForDestination(*destination)}.GetP2PKPubKey();
+    LOCK(wallet.cs_wallet);
+    return wallet.IsMine(output);
+}
+
 util::Result<P2CClaimProposal> PrepareP2CClaim(CWallet& wallet, const COutPoint& bounty,
-                                           const CCoinControl& control, size_t proof_size)
+                                           const CCoinControl& control, size_t proof_size,
+                                           const std::optional<CTxDestination>& payout_destination)
 {
     LOCK(wallet.cs_wallet);
-    if (!HasLocalKeys(wallet)) return util::Error{Untranslated("P2C claiming requires a wallet with local private keys")};
+    if (!payout_destination && !HasLocalKeys(wallet)) return util::Error{Untranslated("P2C claiming requires a wallet with local private keys or an explicit reward address")};
     if (proof_size == 0 || proof_size > MAX_P2C_PROOF_SIZE) {
         return util::Error{Untranslated("P2C proof_size must be between 1 and 65536 bytes")};
     }
@@ -142,13 +152,13 @@ util::Result<P2CClaimProposal> PrepareP2CClaim(CWallet& wallet, const COutPoint&
     }
 
     ReserveDestination reserved{&wallet, OutputType::BECH32M};
-    auto destination{reserved.GetReservedDestination(/*internal=*/false)};
+    auto destination{payout_destination ? util::Result<CTxDestination>{*payout_destination} : reserved.GetReservedDestination(/*internal=*/false)};
     if (!destination) return util::Error{util::ErrorString(destination)};
     CMutableTransaction tx;
     tx.vin.emplace_back(bounty);
     tx.vout.emplace_back(coin->out.nValue, GetScriptForDestination(*destination));
-    if (!tx.vout[0].GetP2PKPubKey() || !wallet.IsMine(tx.vout[0])) {
-        return util::Error{Untranslated("P2C payout must be a P2PK destination belonging to this wallet")};
+    if (!IsP2CClaimPayout(wallet, tx.vout[0], payout_destination)) {
+        return util::Error{Untranslated("P2C payout must be a wallet-owned P2PK destination or the explicitly specified reward address")};
     }
     // Includes witness marker/flags and CompactSize transitions. Never revise
     // the payout/fee after committing the ClientHello to this transaction.
@@ -159,22 +169,23 @@ util::Result<P2CClaimProposal> PrepareP2CClaim(CWallet& wallet, const COutPoint&
     }
     tx.vout[0].nValue -= *fee;
     if (IsDust(tx.vout[0], dust_rate)) return util::Error{Untranslated("P2C reward after fees is dust")};
-    reserved.KeepDestination();
+    if (!payout_destination) reserved.KeepDestination();
     return P2CClaimProposal{MakeTransactionRef(std::move(tx)), coin->out, *destination, *fee, proof_size, validation_time};
 }
 
-util::Result<P2CClaimProposal> ResumeP2CClaim(CWallet& wallet, const CTransaction& proposal)
+util::Result<P2CClaimProposal> ResumeP2CClaim(CWallet& wallet, const CTransaction& proposal,
+                                          const std::optional<CTxDestination>& destination)
 {
     LOCK(wallet.cs_wallet);
-    if (!HasLocalKeys(wallet)) return util::Error{Untranslated("P2C claiming requires a wallet with local private keys")};
+    if (!destination && !HasLocalKeys(wallet)) return util::Error{Untranslated("P2C claiming requires a wallet with local private keys or an explicit reward address")};
     if (proposal.version != CTransaction::CURRENT_VERSION || proposal.nLockTime != 0 ||
         proposal.vin.size() != 1 || proposal.vout.size() != 1 ||
         !proposal.vin[0].scriptSig.empty() || proposal.HasWitness() ||
         proposal.vin[0].nSequence != CTxIn::SEQUENCE_FINAL) {
         return util::Error{Untranslated("Expected an unwitnessed P2C claim with one input and one output, version 2, final sequence and no locktime")};
     }
-    if (!proposal.vout[0].GetP2PKPubKey() || !wallet.IsMine(proposal.vout[0])) {
-        return util::Error{Untranslated("P2C payout must be a P2PK destination belonging to this wallet")};
+    if (!IsP2CClaimPayout(wallet, proposal.vout[0], destination)) {
+        return util::Error{Untranslated("P2C payout must be a P2PK destination belonging to this wallet or match the explicitly specified reward address")};
     }
     auto coin{FindClaimBounty(wallet, proposal.vin[0].prevout)};
     if (!coin) return util::Error{util::ErrorString(coin)};
@@ -195,10 +206,11 @@ util::Result<P2CClaimProposal> ResumeP2CClaim(CWallet& wallet, const CTransactio
 }
 
 util::Result<CTransactionRef> CompleteP2CClaim(CWallet& wallet, const CTransaction& proposal,
-                                            std::span<const unsigned char> proof)
+                                            std::span<const unsigned char> proof,
+                                            const std::optional<CTxDestination>& destination)
 {
     LOCK(wallet.cs_wallet);
-    auto prepared{ResumeP2CClaim(wallet, proposal)};
+    auto prepared{ResumeP2CClaim(wallet, proposal, destination)};
     if (!prepared) return util::Error{util::ErrorString(prepared)};
     if (proof.empty() || proof.size() > MAX_P2C_PROOF_SIZE) {
         return util::Error{Untranslated("P2C proof must be between 1 and 65536 bytes")};

@@ -12,6 +12,7 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <chainparamsbase.h>
+#include <common/url.h>
 #include <consensus/amount.h>
 #include <consensus/consensus.h>
 #include <consensus/merkle.h>
@@ -20,6 +21,7 @@
 #include <core_io.h>
 #include <crypto/hex_base.h>
 #include <interfaces/types.h>
+#include <interfaces/wallet.h>
 #include <key_io.h>
 #include <net.h>
 #include <netbase.h>
@@ -31,6 +33,7 @@
 #include <node/mining_args.h>
 #include <node/mining_types.h>
 #include <node/warnings.h>
+#include <outputtype.h>
 #include <policy/feerate.h>
 #include <policy/policy.h>
 #include <pow.h>
@@ -60,6 +63,7 @@
 #include <util/strencodings.h>
 #include <util/string.h>
 #include <util/time.h>
+#include <util/translation.h>
 #include <validation.h>
 #include <validationinterface.h>
 #include <versionbits.h>
@@ -1282,18 +1286,43 @@ static RPCMethod startmining()
     return RPCMethod{
         "startmining",
         "Start continuous CPU RandomX mining on testnet4 or regtest. Disabled at startup.\n"
-        "One miner is shared by the entire node, not one per wallet. No wallet is required.\n"
+        "One miner is shared by the entire node, not one per wallet. With no address, pay a new address from the selected wallet.\n"
+        "Use /wallet/<name> (CLI -rpcwallet) when several wallets are loaded. An explicit address needs no wallet.\n"
         "Uses the validation RandomX dataset (FAST by default). Reserve CPU capacity for validation.\n"
         "Call stopmining and wait for running=false before changing the address or threads.",
         {
-            {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "Type-1 P2PK reward address on this network"},
+            {"address", RPCArg::Type::STR, RPCArg::DefaultHint{"selected wallet"}, "Optional type-1 P2PK reward address on this network. Empty or omitted uses the selected wallet."},
             {"threads", RPCArg::Type::NUM, RPCArg::Default{1}, "Hashing threads, from 1 to max_threads reported by getcpumininginfo. Exceeding logical_cpus can reduce hashrate and node responsiveness"},
         },
         RPCResult{RPCResult::Type::NONE, "", "Mining start requested; inspect getcpumininginfo for progress/errors"},
         RPCExamples{HelpExampleCli("startmining", "\"address\" 2")},
         [](const RPCMethod& self, const JSONRPCRequest& request) -> UniValue {
             try {
-                EnsureCpuMiner(request).Start(std::string{self.Arg<std::string_view>("address")}, self.Arg<int>("threads"));
+                auto& miner{EnsureCpuMiner(request)};
+                std::string address{request.params[0].isNull() ? "" : request.params[0].get_str()};
+                if (address.empty()) {
+                    const auto status{miner.GetStatus()};
+                    const int threads{self.Arg<int>("threads")};
+                    if (threads < 1 || threads > status.max_threads) throw std::invalid_argument(strprintf("Threads must be between 1 and %d", status.max_threads));
+                    if (status.running) throw std::runtime_error("Miner is already running or stopping; stop it first");
+                    auto& node{EnsureAnyNodeContext(request.context)};
+                    if (!node.wallet_loader) throw JSONRPCError(RPC_WALLET_NOT_FOUND, "No wallet is available; specify a reward address");
+                    auto wallets{node.wallet_loader->getWallets()};
+                    interfaces::Wallet* selected{nullptr};
+                    if (request.URI.starts_with("/wallet/")) {
+                        const auto name{UrlDecode(std::string_view{request.URI}.substr(8))};
+                        for (auto& wallet : wallets) if (wallet->getWalletName() == name) selected = wallet.get();
+                    } else if (wallets.size() == 1) {
+                        selected = wallets.front().get();
+                    } else if (wallets.size() > 1) {
+                        throw JSONRPCError(RPC_WALLET_NOT_SPECIFIED, "Multiple wallets are loaded; select /wallet/<name> or specify a reward address");
+                    }
+                    if (!selected) throw JSONRPCError(RPC_WALLET_NOT_FOUND, "Requested wallet is not loaded; select a wallet or specify a reward address");
+                    auto destination{selected->getNewDestination(OutputType::BECH32M, "Mining")};
+                    if (!destination) throw JSONRPCError(RPC_WALLET_ERROR, util::ErrorString(destination).original);
+                    address = EncodeDestination(*destination);
+                }
+                miner.Start(address, self.Arg<int>("threads"));
             } catch (const std::invalid_argument& e) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, e.what());
             } catch (const std::runtime_error& e) {

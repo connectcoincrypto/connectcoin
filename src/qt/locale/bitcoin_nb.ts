@@ -4048,6 +4048,26 @@ Mangler løsningsdata for å estimere transaksjonsstørrelse</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Valgfritt: tomt felt bruker denne lommeboken</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Belønningsadresse:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Hvis du oppgir en belønningsadresse, brukes den i stedet for denne lommeboken. Ferdige bevis beholder sitt opprinnelige mottakssted når du endrer adressen.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Belønningsmottaker: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Denne lommeboken (standard)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Finn automatisk bekreftede belønninger, generer TLS-bevis og send belønningene til denne lommeboken. Gebyrer tas bare fra hver belønning. Private nøkler trenger ikke å låses opp så lenge det finnes mottaksadresser i nøkkelutvalget. HTTPS er deaktivert til du uttrykkelig starter det.</translation>
     </message>
@@ -4349,6 +4369,13 @@ Rotsertifikatversjon: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Avbrutt. Ingen P2C-transaksjoner ble sendt.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Valgfritt: tomt felt bruker denne lommeboken</translation>
     </message>
 </context>
 </TS>

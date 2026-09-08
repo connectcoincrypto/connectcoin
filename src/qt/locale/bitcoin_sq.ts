@@ -866,6 +866,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opsionale: nëse lihet bosh, përdoret ky portofol</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Adresa e shpërblimit:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Nëse përcaktoni një adresë shpërblimi, ajo përdoret në vend të këtij portofoli. Kur ndryshoni adresën, provat e përfunduara ruajnë destinacionin e tyre fillestar.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Destinacioni i shpërblimit: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Ky portofol (i parazgjedhur)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Gjeni automatikisht shpërblime të konfirmuara, krijoni prova TLS dhe dërgojini shpërblimet në këtë portofol. Tarifat zbriten vetëm nga çdo shpërblim. Nuk nevojitet zhbllokimi i çelësave privatë për sa kohë ka adresa marrjeje në grupin e çelësave. HTTPS është i çaktivizuar derisa ta nisni shprehimisht.</translation>
     </message>
@@ -1167,6 +1187,13 @@ Versioni i certifikatave rrënjë: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>U anulua. Nuk u dërgua asnjë transaksion P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opsionale: nëse lihet bosh, përdoret ky portofol</translation>
     </message>
 </context>
 </TS>

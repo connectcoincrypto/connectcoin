@@ -1348,6 +1348,26 @@
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>විකල්පයි: හිස්ව තැබුවහොත් මෙම පසුම්බිය භාවිත කෙරේ</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>ත්‍යාග ලැබෙන ලිපිනය:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>ත්‍යාග ලැබෙන ලිපිනයක් සඳහන් කළහොත් මෙම පසුම්බිය වෙනුවට එම ලිපිනය භාවිත කෙරේ. ඔබ ලිපිනය වෙනස් කළත් සම්පූර්ණ කළ සාක්ෂි ඒවායේ මුල් ගමනාන්තය රඳවා ගනී.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>ත්‍යාගයේ ගමනාන්තය: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>මෙම පසුම්බිය (පෙරනිමි)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>තහවුරු කළ ත්‍යාග ස්වයංක්‍රීයව සොයා, TLS සාක්ෂි සාදා, ත්‍යාග මෙම පසුම්බියට යවයි. ගාස්තු අඩු කරන්නේ එක් එක් ත්‍යාගයෙන් පමණි. යතුරු සංචිතයේ ලැබීමේ ලිපින පවතින තුරු පෞද්ගලික යතුරු අගුළු හැරීම අවශ්‍ය නොවේ. ඔබ පැහැදිලිව ආරම්භ කරන තුරු HTTPS අක්‍රියව පවතී.</translation>
     </message>
@@ -1649,6 +1669,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>අවලංගු කළා. කිසිදු P2C ගනුදෙනුවක් යවා නැත.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>විකල්පයි: හිස්ව තැබුවහොත් මෙම පසුම්බිය භාවිත කෙරේ</translation>
     </message>
 </context>
 </TS>

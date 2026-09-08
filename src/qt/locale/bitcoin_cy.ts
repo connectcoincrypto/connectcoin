@@ -2003,6 +2003,26 @@ Bydd y broses fudo yn creu copi wrth gefn o'r waled cyn mudo. Bydd y ffeil wrth 
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Dewisol: mae maes gwag yn defnyddio'r waled hon</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Cyfeiriad y wobr:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Defnyddir cyfeiriad gwobr dewisol yn lle'r waled hon. Mae proflenni gorffenedig yn cadw eu cyrchfan wreiddiol pan fyddwch yn ei newid.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Cyrchfan y wobr: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Y waled hon (rhagosodedig)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Canfod gwobrau wedi'u cadarnhau yn awtomatig, cynhyrchu proflenni TLS ac anfon y gwobrau i'r waled hon. Dim ond o bob gwobr y tynnir ffioedd. Nid oes angen datgloi allweddi preifat tra bod cyfeiriadau derbyn yn y gronfa allweddi. Mae HTTPS wedi'i analluogi nes i chi ei gychwyn yn benodol.</translation>
     </message>
@@ -2304,6 +2324,13 @@ Fersiwn y tystysgrifau gwraidd: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Wedi canslo. Ni anfonwyd unrhyw drafodion P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Dewisol: mae maes gwag yn defnyddio'r waled hon</translation>
     </message>
 </context>
 </TS>

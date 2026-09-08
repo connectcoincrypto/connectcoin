@@ -5107,6 +5107,26 @@ Kérjük próbálja futtatni a legújabb szoftver verziót.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Nem kötelező: üresen ezt a tárcát használja</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Jutalomcím:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Ha jutalomcímet ad meg, azt használja e tárca helyett. A cím módosításakor a kész bizonyítékok megtartják eredeti címzettjüket.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Jutalom címzettje: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Ez a tárca (alapértelmezett)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>A megerősített jutalmak automatikus felderítése, TLS-bizonyítékok előállítása és a jutalmak elküldése ebbe a tárcába. A díjakat kizárólag az adott jutalomból vonjuk le. A privát kulcsokat nem kell feloldani, amíg vannak fogadási címek a kulcskészletben. A HTTPS le van tiltva, amíg kifejezetten el nem indítja.</translation>
     </message>
@@ -5408,6 +5428,13 @@ Gyökértanúsítványok verziója: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Megszakítva. Nem küldtünk P2C-tranzakciókat.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Nem kötelező: üresen ezt a tárcát használja</translation>
     </message>
 </context>
 </TS>

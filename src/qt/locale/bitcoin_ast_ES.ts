@@ -973,6 +973,26 @@ La firma ye possible solamentu con direcciones del tipu 'legacy'.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opcional: si ta balero, usa esta cartera</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Direición de la recompensa:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Una direición de recompensa opcional úsase en cuenta d'esta cartera. Les pruebes completaes caltienen el so destín orixinal cuando la cambies.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Destín de la recompensa: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Esta cartera (por defeutu)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Atopa automáticamente recompenses confirmaes, xenera pruebes TLS y unvia les recompenses a esta cartera. Les comisiones descuéntense namás de cada recompensa. Nun fai falta desbloquiar les claves privaes mentanto queden direiciones de recepción na reserva de claves. HTTPS ta desactiváu hasta que lu entames esplícitamente.</translation>
     </message>
@@ -1274,6 +1294,13 @@ Versión de los certificaos raíz: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Encaboxóse. Nun s'unvió nenguna transaición P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opcional: si ta balero, usa esta cartera</translation>
     </message>
 </context>
 </TS>

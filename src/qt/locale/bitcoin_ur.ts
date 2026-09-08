@@ -2820,6 +2820,26 @@ If you are receiving this error you should request the merchant provide a BIP21 
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>اختیاری: خالی چھوڑنے پر یہ بٹوا استعمال ہوگا</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>انعام کا پتہ:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>اگر آپ انعام کا پتہ بتائیں تو اس بٹوے کی بجائے وہ پتہ استعمال ہوگا۔ پتہ تبدیل کرنے پر بھی مکمل شدہ ثبوت اپنی اصل منزل برقرار رکھتے ہیں۔</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>انعام کی منزل: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>یہ بٹوا (طے شدہ)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>تصدیق شدہ انعامات خودکار طور پر تلاش کریں، TLS ثبوت بنائیں اور انعامات اس والیٹ میں بھیجیں۔ فیس صرف ہر انعام سے کاٹی جاتی ہے۔ جب تک کلیدوں کے ذخیرے میں وصولی کے پتے موجود ہوں، نجی کلیدیں کھولنے کی ضرورت نہیں۔ HTTPS اس وقت تک غیر فعال رہتا ہے جب تک آپ اسے واضح طور پر شروع نہ کریں۔</translation>
     </message>
@@ -3121,6 +3141,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>منسوخ ہو گیا۔ کوئی P2C ٹرانزیکشن نہیں بھیجی گئی۔</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>اختیاری: خالی چھوڑنے پر یہ بٹوا استعمال ہوگا</translation>
     </message>
 </context>
 </TS>

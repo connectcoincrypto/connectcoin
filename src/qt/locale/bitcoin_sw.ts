@@ -1607,6 +1607,26 @@ Mchakato wa uhamiaji utaunda nakala rudufu ya pochi kabla ya kuhama. Faili hii y
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Hiari: ikiachwa tupu, pochi hii itatumika</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Anwani ya zawadi:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Ukitaja anwani ya zawadi, itatumika badala ya pochi hii. Unapobadilisha anwani, uthibitisho uliokamilika huhifadhi mahali pake pa awali pa kutumwa.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Mlengwa wa zawadi: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Pochi hii (chaguo-msingi)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Tafuta zawadi zilizothibitishwa kiotomatiki, tengeneza thibitisho za TLS na utume zawadi kwenye pochi hii. Ada hukatwa kwenye kila zawadi pekee. Hakuna haja ya kufungua funguo za faragha ikiwa anwani za kupokea bado zipo katika hifadhi ya funguo. HTTPS imezimwa mpaka uiwashe waziwazi.</translation>
     </message>
@@ -1908,6 +1928,13 @@ Toleo la vyeti vya mzizi: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Imeghairiwa. Hakuna miamala ya P2C iliyotumwa.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Hiari: ikiachwa tupu, pochi hii itatumika</translation>
     </message>
 </context>
 </TS>

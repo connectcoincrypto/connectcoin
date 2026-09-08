@@ -1738,6 +1738,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Neobavezno: prazno polje koristi ovaj novčanik</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Adresa nagrade:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Neobavezna adresa nagrade koristi se umjesto ovog novčanika. Kada je promijenite, dovršeni dokazi zadržavaju izvorno odredište.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Odredište nagrade: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Ovaj novčanik (zadano)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Automatski pronađite potvrđene nagrade, kreirajte TLS dokaze i pošaljite nagrade u ovaj novčanik. Naknade se oduzimaju samo od svake nagrade. Privatne ključeve nije potrebno otključati dok u zalihi ključeva ima adresa za primanje. HTTPS je onemogućen dok ga izričito ne pokrenete.</translation>
     </message>
@@ -2039,6 +2059,13 @@ Verzija korijenskih certifikata: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Otkazano. Nijedna P2C transakcija nije poslana.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Neobavezno: prazno polje koristi ovaj novčanik</translation>
     </message>
 </context>
 </TS>

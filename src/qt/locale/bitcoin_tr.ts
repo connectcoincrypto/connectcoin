@@ -4206,6 +4206,26 @@ Cüzdan yedeği geri yüklenemiyor.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>İsteğe bağlı: boş bırakılırsa bu cüzdan kullanılır</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Ödül adresi:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Bir ödül adresi belirtirseniz bu cüzdan yerine o adres kullanılır. Adresi değiştirdiğinizde tamamlanmış kanıtlar özgün hedeflerini korur.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Ödül hedefi: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Bu cüzdan (varsayılan)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Onaylanmış ödülleri otomatik olarak bulur, TLS kanıtları üretir ve ödülleri bu cüzdana gönderir. Ücretler yalnızca ilgili ödülden kesilir. Anahtar havuzunda alım adresleri bulunduğu sürece özel anahtarların kilidini açmak gerekmez. HTTPS, siz açıkça başlatana kadar devre dışıdır.</translation>
     </message>
@@ -4507,6 +4527,13 @@ Kök sertifika sürümü: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>İptal edildi. Hiçbir P2C işlemi gönderilmedi.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>İsteğe bağlı: boş bırakılırsa bu cüzdan kullanılır</translation>
     </message>
 </context>
 </TS>

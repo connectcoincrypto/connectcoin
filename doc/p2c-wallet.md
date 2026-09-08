@@ -52,10 +52,16 @@ connectcoin-cli -rpcwallet=claimant submitp2cclaim "prepared_hex" "proof_hex"
 ```
 
 Preparation requires one confirmed type-2 output, possibly funded by somebody
-else. It reserves a new P2PK receiving destination in this wallet and deducts
+else. By default it reserves a new P2PK receiving destination in this wallet and deducts
 fees exclusively from the bounty: no other wallet coins are spent. Local-key
 wallets may remain locked if their keypool has an available receiving address.
-Watch-only/external-signer wallets are not supported by these initial RPCs.
+Alternatively, pass the optional `address` argument to pay an explicit type-1
+P2PK address on this network without reserving a wallet key. This also works
+with a watch-only/external-signer wallet: claiming needs no private-key signature.
+When submitting a proposal with an external payout, explicitly authorize the
+same address with `submitp2cclaim "prepared_hex" "proof_hex" "REWARD_ADDRESS"`.
+Without that argument the payout must still belong to this wallet; a different
+explicit address is rejected. Empty addresses select the wallet default.
 
 The preparation result supplies the canonical on-chain domain, work target,
 root version, tip median time, fixed transaction hex and exact ClientHello
@@ -67,7 +73,8 @@ budget remains a fee. Fees cannot be changed after generating the proof
 without generating a new challenge and doing the TLS work again. The optional
 `fee_rate` is in connects/vB, consistently with other wallet RPCs.
 
-Submission checks that the payout belongs to this wallet, the input is a
+Submission checks that the payout belongs to this wallet or matches the explicitly
+authorized address, the input is a
 confirmed available bounty, and the proof meets the challenge and work target.
 It then asks the node to perform full current mempool/consensus validation,
 including the certificate chain, CertificateVerify and tip median time, before
@@ -84,9 +91,12 @@ fees, or submit proof data obtained from an untrusted JSON envelope.
 ## Native automatic claims
 
 Open **P2C → Automatic claims**, select a connection rate, simultaneous connections,
-and optionally a comma-separated domain allowlist. Confirm **Apply / start**.
+and optionally a comma-separated domain allowlist. Leave **Reward address**
+empty to pay this wallet (the default), or enter a type-1 P2PK address for this
+network. Confirm **Apply / start** and check the reward target in the status.
 Successful proofs are submitted automatically, without a separate redeem click.
-The wallet needs local keys and `walletbroadcast=1`, but no pre-existing balance.
+The wallet needs local keys for the default target, but not for an explicit address.
+Both modes require `walletbroadcast=1`, but no pre-existing balance.
 
 The equivalent RPCs are:
 
@@ -95,6 +105,19 @@ connectcoin-cli -rpcwallet=claimant setp2cclaiming 1 4 '["example.com"]'
 connectcoin-cli -rpcwallet=claimant getp2cclaimstatus
 connectcoin-cli -rpcwallet=claimant setp2cclaiming 0
 ```
+
+The optional fourth argument of `setp2cclaiming` is `address`. For example,
+`setp2cclaiming 1 4 '["example.com"]' "REWARD_ADDRESS"` sends rewards there.
+`getp2cclaimstatus.reward_address` reports this setting; an empty string means
+the wallet default. Omitting it on reconfiguration restores the default.
+
+Changing the target stops and joins old searches before starting new ones.
+Unfinished proposals with a different payout are replaced because the payout
+is bound into their TLS challenge. **Completed proofs retain their original
+authorized destination**, saved with the proof even across wallet reloads;
+changing the setting never redirects or discards completed work. The new target
+applies to new searches. No destination setting is restored automatically on
+wallet load, and HTTPS still starts disabled.
 
 Automatic claims use the greatest of the wallet/relay minimum, mining minimum and
 current mempool fee floor, budgeting for the full maximum proof. This works without fee-estimation

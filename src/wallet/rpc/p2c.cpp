@@ -19,15 +19,27 @@
 #include <exception>
 #include <limits>
 #include <memory>
+#include <optional>
 #include <string>
 
 namespace wallet {
 namespace {
+std::optional<CTxDestination> ClaimRewardDestination(const UniValue& value)
+{
+    if (value.isNull() || value.get_str().empty()) return std::nullopt;
+    auto destination{DecodeDestination(value.get_str())};
+    if (!IsValidDestination(destination) || !CTxOut{0, GetScriptForDestination(destination)}.GetP2PKPubKey()) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Expected a type-1 P2PK reward address for this network");
+    }
+    return destination;
+}
+
 RPCResult ClaimWorkerResult()
 {
     return RPCResult{RPCResult::Type::OBJ, "", "", {
         {RPCResult::Type::NUM, "connections_per_second", "Aggregate per-wallet rate; 0 disables, -1 is unlimited."},
         {RPCResult::Type::NUM, "concurrency", "Maximum simultaneous TLS handshakes."},
+        {RPCResult::Type::STR, "reward_address", "Explicit destination for new searches; empty means this wallet. Completed proofs retain their original destination."},
         {RPCResult::Type::NUM, "domain_rounds", "Connection assignments since the last configuration (legacy field name)."},
         {RPCResult::Type::NUM, "schedule_refreshes", "Completed bounty/priority refreshes since the last configuration."},
         {RPCResult::Type::STR, "state", "Current worker state."},
@@ -54,6 +66,7 @@ RPCMethod setp2cclaiming()
             {"domains", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "Optional allowlist. Empty means all canonical public domains with bounties.", {
                 {"domain", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "Canonical lower-case ASCII domain."},
             }},
+            {"address", RPCArg::Type::STR, RPCArg::DefaultHint{"this wallet"}, "Optional reward address. Changing it restarts unfinished searches; completed proofs keep their original destination."},
         },
         ClaimWorkerResult(),
         RPCExamples{HelpExampleCli("setp2cclaiming", "1 4") + HelpExampleCli("setp2cclaiming", "0")},
@@ -68,7 +81,7 @@ RPCMethod setp2cclaiming()
             const int rate{request.params[0].getInt<int>()};
             const int concurrency{request.params[1].isNull() ? 4 : request.params[1].getInt<int>()};
             auto& worker{wallet->GetP2CClaimWorker()};
-            if (auto result{worker.Configure(rate, concurrency, std::move(domains))}; !result) {
+            if (auto result{worker.Configure(rate, concurrency, std::move(domains), request.params[3].isNull() ? "" : request.params[3].get_str())}; !result) {
                 throw JSONRPCError(RPC_WALLET_ERROR, util::ErrorString(result).original);
             }
             return worker.Status();
@@ -92,21 +105,22 @@ RPCMethod preparep2cclaim()
 {
     return RPCMethod{
         "preparep2cclaim",
-        "Prepare a claim of one confirmed P2C bounty, paying this wallet. Fees are deducted only from the bounty.\n"
+        "Prepare a claim of one confirmed P2C bounty, paying this wallet by default or the specified address. Fees are deducted only from the bounty.\n"
         "The returned transaction and its challenge are fixed before proof generation; changing outputs or fees requires a new proof.\n"
-        "This reserves a receiving address but neither spends coins nor makes HTTPS connections. A locked wallet can use its existing keypool.\n",
+        "By default this reserves a wallet receiving address, but it neither spends coins nor makes HTTPS connections. A locked wallet can use its existing keypool.\n",
         {
             {"txid", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "Transaction containing the bounty."},
             {"vout", RPCArg::Type::NUM, RPCArg::Optional::NO, "Output index of the bounty."},
             {"fee_rate", RPCArg::Type::AMOUNT, RPCArg::DefaultHint{"wallet fee estimation"}, "Fee rate in " + CURRENCY_ATOM + "/vB (not CC/kvB)."},
             {"proof_size", RPCArg::Type::NUM, RPCArg::Default{MAX_P2C_PROOF_SIZE}, "Proof bytes to budget for fees (1-65536). Defaults to the full consensus limit. Unused budget is still paid as a fee; it cannot be refunded without changing the challenge."},
+            {"address", RPCArg::Type::STR, RPCArg::DefaultHint{"this wallet"}, "Optional type-1 P2PK payout. Specify the same address in submitp2cclaim to authorize an external payout."},
         },
         RPCResult{RPCResult::Type::OBJ, "", "", {
             {RPCResult::Type::STR_HEX, "hex", "Unwitnessed claim transaction. Keep this unchanged during proof generation."},
             {RPCResult::Type::STR_HEX, "txid", "Claim transaction id, not the funding transaction id."},
             {RPCResult::Type::NUM, "input_index", "Always zero for this single-bounty claim."},
             {RPCResult::Type::STR_HEX, "clienthello_random", "Exact challenge bytes; do not reverse them."},
-            {RPCResult::Type::STR, "address", "Reserved wallet receiving address."},
+            {RPCResult::Type::STR, "address", "Reward address (new wallet address by default)."},
             {RPCResult::Type::STR, "domain", "Domain from the on-chain bounty."},
             {RPCResult::Type::STR_HEX, "connection_work_target", "Largest accepted work hash."},
             {RPCResult::Type::NUM, "root_certificates_version", "Immutable trusted-root bundle."},
@@ -114,7 +128,7 @@ RPCMethod preparep2cclaim()
             {RPCResult::Type::NUM, "proof_size", "Proof bytes budgeted for fees."},
             {RPCResult::Type::STR_AMOUNT, "bounty_amount", "Gross bounty in CC."},
             {RPCResult::Type::STR_AMOUNT, "fee", "Fixed fee in CC."},
-            {RPCResult::Type::STR_AMOUNT, "receive_amount", "Net wallet payout in CC."},
+            {RPCResult::Type::STR_AMOUNT, "receive_amount", "Net payout in CC."},
         }},
         RPCExamples{HelpExampleCli("preparep2cclaim", "\"txid\" 0")},
         [](const RPCMethod&, const JSONRPCRequest& request) -> UniValue {
@@ -132,7 +146,7 @@ RPCMethod preparep2cclaim()
             CCoinControl control;
             if (!request.params[2].isNull()) control.m_feerate = CFeeRate{AmountFromValue(request.params[2], /*decimals=*/3)};
             wallet->BlockUntilSyncedToCurrentChain();
-            const auto prepared{PrepareP2CClaim(*wallet, COutPoint{txid, static_cast<uint32_t>(vout)}, control, proof_size)};
+            const auto prepared{PrepareP2CClaim(*wallet, COutPoint{txid, static_cast<uint32_t>(vout)}, control, proof_size, ClaimRewardDestination(request.params[4]))};
             if (!prepared) throw JSONRPCError(RPC_WALLET_ERROR, util::ErrorString(prepared).original);
             const auto bounty{prepared->bounty.GetPayToDomain()};
             const uint256 challenge{P2CClaimChallenge(*prepared->tx, 0)};
@@ -160,11 +174,12 @@ RPCMethod submitp2cclaim()
     return RPCMethod{
         "submitp2cclaim",
         "Validate a prepared P2C claim and its complete binary TLS proof, then store it in this wallet and submit using walletbroadcast.\n"
-        "Accepts only a single P2C input and a single P2PK payout belonging to this wallet. It cannot spend ordinary wallet coins.\n"
+        "Accepts only a single P2C input and a single P2PK payout owned by this wallet or matching the explicit address. It cannot spend ordinary wallet coins.\n"
         "No HTTPS connections are made. No private-key signature or wallet unlock is needed.\n",
         {
             {"hex", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "Unwitnessed transaction from preparep2cclaim."},
             {"proof", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "Complete version-1 binary TLS proof encoded as hex, not the JSON envelope."},
+            {"address", RPCArg::Type::STR, RPCArg::DefaultHint{"this wallet"}, "Explicitly authorize this exact reward address. Required for payouts not owned by this wallet."},
         },
         RPCResult{RPCResult::Type::OBJ, "", "", {
             {RPCResult::Type::STR_HEX, "txid", "Claim transaction id, unchanged by proof attachment."},
@@ -189,7 +204,7 @@ RPCMethod submitp2cclaim()
             const auto proof{ParseHex(proof_hex)};
             wallet->BlockUntilSyncedToCurrentChain();
             LOCK(wallet->cs_wallet);
-            const auto completed{CompleteP2CClaim(*wallet, CTransaction{tx}, proof)};
+            const auto completed{CompleteP2CClaim(*wallet, CTransaction{tx}, proof, ClaimRewardDestination(request.params[2]))};
             if (!completed) throw JSONRPCError(RPC_WALLET_ERROR, util::ErrorString(completed).original);
             try {
                 wallet->CommitTransaction(*completed);

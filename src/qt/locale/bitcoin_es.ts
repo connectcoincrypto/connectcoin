@@ -5108,6 +5108,26 @@ Intenta ejecutar la última versión del software.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opcional: vacío utiliza esta cartera</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Dirección de la recompensa:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Una dirección de recompensa opcional se utiliza en lugar de esta cartera. Las pruebas completadas conservan su destino original cuando la cambias.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Destino de la recompensa: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Esta cartera (predeterminada)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Detecta recompensas confirmadas automáticamente, genera pruebas TLS y envía los importes a esta cartera. Las comisiones se descuentan únicamente de cada recompensa. No es necesario desbloquear las claves privadas mientras queden direcciones de recepción en la reserva de claves. HTTPS permanece desactivado hasta que lo inicie explícitamente.</translation>
     </message>
@@ -5409,6 +5429,13 @@ Versión de certificados raíz: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Cancelado. No se enviaron transacciones P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Opcional: vacío utiliza esta cartera</translation>
     </message>
 </context>
 </TS>

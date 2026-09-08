@@ -5302,6 +5302,26 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Необов’язково: порожнє поле означає використання цього гаманця</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Адреса для винагороди:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Якщо вказати адресу для винагороди, вона використовуватиметься замість цього гаманця. Коли ви змінюєте адресу, завершені докази зберігають початкового одержувача.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Одержувач винагороди: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Цей гаманець (типово)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Автоматично знаходити підтверджені винагороди, створювати докази TLS і надсилати винагороди до цього гаманця. Комісії вираховуються лише з кожної винагороди. Розблокування приватних ключів не потрібне, поки в пулі ключів залишаються адреси отримання. HTTPS вимкнено, доки ви явно його не запустите.</translation>
     </message>
@@ -5603,6 +5623,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Скасовано. Транзакції P2C не надсилались.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Необов’язково: порожнє поле означає використання цього гаманця</translation>
     </message>
 </context>
 </TS>

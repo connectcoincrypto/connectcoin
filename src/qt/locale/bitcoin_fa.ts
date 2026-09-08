@@ -1864,6 +1864,26 @@ If you are receiving this error you should request the merchant provide a BIP21 
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>اختیاری: خالی بماند تا از این کیف پول استفاده شود</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>نشانی پاداش:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>نشانی پاداش اختیاری به‌جای این کیف پول استفاده می‌شود. با تغییر آن، اثبات‌های تکمیل‌شده مقصد اصلی خود را حفظ می‌کنند.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>مقصد پاداش: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>این کیف پول (پیش‌فرض)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>پاداش‌های تأییدشده را خودکار پیدا کنید، اثبات‌های TLS بسازید و پاداش‌ها را به این کیف پول بفرستید. کارمزد فقط از هر پاداش کم می‌شود. تا زمانی که در مخزن کلیدها نشانی دریافت وجود دارد، باز کردن قفل کلیدهای خصوصی لازم نیست. HTTPS تا زمانی که صریحاً آن را شروع نکنید غیرفعال است.</translation>
     </message>
@@ -2165,6 +2185,13 @@ Root certificates version: %2</source>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>لغو شد. هیچ تراکنش P2C ارسال نشد.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>اختیاری: خالی بماند تا از این کیف پول استفاده شود</translation>
     </message>
 </context>
 </TS>

@@ -1699,6 +1699,26 @@ once_cell = "1.18"</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Niyôbowiōnzkowe: puste pole używo tego portmanyja</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Adres nagrody:</translation>
+    </message>
+    <message>
+        <source>An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it.</source>
+        <translation>Jak podŏsz adres nagrody, bydzie użyty zamiast tego portmanyja. Jak zmiynisz adres, gotowe dowody zachowujōm swōj piyrwotny adres docelowy.</translation>
+    </message>
+    <message>
+        <source>Reward target: %1</source>
+        <translation>Ôdbiorca nagrody: %1</translation>
+    </message>
+    <message>
+        <source>This wallet (default)</source>
+        <translation>Tyn portmanyj (dōmyślnie)</translation>
+    </message>
+    <message>
         <source>Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it.</source>
         <translation>Automatycznie znejdź potwierdzōne nagrody, twōrz dowody TLS i posyłej nagrody do tego portmanyja. Ôpłŏcki sōm brane ino ze kożdyj nagrody. Prywatnych kluczy niy trza ôdblokowywać, pōki w zapasie kluczy sōm adresy do ôdbiyranio. HTTPS je wyłōnczōny, pōki go wyraźnie niy włōnczysz.</translation>
     </message>
@@ -2000,6 +2020,13 @@ Wersyjŏ głōwnych certyfikatōw: %2</translation>
     <message>
         <source>Cancelled. No P2C transactions were sent.</source>
         <translation>Pociepniynte. Niy posłano żŏdnych transakcyji P2C.</translation>
+    </message>
+</context>
+<context>
+    <name>MiningPage</name>
+    <message>
+        <source>Optional: empty uses this wallet</source>
+        <translation>Niyôbowiōnzkowe: puste pole używo tego portmanyja</translation>
     </message>
 </context>
 </TS>
