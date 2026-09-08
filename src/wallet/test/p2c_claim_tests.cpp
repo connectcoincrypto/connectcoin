@@ -4,6 +4,7 @@
 
 #include <coins.h>
 #include <consensus/p2c_x509.h>
+#include <consensus/validation.h>
 #include <core_io.h>
 #include <interfaces/chain.h>
 #include <key_io.h>
@@ -12,6 +13,7 @@
 #include <policy/policy.h>
 #include <test/util/net.h>
 #include <test/util/random.h>
+#include <test/util/script.h>
 #include <test/util/setup_common.h>
 #include <test/util/time.h>
 #include <univalue.h>
@@ -216,6 +218,88 @@ BOOST_AUTO_TEST_CASE(expected_return_priority_is_exact)
     }
 }
 
+BOOST_AUTO_TEST_CASE(expected_return_floor_uses_net_payout_and_domain_efficiency)
+{
+    const auto maximum{uint256::FromHex(std::string(64, 'f')).value()};
+    const auto half{uint256::FromHex("7" + std::string(63, 'f')).value()};
+    BOOST_CHECK(!IsP2CClaimWorthAttempting(GetP2CClaimPriority(maximum, 199), 5.0));
+    BOOST_CHECK(IsP2CClaimWorthAttempting(GetP2CClaimPriority(maximum, 200), 5.0));
+    BOOST_CHECK(IsP2CClaimWorthAttempting(GetP2CClaimPriority(half, 400), 5.0));
+    BOOST_CHECK(!IsP2CClaimWorthAttempting(GetP2CClaimPriority(maximum, 200), std::nextafter(5.0, 0.0)));
+    BOOST_CHECK(IsP2CClaimWorthAttempting(GetP2CClaimPriority(maximum, 200), std::nextafter(5.0, 6.0)));
+    BOOST_CHECK(!IsP2CClaimWorthAttempting(GetP2CClaimPriority(maximum, 1000 - 801), 5.0));
+    BOOST_CHECK(!IsP2CClaimWorthAttempting(GetP2CClaimPriority(maximum, 0), 5005.0));
+    BOOST_CHECK(IsP2CClaimWorthAttempting(GetP2CClaimPriority(maximum, MAX_MONEY), 5005.0));
+    for (const double invalid : {0.0, -1.0, std::numeric_limits<double>::infinity(), std::numeric_limits<double>::quiet_NaN()}) {
+        BOOST_CHECK(!IsP2CClaimWorthAttempting(GetP2CClaimPriority(maximum, MAX_MONEY), invalid));
+    }
+    // Even the largest target with 64 leading zero bits and the largest payout
+    // at the maximum smoothed capture rate is below the floor (about 271/s).
+    for (const auto& target : {uint256{}, uint256::FromHex(std::string(16, '0') + std::string(48, 'f')).value()}) {
+        BOOST_CHECK_EQUAL(target.GetUint64(3), 0U);
+        BOOST_CHECK(!IsP2CClaimWorthAttempting(GetP2CClaimPriority(target, MAX_MONEY), 5005.0));
+    }
+    // A nonzero high word does not automatically make a bounty economical.
+    const auto tiny{uint256::FromHex("0000000000000001" + std::string(48, 'f')).value()};
+    BOOST_CHECK_NE(tiny.GetUint64(3), 0U);
+    BOOST_CHECK(!IsP2CClaimWorthAttempting(GetP2CClaimPriority(tiny, MAX_MONEY), 5005.0));
+}
+
+BOOST_AUTO_TEST_CASE(attempt_limit_is_strict_and_overflow_safe)
+{
+    for (unsigned bits = 0; bits <= 62; ++bits) {
+        // target = 2^(256-bits)-1, p = 2^-bits, 2*E = 2^(bits+1).
+        uint256 target;
+        for (unsigned bit = 0; bit < 256 - bits; ++bit) target.begin()[bit / 8] |= 1U << (bit % 8);
+        const uint64_t twice_expected{uint64_t{1} << (bits + 1)};
+        BOOST_CHECK(!IsP2CClaimAttemptLimitExceeded(target, twice_expected - 1));
+        BOOST_CHECK(!IsP2CClaimAttemptLimitExceeded(target, twice_expected));
+        BOOST_CHECK(IsP2CClaimAttemptLimitExceeded(target, twice_expected + 1));
+    }
+    const uint64_t maximum{std::numeric_limits<uint64_t>::max()};
+    BOOST_CHECK(!IsP2CClaimAttemptLimitExceeded(uint256{}, maximum));
+    BOOST_CHECK(!IsP2CClaimAttemptLimitExceeded(uint256::FromHex(std::string(16, '0') + std::string(48, 'f')).value(), maximum));
+    const auto above_half{uint256::FromHex("8" + std::string(63, '0')).value()};
+    BOOST_CHECK(!IsP2CClaimAttemptLimitExceeded(above_half, 3));
+    BOOST_CHECK(IsP2CClaimAttemptLimitExceeded(above_half, 4));
+    const auto below_half{uint256::FromHex("7" + std::string(62, 'f') + "e").value()};
+    BOOST_CHECK(!IsP2CClaimAttemptLimitExceeded(below_half, 4));
+    BOOST_CHECK(IsP2CClaimAttemptLimitExceeded(below_half, 5));
+    // Independent bytewise shift/add oracle, including full-width counters.
+    for (int trial = 0; trial < 256; ++trial) {
+        const auto target{m_rng.rand256()};
+        const uint64_t count{m_rng.rand64()};
+        std::array<unsigned char, 40> factor{}, product{}, threshold{};
+        std::copy(target.begin(), target.end(), factor.begin());
+        unsigned carry{1};
+        for (auto& byte : factor) {
+            const unsigned sum{byte + carry};
+            byte = static_cast<unsigned char>(sum & 255);
+            carry = sum >> 8;
+        }
+        for (unsigned bit = 0; bit < 64; ++bit) {
+            if ((count >> bit) & 1) {
+                carry = 0;
+                for (size_t i = 0; i < product.size(); ++i) {
+                    const unsigned sum{product[i] + factor[i] + carry};
+                    product[i] = static_cast<unsigned char>(sum & 255);
+                    carry = sum >> 8;
+                }
+                BOOST_CHECK_EQUAL(carry, 0U);
+            }
+            carry = 0;
+            for (auto& byte : factor) {
+                const unsigned shifted{2U * byte + carry};
+                byte = static_cast<unsigned char>(shifted & 255);
+                carry = shifted >> 8;
+            }
+        }
+        threshold[32] = 2;
+        const bool exceeded{std::lexicographical_compare(threshold.rbegin(), threshold.rend(), product.rbegin(), product.rend())};
+        BOOST_CHECK_EQUAL(IsP2CClaimAttemptLimitExceeded(target, count), exceeded);
+    }
+}
+
 BOOST_AUTO_TEST_CASE(claim_fee_quote_matches_wire_transaction)
 {
     const CFeeRate rate{1234567};
@@ -330,7 +414,7 @@ BOOST_FIXTURE_TEST_CASE(worker_retries_dns_reuses_endpoints_and_stops, TestChain
     wallet->SetBroadcastTransactions(true);
     const COutPoint outpoint{Txid::FromUint256(uint256::ONE), 0};
     WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint,
-        Coin{CTxOut{COIN, PayToDomainOutput{"example.com", uint256{}, 1}}, 100, false}, false));
+        Coin{CTxOut{COIN, PayToDomainOutput{"example.com", uint256::FromHex("0000" + std::string(60, 'f')).value(), 1}}, 100, false}, false));
     WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(outpoint, false)));
     RestoreDNSLookup restore_dns;
     RestoreSocketFactory restore_sockets;
@@ -403,6 +487,288 @@ BOOST_FIXTURE_TEST_CASE(worker_retries_dns_reuses_endpoints_and_stops, TestChain
     BOOST_CHECK(!worker->Configure(-1, 4));
 }
 
+BOOST_FIXTURE_TEST_CASE(worker_age_window_does_not_cancel_inflight_tls, TestChain100Setup)
+{
+    using namespace std::chrono_literals;
+    FakeSteadyClock clock;
+    auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
+    auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
+    wallet->SetBroadcastTransactions(true);
+    const COutPoint outpoint{Txid::FromUint256(uint256::ONE), 0};
+    WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint,
+        Coin{CTxOut{COIN, PayToDomainOutput{"aging.example", uint256::FromHex(std::string(64, 'f')).value(), 1}}, 100, false}, false));
+    RestoreDNSLookup restore_dns;
+    RestoreSocketFactory restore_sockets;
+    const auto address{LookupHost("8.8.8.8", false, restore_dns.original)};
+    BOOST_REQUIRE(address);
+    g_dns_lookup = [&](const std::string&, bool) { return std::vector<CNetAddr>{*address}; };
+    const auto config{std::make_shared<test::P2CTLSServer>()};
+    config->Setup();
+    std::atomic<unsigned> sockets{0};
+    std::mutex pending_mutex;
+    std::condition_variable release;
+    bool released{false};
+    auto worker{MakeP2CClaimWorker(*wallet)};
+    struct ReleaseAndStop {
+        std::mutex& mutex;
+        std::condition_variable& wake;
+        bool& released;
+        P2CClaimWorker& worker;
+        ~ReleaseAndStop() {
+            { std::lock_guard lock{mutex}; released = true; }
+            wake.notify_all();
+            worker.Stop();
+        }
+    } release_and_stop{pending_mutex, release, released, *worker};
+    CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
+        ++sockets;
+        std::unique_lock lock{pending_mutex};
+        release.wait(lock, [&] { return released; });
+        return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+    };
+    const auto wait_until = [](const auto& predicate) {
+        const auto deadline{std::chrono::steady_clock::now() + 15s};
+        while (!predicate()) {
+            if (std::chrono::steady_clock::now() >= deadline) return false;
+            std::this_thread::sleep_for(5ms);
+        }
+        return true;
+    };
+    // Do the slow chain preparation before starting the real-time TLS timeout.
+    for (int i = 0; i < 599; ++i) CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE(wait_until([&] { return sockets == 1; }));
+    // The catalog advances using real block deltas, without resetting the
+    // assigned challenge. Height 100 is now just outside the 600-block window.
+    CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
+    const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
+    clock += 5s;
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; }));
+    BOOST_CHECK_EQUAL(worker->Status()["state"].get_str(), "waiting for bounties");
+    { std::lock_guard lock{pending_mutex}; released = true; }
+    release.notify_all();
+    BOOST_REQUIRE(wait_until([&] { return !worker->Status()["last_error"].get_str().empty(); }));
+    // Completing capture and reaching certificate validation proves the age
+    // refresh did NOT cancel TLS. The fixture root is intentionally untrusted.
+    BOOST_CHECK_EQUAL(worker->Status()["state"].get_str(), "certificate rejected");
+    worker->Stop();
+    BOOST_CHECK_EQUAL(sockets.load(), 1U);
+}
+
+BOOST_FIXTURE_TEST_CASE(worker_attempt_budget_is_per_bounty_concurrent_and_memory_only, TestChain100Setup)
+{
+    using namespace std::chrono_literals;
+    FakeSteadyClock clock;
+    auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
+    auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
+    wallet->SetBroadcastTransactions(true);
+    const auto half{uint256::FromHex("7" + std::string(63, 'f')).value()};
+    for (uint32_t i = 0; i < 2; ++i) {
+        WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(
+            COutPoint{Txid::FromUint256(uint256::ONE), i},
+            Coin{CTxOut{COIN, PayToDomainOutput{"budget.example", half, 1}}, 100, false}, false));
+    }
+    RestoreDNSLookup restore_dns;
+    RestoreSocketFactory restore_sockets;
+    const auto address{LookupHost("8.8.8.8", false, restore_dns.original)};
+    BOOST_REQUIRE(address);
+    g_dns_lookup = [&](const std::string&, bool) { return std::vector<CNetAddr>{*address}; };
+    std::atomic<unsigned> sockets{0};
+    std::mutex pending_mutex;
+    std::condition_variable release;
+    bool released{false};
+    auto worker{MakeP2CClaimWorker(*wallet)};
+    struct ReleaseAndStop {
+        std::mutex& mutex;
+        std::condition_variable& wake;
+        bool& released;
+        std::unique_ptr<P2CClaimWorker>& worker;
+        ~ReleaseAndStop() {
+            { std::lock_guard lock{mutex}; released = true; }
+            wake.notify_all();
+            if (worker) worker->Stop();
+        }
+    } release_and_stop{pending_mutex, release, released, worker};
+    CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
+        ++sockets;
+        std::unique_lock lock{pending_mutex};
+        release.wait(lock, [&] { return released; });
+        return nullptr;
+    };
+    const auto wait_until = [](const auto& predicate) {
+        const auto deadline{std::chrono::steady_clock::now() + 15s};
+        while (!predicate()) {
+            if (std::chrono::steady_clock::now() >= deadline) return false;
+            std::this_thread::sleep_for(5ms);
+        }
+        return true;
+    };
+    // p=1/2: four equals 2*E, the fifth exceeds it. Even with 64
+    // workers, exactly five starts per bounty may be in flight, not 64.
+    BOOST_REQUIRE(worker->Configure(-1, 64));
+    BOOST_REQUIRE(wait_until([&] { return sockets >= 10; }));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
+    BOOST_CHECK_EQUAL(sockets.load(), 10U);
+    BOOST_CHECK_EQUAL(worker->Status()["attempts"].getInt<uint64_t>(), 10U);
+    const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
+    clock += 5s;
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; }));
+    { std::lock_guard lock{pending_mutex}; released = true; }
+    release.notify_all();
+    worker->Stop();
+    // Neither reconfiguration nor replacing unsigned payout challenges resets
+    // the in-memory counter for an outpoint.
+    const auto destination{EncodeDestination(WitnessV1Taproot{XOnlyPubKey{GenerateRandomKey().GetPubKey()}})};
+    BOOST_REQUIRE(worker->Configure(-1, 64, {}, destination));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > 0; }));
+    worker->Stop();
+    BOOST_CHECK_EQUAL(sockets.load(), 10U);
+    BOOST_REQUIRE(worker->Configure(-1, 64, {"unfunded.example"}));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > 0; }));
+    worker->Stop();
+    BOOST_REQUIRE(worker->Configure(-1, 64));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > 0; }));
+    worker->Stop();
+    BOOST_CHECK_EQUAL(sockets.load(), 10U); // Domain-filter changes do not reset budgets.
+
+    // Once fully outside discovery and no longer in flight, counters are
+    // collected. A subsequent reorg may make these old bounties eligible anew.
+    for (int i = 0; i < 600; ++i) CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
+    BOOST_REQUIRE(worker->Configure(-1, 64));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for bounties"; }));
+    worker->Stop();
+    BOOST_CHECK_EQUAL(sockets.load(), 10U);
+    BlockValidationState state;
+    auto* tip{WITH_LOCK(cs_main, return m_node.chainman->ActiveChain().Tip())};
+    BOOST_REQUIRE(m_node.chainman->ActiveChainstate().InvalidateBlock(state, tip));
+    BOOST_REQUIRE(worker->Configure(-1, 64));
+    BOOST_REQUIRE(wait_until([&] { return sockets >= 20; }));
+    worker->Stop();
+    BOOST_CHECK_EQUAL(sockets.load(), 20U);
+    // A newly loaded worker has no persisted per-bounty budget. The aggregate
+    // status counter remains durable, but does not restrict this new session.
+    worker.reset();
+    worker = MakeP2CClaimWorker(*wallet);
+    BOOST_REQUIRE(worker->Configure(-1, 64));
+    BOOST_REQUIRE(wait_until([&] { return sockets >= 30; }));
+    worker->Stop();
+    BOOST_CHECK_EQUAL(sockets.load(), 30U);
+}
+
+BOOST_FIXTURE_TEST_CASE(worker_filters_each_bounty_before_network_and_rechecks_efficiency, TestChain100Setup)
+{
+    using namespace std::chrono_literals;
+    FakeSteadyClock clock;
+    auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
+    auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
+    wallet->SetBroadcastTransactions(true);
+    wallet->m_default_max_tx_fee = MAX_MONEY;
+    // Probability 2^-26: 1 CC net at the 5/s prior is below 1000 connects/s,
+    // whereas 2 CC net is above it. Gross rewards alone would admit both.
+    const auto target{uint256::FromHex(std::string(6, '0') + "3" + std::string(57, 'f')).value()};
+    const std::array<uint256, 4> targets{uint256{},
+        uint256::FromHex(std::string(16, '0') + std::string(48, 'f')).value(), target, target};
+    const std::array<CAmount, 4> payouts{3 * COIN, 3 * COIN, COIN, 2 * COIN};
+    std::vector<COutPoint> outpoints;
+    UniValue saved{UniValue::VOBJ}, pending{UniValue::VARR};
+    CCoinControl control;
+    control.m_feerate = CFeeRate{1000};
+    uint256 eligible_challenge;
+    for (uint32_t i = 0; i < targets.size(); ++i) {
+        outpoints.emplace_back(Txid::FromUint256(uint256::ONE), i);
+        const std::string name{i == 0 ? "facebook.com" : "mixed.example"};
+        WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoints.back(),
+            Coin{CTxOut{4 * COIN, PayToDomainOutput{name, targets[i], 1}}, 100, false}, false));
+        // Manual preparation remains allowed; the floor is only search policy.
+        const auto prepared{PrepareP2CClaim(*wallet, outpoints.back(), control)};
+        BOOST_REQUIRE(prepared);
+        CMutableTransaction tx{*prepared->tx};
+        tx.vout[0].nValue = payouts[i];
+        pending.push_back(EncodeHexTx(CTransaction{tx}));
+        if (i == 3) eligible_challenge = P2CClaimChallenge(CTransaction{tx}, 0);
+    }
+    saved.pushKV("pending", std::move(pending));
+    saved.pushKV("ready", "");
+    saved.pushKV("proof", "");
+    saved.pushKV("attempts", 0);
+    saved.pushKV("submitted", 0);
+    saved.pushKV("last_txid", "");
+    BOOST_REQUIRE(wallet->GetDatabase().MakeBatch()->Write(std::string{"p2c_claim_worker_v1"}, saved.write()));
+    WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(outpoints[3], false)));
+    const COutPoint fresh{Txid::FromUint256(uint256::ONE), 4};
+    WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(fresh,
+        Coin{CTxOut{COIN, PayToDomainOutput{"mixed.example", uint256::FromHex(std::string(64, 'f')).value(), 1}}, 100, false}, false));
+    WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(fresh, false)));
+
+    RestoreDNSLookup restore_dns;
+    RestoreSocketFactory restore_sockets;
+    const auto address{LookupHost("8.8.8.8", false, restore_dns.original)};
+    BOOST_REQUIRE(address);
+    std::atomic<unsigned> lookups{0};
+    std::atomic<bool> wrong_domain{false};
+    g_dns_lookup = [&](const std::string& name, bool) {
+        ++lookups;
+        if (name != "mixed.example") wrong_domain = true;
+        return std::vector<CNetAddr>{*address};
+    };
+    std::mutex sent_mutex;
+    std::vector<std::vector<unsigned char>> hellos;
+    CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
+        std::this_thread::sleep_for(100ms); // A measured, unsuccessful attempt.
+        auto sent{std::make_shared<std::vector<unsigned char>>()};
+        return std::make_unique<ClientHelloSocket>(*sent, 16384, [&, sent] {
+            std::lock_guard lock{sent_mutex};
+            hellos.push_back(*sent);
+        });
+    };
+    const auto wait_until = [](const auto& predicate) {
+        const auto deadline{std::chrono::steady_clock::now() + 15s};
+        while (!predicate()) {
+            if (std::chrono::steady_clock::now() >= deadline) return false;
+            std::this_thread::sleep_for(5ms);
+        }
+        return true;
+    };
+    auto worker{MakeP2CClaimWorker(*wallet)};
+    const auto refresh = [&] {
+        const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
+        clock += 5s;
+        return wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; });
+    };
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
+    BOOST_CHECK_EQUAL(lookups.load(), 0U);
+    BOOST_CHECK_EQUAL(worker->Status()["attempts"].getInt<uint64_t>(), 0U);
+
+    WITH_LOCK(wallet->cs_wallet, wallet->UnlockCoin(outpoints[3]));
+    BOOST_REQUIRE(refresh());
+    BOOST_REQUIRE(wait_until([&] {
+        std::lock_guard lock{sent_mutex};
+        return hellos.size() >= 2 && worker->Status()["state"].get_str() == "retrying connections";
+    }));
+    {
+        std::lock_guard lock{sent_mutex};
+        for (const auto& hello : hellos) {
+            BOOST_REQUIRE(hello.size() >= 43);
+            BOOST_CHECK_EQUAL_COLLECTIONS(hello.begin() + 11, hello.begin() + 43,
+                                          eligible_challenge.begin(), eligible_challenge.end());
+        }
+    }
+    // After the observed failures the formerly eligible bounty is below the
+    // floor too; fair rotation may not keep probing it.
+    BOOST_REQUIRE(refresh());
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
+    const auto stopped_at{worker->Status()["attempts"].getInt<uint64_t>()};
+    std::this_thread::sleep_for(1200ms);
+    BOOST_CHECK_EQUAL(worker->Status()["attempts"].getInt<uint64_t>(), stopped_at);
+    // A more profitable bounty becoming eligible revives the same domain.
+    WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->UnlockCoin(fresh)));
+    BOOST_REQUIRE(refresh());
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["attempts"].getInt<uint64_t>() > stopped_at; }));
+    worker->Stop();
+    BOOST_CHECK(!wrong_domain);
+}
+
 BOOST_FIXTURE_TEST_CASE(worker_rotates_each_connection_and_reaches_large_domain_tail, TestChain100Setup)
 {
     using namespace std::chrono_literals;
@@ -415,7 +781,7 @@ BOOST_FIXTURE_TEST_CASE(worker_rotates_each_connection_and_reaches_large_domain_
         WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(
             COutPoint{Txid::FromUint256(uint256::ONE), i},
             Coin{CTxOut{i < 260 ? 100'000 * COIN + i * (COIN / 1000) : COIN,
-                PayToDomainOutput{names[i < 260 ? 0 : i - 259], uint256{}, 1}}, 100, false}, false));
+                PayToDomainOutput{names[i < 260 ? 0 : i - 259], uint256::FromHex("0000" + std::string(60, 'f')).value(), 1}}, 100, false}, false));
     }
     RestoreDNSLookup restore_dns;
     RestoreSocketFactory restore_sockets;
@@ -494,7 +860,8 @@ BOOST_FIXTURE_TEST_CASE(worker_prioritizes_difficulty_and_saved_net_payout, Test
     control.m_feerate = CFeeRate{1000};
     for (uint32_t i = 0; i < rewards.size(); ++i) {
         const COutPoint outpoint{Txid::FromUint256(uint256::ONE), i};
-        const auto target{i == 2 ? uint256::FromHex(std::string(63, '0') + "3").value() : uint256{}};
+        // Keep the original 4:1 probability ratio, above the automatic floor.
+        const auto target{uint256::FromHex(std::string(1, i == 2 ? '3' : '0') + std::string(63, 'f')).value()};
         {
             LOCK(cs_main);
             m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint,
@@ -537,7 +904,7 @@ BOOST_FIXTURE_TEST_CASE(worker_prioritizes_difficulty_and_saved_net_payout, Test
     }
     worker->Stop(); // The first three attempts have completed before #4 starts.
     BOOST_REQUIRE(hellos.size() >= 4);
-    const std::array<size_t, 3> order{2, 1, 0}; // Expected numerators: 12, 8, 5 coins.
+    const std::array<size_t, 3> order{2, 1, 0}; // Net EV ratio: 12 : 8 : 5.
     for (size_t i = 0; i < order.size(); ++i) {
         BOOST_REQUIRE(hellos[i]->size() >= 43);
         BOOST_CHECK_EQUAL_COLLECTIONS(hellos[i]->begin() + 11, hellos[i]->begin() + 43,
@@ -556,7 +923,10 @@ BOOST_FIXTURE_TEST_CASE(worker_extra_domain_turns_use_net_return_and_recheck_loc
     const std::array<std::string, 4> domains{"alpha.example", "beta.example", "gamma.example", "zeta.example"};
     const std::array<CAmount, 4> rewards{10 * COIN, 9 * COIN, 4 * COIN, 100 * COIN};
     const std::array<CAmount, 4> payouts{5 * COIN, 8 * COIN, 3 * COIN, 99 * COIN};
-    const std::array<uint8_t, 4> targets{0, 0, 3, 15};
+    const auto sixteenth{uint256::FromHex("0" + std::string(63, 'f')).value()};
+    const auto quarter{uint256::FromHex("3" + std::string(63, 'f')).value()};
+    const auto maximum{uint256::FromHex(std::string(64, 'f')).value()};
+    const std::array<uint256, 4> targets{sixteenth, sixteenth, quarter, maximum};
     std::vector<COutPoint> outpoints;
     UniValue saved{UniValue::VOBJ}, pending{UniValue::VARR};
     CCoinControl control;
@@ -564,7 +934,7 @@ BOOST_FIXTURE_TEST_CASE(worker_extra_domain_turns_use_net_return_and_recheck_loc
     for (uint32_t i = 0; i < domains.size(); ++i) {
         outpoints.emplace_back(Txid::FromUint256(uint256::ONE), i);
         WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoints.back(),
-            Coin{CTxOut{rewards[i], PayToDomainOutput{domains[i], uint256{targets[i]}, 1}}, 100, false}, false));
+            Coin{CTxOut{rewards[i], PayToDomainOutput{domains[i], targets[i], 1}}, 100, false}, false));
         const auto prepared{PrepareP2CClaim(*wallet, outpoints.back(), control)};
         BOOST_REQUIRE(prepared);
         CMutableTransaction tx{*prepared->tx};
@@ -650,7 +1020,7 @@ BOOST_FIXTURE_TEST_CASE(worker_weights_domain_priority_by_complete_tls_per_secon
     wallet->SetBroadcastTransactions(true);
     wallet->m_default_max_tx_fee = MAX_MONEY; // Deliberately retained large fees below.
     const std::array<std::string, 2> domains{"alpha.example", "beta.example"};
-    const auto maximum{uint256::FromHex(std::string(64, 'f')).value()};
+    const auto maximum{uint256::FromHex("0" + std::string(63, 'f')).value()};
     CCoinControl control;
     control.m_feerate = CFeeRate{1000};
     UniValue saved{UniValue::VOBJ}, pending{UniValue::VARR};
@@ -761,7 +1131,7 @@ BOOST_FIXTURE_TEST_CASE(worker_batches_spent_checks_and_recovers_eligibility, Te
     auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
     wallet->SetBroadcastTransactions(true);
     const COutPoint outpoint{Txid::FromUint256(uint256::ONE), 0};
-    const CTxOut bounty{COIN, PayToDomainOutput{"example.com", uint256{}, 1}};
+    const CTxOut bounty{COIN, PayToDomainOutput{"example.com", uint256::FromHex(std::string(64, 'f')).value(), 1}};
     WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint, Coin{bounty, 100, false}, false));
     RestoreDNSLookup restore_dns;
     RestoreSocketFactory restore_sockets;
@@ -807,7 +1177,7 @@ BOOST_FIXTURE_TEST_CASE(worker_changes_unfinished_reward_destination, TestChain1
     wallet->SetBroadcastTransactions(true);
     const COutPoint outpoint{Txid::FromUint256(uint256::ONE), 0};
     WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint,
-        Coin{CTxOut{COIN, PayToDomainOutput{"example.com", uint256{}, 1}}, 100, false}, false));
+        Coin{CTxOut{COIN, PayToDomainOutput{"example.com", uint256::FromHex(std::string(64, 'f')).value(), 1}}, 100, false}, false));
     RestoreDNSLookup restore_dns;
     std::atomic<unsigned> lookups{0};
     g_dns_lookup = [&](const std::string&, bool) { ++lookups; return std::vector<CNetAddr>{}; };

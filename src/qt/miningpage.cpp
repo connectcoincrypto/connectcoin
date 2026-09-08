@@ -99,7 +99,7 @@ QString MiningPage::walletAddress()
 {
     if (!m_wallet) return {};
     const QPointer<MiningPage> guard{this};
-    const QString address{m_wallet->getAddressTableModel()->addRow(AddressTableModel::Receive, tr("Mining"), QString{}, OutputType::BECH32M)};
+    QString address{m_wallet->getAddressTableModel()->addRow(AddressTableModel::Receive, tr("Mining"), QString{}, OutputType::BECH32M)};
     if (!guard) return {};
     if (address.isEmpty()) {
         GUIUtil::ShowModalDialogAsynchronously(new QMessageBox(QMessageBox::Warning, tr("Mining"),

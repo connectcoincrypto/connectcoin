@@ -111,7 +111,7 @@ def print_node_warnings(tmp_dir, colors):
                 break
             for (_, _, fns) in os.walk(folder):
                 for fn in fns:
-                    warning = pathlib.Path('{}/{}'.format(folder, fn)).read_text().strip()
+                    warning = pathlib.Path('{}/{}'.format(folder, fn)).read_text(encoding='utf-8', errors='backslashreplace').strip()
                     if warning:
                         warnings.append(("node{} {}".format(i, stream), warning))
 
@@ -148,12 +148,14 @@ def get_log_events(source, logfile):
     Log events may be split over multiple lines. We use the timestamp
     regex match as the marker for a new log event."""
     try:
-        with open(logfile, 'r') as infile:
+        # Node diagnostics can contain bytes from the Windows system code
+        # page. Preserve undecodable bytes visibly instead of losing the log.
+        with open(logfile, 'r', encoding='utf-8', errors='backslashreplace') as infile:
             event = ''
             timestamp = ''
             for line in infile:
                 # skip blank lines
-                if line == '\n':
+                if not line.strip():
                     continue
                 # if this line has a timestamp, it's the start of a new log event.
                 time_match = TIMESTAMP_PATTERN.match(line)
@@ -172,7 +174,8 @@ def get_log_events(source, logfile):
                     # Add the line. Prefix with space equivalent to the source + timestamp so log lines are aligned
                     event += "                                   " + line
             # Flush the final event
-            yield LogEvent(timestamp=timestamp, source=source, event=event.rstrip())
+            if event:
+                yield LogEvent(timestamp=timestamp, source=source, event=event.rstrip())
     except FileNotFoundError:
         print("File %s could not be opened. Continuing without it." % logfile, file=sys.stderr)
 

@@ -88,6 +88,43 @@ class P2CAutoClaimTest(BitcoinTestFramework):
         claimant.setp2cclaiming(0)
         assert_equal(claimant.getp2cclaimstatus()["attempts"], 0)
 
+        self.log.info("Ignore an unprofitable confirmed bounty, including a zero work target")
+        funder.sendtop2c("unprofitable.invalid", 1, {"work_bits": 256}, fee_rate=10000)
+        self.generate(node, 1)
+        claimant.setp2cclaiming(-1, 1, ["unprofitable.invalid"])
+        try:
+            self.wait_until(lambda: claimant.getp2cclaimstatus()["state"] == "waiting for eligible bounties")
+            assert_equal(claimant.getp2cclaimstatus()["attempts"], 0)
+        finally:
+            claimant.setp2cclaiming(0)
+
+        self.log.info("Only discover the last 600 blocks; older bounties remain manually claimable")
+        old = funder.sendtop2c("old-bounty.invalid", 1, {"work_bits": 0}, fee_rate=10000)
+        self.generate(node, 1)
+        old_txid = old["txids"][0]
+        old_tx = funder.gettransaction(old_txid, verbose=True)["decoded"]
+        old_vout = next(output["n"] for output in old_tx["vout"] if output.get("type") == 2)
+        # 600 confirmations is still in the inclusive discovery window. Lock
+        # it so this boundary check cannot issue DNS/TLS, even if regressed.
+        funder.lockunspent(False, [{"txid": old_txid, "vout": old_vout}])
+        self.generate(node, 599)
+        funder.setp2cclaiming(-1, 1, ["old-bounty.invalid"])
+        try:
+            self.wait_until(lambda: funder.getp2cclaimstatus()["state"] == "waiting for eligible bounties")
+            assert_equal(funder.getp2cclaimstatus()["attempts"], 0)
+            # At 601 confirmations it is absent from discovery, rather than
+            # individually looked up and rejected by wallet eligibility.
+            newest = self.generate(node, 1)[0]
+            self.wait_until(lambda: funder.getp2cclaimstatus()["state"] == "waiting for bounties")
+            node.invalidateblock(newest)
+            self.wait_until(lambda: funder.getp2cclaimstatus()["state"] == "waiting for eligible bounties")
+        finally:
+            funder.setp2cclaiming(0)
+            funder.lockunspent(True, [{"txid": old_txid, "vout": old_vout}])
+        # This cutoff is not a new consensus rule or a manual-claim restriction.
+        node.reconsiderblock(newest)
+        assert claimant.preparep2cclaim(old_txid, old_vout)["hex"]
+
         if self.options.live_domain:
             self.log.info("Explicit live TLS test: generate proof, auto-submit, then mine the claim on regtest")
             funded = funder.sendtop2c(self.options.live_domain, 1, {"work_bits": 0}, fee_rate=10000, output_count=3)

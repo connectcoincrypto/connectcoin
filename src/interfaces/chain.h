@@ -188,8 +188,10 @@ public:
     //! reorg undo. Pruned history falls back to a fresh snapshot. Mempool spends
     //! are not removed here (they may be evicted); callers check eligibility.
     //! A false visitor stops this visit, never construction of the catalog.
+    //! A positive recent_blocks visits only that many latest blocks (including
+    //! the catalog tip); zero visits all heights. This is discovery policy only.
     virtual bool scanP2CBounties(const std::function<bool(const COutPoint&, const CTxOut&)>& visitor,
-                                const std::function<bool()>& cancelled) = 0;
+                                const std::function<bool()>& cancelled, int recent_blocks = 0) = 0;
 
     //! Estimate fraction of total transactions verified if blocks up to
     //! the specified block hash are verified.

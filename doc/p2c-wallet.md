@@ -148,6 +148,17 @@ from the current UTXO snapshot. It is not persisted: restarting the node require
 one initial scan again. Wallets sharing the node's chain interface reuse the
 catalog, rather than each flushing/scanning the entire UTXO database.
 
+Automatic discovery requests only bounties created in the **last 600 blocks**,
+including the tip (about 100 minutes at the 10-second target spacing). Creation
+heights are retained by the catalog, including after a rebuild or reorg. A
+height index selects the recent range without walking ancient entries or
+passing them to wallet eligibility checks; this does not add per-bounty UTXO
+database lookups. The
+initial catalog still scans the UTXO snapshot once. This is a periodic search
+preference, not an expiry rule: handshakes already in flight may finish after
+a bounty ages out, and completed proofs are still submitted. Older bounties
+remain valid and manually claimable.
+
 Each wallet refreshes eligible bounties and expected-return priorities every
 **five seconds**, visiting this P2C-only catalog. Competing mempool spends and
 wallet coin locks temporarily exclude bounties; they can become eligible again
@@ -187,6 +198,43 @@ round-robin exploration. Timing scores use floating point; exact economic keys
 break rounded ties. Durations of simultaneous attempts are summed individually,
 not measured as a shared wall-clock interval, so raising concurrency alone does
 not multiply the observed efficiency.
+
+Automatic search ignores each bounty whose expected net return is **less than
+1000 connects per second of connection effort** (1000 exactly is eligible):
+`(reward - claim_fee) * (target + 1) / 2^256 * measured_capture_rate`.
+As a fast rejection, a target whose most significant 64 bits are all zero is
+ignored immediately: even MAX_MONEY at the maximum smoothed rate of 5005/s
+cannot reach this floor. This includes targets requiring 256 zero bits.
+The threshold uses the domain's last-100 history or the initial 5/s prior, not
+the user-configured connection limit or aggregate concurrency. The measured
+score uses the same floating-point precision as domain ranking.
+
+The filter applies before DNS, receiving-key reservation and TLS, including
+guaranteed rotation turns and saved unfinished proposals. Eligibility is
+recalculated every five seconds as fees, bounties and measured efficiency
+change. In-flight handshakes may finish; completed proofs are still retained
+and submitted. A domain with only below-floor bounties is not probed just to
+refresh its speed estimate. This is wallet search policy, not a consensus
+restriction or a restriction on preparing/submitting a claim manually.
+
+Each bounty also has a local connection-start budget. With
+`p = (target + 1) / 2^256`, new attempts stop once its count is **strictly greater
+than `2 / p`**. For example, `p = 1/2` permits five starts: four equals `2 / p`,
+and the fifth exceeds it. The comparison uses exact 320-bit arithmetic. Starts
+are serialized across workers, so concurrency cannot overshoot the budget;
+already started handshakes may finish and successful proofs are not discarded.
+TCP/TLS failures consume this budget too; DNS resolution and waiting do not.
+Counters are per outpoint, not per domain or payout address, and survive
+five-second refreshes, proposal-cache eviction and stop/start while the wallet
+is loaded. They are **only in memory** and reset on wallet unload/restart.
+Counters for confirmed-spent or aged-out bounties are also collected after
+in-flight work/proofs drain, bounding retained history to recent work. Changing
+the domain allowlist, temporary mempool spends or locking a coin does not reset
+a recent bounty's budget. A reorg restoring an already forgotten bounty can
+start a fresh budget; this is deliberately a soft local search policy.
+For independent valid trials with small `p`, failing around `2 / p` times has
+probability approximately 13.5%; this is a resource policy, not evidence that
+a domain is malicious, especially when some attempts fail before hashing.
 
 The oldest attempt is removed when the window exceeds 100. Histories survive
 priority refreshes, temporary bounty ineligibility and stop/start in the same

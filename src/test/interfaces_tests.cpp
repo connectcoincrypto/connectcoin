@@ -20,6 +20,7 @@
 #include <chrono>
 #include <future>
 #include <map>
+#include <set>
 #include <utility>
 
 using interfaces::FoundBlock;
@@ -191,12 +192,24 @@ BOOST_FIXTURE_TEST_CASE(p2c_catalog_updates_new_blocks_and_reorgs, TestChain100S
     const auto block{CreateAndProcessBlock({funding}, GetScriptForP2PKOutput(coinbaseKey))};
     const COutPoint funded{funding.GetHash(), 0};
     BOOST_REQUIRE(read().contains(funded));
+    const auto recent = [&](int blocks) {
+        std::set<COutPoint> found;
+        BOOST_REQUIRE(chain.scanP2CBounties([&](const auto& outpoint, const auto&) {
+            found.insert(outpoint);
+            return true;
+        }, [] { return false; }, blocks));
+        return found;
+    };
+    BOOST_CHECK(recent(1).contains(funded));
     // A test-only mutation at the same tip MUST NOT trigger a whole-UTXO scan.
     const COutPoint sentinel{Txid::FromUint256(uint256::ONE), 0};
     WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(sentinel, Coin{bounty, 100, false}, false));
     BOOST_CHECK_EQUAL(read().size(), 1U);
     CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
     BOOST_CHECK_EQUAL(read().size(), 1U);
+    BOOST_CHECK(recent(1).empty());
+    BOOST_CHECK(recent(2).contains(funded)); // Inclusive oldest block.
+    BOOST_CHECK(recent(600).contains(funded)); // No unsigned underflow near genesis.
     // Stop a visitor early without truncating the shared catalog.
     unsigned visits{0};
     BOOST_REQUIRE(chain.scanP2CBounties([&](const auto&, const auto&) { ++visits; return false; }, [] { return false; }));
@@ -207,6 +220,7 @@ BOOST_FIXTURE_TEST_CASE(p2c_catalog_updates_new_blocks_and_reorgs, TestChain100S
     auto* index{WITH_LOCK(cs_main, return m_node.chainman->m_blockman.LookupBlockIndex(block.GetHash()))};
     BOOST_REQUIRE(m_node.chainman->ActiveChainstate().InvalidateBlock(state, index));
     BOOST_CHECK(read().empty());
+    BOOST_CHECK(recent(600).empty());
     CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
     BOOST_CHECK(read().empty());
     WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().SpendCoin(sentinel));
@@ -241,6 +255,9 @@ BOOST_FIXTURE_TEST_CASE(p2c_catalog_recovers_after_pruning, TestChain100Setup)
         }, [] { return false; }));
         BOOST_REQUIRE_EQUAL(found.size(), 1U);
         BOOST_CHECK(found.contains({funding.GetHash(), 0}));
+        unsigned recent_visits{0};
+        BOOST_REQUIRE(chain.scanP2CBounties([&](const auto&, const auto&) { ++recent_visits; return true; }, [] { return false; }, 1));
+        BOOST_CHECK_EQUAL(recent_visits, 0U); // Rebuild preserves the original height.
     };
     check(); // Missing incremental history must fall back to current UTXOs.
     CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
@@ -303,17 +320,58 @@ BOOST_FIXTURE_TEST_CASE(p2c_catalog_undo_restores_spends_in_reverse_order, Basic
     CBlockUndo undo;
     undo.vtxundo.resize(2);
     for (auto& tx : undo.vtxundo) tx.vprevout.emplace_back(bounty, 1, false);
-    std::map<COutPoint, CTxOut> catalog{{original, bounty}};
-    BOOST_REQUIRE(node::ApplyP2CBountyBlock(catalog, block, nullptr, [] { return false; }));
-    BOOST_CHECK_EQUAL(catalog.size(), 1U);
-    BOOST_CHECK(catalog.contains({coinbase.GetHash(), 0}));
-    BOOST_REQUIRE(node::ApplyP2CBountyBlock(catalog, block, &undo, [] { return false; }));
-    BOOST_CHECK_EQUAL(catalog.size(), 1U);
-    BOOST_CHECK(catalog.contains(original));
+    node::P2CBountyCatalog catalog;
+    catalog.Insert(original, Coin{bounty, 1, false});
+    BOOST_REQUIRE(node::ApplyP2CBountyBlock(catalog, block, 20, nullptr, [] { return false; }));
+    auto snapshot{catalog.Snapshot(0, [] { return false; })};
+    BOOST_REQUIRE(snapshot);
+    BOOST_CHECK_EQUAL(snapshot->size(), 1U);
+    BOOST_CHECK(snapshot->contains({coinbase.GetHash(), 0}));
+    BOOST_CHECK_EQUAL(snapshot->at({coinbase.GetHash(), 0}).nHeight, 20U);
+    BOOST_CHECK(snapshot->at({coinbase.GetHash(), 0}).IsCoinBase());
+    BOOST_REQUIRE(node::ApplyP2CBountyBlock(catalog, block, 20, &undo, [] { return false; }));
+    snapshot = catalog.Snapshot(0, [] { return false; });
+    BOOST_REQUIRE(snapshot);
+    BOOST_CHECK_EQUAL(snapshot->size(), 1U);
+    BOOST_CHECK(snapshot->contains(original));
+    BOOST_CHECK_EQUAL(snapshot->at(original).nHeight, 1U);
+    BOOST_CHECK(!snapshot->at(original).IsCoinBase());
+    BOOST_CHECK(catalog.Snapshot(20, [] { return false; })->empty());
     // Cancellation and malformed undo cannot report a complete update.
-    BOOST_CHECK(!node::ApplyP2CBountyBlock(catalog, block, nullptr, [] { return true; }));
+    BOOST_CHECK(!node::ApplyP2CBountyBlock(catalog, block, 20, nullptr, [] { return true; }));
     undo.vtxundo[0].vprevout.clear();
-    BOOST_CHECK(!node::ApplyP2CBountyBlock(catalog, block, &undo, [] { return false; }));
+    BOOST_CHECK(!node::ApplyP2CBountyBlock(catalog, block, 20, &undo, [] { return false; }));
+}
+
+BOOST_FIXTURE_TEST_CASE(p2c_catalog_height_index_skips_old_entries, BasicTestingSetup)
+{
+    node::P2CBountyCatalog catalog;
+    const CTxOut bounty{COIN, PayToDomainOutput{"example.com", uint256{}, 1}};
+    for (int height = 1; height <= 2000; ++height) {
+        catalog.Insert({Txid::FromUint256(uint256::ONE), static_cast<uint32_t>(height)}, Coin{bounty, height, false});
+    }
+    unsigned visited{0};
+    auto recent{catalog.Snapshot(1999, [&] { ++visited; return false; })};
+    BOOST_REQUIRE(recent);
+    BOOST_CHECK_EQUAL(recent->size(), 2U);
+    BOOST_CHECK_EQUAL(visited, 3U); // Initial cancellation check + two entries, not 2000.
+    BOOST_CHECK(!catalog.Snapshot(0, [] { return true; }));
+    visited = 0;
+    BOOST_CHECK(!catalog.Snapshot(1999, [&] { return ++visited == 2; }));
+    // Replacing an outpoint at a different height removes the old index entry.
+    const COutPoint moved{Txid::FromUint256(uint256::ONE), 2000};
+    catalog.Insert(moved, Coin{bounty, 1, false});
+    BOOST_CHECK_EQUAL(catalog.Snapshot(1999, [] { return false; })->size(), 1U);
+    catalog.Insert(moved, Coin{bounty, 3000, false});
+    catalog.Insert(moved, Coin{bounty, 3000, false});
+    BOOST_CHECK_EQUAL(catalog.Snapshot(3000, [] { return false; })->size(), 1U);
+    BOOST_CHECK_EQUAL(catalog.Snapshot(0, [] { return false; })->size(), 2000U);
+    catalog.Erase(moved);
+    catalog.Erase(moved);
+    BOOST_CHECK(catalog.Snapshot(3000, [] { return false; })->empty());
+    BOOST_CHECK_EQUAL(catalog.Snapshot(0, [] { return false; })->size(), 1999U);
+    catalog.Clear();
+    BOOST_CHECK(catalog.Snapshot(0, [] { return false; })->empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

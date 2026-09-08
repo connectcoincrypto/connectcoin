@@ -63,13 +63,9 @@ bool SafeFeeRate(const CFeeRate& rate)
 {
     return rate >= CFeeRate{0} && rate <= CFeeRate{MAX_MONEY, std::numeric_limits<int32_t>::max()};
 }
-} // namespace
-
-P2CClaimPriority GetP2CClaimPriority(const uint256& target, CAmount net_reward)
+P2CClaimPriority MultiplyP2CTarget(const uint256& target, uint64_t payout)
 {
     P2CClaimPriority result{};
-    if (net_reward <= 0 || !MoneyRange(net_reward)) return result;
-    const auto payout{static_cast<uint64_t>(net_reward)};
     constexpr uint64_t MASK{0xffffffff};
     // Eight target words times two payout words, accumulated into ten words.
     // Each multiply/add is at most (2^32-1)^2 + 2*(2^32-1) = 2^64-1.
@@ -93,6 +89,21 @@ P2CClaimPriority GetP2CClaimPriority(const uint256& target, CAmount net_reward)
         carry = (carry >> 32) + (sum >> 32);
     }
     return result;
+}
+} // namespace
+
+P2CClaimPriority GetP2CClaimPriority(const uint256& target, CAmount net_reward)
+{
+    if (net_reward <= 0 || !MoneyRange(net_reward)) return {};
+    return MultiplyP2CTarget(target, static_cast<uint64_t>(net_reward));
+}
+
+bool IsP2CClaimAttemptLimitExceeded(const uint256& target, uint64_t attempts)
+{
+    // attempts * (target + 1) > 2^257. The full uint64 range fits in
+    // 320 bits, including target=2^256-1; no rounded division or overflow.
+    constexpr P2CClaimPriority twice_space{0, 2};
+    return MultiplyP2CTarget(target, attempts) > twice_space;
 }
 
 util::Result<CAmount> CalculateP2CClaimFee(const CFeeRate& rate, size_t proof_size)

@@ -815,11 +815,7 @@ def run_tests(*, test_list, build_dir, tmpdir, jobs=1, enable_coverage=False, ar
                     print('\n============')
                     print('{}Combined log for {}:{}'.format(BOLD[1], testdir, BOLD[0]))
                     print('============\n')
-                    combined_logs_args = [sys.executable, os.path.join(tests_dir, 'combine_logs.py'), testdir]
-                    if BOLD[0]:
-                        combined_logs_args += ['--color']
-                    combined_logs, _ = subprocess.Popen(combined_logs_args, text=True, stdout=subprocess.PIPE).communicate()
-                    combined_tail = "\n".join(deque(combined_logs.splitlines(), combined_logs_len))
+                    combined_tail = get_combined_log_tail(tests_dir, testdir, combined_logs_len, color=bool(BOLD[0]))
                     safe_combined_tail = combined_tail.encode(console_encoding, errors="backslashreplace").decode(console_encoding)
                     print(safe_combined_tail)
 
@@ -855,6 +851,22 @@ def run_tests(*, test_list, build_dir, tmpdir, jobs=1, enable_coverage=False, ar
         os.killpg(os.getpgid(0), signal.SIGKILL)
 
     sys.exit(not all_passed)
+
+
+def get_combined_log_tail(tests_dir, testdir, max_lines, *, color=False):
+    args = [sys.executable, os.path.join(tests_dir, 'combine_logs.py'), testdir]
+    if color:
+        args.append('--color')
+    # -X utf8 in this process is not inherited by the child. Establish an
+    # explicit pipe encoding even when Windows or PYTHONIOENCODING uses a
+    # legacy code page; displaying a failure must not abort the whole suite.
+    result = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8', errors='backslashreplace',
+                            env={**os.environ, 'PYTHONIOENCODING': 'utf-8'})
+    if result.returncode:
+        logging.warning('Log combination exited with status %d:\n%s', result.returncode, result.stderr.rstrip())
+    elif result.stderr:
+        logging.warning('Log combination warnings:\n%s', result.stderr.rstrip())
+    return "\n".join(deque(result.stdout.splitlines(), max_lines))
 
 
 def print_results(test_results, max_len_name, runtime):

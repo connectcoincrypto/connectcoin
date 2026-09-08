@@ -30,6 +30,9 @@ class CWallet;
 using P2CClaimPriority = std::array<uint32_t, 10>;
 P2CClaimPriority GetP2CClaimPriority(const uint256& target, CAmount net_reward);
 
+/** Wallet search policy: attempts > 2 / Pr(hash <= target), calculated exactly. */
+bool IsP2CClaimAttemptLimitExceeded(const uint256& target, uint64_t attempts);
+
 /** Fee for a one-input P2C claim with one P2PK payout and the given proof budget.
  * Does not reserve a wallet key or perform network access.
  */

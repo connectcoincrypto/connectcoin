@@ -59,6 +59,7 @@
 #include <univalue.h>
 #include <util/chaintype.h>
 #include <util/check.h>
+#include <util/result.h>
 #include <util/signalinterrupt.h>
 #include <util/strencodings.h>
 #include <util/string.h>

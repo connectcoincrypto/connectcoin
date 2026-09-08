@@ -680,7 +680,7 @@ public:
         return {};
     }
     bool scanP2CBounties(const std::function<bool(const COutPoint&, const CTxOut&)>& visitor,
-                        const std::function<bool()>& cancelled) override
+                        const std::function<bool()>& cancelled, int recent_blocks) override
     {
         // All wallets share this lazy node-side catalog. Only its initial load
         // (or recovery after pruning) scans the UTXO database. Disk reads and
@@ -698,13 +698,13 @@ public:
                 state.ForceFlushStateToDisk(/*wipe_cache=*/false);
                 cursor = state.CoinsDB().Cursor();
             }
-            std::map<COutPoint, CTxOut> fresh;
+            P2CBountyCatalog fresh;
             while (cursor->Valid()) {
                 if (cancelled()) return false;
                 COutPoint outpoint;
                 Coin coin;
                 if (!cursor->GetKey(outpoint) || !cursor->GetValue(coin)) return false;
-                if (IsCanonicalP2COutput(coin.out)) fresh.emplace(outpoint, std::move(coin.out));
+                if (IsCanonicalP2COutput(coin.out)) fresh.Insert(outpoint, std::move(coin));
                 cursor->Next();
             }
             const auto* tip{WITH_LOCK(cs_main, return chainman().m_blockman.LookupBlockIndex(cursor->GetBestBlock()))};
@@ -729,7 +729,13 @@ public:
             CBlockUndo undo;
             if (cancelled() || !chainman().m_blockman.ReadBlock(block, *index)) return false;
             if (disconnect && (!chainman().m_blockman.ReadBlockUndo(undo, *index) || undo.vtxundo.size() + 1 != block.vtx.size())) return false;
-            return ApplyP2CBountyBlock(m_p2c_bounties, block, disconnect ? &undo : nullptr, cancelled);
+            try {
+                return ApplyP2CBountyBlock(m_p2c_bounties, block, index->nHeight, disconnect ? &undo : nullptr, cancelled);
+            } catch (...) {
+                m_p2c_tip = nullptr;
+                m_p2c_bounties.Clear();
+                throw;
+            }
         };
         bool updated{true};
         while (m_p2c_tip != fork) {
@@ -746,16 +752,21 @@ public:
         }
         if (!updated) {
             m_p2c_tip = nullptr;
-            m_p2c_bounties.clear();
+            m_p2c_bounties.Clear();
             if (cancelled() || !rebuild()) return false;
         }
         // Snapshot only P2C outputs, not the entire UTXO set. Release the catalog
         // before invoking wallet code, which may take wallet/chain locks.
-        const auto snapshot{m_p2c_bounties};
+        // Keep creation heights through initial load, block deltas and undo.
+        // Old entries stay available to other callers/reorgs, but are not
+        // copied or passed to wallets doing a recent-only search.
+        const int min_height{recent_blocks > 0 ? std::max(0, m_p2c_tip->nHeight - recent_blocks + 1) : 0};
+        const auto snapshot{m_p2c_bounties.Snapshot(min_height, cancelled)};
         catalog_lock.unlock();
-        for (const auto& [outpoint, output] : snapshot) {
+        if (!snapshot) return false;
+        for (const auto& [outpoint, coin] : *snapshot) {
             if (cancelled()) return false;
-            if (!visitor(outpoint, output)) break;
+            if (!visitor(outpoint, coin.out)) break;
         }
         return true;
     }
@@ -997,7 +1008,7 @@ public:
     NodeContext& m_node;
     std::timed_mutex m_p2c_mutex;
     const CBlockIndex* m_p2c_tip{nullptr};
-    std::map<COutPoint, CTxOut> m_p2c_bounties;
+    P2CBountyCatalog m_p2c_bounties;
 };
 
 class BlockTemplateImpl : public BlockTemplate

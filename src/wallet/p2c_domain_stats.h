@@ -66,6 +66,19 @@ inline double GetP2CDomainPriority(const P2CClaimPriority& economic_priority, do
     for (const auto word : economic_priority) numerator = std::ldexp(numerator, 32) + word;
     return std::ldexp(numerator, -256) * connection_rate;
 }
+
+/** Local automatic-search policy, in connects per second of TCP/TLS effort.
+ * Equal to the floor remains eligible. This does not restrict manual claims,
+ * change consensus or discard proofs whose work has already been completed.
+ */
+inline constexpr double MIN_P2C_EXPECTED_RETURN{1000};
+
+inline bool IsP2CClaimWorthAttempting(const P2CClaimPriority& economic_priority, double connection_rate)
+{
+    if (!std::isfinite(connection_rate) || connection_rate <= 0) return false;
+    const double expected_return{GetP2CDomainPriority(economic_priority, connection_rate)};
+    return std::isfinite(expected_return) && expected_return >= MIN_P2C_EXPECTED_RETURN;
+}
 } // namespace wallet
 
 #endif // CONNECTCOIN_WALLET_P2C_DOMAIN_STATS_H
