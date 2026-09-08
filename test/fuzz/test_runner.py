@@ -17,6 +17,7 @@ import random
 import subprocess
 import sys
 import tempfile
+import time
 
 
 def get_fuzz_env(*, target, source_dir):
@@ -31,6 +32,25 @@ def get_fuzz_env(*, target, source_dir):
         'MSAN_SYMBOLIZER_PATH': symbolizer,
     }
     return fuzz_env
+
+
+def detect_fuzz_engine(*, fuzz_bin, target, source_dir):
+    """Never mistake a failed initialization for a non-libFuzzer binary."""
+    result = subprocess.run(
+        [fuzz_bin, '-help=1'],
+        env=get_fuzz_env(target=target, source_dir=source_dir),
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        timeout=300,
+    )
+    result.check_returncode()
+    if 'libFuzzer' in result.stderr:
+        return True
+    if 'ConnectCoin fuzz: corpus replay' in result.stderr.splitlines():
+        return False
+    raise RuntimeError(f'Unrecognized fuzz engine help output: {result.stdout}{result.stderr}')
 
 
 def install_p2c_seed_corpus(*, targets, corpus_dir, source_dir):
@@ -267,19 +287,18 @@ def main():
                 "pull request until a project-owned corpus repository exists"
             )
 
-    print("Check if using libFuzzer ... ", end='')
-    help_output = subprocess.run(
-        args=[
-            fuzz_bin,
-            '-help=1',
-        ],
-        env=get_fuzz_env(target=test_list_selection[0], source_dir=config['environment']['SRCDIR']),
-        check=False,
-        stderr=subprocess.PIPE,
-        text=True,
-    ).stderr
-    using_libfuzzer = "libFuzzer" in help_output
-    print(using_libfuzzer)
+    print("Check if using libFuzzer ... ", end='', flush=True)
+    try:
+        # Check RPC registration before any expensive replay when it is selected.
+        using_libfuzzer = detect_fuzz_engine(
+            fuzz_bin=fuzz_bin,
+            target='rpc' if 'rpc' in test_list_selection else test_list_selection[0],
+            source_dir=config['environment']['SRCDIR'],
+        )
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, RuntimeError) as error:
+        logging.error('Fuzz engine probe failed: %s\n%s', error, getattr(error, 'stderr', '') or '')
+        sys.exit(1)
+    print(using_libfuzzer, flush=True)
     if (args.generate or args.m_dir) and not using_libfuzzer:
         logging.error("Must be built with libFuzzer")
         sys.exit(1)
@@ -519,12 +538,15 @@ def run_once(
 
         def job(t, args):
             output = 'Run {} with args {}'.format(t, args)
+            logging.debug('Starting %s with args %s', t, args)
+            started = time.monotonic()
             result = subprocess.run(
                 args,
                 env=get_fuzz_env(target=t, source_dir=src_dir),
                 stderr=subprocess.PIPE,
                 text=True,
             )
+            logging.debug('Finished %s in %.1fs (exit code %d)', t, time.monotonic() - started, result.returncode)
             output += result.stderr
             return output, result, t
 

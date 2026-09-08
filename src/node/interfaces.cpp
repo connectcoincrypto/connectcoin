@@ -38,6 +38,7 @@
 #include <node/coin.h>
 #include <node/context.h>
 #include <node/cpu_miner.h>
+#include <node/cpu_miner_types.h>
 #include <node/interface_ui.h>
 #include <node/kernel_notifications.h>
 #include <node/miner.h>
@@ -58,8 +59,8 @@
 #include <rpc/request.h>
 #include <rpc/server.h>
 #include <sync.h>
-#include <txmempool.h>
 #include <txdb.h>
+#include <txmempool.h>
 #include <uint256.h>
 #include <univalue.h>
 #include <util/btcsignals.h>
@@ -83,6 +84,7 @@
 #include <map>
 #include <memory>
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <tuple>
 #include <utility>

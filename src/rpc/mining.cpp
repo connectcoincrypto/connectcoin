@@ -26,6 +26,7 @@
 #include <node/blockstorage.h>
 #include <node/context.h>
 #include <node/cpu_miner.h>
+#include <node/cpu_miner_types.h>
 #include <node/miner.h>
 #include <node/mining_args.h>
 #include <node/mining_types.h>
@@ -74,6 +75,7 @@
 #include <optional>
 #include <set>
 #include <span>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <utility>

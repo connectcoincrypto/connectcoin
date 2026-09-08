@@ -82,6 +82,7 @@ const std::vector<std::string> RPC_COMMANDS_NOT_SAFE_FOR_FUZZING{
     "loadwallet",           // avoid reading from disk
     "savemempool",          // disabled as a precautionary measure: may take a file path argument in the future
     "setban",               // avoid DNS lookups
+    "startmining",          // avoid unbounded background RandomX mining
     "stop",                 // avoid shutdown state
 };
 
@@ -125,6 +126,7 @@ const std::vector<std::string> RPC_COMMANDS_SAFE_FOR_FUZZING{
     "getchainstates",
     "getchaintxstats",
     "getconnectioncount",
+    "getcpumininginfo",
     "getdeploymentinfo",
     "getdescriptoractivity",
     "getdescriptorinfo",
@@ -176,6 +178,7 @@ const std::vector<std::string> RPC_COMMANDS_SAFE_FOR_FUZZING{
     "setp2cproof",
     "signmessagewithprivkey",
     "signrawtransactionwithkey",
+    "stopmining",
     "submitblock",
     "submitheader",
     "submitpackage",

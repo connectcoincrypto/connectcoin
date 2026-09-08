@@ -236,6 +236,12 @@ int main(int argc, char** argv)
         test_one_input({buffer, buffer_len});
     }
 #else
+    // Match libFuzzer's successful help probe, but identify the replay engine
+    // explicitly. Initialization errors must still fail the probe above.
+    if (argc == 2 && std::strcmp(argv[1], "-help=1") == 0) {
+        std::cerr << "ConnectCoin fuzz: corpus replay\n";
+        return 0;
+    }
     std::vector<uint8_t> buffer;
     if (argc <= 1) {
         if (!read_stdin(buffer)) {
