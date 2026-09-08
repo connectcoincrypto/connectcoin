@@ -77,6 +77,7 @@
 #include <validation.h>
 #include <validationinterface.h>
 
+#include <algorithm>
 #include <any>
 #include <atomic>
 #include <condition_variable>

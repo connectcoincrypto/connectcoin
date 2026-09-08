@@ -131,6 +131,10 @@ if [ -n "$XCODE_VERSION" ] && [ ! -d "${DEPENDS_DIR}/SDKs/${OSX_SDK_BASENAME}" ]
   fi
   sha256sum -c <<<"${OSX_SDK_SHA256} ${OSX_SDK_PATH}"
   tar -C "${DEPENDS_DIR}/SDKs" -xf "$OSX_SDK_PATH"
+  # Do not embed both the archive and the extracted SDK in the image layer.
+  # Direct/local CI runs retain their download cache. Failed extraction never
+  # reaches cleanup, and the extracted SDK is used by all subsequent builds.
+  if [[ ${CI_IMAGE_BUILD:-0} == 1 ]]; then rm -f -- "$OSX_SDK_PATH"; fi
 fi
 
 if [ -n "$NETBSD_VERSION" ] && [ ! -d "${DEPENDS_DIR}/SDKs/${NETBSD_SDK_BASENAME}" ]; then
@@ -142,6 +146,7 @@ if [ -n "$NETBSD_VERSION" ] && [ ! -d "${DEPENDS_DIR}/SDKs/${NETBSD_SDK_BASENAME
     fi
     sha512sum -c <<<"${NETBSD_SDK_SHA512}  ${NETBSD_SDK_PATH}"
     tar -C "${DEPENDS_DIR}/SDKs/${NETBSD_SDK_BASENAME}" -xf "$NETBSD_SDK_PATH"
+    if [[ ${CI_IMAGE_BUILD:-0} == 1 ]]; then rm -f -- "$NETBSD_SDK_PATH"; fi
   done < <(printf '%b\n' "${NETBSD_SDK_SHA512SUMS}")
 fi
 
@@ -154,6 +159,7 @@ if [ -n "$FREEBSD_VERSION" ] && [ ! -d "${DEPENDS_DIR}/SDKs/${FREEBSD_SDK_BASENA
   sha256sum -c <<<"${FREEBSD_SDK_SHA256} ${FREEBSD_SDK_PATH}"
   mkdir -p "${DEPENDS_DIR}/SDKs/${FREEBSD_SDK_BASENAME}"
   tar -C "${DEPENDS_DIR}/SDKs/${FREEBSD_SDK_BASENAME}" -xf "$FREEBSD_SDK_PATH"
+  if [[ ${CI_IMAGE_BUILD:-0} == 1 ]]; then rm -f -- "$FREEBSD_SDK_PATH"; fi
 fi
 
 if [ -n "$OPENBSD_VERSION" ] && [ ! -d "${DEPENDS_DIR}/SDKs/${OPENBSD_SDK_BASENAME}" ]; then
@@ -165,6 +171,7 @@ if [ -n "$OPENBSD_VERSION" ] && [ ! -d "${DEPENDS_DIR}/SDKs/${OPENBSD_SDK_BASENA
     fi
     sha256sum -c <<<"${OPENBSD_SDK_SHA256}  ${OPENBSD_SDK_PATH}"
     tar -C "${DEPENDS_DIR}/SDKs/${OPENBSD_SDK_BASENAME}" -xf "$OPENBSD_SDK_PATH"
+    if [[ ${CI_IMAGE_BUILD:-0} == 1 ]]; then rm -f -- "$OPENBSD_SDK_PATH"; fi
   done < <(printf '%b\n' "${OPENBSD_SDK_SHA256SUMS}")
   (
     # The SDK has versioned shared libs, but no unversioned libfoo.so symlink,

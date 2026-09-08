@@ -23,4 +23,4 @@ COPY ./ci/test/*.patch ${BASE_ROOT_DIR}/ci/test/
 # Bash is required, so install it when missing
 RUN sh -c "bash -c 'true' || ( apk update && apk add --no-cache bash )"
 
-RUN ["bash", "-c", "cd ${BASE_ROOT_DIR}/ && set -o errexit && source ./ci/test/00_setup_env.sh && DANGER_RUN_CI_ON_HOST=1 ./ci/test/01_base_install.sh"]
+RUN ["bash", "-c", "cd ${BASE_ROOT_DIR}/ && set -o errexit && source ./ci/test/00_setup_env.sh && CI_IMAGE_BUILD=1 DANGER_RUN_CI_ON_HOST=1 ./ci/test/01_base_install.sh"]
