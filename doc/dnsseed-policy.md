@@ -49,12 +49,13 @@ for non-sensitive operational reports. Do not post credentials or private keys.
 Behavior outside of these expectations may be reasonable in some
 situations but should be discussed in public in advance.
 
-Current beta seed
------------------
+Current beta seeds
+------------------
 
-`connectcoin1.com` is configured only for ConnectCoin testnet4. Its operator must
+`connectcoin1.com`, `connectcoin2.com`, `connectcoin3.com` and
+`dememzea.tplinkdns.com` are configured only for ConnectCoin testnet4. Operators must
 maintain the required DNS records and a reachable P2P bootstrap service on TCP
-48179; adding the hostname to the source does not establish service availability.
+48179; adding hostnames to the source does not establish service availability.
 See [testnet-beta.md](testnet-beta.md#testnet4-bootstrap-dns) for the filtered
 query and base-hostname fallback requirements. No mainnet seed or fixed peer
 snapshot is enabled by this configuration.

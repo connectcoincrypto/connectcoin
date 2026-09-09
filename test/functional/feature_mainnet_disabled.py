@@ -97,7 +97,8 @@ class MainnetDisabledTest(BitcoinTestFramework):
         self.test_beta_seed()
 
     def test_beta_seed(self):
-        self.log.info("The beta default uses its DNS seed and respects -dnsseed=0")
+        self.log.info("The beta default uses all its DNS seeds and respects -dnsseed=0")
+        seeds = ["connectcoin1.com", "connectcoin2.com", "connectcoin3.com", "dememzea.tplinkdns.com"]
         node = self.nodes[0]
         conf = node.datadir_path / "connectcoin.conf"
         write_config(conf, n=0, chain="testnet4", disable_autoconnect=False)
@@ -112,16 +113,21 @@ class MainnetDisabledTest(BitcoinTestFramework):
                 if not enabled:
                     args.append("-dnsseed=0")
                 with node.assert_debug_log(
-                    expected_msgs=["Loading addresses from DNS seed connectcoin1.com" if enabled else "DNS seeding disabled"],
+                    expected_msgs=[f"Loading addresses from DNS seed {seed}" for seed in seeds] if enabled else ["DNS seeding disabled"],
                     unexpected_msgs=[] if enabled else ["Loading addresses from DNS seed"],
                 ):
                     self.start_node(0, extra_args=args)
                     if enabled:
-                        request = proxy.queue.get(timeout=self.rpc_timeout)
-                        assert isinstance(request, Socks5Command)
-                        assert_equal(request.atyp, AddressType.DOMAINNAME)
-                        assert_equal(request.addr, b"connectcoin1.com")
-                        assert_equal(request.port, 48179)
+                        requested_seeds = []
+                        for _ in seeds:
+                            request = proxy.queue.get(timeout=self.rpc_timeout)
+                            assert isinstance(request, Socks5Command)
+                            assert_equal(request.atyp, AddressType.DOMAINNAME)
+                            assert_equal(request.port, 48179)
+                            requested_seeds.append(request.addr)
+                        # Seeds are shuffled; compare the complete list without
+                        # relying on order or allowing duplicate/missing names.
+                        assert_equal(sorted(requested_seeds), sorted(seed.encode("ascii") for seed in seeds))
                     self.stop_node(0)
                 assert proxy.queue.empty()
             finally:

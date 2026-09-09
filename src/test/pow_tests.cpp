@@ -15,6 +15,8 @@
 
 #include <cstdlib>
 #include <optional>
+#include <string>
+#include <vector>
 
 BOOST_FIXTURE_TEST_SUITE(pow_tests, BasicTestingSetup)
 
@@ -242,8 +244,10 @@ void sanity_check_chainparams(const ArgsManager& args, ChainType chain_type)
     // Public beta discovery must stay isolated from every other network.
     const auto& seeds{chainParams->DNSSeeds()};
     if (chain_type == ChainType::TESTNET4) {
-        BOOST_REQUIRE_EQUAL(seeds.size(), 1U);
-        BOOST_CHECK_EQUAL(seeds.front(), "connectcoin1.com");
+        const std::vector<std::string> expected_seeds{
+            "connectcoin1.com", "connectcoin2.com", "connectcoin3.com", "dememzea.tplinkdns.com",
+        };
+        BOOST_CHECK_EQUAL_COLLECTIONS(seeds.begin(), seeds.end(), expected_seeds.begin(), expected_seeds.end());
         BOOST_CHECK_EQUAL(chainParams->GetDefaultPort(), 48179);
     } else if (chain_type == ChainType::REGTEST) {
         BOOST_REQUIRE_EQUAL(seeds.size(), 1U);

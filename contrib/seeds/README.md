@@ -12,8 +12,9 @@ peers, which are on an incompatible network.
 
 Until ConnectCoin operates project-owned crawlers and has enough independently
 operated nodes to produce trustworthy snapshots, keep fixed seeds out of the
-build. Testnet4 includes `connectcoin1.com` as its DNS bootstrap hostname;
-its DNS records and P2P service must be operated separately as described in
+build. Testnet4 includes `connectcoin1.com`, `connectcoin2.com`, `connectcoin3.com`
+and `dememzea.tplinkdns.com` as DNS/DDNS bootstrap hostnames;
+their DNS records and P2P services must be operated separately as described in
 [testnet-beta.md](../../doc/testnet-beta.md#testnet4-bootstrap-dns). Other test
 deployments can bootstrap with explicit `-addnode` entries.
 Do not populate this directory from Bitcoin Core DNS seeds, crawlers, or AS-map
