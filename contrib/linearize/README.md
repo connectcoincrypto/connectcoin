@@ -11,7 +11,8 @@ Required configuration file settings for linearize-hashes:
 
 Optional config file setting for linearize-hashes:
 * RPC: `host`  (Default: `127.0.0.1`)
-* RPC: `port`  (Mainnet default: `48172`)
+* RPC: `port` (Default: `48178`, the current Testnet4 beta RPC port; set it
+  explicitly for other networks.)
 * Blockchain: `min_height`, `max_height`
 * `rev_hash_bytes`: If true, the written block hash list will be
 byte-reversed. (In other words, the hash returned by getblockhash will have its
@@ -30,6 +31,15 @@ Required configuration file settings:
 * `output_file`: The file that will contain the final blockchain.
       or
 * `output`: Output directory for linearized `blocks/blkNNNNN.dat` output.
+* `genesis`: The selected chain's genesis hash, as returned by
+  `connectcoin-cli getblockhash 0` (64 hexadecimal characters).
+* `netmagic`: The selected chain's network magic (8 hexadecimal characters),
+  available as `net.magic` from `connectcoin-util getchainparams`.
+
+There are no implicit genesis or network-magic defaults. Test networks can be
+reset, and old block files must not be mixed with a new chain. The example
+configuration uses the P2C v2 Testnet4 network; for another network, select that
+network explicitly in both commands and update the port and paths as well.
 
 Optional config file setting for linearize-data:
 * `debug_output`: Some printouts may not always be desired. If true, such output
@@ -37,14 +47,11 @@ will be printed.
 * `file_timestamp`: Set each file's last-accessed and last-modified times,
 respectively, to the current time and to the timestamp of the most recent block
 written to the script's blockchain.
-* `genesis`: The hash of the genesis block in the blockchain. Defaults to the
-  ConnectCoin mainnet genesis hash.
 * `input`: connectcoind blocks/ directory containing blkNNNNN.dat
 * `hashlist`: text file containing list of block hashes created by
 linearize-hashes.py.
 * `max_out_sz`: Maximum size for files created by the `output_file` option.
 (Default: `1000*1000*1000 bytes`)
-* `netmagic`: Network magic number. Defaults to the ConnectCoin mainnet magic.
 * `out_of_order_cache_sz`: If out-of-order blocks are being read, the block can
 be written to a cache so that the blockchain doesn't have to be sought again.
 This option specifies the cache size. (Default: `100*1000*1000 bytes`)

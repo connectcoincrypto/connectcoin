@@ -107,10 +107,10 @@ def _pow_hash_int(header):
 
 MAGIC_BYTES = {
     "mainnet": b"\xd9\x51\xa5\xe2",
-    "testnet3": b"\x03\x84\x8e\x59",
-    "testnet4": b"\xbb\x51\xf5\xe7",
-    "regtest": b"\xa5\x4f\xc7\xd5",
-    "signet": b"\x54\xd2\x6f\xbd",
+    "testnet3": b"\x0d\xb1\x48\x4d",
+    "testnet4": b"\x4e\x3d\x81\x78",
+    "regtest": b"\x8d\x6e\x01\x91",
+    "signet": b"\x4c\x48\xf3\xb3",
 }
 
 def sha256(s):

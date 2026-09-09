@@ -17,6 +17,7 @@ import tempfile
 import urllib
 
 from test_framework.blocktools import COINBASE_MATURITY
+from test_framework.messages import MAGIC_BYTES
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import assert_equal
 
@@ -51,13 +52,29 @@ class LoadblockTest(BitcoinTestFramework):
             cfg.write(f"host={node_url.hostname}\n")
             cfg.write(f"output_file={bootstrap_file}\n")
             cfg.write("max_height=100\n")
-            cfg.write("netmagic=a54fc7d5\n")
+            cfg.write(f"netmagic={MAGIC_BYTES[self.chain].hex()}\n")
             cfg.write(f"input={blocks_dir}\n")
             cfg.write(f"genesis={genesis_block}\n")
             cfg.write(f"hashlist={hash_list.name}\n")
 
         base_dir = self.config["environment"]["SRCDIR"]
         linearize_dir = Path(base_dir) / "contrib" / "linearize"
+
+        self.log.info("Reject missing or malformed chain identifiers before writing block data")
+        linearize_data_file = linearize_dir / "linearize-data.py"
+        valid_config = cfg_file.read_text(encoding="utf-8")
+        for field, width in (("netmagic", 8), ("genesis", 64)):
+            for invalid_value in (None, "0" * (width - 1), "g" * width):
+                lines = [line for line in valid_config.splitlines() if not line.startswith(f"{field}=")]
+                if invalid_value is not None:
+                    lines.append(f"{field}={invalid_value}")
+                invalid_cfg = data_dir / "linearize-invalid.cfg"
+                invalid_cfg.write_text("\n".join(lines) + "\n", encoding="utf-8")
+                result = subprocess.run([sys.executable, linearize_data_file, invalid_cfg],
+                                        capture_output=True, text=True, timeout=30)
+                assert_equal(result.returncode, 1)
+                assert f"Missing or invalid {field}" in result.stderr
+                assert not bootstrap_file.exists()
 
         self.log.info("Run linearization of block hashes")
         linearize_hashes_file = linearize_dir / "linearize-hashes.py"
@@ -66,7 +83,6 @@ class LoadblockTest(BitcoinTestFramework):
                        check=True)
 
         self.log.info("Run linearization of block data")
-        linearize_data_file = linearize_dir / "linearize-data.py"
         subprocess.run([sys.executable, linearize_data_file, cfg_file],
                        check=True)
 

@@ -2,9 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://opensource.org/license/mit/.
 
+#include <arith_uint256.h>
 #include <consensus/p2c.h>
 #include <consensus/p2c_x509.h>
 #include <crypto/sha256.h>
+#include <hash.h>
 #include <key.h>
 #include <primitives/transaction.h>
 #include <rpc/rawtransaction_util.h>
@@ -17,6 +19,8 @@
 
 #include <univalue.h>
 
+#include <mbedtls/asn1.h>
+#include <mbedtls/bignum.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/pk.h>
@@ -29,6 +33,7 @@
 #include <span>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 #include <boost/test/unit_test.hpp>
@@ -68,6 +73,53 @@ Bytes Handshake(uint8_t type, const Bytes& body)
 void Append(Bytes& out, const Bytes& bytes)
 {
     out.insert(out.end(), bytes.begin(), bytes.end());
+}
+
+struct TestMpi {
+    mbedtls_mpi value;
+    TestMpi() { mbedtls_mpi_init(&value); }
+    ~TestMpi() { mbedtls_mpi_free(&value); }
+    TestMpi(const TestMpi&) = delete;
+    TestMpi& operator=(const TestMpi&) = delete;
+};
+
+void Asn1Length(Bytes& out, size_t length)
+{
+    BOOST_REQUIRE_LE(length, 0xffffU);
+    if (length < 0x80) {
+        out.push_back(static_cast<unsigned char>(length));
+    } else if (length <= 0xff) {
+        out.push_back(0x81);
+        out.push_back(static_cast<unsigned char>(length));
+    } else {
+        out.push_back(0x82);
+        U16(out, static_cast<uint16_t>(length));
+    }
+}
+
+Bytes Asn1Integer(const mbedtls_mpi& number, size_t extra_zeros)
+{
+    Bytes value(mbedtls_mpi_size(&number));
+    BOOST_REQUIRE(!value.empty());
+    BOOST_REQUIRE_EQUAL(mbedtls_mpi_write_binary(&number, value.data(), value.size()), 0);
+    if ((value.front() & 0x80) != 0) value.insert(value.begin(), 0);
+    value.insert(value.begin(), extra_zeros, 0);
+    Bytes result{0x02};
+    Asn1Length(result, value.size());
+    Append(result, value);
+    return result;
+}
+
+Bytes EncodeEcdsaSignature(const mbedtls_mpi& r, const mbedtls_mpi& s,
+                         size_t extra_r_zeros = 0, size_t extra_s_zeros = 0)
+{
+    const Bytes encoded_r{Asn1Integer(r, extra_r_zeros)};
+    const Bytes encoded_s{Asn1Integer(s, extra_s_zeros)};
+    Bytes result{0x30};
+    Asn1Length(result, encoded_r.size() + encoded_s.size());
+    Append(result, encoded_r);
+    Append(result, encoded_s);
+    return result;
 }
 
 Bytes StructuralProof(std::string_view domain, const uint256& challenge, bool invalid_key_share = false,
@@ -226,6 +278,51 @@ BOOST_AUTO_TEST_CASE(canonical_tls_profile_and_connection_work)
 
     const Bytes malformed_share{StructuralProof("example.com", challenge, /*invalid_key_share=*/true)};
     BOOST_CHECK(!ParseP2CTlsProof(malformed_share, "example.com", challenge, parsed, error));
+}
+
+BOOST_AUTO_TEST_CASE(connection_work_v2_hashes_only_the_authenticated_transcript)
+{
+    const uint256 challenge{};
+    const Bytes proof{StructuralProof("example.com", challenge)};
+    P2CTlsProofView parsed;
+    std::string error;
+    BOOST_REQUIRE(ParseP2CTlsProof(proof, "example.com", challenge, parsed, error));
+
+    // Independently calculated SHA256(tag_hash || tag_hash || 234-byte
+    // transcript), displayed in uint256's little-endian hexadecimal convention.
+    BOOST_CHECK_EQUAL(parsed.connection_work_hash.GetHex(), "6dfd877a171f3b7cfcf47aa3838338d5f8b992126c2e865f5c8f933e64bc0b0d");
+    const size_t signature_offset{static_cast<size_t>(parsed.certificate_verify.data() - proof.data())};
+    BOOST_CHECK_EQUAL(signature_offset, 235U); // Version byte is excluded too.
+    HashWriter independent{TaggedHash("ConnectCoin/P2C/work/v2")};
+    independent.write(std::as_bytes(std::span{proof}.subspan(1, signature_offset - 1)));
+    BOOST_CHECK(parsed.connection_work_hash == independent.GetSHA256());
+
+    const uint256 work_hash{parsed.connection_work_hash};
+    const uint256 transcript_hash{parsed.transcript_hash};
+    // Changes to signature length, handshake length and signature bytes are all
+    // outside the preimage; these dummy signatures do not authenticate a proof.
+    const Bytes different_signature{StructuralProof("example.com", challenge, false, {}, Bytes(512, 0x30))};
+    BOOST_REQUIRE(ParseP2CTlsProof(different_signature, "example.com", challenge, parsed, error));
+    BOOST_CHECK(parsed.connection_work_hash == work_hash);
+    BOOST_CHECK(parsed.transcript_hash == transcript_hash);
+
+    Bytes old_version{proof};
+    old_version.front() = 1;
+    BOOST_CHECK(!ParseP2CTlsProof(old_version, "example.com", challenge, parsed, error));
+    BOOST_CHECK_EQUAL(error, "unsupported P2C proof version");
+    Bytes future_version{proof};
+    future_version.front() = 3;
+    BOOST_CHECK(!ParseP2CTlsProof(future_version, "example.com", challenge, parsed, error));
+
+    // Exclusion from hashing must not make CertificateVerify optional.
+    BOOST_CHECK(!ParseP2CTlsProof(std::span{proof}.first(signature_offset), "example.com", challenge, parsed, error));
+    Bytes empty_signature{proof.begin(), proof.begin() + signature_offset};
+    Append(empty_signature, Handshake(15, {0x04, 0x03, 0, 0}));
+    BOOST_CHECK(!ParseP2CTlsProof(empty_signature, "example.com", challenge, parsed, error));
+    BOOST_CHECK_EQUAL(error, "invalid P2C CertificateVerify message");
+    const Bytes oversized_signature{StructuralProof("example.com", challenge, false, {}, Bytes(8192, 0x30))};
+    BOOST_CHECK(!ParseP2CTlsProof(oversized_signature, "example.com", challenge, parsed, error));
+    BOOST_CHECK_EQUAL(error, "TLS handshake message exceeds P2C limit");
 }
 
 BOOST_AUTO_TEST_CASE(immutable_root_store_v1_is_parseable)
@@ -402,10 +499,70 @@ AwEHoUQDQgAEN8xW2XYJHlpyPsdZLf8gbu58+QaRdNCtFLX3aCJZYpJO5QDYIxH/
     BOOST_CHECK(!VerifyP2CCertificateProofForTest(prevout, parsed, /*validation_time=*/2100000000,
                                                  test_roots, error));
 
-    proof.back() ^= 1;
+    const uint256 work_hash{parsed.connection_work_hash};
+    const uint256 transcript_hash{parsed.transcript_hash};
+    BOOST_REQUIRE(!work_hash.IsNull());
+    const uint256 below_work_hash{ArithToUint256(UintToArith256(work_hash) - 1)};
+
+    TestMpi r, s, order, opposite_s;
+    auto* signature_cursor{signature.data()};
+    const auto* signature_end{signature.data() + signature.size()};
+    size_t sequence_size{0};
+    BOOST_REQUIRE_EQUAL(mbedtls_asn1_get_tag(&signature_cursor, signature_end, &sequence_size, 0x30), 0);
+    BOOST_REQUIRE_EQUAL(sequence_size, static_cast<size_t>(signature_end - signature_cursor));
+    BOOST_REQUIRE_EQUAL(mbedtls_asn1_get_mpi(&signature_cursor, signature_end, &r.value), 0);
+    BOOST_REQUIRE_EQUAL(mbedtls_asn1_get_mpi(&signature_cursor, signature_end, &s.value), 0);
+    BOOST_REQUIRE(signature_cursor == signature_end);
+    BOOST_REQUIRE_EQUAL(mbedtls_mpi_read_string(&order.value, 16,
+        "FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551"), 0);
+    BOOST_REQUIRE_EQUAL(mbedtls_mpi_sub_mpi(&opposite_s.value, &order.value, &s.value), 0);
+    const std::vector<std::pair<std::string_view, Bytes>> equivalent_signatures{
+        {"canonical", EncodeEcdsaSignature(r.value, s.value)},
+        {"opposite s", EncodeEcdsaSignature(r.value, opposite_s.value)},
+        {"redundant r zero", EncodeEcdsaSignature(r.value, s.value, 1, 0)},
+        {"redundant s zero", EncodeEcdsaSignature(r.value, s.value, 0, 1)},
+        {"32 r zeros", EncodeEcdsaSignature(r.value, s.value, 32, 0)},
+        {"512 r zeros", EncodeEcdsaSignature(r.value, s.value, 512, 0)},
+        {"4000 r zeros", EncodeEcdsaSignature(r.value, s.value, 4000, 0)},
+        {"4000 r and s zeros", EncodeEcdsaSignature(r.value, s.value, 4000, 4000)},
+        {"padded opposite s", EncodeEcdsaSignature(r.value, opposite_s.value, 1, 1)},
+    };
+    // The real certificate/signature verifier accepts these encodings of one
+    // server response. None may create another work hash or change its target
+    // result, even where the signature/message length encoding changes.
+    for (const auto& [description, equivalent_signature] : equivalent_signatures) {
+        BOOST_TEST_CONTEXT(description) {
+            const Bytes equivalent{StructuralProof("localhost", challenge, false, certificate_der, equivalent_signature)};
+            BOOST_REQUIRE(ParseP2CTlsProof(equivalent, "localhost", challenge, parsed, error));
+            BOOST_REQUIRE_MESSAGE(VerifyP2CCertificateProofForTest(prevout, parsed, /*validation_time=*/1800000000,
+                                                                  test_roots, error), error);
+            BOOST_CHECK(parsed.transcript_hash == transcript_hash);
+            BOOST_CHECK(parsed.connection_work_hash == work_hash);
+            BOOST_CHECK(P2CMeetsWorkTarget(parsed.connection_work_hash, work_hash));
+            BOOST_CHECK(!P2CMeetsWorkTarget(parsed.connection_work_hash, below_work_hash));
+        }
+    }
+
+    // Conversely, a change to authenticated ServerHello.random does change
+    // work, but must invalidate the unchanged signature.
     BOOST_REQUIRE(ParseP2CTlsProof(proof, "localhost", challenge, parsed, error));
+    const size_t server_random_offset{static_cast<size_t>(parsed.server_hello.data() - proof.data()) + 6};
+    Bytes changed_transcript{proof};
+    changed_transcript[server_random_offset] ^= 1;
+    BOOST_REQUIRE(ParseP2CTlsProof(changed_transcript, "localhost", challenge, parsed, error));
+    BOOST_CHECK(parsed.transcript_hash != transcript_hash);
+    BOOST_CHECK(parsed.connection_work_hash != work_hash);
     BOOST_CHECK(!VerifyP2CCertificateProofForTest(prevout, parsed, /*validation_time=*/1800000000,
                                                  test_roots, error));
+    BOOST_CHECK_EQUAL(error, "invalid P2C TLS CertificateVerify signature");
+
+    proof.back() ^= 1;
+    BOOST_REQUIRE(ParseP2CTlsProof(proof, "localhost", challenge, parsed, error));
+    BOOST_CHECK(parsed.connection_work_hash == work_hash);
+    BOOST_CHECK(parsed.transcript_hash == transcript_hash);
+    BOOST_CHECK(!VerifyP2CCertificateProofForTest(prevout, parsed, /*validation_time=*/1800000000,
+                                                 test_roots, error));
+    BOOST_CHECK_EQUAL(error, "invalid P2C TLS CertificateVerify signature");
 
     mbedtls_pk_free(&key);
     mbedtls_x509_crt_free(&certificate);

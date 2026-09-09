@@ -178,7 +178,7 @@ RPCMethod submitp2cclaim()
         "No HTTPS connections are made. No private-key signature or wallet unlock is needed.\n",
         {
             {"hex", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "Unwitnessed transaction from preparep2cclaim."},
-            {"proof", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "Complete version-1 binary TLS proof encoded as hex, not the JSON envelope."},
+            {"proof", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "Complete version-2 binary TLS proof encoded as hex, not the JSON envelope. CertificateVerify remains mandatory but is excluded from connection work."},
             {"address", RPCArg::Type::STR, RPCArg::DefaultHint{"this wallet"}, "Explicitly authorize this exact reward address. Required for payouts not owned by this wallet."},
         },
         RPCResult{RPCResult::Type::OBJ, "", "", {

@@ -72,10 +72,12 @@ class TypedOutputsTest(BitcoinTestFramework):
         assert_equal(challenge["txid"], node.decoderawtransaction(p2c_hex)["txid"])
         assert_equal(challenge["input_index"], 0)
         assert_equal(len(challenge["clienthello_random"]), 64)
-        witnessed_p2c = node.setp2cproof(p2c_hex, 0, "01")
+        # This RPC only attaches witness bytes; a version byte alone is not a
+        # valid TLS proof. New proofs use version 2 after the network reset.
+        witnessed_p2c = node.setp2cproof(p2c_hex, 0, "02")
         witnessed_decoded = node.decoderawtransaction(witnessed_p2c)
         assert_equal(witnessed_decoded["txid"], challenge["txid"])
-        assert_equal(witnessed_decoded["vin"][0]["txinwitness"], ["01"])
+        assert_equal(witnessed_decoded["vin"][0]["txinwitness"], ["02"])
 
         self.log.info("Check wallet funding and signing preserve a P2C recipient")
         funded_p2c = node.send(

@@ -17,7 +17,9 @@ runs:
       uses: ./.github/actions/cache/save/internal
       # GitHub caches are branch-scoped, so branch pushes can reuse their own
       # builds. Keep other providers restricted to the default branch.
-      if: ${{ github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) }}
+      # Fuzz shards compile identical binaries and restore a shared namespace.
+      # Export once, as with Docker, to avoid four copies evicting other caches.
+      if: ${{ github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') }}
       with:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-${{ env.CI_CACHE_NAME }}-${{ github.run_id }}-${{ env.CONTAINER_NAME }}

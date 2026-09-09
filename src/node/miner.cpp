@@ -271,7 +271,7 @@ bool BlockAssembler::TestChunkTransactions(const std::vector<CTxMemPoolEntryRef>
         for (uint32_t input_index{0}; input_index < tx.vin.size(); ++input_index) {
             const CTxIn& input{tx.vin[input_index]};
             // Valid type-1 entries have one 64-byte witness, while every
-            // structurally valid version-1 TLS proof is larger. Avoid UTXO
+            // structurally valid version-2 TLS proof is larger. Avoid UTXO
             // lookups for the overwhelmingly common P2PK path. This also
             // preserves the block-assembler tests' deliberately synthetic
             // mempool entries, which do not have backing coins.

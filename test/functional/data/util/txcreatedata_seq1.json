@@ -1,10 +1,10 @@
 {
-    "txid": "c4dea671b0d7b48f8ab10bc46650e8329d3c5766931f548f513847a19f5ba75b",
-    "hash": "c4dea671b0d7b48f8ab10bc46650e8329d3c5766931f548f513847a19f5ba75b",
+    "txid": "92ea6299d8eab01e9b6776f0611395a7a6c8d5739ec2fc5d40a797e6f422f4a8",
+    "hash": "92ea6299d8eab01e9b6776f0611395a7a6c8d5739ec2fc5d40a797e6f422f4a8",
     "version": 1,
-    "size": 126,
-    "vsize": 126,
-    "weight": 504,
+    "size": 133,
+    "vsize": 133,
+    "weight": 532,
     "locktime": 0,
     "vin": [
         {
@@ -30,14 +30,16 @@
         {
             "value": 0.0018000000,
             "n": 0,
+            "type": 1,
+            "pubkey": "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
             "scriptPubKey": {
-                "asm": "OP_DUP OP_HASH160 1fc11f39be1729bf973a7ab6a615ca4729d64574 OP_EQUALVERIFY OP_CHECKSIG",
-                "desc": "addr(CKMnsLZUuUehkub6bqdNBxFtGhvQbAKAU8)#9dz4xqkv",
-                "hex": "76a9141fc11f39be1729bf973a7ab6a615ca4729d6457488ac",
-                "address": "CKMnsLZUuUehkub6bqdNBxFtGhvQbAKAU8",
-                "type": "pubkeyhash"
+                "asm": "1 79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+                "desc": "rawtr(79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798)#xsjqcczm",
+                "hex": "512079be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+                "address": "tcc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqz8t54j",
+                "type": "witness_v1_taproot"
             }
         }
     ],
-    "hex": "01000000021f5c38dfcf6f1a5f5a87c416076d392c87e6d41970d5ad5e477a02d66bde97580000000000fdffffff1f5c38dfcf6f1a5f5a87c416076d392c87e6d41970d5ad5e477a02d66bde97580000000000010000000180a81201000000001976a9141fc11f39be1729bf973a7ab6a615ca4729d6457488ac00000000"
+    "hex": "01000000021f5c38dfcf6f1a5f5a87c416076d392c87e6d41970d5ad5e477a02d66bde97580000000000fdffffff1f5c38dfcf6f1a5f5a87c416076d392c87e6d41970d5ad5e477a02d66bde97580000000000010000000180a81201000000000179be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179800000000"
 }

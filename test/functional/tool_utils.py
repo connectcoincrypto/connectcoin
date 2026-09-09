@@ -5,13 +5,20 @@
 # file COPYING or https://opensource.org/license/mit.
 """Exercise the utils via json-defined tests."""
 
-from test_framework.test_framework import BitcoinTestFramework
-
 import difflib
+import io
 import json
 import os
 import subprocess
+from decimal import Decimal
 from pathlib import Path
+
+from test_framework.address import byte_to_base58
+from test_framework.key import compute_xonly_pubkey, verify_schnorr
+from test_framework.messages import COIN, COutPoint, CTransaction, CTxIn, CTxInWitness, CTxOut
+from test_framework.script import SIGHASH_DEFAULT, TaprootSignatureHash
+from test_framework.test_framework import BitcoinTestFramework
+from test_framework.util import assert_equal
 
 
 class ToolUtils(BitcoinTestFramework):
@@ -34,6 +41,109 @@ class ToolUtils(BitcoinTestFramework):
         for i, test_obj in enumerate(input_data):
             self.log.debug(f"Running [{i}]: " + test_obj["description"])
             self.test_one(test_obj)
+        self.log.info(f"Passed {len(input_data)} utility fixtures; checking typed-output semantics")
+        self.test_typed_outputs()
+
+    def assert_model(self, args, tx):
+        """Compare CLI output to Python serialization, not another CLI snapshot."""
+        expected = tx.serialize_with_witness().hex()
+        result = subprocess.run(self.bins.tx_argv() + args, capture_output=True, text=True, timeout=60)
+        assert_equal(result.returncode, 0)
+        assert_equal(result.stderr, "")
+        assert_equal(result.stdout, expected + "\n")
+        decoded = subprocess.run(self.bins.tx_argv() + ["-json"] + args, capture_output=True, text=True, timeout=60)
+        assert_equal(decoded.returncode, 0)
+        assert_equal(decoded.stderr, "")
+        data = json.loads(decoded.stdout, parse_float=Decimal)
+        assert_equal(data["hex"], expected)
+        assert_equal(data["txid"], tx.txid_hex)
+        assert_equal(data["hash"], tx.wtxid_hex)
+        assert_equal(data["weight"], tx.get_weight())
+        assert_equal([out["type"] for out in data["vout"]], [out.type for out in tx.vout])
+        assert_equal([out["value"] for out in data["vout"]], [Decimal(out.nValue) / COIN for out in tx.vout])
+
+    def test_typed_outputs(self):
+        pubkey = compute_xonly_pubkey((1).to_bytes(32, "big"))[0]
+        target = "00" * 31 + "01"
+        tx = CTransaction()
+        tx.vin = [CTxIn(COutPoint(1, 0), b"", 0xffffffff)]
+        p2pk = CTxOut(1, b"\x51\x20" + pubkey)
+        domain = b"example.com"
+        p2c = CTxOut(2 * COIN, b"\x52" + bytes([len(domain)]) + domain + bytes.fromhex(target)[::-1] + b"\x01\x00\x00\x00")
+        tx.vout = [p2pk, p2c]
+        args = ["-create", f"in={1:064x}:0", f"outpubkey=0.0000000001:{pubkey.hex()}", f"outp2c=2:example.com:{target}:1"]
+        self.assert_model(args, tx)
+        self.assert_model([tx.serialize_without_witness().hex()], tx)
+
+        # Attaching a witness is intentionally not full TLS validation. It must
+        # preserve the txid/challenge and replace (not append to) its one item.
+        unwitnessed = tx.serialize_without_witness().hex()
+        original_txid = tx.txid_hex
+        tx.wit.vtxinwit = [CTxInWitness()]
+        tx.wit.vtxinwit[0].scriptWitness.stack = [b"\x02\xaa\x55"]
+        self.assert_model([unwitnessed, "p2cproof=0:02aa55"], tx)
+        tx.wit.vtxinwit[0].scriptWitness.stack = [b"\x02\x11"]
+        self.assert_model([unwitnessed, "p2cproof=0:02aa55", "p2cproof=0:0211"], tx)
+        assert_equal(tx.txid_hex, original_txid)
+        assert tx.wtxid_hex != original_txid
+
+        errors = [
+            (f"outp2c=2:example.com:{target}", "P2C output must be VALUE:DOMAIN:TARGET:ROOTS_VERSION"),
+            (f"outp2c=2:Example.com:{target}:1", "P2C domain must be canonical"),
+            (f"outp2c=2:example.com.:{target}:1", "P2C domain must be canonical"),
+            ("outp2c=2:example.com:01:1", "P2C target must be exactly 32 bytes of hex"),
+            (f"outp2c=2:example.com:{target}:0", "unsupported P2C root certificate version"),
+            (f"outp2c=2:example.com:{target}:2", "unsupported P2C root certificate version"),
+            ("p2cproof=0", "P2C proof must be INPUT_INDEX:PROOF"),
+            ("p2cproof=1:02", "invalid P2C proof input index"),
+            ("p2cproof=0:", "P2C proof must be non-empty hexadecimal data"),
+            ("p2cproof=0:xyz", "P2C proof must be non-empty hexadecimal data"),
+            ("p2cproof=0:0", "P2C proof must be non-empty hexadecimal data"),
+            ("outpubkey=0:" + "ff" * 32, "invalid TX output x-only pubkey"),
+            (f"outpubkey=0.00000000001:{pubkey.hex()}", "invalid TX output value"),
+            ("sign=ALL", "unknown sighash flag/sign option"),
+        ]
+        for command, error in errors:
+            self.test_one({"exec": "./connectcoin-tx", "args": [unwitnessed, command], "return_code": 1, "error_txt": error})
+
+        # Signing must have all input amounts/keys, not legacy P2PKH prevouts.
+        secret = (1).to_bytes(32, "big")  # Public, deterministic test key only.
+        key_arg = "set=privatekeys:" + json.dumps([byte_to_base58(secret + b"\x01", 178)])
+        prevout = {"txid": f"{1:064x}", "vout": 0, "scriptPubKey": p2pk.scriptPubKey.hex(), "amount": "3"}
+        signing = [unwitnessed, key_arg, "set=prevtxs:" + json.dumps([prevout]), "sign=DEFAULT"]
+        signed = subprocess.run(self.bins.tx_argv() + signing, capture_output=True, text=True, timeout=60)
+        assert_equal(signed.returncode, 0)
+        assert_equal(signed.stderr, "")
+        self.assert_signatures(signing, signed.stdout)
+        incomplete = [unwitnessed, f"in={2:064x}:1", key_arg, "set=prevtxs:" + json.dumps([prevout]), "sign=DEFAULT"]
+        self.test_one({"exec": "./connectcoin-tx", "args": incomplete, "return_code": 1, "error_txt": "prevtxs must contain every transaction input"})
+        second_prevout = dict(prevout, txid=f"{2:064x}", vout=1, amount="4")
+        complete = [unwitnessed, f"in={2:064x}:1", key_arg, "set=prevtxs:" + json.dumps([prevout, second_prevout]), "sign=DEFAULT"]
+        signed_pair = subprocess.run(self.bins.tx_argv() + complete, capture_output=True, text=True, timeout=60)
+        assert_equal(signed_pair.returncode, 0)
+        assert_equal(signed_pair.stderr, "")
+        self.assert_signatures(complete, signed_pair.stdout)
+
+    @staticmethod
+    def assert_signatures(args, output):
+        """Independently verify every successful CLI Schnorr signature."""
+        raw = json.loads(output)["hex"] if "-json" in args else output.strip()
+        tx = CTransaction()
+        tx.deserialize(io.BytesIO(bytes.fromhex(raw)))
+        prevouts = json.loads(next(arg[len("set=prevtxs:"):] for arg in args if arg.startswith("set=prevtxs:")))
+        by_outpoint = {(int(prev["txid"], 16), prev["vout"]): prev for prev in prevouts}
+        spent = []
+        for txin in tx.vin:
+            prev = by_outpoint[txin.prevout.hash, txin.prevout.n]
+            spent.append(CTxOut(int(Decimal(str(prev["amount"])) * COIN), bytes.fromhex(prev["scriptPubKey"])))
+        assert_equal(len(tx.wit.vtxinwit), len(tx.vin))
+        for index, (txin, witness, prevout) in enumerate(zip(tx.vin, tx.wit.vtxinwit, spent)):
+            assert_equal(txin.scriptSig, b"")
+            assert_equal(len(witness.scriptWitness.stack), 1)
+            signature = witness.scriptWitness.stack[0]
+            assert_equal(len(signature), 64)
+            assert_equal(prevout.type, CTxOut.TYPE_P2PK)
+            assert verify_schnorr(prevout.pubkey, signature, TaprootSignatureHash(tx, spent, SIGHASH_DEFAULT, index))
 
     def test_one(self, testObj):
         """Runs a single test, comparing output and RC to expected output and RC.
@@ -46,6 +156,8 @@ class ToolUtils(BitcoinTestFramework):
             execrun = self.bins.util_argv() + testObj["args"]
         elif testObj["exec"] == "./connectcoin-tx":
             execrun = self.bins.tx_argv() + testObj["args"]
+        else:
+            raise ValueError(f"Unknown utility executable: {testObj['exec']}")
 
         # Read the input data (if there is any)
         inputData = None
@@ -68,7 +180,10 @@ class ToolUtils(BitcoinTestFramework):
                 raise Exception(f"Output file {outputFn} does not have a file extension")
 
         # Run the test
-        res = subprocess.run(execrun, capture_output=True, text=True, input=inputData)
+        res = subprocess.run(execrun, capture_output=True, text=True, input=inputData, timeout=60)
+        # Report the real process failure before trying to parse empty stdout.
+        if res.returncode != testObj.get("return_code", 0):
+            raise Exception(f"Return code mismatch for {outputFn}; res: {str(res)}")
 
         if outputData:
             data_mismatch, formatting_mismatch = False, False
@@ -99,13 +214,6 @@ class ToolUtils(BitcoinTestFramework):
 
             assert not data_mismatch and not formatting_mismatch
 
-        # Compare the return code to the expected return code
-        wantRC = 0
-        if "return_code" in testObj:
-            wantRC = testObj['return_code']
-        if res.returncode != wantRC:
-            raise Exception(f"Return code mismatch for {outputFn}; res: {str(res)}")
-
         if "error_txt" in testObj:
             want_error = testObj["error_txt"]
             # A partial match instead of an exact match makes writing tests easier
@@ -115,6 +223,8 @@ class ToolUtils(BitcoinTestFramework):
         else:
             if res.stderr:
                 raise Exception(f"Unexpected error received: {res.stderr.rstrip()}\nres: {str(res)}")
+        if res.returncode == 0 and any(arg.startswith("sign=") for arg in testObj["args"]):
+            self.assert_signatures(testObj["args"], res.stdout)
 
 
 def parse_output(a, fmt):

@@ -4,8 +4,9 @@ This document specifies ConnectCoin transaction output type `2`, named
 `PAY_TO_CONNECT`. There is exactly one type-2 form: pay-to-domain. There is no
 pay-to-domain-certificate mode and output type `3` is unassigned.
 
-The purpose of P2C is to let an output be redeemed by proving a fresh TLS 1.3
-connection to a specified DNS domain. Verification is deterministic and does
+The purpose of P2C is to let an output be redeemed with a TLS 1.3
+server-authenticated transcript bound to a claim and a specified DNS domain.
+Verification is deterministic and does
 not make a network connection: every handshake message and certificate needed
 by consensus is supplied in the spending transaction witness.
 
@@ -33,7 +34,7 @@ update requires a new root version and an explicit consensus deployment.
 A type-2 input has an empty `scriptSig` and exactly one witness element. That
 element is at most 64 KiB and contains:
 
-1. one byte with proof version `1`;
+1. one byte with proof version `2`;
 2. the complete raw TLS `ClientHello` handshake message;
 3. the complete raw TLS `ServerHello` handshake message;
 4. the complete raw TLS `EncryptedExtensions` handshake message;
@@ -69,7 +70,7 @@ The `getp2cchallenge` RPC returns the exact byte string to place in
 
 ## TLS 1.3 profile
 
-Proof version 1 accepts this deliberately narrow profile:
+Proof version 2 accepts this deliberately narrow profile:
 
 - TLS 1.3 must be offered and selected.
 - The selected cipher suite must be TLS_AES_128_GCM_SHA256 (`0x1301`) or
@@ -102,20 +103,48 @@ The connection-work hash is:
 
 ```
 TaggedHash(
-    "ConnectCoin/P2C/work/v1",
+    "ConnectCoin/P2C/work/v2",
     ClientHello || ServerHello || EncryptedExtensions ||
-    Certificate || CertificateVerify
+    Certificate
 )
 ```
 
 The proof is accepted only when this hash, interpreted with ConnectCoin's
 normal 256-bit hash ordering, is less than or equal to the output's
-`connection_work_target`. A stricter target statistically requires more fresh
-connections before finding an acceptable transcript.
+`connection_work_target`.
+
+The entire `CertificateVerify` message is excluded from the work hash: its
+handshake header, signature scheme, length fields and signature bytes. It is
+still mandatory in the witness and its signature must authenticate the first
+four raw messages, including their handshake headers. Altering an equivalent
+ECDSA signature encoding or replacing `s` with `n-s` therefore gives the same
+work hash and no additional target attempts. Invalid signatures remain invalid.
+The proof-version byte is not hashed either; the parser accepts only version 2
+and the work tag provides version-specific domain separation.
+
+For uniform independent candidate hashes and inclusive target `T`, success
+probability is `(T + 1) / 2^256`. Interpreting candidate trials as connections
+requires an independent server: an operator holding its signing key can
+manufacture or selectively release authenticated responses locally. P2C does
+not prove a counted number of physical connections, completed application
+requests, or independent visitors.
 
 Each P2C output is a normal UTXO and can be spent only once. There is no
 remaining-claims counter and no consensus set of previously used connection
 hashes.
+
+## P2C v2 test-chain reset (September 9, 2026)
+
+Version 1 proofs are rejected on the reset networks. The claim challenge tag
+`ConnectCoin/P2C/claim/v1`, typed output payload and immutable root bundle
+version 1 are unchanged; these identifiers describe different formats.
+
+Testnet3, testnet4, signet and regtest have new genesis blocks and P2P message
+starts. The change is active from their genesis, not a height-based reinterpretation
+of the old chains. There is no conversion of old balances or automatic migration
+of old block databases. Preserve wallets and backups, and use a fresh chain data
+directory. All peer/seed nodes must update together. Mainnet remains unlaunched.
+See [testnet-beta.md](testnet-beta.md) for reset identifiers and operator steps.
 
 ## RPC and command-line workflow
 
@@ -127,7 +156,7 @@ connectcoin-cli getp2cchallenge "unsigned_transaction_hex" 0
 ```
 
 Use the returned `clienthello_random` in an external TLS proof generator. Once
-the complete version-1 proof is available, attach it without changing the
+the complete version-2 proof is available, attach it without changing the
 transaction ID:
 
 ```
@@ -143,9 +172,11 @@ connectcoin-tx outp2c=VALUE:DOMAIN:TARGET:ROOTS_VERSION
 connectcoin-tx p2cproof=INPUT_INDEX:PROOF
 ```
 
-ConnectCoin Core currently provides canonical parsing, validation, transaction
-construction, challenge calculation, and proof attachment. Network capture and
-generation of the TLS proof are external to the node for now.
+ConnectCoin Core provides parsing, validation, transaction construction,
+challenge calculation and proof attachment. Its opt-in wallet claim worker
+also captures TLS proofs; manual integrations may use an external generator.
+Consensus validation itself never contacts the domain. See
+[p2c-wallet.md](p2c-wallet.md) for the wallet workflow.
 
 ## Root-bundle provenance
 

@@ -4,8 +4,11 @@
 # file COPYING or https://opensource.org/license/mit/.
 """Mainnet must not start, including with old data; testnet4 is the beta default."""
 
+import json
+from pathlib import Path
 import subprocess
 
+from test_framework.messages import hash256
 from test_framework.socks5 import AddressType, Socks5Command, start_socks5_server
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import assert_equal, rpc_port, write_config
@@ -23,6 +26,7 @@ class MainnetDisabledTest(BitcoinTestFramework):
         self.add_nodes(self.num_nodes, self.extra_args)
 
     def run_test(self):
+        self.test_chainparams()
         node = self.nodes[0]
         conf = node.datadir_path / "connectcoin.conf"
         write_config(conf, n=0, chain="")
@@ -70,7 +74,8 @@ class MainnetDisabledTest(BitcoinTestFramework):
         for peer in self.nodes:
             assert_equal(peer.getblockchaininfo()["chain"], "testnet4")
             assert_equal(peer.getblockcount(), 0)
-            assert_equal(peer.getbestblockhash(), "06a1a1f822fed4a412aedb19315f1e85c963ad9b3c10e88ff12626b4b1389115")
+            assert_equal(peer.getbestblockhash(), "38cae555fb78f44c31e7d6859d0476252b321dae8b6312afefe0a45fc3fd112a")
+            self.check_genesis_display(peer, "testnet4")
         for directory in (old_index, old_chainstate):
             assert_equal(list(directory.iterdir()), [directory / "untouched"])
 
@@ -95,6 +100,67 @@ class MainnetDisabledTest(BitcoinTestFramework):
         saved_conf.rename(conf)
 
         self.test_beta_seed()
+        self.test_regtest_genesis_display()
+
+    def test_chainparams(self):
+        self.utility_chainparams = {}
+        if not self.is_connectcoin_util_compiled():
+            self.log.info("Skipping utility chain-parameter checks: connectcoin-util is not compiled")
+            return
+
+        self.log.info("Compiled utility parameters match every reset-chain fixture and the beta default")
+        fixture_dir = Path(self.config["environment"]["SRCDIR"]) / "test" / "functional" / "data" / "util"
+        cases = (
+            ([], "testnet4"),
+            (["-chain=main"], "mainnet"),
+            (["-regtest"], "regtest"),
+            (["-testnet"], "testnet"),
+            (["-testnet4"], "testnet4"),
+            (["-signet"], "signet"),
+            (["-signet", "-signetchallenge=60"], "signet-custom"),
+        )
+        for arguments, fixture in cases:
+            self.log.debug(f"Checking getchainparams {arguments or '[default]'} against {fixture}")
+            # The standalone utility reads hardcoded parameters without starting
+            # a node or opening a chain/wallet database for any of these networks.
+            result = subprocess.run(
+                self.get_binaries().util_argv() + arguments + ["getchainparams"],
+                capture_output=True, text=True, timeout=self.rpc_timeout,
+            )
+            assert_equal(result.returncode, 0)
+            expected = json.loads((fixture_dir / f"getchainparams-{fixture}.json").read_text(encoding="utf-8"))
+            actual = json.loads(result.stdout)
+            assert_equal(actual, expected)
+            self.utility_chainparams[fixture] = actual
+
+    def check_genesis_display(self, node, fixture):
+        if not self.is_connectcoin_util_compiled():
+            return
+        # Do not only compare with another hardcoded fixture: a fixture copied
+        # from the utility previously preserved its reversed-byte display bug.
+        rpc_hash = node.getblockhash(0)
+        header = bytes.fromhex(node.getblockheader(rpc_hash, False))
+        assert_equal(self.utility_chainparams[fixture]["genesis"], rpc_hash, hash256(header)[::-1].hex())
+
+    def test_regtest_genesis_display(self):
+        if not self.is_connectcoin_util_compiled():
+            return
+        self.log.info("Regtest utility genesis matches the RPC block ID and independently hashed header")
+        # Reuse an already-stopped isolated test node. This never reads a user's
+        # regtest data or requires another daemon to run concurrently.
+        node = self.nodes[0]
+        conf = node.datadir_path / "connectcoin.conf"
+        previous_config = conf.read_text(encoding="utf-8")
+        previous_chain = node.chain
+        try:
+            node.chain = "regtest"
+            write_config(conf, n=0, chain="regtest")
+            self.start_node(0)
+            self.check_genesis_display(node, "regtest")
+        finally:
+            self.stop_node(0)
+            node.chain = previous_chain
+            conf.write_text(previous_config, encoding="utf-8")
 
     def test_beta_seed(self):
         self.log.info("The beta default uses all its DNS seeds and respects -dnsseed=0")

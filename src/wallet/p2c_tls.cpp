@@ -151,6 +151,9 @@ util::Result<std::vector<unsigned char>> CaptureP2CTls(
         if (setup != 0) return util::Error{Untranslated(TlsError(setup))};
         mbedtls_ssl_set_bio(&connection.ssl, &connection, Connection::Send, Connection::Receive, nullptr);
     }
+    // Keep CertificateVerify in the v2 proof even though its entire message is
+    // excluded from connection work. The captured transcript must still be
+    // authenticated by Core's certificate/signature verification before use.
     std::vector<unsigned char> proof{P2C_PROOF_VERSION};
     std::string captured_order;
     while (!cancelled() && std::chrono::steady_clock::now() < deadline) {

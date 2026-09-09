@@ -35,7 +35,7 @@ def structural_proof(domain, challenge):
     extensions = extension(43, b"\x03\x04") + extension(51, u16(29) + u16(32) + b"\x02" * 32)
     server = b"\x03\x03" + b"\x03" * 32 + b"\x00\x13\x01\x00" + u16(len(extensions)) + extensions
     certificate = b"\x00" + u24(6) + u24(1) + b"\x30\x00\x00"
-    return (b"\x01" + handshake(1, client) + handshake(2, server) + handshake(8, b"\x00\x00")
+    return (b"\x02" + handshake(1, client) + handshake(2, server) + handshake(8, b"\x00\x00")
             + handshake(11, certificate) + handshake(15, b"\x04\x03\x00\x01\x30")).hex()
 
 
@@ -134,6 +134,9 @@ class P2CClaimTest(BitcoinTestFramework):
         assert_equal(claimant.getaddressinfo(claimant.preparep2cclaim(*outpoint, address="")["address"])["ismine"], True)
         proof = structural_proof(prepared["domain"], prepared["clienthello_random"])
         assert_raises_rpc_error(-4, "P2C proof contains an invalid DER certificate", claimant.submitp2cclaim, prepared["hex"], proof)
+        self.log.info("The reset network rejects complete legacy version-1 proofs")
+        legacy_proof = "01" + proof[2:]
+        assert_raises_rpc_error(-4, "unsupported P2C proof version", claimant.submitp2cclaim, prepared["hex"], legacy_proof)
         assert_raises_rpc_error(-4, "Invalid P2C proof:", claimant.submitp2cclaim, prepared["hex"], "01")
         for invalid in ("", "xyz", "0", "00" * 65537):
             assert_raises_rpc_error(-8, "proof must encode", claimant.submitp2cclaim, prepared["hex"], invalid)

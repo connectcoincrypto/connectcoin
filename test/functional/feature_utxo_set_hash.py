@@ -8,6 +8,7 @@ from test_framework.messages import (
     CBlock,
     COutPoint,
     from_hex,
+    hash256,
 )
 from test_framework.crypto.muhash import MuHash3072
 from test_framework.test_framework import BitcoinTestFramework
@@ -44,6 +45,7 @@ class UTXOSetHashTest(BitcoinTestFramework):
         # Serialize the outputs that should be in the UTXO set and add them to
         # a MuHash object
         muhash = MuHash3072()
+        serialized_coins = {}
 
         for height, block in blocks_with_heights:
             # The spendable genesis output remains, while the first mined
@@ -61,15 +63,21 @@ class UTXOSetHashTest(BitcoinTestFramework):
                     data += tx_out.serialize()
 
                     muhash.insert(data)
+                    serialized_coins[(data[:32], n)] = data
 
         finalized = muhash.digest()
         node_muhash = node.gettxoutsetinfo("muhash")['muhash']
 
         assert_equal(finalized[::-1].hex(), node_muhash)
+        # LevelDB groups transactions by their serialized hash bytes, then
+        # Core orders each transaction's outputs by numeric vout index.
+        serialized_hash = hash256(b''.join(serialized_coins[key] for key in sorted(serialized_coins)))[::-1].hex()
+        assert_equal(serialized_hash, node.gettxoutsetinfo()['hash_serialized_3'])
 
         self.log.info("Test deterministic UTXO set hash results")
-        assert_equal(node.gettxoutsetinfo()['hash_serialized_3'], "42699628ad98c031b1a9d789ec9e552f554032591f6d6cb81f40630577113a7f")
-        assert_equal(node.gettxoutsetinfo("muhash")['muhash'], "b090adf552dc0cce14ee0f2d5b91bffd5e5d7f5bd84da71d4b35839e102e0904")
+        self.log.info("Independently calculated commitments: %s / %s", serialized_hash, node_muhash)
+        assert_equal(serialized_hash, "a544c68fd763c3f2ade7eb325406936fcc94f807fc3e83e7f1474d7b0e867c1b")
+        assert_equal(finalized[::-1].hex(), "2146e399748cecf18775e5aa5a71fdbe5be90f86e21d97c24d703566bf5f3a7e")
 
     def run_test(self):
         self.test_muhash_implementation()

@@ -88,6 +88,10 @@ public:
 
     const Consensus::Params& GetConsensus() const { return consensus; }
     const MessageStartChars& MessageStart() const { return pchMessageStart; }
+    /** Stable SQLite wallet application ID, independent of genesis/P2P resets.
+     * Changing it would prevent loading existing wallets and their backups.
+     */
+    const MessageStartChars& WalletDatabaseId() const { return m_wallet_database_id; }
     uint16_t GetDefaultPort() const { return nDefaultPort; }
     std::vector<int> GetAvailableSnapshotHeights() const;
 
@@ -193,6 +197,7 @@ protected:
 
     Consensus::Params consensus;
     MessageStartChars pchMessageStart;
+    MessageStartChars m_wallet_database_id{};
     uint16_t nDefaultPort;
     uint64_t nPruneAfterHeight;
     uint64_t m_assumed_blockchain_size;

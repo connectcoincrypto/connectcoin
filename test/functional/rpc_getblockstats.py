@@ -2,202 +2,175 @@
 # Copyright (c) 2017-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
+"""Compare every getblockstats field with native typed transactions.
 
-#
-# Test getblockstats rpc call
-#
+The oracle uses serialized blocks and known previous outputs, not captured
+getblockstats responses. Bitcoin Script/OP_RETURN fixtures are not applicable.
+"""
+from decimal import Decimal
+from io import BytesIO
 
-from test_framework.blocktools import COINBASE_MATURITY
-from test_framework.messages import COIN
+from test_framework.messages import CBlock, COIN, CTxOut
 from test_framework.test_framework import BitcoinTestFramework
-from test_framework.util import (
-    assert_equal,
-    assert_raises_rpc_error,
-    wallet_importprivkey,
-)
-import json
-import os
+from test_framework.util import assert_equal, assert_raises_rpc_error
+from test_framework.wallet import MiniWallet
 
-TESTSDIR = os.path.dirname(os.path.realpath(__file__))
+
+def median(values):
+    if not values:
+        return 0
+    values = sorted(values)
+    middle = len(values) // 2
+    return values[middle] if len(values) % 2 else (values[middle - 1] + values[middle]) // 2
+
 
 class GetblockstatsTest(BitcoinTestFramework):
-
-    start_height = 101
-    max_stat_pos = 2
-
-    def add_options(self, parser):
-        parser.add_argument('--gen-test-data', dest='gen_test_data',
-                            default=False, action='store_true',
-                            help='Generate test data')
-        parser.add_argument('--test-data', dest='test_data',
-                            default='data/rpc_getblockstats.json',
-                            action='store', metavar='FILE',
-                            help='Test data file')
-
     def set_test_params(self):
         self.num_nodes = 1
         self.setup_clean_chain = True
+        self.wallet_names = []  # Keep coverage available without a compiled wallet.
 
-    def skip_test_if_missing_module(self):
-        if self.options.gen_test_data:
-            self.skip_if_no_wallet()
+    def expected_stats(self, height, blockhash, block, coins, times):
+        # The RPC adds a 36-byte outpoint and 4-byte height per UTXO.
+        overhead = 40
+        fees, sizes, weights, rates = [], [], [], []
+        inputs = total_out = output_bytes = spent_bytes = 0
+        outputs = sum(len(tx.vout) for tx in block.vtx)
+        for index, tx in enumerate(block.vtx):
+            spent = [] if index == 0 else [coins.pop((vin.prevout.hash, vin.prevout.n)) for vin in tx.vin]
+            spent_bytes += sum(len(out.serialize()) + overhead for out in spent)
+            output_bytes += sum(len(out.serialize()) + overhead for out in tx.vout)
+            for n, out in enumerate(tx.vout):
+                assert out.type in (CTxOut.TYPE_P2PK, CTxOut.TYPE_PAY_TO_CONNECT)
+                coins[(tx.txid_int, n)] = out
+            if index == 0:
+                continue
+            inputs += len(tx.vin)
+            amount = sum(out.nValue for out in tx.vout)
+            total_out += amount
+            fees.append(sum(out.nValue for out in spent) - amount)
+            sizes.append(len(tx.serialize()))
+            weights.append(3 * len(tx.serialize_without_witness()) + len(tx.serialize()))
+            rates.append(4 * fees[-1] // weights[-1])
 
-    def get_stats(self):
-        return [self.nodes[0].getblockstats(hash_or_height=self.start_height + i) for i in range(self.max_stat_pos+1)]
-
-    def generate_test_data(self, filename):
-        mocktime = 1525107225
-        self.nodes[0].setmocktime(mocktime)
-        self.nodes[0].createwallet(wallet_name='test')
-        wallet = self.nodes[0].get_wallet_rpc('test')
-        privkey = self.nodes[0].get_deterministic_priv_key().key
-        wallet_importprivkey(wallet, privkey, 0)
-
-        self.generate(self.nodes[0], COINBASE_MATURITY + 1)
-
-        address = self.nodes[0].get_deterministic_priv_key().address
-        wallet.sendtoaddress(address=address, amount=10, subtractfeefromamount=True)
-        self.generate(self.nodes[0], 1)
-
-        wallet.sendtoaddress(address=address, amount=10, subtractfeefromamount=True)
-        wallet.sendtoaddress(address=address, amount=10, subtractfeefromamount=False)
-        self.fee_rate=300
-        wallet.sendtoaddress(address=address, amount=1, subtractfeefromamount=True, fee_rate=self.fee_rate)
-        # Send to OP_RETURN output to test its exclusion from statistics
-        wallet.send(outputs={"data": "21"}, fee_rate=self.fee_rate)
-        self.sync_all()
-        self.generate(self.nodes[0], 1)
-
-        self.expected_stats = self.get_stats()
-
-        blocks = []
-        tip = self.nodes[0].getbestblockhash()
-        blockhash = None
-        height = 0
-        while tip != blockhash:
-            blockhash = self.nodes[0].getblockhash(height)
-            blocks.append(self.nodes[0].getblock(blockhash, 0))
-            height += 1
-
-        to_dump = {
-            'blocks': blocks,
-            'mocktime': int(mocktime),
-            'stats': self.expected_stats,
+        count = len(fees)
+        total_weight = sum(weights)
+        percentiles = []
+        for percentile in (10, 25, 50, 75, 90):
+            cumulative = selected = 0
+            for rate, weight in sorted(zip(rates, weights)):
+                cumulative += weight
+                if cumulative * 100 >= total_weight * percentile:
+                    selected = rate
+                    break
+            percentiles.append(selected)
+        witnessed = [i for i, tx in enumerate(block.vtx[1:]) if not tx.wit.is_null()]
+        subsidy = 10_000_000 * COIN if height == 0 else (15 * COIN >> (height // 150))
+        if height:
+            subsidy -= subsidy * min(total_weight, 50_000_000) // 500_000_000
+        return {
+            "avgfee": sum(fees) // count if count else 0,
+            "avgfeerate": 4 * sum(fees) // total_weight if total_weight else 0,
+            "avgtxsize": sum(sizes) // count if count else 0,
+            "blockhash": blockhash,
+            "feerate_percentiles": percentiles,
+            "height": height,
+            "ins": inputs,
+            "maxfee": max(fees, default=0),
+            "maxfeerate": max(rates, default=0),
+            "maxtxsize": max(sizes, default=0),
+            "medianfee": median(fees),
+            "mediantime": sorted(times[-11:])[len(times[-11:]) // 2],
+            "mediantxsize": median(sizes),
+            "minfee": min(fees, default=0),
+            "minfeerate": min(rates, default=0),
+            "mintxsize": min(sizes, default=0),
+            "outs": outputs,
+            "subsidy": subsidy,
+            "swtotal_size": sum(sizes[i] for i in witnessed),
+            "swtotal_weight": sum(weights[i] for i in witnessed),
+            "swtxs": len(witnessed),
+            "time": block.nTime,
+            "total_out": total_out,
+            "total_size": sum(sizes),
+            "total_weight": total_weight,
+            "totalfee": sum(fees),
+            "txs": len(block.vtx),
+            "utxo_increase": outputs - inputs,
+            "utxo_size_inc": output_bytes - spent_bytes,
+            # Both native types create UTXOs; Script burns do not exist.
+            "utxo_increase_actual": outputs - inputs,
+            "utxo_size_inc_actual": output_bytes - spent_bytes,
         }
-        with open(filename, 'w') as f:
-            json.dump(to_dump, f, sort_keys=True, indent=2)
-
-    def load_test_data(self, filename):
-        with open(filename, 'r') as f:
-            d = json.load(f)
-            blocks = d['blocks']
-            mocktime = d['mocktime']
-            self.expected_stats = d['stats']
-
-        # Set the timestamps from the file so that the nodes can get out of Initial Block Download
-        self.nodes[0].setmocktime(mocktime)
-        self.sync_all()
-
-        for b in blocks:
-            self.nodes[0].submitblock(b)
-
 
     def run_test(self):
-        test_data = os.path.join(TESTSDIR, self.options.test_data)
-        if self.options.gen_test_data:
-            self.generate_test_data(test_data)
-        else:
-            self.load_test_data(test_data)
+        node = self.nodes[0]
+        wallet = MiniWallet(node)
+        self.log.info("Create empty, single-transaction, and mixed typed-output blocks")
+        self.generate(wallet, 101)
+        single = wallet.send_self_transfer(from_node=node, fee=Decimal("0.000060"))
+        self.generate(wallet, 1)
+        parent = wallet.send_self_transfer_multi(
+            from_node=node, utxos_to_spend=[single["new_utxo"]], num_outputs=3, fee_per_output=300_000)
+        wallet.send_self_transfer_multi(
+            from_node=node, utxos_to_spend=parent["new_utxos"][:2], num_outputs=4, fee_per_output=400_000)
+        bounty = wallet.create_self_transfer(
+            utxo_to_spend=parent["new_utxos"][2], fee=Decimal("0.00010"))["tx"]
+        bounty.vout[0].nValue -= COIN
+        domain = b"stats.example"
+        p2c_script = b"\x52" + bytes([len(domain)]) + domain + b"\xff" * 32 + (1).to_bytes(4, "little")
+        bounty.vout.append(CTxOut(COIN, p2c_script))
+        wallet.sign_tx(bounty, utxos_to_spend=[parent["new_utxos"][2]])
+        wallet.sendrawtransaction(from_node=node, tx_hex=bounty.serialize().hex())
+        wallet.send_self_transfer(from_node=node, confirmed_only=True, fee=Decimal("0.000080"))
+        assert_equal(len(node.getrawmempool()), 4)
+        self.generate(wallet, 1)
+        assert_equal(node.getrawmempool(), [])
 
-        self.sync_all()
-        stats = self.get_stats()
+        coins, times, expected = {}, [], {}
+        for height in range(104):
+            blockhash = node.getblockhash(height)
+            block = CBlock()
+            block.deserialize(BytesIO(bytes.fromhex(node.getblock(blockhash, 0))))
+            times.append(block.nTime)
+            stats = self.expected_stats(height, blockhash, block, coins, times)
+            if height in (0, 101, 102, 103):
+                expected[height] = stats
 
-        # Make sure all valid statistics are included but nothing else is
-        expected_keys = self.expected_stats[0].keys()
-        assert_equal(set(stats[0].keys()), set(expected_keys))
+        self.log.info("Check every statistic, individual selection, and hash/height lookup")
+        for height, stats in expected.items():
+            assert_equal(node.getblockstats(height), stats)
+            assert_equal(node.getblockstats(stats["blockhash"]), stats)
+            for name, value in stats.items():
+                assert_equal(node.getblockstats(height, [name]), {name: value})
+            names = ["minfee", "maxfee", "utxo_size_inc_actual"]
+            assert_equal(node.getblockstats(height, names), {name: stats[name] for name in names})
+        assert_equal(expected[0]["utxo_size_inc_actual"], 81)
+        assert_equal(expected[101]["totalfee"], 0)
+        assert_equal(expected[103]["txs"], 5)
+        assert expected[103]["subsidy"] < 15 * COIN
+        assert expected[103]["maxfeerate"] > expected[103]["minfeerate"]
 
-        assert_equal(stats[0]['height'], self.start_height)
-        assert_equal(stats[self.max_stat_pos]['height'], self.start_height + self.max_stat_pos)
-
-        for i in range(self.max_stat_pos+1):
-            self.log.info('Checking block %d' % (i))
-            assert_equal(stats[i], self.expected_stats[i])
-
-            # Check selecting block by hash too
-            blockhash = self.expected_stats[i]['blockhash']
-            stats_by_hash = self.nodes[0].getblockstats(hash_or_height=blockhash)
-            assert_equal(stats_by_hash, self.expected_stats[i])
-
-        # Make sure each stat can be queried on its own
-        for stat in expected_keys:
-            for i in range(self.max_stat_pos+1):
-                result = self.nodes[0].getblockstats(hash_or_height=self.start_height + i, stats=[stat])
-                assert_equal(list(result.keys()), [stat])
-                if result[stat] != self.expected_stats[i][stat]:
-                    self.log.info('result[%s] (%d) failed, %r != %r' % (
-                        stat, i, result[stat], self.expected_stats[i][stat]))
-                assert_equal(result[stat], self.expected_stats[i][stat])
-
-        # Make sure only the selected statistics are included (more than one)
-        some_stats = {'minfee', 'maxfee'}
-        stats = self.nodes[0].getblockstats(hash_or_height=1, stats=list(some_stats))
-        assert_equal(set(stats.keys()), some_stats)
-
-        # Test invalid parameters raise the proper json exceptions
-        tip = self.start_height + self.max_stat_pos
-        assert_raises_rpc_error(-8, 'Target block height %d after current tip %d' % (tip+1, tip),
-                                self.nodes[0].getblockstats, hash_or_height=tip+1)
-        assert_raises_rpc_error(-8, 'Target block height %d is negative' % (-1),
-                                self.nodes[0].getblockstats, hash_or_height=-1)
-
-        # Make sure not valid stats aren't allowed
-        inv_sel_stat = 'asdfghjkl'
-        inv_stats = [
-            [inv_sel_stat],
-            ['minfee', inv_sel_stat],
-            [inv_sel_stat, 'minfee'],
-            ['minfee', inv_sel_stat, 'maxfee'],
-        ]
-        for inv_stat in inv_stats:
-            assert_raises_rpc_error(-8, f"Invalid selected statistic '{inv_sel_stat}'",
-                                    self.nodes[0].getblockstats, hash_or_height=1, stats=inv_stat)
-
-        # Make sure we aren't always returning inv_sel_stat as the culprit stat
-        assert_raises_rpc_error(-8, f"Invalid selected statistic 'aaa{inv_sel_stat}'",
-                                self.nodes[0].getblockstats, hash_or_height=1, stats=['minfee', f'aaa{inv_sel_stat}'])
-        # Mainchain's genesis block shouldn't be found on regtest
-        assert_raises_rpc_error(-5, 'Block not found', self.nodes[0].getblockstats,
-                                hash_or_height='000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f')
-
-        # Invalid number of args
-        assert_raises_rpc_error(-1, 'getblockstats hash_or_height ( stats )', self.nodes[0].getblockstats, '00', 1, 2)
-        assert_raises_rpc_error(-1, 'getblockstats hash_or_height ( stats )', self.nodes[0].getblockstats)
-
-        self.log.info('Test block height 0')
-        genesis_stats = self.nodes[0].getblockstats(0)
-        assert_equal(genesis_stats["blockhash"], "197dd70fa5df793d1b9e4684f3c9608afcdae4b86f935c04e8187a48def347f6")
-        assert_equal(genesis_stats["utxo_increase"], 1)
-        assert_equal(genesis_stats["utxo_size_inc"], 116)
-        assert_equal(genesis_stats["utxo_increase_actual"], 1)
-        assert_equal(genesis_stats["utxo_size_inc_actual"], 116)
-        assert_equal(genesis_stats["subsidy"], 10_000_000 * COIN)
-
-        self.log.info('Test tip including OP_RETURN')
-        tip_stats = self.nodes[0].getblockstats(tip)
-        assert_equal(tip_stats["utxo_increase"], 6)
-        assert_equal(tip_stats["utxo_size_inc"], 444)
-        assert_equal(tip_stats["utxo_increase_actual"], 4)
-        assert_equal(tip_stats["utxo_size_inc_actual"], 305)
-
-        self.log.info("Test when only header is known")
-        block = self.generateblock(self.nodes[0], output="raw(55)", transactions=[], submit=False)
-        self.nodes[0].submitheader(block["hex"])
-        assert_raises_rpc_error(-1, "Block not available (not fully downloaded)", lambda: self.nodes[0].getblockstats(block['hash']))
-
-        self.log.info('Test when block is missing')
-        (self.nodes[0].blocks_path / 'blk00000.dat').rename(self.nodes[0].blocks_path / 'blk00000.dat.backup')
-        assert_raises_rpc_error(-1, 'Block not found on disk', self.nodes[0].getblockstats, hash_or_height=1)
-        (self.nodes[0].blocks_path / 'blk00000.dat.backup').rename(self.nodes[0].blocks_path / 'blk00000.dat')
+        self.log.info("Retain invalid-argument and unavailable-block coverage")
+        assert_raises_rpc_error(-8, "Target block height 104 after current tip 103", node.getblockstats, 104)
+        assert_raises_rpc_error(-8, "Target block height -1 is negative", node.getblockstats, -1)
+        for names in (["invalid"], ["minfee", "invalid"], ["invalid", "minfee"], ["minfee", "invalid", "maxfee"]):
+            assert_raises_rpc_error(-8, "Invalid selected statistic 'invalid'", node.getblockstats, 101, names)
+        assert_raises_rpc_error(-8, "Invalid selected statistic 'aaa'", node.getblockstats, 101, ["invalid", "aaa"])
+        assert_raises_rpc_error(-5, "Block not found", node.getblockstats,
+                               "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f")
+        assert_raises_rpc_error(-1, "getblockstats hash_or_height ( stats )", node.getblockstats, "00", 1, 2)
+        assert_raises_rpc_error(-1, "getblockstats hash_or_height ( stats )", node.getblockstats)
+        header_only = self.generateblock(node, output=wallet.get_address(), transactions=[], submit=False)
+        node.submitheader(header_only["hex"][:160])
+        assert_raises_rpc_error(-1, "Block not available (not fully downloaded)", node.getblockstats, header_only["hash"])
+        block_file = node.blocks_path / "blk00000.dat"
+        backup = node.blocks_path / "blk00000.dat.backup"
+        block_file.rename(backup)
+        try:
+            assert_raises_rpc_error(-1, "Block not found on disk", node.getblockstats, 1)
+        finally:
+            backup.rename(block_file)
 
 
 if __name__ == '__main__':

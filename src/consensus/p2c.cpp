@@ -306,10 +306,10 @@ bool ParseServerHello(std::span<const unsigned char> body, const ClientHelloStat
         !reader.ReadU16(cipher_suite) || !reader.ReadU8(compression) || compression != 0) {
         return SetError(error, "invalid canonical P2C ServerHello");
     }
-    if (std::ranges::equal(random, HELLO_RETRY_REQUEST_RANDOM)) return SetError(error, "HelloRetryRequest is forbidden in P2C v1");
+    if (std::ranges::equal(random, HELLO_RETRY_REQUEST_RANDOM)) return SetError(error, "HelloRetryRequest is forbidden in P2C v2");
     if (!std::ranges::equal(session_id, client.legacy_session_id)) return SetError(error, "ServerHello session id mismatch");
     if (cipher_suite != TLS_AES_128_GCM_SHA256 && cipher_suite != TLS_CHACHA20_POLY1305_SHA256) {
-        return SetError(error, "P2C v1 requires a SHA-256 TLS 1.3 cipher suite");
+        return SetError(error, "P2C v2 requires a SHA-256 TLS 1.3 cipher suite");
     }
     if (std::ranges::find(client.cipher_suites, cipher_suite) == client.cipher_suites.end()) {
         return SetError(error, "ServerHello selected an unoffered cipher suite");
@@ -342,7 +342,7 @@ bool ParseEncryptedExtensions(std::span<const unsigned char> body, std::string& 
     ByteReader reader{body};
     std::vector<TlsExtension> extensions;
     if (!ReadExtensions(reader, extensions, error) || !reader.Empty()) return false;
-    if (FindExtension(extensions, TLS_EXTENSION_EARLY_DATA)) return SetError(error, "TLS early_data is forbidden in P2C v1");
+    if (FindExtension(extensions, TLS_EXTENSION_EARLY_DATA)) return SetError(error, "TLS early_data is forbidden in P2C v2");
     return true;
 }
 
@@ -472,12 +472,15 @@ bool ParseP2CTlsProof(std::span<const unsigned char> encoded_proof,
     }
     transcript.Finalize(parsed.transcript_hash.begin());
 
-    HashWriter work{TaggedHash("ConnectCoin/P2C/work/v1")};
+    // Hash exactly the raw transcript authenticated by CertificateVerify. The
+    // entire CertificateVerify message (including its header and lengths) is
+    // excluded so equivalent signature encodings cannot create more work
+    // candidates. Parsing it above and verifying its signature remain mandatory.
+    HashWriter work{TaggedHash("ConnectCoin/P2C/work/v2")};
     WriteRaw(work, parsed.client_hello);
     WriteRaw(work, parsed.server_hello);
     WriteRaw(work, parsed.encrypted_extensions);
     WriteRaw(work, parsed.certificate);
-    WriteRaw(work, parsed.certificate_verify);
     parsed.connection_work_hash = work.GetSHA256();
     return true;
 }

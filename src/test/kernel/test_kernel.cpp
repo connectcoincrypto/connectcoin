@@ -651,17 +651,17 @@ BOOST_AUTO_TEST_CASE(cck_chainman_tests)
     Logger logger{std::make_unique<TestLog>()};
     auto test_directory{TestDirectory{"chainman_test_connectcoin_kernel"}};
 
-    { // test with default context
+    { // The Kernel's default mainnet has no launch genesis.
         Context context{};
         ChainstateManagerOptions chainman_opts{context, PathToString(test_directory.m_directory), PathToString(test_directory.m_directory / "blocks")};
-        ChainMan chainman{context, chainman_opts};
+        BOOST_CHECK_THROW(ChainMan(context, chainman_opts), std::runtime_error);
     }
 
-    { // test with default context options
+    { // Default context options must reject the unlaunched chain too.
         ContextOptions options{};
         Context context{options};
         ChainstateManagerOptions chainman_opts{context, PathToString(test_directory.m_directory), PathToString(test_directory.m_directory / "blocks")};
-        ChainMan chainman{context, chainman_opts};
+        BOOST_CHECK_THROW(ChainMan(context, chainman_opts), std::runtime_error);
     }
     { // null or empty data_directory or blocks_directory are not allowed
         Context context{};
@@ -679,7 +679,7 @@ BOOST_AUTO_TEST_CASE(cck_chainman_tests)
     }
 
     auto notifications{std::make_shared<TestKernelNotifications>()};
-    auto context{create_context(notifications, ChainType::MAINNET)};
+    auto context{create_context(notifications, ChainType::REGTEST)};
 
     ChainstateManagerOptions chainman_opts{context, PathToString(test_directory.m_directory), PathToString(test_directory.m_directory / "blocks")};
     chainman_opts.SetWorkerThreads(4);
@@ -722,7 +722,7 @@ std::unique_ptr<ChainMan> create_chainman(TestDirectory& test_directory,
 void chainman_reindex_test(TestDirectory& test_directory)
 {
     auto notifications{std::make_shared<TestKernelNotifications>()};
-    auto context{create_context(notifications, ChainType::MAINNET)};
+    auto context{create_context(notifications, ChainType::REGTEST)};
     auto chainman{create_chainman(
         test_directory, /*reindex=*/true, /*wipe_chainstate=*/false,
         /*block_tree_db_in_memory=*/false, /*chainstate_db_in_memory=*/false, context)};
@@ -767,7 +767,7 @@ void chainman_reindex_test(TestDirectory& test_directory)
 void chainman_reindex_chainstate_test(TestDirectory& test_directory)
 {
     auto notifications{std::make_shared<TestKernelNotifications>()};
-    auto context{create_context(notifications, ChainType::MAINNET)};
+    auto context{create_context(notifications, ChainType::REGTEST)};
     auto chainman{create_chainman(
         test_directory, /*reindex=*/false, /*wipe_chainstate=*/true,
         /*block_tree_db_in_memory=*/false, /*chainstate_db_in_memory=*/false, context)};
@@ -777,25 +777,25 @@ void chainman_reindex_chainstate_test(TestDirectory& test_directory)
     BOOST_CHECK(chainman->ImportBlocks(import_files));
 }
 
-void chainman_mainnet_validation_test(TestDirectory& test_directory)
+void chainman_regtest_validation_test(TestDirectory& test_directory)
 {
     auto notifications{std::make_shared<TestKernelNotifications>()};
     auto validation_interface{std::make_shared<TestValidationInterface>()};
-    auto context{create_context(notifications, ChainType::MAINNET, validation_interface)};
+    auto context{create_context(notifications, ChainType::REGTEST, validation_interface)};
     auto chainman{create_chainman(
         test_directory, /*reindex=*/false, /*wipe_chainstate=*/false,
         /*block_tree_db_in_memory=*/false, /*chainstate_db_in_memory=*/false, context)};
 
-    // mainnet block 1
-    auto raw_block = hex_string_to_byte_vec(MAINNET_BLOCK_1_DATA);
+    // Use an active-chain block; the historical mainnet fixture is decode-only.
+    auto raw_block = hex_string_to_byte_vec(REGTEST_BLOCK_DATA[0]);
     Block block{raw_block};
     BlockHeader header{block.GetHeader()};
     TransactionView tx{block.GetTransaction(block.CountTransactions() - 1)};
-    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(tx.Txid().ToBytes()), "b6d6f00f0c1bf525e2998e042cc270aa0b8fb3645da3559e0857bec8bf79d08a");
-    BOOST_CHECK_EQUAL(header.Version(), 4);
-    BOOST_CHECK_EQUAL(header.Timestamp(), 1787596841);
-    BOOST_CHECK_EQUAL(header.Bits(), 0x1f00ffff);
-    BOOST_CHECK_EQUAL(header.Nonce(), 69871);
+    BOOST_CHECK_EQUAL(byte_span_to_hex_string_reversed(tx.Txid().ToBytes()), "dd4b10b94efe44615240e810a137b57e8d13e9bd4c0eb63672017707132c7493");
+    BOOST_CHECK_EQUAL(header.Version(), 0x20000000);
+    BOOST_CHECK_EQUAL(header.Timestamp(), 1788120780);
+    BOOST_CHECK_EQUAL(header.Bits(), 0x207fffff);
+    BOOST_CHECK_EQUAL(header.Nonce(), 0);
     BOOST_CHECK_EQUAL(tx.CountInputs(), 1);
     Transaction tx2 = tx;
     BOOST_CHECK_EQUAL(tx2.CountInputs(), 1);
@@ -925,10 +925,10 @@ BOOST_AUTO_TEST_CASE(cck_check_block_context_free)
                           HasReason{"failed to instantiate cck object"});
 }
 
-BOOST_AUTO_TEST_CASE(cck_chainman_mainnet_tests)
+BOOST_AUTO_TEST_CASE(cck_chainman_active_chain_tests)
 {
-    auto test_directory{TestDirectory{"mainnet_test_connectcoin_kernel"}};
-    chainman_mainnet_validation_test(test_directory);
+    auto test_directory{TestDirectory{"active_chain_test_connectcoin_kernel"}};
+    chainman_regtest_validation_test(test_directory);
     chainman_reindex_test(test_directory);
     chainman_reindex_chainstate_test(test_directory);
 }
@@ -950,6 +950,7 @@ BOOST_AUTO_TEST_CASE(cck_block_hash_tests)
 
 BOOST_AUTO_TEST_CASE(cck_block_tree_entry_tests)
 {
+    Logger logger{std::make_unique<TestLog>()};
     auto test_directory{TestDirectory{"block_tree_entry_test_connectcoin_kernel"}};
     auto notifications{std::make_shared<TestKernelNotifications>()};
     auto context{create_context(notifications, ChainType::REGTEST)};
@@ -965,8 +966,9 @@ BOOST_AUTO_TEST_CASE(cck_block_tree_entry_tests)
     for (size_t i{0}; i < 3; i++) {
         Block block{hex_string_to_byte_vec(REGTEST_BLOCK_DATA[i])};
         bool new_block{false};
-        chainman->ProcessBlock(block, &new_block);
-        BOOST_CHECK(new_block);
+        BOOST_REQUIRE_MESSAGE(chainman->ProcessBlock(block, &new_block), "Rejected regtest block " << i + 1);
+        BOOST_REQUIRE_MESSAGE(new_block, "Regtest block was not processed at height " << i + 1);
+        BOOST_REQUIRE_EQUAL(chainman->GetChain().Height(), i + 1);
     }
 
     auto chain{chainman->GetChain()};
@@ -1005,11 +1007,13 @@ BOOST_AUTO_TEST_CASE(cck_chainman_in_memory_tests)
         in_memory_test_directory, /*reindex=*/false, /*wipe_chainstate=*/false,
         /*block_tree_db_in_memory=*/true, /*chainstate_db_in_memory=*/true, context)};
 
+    int height{0};
     for (auto& raw_block : REGTEST_BLOCK_DATA) {
         Block block{hex_string_to_byte_vec(raw_block)};
         bool new_block{false};
-        chainman->ProcessBlock(block, &new_block);
-        BOOST_CHECK(new_block);
+        BOOST_REQUIRE(chainman->ProcessBlock(block, &new_block));
+        BOOST_REQUIRE(new_block);
+        BOOST_REQUIRE_EQUAL(chainman->GetChain().Height(), ++height);
     }
 
     BOOST_CHECK(fs::exists(in_memory_test_directory.m_directory / "blocks"));
@@ -1021,6 +1025,7 @@ BOOST_AUTO_TEST_CASE(cck_chainman_in_memory_tests)
 
 BOOST_AUTO_TEST_CASE(cck_chainman_regtest_tests)
 {
+    Logger logger{std::make_unique<TestLog>()};
     auto test_directory{TestDirectory{"regtest_test_connectcoin_kernel"}};
 
     auto notifications{std::make_shared<TestKernelNotifications>()};
@@ -1034,7 +1039,7 @@ BOOST_AUTO_TEST_CASE(cck_chainman_regtest_tests)
             Block block{hex_string_to_byte_vec(data)};
             BlockHeader header = block.GetHeader();
             BlockValidationState state = chainman->ProcessBlockHeader(header);
-            BOOST_CHECK(state.GetValidationMode() == ValidationMode::VALID);
+            BOOST_REQUIRE(state.GetValidationMode() == ValidationMode::VALID);
             BOOST_CHECK(state.GetBlockValidationResult() == BlockValidationResult::UNSET);
             BlockTreeEntry entry{*chainman->GetBlockTreeEntry(header.Hash())};
             BOOST_CHECK(!chainman->GetChain().Contains(entry));
@@ -1056,8 +1061,9 @@ BOOST_AUTO_TEST_CASE(cck_chainman_regtest_tests)
         for (size_t i{0}; i < mid; i++) {
             Block block{hex_string_to_byte_vec(REGTEST_BLOCK_DATA[i])};
             bool new_block{false};
-            BOOST_CHECK(chainman->ProcessBlock(block, &new_block));
-            BOOST_CHECK(new_block);
+            BOOST_REQUIRE_MESSAGE(chainman->ProcessBlock(block, &new_block), "Rejected regtest block " << i + 1);
+            BOOST_REQUIRE_MESSAGE(new_block, "Regtest block was not processed at height " << i + 1);
+            BOOST_REQUIRE_EQUAL(chainman->GetChain().Height(), i + 1);
         }
     }
 
@@ -1068,8 +1074,9 @@ BOOST_AUTO_TEST_CASE(cck_chainman_regtest_tests)
     for (size_t i{mid}; i < REGTEST_BLOCK_DATA.size(); i++) {
         Block block{hex_string_to_byte_vec(REGTEST_BLOCK_DATA[i])};
         bool new_block{false};
-        BOOST_CHECK(chainman->ProcessBlock(block, &new_block));
-        BOOST_CHECK(new_block);
+        BOOST_REQUIRE_MESSAGE(chainman->ProcessBlock(block, &new_block), "Rejected regtest block " << i + 1);
+        BOOST_REQUIRE_MESSAGE(new_block, "Regtest block was not processed at height " << i + 1);
+        BOOST_REQUIRE_EQUAL(chainman->GetChain().Height(), i + 1);
     }
 
     auto chain = chainman->GetChain();
@@ -1152,7 +1159,7 @@ BOOST_AUTO_TEST_CASE(cck_chainman_regtest_tests)
     TransactionOutputView output = coin.GetOutput();
     uint32_t coin_height = coin.GetConfirmationHeight();
     BOOST_CHECK_EQUAL(coin_height, 58);
-    BOOST_CHECK_EQUAL(output.Amount(), 1'000'000'000'000);
+    BOOST_CHECK_EQUAL(output.Amount(), 150'000'000'000);
 
     // Test script pubkey serialization
     auto script_pubkey = output.GetScriptPubkey();

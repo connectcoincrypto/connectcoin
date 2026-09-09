@@ -8,6 +8,8 @@
 import os
 
 from test_framework.blocktools import COINBASE_MATURITY
+from test_framework.compressor import compress_amount
+from test_framework.messages import CBlock, COutPoint, MAGIC_BYTES, from_hex, hash256, ser_varint
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
@@ -20,6 +22,32 @@ class DumptxoutsetTest(BitcoinTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1
+
+    def check_snapshot_contents(self, out, path):
+        # Build both commitments independently from the actual block outputs.
+        # This fixture has exactly one unspent coinbase output per block,
+        # including ConnectCoin's spendable genesis allocation.
+        coins = {}
+        for height in range(out['base_height'] + 1):
+            block = from_hex(CBlock(), self.nodes[0].getblock(self.nodes[0].getblockhash(height), False))
+            assert_equal(len(block.vtx), 1)
+            tx = block.vtx[0]
+            assert_equal(len(tx.vout), 1)
+            output = tx.vout[0]
+            outpoint = COutPoint(tx.txid_int, 0).serialize()
+            code = height * 2 + 1
+            coins[outpoint[:32]] = (
+                outpoint + code.to_bytes(4, 'little') + output.serialize(),
+                b'\x01\x00' + ser_varint(code) + ser_varint(compress_amount(output.nValue)) + output.serialize()[8:],
+            )
+        header = b'utxo\xff\x02\x00' + MAGIC_BYTES[self.chain]
+        header += bytes.fromhex(out['base_hash'])[::-1] + len(coins).to_bytes(8, 'little')
+        expected_snapshot = header + b''.join(txid + coins[txid][1] for txid in sorted(coins))
+        assert_equal(path.read_bytes(), expected_snapshot)
+        commitment = hash256(b''.join(coins[txid][0] for txid in sorted(coins)))[::-1].hex()
+        assert_equal(out['txoutset_hash'], commitment)
+        self.log.info("Independent snapshot: base=%s file=%s UTXOs=%s",
+                      out['base_hash'], sha256sum_file(str(path)).hex(), commitment)
 
     def test_dumptxoutset_with_fork(self):
         node = self.nodes[0]
@@ -67,12 +95,13 @@ class DumptxoutsetTest(BitcoinTestFramework):
         assert_equal(out['coins_written'], 101)
         assert_equal(out['base_height'], 100)
         assert_equal(out['path'], str(expected_path))
+        self.check_snapshot_contents(out, expected_path)
         # Blockhash should be deterministic based on mocked time and the PoW
         # implementation selected by the test environment.
         expected_base_hash = (
-            '49beadffa798c58e5520288a240adbdadc88f7452c8baf1067838fa22831b9a9'
+            '69a2fe82bde808f7c11562a800db81637a9b3dec6e746d692a160d228d60e129'
             if os.getenv('TEST_RANDOMX_MOCK_POW') is not None else
-            '3ee2a27ef43a98f788e00cb61db50872159cbc6ad040f0b144e201ae0d2580c8'
+            'd8b7fb434815eb67fba4b0d6ea3c1f44a33ad80529a6e50867b1aef4cd530117'
         )
         assert_equal(
             out['base_hash'],
@@ -81,16 +110,16 @@ class DumptxoutsetTest(BitcoinTestFramework):
         # The snapshot includes the base block hash, so its file hash also
         # differs when the mock PoW implementation is active.
         expected_snapshot_hash = (
-            '567b415411b17a99e0e44f6535d6b204f64df7a1fd5748b323cb7193427e7eb9'
+            'd99350f80286bf51846d3c51ee1f6c3951a2fb3176ecd27fb26d0f1be4b78c28'
             if os.getenv('TEST_RANDOMX_MOCK_POW') is not None else
-            '172fe890942cba33c34d066be5d710deac24d518416526374dcf374aaba53349'
+            'f234b084392a334a06d3dd8a667e6d66ebcd9763f3a9a7e90d18de00d266b0bd'
         )
         assert_equal(
             sha256sum_file(str(expected_path)).hex(),
             expected_snapshot_hash)
 
         assert_equal(
-            out['txoutset_hash'], '78a1e431f591777ff2b3bc2bf91b9bb74ab1dc3e69e6af59b81732710231d7ef')
+            out['txoutset_hash'], 'efaf21d989d89cc0831e6c645f076ca104d2ce56d0f6979e1353c0351fd0f90f')
         assert_equal(out['nchaintx'], 101)
 
         # Specifying a path to an existing or invalid file will fail.

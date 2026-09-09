@@ -9,7 +9,11 @@ This test uses 4GB of disk space.
 """
 import os
 
-from test_framework.blockfilter import REGTEST_GENESIS_BASIC_FILTER_FALSE_POSITIVE
+from test_framework.blockfilter import (
+    REGTEST_GENESIS_BASIC_FILTER_FALSE_POSITIVE,
+    bip158_basic_element_hash,
+    bip158_relevant_scriptpubkeys,
+)
 from test_framework.blocktools import (
     MIN_BLOCKS_TO_KEEP,
     add_witness_commitment,
@@ -402,6 +406,18 @@ class PruneTest(BitcoinTestFramework):
 
     def run_test(self):
         self.log.info("Warning! This test requires 4GB of disk space")
+
+        # Validate the false-positive fixture before the expensive chain setup
+        # and before pruning makes the genesis block unavailable on node 5.
+        genesis_blockhash = self.nodes[5].getblockhash(0)
+        genesis_spks = bip158_relevant_scriptpubkeys(self.nodes[5], genesis_blockhash)
+        assert_equal(len(genesis_spks), 1)
+        false_positive_spk = REGTEST_GENESIS_BASIC_FILTER_FALSE_POSITIVE
+        assert false_positive_spk not in genesis_spks
+        assert_equal(
+            bip158_basic_element_hash(next(iter(genesis_spks)), 1, genesis_blockhash),
+            bip158_basic_element_hash(false_positive_spk, 1, genesis_blockhash),
+        )
 
         self.log.info("Mining a big blockchain of 995 blocks")
         self.create_big_chain()

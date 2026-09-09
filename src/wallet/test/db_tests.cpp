@@ -4,8 +4,11 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <chainparams.h>
+#include <crypto/common.h>
 #include <test/util/common.h>
 #include <test/util/setup_common.h>
+#include <tinyformat.h>
 #include <util/check.h>
 #include <util/fs.h>
 #include <util/translation.h>
@@ -14,8 +17,14 @@
 #include <wallet/test/util.h>
 #include <wallet/walletutil.h>
 
+#include <sqlite3.h>
+
+#include <array>
 #include <cstddef>
+#include <cstdint>
+#include <fstream>
 #include <memory>
+#include <set>
 #include <span>
 #include <string>
 #include <string_view>
@@ -59,6 +68,126 @@ static void CheckPrefix(DatabaseBatch& batch, std::span<const std::byte> prefix,
 }
 
 BOOST_FIXTURE_TEST_SUITE(db_tests, BasicTestingSetup)
+
+static std::vector<std::unique_ptr<const CChainParams>> WalletIdentityNetworks()
+{
+    std::vector<std::unique_ptr<const CChainParams>> networks;
+    networks.emplace_back(CChainParams::Main());
+    networks.emplace_back(CChainParams::TestNet());
+    networks.emplace_back(CChainParams::TestNet4());
+    networks.emplace_back(CChainParams::SigNet());
+    networks.emplace_back(CChainParams::RegTest());
+    for (const uint8_t challenge : std::array<uint8_t, 2>{0x52, 0x53}) {
+        CChainParams::SigNetOptions options;
+        options.challenge = std::vector<uint8_t>{challenge};
+        networks.emplace_back(CChainParams::SigNet(options));
+    }
+    return networks;
+}
+
+class WalletWireMagicTestParams : public CChainParams
+{
+public:
+    WalletWireMagicTestParams(const CChainParams& params, const MessageStartChars& wire_magic) : CChainParams{params}
+    {
+        pchMessageStart = wire_magic;
+    }
+};
+
+BOOST_AUTO_TEST_CASE(wallet_database_ids_are_stable)
+{
+    // These are the wallet IDs used before the P2C v2 network reset, not the
+    // new wire magics. Signet IDs are SHA256d(0151), SHA256d(0152), SHA256d(0153).
+    const std::array<MessageStartChars, 7> expected{{
+        {0xd9, 0x51, 0xa5, 0xe2},
+        {0x03, 0x84, 0x8e, 0x59},
+        {0xbb, 0x51, 0xf5, 0xe7},
+        {0x54, 0xd2, 0x6f, 0xbd},
+        {0xa5, 0x4f, 0xc7, 0xd5},
+        {0x2c, 0x79, 0x81, 0x94},
+        {0x31, 0x4b, 0xfb, 0x9c},
+    }};
+    const auto networks = WalletIdentityNetworks();
+    BOOST_REQUIRE_EQUAL(networks.size(), expected.size());
+    std::set<MessageStartChars> distinct;
+    for (size_t i = 0; i < networks.size(); ++i) {
+        BOOST_CHECK(networks[i]->WalletDatabaseId() == expected[i]);
+        BOOST_CHECK(distinct.insert(networks[i]->WalletDatabaseId()).second);
+        if (networks[i]->GetChainType() != ChainType::MAIN) {
+            BOOST_CHECK(networks[i]->WalletDatabaseId() != networks[i]->MessageStart());
+        }
+        const WalletWireMagicTestParams changed_wire{*networks[i], {0x12, 0x34, 0x56, 0x78}};
+        BOOST_CHECK(changed_wire.WalletDatabaseId() == expected[i]);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(sqlite_wallet_identity_isolated_from_wire_magic)
+{
+    // Preserve even custom/test-only parameters if an assertion throws.
+    struct RestoreParams {
+        std::unique_ptr<const CChainParams> value{std::make_unique<const CChainParams>(Params())};
+        ~RestoreParams() { SelectParams(std::move(value)); }
+    } restore_params;
+    const auto networks = WalletIdentityNetworks();
+    DatabaseOptions options;
+    DatabaseStatus status;
+    bilingual_str error;
+
+    for (size_t i = 0; i < networks.size(); ++i) {
+        // CChainParams has no virtual destructor: store a sliced base value.
+        SelectParams(std::make_unique<const CChainParams>(WalletWireMagicTestParams{*networks[i], {0x12, 0x34, 0x56, 0x78}}));
+        const fs::path path{m_path_root / fs::PathFromString(strprintf("wallet-id-%u", i))};
+        error = {};
+        auto database = MakeSQLiteDatabase(path, options, status, error);
+        BOOST_REQUIRE_MESSAGE(database != nullptr, error.original);
+        const fs::path file{fs::PathFromString(database->Filename())};
+        BOOST_CHECK(IsSQLiteFile(file));
+        {
+            // Inspect the actual new file, independently of the SQLite verifier.
+            std::ifstream input{file.std_path(), std::ios::binary};
+            MessageStartChars stored{};
+            input.seekg(68);
+            input.read(reinterpret_cast<char*>(stored.data()), static_cast<std::streamsize>(stored.size()));
+            BOOST_REQUIRE(input.good());
+            BOOST_CHECK(stored == networks[i]->WalletDatabaseId());
+        }
+        for (size_t j = 0; j < networks.size(); ++j) {
+            // A different chain/challenge must remain rejected even if its
+            // P2P magic happens to equal this file's application ID.
+            SelectParams(std::make_unique<const CChainParams>(WalletWireMagicTestParams{*networks[j], networks[i]->WalletDatabaseId()}));
+            BOOST_CHECK_EQUAL(IsSQLiteFile(file), i == j);
+            error = {};
+            BOOST_CHECK_EQUAL(database->Verify(error), i == j);
+            if (i != j) BOOST_CHECK(error.original.find("Unexpected application id") != std::string::npos);
+        }
+        database.reset();
+
+        // Test the normal open+Verify path, not just Verify on an existing handle.
+        for (size_t j = 0; j < networks.size(); ++j) {
+            SelectParams(std::make_unique<const CChainParams>(*networks[j]));
+            error = {};
+            auto reopened = MakeSQLiteDatabase(path, options, status, error);
+            BOOST_CHECK_EQUAL(bool(reopened), i == j);
+            BOOST_CHECK(status == (i == j ? DatabaseStatus::SUCCESS : DatabaseStatus::FAILED_VERIFY));
+        }
+
+        SelectParams(std::make_unique<const CChainParams>(*networks[i]));
+        error = {};
+        database = MakeSQLiteDatabase(path, options, status, error);
+        BOOST_REQUIRE_MESSAGE(database != nullptr, error.original);
+        if (Params().MessageStart() != Params().WalletDatabaseId()) {
+            // Unreleased intermediate v2 test wallets are not a compatibility
+            // alias. In particular never accept P2P magic as a fallback ID.
+            const uint32_t transient_id = ReadBE32(Params().MessageStart().data());
+            SQliteExecHandler sql;
+            BOOST_REQUIRE_EQUAL(sql.Exec(*database, strprintf("PRAGMA application_id=%d", static_cast<int32_t>(transient_id))), SQLITE_OK);
+            BOOST_CHECK(!IsSQLiteFile(file));
+            error = {};
+            BOOST_CHECK(!database->Verify(error));
+            BOOST_CHECK(error.original.find("Unexpected application id") != std::string::npos);
+        }
+    }
+}
 
 static std::vector<std::unique_ptr<WalletDatabase>> TestDatabases(const fs::path& path_root)
 {

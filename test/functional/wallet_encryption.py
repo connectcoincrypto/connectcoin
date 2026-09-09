@@ -105,16 +105,15 @@ class WalletEncryptionTest(BitcoinTestFramework):
             self.log.info("Test that encryption keys in wallets without privkeys are removed")
 
             def do_wallet_tool(*args):
-                proc = subprocess.Popen(
+                result = subprocess.run(
                     self.get_binaries().wallet_argv() + [f"-datadir={self.nodes[0].datadir_path}", f"-chain={self.chain}"] + list(args),
-                    stdin=subprocess.PIPE,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    text=True
+                    stdin=subprocess.DEVNULL,
+                    capture_output=True,
+                    text=True,
+                    timeout=self.rpc_timeout,
                 )
-                stdout, stderr = proc.communicate()
-                assert_equal(proc.poll(), 0)
-                assert_equal(stderr, "")
+                assert result.returncode == 0, f"Wallet tool {args[-1]} failed ({result.returncode}): {result.stderr}"
+                assert_equal(result.stderr, "")
 
             # Since it is no longer possible to encrypt a wallet without privkeys, we need to force one into the wallet
             # 1. Make a dump of the wallet

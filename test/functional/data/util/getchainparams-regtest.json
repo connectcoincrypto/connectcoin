@@ -1,7 +1,7 @@
 {
   "chain": "regtest",
   "test_chain": true,
-  "genesis": "4293e98e25d0315ca227d1da7d75bc79520c41e491bd5d04b524ae9b6195facc",
+  "genesis": "de48ff31cbff58a91ef359100fef13e6472f165e6f0410e52efcdacb1861f65a",
   "subsidy_halving_interval": 150,
   "pow": {
     "algorithm": "randomx-v2",
@@ -13,7 +13,7 @@
   },
   "net": {
     "default_port": 48185,
-    "magic": "a54fc7d5",
+    "magic": "8d6e0191",
     "dns_seeds": [
       "dummySeed.invalid."
     ]

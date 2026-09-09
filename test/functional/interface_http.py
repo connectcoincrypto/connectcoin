@@ -635,6 +635,7 @@ class HTTPBasicsTest (BitcoinTestFramework):
 
     def check_connection_limit(self):
         self.log.info("Check connection limits")
+        genesis_hash = self.node.getblockhash(0)
 
         # Disable timeout so the initial batch of clients stays connected
         # until the end of the test.
@@ -705,7 +706,7 @@ class HTTPBasicsTest (BitcoinTestFramework):
 
             # The waiting connection gets processed
             delayed_response = waiting_request.result(timeout=5)
-            assert "ccfa95619bae24b5045dbd91e4410c5279bc757ddad127a25c31d0258ee99342" in delayed_response.decode()
+            assert genesis_hash in delayed_response.decode()
 
             # Close all remaining connections for clean up
             for client in connections:

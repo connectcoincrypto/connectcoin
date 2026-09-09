@@ -192,13 +192,13 @@ bool SQLiteDatabase::Verify(bilingual_str& error)
 {
     assert(m_db);
 
-    // Check the application ID matches our network magic
+    // Check the stable wallet identity, not the resettable P2P magic.
     auto read_result = ReadPragmaInteger(m_db, "application_id", "the application id", error);
     if (!read_result.has_value()) return false;
     uint32_t app_id = static_cast<uint32_t>(read_result.value());
-    uint32_t net_magic = ReadBE32(Params().MessageStart().data());
-    if (app_id != net_magic) {
-        error = strprintf(_("SQLiteDatabase: Unexpected application id. Expected %u, got %u"), net_magic, app_id);
+    uint32_t wallet_id = ReadBE32(Params().WalletDatabaseId().data());
+    if (app_id != wallet_id) {
+        error = strprintf(_("SQLiteDatabase: Unexpected application id. Expected %u, got %u"), wallet_id, app_id);
         return false;
     }
 
@@ -335,8 +335,8 @@ void SQLiteDatabase::Open(int additional_flags)
             throw std::runtime_error(strprintf("SQLiteDatabase: Failed to create new database: %s\n", sqlite3_errstr(ret)));
         }
 
-        // Set the application id
-        uint32_t app_id = ReadBE32(Params().MessageStart().data());
+        // Persist the stable per-chain identity so backups survive a network reset.
+        uint32_t app_id = ReadBE32(Params().WalletDatabaseId().data());
         SetPragma(m_db, "application_id", strprintf("%d", static_cast<int32_t>(app_id)),
                   "Failed to set the application id");
 

@@ -25,6 +25,24 @@
 
 namespace wallet::test {
 
+/** Public test CA for VerifyP2CCertificateProofForTest only. Never installed in
+ * the production root store; this matches the consensus TLS test fixture.
+ */
+inline constexpr unsigned char P2C_TEST_ROOTS_PEM[]{R"pem(-----BEGIN CERTIFICATE-----
+MIICBzCCAYugAwIBAgIJAMFD4n5iQ8zoMAwGCCqGSM49BAMCBQAwPjELMAkGA1UE
+BhMCTkwxETAPBgNVBAoMCFBvbGFyU1NMMRwwGgYDVQQDDBNQb2xhcnNzbCBUZXN0
+IEVDIENBMB4XDTE5MDIxMDE0NDQwMFoXDTI5MDIxMDE0NDQwMFowPjELMAkGA1UE
+BhMCTkwxETAPBgNVBAoMCFBvbGFyU1NMMRwwGgYDVQQDDBNQb2xhcnNzbCBUZXN0
+IEVDIENBMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEw9orNEE3WC+HVv78ibopQ0tO
+4G7DDldTMzlY1FK0kZU5CyPfXxckYkj8GpUpziwth8KIUoCv1mqrId240xxuWLjK
+6LJpjvNBrSnDtF91p0dv1RkpVWmaUzsgtGYWYDMeo1MwUTAPBgNVHRMBAf8EBTAD
+AQH/MB0GA1UdDgQWBBSdbSAkSQE/K8t4tRm8fiTJ2/s2fDAfBgNVHSMEGDAWgBSd
+bSAkSQE/K8t4tRm8fiTJ2/s2fDAMBggqhkjOPQQDAgUAA2gAMGUCMQDpNWfBIlzq
+6xV2UwQD/1YGz9fQUM7AfNKzVa2PVBpf/QD1TAylTYTF4GI6qlb6EPYCMF/YVa29
+N5yC1mFAir19jb9Pl9iiIkRm17dM4y6m5VIMepEPm/VlWAa8H5p1+BPbGw==
+-----END CERTIFICATE-----
+)pem"};
+
 /** In-memory TLS 1.3 server for sequential capture/worker tests. The public test
  * certificate/key match the existing consensus fixture in p2c_tests.cpp. They
  * are deliberately NOT trusted by Core. No real DNS, sockets or HTTP are used.

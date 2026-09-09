@@ -1,7 +1,7 @@
 {
   "chain": "testnet4",
   "test_chain": true,
-  "genesis": "1965d16afa3c16fccba1d9e9e9ac4ef45aa73b0a744cf3088c498e7f5bfe07d6",
+  "genesis": "38cae555fb78f44c31e7d6859d0476252b321dae8b6312afefe0a45fc3fd112a",
   "subsidy_halving_interval": 3000000,
   "pow": {
     "algorithm": "randomx-v2",
@@ -16,8 +16,12 @@
   },
   "net": {
     "default_port": 48179,
-    "magic": "bb51f5e7",
+    "magic": "4e3d8178",
     "dns_seeds": [
+      "connectcoin1.com",
+      "connectcoin2.com",
+      "connectcoin3.com",
+      "dememzea.tplinkdns.com"
     ]
   },
   "addresses": {

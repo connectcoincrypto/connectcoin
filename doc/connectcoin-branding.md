@@ -143,10 +143,16 @@ be defined separately; see [testnet-beta.md](testnet-beta.md).
 | Network | RPC port | P2P port | Onion bind | Message start | Genesis hash |
 | --- | ---: | ---: | ---: | --- | --- |
 | Mainnet (disabled) | 48172 | 48173 | 48174 | `d9 51 a5 e2` | Not defined |
-| Testnet3 | 48175 | 48176 | 48177 | `03 84 8e 59` | `90090317e3c15f275f86bc5b58eede9cc959d40ab8798a7df35acb9de0a5a8c9` |
-| Testnet4 | 48178 | 48179 | 48180 | `bb 51 f5 e7` | `06a1a1f822fed4a412aedb19315f1e85c963ad9b3c10e88ff12626b4b1389115` |
-| Signet | 48181 | 48182 | 48183 | `54 d2 6f bd` (default `OP_TRUE` challenge) | `cce9d1179afd938765c21b95b96bed6e5c018910091c855d303a5ecdf47600c5` |
-| Regtest | 48184 | 48185 | 48186 | `a5 4f c7 d5` | `ccfa95619bae24b5045dbd91e4410c5279bc757ddad127a25c31d0258ee99342` |
+| Testnet3 | 48175 | 48176 | 48177 | `0d b1 48 4d` | `ca89051d3a1bcf96be2ed4943d347687af47b6fd0a155fc2b15ddcc103bd75af` |
+| Testnet4 | 48178 | 48179 | 48180 | `4e 3d 81 78` | `38cae555fb78f44c31e7d6859d0476252b321dae8b6312afefe0a45fc3fd112a` |
+| Signet | 48181 | 48182 | 48183 | `4c 48 f3 b3` (default `OP_TRUE` challenge) | `2a62fd84425bc1f6dce0343ec3f6c08b782d76df54d52e5e3b8153f5d27d94b4` |
+| Regtest | 48184 | 48185 | 48186 | `8d 6e 01 91` | `de48ff31cbff58a91ef359100fef13e6472f165e6f0410e52efcdacb1861f65a` |
+
+These four test-chain genesis blocks and message starts were reset for P2C v2
+on September 9, 2026. Public keys, ports and address encodings are unchanged.
+Signet message start is the first four bytes of SHA256d over the serialized
+string `ConnectCoin signet P2C v2 network` followed by the serialized challenge
+vector. See [testnet-beta.md](testnet-beta.md) before upgrading an existing node.
 
 Fixed seeds are intentionally absent during development. The inherited Bitcoin
 peer snapshots were removed from `contrib/seeds`, and the generated seed header

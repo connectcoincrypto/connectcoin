@@ -157,6 +157,7 @@ public:
          */
         // First four bytes of SHA256("ConnectCoin main network").
         pchMessageStart = {0xd9, 0x51, 0xa5, 0xe2};
+        m_wallet_database_id = {0xd9, 0x51, 0xa5, 0xe2};
         nDefaultPort = 48173;
         nPruneAfterHeight = 100000;
         m_assumed_blockchain_size = 0;
@@ -248,17 +249,19 @@ public:
         consensus.nMinimumChainWork = uint256{1};
         consensus.defaultAssumeValid = uint256{};
 
-        // First four bytes of SHA256("ConnectCoin testnet3 network").
-        pchMessageStart = {0x03, 0x84, 0x8e, 0x59};
+        // First four bytes of SHA256("ConnectCoin testnet3 P2C v2 network").
+        pchMessageStart = {0x0d, 0xb1, 0x48, 0x4d};
+        // Preserve the pre-reset wallet identity, not the wire protocol magic.
+        m_wallet_database_id = {0x03, 0x84, 0x8e, 0x59};
         nDefaultPort = 48176;
         nPruneAfterHeight = 1000;
         m_assumed_blockchain_size = 0;
         m_assumed_chain_state_size = 0;
 
-        genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin testnet3", 1787596782, 29790, 0x1f00ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
+        genesis = CreateConnectCoinGenesisBlock("ConnectCoin testnet3 | P2C v2 | 2026-09-09", 1788912000, 38388, 0x1f00ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
         consensus.hashGenesisBlock = genesis->GetHash();
-        assert(genesis->hashMerkleRoot == uint256{"1df98af4c1fc04b34d14c2fc8231083428b5056975bfb51e7fad9ca2043d8cc9"});
-        assert(consensus.hashGenesisBlock == uint256{"90090317e3c15f275f86bc5b58eede9cc959d40ab8798a7df35acb9de0a5a8c9"});
+        assert(genesis->hashMerkleRoot == uint256{"3477a829a66de337c0b0db26685a1f6294287f4e9655bd892245d85e3d51ee6d"});
+        assert(consensus.hashGenesisBlock == uint256{"ca89051d3a1bcf96be2ed4943d347687af47b6fd0a155fc2b15ddcc103bd75af"});
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -335,17 +338,18 @@ public:
         consensus.nMinimumChainWork = uint256{1};
         consensus.defaultAssumeValid = uint256{};
 
-        // First four bytes of SHA256("ConnectCoin testnet4 network").
-        pchMessageStart = {0xbb, 0x51, 0xf5, 0xe7};
+        // First four bytes of SHA256("ConnectCoin testnet4 P2C v2 network").
+        pchMessageStart = {0x4e, 0x3d, 0x81, 0x78};
+        m_wallet_database_id = {0xbb, 0x51, 0xf5, 0xe7};
         nDefaultPort = 48179;
         nPruneAfterHeight = 1000;
         m_assumed_blockchain_size = 0;
         m_assumed_chain_state_size = 0;
 
-        genesis = CreateConnectCoinGenesisBlock("ConnectCoin testnet4 | 2026-09-07 | development fund", 1788814378, 60490, 0x1f00ffff, 1, 10'000'000 * COIN, TestNet4GenesisOutputScript());
+        genesis = CreateConnectCoinGenesisBlock("ConnectCoin testnet4 | P2C v2 | 2026-09-09", 1788912001, 199567, 0x1f00ffff, 1, 10'000'000 * COIN, TestNet4GenesisOutputScript());
         consensus.hashGenesisBlock = genesis->GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"06a1a1f822fed4a412aedb19315f1e85c963ad9b3c10e88ff12626b4b1389115"});
-        assert(genesis->hashMerkleRoot == uint256{"c20a4d5c39a400dde2e7d9eaeedc4c5df22bb2f9d4f471369ee67aa40da3a683"});
+        assert(consensus.hashGenesisBlock == uint256{"38cae555fb78f44c31e7d6859d0476252b321dae8b6312afefe0a45fc3fd112a"});
+        assert(genesis->hashMerkleRoot == uint256{"e70bc6f9408b4997f2b8f4f227bddd122282ceb4cc5b58d326081ee411441d4e"});
 
         vFixedSeeds.clear();
         // ConnectCoin public testnet4 bootstrap (base hostnames, including DDNS).
@@ -451,8 +455,17 @@ public:
         m_assumed_chain_state_size = 0;
         chainTxData = ChainTxData{0, 0, 0};
 
-        // message start is defined as the first 4 bytes of the sha256d of the block script
+        // Wallet identity keeps the original SHA256d(serialized challenge),
+        // independent of network resets but still isolated by custom challenge.
+        HashWriter wallet_id_hash{};
+        wallet_id_hash << consensus.signet_challenge;
+        const uint256 wallet_id = wallet_id_hash.GetHash();
+        std::copy_n(wallet_id.begin(), 4, m_wallet_database_id.begin());
+
+        // Domain-separate the reset network while preserving custom-challenge isolation.
+        // First four bytes of SHA256d of the serialized string and challenge vector.
         HashWriter h{};
+        h << std::string{"ConnectCoin signet P2C v2 network"};
         h << consensus.signet_challenge;
         uint256 hash = h.GetHash();
         std::copy_n(hash.begin(), 4, pchMessageStart.begin());
@@ -460,10 +473,10 @@ public:
         nDefaultPort = 48182;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin signet", 1787596784, 67056, 0x1f00ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
+        genesis = CreateConnectCoinGenesisBlock("ConnectCoin signet | P2C v2 | 2026-09-09", 1788912002, 27113, 0x1f00ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
         consensus.hashGenesisBlock = genesis->GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"cce9d1179afd938765c21b95b96bed6e5c018910091c855d303a5ecdf47600c5"});
-        assert(genesis->hashMerkleRoot == uint256{"5f09f9b805e8731b6d9f7410bb4404d24e5c95005ec395a47a80c45fd92024b2"});
+        assert(consensus.hashGenesisBlock == uint256{"2a62fd84425bc1f6dce0343ec3f6c08b782d76df54d52e5e3b8153f5d27d94b4"});
+        assert(genesis->hashMerkleRoot == uint256{"374929cb89e0db3685b45adde158b63ccb00be549aeaa8f7b8eeda01b51c23d0"});
 
         m_assumeutxo_data.clear();
 
@@ -530,8 +543,9 @@ public:
         consensus.nMinimumChainWork = uint256{};
         consensus.defaultAssumeValid = uint256{};
 
-        // First four bytes of SHA256("ConnectCoin regtest network").
-        pchMessageStart = {0xa5, 0x4f, 0xc7, 0xd5};
+        // First four bytes of SHA256("ConnectCoin regtest P2C v2 network").
+        pchMessageStart = {0x8d, 0x6e, 0x01, 0x91};
+        m_wallet_database_id = {0xa5, 0x4f, 0xc7, 0xd5};
         nDefaultPort = 48185;
         nPruneAfterHeight = opts.fastprune ? 100 : 1000;
         m_assumed_blockchain_size = 0;
@@ -539,10 +553,11 @@ public:
 
         ApplyDeploymentOptions(opts.dep_opts);
 
-        genesis = CreateConnectCoinGenesisBlock("teste testado | ConnectCoin regtest", 1296688602, 3, 0x207fffff, 1, 10'000'000 * COIN, RegTestGenesisOutputScript());
+        // Keep the historical regtest clock for tests; the new coinbase and nonce reset its identity.
+        genesis = CreateConnectCoinGenesisBlock("ConnectCoin regtest | P2C v2 | 2026-09-09", 1296688602, 26, 0x207fffff, 1, 10'000'000 * COIN, RegTestGenesisOutputScript());
         consensus.hashGenesisBlock = genesis->GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"ccfa95619bae24b5045dbd91e4410c5279bc757ddad127a25c31d0258ee99342"});
-        assert(genesis->hashMerkleRoot == uint256{"a0d6ef2f2a981e1c00845ba4de2c34784d7724ef5fe1341fef76cf1a5367ca6b"});
+        assert(consensus.hashGenesisBlock == uint256{"de48ff31cbff58a91ef359100fef13e6472f165e6f0410e52efcdacb1861f65a"});
+        assert(genesis->hashMerkleRoot == uint256{"a26cc36202eb5e29223338940ab72e985db833ef1c14340fce37bfded3e0f595"});
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();
@@ -555,20 +570,20 @@ public:
             {
                 // Deterministic snapshot used by the chainstate manager unit tests.
                 .height = 110,
-                .hash_serialized = AssumeutxoHash{uint256{"e45ed18a928f9fa879bda51e00f492bfa7ba6b138f9fdf71f2bb29123af83507"}},
+                .hash_serialized = AssumeutxoHash{uint256{"f061bc6756b220fe5b9f207ed3fce195422d253a254c459090ad5f860998ad1b"}},
                 .m_chain_tx_count = 111,
                 .blockhash = opts.randomx_mock_pow
-                    ? uint256{"307561b922859b22c518aaefd7c802d2571706a4e0ca1d0f506f24591607bef5"}
-                    : uint256{"fd2d86f0bfb22dba48758d291f89eb8f64bedaf13932350f3da84bbbf32fc260"},
+                    ? uint256{"2058bef815acee68c300801bb54882211b79ffdfc0457466829589e93664423a"}
+                    : uint256{"a95b0b7af1e07d571b1e835a3c74b5ff7de6956c261726b9f6c4a1e5a5925710"},
             },
             {
                 // Deterministic regtest commitment used by the utxo_snapshot fuzz targets.
                 .height = 200,
-                .hash_serialized = AssumeutxoHash{uint256{"3fd7b22c0fa827f8119a9ae5a203481c3bcffd5d7dd74d9594ad87756b8434de"}},
+                .hash_serialized = AssumeutxoHash{uint256{"7bfadd0d71b06c17b5e65ae86445d1de9c848a53ec3828893dc4bfe057f0e866"}},
                 .m_chain_tx_count = 201,
                 .blockhash = opts.randomx_mock_pow
-                    ? uint256{"290319d9129f74fd13351f4df418434d4319579d66afb03f98f52a48981a11ff"}
-                    : uint256{"799750eee344c6bb269406c29e150138f7c56f3908c195edb25532083327f90b"},
+                    ? uint256{"6eb52cda8e2ecae855573312d91682a66d8add1fa73bf0ff97175382a6083531"}
+                    : uint256{"3d2780631fc34fddfe3280d84280f40399e908984bfc1dd1a0202495209e353a"},
             },
         };
 

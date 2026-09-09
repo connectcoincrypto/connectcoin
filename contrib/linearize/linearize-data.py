@@ -286,10 +286,14 @@ if __name__ == '__main__':
         settings['rev_hash_bytes'] = 'false'
     settings['rev_hash_bytes'] = settings['rev_hash_bytes'].lower()
 
-    if 'netmagic' not in settings:
-        settings['netmagic'] = 'd951a5e2'
-    if 'genesis' not in settings:
-        settings['genesis'] = '0000004b461aae33a4be0ee95ae8461155f2c48130bc8dd521adb71ec0d3e9a2'
+    # Never guess the chain: beta resets deliberately change both identifiers.
+    # Require explicit values before opening block data or producing output.
+    for name, hex_length in (('netmagic', 8), ('genesis', 64)):
+        value = settings.get(name, '').strip()
+        if re.fullmatch(r'[0-9a-fA-F]{' + str(hex_length) + r'}', value) is None:
+            print(f"Missing or invalid {name}: configure exactly {hex_length} hexadecimal characters", file=sys.stderr)
+            sys.exit(1)
+        settings[name] = value.lower()
     if 'input' not in settings:
         settings['input'] = 'input'
     if 'hashlist' not in settings:
@@ -322,5 +326,6 @@ if __name__ == '__main__':
     # Block hash map won't be byte-reversed. Neither should the genesis hash.
     if settings['genesis'] not in blkmap:
         print("Genesis block not found in hashlist")
+        sys.exit(1)
     else:
         BlockDataCopier(settings, blkindex, blkmap).run()

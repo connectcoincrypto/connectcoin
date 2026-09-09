@@ -17,7 +17,7 @@
 class CTransaction;
 class CTxOut;
 
-inline constexpr uint8_t P2C_PROOF_VERSION{1};
+inline constexpr uint8_t P2C_PROOF_VERSION{2};
 inline constexpr uint32_t P2C_ROOT_CERTIFICATES_VERSION_1{1};
 inline constexpr size_t MAX_P2C_PROOF_SIZE{size_t{64} * 1024};
 inline constexpr size_t MAX_P2C_CERTIFICATE_MESSAGE_SIZE{size_t{48} * 1024};
@@ -33,7 +33,7 @@ constexpr bool IsSupportedP2CRootCertificatesVersion(uint32_t version)
 /** Return whether an output is a canonical, currently supported type-2 P2C output. */
 bool IsCanonicalP2COutput(const CTxOut& output);
 
-/** A non-owning, fully parsed view of one version-1 P2C TLS proof. */
+/** A non-owning, fully parsed view of one version-2 P2C TLS proof. */
 struct P2CTlsProofView
 {
     std::span<const unsigned char> client_hello;
@@ -45,6 +45,7 @@ struct P2CTlsProofView
     uint16_t certificate_verify_scheme{0};
     std::span<const unsigned char> certificate_verify_signature;
     uint256 transcript_hash;
+    /** Tagged hash of CH || SH || EE || Certificate, excluding all CertificateVerify bytes. */
     uint256 connection_work_hash;
 };
 

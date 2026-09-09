@@ -107,7 +107,10 @@ class P2CAutoClaimTest(BitcoinTestFramework):
         # 600 confirmations is still in the inclusive discovery window. Lock
         # it so this boundary check cannot issue DNS/TLS, even if regressed.
         funder.lockunspent(False, [{"txid": old_txid, "vout": old_vout}])
-        self.generate(node, 599)
+        # Real RandomX mining can exceed the per-RPC timeout for one 599-block
+        # request. Keep the same chain boundary while bounding each request.
+        for generated in range(0, 599, 25):
+            self.generate(node, min(25, 599 - generated))
         funder.setp2cclaiming(-1, 1, ["old-bounty.invalid"])
         try:
             self.wait_until(lambda: funder.getp2cclaimstatus()["state"] == "waiting for eligible bounties")

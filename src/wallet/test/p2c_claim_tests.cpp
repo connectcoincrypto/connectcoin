@@ -6,6 +6,7 @@
 #include <consensus/p2c_x509.h>
 #include <consensus/validation.h>
 #include <core_io.h>
+#include <hash.h>
 #include <interfaces/chain.h>
 #include <key_io.h>
 #include <netbase.h>
@@ -42,6 +43,7 @@
 #include <memory>
 #include <mutex>
 #include <set>
+#include <span>
 #include <stdexcept>
 #include <thread>
 #include <utility>
@@ -83,6 +85,56 @@ public:
 }
 
 BOOST_FIXTURE_TEST_SUITE(p2c_claim_tests, WalletTestingSetup)
+
+BOOST_AUTO_TEST_CASE(tls_capture_v2_authenticates_but_does_not_hash_certificate_verify)
+{
+    RestoreSocketFactory restore_sockets;
+    const auto endpoint{Lookup("8.8.8.8", 443, false)};
+    BOOST_REQUIRE(endpoint);
+    const auto config{std::make_shared<test::P2CTLSServer>()};
+    config->Setup();
+    CreateSock = [config](int, int, int) -> std::unique_ptr<Sock> {
+        return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+    };
+    // All I/O goes to the in-memory TLS fixture, never to this IP address.
+    const uint256 challenge{uint256::ONE};
+    const auto captured{CaptureP2CTls(*endpoint, "localhost", challenge, [] { return false; })};
+    BOOST_REQUIRE_MESSAGE(captured, util::ErrorString(captured).original);
+    BOOST_REQUIRE(!captured->empty());
+    BOOST_CHECK_EQUAL(captured->front(), 2U);
+    P2CTlsProofView parsed;
+    std::string error;
+    BOOST_REQUIRE(ParseP2CTlsProof(*captured, "localhost", challenge, parsed, error));
+    BOOST_REQUIRE(!parsed.certificate_verify_signature.empty());
+
+    // Independently assemble the v2 candidate from the four signed messages:
+    // no proof-version byte, CertificateVerify header, scheme, length, or signature.
+    auto work{TaggedHash("ConnectCoin/P2C/work/v2")};
+    for (const auto message : {parsed.client_hello, parsed.server_hello,
+                               parsed.encrypted_extensions, parsed.certificate}) {
+        work.write(std::as_bytes(message));
+    }
+    BOOST_CHECK(parsed.connection_work_hash == work.GetSHA256());
+    const CTxOut output{COIN, PayToDomainOutput{"localhost", parsed.connection_work_hash, 1}};
+    const std::span<const unsigned char> roots{test::P2C_TEST_ROOTS_PEM, sizeof(test::P2C_TEST_ROOTS_PEM) - 1};
+    BOOST_REQUIRE_MESSAGE(VerifyP2CCertificateProofForTest(output, parsed, 1800000000, roots, error), error);
+    BOOST_CHECK(P2CMeetsWorkTarget(parsed.connection_work_hash, parsed.connection_work_hash));
+
+    // Excluding the signature from work must never make signature verification
+    // optional: a changed signature keeps the candidate but fails authentication.
+    auto invalid_signature{*captured};
+    invalid_signature.back() ^= 1;
+    P2CTlsProofView modified;
+    BOOST_REQUIRE(ParseP2CTlsProof(invalid_signature, "localhost", challenge, modified, error));
+    BOOST_CHECK(modified.connection_work_hash == parsed.connection_work_hash);
+    BOOST_CHECK(modified.transcript_hash == parsed.transcript_hash);
+    BOOST_CHECK(!VerifyP2CCertificateProofForTest(output, modified, 1800000000, roots, error));
+
+    auto legacy{*captured};
+    legacy.front() = 1;
+    BOOST_CHECK(!ParseP2CTlsProof(legacy, "localhost", challenge, modified, error));
+    BOOST_CHECK(error.find("unsupported P2C proof version") != std::string::npos);
+}
 
 BOOST_AUTO_TEST_CASE(domain_connection_statistics_use_last_100_attempts)
 {

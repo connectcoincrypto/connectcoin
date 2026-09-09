@@ -3,6 +3,7 @@
 # file COPYING or https://opensource.org/license/mit/.
 """Check fuzz engine detection and corpus replay without running a node."""
 
+import ast
 import hashlib
 import json
 from concurrent.futures import ThreadPoolExecutor
@@ -12,6 +13,42 @@ import subprocess
 import tempfile
 from unittest import TestCase
 from unittest.mock import patch
+
+
+def check_shared_cache_writer(root):
+    """Evaluate the actual small workflow predicate over every relevant context."""
+    source = (root / '.github/actions/cache/save/action.yml').read_text(encoding='utf-8')
+    step = source.split('- name: Save Ccache cache\n', 1)[1].split('\n    - name:', 1)[0]
+    condition = next(line.strip().removeprefix('if: ${{ ').removesuffix(' }}')
+                     for line in step.splitlines() if line.strip().startswith('if:'))
+    tree = ast.parse(condition.replace('&&', ' and ').replace('||', ' or '), mode='eval')
+
+    def evaluate(node, values):
+        if isinstance(node, ast.Expression):
+            return evaluate(node.body, values)
+        if isinstance(node, ast.Constant):
+            return node.value
+        if isinstance(node, ast.Attribute):
+            return values[ast.unparse(node)]
+        if isinstance(node, ast.BoolOp):
+            operation = {ast.And: all, ast.Or: any}[type(node.op)]
+            return operation(evaluate(child, values) for child in node.values)
+        if isinstance(node, ast.Compare) and len(node.ops) == 1 and isinstance(node.ops[0], ast.Eq):
+            return evaluate(node.left, values) == evaluate(node.comparators[0], values)
+        raise AssertionError(f'Review new cache predicate syntax: {ast.dump(node)}')
+
+    for event in ('push', 'pull_request', 'workflow_dispatch'):
+        for provider in ('gha', 'warp'):
+            for branch in ('main', 'feature'):
+                for count in ('', '1', '4'):
+                    for index in ('', '0', '1', '2', '3'):
+                        values = {
+                            'github.event_name': event, 'inputs.provider': provider,
+                            'github.ref_name': branch, 'github.event.repository.default_branch': 'main',
+                            'env.FUZZ_SHARD_COUNT': count, 'env.FUZZ_SHARD_INDEX': index,
+                        }
+                        expected = event == 'push' and (provider == 'gha' or branch == 'main') and (count == '' or index == '0')
+                        assert evaluate(tree, values) == expected, values
 
 
 def check_engine_detection(runner, root):
@@ -45,6 +82,7 @@ def check_engine_detection(runner, root):
 
 def main():
     root = Path(__file__).resolve().parents[2]
+    check_shared_cache_writer(root)
     runner = runpy.run_path(str(root / 'test/fuzz/test_runner.py'))
     check_engine_detection(runner, root)
     install = runner['install_p2c_seed_corpus']
