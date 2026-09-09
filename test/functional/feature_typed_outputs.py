@@ -4,13 +4,15 @@
 # file COPYING or https://opensource.org/license/mit/.
 """End-to-end tests for ConnectCoin typed transaction outputs."""
 
+import io
 import json
 import subprocess
 
 from test_framework.test_framework import BitcoinTestFramework
-from test_framework.messages import tx_from_hex
+from test_framework.messages import CTxOut, tx_from_hex
 from test_framework.util import (
     assert_equal,
+    assert_raises,
     assert_raises_rpc_error,
 )
 from test_framework.wallet_util import bytes_to_wif
@@ -62,12 +64,37 @@ class TypedOutputsTest(BitcoinTestFramework):
         assert_equal(p2c_tx.vout[0].domain, b"example.com")
         assert_equal(p2c_tx.vout[0].connection_work_target, bytes.fromhex(target)[::-1])
         assert_equal(p2c_tx.vout[0].root_certificates_version, 1)
+        assert_equal(p2c_tx.vout[0].signature_algorithms_mask, 7)
         assert_equal(p2c_tx.serialize().hex(), p2c_hex)
         decoded_p2c = node.decoderawtransaction(p2c_hex)["vout"][0]
         assert_equal(decoded_p2c["type"], 2)
         assert_equal(decoded_p2c["domain"], "example.com")
         assert_equal(decoded_p2c["connection_work_target"], target)
         assert_equal(decoded_p2c["root_certificates_version"], 1)
+        assert_equal(decoded_p2c["signature_algorithms_mask"], 7)
+        for mask in range(1, 8):
+            masked_hex = node.createrawtransaction(
+                inputs=[{"txid": "11" * 32, "vout": 0}],
+                outputs=[{"p2c": {
+                    "amount": 1, "domain": "example.com", "connection_work_target": target,
+                    "root_certificates_version": 1, "signature_algorithms_mask": mask,
+                }}],
+            )
+            masked_tx = tx_from_hex(masked_hex)
+            assert_equal(masked_tx.vout[0].signature_algorithms_mask, mask)
+            assert_equal(masked_tx.serialize().hex(), masked_hex)
+            assert_equal(node.decoderawtransaction(masked_hex)["vout"][0]["signature_algorithms_mask"], mask)
+            assert_equal(CTxOut(masked_tx.vout[0].nValue, masked_tx.vout[0].scriptPubKey).serialize(), masked_tx.vout[0].serialize())
+        for mask in (0, 8, 128, 255):
+            malformed = p2c_tx.vout[0].serialize()[:-1] + bytes([mask])
+            assert_raises(ValueError, CTxOut().deserialize, io.BytesIO(malformed))
+            malformed_tx = bytes.fromhex(p2c_hex)
+            # The only output ends immediately before the four-byte locktime.
+            malformed_tx = malformed_tx[:-5] + bytes([mask]) + malformed_tx[-4:]
+            assert_raises_rpc_error(-22, "TX decode failed", node.decoderawtransaction, malformed_tx.hex())
+        assert_raises(EOFError, CTxOut().deserialize, io.BytesIO(p2c_tx.vout[0].serialize()[:-1]))
+        truncated_tx = bytes.fromhex(p2c_hex)
+        assert_raises_rpc_error(-22, "TX decode failed", node.decoderawtransaction, (truncated_tx[:-5] + truncated_tx[-4:]).hex())
         challenge = node.getp2cchallenge(p2c_hex, 0)
         assert_equal(challenge["txid"], node.decoderawtransaction(p2c_hex)["txid"])
         assert_equal(challenge["input_index"], 0)
@@ -86,6 +113,7 @@ class TypedOutputsTest(BitcoinTestFramework):
                 "domain": "example.com",
                 "connection_work_target": target,
                 "root_certificates_version": 1,
+                "signature_algorithms_mask": 6,
             }}],
             add_to_wallet=False,
         )
@@ -94,6 +122,7 @@ class TypedOutputsTest(BitcoinTestFramework):
         p2c_outputs = [output for output in funded_decoded["vout"] if output["type"] == 2]
         assert_equal(len(p2c_outputs), 1)
         assert_equal(p2c_outputs[0]["domain"], "example.com")
+        assert_equal(p2c_outputs[0]["signature_algorithms_mask"], 6)
         assert_equal(node.testmempoolaccept([funded_p2c["hex"]])[0]["allowed"], True)
 
         self.log.info("Create P2C bounties through the dedicated wallet RPC")
@@ -119,15 +148,18 @@ class TypedOutputsTest(BitcoinTestFramework):
         assert_equal(explicit_output["domain"], "example.com")
         assert_equal(explicit_output["connection_work_target"], target)
         assert_equal(explicit_output["root_certificates_version"], 1)
+        assert_equal(explicit_output["signature_algorithms_mask"], 7)
 
         bits_result = node.cli.sendtop2c(
             domain="example.com",
             amount=1,
             work={"work_bits": 10},
             verbose=True,
+            signature_algorithms_mask=1,
         )
         assert "fee_reason" in bits_result["transactions"][0]
         bits_output = get_p2c_output(bits_result["txids"][0])
+        assert_equal(bits_output["signature_algorithms_mask"], 1)
         assert_equal(
             bits_output["connection_work_target"],
             "003f" + "ff" * 30,
@@ -175,6 +207,16 @@ class TypedOutputsTest(BitcoinTestFramework):
         self.log.info("Reject ambiguous and malformed P2C wallet requests")
         mempool_before = set(node.getrawmempool())
         locks_before = node.listlockunspent()
+        for mask in (-1, 0, 8, 128, 255, 256, 2**32):
+            assert_raises_rpc_error(
+                -8, "signature_algorithms_mask must be between 1 and 7", node.sendtop2c,
+                domain="example.com", amount=1, work={"work_bits": 0}, signature_algorithms_mask=mask,
+            )
+            assert_raises_rpc_error(
+                -8, "signature_algorithms_mask must be between 1 and 7", node.createrawtransaction,
+                [], [{"p2c": {"amount": 1, "domain": "example.com", "connection_work_target": target,
+                             "root_certificates_version": 1, "signature_algorithms_mask": mask}}],
+            )
         assert_raises_rpc_error(
             -6, "Fee rate", node.sendtop2c,
             domain="example.com", amount=0.001, work={"work_bits": 10},

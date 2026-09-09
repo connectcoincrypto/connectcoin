@@ -16,7 +16,8 @@ if --spk=raw, then scriptpubkey will be BLOB instead.
 scriptpubkey is Core's compatibility view, not a Bitcoin script on the wire:
 type 1 is 0x5120 || x-only public key; type 2 is 0x52 || domain length (u8)
 || domain || work target (32-byte little endian) || root version (u32 little
-endian). Bitcoin's legacy compressed-script snapshots are not supported.
+endian) || signature algorithms mask (u8). Bitcoin's legacy compressed-script
+snapshots are not supported.
 This checks the snapshot encoding, not its chain membership or consensus validity.
 """
 import argparse
@@ -35,10 +36,10 @@ MAX_MONEY = 100_000_000 * 10**10
 MAX_COMPACT_SIZE = 0x04000000
 NET_MAGIC_BYTES = {
     b"\xd9\x51\xa5\xe2": "ConnectCoin Mainnet (not launched)",
-    b"\x4c\x48\xf3\xb3": "ConnectCoin Signet (P2C v2)",
-    b"\x0d\xb1\x48\x4d": "ConnectCoin Testnet3 (P2C v2)",
-    b"\x4e\x3d\x81\x78": "ConnectCoin Testnet4 (P2C v2)",
-    b"\x8d\x6e\x01\x91": "ConnectCoin Regtest (P2C v2)",
+    b"\x30\x4c\x2f\x0c": "ConnectCoin Signet (P2C mask v1)",
+    b"\xc7\x29\x1f\xf5": "ConnectCoin Testnet3 (P2C mask v1)",
+    b"\x77\xd6\x6c\xbc": "ConnectCoin Testnet4 (P2C mask v1)",
+    b"\x3a\xf8\x3b\xe3": "ConnectCoin Regtest (P2C mask v1)",
 }
 
 
@@ -129,7 +130,10 @@ def read_typed_output(f):
     roots = read_exact(f, 4, "P2C root certificate version")
     if int.from_bytes(roots, 'little') == 0:
         raise ValueError("invalid P2C root certificate version")
-    return b'\x52' + domain_size + domain + target + roots
+    mask = read_exact(f, 1, "P2C signature algorithms mask")
+    if not 1 <= mask[0] <= 7:
+        raise ValueError("invalid P2C signature algorithms mask")
+    return b'\x52' + domain_size + domain + target + roots + mask
 
 
 def convert(f, con, args):

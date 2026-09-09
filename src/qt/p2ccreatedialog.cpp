@@ -21,6 +21,7 @@
 #include <util/translation.h>
 #include <wallet/coincontrol.h>
 #include <wallet/p2c.h>
+#include <wallet/p2c_tls.h>
 #include <wallet/wallet.h>
 
 #include <QAbstractButton>
@@ -39,10 +40,21 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
+#include <atomic>
+#include <chrono>
 #include <exception>
+#include <thread>
+#include <utility>
 #include <vector>
 
-P2CCreateDialog::P2CCreateDialog(QWidget* parent) : QWidget(parent)
+struct P2CCreateDialog::RsaProbeState
+{
+    std::atomic<bool> cancelled{false};
+    std::atomic<bool> rsa_verified{false};
+    const std::chrono::steady_clock::time_point deadline{std::chrono::steady_clock::now() + std::chrono::seconds{3}};
+};
+
+P2CCreateDialog::P2CCreateDialog(QWidget* parent) : QWidget(parent), m_rsa_probe{wallet::ProbeP2CRsa}
 {
     auto* outer = new QVBoxLayout(this);
     auto* tabs = new QTabWidget(this);
@@ -57,7 +69,7 @@ P2CCreateDialog::P2CCreateDialog(QWidget* parent) : QWidget(parent)
     title_font.setBold(true);
     title->setFont(title_font);
     layout->addWidget(title);
-    auto* explanation = new QLabel(tr("Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections."), this);
+    auto* explanation = new QLabel(tr("Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain's RSA signature support with a TLS handshake. No HTTP request is sent."), this);
     explanation->setWordWrap(true);
     layout->addWidget(explanation);
 
@@ -129,11 +141,88 @@ P2CCreateDialog::P2CCreateDialog(QWidget* parent) : QWidget(parent)
     updateWorkMode();
 }
 
-P2CCreateDialog::~P2CCreateDialog() = default;
+P2CCreateDialog::~P2CCreateDialog()
+{
+    cancelRsaProbe();
+}
+
+void P2CCreateDialog::setRsaProbeForTest(RsaProbe probe)
+{
+    m_rsa_probe = std::move(probe);
+}
+
+void P2CCreateDialog::cancelRsaProbe()
+{
+    if (m_probe) m_probe->cancelled.store(true);
+    m_probe.reset();
+}
+
+void P2CCreateDialog::startRsaProbe(const std::string& domain, uint32_t roots_version)
+{
+    const auto state = std::make_shared<RsaProbeState>();
+    m_probe = state;
+    auto* timer = new QTimer(m_confirmation);
+    timer->setSingleShot(true);
+    timer->setTimerType(Qt::PreciseTimer);
+    connect(timer, &QTimer::timeout, m_confirmation, [this, state] { freezeSignatureAlgorithms(state); });
+    timer->start(3000);
+    // DNS can outlive cancellation. Bound detached workers across all pages;
+    // a busy probe service conservatively leaves the full algorithm mask.
+    static const auto active_probes = std::make_shared<std::atomic<int>>(0);
+    const auto active = active_probes;
+    if (active->fetch_add(1) >= 4) {
+        --*active;
+        return;
+    }
+    try {
+        // No QObject, wallet, or batch is captured. A resolver that returns
+        // after cancellation can only touch this isolated shared state.
+        std::thread([state, domain, roots_version, probe = m_rsa_probe, active] {
+            try {
+                const auto cancelled = [state] { return state->cancelled.load(); };
+                const bool verified = probe && probe(domain, roots_version, cancelled, state->deadline);
+                if (verified && !cancelled() && std::chrono::steady_clock::now() < state->deadline) {
+                    state->rsa_verified.store(true);
+                }
+            } catch (...) {
+                // Probe failure is advisory: retain all supported algorithms.
+            }
+            --*active;
+        }).detach();
+    } catch (const std::exception&) {
+        --*active;
+        // Thread creation failure has the same conservative result as timeout.
+    }
+}
+
+void P2CCreateDialog::freezeSignatureAlgorithms(const std::shared_ptr<RsaProbeState>& probe)
+{
+    if (m_probe != probe || !m_confirmation || !m_batch || !m_model) return;
+    const uint8_t mask = probe->rsa_verified.load() ? PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA
+                                                   : PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL;
+    cancelRsaProbe();
+    auto selected = m_batch->SelectSignatureAlgorithmsMask(mask);
+    if (!selected) {
+        const auto error = QString::fromStdString(util::ErrorString(selected).translated);
+        m_confirmation->reject();
+        showError(error);
+        return;
+    }
+    const QString algorithms = mask == PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA
+        ? tr("RSA-PSS with SHA-256") : tr("All supported algorithms");
+    const QString selection = tr("Allowed signatures: %1 (mask %2)").arg(algorithms).arg(static_cast<unsigned int>(mask));
+    m_confirmation->setInformativeText(tr("These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.") + "<br /><br />" + selection);
+    m_confirmation->setDetailedText(m_confirmation->detailedText() + '\n' + selection);
+    // The batch and visible selection are now frozen; late probe results never
+    // reach either. Selection needs no unlock, fee calculation, or re-signing.
+    m_ready_to_send = true;
+    m_confirmation->button(QMessageBox::Yes)->setEnabled(true);
+}
 
 void P2CCreateDialog::setModel(WalletModel* model)
 {
     if (m_model) disconnect(m_model, nullptr, this, nullptr);
+    cancelRsaProbe();
     if (m_confirmation) m_confirmation->reject();
     m_batch.reset();
     m_model = model;
@@ -200,7 +289,7 @@ void P2CCreateDialog::prepare(bool)
     }
     const wallet::CRecipient recipient{
         .dest = CNoDestination{}, .nAmount = amount, .fSubtractFeeFromAmount = false,
-        .p2c = PayToDomainOutput{domain, *target, m_roots->currentData().toUInt()},
+        .p2c = PayToDomainOutput{domain, *target, m_roots->currentData().toUInt(), PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL},
     };
     const bool bits_mode{m_work_mode->currentIndex() == 0};
     const int work_bits{m_bits->value()};
@@ -217,7 +306,12 @@ void P2CCreateDialog::prepare(bool)
             if (!prepared) {
                 preparation_error = QString::fromStdString(util::ErrorString(prepared).translated);
             } else {
-                m_batch = std::move(*prepared);
+                auto alternative = (*prepared)->PrepareSignatureAlgorithmsAlternative(PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA);
+                if (!alternative) {
+                    preparation_error = QString::fromStdString(util::ErrorString(alternative).translated);
+                } else {
+                    m_batch = std::move(*prepared);
+                }
             }
         } catch (const std::exception& e) {
             preparation_error = tr("Unable to prepare P2C transactions: %1").arg(QString::fromUtf8(e.what()));
@@ -250,29 +344,33 @@ void P2CCreateDialog::prepare(bool)
         QMessageBox::Yes | QMessageBox::Cancel, this);
     m_confirmation->setObjectName("p2cConfirmation");
     m_confirmation->setTextFormat(Qt::RichText);
-    m_confirmation->setInformativeText(tr("These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending."));
+    m_confirmation->setInformativeText(tr("These rewards can be claimed by anyone presenting a valid connection proof. You cannot recover them using a normal wallet signature. Review all transactions before sending.") + "<br /><br />" + tr("Checking RSA signature support…"));
     m_confirmation->setDetailedText(details);
     m_confirmation->setDefaultButton(QMessageBox::Cancel);
     m_confirmation->setAttribute(Qt::WA_DeleteOnClose);
     auto* send = m_confirmation->button(QMessageBox::Yes);
     send->setText(tr("Send P2C"));
     send->setEnabled(false);
-    QTimer::singleShot(3000, m_confirmation, [send] { send->setEnabled(true); });
+    m_ready_to_send = false;
     GUIUtil::ExceptionSafeConnect(m_confirmation.data(), &QDialog::finished, this, &P2CCreateDialog::finishConfirmation);
     m_form->setEnabled(false);
     // No nested event loop: closing/unloading the wallet safely destroys the
     // dialog and releases the prepared batch without sending anything.
     m_confirmation->open();
+    startRsaProbe(domain, roots_version);
 }
 
 void P2CCreateDialog::finishConfirmation(int result)
 {
+    cancelRsaProbe();
     if (!m_batch) return;
+    const bool approved = result == QMessageBox::Yes && m_ready_to_send;
+    m_ready_to_send = false;
     auto batch = std::move(m_batch);
     m_confirmation = nullptr;
     QString error;
     std::vector<Txid> submitted;
-    if (result == QMessageBox::Yes && m_model) {
+    if (approved && m_model) {
         auto committed{batch->Commit()};
         QStringList txids;
         size_t index{0};

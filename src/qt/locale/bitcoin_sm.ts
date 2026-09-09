@@ -2356,8 +2356,24 @@ Talosaga mulimuli: %7
         <translation>Fai taui pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Tu'u tupe mo taui ta'itasi mo fa'amaoniga sa'o o so'otaga TLS. E mafai ona maua e so'o se tasi e ausia aiaiga. E lē fai e lenei itulau ni so'otaga HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Fa&apos;atupe taui tuto&apos;atasi mo fa&apos;amaoniga sa&apos;o o so&apos;otaga TLS. I le taimi o le fa&apos;amaoniga e tolu sekone, e siaki ai e lenei itulau pe lagolagoina e le igoa o le tuatusi saini RSA e ala i se feutaga&apos;iga TLS. E leai se talosaga HTTP e lafoina.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>O lo&apos;o siakiina le lagolago mo saini RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS ma le SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>O alakoriti uma e lagolagoina</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Saini e fa&apos;atagaina: %1 (ufimata %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

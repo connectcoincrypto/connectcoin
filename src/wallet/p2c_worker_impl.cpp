@@ -24,6 +24,7 @@
 #include <wallet/wallet.h>
 
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
@@ -113,13 +114,16 @@ struct P2CClaimWorkerImpl::Impl {
         }
     };
     struct DomainWork {
+        struct MaskWork {
+            std::set<PriorityKey> bounties;
+            double connection_rate{5};
+        };
         std::string name;
         std::map<PriorityKey, CTxOut> bounties;
+        std::array<MaskWork, PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL + 1> masks;
         std::optional<PriorityKey> after;
         size_t endpoint_offset{0};
         std::vector<CService> endpoints;
-        std::shared_ptr<P2CDomainStats> statistics;
-        double connection_rate{5};
         std::optional<std::pair<double, PriorityKey>> economic_key;
         ScheduleClock::time_point resolve_after{};
         bool resolving{false};
@@ -136,14 +140,17 @@ struct P2CClaimWorkerImpl::Impl {
         std::shared_ptr<DomainWork> group;
         std::shared_ptr<ClaimWork> claim;
         bool resolve{false};
+        std::shared_ptr<P2CDomainStats> statistics{};
     };
     // No network I/O while holding this mutex. Proposals/proofs are serialized
     // here; immutable assigned work stays alive across schedule refreshes.
     std::mutex work_mutex;
     std::map<std::string, std::shared_ptr<DomainWork>> groups;
-    // Shared by all bounties/endpoints of a domain. Kept through refreshes and
-    // temporary ineligibility, but not persisted when the wallet is unloaded.
-    std::map<std::string, std::shared_ptr<P2CDomainStats>> domain_statistics;
+    // Exact masks can negotiate different server certificates and performance.
+    // Share the last-100 history only within a (domain, mask), while domain
+    // rotation and DNS stay shared. Preserve history through ineligibility.
+    using DomainMask = std::pair<std::string, uint8_t>;
+    std::map<DomainMask, std::shared_ptr<P2CDomainStats>> domain_statistics;
     std::map<COutPoint, std::shared_ptr<ClaimWork>> claim_cache;
     // Local search budget, independent of proposal-cache eviction, payout
     // changes and stop/start. Deliberately not saved to the wallet database.
@@ -354,9 +361,15 @@ struct P2CClaimWorkerImpl::Impl {
     {
         if (group.economic_key) economic_order.erase({*group.economic_key, group.name});
         group.economic_key.reset();
-        if (!group.bounties.empty()) {
-            const auto& best{group.bounties.begin()->first};
-            group.economic_key = std::pair{-GetP2CDomainPriority(best.priority, group.connection_rate), best};
+        // At most seven mask-specific leaders; never scan the whole domain
+        // in the per-connection scheduling path.
+        for (const auto& mask : group.masks) {
+            if (mask.bounties.empty()) continue;
+            const auto& best{*mask.bounties.begin()};
+            const auto key{std::pair{-GetP2CDomainPriority(best.priority, mask.connection_rate), best}};
+            if (!group.economic_key || key < *group.economic_key) group.economic_key = key;
+        }
+        if (group.economic_key) {
             economic_order.emplace(*group.economic_key, group.name);
         }
     }
@@ -367,7 +380,7 @@ struct P2CClaimWorkerImpl::Impl {
     {
         std::map<COutPoint, CTxOut> snapshot;
         std::set<COutPoint> recent_outpoints;
-        std::set<std::string> catalog_domains;
+        std::set<DomainMask> catalog_masks;
         if (!wallet.chain().scanP2CBounties([&](const COutPoint& outpoint, const CTxOut& output) {
             // Remember all recent entries before applying this wallet's
             // domain filter; changing the filter must not reset a budget.
@@ -375,7 +388,7 @@ struct P2CClaimWorkerImpl::Impl {
             const auto bounty{output.GetPayToDomain()};
             if (domains.empty() || std::find(domains.begin(), domains.end(), bounty->domain) != domains.end()) {
                 snapshot.emplace(outpoint, output);
-                catalog_domains.insert(bounty->domain);
+                catalog_masks.emplace(bounty->domain, bounty->signature_algorithms_mask);
             }
             return true;
         }, [&] { return stop.load(); }, RECENT_BOUNTY_BLOCKS)) return;
@@ -425,13 +438,16 @@ struct P2CClaimWorkerImpl::Impl {
                 WITH_LOCK(wallet.cs_wallet, return wallet.IsLockedCoin(outpoint))) claim->unavailable = true;
             if (!claim->unavailable) claim->validation_time = validation_time;
         }
-        for (auto& [name, group] : groups) group->bounties.clear();
+        for (auto& [name, group] : groups) {
+            group->bounties.clear();
+            for (auto& mask : group->masks) mask.bounties.clear();
+        }
         economic_order.clear();
-        // Compute the last-100 throughput once per domain per refresh, not
-        // once per bounty or connection. Unknown domains retain the 5/s prior.
-        std::map<std::string, double> connection_rates;
-        for (const auto& [name, statistics] : domain_statistics) {
-            connection_rates.emplace(name, statistics->ConnectionRate());
+        // Compute throughput once per (domain, mask) per refresh. An untried
+        // mask retains the 5/s prior even if another mask cannot connect.
+        std::map<DomainMask, double> connection_rates;
+        for (const auto& [key, statistics] : domain_statistics) {
+            connection_rates.emplace(key, statistics->ConnectionRate());
         }
         for (const auto& [outpoint, output] : snapshot) {
             if (stop.load()) return;
@@ -450,7 +466,8 @@ struct P2CClaimWorkerImpl::Impl {
             // cannot reach 1000 connects/s when these 64 target bits are zero.
             if (bounty.connection_work_target.GetUint64(3) == 0) continue;
             if (AttemptLimitExceeded(outpoint, bounty.connection_work_target)) continue;
-            const double connection_rate{connection_rates.try_emplace(bounty.domain, 5.0).first->second};
+            const DomainMask domain_mask{bounty.domain, bounty.signature_algorithms_mask};
+            const double connection_rate{connection_rates.try_emplace(domain_mask, 5.0).first->second};
             const auto priority{GetP2CClaimPriority(bounty.connection_work_target, payout)};
             // Filter every bounty BEFORE domain rotation, DNS, key reservation
             // or TLS. Guaranteed domain turns must not bypass this floor.
@@ -459,21 +476,23 @@ struct P2CClaimWorkerImpl::Impl {
             if (!group) {
                 group = std::make_shared<DomainWork>();
                 group->name = bounty.domain;
-                auto& statistics{domain_statistics[bounty.domain]};
-                if (!statistics) statistics = std::make_shared<P2CDomainStats>();
-                group->statistics = statistics;
             }
-            group->bounties.emplace(PriorityKey{priority, outpoint}, output);
+            auto& statistics{domain_statistics[domain_mask]};
+            if (!statistics) statistics = std::make_shared<P2CDomainStats>();
+            const PriorityKey key{priority, outpoint};
+            group->bounties.emplace(key, output);
+            auto& mask{group->masks[bounty.signature_algorithms_mask]};
+            mask.bounties.insert(key);
+            mask.connection_rate = connection_rate;
         }
         std::erase_if(groups, [](const auto& entry) { return entry.second->bounties.empty(); });
-        // Preserve statistics while a domain still has confirmed bounties,
+        // Preserve statistics while a domain/mask still has confirmed bounties,
         // even if all are temporarily locked/spent in the mempool. An old
         // in-flight assignment keeps its history alive until capture returns.
         std::erase_if(domain_statistics, [&](const auto& entry) {
-            return !catalog_domains.contains(entry.first) && entry.second.use_count() == 1;
+            return !catalog_masks.contains(entry.first) && entry.second.use_count() == 1;
         });
         for (auto& [name, group] : groups) {
-            group->connection_rate = connection_rates.at(name);
             group->economic_key.reset();
             UpdateEconomicOrder(*group);
         }
@@ -532,15 +551,19 @@ struct P2CClaimWorkerImpl::Impl {
             if (candidate == group->bounties.end()) candidate = group->bounties.begin();
             const auto key{candidate->first};
             const auto outpoint{key.outpoint};
-            if (AttemptLimitExceeded(outpoint, candidate->second.GetPayToDomain()->connection_work_target)) {
+            const auto mask{candidate->second.GetPayToDomain()->signature_algorithms_mask};
+            const auto discard = [&] {
+                group->masks[mask].bounties.erase(key);
                 group->bounties.erase(candidate);
                 UpdateEconomicOrder(*group);
+            };
+            if (AttemptLimitExceeded(outpoint, candidate->second.GetPayToDomain()->connection_work_target)) {
+                discard();
                 continue;
             }
             auto cached{claim_cache.find(outpoint)};
             if (cached != claim_cache.end() && cached->second->unavailable) {
-                group->bounties.erase(candidate);
-                UpdateEconomicOrder(*group);
+                discard();
                 continue;
             }
             if (cached == claim_cache.end()) {
@@ -560,16 +583,14 @@ struct P2CClaimWorkerImpl::Impl {
                     ResumeP2CClaim(wallet, *saved->second, payout_destination)};
                 if (!prepared) {
                     Message("bounty skipped", util::ErrorString(prepared).original);
-                    group->bounties.erase(candidate);
-                    UpdateEconomicOrder(*group);
+                    discard();
                     continue;
                 }
                 // Fee policy may have changed since Refresh's quote. Check
                 // the actual fixed payout before assigning any connection.
                 if (!IsP2CClaimWorthAttempting(GetP2CClaimPriority(prepared->bounty.GetPayToDomain()->connection_work_target,
-                                                                 prepared->tx->vout[0].nValue), group->connection_rate)) {
-                    group->bounties.erase(candidate);
-                    UpdateEconomicOrder(*group);
+                                                                 prepared->tx->vout[0].nValue), group->masks[mask].connection_rate)) {
+                    discard();
                     continue;
                 }
                 proposals.insert_or_assign(outpoint, prepared->tx);
@@ -590,7 +611,8 @@ struct P2CClaimWorkerImpl::Impl {
                 domain = group->name;
                 state = "searching";
             }
-            return Assignment{std::move(group), cached->second, false};
+            const auto statistics{domain_statistics.at({group->name, mask})};
+            return Assignment{std::move(group), cached->second, false, statistics};
         }
         return std::nullopt;
     }
@@ -645,13 +667,14 @@ struct P2CClaimWorkerImpl::Impl {
             if (claim_cancelled()) continue;
             // No chain/database lookup in the per-connection hot path.
             const auto started{Clock::now()};
-            auto captured{CaptureP2CTls(endpoint, group->name, claim->challenge, claim_cancelled)};
+            auto captured{CaptureP2CTls(endpoint, group->name, claim->challenge, claim_cancelled,
+                {.signature_algorithms_mask = claim->prepared.bounty.GetPayToDomain()->signature_algorithms_mask})};
             const double seconds{std::chrono::duration<double>(Clock::now() - started).count()};
             if (captured || !claim_cancelled()) {
                 std::lock_guard lock{work_mutex};
                 // Full TLS capture is a success even if its work hash misses
                 // the target. Local cancellation is not a server failure.
-                group->statistics->Record(bool(captured), seconds);
+                assignment->statistics->Record(bool(captured), seconds);
             }
             if (!captured) {
                 if (!claim_cancelled()) {

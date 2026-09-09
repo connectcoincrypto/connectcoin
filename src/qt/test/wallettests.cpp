@@ -279,7 +279,11 @@ std::shared_ptr<CWallet> SetupDescriptorsWallet(interfaces::Node& node, TestChai
     Assert(wallet->AddWalletDescriptor(w_desc, provider, "", false));
     const CTxDestination dest{TestDestination(test.coinbaseKey)};
     wallet->SetAddressBook(dest, "", wallet::AddressPurpose::RECEIVE);
-    wallet->SetLastBlockProcessed(105, WITH_LOCK(node.context()->chainman->GetMutex(), return node.context()->chainman->ActiveChain().Tip()->GetBlockHash()));
+    {
+        LOCK(node.context()->chainman->GetMutex());
+        const auto* tip{node.context()->chainman->ActiveChain().Tip()};
+        wallet->SetLastBlockProcessed(tip->nHeight, tip->GetBlockHash());
+    }
     SyncUpWallet(wallet, node);
     wallet->SetBroadcastTransactions(true);
     return wallet;
@@ -636,7 +640,10 @@ void TestP2CGUI(interfaces::Node& node)
 {
     TestChain100Setup test;
     const CScript coinbase_script{GetScriptForDestination(TestDestination(test.coinbaseKey))};
-    for (int i = 0; i < 5; ++i) test.CreateAndProcessBlock({}, coinbase_script);
+    // Fund independent inputs for the single send, partial-commit batch,
+    // 1000-output batch and encrypted sends; unconfirmed change cannot fund
+    // independent split transactions. Do not depend on coin-selection luck.
+    for (int i = 0; i < 12; ++i) test.CreateAndProcessBlock({}, coinbase_script);
     auto loader = interfaces::MakeWalletLoader(*test.m_node.chain, *Assert(test.m_node.args));
     test.m_node.wallet_loader = loader.get();
     node.setContext(&test.m_node);
@@ -656,6 +663,35 @@ void TestP2CGUI(interfaces::Node& node)
     MiniGUI gui(node, style.get());
     gui.initModelForWallet(node, wallet, style.get(), /*unload=*/false);
     P2CCreateDialog page;
+    struct ProbeFixture {
+        enum class Outcome { FAILURE, SUCCESS, PENDING, LATE_SUCCESS, EXCEPTION };
+        std::atomic<Outcome> outcome{Outcome::FAILURE};
+        std::atomic<int> started{0};
+        std::atomic<int> finished{0};
+        std::atomic<int> cancelled{0};
+    };
+    const auto probe = std::make_shared<ProbeFixture>();
+    const P2CCreateDialog::RsaProbe mock_probe = [probe](const std::string&, uint32_t,
+                                                       const std::function<bool()>& cancelled,
+                                                       std::chrono::steady_clock::time_point deadline) {
+        const auto outcome = probe->outcome.load();
+        ++probe->started;
+        if (outcome == ProbeFixture::Outcome::PENDING || outcome == ProbeFixture::Outcome::LATE_SUCCESS) {
+            // Bound even a failed test's worker lifetime. A late result
+            // deliberately ignores cancellation to test the GUI's own fence.
+            while (std::chrono::steady_clock::now() < deadline &&
+                   (outcome == ProbeFixture::Outcome::LATE_SUCCESS || !cancelled())) {
+                std::this_thread::sleep_for(std::chrono::milliseconds{1});
+            }
+            if (outcome == ProbeFixture::Outcome::LATE_SUCCESS) std::this_thread::sleep_for(std::chrono::milliseconds{100});
+        }
+        if (cancelled()) ++probe->cancelled;
+        ++probe->finished;
+        if (outcome == ProbeFixture::Outcome::EXCEPTION) throw std::runtime_error("Injected probe failure");
+        return outcome == ProbeFixture::Outcome::SUCCESS || outcome == ProbeFixture::Outcome::LATE_SUCCESS;
+    };
+    // Never use DNS or real TLS in the normal Qt test suite.
+    page.setRsaProbeForTest(mock_probe);
     page.setModel(gui.walletModel.get());
     auto* claim_rate = page.findChild<QSpinBox*>("p2cClaimRate");
     auto* claim_unlimited = page.findChild<QCheckBox*>("p2cClaimUnlimited");
@@ -878,6 +914,7 @@ void TestP2CGUI(interfaces::Node& node)
     const COutPoint user_locked = std::get<0>(coins.begin()->second.front());
     QVERIFY(gui.walletModel->wallet().lockCoin(user_locked, false));
     error.clear();
+    const auto initial_probe = probe->started.load();
     create->click();
     QVERIFY2(error.isEmpty(), qPrintable(error));
     auto* confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
@@ -886,6 +923,7 @@ void TestP2CGUI(interfaces::Node& node)
     QVERIFY(confirmation->text().contains("Total debit"));
     QVERIFY(confirmation->text().contains("example.com"));
     QVERIFY(!confirmation->button(QMessageBox::Yes)->isEnabled());
+    QTRY_COMPARE(probe->started.load(), initial_probe + 1);
     std::vector<COutPoint> locks;
     gui.walletModel->wallet().listLockedCoins(locks);
     QVERIFY(locks.size() > 1);
@@ -898,6 +936,85 @@ void TestP2CGUI(interfaces::Node& node)
     QVERIFY(sent.empty());
     QVERIFY(gui.walletModel->wallet().unlockCoin(user_locked));
 
+    // Neither a timer nor a programmatic early approval may submit a batch.
+    const auto early_probe = probe->started.load();
+    create->click();
+    confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
+    QVERIFY(confirmation);
+    QTRY_COMPARE(probe->started.load(), early_probe + 1);
+    QVERIFY(!confirmation->button(QMessageBox::Yes)->isEnabled());
+    confirmation->done(QMessageBox::Yes);
+    QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+    QVERIFY(sent.empty());
+    locks.clear();
+    gui.walletModel->wallet().listLockedCoins(locks);
+    QVERIFY(locks.empty());
+
+    // Incomplete, late and exceptional probes all freeze the conservative mask.
+    for (const auto outcome : {ProbeFixture::Outcome::PENDING, ProbeFixture::Outcome::LATE_SUCCESS, ProbeFixture::Outcome::EXCEPTION}) {
+        QTRY_COMPARE(probe->started.load(), probe->finished.load());
+        probe->outcome = outcome;
+        const auto completed = probe->finished.load();
+        create->click();
+        confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
+        QVERIFY(confirmation);
+        QVERIFY(!confirmation->button(QMessageBox::Yes)->isEnabled());
+        QTRY_VERIFY(confirmation->button(QMessageBox::Yes)->isEnabled());
+        QVERIFY(confirmation->informativeText().contains("mask 7"));
+        const auto frozen = confirmation->informativeText();
+        QTRY_COMPARE(probe->finished.load(), completed + 1);
+        QCOMPARE(confirmation->informativeText(), frozen);
+        QVERIFY(sent.empty());
+        confirmation->reject();
+        QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+    }
+    probe->outcome = ProbeFixture::Outcome::FAILURE;
+
+    // A resolver may ignore cancellation. Repeated review/cancel must not
+    // create unbounded workers across the process, and saturation stays safe.
+    {
+        struct BlockedProbes {
+            std::atomic<bool> release{false};
+            std::atomic<int> entered{0};
+            std::atomic<int> exited{0};
+        };
+        const auto blocked = std::make_shared<BlockedProbes>();
+        struct ReleaseProbes {
+            std::shared_ptr<BlockedProbes> state;
+            ~ReleaseProbes() { state->release = true; }
+        } release{blocked};
+        page.setRsaProbeForTest([blocked](const std::string&, uint32_t, const std::function<bool()>&,
+                                         std::chrono::steady_clock::time_point deadline) {
+            ++blocked->entered;
+            while (!blocked->release && std::chrono::steady_clock::now() < deadline + std::chrono::seconds{30}) {
+                std::this_thread::sleep_for(std::chrono::milliseconds{1});
+            }
+            ++blocked->exited;
+            return true;
+        });
+        for (int i = 1; i <= 4; ++i) {
+            create->click();
+            confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
+            QVERIFY(confirmation);
+            QTRY_COMPARE(blocked->entered.load(), i);
+            confirmation->reject();
+            QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+        }
+        create->click();
+        confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
+        QVERIFY(confirmation);
+        QTRY_VERIFY(confirmation->button(QMessageBox::Yes)->isEnabled());
+        QVERIFY(confirmation->informativeText().contains("mask 7"));
+        QCOMPARE(blocked->entered.load(), 4);
+        QCOMPARE(blocked->exited.load(), 0);
+        QVERIFY(sent.empty());
+        confirmation->reject();
+        QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+        blocked->release = true;
+        QTRY_COMPARE(blocked->exited.load(), 4);
+        page.setRsaProbeForTest(mock_probe);
+    }
+
     // A manual unlock/relock during review belongs to the user, not the batch.
     create->click();
     confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
@@ -908,6 +1025,8 @@ void TestP2CGUI(interfaces::Node& node)
     const COutPoint replaced_lock{locks.front()};
     QVERIFY(gui.walletModel->wallet().unlockCoin(replaced_lock));
     QVERIFY(gui.walletModel->wallet().lockCoin(replaced_lock, /*write_to_db=*/true));
+    QTRY_VERIFY(confirmation->button(QMessageBox::Yes)->isEnabled());
+    QVERIFY(confirmation->informativeText().contains("mask 7"));
     confirmation->done(QMessageBox::Yes);
     QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
     QVERIFY(error.contains("reservation changed"));
@@ -916,19 +1035,58 @@ void TestP2CGUI(interfaces::Node& node)
     QVERIFY(gui.walletModel->wallet().unlockCoin(replaced_lock));
     error.clear();
 
-    // Submit exactly the reviewed output, even if the disabled form is changed.
+    // Unloading the page cancels an in-flight probe without keeping a wallet.
+    QTRY_COMPARE(probe->started.load(), probe->finished.load());
+    probe->outcome = ProbeFixture::Outcome::PENDING;
+    const auto cancellations = probe->cancelled.load();
+    const auto started = probe->started.load();
     create->click();
     QVERIFY(page.findChild<QMessageBox*>("p2cConfirmation"));
+    QTRY_COMPARE(probe->started.load(), started + 1);
     page.setModel(nullptr);
+    QTRY_COMPARE(probe->cancelled.load(), cancellations + 1);
+    QTRY_COMPARE(probe->started.load(), probe->finished.load());
     QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
     locks.clear();
     gui.walletModel->wallet().listLockedCoins(locks);
     QVERIFY(locks.empty());
     QVERIFY(sent.empty());
     page.setModel(gui.walletModel.get());
+
+    // Destroying a page while the worker is active must also release every
+    // reservation; the detached callback cannot refer to any deleted QObject.
+    auto closing_page = std::make_unique<P2CCreateDialog>();
+    closing_page->setRsaProbeForTest(mock_probe);
+    closing_page->setModel(gui.walletModel.get());
+    closing_page->findChild<QLineEdit*>("p2cDomain")->setText("example.com");
+    closing_page->findChild<BitcoinAmountField*>("p2cAmount")->setValue(COIN);
+    closing_page->findChild<QCheckBox*>("p2cCustomFee")->setChecked(true);
+    closing_page->findChild<BitcoinAmountField*>("p2cFeeRate")->setValue(2'000'000);
+    const auto closing_started = probe->started.load();
+    const auto closing_cancelled = probe->cancelled.load();
+    closing_page->findChild<QPushButton*>("p2cCreateButton")->click();
+    QVERIFY(closing_page->findChild<QMessageBox*>("p2cConfirmation"));
+    QTRY_COMPARE(probe->started.load(), closing_started + 1);
+    closing_page.reset();
+    QTRY_COMPARE(probe->cancelled.load(), closing_cancelled + 1);
+    QTRY_COMPARE(probe->started.load(), probe->finished.load());
+    locks.clear();
+    gui.walletModel->wallet().listLockedCoins(locks);
+    QVERIFY(locks.empty());
+    QVERIFY(sent.empty());
+
+    // Submit exactly the reviewed output after a timely verified RSA probe,
+    // even if the disabled form is subsequently changed.
+    probe->outcome = ProbeFixture::Outcome::SUCCESS;
+    const auto successful_probe = probe->finished.load();
     create->click();
     confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
     QVERIFY(confirmation);
+    QTRY_COMPARE(probe->finished.load(), successful_probe + 1);
+    QVERIFY(!confirmation->button(QMessageBox::Yes)->isEnabled());
+    QTRY_VERIFY(confirmation->button(QMessageBox::Yes)->isEnabled());
+    QVERIFY(confirmation->informativeText().contains("mask 6"));
+    QVERIFY(confirmation->detailedText().contains("mask 6"));
     domain->setText("changed.example");
     confirmation->done(QMessageBox::Yes);
     QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
@@ -942,6 +1100,7 @@ void TestP2CGUI(interfaces::Node& node)
         for (const auto& out : wtx->GetTx()->vout) {
             if (const auto p2c = out.GetPayToDomain()) {
                 QCOMPARE(p2c->domain, std::string{"example.com"});
+                QCOMPARE(p2c->signature_algorithms_mask, PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA);
                 QCOMPARE(p2c->connection_work_target.GetHex(), std::string{"003"} + std::string(61, 'f'));
                 QCOMPARE(out.nValue, COIN);
                 ++p2c_count;
@@ -989,6 +1148,7 @@ void TestP2CGUI(interfaces::Node& node)
     // first committed transaction, release remaining reservations, and never
     // automatically retry the original batch.
     const std::string partial_domain = std::string(63, 'p') + "." + std::string(63, 'q') + "." + std::string(63, 'r') + "." + std::string(61, 's');
+    probe->outcome = ProbeFixture::Outcome::SUCCESS;
     domain->setText(QString::fromStdString(partial_domain));
     count->setValue(1000);
     amount->setValue(COIN / 1000);
@@ -997,6 +1157,8 @@ void TestP2CGUI(interfaces::Node& node)
     QVERIFY2(error.isEmpty(), qPrintable(error));
     confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
     QVERIFY(confirmation);
+    QTRY_VERIFY(confirmation->button(QMessageBox::Yes)->isEnabled());
+    QVERIFY(confirmation->informativeText().contains("mask 6"));
     sent.clear();
     wallet->SetBroadcastTransactions(false);
     failing_database->batches_until_failure = 1;
@@ -1006,6 +1168,20 @@ void TestP2CGUI(interfaces::Node& node)
     QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
     QVERIFY(error.contains("Injected P2C database failure"));
     QCOMPARE(sent.size(), size_t{1});
+    {
+        LOCK(wallet->cs_wallet);
+        const auto* wtx = wallet->GetWalletTx(sent.front());
+        QVERIFY(wtx);
+        size_t partial_count{0};
+        for (const auto& out : wtx->GetTx()->vout) {
+            if (const auto p2c = out.GetPayToDomain()) {
+                QCOMPARE(p2c->domain, partial_domain);
+                QCOMPARE(p2c->signature_algorithms_mask, PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA);
+                ++partial_count;
+            }
+        }
+        QVERIFY(partial_count > 0 && partial_count < 1000);
+    }
     QVERIFY(QMetaObject::invokeMethod(&page, "finishConfirmation", Q_ARG(int, static_cast<int>(QMessageBox::Yes))));
     QCOMPARE(sent.size(), size_t{1});
     locks.clear();
@@ -1024,6 +1200,8 @@ void TestP2CGUI(interfaces::Node& node)
     QVERIFY2(error.isEmpty(), qPrintable(error));
     confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
     QVERIFY(confirmation);
+    QTRY_VERIFY(confirmation->button(QMessageBox::Yes)->isEnabled());
+    QVERIFY(confirmation->informativeText().contains("mask 6"));
     sent.clear();
     confirmation->done(QMessageBox::Yes);
     QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
@@ -1041,6 +1219,7 @@ void TestP2CGUI(interfaces::Node& node)
             for (const auto& out : wtx->GetTx()->vout) {
                 if (const auto p2c = out.GetPayToDomain()) {
                     QCOMPARE(p2c->domain, long_domain);
+                    QCOMPARE(p2c->signature_algorithms_mask, PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA);
                     QCOMPARE(out.nValue, COIN / 1000);
                     ++p2c_count;
                 }
@@ -1112,6 +1291,7 @@ void TestP2CGUI(interfaces::Node& node)
     });
     domain->setText("original.example");
     target->setText(QString(64, 'f'));
+    const auto encrypted_cancel_probe = probe->started.load();
     create->click();
     QVERIFY2(error.isEmpty(), qPrintable(error));
     confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
@@ -1119,6 +1299,7 @@ void TestP2CGUI(interfaces::Node& node)
     QVERIFY(wallet->IsLocked());
     QVERIFY(confirmation->text().contains("original.example"));
     QVERIFY(!confirmation->text().contains("changed-during-unlock.example"));
+    QTRY_COMPARE(probe->started.load(), encrypted_cancel_probe + 1);
     QVERIFY(confirmation->detailedText().contains(QString(64, 'f')));
     confirmation->reject();
     QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
@@ -1127,6 +1308,46 @@ void TestP2CGUI(interfaces::Node& node)
     locks.clear();
     gui.walletModel->wallet().listLockedCoins(locks);
     QVERIFY(locks.empty());
+    QObject::disconnect(unlock_connection);
+
+    // The RSA alternative was already signed before review: choosing and
+    // submitting it after relock must not request another password.
+    int unlock_requests{0};
+    unlock_connection = QObject::connect(gui.walletModel.get(), &WalletModel::requireUnlock, [&] {
+        ++unlock_requests;
+        QVERIFY(wallet->Unlock(passphrase));
+    });
+    probe->outcome = ProbeFixture::Outcome::SUCCESS;
+    domain->setText("original.example");
+    target->setText(QString(64, 'f'));
+    create->click();
+    confirmation = page.findChild<QMessageBox*>("p2cConfirmation");
+    QVERIFY(confirmation);
+    QVERIFY(wallet->IsLocked());
+    QCOMPARE(unlock_requests, 1);
+    QTRY_VERIFY(confirmation->button(QMessageBox::Yes)->isEnabled());
+    QVERIFY(wallet->IsLocked());
+    QVERIFY(confirmation->informativeText().contains("mask 6"));
+    confirmation->done(QMessageBox::Yes);
+    QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+    QVERIFY2(error.isEmpty(), qPrintable(error));
+    QVERIFY(wallet->IsLocked());
+    QCOMPARE(unlock_requests, 1);
+    QCOMPARE(sent.size(), size_t{1});
+    {
+        LOCK(wallet->cs_wallet);
+        const auto* wtx = wallet->GetWalletTx(sent.front());
+        QVERIFY(wtx);
+        int rewards{0};
+        for (const auto& out : wtx->GetTx()->vout) {
+            if (const auto p2c = out.GetPayToDomain()) {
+                QCOMPARE(p2c->signature_algorithms_mask, PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA);
+                QCOMPARE(p2c->domain, std::string{"original.example"});
+                ++rewards;
+            }
+        }
+        QCOMPARE(rewards, 1);
+    }
     QObject::disconnect(unlock_connection);
     page.setModel(nullptr);
     QVERIFY(!create->isEnabled());
@@ -1265,6 +1486,11 @@ void WalletTests::p2cTranslations()
         } translator;
         QVERIFY(translator.value.load(":/translations/" + locale));
         QVERIFY(QCoreApplication::installTranslator(&translator.value));
+        for (const auto* source : {"Checking RSA signature support…", "RSA-PSS with SHA-256",
+                 "All supported algorithms", "Allowed signatures: %1 (mask %2)",
+                 "Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain's RSA signature support with a TLS handshake. No HTTP request is sent."}) {
+            QVERIFY2(!translator.value.translate("P2CCreateDialog", source).isEmpty(), qPrintable(locale + ": " + source));
+        }
         P2CCreateDialog page;
         const auto* tabs = page.findChild<QTabWidget*>();
         QVERIFY(tabs);

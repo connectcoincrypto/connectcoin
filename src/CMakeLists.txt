@@ -53,11 +53,38 @@ FetchContent_Declare(connectcoin_mbedtls
 )
 FetchContent_MakeAvailable(connectcoin_mbedtls)
 
+# Preserve the RSA SubjectPublicKeyInfo identity and RFC 4055 restrictions,
+# and enable the corresponding TLS 1.3 rsa_pss_pss schemes in the pinned TLS
+# implementation. Apply on every configure so existing populated trees are
+# checked as well as clean FetchContent downloads.
+set(MBEDTLS_SOURCE_DIR "${connectcoin_mbedtls_SOURCE_DIR}")
+include("${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSP2CRSAPSS.cmake")
+unset(MBEDTLS_SOURCE_DIR)
+set(p2c_mbedtls_targets)
+# Enabling both upstream variants creates separate *_static targets. Every
+# variant consumes the patched headers and therefore needs the same adapter.
+foreach(mbedtls_component IN ITEMS mbedcrypto mbedx509 mbedtls)
+  foreach(mbedtls_suffix IN ITEMS "" _static)
+    set(mbedtls_target "${mbedtls_component}${mbedtls_suffix}")
+    if(TARGET ${mbedtls_target})
+      list(APPEND p2c_mbedtls_targets ${mbedtls_target})
+      if(mbedtls_component STREQUAL "mbedcrypto")
+        target_sources(${mbedtls_target} PRIVATE crypto/mbedtls_rsa_pss.c)
+      endif()
+      if(NOT mbedtls_component STREQUAL "mbedx509")
+        target_include_directories(${mbedtls_target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/crypto")
+      endif()
+    endif()
+  endforeach()
+endforeach()
+unset(mbedtls_component)
+unset(mbedtls_suffix)
+
 # The public headers are third-party too: consumers such as the wallet must
 # not promote their documentation/redeclaration warnings to project errors.
 # Attach this to the dependency so every direct or transitive consumer gets
 # the same system-header treatment, while its own sources keep strict checks.
-foreach(mbedtls_target IN ITEMS mbedcrypto mbedx509 mbedtls)
+foreach(mbedtls_target IN LISTS p2c_mbedtls_targets)
   target_include_directories(${mbedtls_target} SYSTEM INTERFACE
     ${connectcoin_mbedtls_SOURCE_DIR}/include
   )
@@ -71,7 +98,7 @@ endforeach()
 # undefined behavior. Disable only those noisy checks for the vendored package;
 # ASan, LSan, signed-overflow, invalid-shift, divide-by-zero, and all other
 # true-UB checks inherited from sanitize_interface remain enabled.
-foreach(mbedtls_target IN ITEMS mbedcrypto mbedx509 mbedtls everest p256m)
+foreach(mbedtls_target IN ITEMS ${p2c_mbedtls_targets} everest p256m)
   if(TARGET ${mbedtls_target})
     set_property(TARGET ${mbedtls_target} PROPERTY COMPILE_WARNING_AS_ERROR OFF)
     target_compile_options(${mbedtls_target} PRIVATE
@@ -85,6 +112,7 @@ foreach(mbedtls_target IN ITEMS mbedcrypto mbedx509 mbedtls everest p256m)
   endif()
 endforeach()
 unset(mbedtls_target)
+unset(p2c_mbedtls_targets)
 
 set(RANDOMX_BUILD_TESTS OFF CACHE BOOL "Build RandomX tests and benchmark tools" FORCE)
 set(RANDOMX_INSTALL OFF CACHE BOOL "Install the RandomX library and public header" FORCE)

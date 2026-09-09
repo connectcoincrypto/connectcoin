@@ -1724,8 +1724,24 @@ Pēdējais pieprasījums: %7
         <translation>Izveidot pay-to-connect atlīdzības</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Finansējiet neatkarīgas atlīdzības par derīgiem TLS savienojumu pierādījumiem. Tās var pieprasīt ikviens, kas izpilda prasības. Šī lapa neveido HTTPS savienojumus.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Finansējiet neatkarīgas atlīdzības par derīgiem TLS savienojuma pierādījumiem. Trīs sekunžu apstiprināšanas laikā šī lapa ar TLS rokasspiedienu pārbauda, vai domēns atbalsta RSA parakstus. HTTP pieprasījums netiek sūtīts.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Pārbauda RSA parakstu atbalstu…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS ar SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Visi atbalstītie algoritmi</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Atļautie paraksti: %1 (maska %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

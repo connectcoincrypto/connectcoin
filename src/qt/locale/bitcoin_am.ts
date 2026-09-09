@@ -1155,8 +1155,24 @@ Last claim: %7
         <translation>የpay-to-connect ሽልማቶችን ፍጠር</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>ለትክክለኛ የTLS ግንኙነት ማስረጃዎች የተለዩ ሽልማቶችን ይደግፉ። መስፈርቶቹን የሚያሟላ ማንኛውም ሰው ሊጠይቃቸው ይችላል። ይህ ገጽ የHTTPS ግንኙነቶችን አይፈጥርም።</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>ለትክክለኛ የTLS ግንኙነት ማስረጃዎች ገለልተኛ ሽልማቶችን ይመድቡ። በሶስት ሰከንድ ማረጋገጫ ጊዜ፣ ይህ ገጽ በTLS ድርድር የጎራውን የRSA ፊርማ ድጋፍ ይፈትሻል። የHTTP ጥያቄ አይላክም።</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>የRSA ፊርማ ድጋፍ በመፈተሽ ላይ…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS ከSHA-256 ጋር</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>ሁሉም የሚደገፉ ስልተ ቀመሮች</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>የተፈቀዱ ፊርማዎች፦ %1 (ማስክ %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

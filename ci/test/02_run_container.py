@@ -32,6 +32,7 @@ def main():
     # they will not be passed on.
     settings.update([
         "BASE_BUILD_DIR",
+        "CI_DEPENDS_CACHE_RUN",
         "CI_FAILFAST_TEST_LEAVE_DANGLING",
     ])
 

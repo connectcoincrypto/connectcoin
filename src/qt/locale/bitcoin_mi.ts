@@ -920,8 +920,24 @@ Tono whakamutunga: %7
         <translation>Hanga utu whiwhi pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Whakaritea he pūtea utu whiwhi motuhake mō ngā taunakitanga hononga TLS whaimana. Ka taea e te tangata e tutuki ana i ngā whakaritenga te tono. Kāore tēnei whārangi e hanga hononga HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Whakaratoa he pūtea mō ngā utu whiwhi motuhake mō ngā taunakitanga hononga TLS whaimana. I ngā hēkona e toru o te whakaū, ka tirohia e tēnei whārangi te tautoko waitohu RSA o te rohe mā te whiriwhiringa TLS. Kāore he tono HTTP e tukuna.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>E taki ana i te tautoko waitohu RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS me SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Ngā hātepe katoa e tautokona ana</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Ngā waitohu e whakaaetia ana: %1 (ārai %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

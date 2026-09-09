@@ -3841,8 +3841,24 @@ Last claim: %7
         <translation>Δημιουργία ανταμοιβών pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Χρηματοδοτήστε ανεξάρτητες ανταμοιβές για έγκυρες αποδείξεις σύνδεσης TLS. Μπορεί να τις διεκδικήσει οποιοσδήποτε πληροί τις απαιτήσεις. Αυτή η σελίδα δεν δημιουργεί συνδέσεις HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Χρηματοδοτήστε ανεξάρτητες ανταμοιβές για έγκυρες αποδείξεις σύνδεσης TLS. Κατά την επιβεβαίωση των τριών δευτερολέπτων, αυτή η σελίδα ελέγχει την υποστήριξη υπογραφών RSA από τον τομέα μέσω χειραψίας TLS. Δεν αποστέλλεται κανένα αίτημα HTTP.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Έλεγχος υποστήριξης υπογραφών RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS με SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Όλοι οι υποστηριζόμενοι αλγόριθμοι</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Επιτρεπόμενες υπογραφές: %1 (μάσκα %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

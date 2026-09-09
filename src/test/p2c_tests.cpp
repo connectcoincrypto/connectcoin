@@ -330,6 +330,20 @@ BOOST_AUTO_TEST_CASE(immutable_root_store_v1_is_parseable)
     BOOST_CHECK(P2CRootStoreAvailable());
 }
 
+BOOST_AUTO_TEST_CASE(signature_algorithm_mask_matches_only_supported_schemes)
+{
+    for (unsigned int mask = 0; mask <= 255; ++mask) {
+        const bool valid{mask >= 1 && mask <= 7};
+        BOOST_CHECK_EQUAL(P2CSignatureSchemeAllowed(mask, 0x0403), valid && (mask & 1));
+        BOOST_CHECK_EQUAL(P2CSignatureSchemeAllowed(mask, 0x0804), valid && (mask & 2));
+        BOOST_CHECK_EQUAL(P2CSignatureSchemeAllowed(mask, 0x0809), valid && (mask & 4));
+        BOOST_CHECK(!P2CSignatureSchemeAllowed(mask, 0));
+        BOOST_CHECK(!P2CSignatureSchemeAllowed(mask, 0x0805));
+        BOOST_CHECK(!P2CSignatureSchemeAllowed(mask, 0x0807));
+        BOOST_CHECK(!P2CSignatureSchemeAllowed(mask, 0xffff));
+    }
+}
+
 BOOST_AUTO_TEST_CASE(consensus_spend_path_rejects_an_untrusted_tls_proof)
 {
     CKey destination_key;
@@ -494,6 +508,13 @@ AwEHoUQDQgAEN8xW2XYJHlpyPsdZLf8gbu58+QaRdNCtFLX3aCJZYpJO5QDYIxH/
     const std::span<const unsigned char> test_roots{TEST_ROOTS_PEM, sizeof(TEST_ROOTS_PEM) - 1};
     BOOST_CHECK(VerifyP2CCertificateProofForTest(prevout, parsed, /*validation_time=*/1800000000,
                                                 test_roots, error));
+    for (uint8_t mask = 1; mask <= 7; ++mask) {
+        auto restricted{*prevout.GetPayToDomain()};
+        restricted.signature_algorithms_mask = mask;
+        const CTxOut restricted_prevout{prevout.nValue, restricted};
+        BOOST_CHECK_EQUAL(VerifyP2CCertificateProofForTest(restricted_prevout, parsed, 1800000000,
+                                                         test_roots, error), bool(mask & 1));
+    }
     BOOST_CHECK(!VerifyP2CCertificateProofForTest(prevout, parsed, /*validation_time=*/1600000000,
                                                  test_roots, error));
     BOOST_CHECK(!VerifyP2CCertificateProofForTest(prevout, parsed, /*validation_time=*/2100000000,

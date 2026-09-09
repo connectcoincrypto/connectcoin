@@ -2362,8 +2362,24 @@ Lasta rekompencopeto: %7
         <translation>Krei pay-to-connect-rekompencojn</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Financu apartajn rekompencojn por validaj pruvoj de TLS-konektoj. Ĉiu, kiu plenumas la postulojn, povas peti ilin. Ĉi tiu paĝo ne faras HTTPS-konektojn.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Financu sendependajn rekompencojn por validaj TLS-konektopruvoj. Dum la trisekunda konfirmo, ĉi tiu paĝo kontrolas la subtenon de la domajno por RSA-subskriboj per TLS-manpremo. Neniu HTTP-peto estas sendata.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Kontrolado de subteno por RSA-subskriboj…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS kun SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Ĉiuj subtenataj algoritmoj</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Permesitaj subskriboj: %1 (masko %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

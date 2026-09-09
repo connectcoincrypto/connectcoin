@@ -282,14 +282,16 @@ BOOST_AUTO_TEST_CASE(p2c_wire_format_uses_output_type_two)
     }};
     DataStream domain_encoded;
     domain_encoded << by_domain;
-    BOOST_REQUIRE_EQUAL(domain_encoded.size(), 8U + 1U + 1U + domain.size() + 32U + 4U);
+    BOOST_REQUIRE_EQUAL(domain_encoded.size(), 8U + 1U + 1U + domain.size() + 32U + 4U + 1U);
     BOOST_CHECK_EQUAL(std::to_integer<uint8_t>(domain_encoded[8]), 2U);
     BOOST_CHECK_EQUAL(std::to_integer<uint8_t>(domain_encoded[9]), domain.size());
+    BOOST_CHECK_EQUAL(std::to_integer<uint8_t>(domain_encoded[domain_encoded.size() - 1]), PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL);
 
     CTxOut decoded_domain;
     domain_encoded >> decoded_domain;
     BOOST_CHECK(decoded_domain == by_domain);
     BOOST_CHECK(decoded_domain.GetPayToDomain().has_value());
+    BOOST_CHECK_EQUAL(decoded_domain.GetPayToDomain()->signature_algorithms_mask, PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL);
 
     // The UTXO set and undo data use TxOutCompression, which must preserve
     // the exact typed payload rather than attempting Script compression.
@@ -305,6 +307,95 @@ BOOST_AUTO_TEST_CASE(p2c_wire_format_uses_output_type_two)
     BOOST_CHECK(!inconsistent.GetPayToDomain());
     DataStream rejected;
     BOOST_CHECK_THROW(rejected << inconsistent, std::ios_base::failure);
+}
+
+BOOST_AUTO_TEST_CASE(p2c_signature_mask_roundtrip_and_rejection)
+{
+    for (uint8_t mask{1}; mask <= PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL; ++mask) {
+        const CTxOut original{42, PayToDomainOutput{"example.com", uint256::ONE, 1, mask}};
+        BOOST_REQUIRE(original.GetPayToDomain());
+        BOOST_CHECK_EQUAL(original.GetPayToDomain()->signature_algorithms_mask, mask);
+        BOOST_CHECK(CTxOut(42, original.scriptPubKey) == original);
+        for (bool compressed : {false, true}) {
+            DataStream encoded;
+            if (compressed) encoded << Using<TxOutCompression>(original);
+            else encoded << original;
+            BOOST_CHECK_EQUAL(std::to_integer<uint8_t>(encoded[encoded.size() - 1]), mask);
+            CTxOut decoded;
+            if (compressed) encoded >> Using<TxOutCompression>(decoded);
+            else encoded >> decoded;
+            BOOST_CHECK(encoded.empty());
+            BOOST_CHECK(decoded == original);
+        }
+    }
+
+    const CTxOut original{42, PayToDomainOutput{"example.com", uint256::ONE, 1}};
+    for (unsigned mask{0}; mask <= 255; ++mask) {
+        if (IsValidP2CSignatureAlgorithmsMask(static_cast<uint8_t>(mask))) continue;
+        auto invalid_payload{*original.GetPayToDomain()};
+        invalid_payload.signature_algorithms_mask = static_cast<uint8_t>(mask);
+        CTxOut reused{original};
+        BOOST_CHECK_THROW(reused.SetPayToDomain(invalid_payload), std::ios_base::failure);
+        BOOST_CHECK(reused == original);
+        CScript view{original.scriptPubKey};
+        view.back() = static_cast<uint8_t>(mask);
+        BOOST_CHECK(CTxOut(42, view).GetType() == TxOutputType::INVALID);
+        reused.scriptPubKey = view;
+        BOOST_CHECK(!reused.GetPayToDomain());
+        BOOST_CHECK_THROW(GetSerializeSize(reused), std::ios_base::failure);
+        for (bool compressed : {false, true}) {
+            DataStream encoded;
+            if (compressed) encoded << Using<TxOutCompression>(original);
+            else encoded << original;
+            encoded[encoded.size() - 1] = std::byte(mask);
+            reused = original;
+            if (compressed) BOOST_CHECK_THROW(encoded >> Using<TxOutCompression>(reused), std::ios_base::failure);
+            else BOOST_CHECK_THROW(encoded >> reused, std::ios_base::failure);
+            BOOST_CHECK(reused.GetType() == TxOutputType::INVALID);
+            BOOST_CHECK(reused.scriptPubKey.empty());
+        }
+    }
+
+    // An old layout without the mask is truncated, never interpreted as ALL.
+    CScript old_view{original.scriptPubKey};
+    old_view.pop_back();
+    BOOST_CHECK(CTxOut(42, old_view).GetType() == TxOutputType::INVALID);
+    DataStream payload;
+    original.SerializePayload(payload);
+    for (size_t size{0}; size < payload.size(); ++size) {
+        CTxOut reused{original};
+        SpanReader reader{std::span{payload}.first(size)};
+        BOOST_CHECK_THROW(reused.UnserializePayload(reader), std::ios_base::failure);
+        BOOST_CHECK(reused.GetType() == TxOutputType::INVALID);
+        BOOST_CHECK(reused.scriptPubKey.empty());
+    }
+}
+
+BOOST_AUTO_TEST_CASE(p2c_signature_mask_survives_psbt_and_commits_to_txid)
+{
+    CMutableTransaction tx;
+    tx.vin.emplace_back(Txid::FromUint256(uint256::ONE), 0);
+    tx.vout.emplace_back(42, PayToDomainOutput{"example.com", uint256::ONE, 1});
+    const Txid all_algorithms{tx.GetHash()};
+    auto payload{*tx.vout[0].GetPayToDomain()};
+    payload.signature_algorithms_mask = PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA;
+    tx.vout[0].SetPayToDomain(payload);
+    BOOST_CHECK(tx.GetHash() != all_algorithms);
+
+    for (uint32_t version : {0U, 2U}) {
+        PartiallySignedTransaction psbt{tx, version};
+        psbt.inputs[0].witness_utxo = CTxOut{50, payload};
+        DataStream encoded;
+        encoded << psbt;
+        const PartiallySignedTransaction decoded{deserialize, encoded};
+        BOOST_CHECK(encoded.empty());
+        BOOST_CHECK(PSBTHasValidTypedOutputs(decoded));
+        const auto unsigned_tx{decoded.GetUnsignedTx()};
+        BOOST_REQUIRE(unsigned_tx);
+        BOOST_CHECK(unsigned_tx->GetHash() == tx.GetHash());
+        BOOST_CHECK(unsigned_tx->vout == tx.vout);
+        BOOST_CHECK(decoded.inputs[0].witness_utxo == psbt.inputs[0].witness_utxo);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(direct_schnorr_authorization)

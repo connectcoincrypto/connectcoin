@@ -1880,8 +1880,24 @@ Prōby: %5 | Posłane: %6
         <translation>Stwōrz nagrody pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Ufunduj ôsobne nagrody za prawidłowe dowody połōnczynia TLS. Może je ôdebrać kożdy, kto spełni wymogi. Ta strōna niy robi połōnczyń HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Finansuj ôsobne nagrody za prawidłowe dowody połōnczynia TLS. W czasie trzisekundowego potwierdzynio ta strōna sprawdzo, eli dōmyna ôbsuguje podpisy RSA, używajōnc uzgodniynio TLS. Żodne żōndanie HTTP niy je posyłane.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Sprawdzanie ôbsugi podpisōw RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS z SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Wszyjske ôbsugowane algorytmy</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Dozwolōne podpisy: %1 (maska %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

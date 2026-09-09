@@ -5295,8 +5295,24 @@ Last claim: %7
         <translation>pay-to-connect 보상 생성</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>유효한 TLS 연결 증명에 대한 독립적인 보상을 지원합니다. 요건을 충족하는 누구나 청구할 수 있습니다. 이 페이지는 HTTPS 연결을 만들지 않습니다.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>유효한 TLS 연결 증명에 대한 개별 보상을 마련합니다. 3초간의 확인 시간 동안 이 페이지는 TLS 핸드셰이크를 통해 도메인의 RSA 서명 지원 여부를 확인합니다. HTTP 요청은 전송되지 않습니다.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA 서명 지원 여부 확인 중…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>SHA-256을 사용하는 RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>지원되는 모든 알고리즘</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>허용된 서명: %1 (마스크 %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

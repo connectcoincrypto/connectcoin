@@ -38,7 +38,7 @@ Required configuration file settings:
 
 There are no implicit genesis or network-magic defaults. Test networks can be
 reset, and old block files must not be mixed with a new chain. The example
-configuration uses the P2C v2 Testnet4 network; for another network, select that
+configuration uses the P2C mask v1 Testnet4 network; for another network, select that
 network explicitly in both commands and update the port and paths as well.
 
 Optional config file setting for linearize-data:

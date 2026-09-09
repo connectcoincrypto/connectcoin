@@ -3390,8 +3390,24 @@ Last claim: %7
         <translation>បង្កើតរង្វាន់ pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>ផ្ដល់មូលនិធិដល់រង្វាន់ដាច់ដោយឡែកសម្រាប់ភស្តុតាងតភ្ជាប់ TLS ដែលមានសុពលភាព។ អ្នកណាដែលបំពេញលក្ខខណ្ឌអាចទាមទារបាន។ ទំព័រនេះមិនបង្កើតការតភ្ជាប់ HTTPS ទេ។</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>ផ្តល់ថវិកាសម្រាប់រង្វាន់ឯករាជ្យចំពោះភស្តុតាងតភ្ជាប់ TLS ដែលមានសុពលភាព។ ក្នុងអំឡុងពេលបញ្ជាក់បីវិនាទី ទំព័រនេះពិនិត្យការគាំទ្រហត្ថលេខា RSA របស់ដែនដោយការចរចា TLS។ គ្មានសំណើ HTTP ត្រូវបានផ្ញើទេ។</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>កំពុងពិនិត្យការគាំទ្រហត្ថលេខា RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS ជាមួយ SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>ក្បួនដោះស្រាយដែលបានគាំទ្រទាំងអស់</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>ហត្ថលេខាដែលអនុញ្ញាត៖ %1 (របាំង %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

@@ -3333,8 +3333,24 @@ Last claim: %7
         <translation>pay-to-connect வெகுமதிகளை உருவாக்கு</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>செல்லுபடியாகும் TLS இணைப்புச் சான்றுகளுக்குத் தனித்தனி வெகுமதிகளை நிதியளிக்கவும். தேவைகளைப் பூர்த்தி செய்யும் எவரும் அவற்றைக் கோரலாம். இந்தப் பக்கம் HTTPS இணைப்புகளை ஏற்படுத்தாது.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>செல்லுபடியாகும் TLS இணைப்புச் சான்றுகளுக்கான தனித்தனி வெகுமதிகளுக்கு நிதியளிக்கவும். மூன்று நொடிகள் உறுதிப்படுத்தும் நேரத்தில், இந்தப் பக்கம் TLS கைகுலுக்கல் மூலம் களத்தின் RSA கையொப்ப ஆதரவைச் சரிபார்க்கிறது. எந்த HTTP கோரிக்கையும் அனுப்பப்படாது.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA கையொப்ப ஆதரவு சரிபார்க்கப்படுகிறது…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>SHA-256 உடன் RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>ஆதரிக்கப்படும் அனைத்து வழிமுறைகளும்</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>அனுமதிக்கப்பட்ட கையொப்பங்கள்: %1 (மாஸ்க் %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

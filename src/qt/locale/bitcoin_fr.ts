@@ -5351,8 +5351,24 @@ Dernière réclamation : %7
         <translation>Créer des primes pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Financez des primes indépendantes pour des preuves valides de connexion TLS. Toute personne remplissant les conditions peut les réclamer. Cette page n’établit aucune connexion HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Financez des primes indépendantes pour des preuves de connexion TLS valides. Pendant les trois secondes de confirmation, cette page vérifie la prise en charge des signatures RSA par le domaine au moyen d’une négociation TLS. Aucune requête HTTP n’est envoyée.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Vérification de la prise en charge des signatures RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS avec SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Tous les algorithmes pris en charge</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Signatures autorisées : %1 (masque %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

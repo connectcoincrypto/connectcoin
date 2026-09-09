@@ -1348,8 +1348,24 @@ Last claim: %7
         <translation>שאַפֿן pay-to-connect־באַלוינונגען</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>פֿינאַנצירט באַזונדערע באַלוינונגען פֿאַר גילטיקע באַווײַזן פֿון TLS־פֿאַרבינדונגען. יעדער וואָס דערפֿילט די באַדינגונגען קען זיי פֿאָדערן. די זײַט מאַכט נישט קיין HTTPS־פֿאַרבינדונגען.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>פֿינאַנצירט באַזונדערע באַלוינונגען פֿאַר גילטיקע באַווײַזן פֿון TLS־פֿאַרבינדונגען. בעת דער דרײַ־סעקונדיקער באַשטעטיקונג קאָנטראָלירט דער בלאַט מיט אַ TLS־האַנטדרוק צי דער דאָמיין שטיצט RSA־אונטערשריפֿטן. קיין HTTP־בקשה ווערט נישט געשיקט.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>קאָנטראָלירן שטיצע פֿאַר RSA־אונטערשריפֿטן…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS מיט SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>אַלע געשטיצטע אַלגאָריטמען</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>דערלויבטע אונטערשריפֿטן: %1 (מאַסקע %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

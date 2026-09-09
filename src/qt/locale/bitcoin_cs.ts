@@ -4461,8 +4461,24 @@ Poslední nárok: %7
         <translation>Vytvořit odměny pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Financujte nezávislé odměny za platné důkazy spojení TLS. Získat je může kdokoli, kdo splní požadavky. Tato stránka nenavazuje spojení HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Financujte samostatné odměny za platné důkazy spojení TLS. Během třísekundového potvrzování tato stránka pomocí vyjednávání TLS ověřuje, zda doména podporuje podpisy RSA. Žádný požadavek HTTP se neodesílá.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Ověřování podpory podpisů RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS se SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Všechny podporované algoritmy</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Povolené podpisy: %1 (maska %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

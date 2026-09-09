@@ -418,6 +418,19 @@ bool IsCanonicalP2COutput(const CTxOut& output)
     return false;
 }
 
+bool P2CSignatureSchemeAllowed(uint8_t mask, uint16_t scheme)
+{
+    if (!IsValidP2CSignatureAlgorithmsMask(mask)) return false;
+    uint8_t flag{0};
+    switch (scheme) {
+    case TLS_ECDSA_SECP256R1_SHA256: flag = PayToDomainOutput::SIGNATURE_ALGORITHM_ECDSA_P256_SHA256; break;
+    case TLS_RSA_PSS_RSAE_SHA256: flag = PayToDomainOutput::SIGNATURE_ALGORITHM_RSA_PSS_RSAE_SHA256; break;
+    case TLS_RSA_PSS_PSS_SHA256: flag = PayToDomainOutput::SIGNATURE_ALGORITHM_RSA_PSS_PSS_SHA256; break;
+    default: return false;
+    }
+    return (mask & flag) != 0;
+}
+
 uint256 P2CClaimChallenge(const CTransaction& spending_tx, uint32_t input_index)
 {
     return (TaggedHash("ConnectCoin/P2C/claim/v1") << spending_tx.GetHash() << input_index).GetSHA256();

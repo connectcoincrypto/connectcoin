@@ -74,7 +74,7 @@ class MainnetDisabledTest(BitcoinTestFramework):
         for peer in self.nodes:
             assert_equal(peer.getblockchaininfo()["chain"], "testnet4")
             assert_equal(peer.getblockcount(), 0)
-            assert_equal(peer.getbestblockhash(), "38cae555fb78f44c31e7d6859d0476252b321dae8b6312afefe0a45fc3fd112a")
+            assert_equal(peer.getbestblockhash(), "710dc5910cbef40216bd82ccfb66af2273b2b1d336b034c5794966904cb603bf")
             self.check_genesis_display(peer, "testnet4")
         for directory in (old_index, old_chainstate):
             assert_equal(list(directory.iterdir()), [directory / "untouched"])
@@ -109,6 +109,12 @@ class MainnetDisabledTest(BitcoinTestFramework):
             return
 
         self.log.info("Compiled utility parameters match every reset-chain fixture and the beta default")
+        # Cross-compiled utilities may be 32-bit even when Python is 64-bit.
+        # Derive the expected default from the target compiler, never the output
+        # under test, so an incorrect LIGHT/FAST default still fails this check.
+        target_pointer_size = self.config.getint("environment", "TARGET_POINTER_SIZE")
+        assert target_pointer_size in (4, 8)
+        expected_default_mode = "fast" if target_pointer_size == 8 else "light"
         fixture_dir = Path(self.config["environment"]["SRCDIR"]) / "test" / "functional" / "data" / "util"
         cases = (
             ([], "testnet4"),
@@ -128,10 +134,25 @@ class MainnetDisabledTest(BitcoinTestFramework):
                 capture_output=True, text=True, timeout=self.rpc_timeout,
             )
             assert_equal(result.returncode, 0)
+            assert_equal(result.stderr, "")
             expected = json.loads((fixture_dir / f"getchainparams-{fixture}.json").read_text(encoding="utf-8"))
+            if "pow" in expected:
+                expected["pow"]["randomx_mode"] = expected_default_mode
             actual = json.loads(result.stdout)
             assert_equal(actual, expected)
             self.utility_chainparams[fixture] = actual
+            if "pow" in expected:
+                # Parameter inspection does not allocate a RandomX dataset or
+                # mine a block, including when FAST is requested on 32-bit.
+                for flag, mode in ((0, "light"), (1, "fast")):
+                    result = subprocess.run(
+                        self.get_binaries().util_argv() + arguments + [f"-randomxfast={flag}", "getchainparams"],
+                        capture_output=True, text=True, timeout=self.rpc_timeout,
+                    )
+                    assert_equal(result.returncode, 0)
+                    assert_equal(result.stderr, "")
+                    mode_expected = {**expected, "pow": {**expected["pow"], "randomx_mode": mode}}
+                    assert_equal(json.loads(result.stdout), mode_expected)
 
     def check_genesis_display(self, node, fixture):
         if not self.is_connectcoin_util_compiled():

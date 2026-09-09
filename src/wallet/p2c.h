@@ -41,6 +41,12 @@ public:
     const auto& GetTransactions() const { return m_transactions; }
     CAmount GetFee() const { return m_fee; }
     size_t GetCommittedCount() const { return m_committed_count; }
+    /** Pre-sign one alternative mask using the same inputs, values and fees.
+     * Must run while unlocked, before showing the approval dialog.
+     */
+    util::Result<void> PrepareSignatureAlgorithmsAlternative(uint8_t mask);
+    /** Freeze the original or pre-signed alternative. Does not access keys. */
+    util::Result<void> SelectSignatureAlgorithmsMask(uint8_t mask);
     /** Commits exactly the reviewed transactions, never regenerating their fees.
      * A storage error can leave a partially committed batch; callers must report
      * this and must not automatically retry the original request.
@@ -51,6 +57,10 @@ private:
     explicit P2CTransactionBatch(std::shared_ptr<CWallet> wallet);
     std::shared_ptr<CWallet> m_wallet;
     std::vector<std::pair<CreatedTransactionResult, size_t>> m_transactions;
+    std::vector<std::pair<CreatedTransactionResult, size_t>> m_alternative_transactions;
+    uint8_t m_signature_algorithms_mask{0};
+    uint8_t m_alternative_mask{0};
+    bool m_mask_selected{false};
     std::vector<COutPoint> m_locked;
     CAmount m_fee{0};
     size_t m_committed_count{0};

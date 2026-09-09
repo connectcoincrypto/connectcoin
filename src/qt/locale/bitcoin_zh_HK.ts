@@ -4970,8 +4970,24 @@ Last claim: %7
         <translation>建立 pay-to-connect 懸賞</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>為有效的 TLS 連線證明提供獨立獎勵。任何符合條件的人都可以領取。此頁面不會建立 HTTPS 連線。</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>為有效的 TLS 連線證明提供獨立獎勵。在三秒的確認期間，此頁面會透過 TLS 握手檢查網域是否支援 RSA 簽章。不會傳送 HTTP 請求。</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>正在檢查 RSA 簽章支援…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>使用 SHA-256 的 RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>所有支援的演算法</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>允許的簽章：%1（遮罩 %2）</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

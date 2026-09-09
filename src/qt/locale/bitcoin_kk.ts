@@ -1105,8 +1105,24 @@ Last claim: %7
         <translation>Pay-to-connect сыйақыларын жасау</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Жарамды TLS қосылым дәлелдері үшін жеке сыйақыларды қаржыландырыңыз. Талаптарды орындаған кез келген адам оларды ала алады. Бұл бет HTTPS қосылымдарын орнатпайды.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Жарамды TLS қосылым дәлелдері үшін тәуелсіз сыйақыларды қаржыландырыңыз. Үш секундтық растау кезінде бұл бет TLS келісуі арқылы доменнің RSA қолтаңбаларын қолдауын тексереді. HTTP сұрауы жіберілмейді.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA қолтаңбаларын қолдау тексерілуде…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>SHA-256 көмегімен RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Барлық қолдау көрсетілетін алгоритмдер</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Рұқсат етілген қолтаңбалар: %1 (маска %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

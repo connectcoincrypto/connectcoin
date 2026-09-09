@@ -124,6 +124,7 @@ RPCMethod preparep2cclaim()
             {RPCResult::Type::STR, "domain", "Domain from the on-chain bounty."},
             {RPCResult::Type::STR_HEX, "connection_work_target", "Largest accepted work hash."},
             {RPCResult::Type::NUM, "root_certificates_version", "Immutable trusted-root bundle."},
+            {RPCResult::Type::NUM, "signature_algorithms_mask", "Allowed CertificateVerify schemes: 1=ECDSA, 2=RSA-PSS-RSAE, 4=RSA-PSS-PSS."},
             {RPCResult::Type::NUM_TIME, "validation_time", "Chain median time past when prepared; checked again on submission."},
             {RPCResult::Type::NUM, "proof_size", "Proof bytes budgeted for fees."},
             {RPCResult::Type::STR_AMOUNT, "bounty_amount", "Gross bounty in CC."},
@@ -159,6 +160,7 @@ RPCMethod preparep2cclaim()
             result.pushKV("domain", bounty->domain);
             result.pushKV("connection_work_target", bounty->connection_work_target.GetHex());
             result.pushKV("root_certificates_version", bounty->root_certificates_version);
+            result.pushKV("signature_algorithms_mask", bounty->signature_algorithms_mask);
             result.pushKV("validation_time", prepared->validation_time);
             result.pushKV("proof_size", static_cast<uint64_t>(prepared->proof_size));
             result.pushKV("bounty_amount", ValueFromAmount(prepared->bounty.nValue));

@@ -107,10 +107,10 @@ def _pow_hash_int(header):
 
 MAGIC_BYTES = {
     "mainnet": b"\xd9\x51\xa5\xe2",
-    "testnet3": b"\x0d\xb1\x48\x4d",
-    "testnet4": b"\x4e\x3d\x81\x78",
-    "regtest": b"\x8d\x6e\x01\x91",
-    "signet": b"\x4c\x48\xf3\xb3",
+    "testnet3": b"\xc7\x29\x1f\xf5",
+    "testnet4": b"\x77\xd6\x6c\xbc",
+    "regtest": b"\x3a\xf8\x3b\xe3",
+    "signet": b"\x30\x4c\x2f\x0c",
 }
 
 def sha256(s):
@@ -556,6 +556,11 @@ class CTxOut:
     TYPE_INVALID = 0
     TYPE_P2PK = 1
     TYPE_PAY_TO_CONNECT = 2
+    SIGNATURE_ALGORITHM_ECDSA_P256_SHA256 = 0x01
+    SIGNATURE_ALGORITHM_RSA_PSS_RSAE_SHA256 = 0x02
+    SIGNATURE_ALGORITHM_RSA_PSS_PSS_SHA256 = 0x04
+    SIGNATURE_ALGORITHMS_RSA = 0x06
+    SIGNATURE_ALGORITHMS_ALL = 0x07
     __slots__ = (
         "nValue",
         "type",
@@ -563,6 +568,7 @@ class CTxOut:
         "domain",
         "connection_work_target",
         "root_certificates_version",
+        "signature_algorithms_mask",
         "_scriptPubKey",
     )
 
@@ -581,23 +587,30 @@ class CTxOut:
         self.domain = b""
         self.connection_work_target = b""
         self.root_certificates_version = 0
+        self.signature_algorithms_mask = self.SIGNATURE_ALGORITHMS_ALL
         if len(self._scriptPubKey) == 34 and self._scriptPubKey[:2] == b"\x51\x20":
             self.type = self.TYPE_P2PK
             self.pubkey = self._scriptPubKey[2:]
         elif len(self._scriptPubKey) >= 2 and self._scriptPubKey[0] == 0x52:
             domain_size = self._scriptPubKey[1]
-            expected_size = 2 + domain_size + 32 + 4
+            expected_size = 2 + domain_size + 32 + 4 + 1
             domain = self._scriptPubKey[2:2 + domain_size]
-            roots = int.from_bytes(self._scriptPubKey[-4:], "little")
-            if len(self._scriptPubKey) == expected_size and self._canonical_p2c_domain(domain) and roots != 0:
+            roots = int.from_bytes(self._scriptPubKey[-5:-1], "little")
+            mask = self._scriptPubKey[-1]
+            if len(self._scriptPubKey) == expected_size and self._canonical_p2c_domain(domain) and roots != 0 and self._valid_p2c_mask(mask):
                 self.type = self.TYPE_PAY_TO_CONNECT
                 self.domain = domain
                 self.connection_work_target = self._scriptPubKey[2 + domain_size:2 + domain_size + 32]
                 self.root_certificates_version = roots
+                self.signature_algorithms_mask = mask
             else:
                 self.type = self.TYPE_INVALID
         else:
             self.type = self.TYPE_INVALID
+
+    @staticmethod
+    def _valid_p2c_mask(mask):
+        return 1 <= mask <= CTxOut.SIGNATURE_ALGORITHMS_ALL
 
     @staticmethod
     def _canonical_p2c_domain(domain):
@@ -624,6 +637,7 @@ class CTxOut:
             self.domain = b""
             self.connection_work_target = b""
             self.root_certificates_version = 0
+            self.signature_algorithms_mask = self.SIGNATURE_ALGORITHMS_ALL
         elif self.type == self.TYPE_PAY_TO_CONNECT:
             encoded_size = f.read(1)
             if len(encoded_size) != 1:
@@ -642,16 +656,23 @@ class CTxOut:
             self.root_certificates_version = int.from_bytes(encoded_roots, "little")
             if self.root_certificates_version == 0:
                 raise ValueError("invalid PAY_TO_CONNECT root certificate version")
+            encoded_mask = f.read(1)
+            if len(encoded_mask) != 1:
+                raise EOFError("missing PAY_TO_CONNECT signature algorithms mask")
+            self.signature_algorithms_mask = encoded_mask[0]
+            if not self._valid_p2c_mask(self.signature_algorithms_mask):
+                raise ValueError("invalid PAY_TO_CONNECT signature algorithms mask")
             self.pubkey = b""
             self._scriptPubKey = (
                 b"\x52" + encoded_size + self.domain +
-                self.connection_work_target + encoded_roots
+                self.connection_work_target + encoded_roots + encoded_mask
             )
         elif self.type == self.TYPE_INVALID:
             self.pubkey = b""
             self.domain = b""
             self.connection_work_target = b""
             self.root_certificates_version = 0
+            self.signature_algorithms_mask = self.SIGNATURE_ALGORITHMS_ALL
             self._scriptPubKey = b""
         else:
             raise ValueError(f"unknown transaction output type {self.type}")
@@ -668,10 +689,12 @@ class CTxOut:
                 raise ValueError("PAY_TO_CONNECT work target must be 32 bytes")
             if not 0 < self.root_certificates_version <= 0xffffffff:
                 raise ValueError("invalid PAY_TO_CONNECT root certificate version")
+            if not self._valid_p2c_mask(self.signature_algorithms_mask):
+                raise ValueError("invalid PAY_TO_CONNECT signature algorithms mask")
             return (
                 bytes([self.type, len(self.domain)]) + self.domain +
                 self.connection_work_target +
-                self.root_certificates_version.to_bytes(4, "little")
+                self.root_certificates_version.to_bytes(4, "little") + bytes([self.signature_algorithms_mask])
             )
         if self.type == self.TYPE_INVALID:
             return bytes([self.type])
@@ -682,10 +705,10 @@ class CTxOut:
 
     def __repr__(self):
         if self.type == self.TYPE_PAY_TO_CONNECT:
-            return "CTxOut(nValue=%i.%010i type=%i domain=%s target=%s roots=%i)" \
+            return "CTxOut(nValue=%i.%010i type=%i domain=%s target=%s roots=%i signature_algorithms_mask=%i)" \
                 % (self.nValue // COIN, self.nValue % COIN, self.type,
                    self.domain.decode("ascii", errors="replace"),
-                   self.connection_work_target.hex(), self.root_certificates_version)
+                   self.connection_work_target.hex(), self.root_certificates_version, self.signature_algorithms_mask)
         return "CTxOut(nValue=%i.%010i type=%i pubkey=%s)" \
             % (self.nValue // COIN, self.nValue % COIN,
                self.type, self.pubkey.hex())
@@ -2111,6 +2134,34 @@ class msg_feature:
 
 
 class TestFrameworkScript(unittest.TestCase):
+    def test_p2c_signature_algorithms_mask(self):
+        # The compatibility view and consensus payload use the same byte
+        # order after their different first bytes (OP_2 versus output type 2).
+        base = b"\x52\x0bexample.com" + bytes(range(32)) + (1).to_bytes(4, "little")
+        for mask in range(1, 8):
+            output = CTxOut(42, base + bytes([mask]))
+            self.assertEqual(output.type, CTxOut.TYPE_PAY_TO_CONNECT)
+            self.assertEqual(output.signature_algorithms_mask, mask)
+            encoded = output.serialize()
+            self.assertEqual(encoded, (42).to_bytes(8, "little") + b"\x02" + base[1:] + bytes([mask]))
+            decoded = CTxOut()
+            stream = BytesIO(encoded)
+            decoded.deserialize(stream)
+            self.assertEqual(stream.read(), b"")
+            self.assertEqual(decoded.serialize(), encoded)
+            self.assertEqual(decoded.scriptPubKey, output.scriptPubKey)
+            self.assertEqual(decoded.signature_algorithms_mask, mask)
+        for mask in (0, *range(8, 256)):
+            self.assertEqual(CTxOut(42, base + bytes([mask])).type, CTxOut.TYPE_INVALID)
+            with self.assertRaises(ValueError):
+                CTxOut().deserialize(BytesIO(encoded[:-1] + bytes([mask])))
+            output.signature_algorithms_mask = mask
+            with self.assertRaises(ValueError):
+                output.serialize()
+        self.assertEqual(CTxOut(42, base).type, CTxOut.TYPE_INVALID)
+        with self.assertRaises(EOFError):
+            CTxOut().deserialize(BytesIO(encoded[:-1]))
+
     def test_addrv2_encode_decode(self):
         def check_addrv2(ip, net):
             addr = CAddress()

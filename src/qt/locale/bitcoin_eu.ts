@@ -5391,8 +5391,24 @@ Azken eskaera: %7
         <translation>Sortu pay-to-connect sariak</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Finantzatu sari independenteak baliozko TLS konexio-frogentzat. Baldintzak betetzen dituen edonork eska ditzake. Orri honek ez du HTTPS konexiorik ezartzen.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Finantzatu TLS konexioen baliozko frogen sari independenteak. Hiru segundoko berrespenaldian, orri honek domeinuak RSA sinadurak onartzen dituen egiaztatzen du TLS negoziazio baten bidez. Ez da HTTP eskaerarik bidaltzen.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA sinaduren euskarria egiaztatzen…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS SHA-256 erabiliz</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Onartutako algoritmo guztiak</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Baimendutako sinadurak: %1 (%2 maskara)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

@@ -39,10 +39,10 @@ class FileMeta(object):
         '''Parse a `git ls files --stage` output line.'''
         # 100755 5a150d5f8031fcd75e80a4dd9843afa33655f579 0       ci/test/00_setup_env.sh
         meta, self.file_path = file_spec.split('\t', 2)
-        meta = meta.split()
+        meta_fields = meta.split()
         # The octal file permission of the file. Internally, git only
         # keeps an 'executable' bit, so this will always be 0o644 or 0o755.
-        self.permissions = int(meta[0], 8) & 0o7777
+        self.permissions = int(meta_fields[0], 8) & 0o7777
         # We don't currently care about the other fields
 
     @property

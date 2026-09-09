@@ -155,6 +155,42 @@ BOOST_AUTO_TEST_CASE(kernel_type1_verification_matches_consensus)
                                       cck::ScriptVerificationFlags::ALL, status));
 }
 
+BOOST_AUTO_TEST_CASE(kernel_type2_signature_algorithms_mask)
+{
+    for (uint8_t mask{1}; mask <= PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL; ++mask) {
+        const CTxOut output{42, PayToDomainOutput{"example.com", uint256::ONE, 1, mask}};
+        const auto view{ScriptBytes(output.scriptPubKey)};
+        cck::ScriptPubkey script{view};
+        cck::TransactionOutput kernel_output{script, 42};
+        BOOST_REQUIRE(kernel_output.get() != nullptr);
+        BOOST_CHECK(kernel_output.GetScriptPubkey().ToBytes() == view);
+
+        CMutableTransaction tx;
+        tx.vin.emplace_back(Txid::FromUint256(uint256::ONE), 0);
+        tx.vout.push_back(output);
+        const auto wire{SerializeTransaction(tx)};
+        cck::Transaction kernel_tx{wire};
+        BOOST_REQUIRE(kernel_tx.get() != nullptr);
+        BOOST_CHECK(kernel_tx.ToBytes() == wire);
+        BOOST_CHECK(kernel_tx.GetOutput(0).GetScriptPubkey().ToBytes() == view);
+
+        for (uint8_t invalid_mask : {uint8_t{0}, uint8_t{8}, uint8_t{128}, uint8_t{255}}) {
+            auto invalid_view{view};
+            invalid_view.back() = std::byte{invalid_mask};
+            cck::ScriptPubkey invalid_script{invalid_view};
+            auto* rejected{cck_transaction_output_create(invalid_script.get(), 42)};
+            BOOST_CHECK(rejected == nullptr);
+            if (rejected) cck_transaction_output_destroy(rejected);
+        }
+        auto old_view{view};
+        old_view.pop_back();
+        cck::ScriptPubkey old_script{old_view};
+        auto* rejected{cck_transaction_output_create(old_script.get(), 42)};
+        BOOST_CHECK(rejected == nullptr);
+        if (rejected) cck_transaction_output_destroy(rejected);
+    }
+}
+
 BOOST_AUTO_TEST_CASE(kernel_signet_rejects_nontrivial_script_challenges)
 {
     constexpr uint8_t trivial_challenge{OP_TRUE};

@@ -151,12 +151,25 @@ inline constexpr size_t MAX_P2C_DOMAIN_LENGTH{253};
 /** Immutable payload for a PAY_TO_DOMAIN output. */
 struct PayToDomainOutput
 {
+    static constexpr uint8_t SIGNATURE_ALGORITHM_ECDSA_P256_SHA256{0x01};
+    static constexpr uint8_t SIGNATURE_ALGORITHM_RSA_PSS_RSAE_SHA256{0x02};
+    static constexpr uint8_t SIGNATURE_ALGORITHM_RSA_PSS_PSS_SHA256{0x04};
+    static constexpr uint8_t SIGNATURE_ALGORITHMS_RSA{0x06};
+    static constexpr uint8_t SIGNATURE_ALGORITHMS_ALL{0x07};
+
     std::string domain;
     uint256 connection_work_target;
     uint32_t root_certificates_version{0};
+    uint8_t signature_algorithms_mask{SIGNATURE_ALGORITHMS_ALL};
 
     friend bool operator==(const PayToDomainOutput&, const PayToDomainOutput&) = default;
 };
+
+/** Require at least one supported TLS signature scheme and no reserved bits. */
+constexpr bool IsValidP2CSignatureAlgorithmsMask(uint8_t mask)
+{
+    return mask != 0 && (mask & ~PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL) == 0;
+}
 
 /**
  * Return whether a domain is in the canonical P2C wire form: lower-case ASCII
@@ -171,7 +184,8 @@ bool IsCanonicalP2CDomain(std::string_view domain);
  * The consensus serialization is amount + one-byte type + type payload. For
  * P2PK the payload is exactly one 32-byte x-only public key. P2C uses a
  * one-byte domain length followed by the canonical domain, a 32-byte work
- * target, and a 32-bit immutable root-certificate bundle version. scriptPubKey is a
+ * target, a 32-bit immutable root-certificate bundle version, and a one-byte
+ * signature-algorithms mask. scriptPubKey is a
  * compatibility view used by wallet, descriptor, PSBT, kernel, and RPC code;
  * it is not serialized for valid outputs and is never executed by consensus.
  */
@@ -223,6 +237,7 @@ public:
                 s.write(MakeByteSpan(p2c->domain));
                 ::Serialize(s, p2c->connection_work_target);
                 ::Serialize(s, p2c->root_certificates_version);
+                ::Serialize(s, p2c->signature_algorithms_mask);
             } else {
                 throw std::ios_base::failure("Inconsistent PAY_TO_CONNECT transaction output");
             }
@@ -269,6 +284,10 @@ public:
             ::Unserialize(s, p2c.root_certificates_version);
             if (p2c.root_certificates_version == 0) {
                 throw std::ios_base::failure("Invalid PAY_TO_CONNECT root certificate version");
+            }
+            ::Unserialize(s, p2c.signature_algorithms_mask);
+            if (!IsValidP2CSignatureAlgorithmsMask(p2c.signature_algorithms_mask)) {
+                throw std::ios_base::failure("Invalid PAY_TO_CONNECT signature algorithms mask");
             }
             SetPayToDomain(p2c);
             break;

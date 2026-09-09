@@ -4930,8 +4930,24 @@ Last claim: %7
         <translation>建立 pay-to-connect 懸賞</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>為有效个 TLS 連線證明提供獨立獎勵。符合條件个人都做得領取。這隻頁面毋會建立 HTTPS 連線。</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>為有效个 TLS 連線證明提供獨立獎勵。在三秒个確認期間，這隻頁面會用 TLS 交握檢查網域係毋係支援 RSA 簽章。毋會傳送 HTTP 請求。</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>檢查緊 RSA 簽章支援情形…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>使用 SHA-256 个 RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>全部支援个演算法</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>允許个簽章：%1（遮罩 %2）</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

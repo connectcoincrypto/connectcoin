@@ -435,6 +435,7 @@ static void TypedOutputFieldsToUniv(const CTxOut& txout, UniValue& out)
         out.pushKV("domain", p2c->domain);
         out.pushKV("connection_work_target", p2c->connection_work_target.GetHex());
         out.pushKV("root_certificates_version", p2c->root_certificates_version);
+        out.pushKV("signature_algorithms_mask", p2c->signature_algorithms_mask);
     }
 }
 

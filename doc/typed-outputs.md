@@ -49,6 +49,14 @@ connection to a canonical DNS domain. Its payload is:
 | `domain` | variable | Lower-case ASCII DNS LDH labels, without a trailing dot |
 | `connection_work_target` | 32 bytes | Maximum accepted connection-work hash |
 | `root_certificates_version` | 4 bytes | Immutable trusted-root bundle identifier |
+| `signature_algorithms_mask` | 1 byte | Allowed TLS CertificateVerify signature schemes |
+
+The mask is mandatory on the wire. Bit 0 (`1`) allows ECDSA P-256/SHA-256,
+bit 1 (`2`) allows `rsa_pss_rsae_sha256`, and bit 2 (`4`) allows
+`rsa_pss_pss_sha256`. Mask `6` allows both RSA schemes; mask `7` allows all
+three and is the default for creators. Zero and reserved bits are invalid.
+Type-2 payloads from the previous layout that omit the mask are not supported;
+there is no old-layout fallback.
 
 There is no mode byte and no certificate-specific output form. The leaf
 certificate and every intermediate sent by the server appear in the redemption
@@ -72,8 +80,8 @@ view still exactly matches the canonical key, so direct mutation cannot silently
 change or desynchronize the consensus payload.
 
 For type `2`, the compatibility view is a deterministic internal byte sequence
-beginning with `OP_2`, followed by the domain length, domain, target, and root
-bundle version. It exists only for inherited interfaces. It is neither the
+beginning with `OP_2`, followed by the domain length, domain, target, root
+bundle version, and signature-algorithms mask. It exists only for inherited interfaces. It is neither the
 consensus wire payload nor an executable Script.
 
 ## Coinbase witness commitment

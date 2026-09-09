@@ -3869,8 +3869,24 @@ Last claim: %7
         <translation>יצירת פרסי pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>מימון תגמולים נפרדים עבור הוכחות תקינות לחיבור TLS. כל מי שעומד בתנאים יכול לממש אותם. הדף הזה אינו יוצר חיבורי HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>ממנו תגמולים עצמאיים עבור הוכחות תקינות לחיבור TLS. במהלך שלוש שניות האישור, דף זה בודק את תמיכת המתחם בחתימות RSA באמצעות לחיצת יד של TLS. לא נשלחת בקשת HTTP.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>תמיכה בחתימות RSA נבדקת…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS עם SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>כל האלגוריתמים הנתמכים</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>חתימות מותרות: %1 (מסכה %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

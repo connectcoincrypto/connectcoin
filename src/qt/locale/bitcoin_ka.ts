@@ -3166,8 +3166,24 @@ Last claim: %7
         <translation>pay-to-connect ჯილდოების შექმნა</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>დააფინანსეთ დამოუკიდებელი ჯილდოები TLS კავშირის მოქმედი მტკიცებულებებისთვის. მათი მოთხოვნა შეუძლია ყველას, ვინც პირობებს აკმაყოფილებს. ეს გვერდი HTTPS კავშირებს არ ამყარებს.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>დააფინანსეთ დამოუკიდებელი ჯილდოები TLS კავშირის მოქმედი მტკიცებულებებისთვის. სამწამიანი დადასტურების დროს ეს გვერდი TLS შეთანხმებით ამოწმებს დომენის მიერ RSA ხელმოწერების მხარდაჭერას. HTTP მოთხოვნა არ იგზავნება.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>მოწმდება RSA ხელმოწერების მხარდაჭერა…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS SHA-256-ით</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>ყველა მხარდაჭერილი ალგორითმი</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>ნებადართული ხელმოწერები: %1 (ნიღაბი %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

@@ -10,7 +10,11 @@
 #include <QPointer>
 #include <QWidget>
 
+#include <chrono>
+#include <cstdint>
+#include <functional>
 #include <memory>
+#include <string>
 
 class BitcoinAmountField;
 class WalletModel;
@@ -32,9 +36,13 @@ class P2CCreateDialog : public QWidget
 {
     Q_OBJECT
 public:
+    using RsaProbe = std::function<bool(const std::string&, uint32_t, const std::function<bool()>&,
+                                       std::chrono::steady_clock::time_point)>;
     explicit P2CCreateDialog(QWidget* parent = nullptr);
     ~P2CCreateDialog();
     void setModel(WalletModel* model);
+    /** Test injection: all normal GUI tests use an in-memory probe, never DNS/TLS. */
+    void setRsaProbeForTest(RsaProbe probe);
 
 Q_SIGNALS:
     void coinsSent(const Txid& txid);
@@ -46,6 +54,10 @@ private Q_SLOTS:
     void finishConfirmation(int result);
 
 private:
+    struct RsaProbeState;
+    void startRsaProbe(const std::string& domain, uint32_t roots_version);
+    void cancelRsaProbe();
+    void freezeSignatureAlgorithms(const std::shared_ptr<RsaProbeState>& probe);
     void showError(const QString& text);
     QPointer<WalletModel> m_model;
     P2CClaimDialog* m_claim;
@@ -64,6 +76,9 @@ private:
     QPlainTextEdit* m_receipt;
     QPointer<QMessageBox> m_confirmation;
     std::unique_ptr<wallet::P2CTransactionBatch> m_batch;
+    RsaProbe m_rsa_probe;
+    std::shared_ptr<RsaProbeState> m_probe;
+    bool m_ready_to_send{false};
 };
 
 #endif // CONNECTCOIN_QT_P2CCREATEDIALOG_H

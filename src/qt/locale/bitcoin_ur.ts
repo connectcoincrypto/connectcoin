@@ -3001,8 +3001,24 @@ Last claim: %7
         <translation>pay-to-connect انعامات بنائیں</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>درست TLS کنکشن ثبوتوں کے لیے الگ الگ انعامات کی رقم فراہم کریں۔ شرائط پوری کرنے والا کوئی بھی شخص انہیں وصول کر سکتا ہے۔ یہ صفحہ HTTPS کنکشن نہیں بناتا۔</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>درست TLS کنکشن ثبوتوں کے لیے الگ الگ انعامات کو فنڈ کریں۔ تین سیکنڈ کی تصدیق کے دوران، یہ صفحہ TLS ہینڈ شیک کے ذریعے ڈومین کی RSA دستخطوں کی معاونت کو جانچتا ہے۔ کوئی HTTP درخواست نہیں بھیجی جاتی۔</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA دستخطوں کی معاونت کی جانچ ہو رہی ہے…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>SHA-256 کے ساتھ RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>تمام معاونت یافتہ الگورتھم</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>اجازت یافتہ دستخط: %1 (ماسک %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

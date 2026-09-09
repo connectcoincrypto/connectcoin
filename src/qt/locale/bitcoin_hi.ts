@@ -3033,8 +3033,24 @@ Last claim: %7
         <translation>pay-to-connect इनाम बनाएँ</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>मान्य TLS कनेक्शन प्रमाणों के लिए अलग-अलग इनामों का वित्तपोषण करें। आवश्यकताएँ पूरी करने वाला कोई भी व्यक्ति उनका दावा कर सकता है। यह पृष्ठ HTTPS कनेक्शन नहीं बनाता।</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>मान्य TLS कनेक्शन प्रमाणों के लिए स्वतंत्र इनामों का वित्तपोषण करें। तीन सेकंड की पुष्टि अवधि के दौरान, यह पृष्ठ TLS हैंडशेक के माध्यम से डोमेन के RSA हस्ताक्षर समर्थन की जाँच करता है। कोई HTTP अनुरोध नहीं भेजा जाता।</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA हस्ताक्षर समर्थन की जाँच हो रही है…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>SHA-256 के साथ RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>सभी समर्थित एल्गोरिदम</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>अनुमत हस्ताक्षर: %1 (मास्क %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

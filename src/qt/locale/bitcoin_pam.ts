@@ -1323,8 +1323,24 @@ Tauling claim: %7
         <translation>Gawang pay-to-connect a pabuya</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Lagyan pondung pabuya ing balang wastung patunay ning TLS koneksyun. Ninumang makatutuking kareng kailangan malyari yang mag-claim. Ing pahinang ini e ya gagawang HTTPS koneksyun.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Punanduan la reng magkakawaling pabuyang para kareng wastung patunay ning koneksyung TLS. King atlung segundung kumpirmasyun, susuriin ning pahinang ini nung susuportan neng domain deng lagdang RSA gamit ing pakipagkasundung TLS. Alang pamanyad a HTTP a ipapadala.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Susuriin ing suporta kareng lagdang RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS a atin SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Eganaganang susuportang algoritmu</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Deng lagdang papayagan: %1 (maskara %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

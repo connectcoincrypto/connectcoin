@@ -118,7 +118,7 @@ class GetblockstatsTest(BitcoinTestFramework):
             utxo_to_spend=parent["new_utxos"][2], fee=Decimal("0.00010"))["tx"]
         bounty.vout[0].nValue -= COIN
         domain = b"stats.example"
-        p2c_script = b"\x52" + bytes([len(domain)]) + domain + b"\xff" * 32 + (1).to_bytes(4, "little")
+        p2c_script = b"\x52" + bytes([len(domain)]) + domain + b"\xff" * 32 + (1).to_bytes(4, "little") + b"\x07"
         bounty.vout.append(CTxOut(COIN, p2c_script))
         wallet.sign_tx(bounty, utxos_to_spend=[parent["new_utxos"][2]])
         wallet.sendrawtransaction(from_node=node, tx_hex=bounty.serialize().hex())

@@ -1,8 +1,9 @@
 # P2C in the wallet
 
 The **P2C** tab (Alt+5) has separate **Create bounties** and **Automatic claims**
-pages. Creating bounties uses the same type-2 outputs as `sendtop2c` and never
-makes an HTTPS connection. Automatic claiming is disabled until explicitly enabled.
+pages. Creating bounties uses the same type-2 outputs as `sendtop2c`. During
+confirmation the GUI makes a bounded TLS capability probe, without sending an
+HTTP request. Automatic claiming is disabled until explicitly enabled.
 
 ## Creating bounties
 
@@ -17,6 +18,13 @@ makes an HTTPS connection. Automatic claiming is disabled until explicitly enabl
    Extreme rates that cannot be evaluated safely are rejected before transaction construction.
 6. Click **Review P2C** and unlock the wallet if requested. Review the domain,
    difficulty, roots version, total rewards, transaction count, fees, and total debit.
+   During the existing three-second confirmation delay, the GUI offers only
+   `rsa_pss_rsae_sha256` and `rsa_pss_pss_sha256`. If a complete, authenticated
+   handshake succeeds before the deadline, it selects mask `6` (both RSA schemes).
+   Failure, timeout, cancellation of the probe, or a busy probe worker keeps mask
+   `7` (all three supported schemes). The chosen mask is displayed and frozen
+   before **Send P2C** is enabled. A successful probe confirms the selected
+   server's current capability, not future availability or all DNS endpoints.
 7. Confirm **Send P2C**, or cancel without sending. Submission IDs appear on the page.
 
 In transaction history, each P2C output shows `P2C: domain` in the Label column.
@@ -28,7 +36,12 @@ Large requests are split into standard-sized transactions with independent confi
 inputs. Enough total balance alone may not be sufficient: a split also needs enough
 separate confirmed inputs. Inputs are temporarily reserved while awaiting approval;
 cancellation releases those reservations without unlocking unrelated user-locked coins.
-The exact signed transactions shown during review are submitted, without regenerating fees.
+The wallet signs both mask alternatives before relocking, using identical inputs,
+amounts, fees and transaction weights. Selecting the mask requires no second unlock.
+Once sending is enabled, the selected signed batch is immutable and is submitted
+without regenerating fees. Closing the confirmation releases its reservations.
+The capability probe never bypasses configured proxies or connects to private
+addresses, and at most four probes can remain pending across GUI pages.
 
 Bounties can be claimed by anyone presenting the required connection proof. The
 funding wallet cannot refund them with an ordinary signature. Submission is not
@@ -64,7 +77,7 @@ Without that argument the payout must still belong to this wallet; a different
 explicit address is rejected. Empty addresses select the wallet default.
 
 The preparation result supplies the canonical on-chain domain, work target,
-root version, tip median time, fixed transaction hex and exact ClientHello
+root version, signature algorithms mask, tip median time, fixed transaction hex and exact ClientHello
 challenge. A proof generator must use these values unchanged. `proof_size`
 defaults to the full 65536-byte consensus limit and determines the fee budget,
 including transaction/witness framing. An explicit smaller budget can reduce
@@ -178,8 +191,12 @@ This balances economic preference with exploration; it is not proportional
 allocation. The economic winner uses its best eligible bounty, not the sum or
 count of its outputs. Unusable bounties do not earn extra economic assignments.
 
-Each domain keeps a rolling `deque<pair<bool, double>>` of the **last 100
-completed TCP/TLS attempts**, shared across its bounties and resolved IPs. The
+Each `(domain, signature_algorithms_mask)` pair keeps a rolling
+`deque<pair<bool, double>>` of the **last 100 completed TCP/TLS attempts**,
+shared across its bounties and resolved IPs with the same mask. An unsupported
+RSA-only bounty therefore cannot poison the measured success rate of an
+ECDSA-capable bounty on that domain. Rotation and DNS are still grouped by
+domain, not by mask. The
 boolean records capture through **CertificateVerify**; seconds measure elapsed
 TCP/TLS effort with a monotonic clock. TCP failures, TLS errors and timeouts count
 as failures. A completed capture counts as a success regardless of whether its
@@ -189,11 +206,11 @@ subsequent certificate verification are not part of this duration. Locally
 cancelled incomplete attempts (stop, spent bounty or duplicate proof) are excluded,
 since they do not establish whether the server could complete the handshake.
 
-At each five-second refresh the domain multiplier is:
+At each five-second refresh the multiplier for each domain/mask pair is:
 `(0.1 + successful_captures) / (0.02 + total_attempt_seconds)`.
-An untried domain therefore starts at **5 captures/second of effort**. The score
-for extra assignments is the best bounty's expected net return multiplied by
-this rate. This favors reliable, fast connections while retaining guaranteed
+An untried pair therefore starts at **5 captures/second of effort**. The score
+for extra assignments is the highest eligible bounty score after multiplying
+each mask's expected net return by its own rate. This favors reliable, fast connections while retaining guaranteed
 round-robin exploration. Timing scores use floating point; exact economic keys
 break rounded ties. Durations of simultaneous attempts are summed individually,
 not measured as a shared wall-clock interval, so raising concurrency alone does
@@ -205,7 +222,7 @@ Automatic search ignores each bounty whose expected net return is **less than
 As a fast rejection, a target whose most significant 64 bits are all zero is
 ignored immediately: even MAX_MONEY at the maximum smoothed rate of 5005/s
 cannot reach this floor. This includes targets requiring 256 zero bits.
-The threshold uses the domain's last-100 history or the initial 5/s prior, not
+The threshold uses the domain/mask pair's last-100 history or the initial 5/s prior, not
 the user-configured connection limit or aggregate concurrency. The measured
 score uses the same floating-point precision as domain ranking.
 
@@ -239,7 +256,7 @@ a domain is malicious, especially when some attempts fail before hashing.
 The oldest attempt is removed when the window exceeds 100. Histories survive
 priority refreshes, temporary bounty ineligibility and stop/start in the same
 loaded wallet. They are in-memory only: unloading the wallet resets them. A
-domain with no remaining matching confirmed bounties is forgotten once its
+domain/mask pair with no remaining matching confirmed bounties is forgotten once its
 in-flight work drains. These measurements affect local scheduling only, never
 consensus, the global connection limit or within-domain bounty ordering.
 

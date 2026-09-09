@@ -1853,8 +1853,24 @@ Last claim: %7
         <translation>pay-to-connect പ്രതിഫലങ്ങൾ സൃഷ്ടിക്കുക</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>സാധുവായ TLS കണക്ഷൻ തെളിവുകൾക്ക് പ്രത്യേകം പ്രതിഫലങ്ങൾക്കുള്ള പണം നൽകുക. നിബന്ധനകൾ പാലിക്കുന്ന ആർക്കും അവ ക്ലെയിം ചെയ്യാം. ഈ പേജ് HTTPS കണക്ഷനുകൾ സ്ഥാപിക്കുന്നില്ല.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>സാധുവായ TLS കണക്ഷൻ തെളിവുകൾക്കായി സ്വതന്ത്ര പ്രതിഫലങ്ങൾക്ക് പണം നൽകുക. മൂന്ന് സെക്കൻഡ് സ്ഥിരീകരണ സമയത്ത്, ഈ പേജ് ഒരു TLS ഹാൻഡ്‌ഷേക്ക് വഴി ഡൊമെയ്‌നിന്റെ RSA ഒപ്പ് പിന്തുണ പരിശോധിക്കുന്നു. HTTP അഭ്യർത്ഥനയൊന്നും അയയ്ക്കുന്നില്ല.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA ഒപ്പ് പിന്തുണ പരിശോധിക്കുന്നു…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>SHA-256 ഉപയോഗിച്ചുള്ള RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>പിന്തുണയ്ക്കുന്ന എല്ലാ അൽഗോരിതങ്ങളും</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>അനുവദിച്ച ഒപ്പുകൾ: %1 (മാസ്ക് %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

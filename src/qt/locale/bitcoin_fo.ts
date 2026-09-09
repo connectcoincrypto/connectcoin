@@ -5412,8 +5412,24 @@ Seinasta krav: %7
         <translation>Stovna pay-to-connect-lønir</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Fíggja sjálvstøðugar lønir fyri gild TLS-sambandsprógv. Øll, sum lúka krøvini, kunnu krevja tær. Henda síðan ger ikki HTTPS-sambond.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Fíggja sjálvstøðugar lønir fyri gild TLS-sambandsprógv. Meðan váttanin varir í tríggjar sekund, kannar henda síðan stuðulin hjá økinum fyri RSA-undirskriftum við einari TLS-samráðing. Eingin HTTP-fyrispurningur verður sendur.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Kannar stuðul fyri RSA-undirskriftum…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS við SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Allar stuðlaðar algoritmur</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Loyvdar undirskriftir: %1 (maska %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

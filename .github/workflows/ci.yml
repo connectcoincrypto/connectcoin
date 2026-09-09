@@ -365,16 +365,9 @@ jobs:
       - name: CI script
         run: ./ci/test_run_all.sh
 
-      - name: Save Ccache cache after failure
-        uses: ./.github/actions/cache/save/internal
-        if: ${{ failure() && github.event_name == 'push' }}
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ccache-${{ env.CI_CACHE_NAME }}-${{ github.run_id }}-${{ env.CONTAINER_NAME }}
-          provider: gha
-
       - name: Save caches
         uses: ./.github/actions/cache/save
+        if: ${{ (success() || failure()) && github.event_name == 'push' }}
         with:
           provider: gha
 
@@ -630,17 +623,9 @@ jobs:
       - name: CI script
         run: ./ci/test_run_all.sh
 
-      - name: Save Ccache cache after failure
-        uses: ./.github/actions/cache/save/internal
-        if: ${{ failure() && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') && github.event_name == 'push' }}
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ccache-${{ env.CI_CACHE_NAME }}-${{ github.run_id }}-${{ env.CONTAINER_NAME }}
-          provider: gha
-
       - name: Save caches
         uses: ./.github/actions/cache/save
-        if: ${{ env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0' }}
+        if: ${{ (success() || failure()) && github.event_name == 'push' && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') }}
         with:
           provider: gha
 

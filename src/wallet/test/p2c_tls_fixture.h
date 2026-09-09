@@ -69,7 +69,12 @@ struct P2CTLSServer {
 
     static int Random(void*, unsigned char* bytes, size_t size)
     {
-        GetStrongRandBytes(std::span{bytes, size});
+        while (size != 0) {
+            const auto chunk{std::min(size, size_t{32})};
+            GetStrongRandBytes(std::span{bytes, chunk});
+            bytes += chunk;
+            size -= chunk;
+        }
         return 0;
     }
     static void Check(int result)

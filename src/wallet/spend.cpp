@@ -1094,7 +1094,8 @@ static util::Result<CreatedTransactionResult> CreateTransactionInternal(
     if (std::any_of(vecSend.begin(), vecSend.end(), [](const CRecipient& recipient) {
             if (recipient.p2c) {
                 return !IsCanonicalP2CDomain(recipient.p2c->domain) ||
-                       !IsSupportedP2CRootCertificatesVersion(recipient.p2c->root_certificates_version);
+                       !IsSupportedP2CRootCertificatesVersion(recipient.p2c->root_certificates_version) ||
+                       !IsValidP2CSignatureAlgorithmsMask(recipient.p2c->signature_algorithms_mask);
             }
             return !std::holds_alternative<WitnessV1Taproot>(recipient.dest) || !IsValidDestination(recipient.dest);
         })) {

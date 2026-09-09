@@ -2435,8 +2435,24 @@ L-aħħar talba: %7
         <translation>Oħloq premjijiet pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Iffinanzja premjijiet indipendenti għal provi validi ta' konnessjoni TLS. Kull min jissodisfa r-rekwiżiti jista' jitlobhom. Din il-paġna ma tagħmilx konnessjonijiet HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Iffinanzja premjijiet indipendenti għal provi validi ta&apos; konnessjoni TLS. Matul il-konferma ta&apos; tliet sekondi, din il-paġna tiċċekkja jekk id-dominju jappoġġjax firem RSA permezz ta&apos; negozjar TLS. Ma tintbagħat ebda talba HTTP.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Qed jiġi ċċekkjat l-appoġġ għal firem RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS b&apos;SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>L-algoritmi kollha appoġġjati</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Firem permessi: %1 (maskra %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

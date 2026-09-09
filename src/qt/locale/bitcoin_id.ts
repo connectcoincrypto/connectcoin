@@ -2102,8 +2102,24 @@ Klaim terakhir: %7
         <translation>Buat hadiah pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Danai hadiah terpisah untuk bukti koneksi TLS yang valid. Siapa pun yang memenuhi persyaratan dapat mengklaimnya. Halaman ini tidak membuat koneksi HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Danai hadiah mandiri untuk bukti koneksi TLS yang valid. Selama tiga detik konfirmasi, halaman ini memeriksa dukungan domain untuk tanda tangan RSA melalui jabat tangan TLS. Tidak ada permintaan HTTP yang dikirim.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Memeriksa dukungan tanda tangan RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS dengan SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Semua algoritma yang didukung</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Tanda tangan yang diizinkan: %1 (masker %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

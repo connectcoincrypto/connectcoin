@@ -846,7 +846,10 @@ CONNECTCOINKERNEL_API void cck_script_pubkey_destroy(cck_ScriptPubkey* script_pu
 /**
  * @brief Create a transaction output from a script pubkey and an amount.
  *
- * @param[in] script_pubkey Non-null.
+ * @param[in] script_pubkey Non-null. Type-2 compatibility views contain OP_2,
+ *                         one-byte domain length, domain, 32-byte work target,
+ *                         four-byte little-endian root version, and one-byte
+ *                         signature algorithms mask (nonzero, bits 0..2 only).
  * @param[in] amount        The amount associated with the script pubkey for this output.
  * @return                  The transaction output, or null if script_pubkey is not a valid
  *                          ConnectCoin type-1 P2PK or type-2 PAY_TO_CONNECT compatibility view.

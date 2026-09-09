@@ -2045,8 +2045,24 @@ Last claim: %7
         <translation>ایجاد پاداش‌های pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>برای اثبات‌های معتبر اتصال TLS پاداش‌های مستقل تأمین کنید. هر کسی که شرایط را داشته باشد می‌تواند آن‌ها را دریافت کند. این صفحه اتصال HTTPS برقرار نمی‌کند.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>برای اثبات‌های معتبر اتصال TLS پاداش‌های مستقلی تأمین کنید. در مهلت سه‌ثانیه‌ای تأیید، این صفحه با دست‌دهی TLS پشتیبانی دامنه از امضاهای RSA را بررسی می‌کند. هیچ درخواست HTTP ارسال نمی‌شود.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>در حال بررسی پشتیبانی از امضاهای RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS با SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>همهٔ الگوریتم‌های پشتیبانی‌شده</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>امضاهای مجاز: %1 (ماسک %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

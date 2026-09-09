@@ -2761,8 +2761,24 @@ Last claim: %7
         <translation>สร้างรางวัล pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>จัดสรรเงินรางวัลแยกกันสำหรับหลักฐานการเชื่อมต่อ TLS ที่ถูกต้อง ใครก็ตามที่ทำตามข้อกำหนดได้สามารถรับรางวัลได้ หน้านี้จะไม่สร้างการเชื่อมต่อ HTTPS</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>จัดสรรเงินสำหรับรางวัลแยกกันให้แก่หลักฐานการเชื่อมต่อ TLS ที่ถูกต้อง ระหว่างการยืนยันสามวินาที หน้านี้จะตรวจสอบว่าโดเมนรองรับลายเซ็น RSA หรือไม่ด้วยการจับมือ TLS โดยไม่มีการส่งคำขอ HTTP</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>กำลังตรวจสอบการรองรับลายเซ็น RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS กับ SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>อัลกอริทึมทั้งหมดที่รองรับ</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>ลายเซ็นที่อนุญาต: %1 (มาสก์ %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

@@ -24,6 +24,7 @@
 #include <wallet/p2c_claim.h>
 #include <wallet/p2c_domain_stats.h>
 #include <wallet/p2c_tls.h>
+#include <wallet/p2c_tls_lifecycle.h>
 #include <wallet/p2c_worker.h>
 #include <wallet/test/p2c_tls_fixture.h>
 #include <wallet/test/util.h>
@@ -370,6 +371,28 @@ BOOST_AUTO_TEST_CASE(claim_fee_quote_matches_wire_transaction)
     BOOST_CHECK(!CalculateP2CClaimFee(CFeeRate{std::numeric_limits<CAmount>::max()}));
 }
 
+BOOST_AUTO_TEST_CASE(tls_complete_handshake_obeys_mask_and_preserves_proof)
+{
+    RestoreSocketFactory restore_sockets;
+    const auto endpoint{Lookup("8.8.8.8", 443, false)};
+    BOOST_REQUIRE(endpoint);
+    const auto config{std::make_shared<test::P2CTLSServer>()};
+    config->Setup();
+    CreateSock = [config](int, int, int) -> std::unique_ptr<Sock> {
+        return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 23);
+    };
+    const auto complete{CaptureP2CTls(*endpoint, "localhost", uint256::ONE, [] { return false; },
+                                    {.signature_algorithms_mask = 1, .complete_handshake = true})};
+    BOOST_REQUIRE_MESSAGE(complete, util::ErrorString(complete).original);
+    P2CTlsProofView proof;
+    std::string error;
+    // Finished is verified by TLS but must not leak into the proof format.
+    BOOST_REQUIRE(ParseP2CTlsProof(*complete, "localhost", uint256::ONE, proof, error));
+    BOOST_CHECK_EQUAL(proof.certificate_verify_scheme, 0x0403);
+    BOOST_CHECK(!CaptureP2CTls(*endpoint, "localhost", uint256::ONE, [] { return false; },
+                             {.signature_algorithms_mask = 6, .complete_handshake = true}));
+}
+
 BOOST_AUTO_TEST_CASE(tls_client_random_and_fresh_keyshare)
 {
     RestoreSocketFactory restore;
@@ -423,7 +446,159 @@ BOOST_AUTO_TEST_CASE(tls_cancellation_and_private_endpoint_never_connect)
     BOOST_REQUIRE(public_endpoint && private_endpoint);
     BOOST_CHECK(!CaptureP2CTls(*public_endpoint, "example.com", uint256{}, [] { return true; }));
     BOOST_CHECK(!CaptureP2CTls(*private_endpoint, "example.com", uint256{}, [] { return false; }));
+    BOOST_CHECK(!CaptureP2CTls(*public_endpoint, "example.com", uint256{}, [] { return false; },
+                             {.signature_algorithms_mask = 0}));
+    BOOST_CHECK(!CaptureP2CTls(*public_endpoint, "example.com", uint256{}, [] { return false; },
+                             {.deadline = std::chrono::steady_clock::now() - std::chrono::seconds{1}}));
     BOOST_CHECK_EQUAL(calls, 0U);
+}
+
+BOOST_AUTO_TEST_CASE(tls_client_hello_advertises_only_output_mask)
+{
+    RestoreSocketFactory restore;
+    const auto endpoint{Lookup("8.8.8.8", 443, false)};
+    BOOST_REQUIRE(endpoint);
+    for (uint8_t mask = 1; mask <= 7; ++mask) {
+        std::vector<unsigned char> sent;
+        CreateSock = [&](int, int, int) { return std::make_unique<ClientHelloSocket>(sent, 13); };
+        BOOST_CHECK(!CaptureP2CTls(*endpoint, "example.com", uint256::ONE, [] { return false; },
+                                  {.signature_algorithms_mask = mask}));
+        BOOST_REQUIRE(sent.size() > 44);
+        size_t pos{43};
+        const auto read8 = [&]() -> size_t { BOOST_REQUIRE(pos < sent.size()); return sent[pos++]; };
+        const auto read16 = [&]() -> size_t { const auto high{read8()}; return high * 256 + read8(); };
+        const auto skip = [&](size_t size) { BOOST_REQUIRE(size <= sent.size() - pos); pos += size; };
+        skip(read8());
+        skip(read16());
+        skip(read8());
+        const auto extensions_length{read16()};
+        BOOST_REQUIRE_EQUAL(extensions_length, sent.size() - pos);
+        std::vector<uint16_t> advertised;
+        while (pos < sent.size()) {
+            const auto type{read16()};
+            const auto length{read16()};
+            BOOST_REQUIRE(length <= sent.size() - pos);
+            if (type == 13) {
+                BOOST_REQUIRE(length >= 2);
+                const auto list_size{read16()};
+                BOOST_REQUIRE_EQUAL(list_size, length - 2);
+                BOOST_REQUIRE_EQUAL(list_size % 2, 0U);
+                for (size_t i = 0; i < list_size; i += 2) advertised.push_back(read16());
+            } else {
+                skip(length);
+            }
+        }
+        std::vector<uint16_t> expected;
+        if (mask & 1) expected.push_back(0x0403);
+        if (mask & 2) expected.push_back(0x0804);
+        if (mask & 4) expected.push_back(0x0809);
+        BOOST_CHECK_EQUAL_COLLECTIONS(advertised.begin(), advertised.end(), expected.begin(), expected.end());
+    }
+}
+
+BOOST_AUTO_TEST_CASE(rsa_probe_cancellation_after_dns_never_connects)
+{
+    RestoreSocketFactory restore_socket;
+    RestoreDNSLookup restore_dns;
+    unsigned sockets{0};
+    unsigned lookups{0};
+    bool cancelled{false};
+    const auto address{LookupHost("8.8.8.8", false)};
+    BOOST_REQUIRE(address);
+    CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> { ++sockets; return nullptr; };
+    g_dns_lookup = [&](const std::string&, bool) {
+        ++lookups;
+        cancelled = true;
+        return std::vector<CNetAddr>{*address};
+    };
+    const auto deadline{std::chrono::steady_clock::now() + std::chrono::seconds{3}};
+    BOOST_CHECK(!ProbeP2CRsa("example.com", 1, [&] { return cancelled; }, deadline));
+    BOOST_CHECK_EQUAL(lookups, 1U);
+    BOOST_CHECK_EQUAL(sockets, 0U);
+    BOOST_CHECK(!ProbeP2CRsa("example.com", 1, [] { return false; }, std::chrono::steady_clock::now()));
+    BOOST_CHECK_EQUAL(lookups, 1U);
+}
+
+BOOST_AUTO_TEST_CASE(rsa_probe_shutdown_drains_an_active_moved_phase)
+{
+    P2CRsaProbeLifecycle lifecycle;
+    std::atomic<bool> stopped{false};
+    std::thread stopper;
+    {
+        auto original{lifecycle.TryEnter()};
+        BOOST_REQUIRE(original);
+        auto phase{std::move(original)};
+        // Phase's move constructor explicitly empties the source; verify that
+        // contract so its destructor cannot release the same phase twice.
+        // NOLINTNEXTLINE(bugprone-use-after-move)
+        BOOST_CHECK(!original);
+        BOOST_CHECK(phase);
+        stopper = std::thread([&] {
+            lifecycle.Stop();
+            stopped.store(true);
+        });
+        // Observing the stop flag establishes that Stop has entered its
+        // critical section. It cannot return while the moved phase is alive.
+        while (!lifecycle.IsStopping()) std::this_thread::yield();
+        BOOST_CHECK(!stopped.load());
+        BOOST_CHECK(!lifecycle.TryEnter());
+    }
+    stopper.join();
+    BOOST_CHECK(stopped.load());
+    BOOST_CHECK(!lifecycle.TryEnter());
+    lifecycle.Stop();
+}
+
+BOOST_AUTO_TEST_CASE(rsa_probe_shutdown_does_not_wait_for_dns_or_allow_late_work)
+{
+    RestoreSocketFactory restore_socket;
+    RestoreDNSLookup restore_dns;
+    P2CRsaProbeLifecycle lifecycle;
+    std::mutex mutex;
+    std::condition_variable cv;
+    bool dns_entered{false};
+    bool release_dns{false};
+    bool result{true};
+    unsigned sockets{0};
+    unsigned late_dns_calls{0};
+    const auto address{LookupHost("8.8.8.8", false)};
+    BOOST_REQUIRE(address);
+    CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> { ++sockets; return nullptr; };
+    g_dns_lookup = [&](const std::string&, bool) {
+        std::unique_lock lock{mutex};
+        dns_entered = true;
+        cv.notify_all();
+        cv.wait(lock, [&] { return release_dns; });
+        return std::vector<CNetAddr>{*address};
+    };
+    const auto deadline{std::chrono::steady_clock::time_point::max()};
+    std::thread probe([&] {
+        result = ProbeP2CRsaForTest("example.com", 1, [] { return false; }, deadline, lifecycle);
+    });
+    {
+        std::unique_lock lock{mutex};
+        cv.wait(lock, [&] { return dns_entered; });
+    }
+    // This returns while the resolver is still blocked. No sleeps or network
+    // are needed to establish that shutdown does not join the DNS phase.
+    lifecycle.Stop();
+    BOOST_CHECK(lifecycle.IsStopping());
+    BOOST_CHECK(!lifecycle.TryEnter());
+    g_dns_lookup = [&](const std::string&, bool) {
+        ++late_dns_calls;
+        return std::vector<CNetAddr>{};
+    };
+    {
+        const std::lock_guard lock{mutex};
+        release_dns = true;
+    }
+    cv.notify_all();
+    probe.join();
+    BOOST_CHECK(!result);
+    BOOST_CHECK_EQUAL(sockets, 0U);
+    BOOST_CHECK(!ProbeP2CRsaForTest("example.com", 1, [] { return false; }, deadline, lifecycle));
+    BOOST_CHECK_EQUAL(late_dns_calls, 0U);
+    lifecycle.Stop(); // Repeated application shutdown is harmless.
 }
 
 BOOST_AUTO_TEST_CASE(resumed_proposal_revalidates_amounts_and_ownership)
@@ -819,6 +994,98 @@ BOOST_FIXTURE_TEST_CASE(worker_filters_each_bounty_before_network_and_rechecks_e
     BOOST_REQUIRE(wait_until([&] { return worker->Status()["attempts"].getInt<uint64_t>() > stopped_at; }));
     worker->Stop();
     BOOST_CHECK(!wrong_domain);
+}
+
+BOOST_FIXTURE_TEST_CASE(worker_keeps_connection_history_separate_for_exact_signature_masks, TestChain100Setup)
+{
+    using namespace std::chrono_literals;
+    FakeSteadyClock clock;
+    auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
+    auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
+    wallet->SetBroadcastTransactions(true);
+    wallet->m_default_max_tx_fee = MAX_MONEY;
+    // At the untouched 5/s prior, both are just above the existing floor.
+    // A failed 100 ms attempt drops only that mask below it.
+    const auto target{uint256::FromHex(std::string(6, '0') + "3" + std::string(57, 'f')).value()};
+    const std::array<uint8_t, 2> masks{PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA,
+                                      PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL};
+    std::array<COutPoint, 2> outpoints;
+    std::array<uint256, 2> challenges;
+    CCoinControl control;
+    control.m_feerate = CFeeRate{1000};
+    UniValue saved{UniValue::VOBJ}, pending{UniValue::VARR};
+    for (uint32_t i{0}; i < masks.size(); ++i) {
+        outpoints[i] = COutPoint{Txid::FromUint256(uint256::ONE), i};
+        WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoints[i],
+            Coin{CTxOut{4 * COIN, PayToDomainOutput{"mixed.example", target, 1, masks[i]}}, 100, false}, false));
+        const auto prepared{PrepareP2CClaim(*wallet, outpoints[i], control)};
+        BOOST_REQUIRE(prepared);
+        CMutableTransaction tx{*prepared->tx};
+        tx.vout[0].nValue = 2 * COIN;
+        challenges[i] = P2CClaimChallenge(CTransaction{tx}, 0);
+        pending.push_back(EncodeHexTx(CTransaction{tx}));
+    }
+    saved.pushKV("pending", std::move(pending));
+    saved.pushKV("ready", "");
+    saved.pushKV("proof", "");
+    saved.pushKV("attempts", 0);
+    saved.pushKV("submitted", 0);
+    saved.pushKV("last_txid", "");
+    BOOST_REQUIRE(wallet->GetDatabase().MakeBatch()->Write(std::string{"p2c_claim_worker_v1"}, saved.write()));
+    WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(outpoints[1], false)));
+
+    RestoreDNSLookup restore_dns;
+    RestoreSocketFactory restore_sockets;
+    const auto address{LookupHost("8.8.8.8", false, restore_dns.original)};
+    BOOST_REQUIRE(address);
+    g_dns_lookup = [&](const std::string&, bool) { return std::vector<CNetAddr>{*address}; };
+    std::mutex events_mutex;
+    std::vector<uint256> events;
+    CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
+        std::this_thread::sleep_for(100ms);
+        auto sent{std::make_shared<std::vector<unsigned char>>()};
+        return std::make_unique<ClientHelloSocket>(*sent, 16384, [&, sent] {
+            if (sent->size() < 43) return;
+            uint256 challenge;
+            std::copy_n(sent->begin() + 11, challenge.size(), challenge.begin());
+            std::lock_guard lock{events_mutex};
+            events.push_back(challenge);
+        });
+    };
+    const auto wait_until = [](const auto& predicate) {
+        const auto deadline{std::chrono::steady_clock::now() + 15s};
+        while (!predicate()) {
+            if (std::chrono::steady_clock::now() >= deadline) return false;
+            std::this_thread::sleep_for(5ms);
+        }
+        return true;
+    };
+    auto worker{MakeP2CClaimWorker(*wallet)};
+    const auto refresh = [&] {
+        const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
+        clock += 5s;
+        return wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; });
+    };
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE(wait_until([&] {
+        std::lock_guard lock{events_mutex};
+        return events.size() >= 2 && worker->Status()["state"].get_str() == "retrying connections";
+    }));
+    BOOST_REQUIRE(refresh());
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
+    {
+        std::lock_guard lock{events_mutex};
+        for (const auto& challenge : events) BOOST_CHECK(challenge == challenges[0]);
+    }
+    // The RSA-only failures must not poison the untried ALL mask at this same
+    // domain. A shared per-domain history would leave both below the floor.
+    WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->UnlockCoin(outpoints[1])));
+    BOOST_REQUIRE(refresh());
+    BOOST_REQUIRE_MESSAGE(wait_until([&] {
+        std::lock_guard lock{events_mutex};
+        return std::find(events.begin(), events.end(), challenges[1]) != events.end();
+    }), worker->Status().write());
+    worker->Stop();
 }
 
 BOOST_FIXTURE_TEST_CASE(worker_rotates_each_connection_and_reaches_large_domain_tail, TestChain100Setup)

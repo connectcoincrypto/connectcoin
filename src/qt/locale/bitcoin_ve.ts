@@ -929,8 +929,24 @@ Khumbelo ya u fhedzisela: %7
         <translation>Itani pfufho dza pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Ṋetshedzani masheleni a pfufho dzo ḓiimisaho dza vhuṱanzi ho teaho ha vhukwamani ha TLS. Muthu muṅwe na muṅwe a swikelelaho ṱhoḓea a nga dzi humbela. Siaṱari iḽi a ḽi iti vhukwamani ha HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Ṋetshedzani tshelede ya pfufho dzo ḓiimisaho nga dzoṱhe dza vhuṱanzi ho teaho ha vhukwamani ha TLS. Nga tshifhinga tsha u khwaṱhisedza tsha sekonde tharu, siaṱari iḽi ḽi ṱola uri domeini i tikedza tsaino dza RSA nga nyambedzano ya TLS. A hu rumelwi khumbelo ya HTTP.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Hu khou ṱolwa thikhedzo ya tsaino dza RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS na SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Aḽigoridimu dzoṱhe dzi tikedzwaho</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Tsaino dzo tendelwaho: %1 (masiki %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

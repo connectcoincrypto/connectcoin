@@ -1788,8 +1788,24 @@ Dai la mwisho: %7
         <translation>Unda zawadi za pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Toa fedha kwa zawadi huru kwa thibitisho halali za muunganisho wa TLS. Yeyote anayekidhi masharti anaweza kuzidai. Ukurasa huu hauanzishi miunganisho ya HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Fadhili zawadi huru kwa uthibitisho halali wa muunganisho wa TLS. Wakati wa uthibitishaji wa sekunde tatu, ukurasa huu hukagua usaidizi wa saini za RSA wa kikoa kwa mazungumzo ya kuanzisha muunganisho wa TLS. Hakuna ombi la HTTP linalotumwa.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Inakagua usaidizi wa saini za RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS yenye SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Algoriti zote zinazotumika</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Saini zinazoruhusiwa: %1 (maski %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

@@ -3179,8 +3179,24 @@ Huling claim: %7
         <translation>Gumawa ng mga gantimpalang pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Pondohan ang magkakahiwalay na gantimpala para sa mga wastong patunay ng koneksyong TLS. Maaaring mag-claim ang sinumang nakatutugon sa mga kinakailangan. Hindi gumagawa ng mga koneksyong HTTPS ang pahinang ito.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Pondohan ang magkakahiwalay na gantimpala para sa mga wastong patunay ng koneksyon sa TLS. Sa loob ng tatlong segundong pagkumpirma, sinusuri ng pahinang ito ang suporta ng domain para sa mga lagdang RSA sa pamamagitan ng pakikipag-ugnayang TLS. Walang ipinapadalang kahilingan sa HTTP.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Sinusuri ang suporta para sa mga lagdang RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS na may SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Lahat ng suportadong algoritmo</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Mga pinapayagang lagda: %1 (maskara %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

@@ -5375,8 +5375,24 @@ Last claim: %7
         <translation>pay-to-connect報酬を作成</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>有効なTLS接続証明に対する独立した報酬に資金を提供します。条件を満たす人なら誰でも請求できます。このページではHTTPS接続を行いません。</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>有効な TLS 接続証明に対する個別の報酬を用意します。3秒間の確認中に、このページは TLS ハンドシェイクでドメインの RSA 署名への対応を確認します。HTTP リクエストは送信されません。</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA 署名への対応を確認中…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>SHA-256 を使用する RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>対応するすべてのアルゴリズム</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>許可される署名: %1（マスク %2）</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

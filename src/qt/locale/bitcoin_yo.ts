@@ -907,8 +907,24 @@ Domain: %4
         <translation>Ṣẹ̀dá ẹ̀san pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Fi owó sí ẹ̀san ọ̀tọ̀ọ̀tọ̀ fún ẹ̀rí ìsopọ̀ TLS tó wúlò. Ẹnikẹ́ni tó bá pé àwọn àdéhùn lè béèrè wọn. Ojú-ewé yìí kì í ṣe ìsopọ̀ HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Ṣètìlẹ́yìn owó fún àwọn ẹ̀san ọ̀tọ̀ọ̀tọ̀ fún ẹ̀rí ìsopọ̀ TLS tó wúlò. Ní àkókò ìmúdájú ìṣẹ́jú-àáyá mẹ́ta, ojú-ewé yìí ń ṣàyẹ̀wò bóyá dóméènì náà ṣe àtìlẹ́yìn fún ìbuwọ́lu RSA nípasẹ̀ ìfọwọ́sọ̀wọ́pọ̀ TLS. Kò sí ìbéèrè HTTP tí a fi ránṣẹ́.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Ń ṣàyẹ̀wò àtìlẹ́yìn fún ìbuwọ́lu RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS pẹ̀lú SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Gbogbo àwọn algoridimu tí a ṣe àtìlẹ́yìn fún</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Àwọn ìbuwọ́lu tí a gbà láyè: %1 (bójúbojú %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

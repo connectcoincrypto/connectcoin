@@ -3041,8 +3041,24 @@ Last claim: %7
         <translation>Pay-to-connect мукофотларини яратиш</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Ҳақиқий TLS уланиш исботлари учун мустақил мукофотларни молиялаштиринг. Талабларни бажарган ҳар ким уларни олиши мумкин. Бу саҳифа HTTPS уланишларини ўрнатмайди.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Ҳақиқий TLS уланиш исботлари учун мустақил мукофотларни молиялаштиринг. Уч сониялик тасдиқлаш давомида бу саҳифа TLS келишуви орқали домен RSA имзоларини қўллаб-қувватлашини текширади. HTTP сўрови юборилмайди.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA имзоларини қўллаб-қувватлаш текширилмоқда…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>SHA-256 билан RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Барча қўллаб-қувватланадиган алгоритмлар</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Рухсат этилган имзолар: %1 (ниқоб %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

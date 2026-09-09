@@ -2156,8 +2156,24 @@ Viimane taotlus: %7
         <translation>Loo pay-to-connect-tasud</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Rahasta eraldi tasusid kehtivate TLS-ühenduse tõendite eest. Neid võib taotleda igaüks, kes täidab nõuded. See leht ei loo HTTPS-ühendusi.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Rahasta sõltumatuid tasusid kehtivate TLS-ühenduse tõendite eest. Kolmesekundilise kinnitamise ajal kontrollib see leht TLS-kätluse abil domeeni RSA-allkirjade tuge. Ühtegi HTTP-päringut ei saadeta.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA-allkirjade toe kontrollimine…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS koos SHA-256-ga</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Kõik toetatud algoritmid</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Lubatud allkirjad: %1 (mask %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

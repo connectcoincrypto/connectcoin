@@ -1,7 +1,7 @@
 {
   "chain": "signet",
   "test_chain": true,
-  "genesis": "2a62fd84425bc1f6dce0343ec3f6c08b782d76df54d52e5e3b8153f5d27d94b4",
+  "genesis": "a694dccdc04a316a4f4fe496f311aff981392f25ea18e4b7f77d9f449b9089fc",
   "subsidy_halving_interval": 3000000,
   "signet": {
     "challenge": "51"
@@ -19,7 +19,7 @@
   },
   "net": {
     "default_port": 48182,
-    "magic": "4c48f3b3",
+    "magic": "304c2f0c",
     "dns_seeds": [
     ]
   },

@@ -87,6 +87,7 @@ else:
 
 TEST_EXIT_PASSED = 0
 TEST_EXIT_SKIPPED = 77
+PROGRESS_INTERVAL = 30
 
 TEST_FRAMEWORK_UNIT_TESTS = 'feature_framework_unit_tests.py'
 
@@ -914,9 +915,24 @@ class TestHandler:
         self.flags = flags
         self.jobs = {}
         self.use_term_control = use_term_control
+        self.last_progress = time.monotonic()
 
     def done(self):
         return not (self.jobs or self.test_list)
+
+    def print_progress(self, dot_count=0):
+        """Report long-running jobs even with --quiet and redirected output."""
+        now = time.monotonic()
+        if not self.jobs or now - self.last_progress < PROGRESS_INTERVAL:
+            return False
+        self.last_progress = now
+        active = ", ".join(
+            f"{name} ({int(now - started)} s)"
+            for name, started in sorted(self.jobs.values())
+        )
+        prefix = '\r' + (' ' * dot_count) + '\r' if self.use_term_control else ''
+        print(f"{prefix}Progress: {len(self.jobs)} running [{active}]; {len(self.test_list)} queued", flush=True)
+        return True
 
     def get_next(self):
         while len(self.jobs) < self.num_jobs and self.test_list:
@@ -948,12 +964,12 @@ class TestHandler:
                 log_stderr,
             ]
             fut = self.executor.submit(proc_wait, task)
-            self.jobs[fut] = test
+            self.jobs[fut] = (test, time.monotonic())
         assert self.jobs  # Must not be empty here
 
         # Print remaining running jobs when all jobs have been started.
         if not self.test_list:
-            print("Remaining jobs: [{}]".format(", ".join(sorted(self.jobs.values()))))
+            print("Remaining jobs: [{}]".format(", ".join(sorted(name for name, _ in self.jobs.values()))), flush=True)
 
         dot_count = 0
         while True:
@@ -981,6 +997,8 @@ class TestHandler:
                     print(clearline, end='', flush=True)
                 dot_count = 0
                 ret.append((TestResult(name, status, int(time.time() - start_time)), testdir, stdout, stderr, proc.returncode, skip_reason))
+            if self.print_progress(dot_count):
+                dot_count = 0
             if ret:
                 return ret
             if self.use_term_control:

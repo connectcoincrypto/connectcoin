@@ -63,6 +63,29 @@ class P2CClaimTest(BitcoinTestFramework):
             outputs = funder.gettransaction(txid, verbose=True)["decoded"]["vout"]
             return txid, next(out["n"] for out in outputs if out["type"] == 2)
 
+        self.log.info("Fee bumping preserves the exact non-default P2C payload")
+        masked_txid = funder.sendtop2c(
+            "example.com", 1, {"work_bits": 0}, fee_rate=10000, signature_algorithms_mask=6,
+        )["txids"][0]
+        masked_original = tx_from_hex(funder.gettransaction(masked_txid)["hex"])
+        original_outputs = [out.serialize() for out in masked_original.vout if out.type == out.TYPE_PAY_TO_CONNECT]
+        assert_equal(len(original_outputs), 1)
+        bumped = funder.bumpfee(masked_txid, fee_rate=20000)
+        assert_equal(bumped["errors"], [])
+        assert bumped["fee"] > bumped["origfee"]
+        assert bumped["txid"] != masked_txid
+        assert masked_txid not in node.getrawmempool()
+        assert bumped["txid"] in node.getrawmempool()
+        masked_replacement = tx_from_hex(funder.gettransaction(bumped["txid"])["hex"])
+        replacement_outputs = [out.serialize() for out in masked_replacement.vout if out.type == out.TYPE_PAY_TO_CONNECT]
+        assert_equal(replacement_outputs, original_outputs)
+        masked_vout = next(i for i, out in enumerate(masked_replacement.vout) if out.type == out.TYPE_PAY_TO_CONNECT)
+        assert_equal(masked_replacement.vout[masked_vout].signature_algorithms_mask, 6)
+        masked_outpoint = bumped["txid"], masked_vout
+        # Replaced, unconfirmed change is not safe funding for the ordinary
+        # bounties below. Confirm this independent fee-bump case first.
+        self.generate(node, 1)
+
         outpoint = bounty()
         strict_outpoint = bounty(256)
         assert_raises_rpc_error(-4, "must be confirmed", claimant.preparep2cclaim, *outpoint)
@@ -86,6 +109,7 @@ class P2CClaimTest(BitcoinTestFramework):
         assert_equal(prepared["domain"], "example.com")
         assert_equal(prepared["connection_work_target"], "ff" * 32)
         assert_equal(prepared["root_certificates_version"], 1)
+        assert_equal(prepared["signature_algorithms_mask"], 7)
         assert_equal(prepared["proof_size"], 65536)
         assert_equal(prepared["fee"] + prepared["receive_amount"], 1)
         assert_equal(prepared["bounty_amount"], 1)
@@ -93,6 +117,15 @@ class P2CClaimTest(BitcoinTestFramework):
         challenge = node.getp2cchallenge(prepared["hex"], 0)
         assert_equal(challenge["clienthello_random"], prepared["clienthello_random"])
         assert_equal(challenge["txid"], prepared["txid"])
+
+        # Fix the destination and fee so reloading the claimant can reproduce
+        # the same proposal/challenge while reading mask 6 from the real UTXO.
+        masked_prepared = claimant.preparep2cclaim(*masked_outpoint, address=prepared["address"], fee_rate=10000)
+        assert_equal(masked_prepared["signature_algorithms_mask"], 6)
+        masked_claim = tx_from_hex(masked_prepared["hex"])
+        assert_equal(masked_claim.serialize().hex(), masked_prepared["hex"])
+        assert_equal(masked_claim.vin[0].prevout.hash, int(masked_outpoint[0], 16))
+        assert_equal(masked_claim.vin[0].prevout.n, masked_outpoint[1])
 
         self.log.info("Budget full wire overhead at CompactSize boundaries, with CLI conversion")
         for size in (1, 252, 253, 65535, 65536):
@@ -188,6 +221,11 @@ class P2CClaimTest(BitcoinTestFramework):
         assert_equal(claimant.getwalletinfo()["unlocked_until"], 0)
         reloaded = claimant.preparep2cclaim(*outpoint)
         assert reloaded["address"] != prepared["address"]
+        masked_reloaded = claimant.preparep2cclaim(*masked_outpoint, address=prepared["address"], fee_rate=10000)
+        assert_equal(masked_reloaded["signature_algorithms_mask"], 6)
+        for field in ("hex", "txid", "clienthello_random", "domain", "connection_work_target",
+                      "root_certificates_version", "fee", "receive_amount", "bounty_amount"):
+            assert_equal(masked_reloaded[field], masked_prepared[field])
         assert_raises_rpc_error(-4, "P2C proof contains an invalid DER certificate", claimant.submitp2cclaim, prepared["hex"], proof)
         assert_equal(claimant.getbalance(), 0)
         assert_equal(claimant.listtransactions(), history_before)

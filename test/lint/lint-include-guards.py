@@ -53,8 +53,7 @@ def _get_header_id(header_file: str) -> str:
     Returns:
         The header id.
     """
-    header_id_base = header_file.split('/')[1:]
-    header_id_base = '_'.join(header_id_base)
+    header_id_base = '_'.join(header_file.split('/')[1:])
     header_id_base = header_id_base.replace('.h', '').replace('-', '_')
     header_id_base = header_id_base.upper()
 

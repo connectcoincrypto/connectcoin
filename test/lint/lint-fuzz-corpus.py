@@ -30,6 +30,9 @@ def check_shared_cache_writer(root):
             return node.value
         if isinstance(node, ast.Attribute):
             return values[ast.unparse(node)]
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and not node.args and not node.keywords:
+            assert node.func.id in ('success', 'failure')
+            return values['status'] == node.func.id
         if isinstance(node, ast.BoolOp):
             operation = {ast.And: all, ast.Or: any}[type(node.op)]
             return operation(evaluate(child, values) for child in node.values)
@@ -47,8 +50,10 @@ def check_shared_cache_writer(root):
                             'github.ref_name': branch, 'github.event.repository.default_branch': 'main',
                             'env.FUZZ_SHARD_COUNT': count, 'env.FUZZ_SHARD_INDEX': index,
                         }
-                        expected = event == 'push' and (provider == 'gha' or branch == 'main') and (count == '' or index == '0')
-                        assert evaluate(tree, values) == expected, values
+                        for status in ('success', 'failure', 'cancelled'):
+                            values['status'] = status
+                            expected = status != 'cancelled' and event == 'push' and (provider == 'gha' or branch == 'main') and (count == '' or index == '0')
+                            assert evaluate(tree, values) == expected, values
 
 
 def check_engine_detection(runner, root):

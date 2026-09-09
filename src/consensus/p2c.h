@@ -33,6 +33,9 @@ constexpr bool IsSupportedP2CRootCertificatesVersion(uint32_t version)
 /** Return whether an output is a canonical, currently supported type-2 P2C output. */
 bool IsCanonicalP2COutput(const CTxOut& output);
 
+/** Match one negotiated TLS SignatureScheme against the output's exact mask. */
+bool P2CSignatureSchemeAllowed(uint8_t mask, uint16_t scheme);
+
 /** A non-owning, fully parsed view of one version-2 P2C TLS proof. */
 struct P2CTlsProofView
 {

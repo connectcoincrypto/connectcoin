@@ -1485,8 +1485,24 @@ Síðasta innlausn: %7
         <translation>Búa til pay-to-connect-umbunir</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Fjármagnaðu sjálfstæðar umbunir fyrir gildar TLS-tengisannanir. Allir sem uppfylla kröfurnar geta innleyst þær. Þessi síða opnar ekki HTTPS-tengingar.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Fjármagnaðu sjálfstæðar umbunir fyrir gildar sannanir á TLS-tengingum. Á þriggja sekúndna staðfestingartímanum athugar þessi síða stuðning lénsins við RSA-undirskriftir með TLS-handabandi. Engin HTTP-beiðni er send.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Athugar stuðning við RSA-undirskriftir…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS með SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Öll studd reiknirit</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Leyfðar undirskriftir: %1 (gríma %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

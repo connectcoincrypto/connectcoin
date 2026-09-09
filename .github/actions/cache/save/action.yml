@@ -8,10 +8,25 @@ runs:
   using: 'composite'
   steps:
     - name: debug cache hit inputs
+      if: ${{ success() || failure() }}
       shell: bash
       run: |
         echo "depends sources direct cache hit to primary key: ${{ env.depends-sources-cache-hit }}"
         echo "depends built direct cache hit to primary key: ${{ env.depends-built-cache-hit }}"
+
+    - name: Check completed dependency build
+      id: depends-status
+      if: ${{ success() || failure() }}
+      shell: bash
+      env:
+        CI_CACHE_RUN: ${{ github.run_id }}:${{ github.run_attempt }}:${{ github.job }}:${{ env.CONTAINER_NAME }}
+      run: |
+        complete=false
+        if [[ -n "${BASE_BUILD_DIR:-}" && -f "${BASE_BUILD_DIR}/.ci-depends-complete" && ! -L "${BASE_BUILD_DIR}/.ci-depends-complete" ]] &&
+           [[ "$(cat -- "${BASE_BUILD_DIR}/.ci-depends-complete")" == "$CI_CACHE_RUN" ]]; then
+          complete=true
+        fi
+        echo "complete=$complete" >> "$GITHUB_OUTPUT"
 
     - name: Save Ccache cache
       uses: ./.github/actions/cache/save/internal
@@ -19,7 +34,7 @@ runs:
       # builds. Keep other providers restricted to the default branch.
       # Fuzz shards compile identical binaries and restore a shared namespace.
       # Export once, as with Docker, to avoid four copies evicting other caches.
-      if: ${{ github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') }}
+      if: ${{ (success() || failure()) && github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') }}
       with:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-${{ env.CI_CACHE_NAME }}-${{ github.run_id }}-${{ env.CONTAINER_NAME }}
@@ -27,7 +42,7 @@ runs:
 
     - name: Save depends sources cache
       uses: ./.github/actions/cache/save/internal
-      if: ${{ github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && env.depends-sources-cache-hit != 'true' }}
+      if: ${{ (success() || failure()) && github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') && steps.depends-status.outputs.complete == 'true' && env.depends-sources-cache-hit != 'true' }}
       with:
         path: ${{ env.SOURCES_PATH }}
         key: depends-sources-${{ env.CI_CACHE_NAME }}-${{ env.DEPENDS_HASH }}
@@ -35,7 +50,7 @@ runs:
 
     - name: Save built depends cache
       uses: ./.github/actions/cache/save/internal
-      if: ${{ github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && env.depends-built-cache-hit != 'true' }}
+      if: ${{ (success() || failure()) && github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') && steps.depends-status.outputs.complete == 'true' && env.depends-built-cache-hit != 'true' }}
       with:
         path: ${{ env.BASE_CACHE }}
         key: depends-built-${{ env.CI_CACHE_NAME }}-${{ env.DEPENDS_HASH }}

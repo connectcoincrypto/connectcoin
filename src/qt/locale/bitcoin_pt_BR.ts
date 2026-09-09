@@ -4948,8 +4948,24 @@ Tentativas: %5 | Enviados: %6
         <translation>Criar recompensas pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Financie recompensas independentes por provas válidas de conexão TLS. Qualquer pessoa que cumpra os requisitos pode resgatá-las. Esta página não faz conexões HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Financie recompensas independentes por provas válidas de conexão TLS. Durante os três segundos de confirmação, esta página verifica o suporte do domínio a assinaturas RSA com uma negociação TLS. Nenhuma solicitação HTTP é enviada.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Verificando o suporte a assinaturas RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS com SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Todos os algoritmos suportados</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Assinaturas permitidas: %1 (máscara %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

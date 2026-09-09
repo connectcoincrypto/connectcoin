@@ -94,6 +94,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "sendtop2c", 11, "avoid_reuse" },
     { "sendtop2c", 12, "fee_rate" },
     { "sendtop2c", 13, "verbose" },
+    { "sendtop2c", 14, "signature_algorithms_mask" },
     { "getreceivedbyaddress", 1, "minconf" },
     { "getreceivedbyaddress", 2, "include_immature_coinbase" },
     { "getreceivedbylabel", 0, "label", ParamFormat::STRING },

@@ -441,6 +441,7 @@ RPCMethod sendtop2c()
             {"avoid_reuse", RPCArg::Type::BOOL, RPCArg::Default{true}, "Avoid spending from reused addresses when the wallet flag is enabled."},
             {"fee_rate", RPCArg::Type::AMOUNT, RPCArg::DefaultHint{"not set, fall back to wallet fee estimation"}, "Fee rate in " + CURRENCY_ATOM + "/vB."},
             {"verbose", RPCArg::Type::BOOL, RPCArg::Default{false}, "Return the fee-selection reason in addition to the transaction id."},
+            {"signature_algorithms_mask", RPCArg::Type::NUM, RPCArg::Default{PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL}, "Allowed TLS signature schemes: bit 0 ECDSA P-256/SHA-256, bit 1 RSA-PSS-RSAE/SHA-256, bit 2 RSA-PSS-PSS/SHA-256; from 1 through 7."},
         },
         RPCResult{RPCResult::Type::OBJ, "", "", {
             {RPCResult::Type::ARR, "txids", "Transactions created for the requested outputs.", {
@@ -493,6 +494,10 @@ RPCMethod sendtop2c()
             if (!IsSupportedP2CRootCertificatesVersion(roots_version)) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "unsupported root_certificates_version");
             }
+            const int64_t mask{request.params[14].isNull() ? PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL : request.params[14].getInt<int64_t>()};
+            if (mask < 1 || mask > PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "signature_algorithms_mask must be between 1 and 7");
+            }
 
             std::optional<std::string> comment;
             std::optional<std::string> comment_to;
@@ -529,6 +534,7 @@ RPCMethod sendtop2c()
                     .domain = domain,
                     .connection_work_target = target,
                     .root_certificates_version = roots_version,
+                    .signature_algorithms_mask = static_cast<uint8_t>(mask),
                 },
             };
 

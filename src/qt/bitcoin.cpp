@@ -42,6 +42,7 @@
 #include <qt/paymentserver.h>
 #include <qt/walletcontroller.h>
 #include <qt/walletmodel.h>
+#include <wallet/p2c_tls.h>
 #include <wallet/types.h>
 #endif // ENABLE_WALLET
 
@@ -220,6 +221,9 @@ void BitcoinApplication::setupPlatformStyle()
 
 BitcoinApplication::~BitcoinApplication()
 {
+#ifdef ENABLE_WALLET
+    wallet::ShutdownP2CRsaProbes();
+#endif
     m_executor.reset();
 
     delete window;
@@ -348,6 +352,11 @@ void BitcoinApplication::requestShutdown()
     // Request node shutdown, which can interrupt long operations, like
     // rescanning a wallet.
     node().startShutdown();
+#ifdef ENABLE_WALLET
+    // Drain only probe phases touching process state. A blocked resolver keeps
+    // its own callback copy and cannot re-enter after this gate closes.
+    wallet::ShutdownP2CRsaProbes();
+#endif
     // Prior to unsetting the client model, stop listening backend signals
     if (clientModel) {
         clientModel->stop();
@@ -436,6 +445,11 @@ void BitcoinApplication::handleRunawayException(const QString &message)
         nullptr, tr("Runaway exception"),
         tr("A fatal error occurred. %1 can no longer continue safely and will quit.").arg(CLIENT_NAME) +
         QLatin1String("<br><br>") + GUIUtil::MakeHtmlLink(message, CLIENT_BUGREPORT));
+#ifdef ENABLE_WALLET
+    // exit() skips the application destructor but still destroys process
+    // state. Probe phases need no GUI callbacks, and blocked DNS is not joined.
+    wallet::ShutdownP2CRsaProbes();
+#endif
     ::exit(EXIT_FAILURE);
 }
 

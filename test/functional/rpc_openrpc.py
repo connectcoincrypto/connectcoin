@@ -84,6 +84,7 @@ class OpenRPCDocTest(BitcoinTestFramework):
                 "domain": {"type": "string", "description": "Canonical lower-case ASCII domain"},
                 "connection_work_target": {"type": "string", "pattern": "^[0-9a-fA-F]+$", "description": "Maximum accepted connection-work hash"},
                 "root_certificates_version": {"type": "number", "description": "Immutable trusted-root bundle version; version 1 is currently supported"},
+                "signature_algorithms_mask": {"type": "number", "default": 7, "description": "Allowed TLS signature schemes: bit 0 ECDSA P-256/SHA-256, bit 1 RSA-PSS-RSAE/SHA-256, bit 2 RSA-PSS-PSS/SHA-256; from 1 through 7"},
             },
             "additionalProperties": False,
             "required": ["amount", "domain", "connection_work_target", "root_certificates_version"],

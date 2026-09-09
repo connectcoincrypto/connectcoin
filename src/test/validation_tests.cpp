@@ -247,9 +247,9 @@ BOOST_AUTO_TEST_CASE(test_assumeutxo)
 
     const auto out110{params->AssumeutxoForHeight(110)};
     BOOST_REQUIRE(out110);
-    BOOST_CHECK_EQUAL(out110->hash_serialized.ToString(), "f061bc6756b220fe5b9f207ed3fce195422d253a254c459090ad5f860998ad1b");
+    BOOST_CHECK_EQUAL(out110->hash_serialized.ToString(), "4f999da88f2d55aaf4d79d92565f2c03ec5c50dbf04ad48fbc4c809ec9075ea7");
     BOOST_CHECK_EQUAL(out110->m_chain_tx_count, 111U);
-    const uint256 expected_blockhash110{params->GetConsensus().randomx_mock_pow ? uint256{"2058bef815acee68c300801bb54882211b79ffdfc0457466829589e93664423a"} : uint256{"a95b0b7af1e07d571b1e835a3c74b5ff7de6956c261726b9f6c4a1e5a5925710"}};
+    const uint256 expected_blockhash110{params->GetConsensus().randomx_mock_pow ? uint256{"74aa335863dad6125b1eed3dffb2312aaab36057d2be88a393c93b15b4eae1c0"} : uint256{"cc663f573619d2c6ecb84ce51d3cda51efe9fc70fc241f153ca2e2dd8e695455"}};
     BOOST_CHECK(out110->blockhash == expected_blockhash110);
     const auto out110_by_hash{params->AssumeutxoForBlockhash(expected_blockhash110)};
     BOOST_REQUIRE(out110_by_hash);
@@ -257,10 +257,10 @@ BOOST_AUTO_TEST_CASE(test_assumeutxo)
 
     const auto out200{params->AssumeutxoForHeight(200)};
     BOOST_REQUIRE(out200);
-    BOOST_CHECK_EQUAL(out200->hash_serialized.ToString(), "7bfadd0d71b06c17b5e65ae86445d1de9c848a53ec3828893dc4bfe057f0e866");
+    BOOST_CHECK_EQUAL(out200->hash_serialized.ToString(), "9bf1e57fe8fbaea995248beee3f679ad7fb9dc47cbdca2388b285689aef1ea93");
     BOOST_CHECK_EQUAL(out200->m_chain_tx_count, 201U);
 
-    const uint256 expected_blockhash200{params->GetConsensus().randomx_mock_pow ? uint256{"6eb52cda8e2ecae855573312d91682a66d8add1fa73bf0ff97175382a6083531"} : uint256{"3d2780631fc34fddfe3280d84280f40399e908984bfc1dd1a0202495209e353a"}};
+    const uint256 expected_blockhash200{params->GetConsensus().randomx_mock_pow ? uint256{"686ec6f0097a0c42be14d672b2c6b336c93224c183d59872aeff473f7f99bc6a"} : uint256{"03085c6cd5ab716a533e4dbd23d01792960047a71fa273b6be3b8f7f4f787d13"}};
     BOOST_CHECK(out200->blockhash == expected_blockhash200);
     const auto out200_by_hash{params->AssumeutxoForBlockhash(expected_blockhash200)};
     BOOST_REQUIRE(out200_by_hash);

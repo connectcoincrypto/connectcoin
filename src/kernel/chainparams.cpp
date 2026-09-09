@@ -249,8 +249,8 @@ public:
         consensus.nMinimumChainWork = uint256{1};
         consensus.defaultAssumeValid = uint256{};
 
-        // First four bytes of SHA256("ConnectCoin testnet3 P2C v2 network").
-        pchMessageStart = {0x0d, 0xb1, 0x48, 0x4d};
+        // First four bytes of SHA256("ConnectCoin testnet3 P2C mask v1 network").
+        pchMessageStart = {0xc7, 0x29, 0x1f, 0xf5};
         // Preserve the pre-reset wallet identity, not the wire protocol magic.
         m_wallet_database_id = {0x03, 0x84, 0x8e, 0x59};
         nDefaultPort = 48176;
@@ -258,10 +258,10 @@ public:
         m_assumed_blockchain_size = 0;
         m_assumed_chain_state_size = 0;
 
-        genesis = CreateConnectCoinGenesisBlock("ConnectCoin testnet3 | P2C v2 | 2026-09-09", 1788912000, 38388, 0x1f00ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
+        genesis = CreateConnectCoinGenesisBlock("ConnectCoin testnet3 | P2C mask v1 | 2026-09-09", 1788912000, 66621, 0x1f00ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
         consensus.hashGenesisBlock = genesis->GetHash();
-        assert(genesis->hashMerkleRoot == uint256{"3477a829a66de337c0b0db26685a1f6294287f4e9655bd892245d85e3d51ee6d"});
-        assert(consensus.hashGenesisBlock == uint256{"ca89051d3a1bcf96be2ed4943d347687af47b6fd0a155fc2b15ddcc103bd75af"});
+        assert(genesis->hashMerkleRoot == uint256{"2e2e1a9fdad577fc8832a2e582f0149de3ab2032764a978c7e469b18f1c4099e"});
+        assert(consensus.hashGenesisBlock == uint256{"1025889d725c5d64c3ee38ab07d2de279ab57036a2482186c65806d6c0291787"});
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -338,18 +338,18 @@ public:
         consensus.nMinimumChainWork = uint256{1};
         consensus.defaultAssumeValid = uint256{};
 
-        // First four bytes of SHA256("ConnectCoin testnet4 P2C v2 network").
-        pchMessageStart = {0x4e, 0x3d, 0x81, 0x78};
+        // First four bytes of SHA256("ConnectCoin testnet4 P2C mask v1 network").
+        pchMessageStart = {0x77, 0xd6, 0x6c, 0xbc};
         m_wallet_database_id = {0xbb, 0x51, 0xf5, 0xe7};
         nDefaultPort = 48179;
         nPruneAfterHeight = 1000;
         m_assumed_blockchain_size = 0;
         m_assumed_chain_state_size = 0;
 
-        genesis = CreateConnectCoinGenesisBlock("ConnectCoin testnet4 | P2C v2 | 2026-09-09", 1788912001, 199567, 0x1f00ffff, 1, 10'000'000 * COIN, TestNet4GenesisOutputScript());
+        genesis = CreateConnectCoinGenesisBlock("ConnectCoin testnet4 | P2C mask v1 | 2026-09-09", 1788912001, 913, 0x1f00ffff, 1, 10'000'000 * COIN, TestNet4GenesisOutputScript());
         consensus.hashGenesisBlock = genesis->GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"38cae555fb78f44c31e7d6859d0476252b321dae8b6312afefe0a45fc3fd112a"});
-        assert(genesis->hashMerkleRoot == uint256{"e70bc6f9408b4997f2b8f4f227bddd122282ceb4cc5b58d326081ee411441d4e"});
+        assert(consensus.hashGenesisBlock == uint256{"710dc5910cbef40216bd82ccfb66af2273b2b1d336b034c5794966904cb603bf"});
+        assert(genesis->hashMerkleRoot == uint256{"e09a12d2aca740a06be984897fa268d4f03317c2363748d4ab69768ed92ca555"});
 
         vFixedSeeds.clear();
         // ConnectCoin public testnet4 bootstrap (base hostnames, including DDNS).
@@ -465,7 +465,7 @@ public:
         // Domain-separate the reset network while preserving custom-challenge isolation.
         // First four bytes of SHA256d of the serialized string and challenge vector.
         HashWriter h{};
-        h << std::string{"ConnectCoin signet P2C v2 network"};
+        h << std::string{"ConnectCoin signet P2C mask v1 network"};
         h << consensus.signet_challenge;
         uint256 hash = h.GetHash();
         std::copy_n(hash.begin(), 4, pchMessageStart.begin());
@@ -473,10 +473,10 @@ public:
         nDefaultPort = 48182;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateConnectCoinGenesisBlock("ConnectCoin signet | P2C v2 | 2026-09-09", 1788912002, 27113, 0x1f00ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
+        genesis = CreateConnectCoinGenesisBlock("ConnectCoin signet | P2C mask v1 | 2026-09-09", 1788912002, 2069, 0x1f00ffff, 1, 10'000'000 * COIN, PublicGenesisOutputScript());
         consensus.hashGenesisBlock = genesis->GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"2a62fd84425bc1f6dce0343ec3f6c08b782d76df54d52e5e3b8153f5d27d94b4"});
-        assert(genesis->hashMerkleRoot == uint256{"374929cb89e0db3685b45adde158b63ccb00be549aeaa8f7b8eeda01b51c23d0"});
+        assert(consensus.hashGenesisBlock == uint256{"a694dccdc04a316a4f4fe496f311aff981392f25ea18e4b7f77d9f449b9089fc"});
+        assert(genesis->hashMerkleRoot == uint256{"e9b9c33924f02701bc84751dc4701a1eef9b5c865fdc030b34843ed45db74dbf"});
 
         m_assumeutxo_data.clear();
 
@@ -543,8 +543,8 @@ public:
         consensus.nMinimumChainWork = uint256{};
         consensus.defaultAssumeValid = uint256{};
 
-        // First four bytes of SHA256("ConnectCoin regtest P2C v2 network").
-        pchMessageStart = {0x8d, 0x6e, 0x01, 0x91};
+        // First four bytes of SHA256("ConnectCoin regtest P2C mask v1 network").
+        pchMessageStart = {0x3a, 0xf8, 0x3b, 0xe3};
         m_wallet_database_id = {0xa5, 0x4f, 0xc7, 0xd5};
         nDefaultPort = 48185;
         nPruneAfterHeight = opts.fastprune ? 100 : 1000;
@@ -554,10 +554,10 @@ public:
         ApplyDeploymentOptions(opts.dep_opts);
 
         // Keep the historical regtest clock for tests; the new coinbase and nonce reset its identity.
-        genesis = CreateConnectCoinGenesisBlock("ConnectCoin regtest | P2C v2 | 2026-09-09", 1296688602, 26, 0x207fffff, 1, 10'000'000 * COIN, RegTestGenesisOutputScript());
+        genesis = CreateConnectCoinGenesisBlock("ConnectCoin regtest | P2C mask v1 | 2026-09-09", 1296688602, 20, 0x207fffff, 1, 10'000'000 * COIN, RegTestGenesisOutputScript());
         consensus.hashGenesisBlock = genesis->GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"de48ff31cbff58a91ef359100fef13e6472f165e6f0410e52efcdacb1861f65a"});
-        assert(genesis->hashMerkleRoot == uint256{"a26cc36202eb5e29223338940ab72e985db833ef1c14340fce37bfded3e0f595"});
+        assert(consensus.hashGenesisBlock == uint256{"53c5145452f6957a2674ab904726afc2d7643c4a4fb9c2beab193ea983e500f0"});
+        assert(genesis->hashMerkleRoot == uint256{"9fee3081f6d76758b63691d412ce44408c471b02d0e5ae443aa5adf3a7345c9e"});
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();
@@ -570,20 +570,20 @@ public:
             {
                 // Deterministic snapshot used by the chainstate manager unit tests.
                 .height = 110,
-                .hash_serialized = AssumeutxoHash{uint256{"f061bc6756b220fe5b9f207ed3fce195422d253a254c459090ad5f860998ad1b"}},
+                .hash_serialized = AssumeutxoHash{uint256{"4f999da88f2d55aaf4d79d92565f2c03ec5c50dbf04ad48fbc4c809ec9075ea7"}},
                 .m_chain_tx_count = 111,
                 .blockhash = opts.randomx_mock_pow
-                    ? uint256{"2058bef815acee68c300801bb54882211b79ffdfc0457466829589e93664423a"}
-                    : uint256{"a95b0b7af1e07d571b1e835a3c74b5ff7de6956c261726b9f6c4a1e5a5925710"},
+                    ? uint256{"74aa335863dad6125b1eed3dffb2312aaab36057d2be88a393c93b15b4eae1c0"}
+                    : uint256{"cc663f573619d2c6ecb84ce51d3cda51efe9fc70fc241f153ca2e2dd8e695455"},
             },
             {
                 // Deterministic regtest commitment used by the utxo_snapshot fuzz targets.
                 .height = 200,
-                .hash_serialized = AssumeutxoHash{uint256{"7bfadd0d71b06c17b5e65ae86445d1de9c848a53ec3828893dc4bfe057f0e866"}},
+                .hash_serialized = AssumeutxoHash{uint256{"9bf1e57fe8fbaea995248beee3f679ad7fb9dc47cbdca2388b285689aef1ea93"}},
                 .m_chain_tx_count = 201,
                 .blockhash = opts.randomx_mock_pow
-                    ? uint256{"6eb52cda8e2ecae855573312d91682a66d8add1fa73bf0ff97175382a6083531"}
-                    : uint256{"3d2780631fc34fddfe3280d84280f40399e908984bfc1dd1a0202495209e353a"},
+                    ? uint256{"686ec6f0097a0c42be14d672b2c6b336c93224c183d59872aeff473f7f99bc6a"}
+                    : uint256{"03085c6cd5ab716a533e4dbd23d01792960047a71fa273b6be3b8f7f4f787d13"},
             },
         };
 

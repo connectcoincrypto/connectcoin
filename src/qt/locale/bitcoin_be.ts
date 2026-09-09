@@ -1345,8 +1345,24 @@ Last claim: %7
         <translation>Стварыць узнагароды pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Вылучыце сродкі на незалежныя ўзнагароды за сапраўдныя доказы TLS-злучэнняў. Атрымаць іх можа кожны, хто выканае патрабаванні. Гэтая старонка не ўсталёўвае HTTPS-злучэнняў.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Фінансуйце незалежныя ўзнагароды за сапраўдныя доказы злучэння TLS. На працягу трох секунд пацверджання гэтая старонка правярае падтрымку подпісаў RSA даменам праз узгадненне TLS. Запыт HTTP не адпраўляецца.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Праверка падтрымкі подпісаў RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS з SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Усе падтрыманыя алгарытмы</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Дазволеныя подпісы: %1 (маска %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

@@ -80,6 +80,7 @@ add_executable(connectcoin-test
   peerman_tests.cpp
   pmt_tests.cpp
   p2c_tests.cpp
+  p2c_rsa_tests.cpp
   pool_tests.cpp
   pow_tests.cpp
   prevector_tests.cpp
@@ -170,6 +171,7 @@ target_link_libraries(connectcoin-test
   connectcoin_node
   connectcoin_consensus
   MbedTLS::mbedx509
+  MbedTLS::mbedtls
   MbedTLS::mbedcrypto
   minisketch
   $<$<PLATFORM_ID:Windows>:leveldb>

@@ -2184,8 +2184,24 @@ Hawliad diwethaf: %7
         <translation>Creu gwobrau pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Ariannwch wobrau annibynnol am broflenni cysylltiad TLS dilys. Gall unrhyw un sy'n bodloni'r gofynion eu hawlio. Nid yw'r dudalen hon yn creu cysylltiadau HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Ariannwch wobrau annibynnol am brofion cysylltiad TLS dilys. Yn ystod y cadarnhad tair eiliad, mae'r dudalen hon yn gwirio cefnogaeth y parth i lofnodion RSA drwy ysgwyd llaw TLS. Ni anfonir unrhyw gais HTTP.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Yn gwirio cefnogaeth i lofnodion RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS gyda SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Pob algorithm a gefnogir</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Llofnodion a ganiateir: %1 (mwgwd %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

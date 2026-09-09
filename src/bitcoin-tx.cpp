@@ -63,7 +63,7 @@ static void SetupBitcoinTxArgs(ArgsManager &argsman)
     argsman.AddArg("outdata=[VALUE:]DATA", "Unsupported: ConnectCoin has no data/Script output type", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
     argsman.AddArg("outmultisig=...", "Unsupported: ConnectCoin has no multisig output type", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
     argsman.AddArg("outpubkey=VALUE:PUBKEY", "Add a type-1 P2PK output from a 32-byte x-only or full secp256k1 public key", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
-    argsman.AddArg("outp2c=VALUE:DOMAIN:TARGET:ROOTS_VERSION", "Add a type-2 PAY_TO_CONNECT output", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
+    argsman.AddArg("outp2c=VALUE:DOMAIN:TARGET:ROOTS_VERSION[:SIGNATURE_ALGORITHMS_MASK]", "Add a type-2 PAY_TO_CONNECT output (signature algorithms mask defaults to 7)", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
     argsman.AddArg("outscript=...", "Unsupported: ConnectCoin has no raw Script output type", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
     argsman.AddArg("p2cproof=INPUT_INDEX:PROOF", "Set the complete P2C proof witness for one input", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
     argsman.AddArg("replaceable(=N)", "Sets Replace-By-Fee (RBF) opt-in sequence number for input N. "
@@ -346,8 +346,8 @@ static void MutateTxAddOutPubKey(CMutableTransaction& tx, const std::string& str
 static void MutateTxAddOutP2C(CMutableTransaction& tx, const std::string& strInput)
 {
     const std::vector<std::string> parts{SplitString(strInput, ':')};
-    if (parts.size() != 4) {
-        throw std::runtime_error("P2C output must be VALUE:DOMAIN:TARGET:ROOTS_VERSION");
+    if (parts.size() != 4 && parts.size() != 5) {
+        throw std::runtime_error("P2C output must be VALUE:DOMAIN:TARGET:ROOTS_VERSION[:SIGNATURE_ALGORITHMS_MASK]");
     }
     const CAmount value{ExtractAndValidateValue(parts[0])};
     if (!IsCanonicalP2CDomain(parts[1])) {
@@ -359,10 +359,15 @@ static void MutateTxAddOutP2C(CMutableTransaction& tx, const std::string& strInp
     if (!roots_version || !IsSupportedP2CRootCertificatesVersion(*roots_version)) {
         throw std::runtime_error("unsupported P2C root certificate version");
     }
+    const auto mask{parts.size() == 5 ? ToIntegral<uint8_t>(parts[4]) : std::optional<uint8_t>{PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL}};
+    if (!mask || !IsValidP2CSignatureAlgorithmsMask(*mask)) {
+        throw std::runtime_error("P2C signature algorithms mask must be between 1 and 7");
+    }
     tx.vout.emplace_back(value, PayToDomainOutput{
         .domain = parts[1],
         .connection_work_target = *target,
         .root_certificates_version = *roots_version,
+        .signature_algorithms_mask = *mask,
     });
 }
 

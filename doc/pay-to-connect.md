@@ -20,6 +20,14 @@ The type-2 payload contains, in order:
 | `domain` | variable | Canonical DNS name |
 | `connection_work_target` | 32 bytes | Largest accepted P2C work hash |
 | `root_certificates_version` | 4 bytes | Identifier of an immutable root bundle |
+| `signature_algorithms_mask` | 1 byte | Allowed TLS CertificateVerify signature schemes |
+
+The mandatory mask uses bit 0 for ECDSA P-256/SHA-256 (`1`), bit 1 for
+`rsa_pss_rsae_sha256` (`2`), and bit 2 for `rsa_pss_pss_sha256` (`4`).
+The default mask is `7` (all three); `6` permits both RSA schemes. Zero and
+reserved bits are rejected. The byte follows the root version directly,
+without a length prefix. Previous type-2 payloads without this byte have no
+fallback decoder.
 
 The domain is lower-case ASCII, contains only DNS LDH-label characters, has no
 empty labels or trailing dot, and is at most 253 bytes. Wildcards, IP literals,
@@ -81,7 +89,11 @@ Proof version 2 accepts this deliberately narrow profile:
 - HelloRetryRequest, PSK/resumption, early data, ECH, and compressed
   certificates are rejected.
 - `CertificateVerify` may use ECDSA secp256r1 SHA-256 or RSA-PSS SHA-256. RSA
-  leaf keys must be at least 2048 bits.
+  leaf keys must be at least 2048 bits. The selected scheme must be permitted
+  by the output's `signature_algorithms_mask`. RSAE schemes require an
+  `rsaEncryption` leaf public key; PSS-PSS schemes require an `id-RSASSA-PSS`
+  leaf public key whose restrictions permit SHA-256, MGF1-SHA-256 and a
+  32-byte salt. Both RSA schemes require exactly that salt length.
 - The leaf certificate must be valid for TLS server authentication and the
   output domain. Its chain must terminate at a root in the selected immutable
   bundle.
@@ -133,11 +145,14 @@ Each P2C output is a normal UTXO and can be spent only once. There is no
 remaining-claims counter and no consensus set of previously used connection
 hashes.
 
-## P2C v2 test-chain reset (September 9, 2026)
+## P2C mask v1 test-chain reset (September 9, 2026)
 
-Version 1 proofs are rejected on the reset networks. The claim challenge tag
-`ConnectCoin/P2C/claim/v1`, typed output payload and immutable root bundle
-version 1 are unchanged; these identifiers describe different formats.
+“P2C mask v1” identifies the network/output-layout reset that appends the
+required one-byte signature-algorithms mask. It does not rename the proof
+format: TLS proofs remain version 2 and the work tag remains
+`ConnectCoin/P2C/work/v2`. Version 1 proofs are rejected. The claim challenge
+tag `ConnectCoin/P2C/claim/v1` and immutable root bundle version 1 are also
+unchanged; these identifiers describe different formats.
 
 Testnet3, testnet4, signet and regtest have new genesis blocks and P2P message
 starts. The change is active from their genesis, not a height-based reinterpretation
@@ -149,7 +164,10 @@ See [testnet-beta.md](testnet-beta.md) for reset identifiers and operator steps.
 ## RPC and command-line workflow
 
 Create a transaction whose output object contains a `p2c` member with
-`domain`, `connection_work_target`, and `root_certificates_version`. Then:
+`amount`, `domain`, `connection_work_target`, and `root_certificates_version`.
+The optional `signature_algorithms_mask` defaults to `7`. The wallet
+`sendtop2c` RPC also accepts this optional named argument; it is appended after
+`verbose` for positional callers. Then:
 
 ```
 connectcoin-cli getp2cchallenge "unsigned_transaction_hex" 0
@@ -168,7 +186,7 @@ connectcoin-cli sendrawtransaction "witnessed_transaction_hex"
 The offline transaction utility also supports:
 
 ```
-connectcoin-tx outp2c=VALUE:DOMAIN:TARGET:ROOTS_VERSION
+connectcoin-tx outp2c=VALUE:DOMAIN:TARGET:ROOTS_VERSION[:SIGNATURE_ALGORITHMS_MASK]
 connectcoin-tx p2cproof=INPUT_INDEX:PROOF
 ```
 

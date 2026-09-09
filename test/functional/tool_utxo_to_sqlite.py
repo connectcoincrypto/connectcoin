@@ -95,7 +95,7 @@ class UtxoToSqliteTest(BitcoinTestFramework):
         domains = (b'a', b'example.test', b'a' * 63 + b'.test', b'.'.join([b'a' * 63] * 3 + [b'b' * 61]))
         for i, domain in enumerate(domains):
             target = (bytes(32), b'\xff' * 32, bytes(range(32)), bytes(range(32, 64)))[i]
-            output_scripts.append(b'\x52' + bytes([len(domain)]) + domain + target + (1).to_bytes(4, 'little'))
+            output_scripts.append(b'\x52' + bytes([len(domain)]) + domain + target + (1).to_bytes(4, 'little') + bytes([i + 1]))
 
         sent_outputs = []
         for i, output_script in enumerate(output_scripts):
@@ -181,7 +181,7 @@ class UtxoToSqliteTest(BitcoinTestFramework):
             return txid + ser_compact_size(count) + body
 
         valid = snapshot(grouped(coin()))
-        p2c = b'\x02\x01a' + bytes(range(32)) + (1).to_bytes(4, 'little')
+        p2c = b'\x02\x01a' + bytes(range(32)) + (1).to_bytes(4, 'little') + b'\x07'
         valid_p2c = snapshot(grouped(coin(p2c)))
         malformed = {
             'magic': b'wrong' + valid[5:],
@@ -195,7 +195,9 @@ class UtxoToSqliteTest(BitcoinTestFramework):
             'unknown-type': snapshot(grouped(coin(b'\xff'))),
             'invalid-key': snapshot(grouped(coin(b'\x01' + b'\xff' * 32))),
             'key-not-on-curve': snapshot(grouped(coin(b'\x01' + bytes(32)))),
-            'root-zero': snapshot(grouped(coin(p2c[:-4] + bytes(4)))),
+            'root-zero': snapshot(grouped(coin(p2c[:-5] + bytes(4) + p2c[-1:]))),
+            'mask-zero': snapshot(grouped(coin(p2c[:-1] + b'\x00'))),
+            'mask-reserved': snapshot(grouped(coin(p2c[:-1] + b'\x80'))),
             'noncanonical-group': snapshot(txid + b'\xfd\x01\x00' + coin()),
             'noncanonical-vout': snapshot(grouped(b'\xfe\x00\x01\x00\x00' + coin()[1:])),
             'oversized-vout': snapshot(grouped(coin(vout=0x04000001))),
@@ -207,7 +209,7 @@ class UtxoToSqliteTest(BitcoinTestFramework):
         }
         for i, domain in enumerate((b'', b'Example.test', b'a.', b'a..b', b'-a', b'a-', b'a_b',
                                     b'a\x00b', b'\xff', b'a' * 64, b'a' * 254)):
-            malformed[f'domain-{i}'] = snapshot(grouped(coin(b'\x02' + bytes([len(domain)]) + domain + p2c[-36:])))
+            malformed[f'domain-{i}'] = snapshot(grouped(coin(b'\x02' + bytes([len(domain)]) + domain + p2c[-37:])))
         for cut in (0, 4, 5, 6, 7, 10, 11, 42, 43, 50, 51, 82, 83, 84, 85, 86, 87, len(valid) - 1):
             malformed[f'truncated-p2pk-{cut}'] = valid[:cut]
         for cut in (len(valid_p2c) - 39, len(valid_p2c) - 38, len(valid_p2c) - 37,

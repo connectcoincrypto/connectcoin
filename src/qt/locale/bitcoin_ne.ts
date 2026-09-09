@@ -1272,8 +1272,24 @@ Last claim: %7
         <translation>pay-to-connect पुरस्कार बनाउनुहोस्</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>वैध TLS जडान प्रमाणका लागि अलग-अलग पुरस्कारमा रकम राख्नुहोस्। सर्त पूरा गर्ने जोसुकैले दाबी गर्न सक्छ। यो पृष्ठले HTTPS जडान गर्दैन।</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>वैध TLS जडान प्रमाणहरूका लागि स्वतन्त्र पुरस्कारहरूमा रकम उपलब्ध गराउनुहोस्। तीन सेकेन्डको पुष्टिकरणका क्रममा, यो पृष्ठले TLS ह्यान्डशेकमार्फत डोमेनले RSA हस्ताक्षर समर्थन गर्छ कि गर्दैन भनेर जाँच गर्छ। कुनै HTTP अनुरोध पठाइँदैन।</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA हस्ताक्षर समर्थन जाँच गरिँदै छ…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>SHA-256 सहितको RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>समर्थित सबै एल्गोरिदम</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>अनुमति दिइएका हस्ताक्षरहरू: %1 (मास्क %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

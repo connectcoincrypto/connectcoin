@@ -6,6 +6,8 @@
 
 #include <consensus/p2c.h>
 #include <consensus/p2c_roots_v1.pem.h>
+#include <consensus/p2c_x509_mutex.h>
+#include <crypto/mbedtls_rsa_pss.h>
 #include <crypto/sha256.h>
 #include <mbedtls/asn1.h>
 #include <mbedtls/ecp.h>
@@ -21,6 +23,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <limits>
+#include <mutex>
 #include <optional>
 #include <span>
 #include <string>
@@ -73,8 +76,13 @@ const mbedtls_x509_crt* RootStoreV1()
             valid = mbedtls_x509_crt_parse(&chain.value, pem.data(), pem.size()) == 0;
         }
     };
-    static const RootStore roots;
-    return roots.valid ? &roots.chain.value : nullptr;
+    // A cancelled detached GUI probe can still be finishing crypto when static
+    // destruction begins. Keep this fixed, public-only trust cache alive for
+    // the process lifetime. The static pointer remains reachable and its local
+    // initialization retains C++'s thread-safety guarantee. Test roots stay
+    // owned by their individual validation calls and are freed normally.
+    static const RootStore* const roots{new RootStore};
+    return roots->valid ? &roots->chain.value : nullptr;
 }
 
 bool ParseCertificateChain(const P2CTlsProofView& proof, CertificateChain& chain, std::string& error)
@@ -157,10 +165,22 @@ bool VerifyDomainPath(mbedtls_x509_crt& chain, std::string_view domain,
 {
     std::string domain_string{domain};
     uint32_t flags{0};
-    const int result{mbedtls_x509_crt_verify_with_profile(
-        &chain, const_cast<mbedtls_x509_crt*>(&roots), /*ca_crl=*/nullptr,
-        &mbedtls_x509_crt_profile_default, domain_string.c_str(), &flags,
-        IgnoreWallClockValidity, /*p_vrfy=*/nullptr)};
+    int result;
+    {
+        // The root DER is immutable, but Mbed TLS lazily populates RSA
+        // Montgomery and EC precomputation caches in its parsed public keys.
+        // Its classic backend has no configured threading support. Protect
+        // path validation against concurrent consensus, worker and GUI probe
+        // callers; each proof's private leaf/CV verification remains parallel.
+        // Match the process lifetime of RootStoreV1, including detached probes
+        // that finish during application shutdown. This retains no key data.
+        static auto* const root_key_cache_mutex{new consensus::p2c::RootKeyCacheMutex};
+        const std::lock_guard lock{*root_key_cache_mutex};
+        result = mbedtls_x509_crt_verify_with_profile(
+            &chain, const_cast<mbedtls_x509_crt*>(&roots), /*ca_crl=*/nullptr,
+            &mbedtls_x509_crt_profile_default, domain_string.c_str(), &flags,
+            IgnoreWallClockValidity, /*p_vrfy=*/nullptr);
+    }
     if (result != 0 || flags != 0) return SetError(error, "P2C certificate path or domain validation failed");
     return true;
 }
@@ -201,9 +221,8 @@ bool VerifyCertificateVerify(const mbedtls_x509_crt& leaf, const P2CTlsProofView
                                        proof.certificate_verify_signature.data(), proof.certificate_verify_signature.size());
     } else if (proof.certificate_verify_scheme == TLS_RSA_PSS_RSAE_SHA256 ||
                proof.certificate_verify_scheme == TLS_RSA_PSS_PSS_SHA256) {
-        const mbedtls_pk_type_t required_key_type{
-            proof.certificate_verify_scheme == TLS_RSA_PSS_PSS_SHA256 ? MBEDTLS_PK_RSASSA_PSS : MBEDTLS_PK_RSA};
-        if (!mbedtls_pk_can_do(&leaf.pk, required_key_type) || mbedtls_pk_get_bitlen(&leaf.pk) < 2048) {
+        if (!connectcoin_mbedtls_rsa_tls_scheme_matches(&leaf.pk, proof.certificate_verify_scheme) ||
+            mbedtls_pk_get_bitlen(&leaf.pk) < 2048) {
             return SetError(error, "CertificateVerify scheme does not match leaf RSA key");
         }
         const mbedtls_pk_rsassa_pss_options options{
@@ -235,6 +254,9 @@ bool VerifyP2CCertificateProofImpl(const CTxOut& spent_output,
 
     const auto output{spent_output.GetPayToDomain()};
     if (!output) return SetError(error, "spent output is not a canonical PAY_TO_CONNECT output");
+    if (!P2CSignatureSchemeAllowed(output->signature_algorithms_mask, proof.certificate_verify_scheme)) {
+        return SetError(error, "P2C CertificateVerify scheme is not allowed by the output");
+    }
     if (!VerifyDomainPath(chain.value, output->domain, roots, error)) return false;
     return VerifyCertificateVerify(chain.value, proof, error);
 }

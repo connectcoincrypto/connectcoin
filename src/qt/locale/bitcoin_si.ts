@@ -1529,8 +1529,24 @@ Last claim: %7
         <translation>pay-to-connect ත්‍යාග සාදන්න</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>වලංගු TLS සම්බන්ධතා සාක්ෂි සඳහා වෙන්වූ ත්‍යාගවලට මුදල් සපයන්න. අවශ්‍යතා සපුරන ඕනෑම අයෙකුට ඒවා ඉල්ලාගත හැක. මෙම පිටුව HTTPS සම්බන්ධතා නොසාදයි.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>වලංගු TLS සම්බන්ධතා සාක්ෂි සඳහා ස්වාධීන ත්‍යාගවලට අරමුදල් සපයන්න. තත්පර තුනක තහවුරු කිරීම අතරතුර, මෙම පිටුව TLS හෑන්ඩ්ෂේක් ක්‍රියාවලියකින් වසම RSA අත්සන් සඳහා සහාය දක්වන්නේදැයි පරීක්ෂා කරයි. HTTP ඉල්ලීමක් යවන්නේ නැත.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA අත්සන් සහාය පරීක්ෂා කරමින්…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>SHA-256 සමඟ RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>සහාය දක්වන සියලු ඇල්ගොරිතම</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>අවසර දී ඇති අත්සන්: %1 (මාස්ක් %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

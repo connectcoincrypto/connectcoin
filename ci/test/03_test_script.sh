@@ -8,6 +8,11 @@ export LC_ALL=C.UTF-8
 
 set -o errexit -o xtrace -o pipefail
 
+# Also invalidate direct/container invocations before any early failure.
+if [ -n "${BASE_BUILD_DIR:-}" ]; then
+  rm -f -- "${BASE_BUILD_DIR}/.ci-depends-complete"
+fi
+
 if [ "${DANGER_RUN_CI_ON_HOST}" != "1" ]; then
   echo "This script will make unsafe local and global modifications, so it can only be run inside a container and requires DANGER_RUN_CI_ON_HOST=1"
   exit 1
@@ -97,6 +102,12 @@ if [ -z "$NO_DEPENDS" ]; then
     SHELL_OPTS="CONFIG_SHELL="
   fi
   bash -c "$SHELL_OPTS make $MAKEJOBS -C depends HOST=$HOST $DEP_OPTS LOG=1"
+  # Only a successful complete dependency build may publish immutable caches.
+  # BASE_BUILD_DIR is host-bound in cache-enabled jobs, never a restored cache.
+  if [ -n "${BASE_BUILD_DIR:-}" ] && [ -n "${CI_DEPENDS_CACHE_RUN:-}" ]; then
+    mkdir -p -- "${BASE_BUILD_DIR}"
+    printf '%s\n' "${CI_DEPENDS_CACHE_RUN}" > "${BASE_BUILD_DIR}/.ci-depends-complete"
+  fi
 fi
 CONNECTCOIN_CONFIG_ALL="-DCMAKE_COMPILE_WARNING_AS_ERROR=ON -DBUILD_BENCH=ON -DBUILD_FUZZ_BINARY=ON"
 if [ -z "$NO_DEPENDS" ]; then

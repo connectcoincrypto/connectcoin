@@ -322,27 +322,34 @@ G = GE.lift_x(0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798
 class FastGEMul:
     """Table for fast multiplication with a constant group element.
 
-    Speed up scalar multiplication with a fixed point P by using a precomputed lookup table with
-    its powers of 2:
+    Precompute the 15 nonzero multiples of (16^window)*P for each of 64 windows.
+    Multiplication then adds the point for each nonzero four-bit digit of the scalar,
+    requiring on average 60 point additions instead of 128 for a powers-of-two table.
 
-        table = [P, 2*P, 4*P, (2^3)*P, (2^4)*P, ..., (2^255)*P]
-
-    During multiplication, the points corresponding to each bit set in the scalar are added up,
-    i.e. on average ~128 point additions take place.
+    This trades a larger table (960 points instead of 256) and a little more startup
+    work for faster repeated test-only signing. All point arithmetic remains checked.
     """
 
     def __init__(self, p):
-        self.table = [p]  # table[i] = (2^i) * p
-        for _ in range(255):
-            p = p + p
-            self.table.append(p)
+        self.table = []
+        for window in range(64):
+            row = [p]  # row[digit - 1] = digit * (16^window) * original_p
+            for _ in range(14):
+                row.append(row[-1] + p)
+            self.table.append(row)
+            if window != 63:
+                p = row[-1] + p  # The next window starts at 16*p.
 
     def mul(self, a):
         result = GE()
         a = a % GE.ORDER
-        for bit in range(a.bit_length()):
-            if a & (1 << bit):
-                result += self.table[bit]
+        window = 0
+        while a:
+            digit = a & 15
+            if digit:
+                result += self.table[window][digit - 1]
+            a >>= 4
+            window += 1
         return result
 
 # Precomputed table with multiples of G for fast multiplication
@@ -353,3 +360,38 @@ class TestFrameworkSecp256k1(unittest.TestCase):
         H = sha256(G.to_bytes_uncompressed()).digest()
         assert GE.lift_x(FE.from_bytes(H)) is not None
         self.assertEqual(H.hex(), "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0")
+
+    def assertPointEqual(self, actual, expected):
+        self.assertEqual(actual.infinity, expected.infinity)
+        if not actual.infinity:
+            self.assertEqual(actual.x, expected.x)
+            self.assertEqual(actual.y, expected.y)
+
+    def test_fast_mul(self):
+        """Check scalar reduction and arbitrary bases against non-table multiplication."""
+        scalars = [
+            0, 1, 15, 16, 17, 255, 256, 257,
+            GE.ORDER - 1, GE.ORDER, GE.ORDER + 1,
+            2 * GE.ORDER - 1, 2 * GE.ORDER, 2 * GE.ORDER + 1,
+            2**256 - 1, 2**256, 2**256 + 1, 2**512 - 1,
+            -1, -GE.ORDER - 1, -GE.ORDER, -GE.ORDER + 1, -2**256, -2**512,
+        ]
+        # Fixed pseudorandom scalars must not depend on the test runner's seed.
+        scalars += [int.from_bytes(sha256(f"FastGEMul scalar {i}".encode()).digest(), 'big') for i in range(100)]
+        h = GE.lift_x(FE.from_bytes(sha256(G.to_bytes_uncompressed()).digest()))
+        self.assertIsNotNone(h)
+        for point_index, point in enumerate([G, -G, G + G, h, GE()]):
+            table = FastGEMul(point)
+            for scalar in scalars:
+                with self.subTest(point=point_index, scalar=scalar):
+                    self.assertPointEqual(table.mul(scalar), GE.mul((scalar, point)))
+
+    def test_fast_mul_windows(self):
+        """Exercise every digit of every table row, including the highest window."""
+        for window in range(64):
+            base = GE.mul((1 << (4 * window), G))
+            expected = GE()
+            for digit in range(16):
+                with self.subTest(window=window, digit=digit):
+                    self.assertPointEqual(FAST_G.mul(digit << (4 * window)), expected)
+                expected += base

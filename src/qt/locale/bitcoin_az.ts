@@ -1856,8 +1856,24 @@ Son tələb: %7
         <translation>Pay-to-connect mükafatları yarat</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Etibarlı TLS bağlantısı sübutları üçün müstəqil mükafatları maliyyələşdirin. Tələblərə cavab verən hər kəs onları ala bilər. Bu səhifə HTTPS bağlantıları qurmur.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Etibarlı TLS bağlantı sübutları üçün müstəqil mükafatları maliyyələşdirin. Üç saniyəlik təsdiq müddətində bu səhifə TLS əl sıxması vasitəsilə domenin RSA imzalarını dəstəkləyib-dəstəkləmədiyini yoxlayır. Heç bir HTTP sorğusu göndərilmir.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA imza dəstəyi yoxlanılır…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>SHA-256 ilə RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Bütün dəstəklənən alqoritmlər</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>İcazə verilən imzalar: %1 (maska %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

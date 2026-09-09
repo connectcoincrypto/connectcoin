@@ -11,6 +11,8 @@ CLIENT_BUGREPORT=@CLIENT_BUGREPORT@
 SRCDIR=@abs_top_srcdir@
 BUILDDIR=@abs_top_builddir@
 EXEEXT=@EXEEXT@
+# The compiled target's pointer width, which may differ from the Python host.
+TARGET_POINTER_SIZE=@CMAKE_SIZEOF_VOID_P@
 RPCAUTH=@abs_top_srcdir@/share/rpcauth/rpcauth.py
 
 [components]

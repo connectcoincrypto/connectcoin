@@ -96,11 +96,11 @@ namespace {
 
 constexpr size_t P2C_VIEW_PREFIX_SIZE{2};
 
-CScript P2CCompatibilityView(std::string_view domain, const uint256& target, uint32_t root_certificates_version)
+CScript P2CCompatibilityView(std::string_view domain, const uint256& target, uint32_t root_certificates_version, uint8_t signature_algorithms_mask)
 {
     assert(IsCanonicalP2CDomain(domain));
     CScript view;
-    view.reserve(P2C_VIEW_PREFIX_SIZE + domain.size() + target.size() + sizeof(uint32_t));
+    view.reserve(P2C_VIEW_PREFIX_SIZE + domain.size() + target.size() + sizeof(uint32_t) + sizeof(uint8_t));
     view.push_back(OP_2);
     view.push_back(static_cast<unsigned char>(domain.size()));
     view.insert(view.end(), domain.begin(), domain.end());
@@ -108,6 +108,7 @@ CScript P2CCompatibilityView(std::string_view domain, const uint256& target, uin
     std::array<unsigned char, sizeof(uint32_t)> encoded_version{};
     WriteLE32(encoded_version.data(), root_certificates_version);
     view.insert(view.end(), encoded_version.begin(), encoded_version.end());
+    view.push_back(signature_algorithms_mask);
     return view;
 }
 
@@ -115,7 +116,7 @@ std::optional<std::string_view> P2CDomainFromView(const CScript& view)
 {
     if (view.size() < P2C_VIEW_PREFIX_SIZE || view[0] != OP_2) return std::nullopt;
     const size_t domain_size{view[1]};
-    if (view.size() != P2C_VIEW_PREFIX_SIZE + domain_size + uint256::size() + sizeof(uint32_t)) return std::nullopt;
+    if (view.size() != P2C_VIEW_PREFIX_SIZE + domain_size + uint256::size() + sizeof(uint32_t) + sizeof(uint8_t)) return std::nullopt;
     const std::string_view domain{reinterpret_cast<const char*>(view.data() + P2C_VIEW_PREFIX_SIZE), domain_size};
     if (!IsCanonicalP2CDomain(domain)) return std::nullopt;
     return domain;
@@ -147,6 +148,8 @@ std::optional<PayToDomainOutput> CTxOut::GetPayToDomain() const
     std::copy_n(scriptPubKey.begin() + target_pos, uint256::size(), result.connection_work_target.begin());
     result.root_certificates_version = ReadLE32(scriptPubKey.data() + target_pos + uint256::size());
     if (result.root_certificates_version == 0) return std::nullopt;
+    result.signature_algorithms_mask = scriptPubKey.back();
+    if (!IsValidP2CSignatureAlgorithmsMask(result.signature_algorithms_mask)) return std::nullopt;
     return result;
 }
 
@@ -189,10 +192,13 @@ void CTxOut::SetPayToDomain(const PayToDomainOutput& p2cIn)
 {
     assert(IsCanonicalP2CDomain(p2cIn.domain));
     assert(p2cIn.root_certificates_version != 0);
+    if (!IsValidP2CSignatureAlgorithmsMask(p2cIn.signature_algorithms_mask)) {
+        throw std::ios_base::failure("Invalid PAY_TO_CONNECT signature algorithms mask");
+    }
     type = static_cast<uint8_t>(TxOutputType::PAY_TO_CONNECT);
     p2pk_pubkey = {};
     scriptPubKey = P2CCompatibilityView(p2cIn.domain, p2cIn.connection_work_target,
-                                        p2cIn.root_certificates_version);
+                                        p2cIn.root_certificates_version, p2cIn.signature_algorithms_mask);
 }
 
 std::string CTxOut::ToString() const
@@ -201,8 +207,9 @@ std::string CTxOut::ToString() const
     if (const auto pubkey{GetP2PKPubKey()}) {
         payload = strprintf("pubkey=%s", HexStr(*pubkey));
     } else if (const auto p2c{GetPayToDomain()}) {
-        payload = strprintf("domain=%s, target=%s, roots=%u", p2c->domain,
-                            p2c->connection_work_target.ToString(), p2c->root_certificates_version);
+        payload = strprintf("domain=%s, target=%s, roots=%u, signature_algorithms_mask=%u", p2c->domain,
+                            p2c->connection_work_target.ToString(), p2c->root_certificates_version,
+                            p2c->signature_algorithms_mask);
     }
     return strprintf("CTxOut(nValue=%d.%010d, type=%u, %s)", nValue / COIN, nValue % COIN,
                      static_cast<unsigned>(GetType()), payload);

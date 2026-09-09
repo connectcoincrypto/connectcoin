@@ -33,6 +33,9 @@ class ToolUtils(BitcoinTestFramework):
         self.skip_if_no_connectcoin_util()
 
     def run_test(self):
+        # Use the compiler target, not the architecture of the Python runner.
+        self.target_pointer_size = self.config.getint("environment", "TARGET_POINTER_SIZE")
+        assert self.target_pointer_size in (4, 8)
         self.testcase_dir = Path(self.config["environment"]["SRCDIR"]) / "test" / "functional" / "data" / "util"
         self.bins = self.get_binaries()
         with open(self.testcase_dir / "connectcoin-util-test.json") as f:
@@ -69,11 +72,15 @@ class ToolUtils(BitcoinTestFramework):
         tx.vin = [CTxIn(COutPoint(1, 0), b"", 0xffffffff)]
         p2pk = CTxOut(1, b"\x51\x20" + pubkey)
         domain = b"example.com"
-        p2c = CTxOut(2 * COIN, b"\x52" + bytes([len(domain)]) + domain + bytes.fromhex(target)[::-1] + b"\x01\x00\x00\x00")
+        p2c = CTxOut(2 * COIN, b"\x52" + bytes([len(domain)]) + domain + bytes.fromhex(target)[::-1] + b"\x01\x00\x00\x00\x07")
         tx.vout = [p2pk, p2c]
         args = ["-create", f"in={1:064x}:0", f"outpubkey=0.0000000001:{pubkey.hex()}", f"outp2c=2:example.com:{target}:1"]
         self.assert_model(args, tx)
         self.assert_model([tx.serialize_without_witness().hex()], tx)
+        for mask in range(1, 8):
+            tx.vout[1] = CTxOut(2 * COIN, p2c.scriptPubKey[:-1] + bytes([mask]))
+            self.assert_model(args[:-1] + [args[-1] + f":{mask}"], tx)
+        tx.vout[1] = p2c
 
         # Attaching a witness is intentionally not full TLS validation. It must
         # preserve the txid/challenge and replace (not append to) its one item.
@@ -94,6 +101,8 @@ class ToolUtils(BitcoinTestFramework):
             ("outp2c=2:example.com:01:1", "P2C target must be exactly 32 bytes of hex"),
             (f"outp2c=2:example.com:{target}:0", "unsupported P2C root certificate version"),
             (f"outp2c=2:example.com:{target}:2", "unsupported P2C root certificate version"),
+            *((f"outp2c=2:example.com:{target}:1:{mask}", "P2C signature algorithms mask must be between 1 and 7")
+              for mask in (-1, 0, 8, 128, 255, 256)),
             ("p2cproof=0", "P2C proof must be INPUT_INDEX:PROOF"),
             ("p2cproof=1:02", "invalid P2C proof input index"),
             ("p2cproof=0:", "P2C proof must be non-empty hexadecimal data"),
@@ -178,6 +187,12 @@ class ToolUtils(BitcoinTestFramework):
                 raise Exception(f"Output data missing for {outputFn}")
             if not outputType:
                 raise Exception(f"Output file {outputFn} does not have a file extension")
+            if self.target_pointer_size == 4 and outputFn.startswith("getchainparams-"):
+                # Golden files retain the 64-bit default. Adjust only this
+                # target-dependent value, preserving every formatting byte and
+                # the complete identity comparison for the 32-bit utility.
+                assert_equal(outputData.count('"randomx_mode": "fast"'), 1)
+                outputData = outputData.replace('"randomx_mode": "fast"', '"randomx_mode": "light"')
 
         # Run the test
         res = subprocess.run(execrun, capture_output=True, text=True, input=inputData, timeout=60)

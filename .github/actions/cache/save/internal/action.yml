@@ -14,14 +14,14 @@ runs:
   using: 'composite'
   steps:
     - name: Save cache with WarpBuild
-      if: ${{ inputs.provider == 'warp' }}
+      if: ${{ (success() || failure()) && inputs.provider == 'warp' }}
       uses: WarpBuilds/cache/save@v1
       with:
         path: ${{ inputs.path }}
         key: ${{ inputs.key }}
 
     - name: Save cache with GitHub Actions
-      if: ${{ inputs.provider == 'gha' }}
+      if: ${{ (success() || failure()) && inputs.provider == 'gha' }}
       uses: actions/cache/save@v5
       with:
         path: ${{ inputs.path }}

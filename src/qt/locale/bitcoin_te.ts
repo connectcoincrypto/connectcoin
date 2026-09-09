@@ -2871,8 +2871,24 @@ Last claim: %7
         <translation>pay-to-connect బహుమతులు సృష్టించు</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>చెల్లుబాటు అయ్యే TLS కనెక్షన్ ఆధారాలకు వేర్వేరు బహుమతులను నిధులతో సమకూర్చండి. అవసరాలను తీర్చిన ఎవరైనా వాటిని క్లెయిమ్ చేయవచ్చు. ఈ పేజీ HTTPS కనెక్షన్లు ఏర్పాటు చేయదు.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>చెల్లుబాటు అయ్యే TLS కనెక్షన్ ఆధారాల కోసం స్వతంత్ర బహుమతులకు నిధులు సమకూర్చండి. మూడు సెకన్ల నిర్ధారణ సమయంలో, ఈ పేజీ TLS హ్యాండ్‌షేక్ ద్వారా డొమైన్ RSA సంతకాలకు మద్దతు ఇస్తుందో లేదో తనిఖీ చేస్తుంది. HTTP అభ్యర్థన ఏదీ పంపబడదు.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA సంతకాల మద్దతును తనిఖీ చేస్తోంది…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>SHA-256తో RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>మద్దతు ఉన్న అన్ని అల్గారిథమ్‌లు</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>అనుమతించిన సంతకాలు: %1 (మాస్క్ %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

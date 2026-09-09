@@ -3145,8 +3145,24 @@ Paskutinis atsiėmimas: %7
         <translation>Sukurti pay-to-connect atlygius</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Finansuokite atskirus atlygius už galiojančius TLS ryšio įrodymus. Juos gali atsiimti kiekvienas, atitinkantis reikalavimus. Šis puslapis neužmezga HTTPS ryšių.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Finansuokite nepriklausomus atlygius už galiojančius TLS ryšio įrodymus. Per trijų sekundžių patvirtinimo laikotarpį šis puslapis TLS apsikeitimu patikrina, ar domenas palaiko RSA parašus. HTTP užklausa nesiunčiama.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Tikrinamas RSA parašų palaikymas…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS su SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Visi palaikomi algoritmai</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Leidžiami parašai: %1 (kaukė %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

@@ -7,15 +7,18 @@
 // or size alone: ephemeral secret keys must ALWAYS get fresh randomness.
 #define MBEDTLS_ALLOW_PRIVATE_ACCESS
 #include <wallet/p2c_tls.h>
+#include <wallet/p2c_tls_lifecycle.h>
 #include <wallet/p2c_tls_private.h>
 
 #include <consensus/p2c.h>
+#include <consensus/p2c_x509.h>
 #include <netbase.h>
 #include <primitives/transaction.h>
 #include <random.h>
 #include <sync.h>
 #include <tinyformat.h>
 #include <util/sock.h>
+#include <util/time.h>
 #include <util/translation.h>
 
 #include <mbedtls/error.h>
@@ -32,7 +35,39 @@
 static_assert(MBEDTLS_VERSION_NUMBER == 0x03060700, "Review P2C transcript capture when upgrading Mbed TLS");
 
 namespace wallet {
+
+P2CRsaProbeLifecycle::Phase::~Phase()
+{
+    if (!m_lifecycle) return;
+    const std::lock_guard lock{m_lifecycle->m_mutex};
+    --m_lifecycle->m_active;
+    if (m_lifecycle->m_active == 0) m_lifecycle->m_cv.notify_all();
+}
+
+P2CRsaProbeLifecycle::Phase P2CRsaProbeLifecycle::TryEnter()
+{
+    const std::lock_guard lock{m_mutex};
+    if (m_stopping.load()) return Phase{nullptr};
+    ++m_active;
+    return Phase{this};
+}
+
+void P2CRsaProbeLifecycle::Stop()
+{
+    std::unique_lock lock{m_mutex};
+    m_stopping.store(true);
+    m_cv.wait(lock, [this] { return m_active == 0; });
+}
+
 namespace {
+P2CRsaProbeLifecycle& ProbeLifecycle()
+{
+    // Late DNS completions need only this fixed gate, after all destructible
+    // networking and RNG state is gone. It contains no keys or wallet state.
+    static P2CRsaProbeLifecycle* const lifecycle{new P2CRsaProbeLifecycle};
+    return *lifecycle;
+}
+
 // The pinned library's PSA keystore is not configured for multithreading.
 // Serialize its short CPU operations, not network waits. Consensus X.509
 // verification uses the independent classic crypto API, not PSA.
@@ -65,7 +100,14 @@ struct Connection {
             std::copy(self.challenge.begin(), self.challenge.end(), output);
             self.random_set = true;
         } else {
-            GetStrongRandBytes(std::span<unsigned char>{output, size});
+            // Core's strong RNG accepts at most 32 bytes per call; TLS may
+            // request a larger buffer for a supported crypto operation.
+            while (size != 0) {
+                const auto chunk{std::min(size, size_t{32})};
+                GetStrongRandBytes(std::span<unsigned char>{output, chunk});
+                output += chunk;
+                size -= chunk;
+            }
         }
         return 0;
     }
@@ -117,22 +159,37 @@ util::Result<std::vector<CService>> ResolveP2CDomain(const std::string& domain)
 
 util::Result<std::vector<unsigned char>> CaptureP2CTls(
     const CService& endpoint, const std::string& domain, const uint256& challenge,
-    const std::function<bool()>& cancelled)
+    const std::function<bool()>& cancelled, const P2CTlsCaptureOptions& options)
 {
+    if (!IsValidP2CSignatureAlgorithmsMask(options.signature_algorithms_mask)) {
+        return util::Error{Untranslated("Invalid P2C signature algorithms mask")};
+    }
+    if (cancelled() || std::chrono::steady_clock::now() >= options.deadline) {
+        return util::Error{Untranslated("P2C cancelled or deadline expired")};
+    }
     if (!IsCanonicalP2CDomain(domain) || !endpoint.IsRoutable() || (!endpoint.IsIPv4() && !endpoint.IsIPv6()) || endpoint.GetPort() != 443 ||
         GetNameProxy() || GetProxy(NET_IPV4) || GetProxy(NET_IPV6)) {
         return util::Error{Untranslated("P2C requires a public direct HTTPS endpoint on port 443")};
     }
     if (cancelled()) return util::Error{Untranslated("P2C cancelled")};
-    const auto deadline{std::chrono::steady_clock::now() + std::chrono::seconds{10}};
-    auto socket{ConnectDirectly(endpoint, /*manual_connection=*/true, std::chrono::milliseconds{1000})};
+    const auto deadline{std::min(options.deadline, std::chrono::steady_clock::now() + std::chrono::seconds{10})};
+    const auto connect_timeout{std::min(std::chrono::milliseconds{1000},
+        std::chrono::duration_cast<std::chrono::milliseconds>(deadline - std::chrono::steady_clock::now()))};
+    if (connect_timeout <= std::chrono::milliseconds::zero()) return util::Error{Untranslated("P2C TLS timeout")};
+    auto socket{ConnectDirectly(endpoint, /*manual_connection=*/true, connect_timeout)};
     if (!socket || !socket->SetNonBlocking()) return util::Error{Untranslated("P2C TCP connection failed")};
-    Connection connection{challenge, *socket};
+    if (cancelled() || std::chrono::steady_clock::now() >= deadline) return util::Error{Untranslated("P2C cancelled or deadline expired")};
     static constexpr int suites[]{MBEDTLS_TLS1_3_AES_128_GCM_SHA256, MBEDTLS_TLS1_3_CHACHA20_POLY1305_SHA256, 0};
     static constexpr uint16_t groups[]{29, 23, 0};
-    static constexpr uint16_t signatures[]{0x0403, 0x0804, 0x0809, 0};
+    std::vector<uint16_t> signatures;
+    if (options.signature_algorithms_mask & PayToDomainOutput::SIGNATURE_ALGORITHM_ECDSA_P256_SHA256) signatures.push_back(0x0403);
+    if (options.signature_algorithms_mask & PayToDomainOutput::SIGNATURE_ALGORITHM_RSA_PSS_RSAE_SHA256) signatures.push_back(0x0804);
+    if (options.signature_algorithms_mask & PayToDomainOutput::SIGNATURE_ALGORITHM_RSA_PSS_PSS_SHA256) signatures.push_back(0x0809);
+    signatures.push_back(0);
+    Connection connection{challenge, *socket};
     {
         LOCK(g_p2c_tls_mutex);
+        if (cancelled() || std::chrono::steady_clock::now() >= deadline) return util::Error{Untranslated("P2C cancelled or deadline expired")};
         if (psa_crypto_init() != PSA_SUCCESS) return util::Error{Untranslated("TLS crypto initialization failed")};
         const int result{mbedtls_ssl_config_defaults(&connection.config, MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM, MBEDTLS_SSL_PRESET_DEFAULT)};
         if (result != 0) return util::Error{Untranslated(TlsError(result))};
@@ -141,7 +198,7 @@ util::Result<std::vector<unsigned char>> CaptureP2CTls(
         mbedtls_ssl_conf_tls13_key_exchange_modes(&connection.config, MBEDTLS_SSL_TLS1_3_KEY_EXCHANGE_MODE_EPHEMERAL);
         mbedtls_ssl_conf_ciphersuites(&connection.config, suites);
         mbedtls_ssl_conf_groups(&connection.config, groups);
-        mbedtls_ssl_conf_sig_algs(&connection.config, signatures);
+        mbedtls_ssl_conf_sig_algs(&connection.config, signatures.data());
         // Capture first, then verify with Core's immutable roots and chain MTP.
         // The platform trust store and wall clock are NOT consensus authorities.
         mbedtls_ssl_conf_authmode(&connection.config, MBEDTLS_SSL_VERIFY_NONE);
@@ -156,6 +213,7 @@ util::Result<std::vector<unsigned char>> CaptureP2CTls(
     // authenticated by Core's certificate/signature verification before use.
     std::vector<unsigned char> proof{P2C_PROOF_VERSION};
     std::string captured_order;
+    bool certificate_verified{false};
     while (!cancelled() && std::chrono::steady_clock::now() < deadline) {
         const int state{connection.ssl.state};
         if (state == MBEDTLS_SSL_CLIENT_HELLO && connection.captured_client_hello) {
@@ -164,6 +222,7 @@ util::Result<std::vector<unsigned char>> CaptureP2CTls(
         int result;
         {
             LOCK(g_p2c_tls_mutex);
+            if (cancelled() || std::chrono::steady_clock::now() >= deadline) return util::Error{Untranslated("P2C cancelled or deadline expired")};
             result = mbedtls_ssl_handshake_step(&connection.ssl);
         }
         // Use the transmitted record, including partial writes. Mbed TLS
@@ -200,10 +259,76 @@ util::Result<std::vector<unsigned char>> CaptureP2CTls(
             P2CTlsProofView view;
             std::string error;
             if (!ParseP2CTlsProof(proof, domain, challenge, view, error)) return util::Error{Untranslated(error + "; capture" + captured_order)};
-            return proof;
+            if (!P2CSignatureSchemeAllowed(options.signature_algorithms_mask, view.certificate_verify_scheme)) {
+                return util::Error{Untranslated("TLS server used a disallowed P2C signature scheme")};
+            }
+            certificate_verified = true;
+            if (!options.complete_handshake) return proof;
         }
-        if (connection.ssl.state == MBEDTLS_SSL_HANDSHAKE_OVER) break;
+        if (connection.ssl.state == MBEDTLS_SSL_HANDSHAKE_OVER) {
+            if (certificate_verified && !cancelled() && std::chrono::steady_clock::now() < deadline) return proof;
+            break;
+        }
     }
     return util::Error{Untranslated(cancelled() ? "P2C cancelled" : "P2C TLS timeout")};
+}
+
+bool ProbeP2CRsaForTest(const std::string& domain, uint32_t roots_version,
+                       const std::function<bool()>& cancelled,
+                       std::chrono::steady_clock::time_point deadline,
+                       P2CRsaProbeLifecycle& lifecycle)
+{
+    const auto expired = [&] {
+        return lifecycle.IsStopping() || cancelled() || std::chrono::steady_clock::now() >= deadline;
+    };
+    if (expired() || !IsCanonicalP2CDomain(domain) || !IsSupportedP2CRootCertificatesVersion(roots_version)) return false;
+    DNSLookupFn dns_lookup;
+    {
+        const auto phase{lifecycle.TryEnter()};
+        if (!phase || expired()) return false;
+        if (GetNameProxy() || GetProxy(NET_IPV4) || GetProxy(NET_IPV6)) return false;
+        dns_lookup = g_dns_lookup;
+    }
+    if (expired()) return false;
+    // LookupHost with an explicit copied resolver uses only local values and
+    // getaddrinfo. Shutdown never waits for this potentially blocking phase.
+    const auto addresses{LookupHost(domain, 32, true, std::move(dns_lookup))};
+    const auto phase{lifecycle.TryEnter()};
+    if (!phase || expired()) return false;
+    std::vector<CService> endpoints;
+    for (const auto& address : addresses) {
+        if (address.IsRoutable() && (address.IsIPv4() || address.IsIPv6()) && !address.IsInternal()) {
+            endpoints.emplace_back(address, 443);
+        }
+    }
+    if (endpoints.empty()) return false;
+    // Retain the phase through all RNG/TLS/X509 calls and their destructors.
+    // Stop() cancels this work and waits for it before process-state teardown.
+    const auto challenge{GetRandHash()};
+    const P2CTlsCaptureOptions options{
+        .signature_algorithms_mask = PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA,
+        .deadline = deadline,
+        .complete_handshake = true,
+    };
+    const auto proof{CaptureP2CTls(endpoints.front(), domain, challenge, expired, options)};
+    if (expired() || !proof) return false;
+    P2CTlsProofView view;
+    std::string error;
+    if (!ParseP2CTlsProof(*proof, domain, challenge, view, error)) return false;
+    const CTxOut requirement{0, PayToDomainOutput{domain, uint256{}, roots_version,
+        PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA}};
+    return VerifyP2CCertificateProof(requirement, view, GetTime(), error) && !expired();
+}
+
+bool ProbeP2CRsa(const std::string& domain, uint32_t roots_version,
+                 const std::function<bool()>& cancelled,
+                 std::chrono::steady_clock::time_point deadline)
+{
+    return ProbeP2CRsaForTest(domain, roots_version, cancelled, deadline, ProbeLifecycle());
+}
+
+void ShutdownP2CRsaProbes()
+{
+    ProbeLifecycle().Stop();
 }
 } // namespace wallet

@@ -4219,8 +4219,24 @@ Last claim: %7
         <translation>Направи pay-to-connect награде</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Финансирајте независне награде за важеће доказе TLS веза. Може их преузети свако ко испуни услове. Ова страница не успоставља HTTPS везе.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Финансирајте независне награде за важеће доказе TLS везе. Током потврде која траје три секунде, ова страница TLS руковањем проверава да ли домен подржава RSA потписе. Не шаље се HTTP захтев.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Провера подршке за RSA потписе…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS са SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Сви подржани алгоритми</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Дозвољени потписи: %1 (маска %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

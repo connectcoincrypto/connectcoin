@@ -4414,8 +4414,24 @@ Posljednji zahtjev: %7
         <translation>Izradi pay-to-connect nagrade</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Financirajte neovisne nagrade za valjane dokaze TLS veza. Može ih preuzeti svatko tko ispuni uvjete. Ova stranica ne uspostavlja HTTPS veze.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Financirajte neovisne nagrade za valjane dokaze TLS veze. Tijekom tri sekunde potvrđivanja ova stranica provjerava podršku domene za RSA potpise putem TLS rukovanja. Ne šalje se HTTP zahtjev.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Provjera podrške za RSA potpise…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS uz SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Svi podržani algoritmi</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Dopušteni potpisi: %1 (maska %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

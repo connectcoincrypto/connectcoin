@@ -4051,8 +4051,24 @@ Ultima revendicare: %7
         <translation>Creează recompense pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Finanțează recompense independente pentru dovezi valide de conexiune TLS. Oricine îndeplinește cerințele le poate revendica. Această pagină nu realizează conexiuni HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Finanțează recompense independente pentru dovezi valide de conexiune TLS. În timpul confirmării de trei secunde, această pagină verifică dacă domeniul acceptă semnături RSA printr-o negociere TLS. Nu se trimite nicio cerere HTTP.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Se verifică suportul pentru semnături RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS cu SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Toți algoritmii acceptați</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Semnături permise: %1 (mască %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

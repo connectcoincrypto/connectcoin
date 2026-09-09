@@ -2790,8 +2790,24 @@ Soňky talap: %7
         <translation>Pay-to-connect sylaglaryny döret</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Dogry TLS birikme subutnamalary üçin aýratyn sylaglary maliýeleşdiriň. Talaplary ýerine ýetirýän islendik adam olary alyp biler. Bu sahypa HTTPS birikmelerini döretmeýär.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Dogry TLS birikme subutnamalary üçin özbaşdak sylaglary maliýeleşdiriň. Üç sekuntlyk tassyklama wagtynda bu sahypa TLS gepleşigi arkaly domeniň RSA gollaryny goldaýandygyny barlaýar. Hiç hili HTTP haýyşy iberilmeýär.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>RSA gollarynyň goldawy barlanýar…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>SHA-256 bilen RSA-PSS</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Goldanylýan algoritmleriň ählisi</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Rugsat berlen gollar: %1 (maska %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

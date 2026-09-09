@@ -99,9 +99,9 @@ class DumptxoutsetTest(BitcoinTestFramework):
         # Blockhash should be deterministic based on mocked time and the PoW
         # implementation selected by the test environment.
         expected_base_hash = (
-            '69a2fe82bde808f7c11562a800db81637a9b3dec6e746d692a160d228d60e129'
+            '08bfe4891338371d1ee00e07b304f443d7b7ae2e44d71a4ec19182e167081216'
             if os.getenv('TEST_RANDOMX_MOCK_POW') is not None else
-            'd8b7fb434815eb67fba4b0d6ea3c1f44a33ad80529a6e50867b1aef4cd530117'
+            '8891cfa0f485859eb822f31702269c4ad73696f0ee0c452eaeae6a2c57c2cb44'
         )
         assert_equal(
             out['base_hash'],
@@ -110,16 +110,16 @@ class DumptxoutsetTest(BitcoinTestFramework):
         # The snapshot includes the base block hash, so its file hash also
         # differs when the mock PoW implementation is active.
         expected_snapshot_hash = (
-            'd99350f80286bf51846d3c51ee1f6c3951a2fb3176ecd27fb26d0f1be4b78c28'
+            '5e3b37bab8dde24a6ad55c4e7ef851073a6e1234556d53386f24614e16f25c42'
             if os.getenv('TEST_RANDOMX_MOCK_POW') is not None else
-            'f234b084392a334a06d3dd8a667e6d66ebcd9763f3a9a7e90d18de00d266b0bd'
+            '3d4c349fd3af896161fb7cbb6ac40d709117ebad7811a04389f1618ec56b7303'
         )
         assert_equal(
             sha256sum_file(str(expected_path)).hex(),
             expected_snapshot_hash)
 
         assert_equal(
-            out['txoutset_hash'], 'efaf21d989d89cc0831e6c645f076ca104d2ce56d0f6979e1353c0351fd0f90f')
+            out['txoutset_hash'], '226c8d543e7dfeae1f52232a71d3fd47d6a1d7c0420c9afd166fb11b2fbd4c9c')
         assert_equal(out['nchaintx'], 101)
 
         # Specifying a path to an existing or invalid file will fail.

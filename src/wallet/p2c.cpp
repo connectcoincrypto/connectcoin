@@ -7,6 +7,7 @@
 #include <consensus/amount.h>
 #include <consensus/consensus.h>
 #include <consensus/p2c.h>
+#include <consensus/validation.h>
 #include <policy/feerate.h>
 #include <policy/policy.h>
 #include <serialize.h>
@@ -35,8 +36,9 @@ util::Result<std::unique_ptr<P2CTransactionBatch>> P2CTransactionBatch::Prepare(
 {
     LOCK(wallet->cs_wallet);
     if (!recipient.p2c || !IsCanonicalP2CDomain(recipient.p2c->domain) ||
-        !IsSupportedP2CRootCertificatesVersion(recipient.p2c->root_certificates_version)) {
-        return util::Error{Untranslated("Invalid P2C domain or root certificates version")};
+        !IsSupportedP2CRootCertificatesVersion(recipient.p2c->root_certificates_version) ||
+        !IsValidP2CSignatureAlgorithmsMask(recipient.p2c->signature_algorithms_mask)) {
+        return util::Error{Untranslated("Invalid P2C domain, root certificates version or signature algorithms mask")};
     }
     if (recipient.nAmount <= 0 || !MoneyRange(recipient.nAmount) || output_count < 1 ||
         output_count > MAX_P2C_OUTPUT_COUNT || output_count > MAX_MONEY / recipient.nAmount) {
@@ -61,6 +63,7 @@ util::Result<std::unique_ptr<P2CTransactionBatch>> P2CTransactionBatch::Prepare(
     }
 
     auto batch = std::unique_ptr<P2CTransactionBatch>(new P2CTransactionBatch(wallet));
+    batch->m_signature_algorithms_mask = recipient.p2c->signature_algorithms_mask;
     const uint64_t output_weight{WITNESS_SCALE_FACTOR * ::GetSerializeSize(CTxOut{recipient.nAmount, *recipient.p2c})};
     const int64_t max_outputs_per_tx{static_cast<int64_t>((MAX_STANDARD_TX_WEIGHT - MIN_TRANSACTION_WEIGHT) / output_weight)};
     if (max_outputs_per_tx < 1) return util::Error{Untranslated("P2C output cannot fit in a standard transaction")};
@@ -130,6 +133,69 @@ util::Result<std::unique_ptr<P2CTransactionBatch>> P2CTransactionBatch::Prepare(
         remaining -= static_cast<int64_t>(selected_count);
     }
     return batch;
+}
+
+util::Result<void> P2CTransactionBatch::PrepareSignatureAlgorithmsAlternative(uint8_t mask)
+{
+    LOCK(m_wallet->cs_wallet);
+    if (m_commit_attempted || m_mask_selected || !m_alternative_transactions.empty() ||
+        !IsValidP2CSignatureAlgorithmsMask(mask) || mask == m_signature_algorithms_mask) {
+        return util::Error{Untranslated("Invalid or already finalized P2C signature mask alternative")};
+    }
+    if (m_wallet->IsLocked()) return util::Error{Untranslated("Wallet is locked")};
+    // Construct locally first: an error must leave the original signed batch
+    // and its reservation ownership unchanged.
+    auto alternatives{m_transactions};
+    for (auto& [created, count] : alternatives) {
+        CMutableTransaction tx{*created.tx};
+        size_t changed{0};
+        for (auto& output : tx.vout) {
+            if (auto p2c{output.GetPayToDomain()}) {
+                if (p2c->signature_algorithms_mask != m_signature_algorithms_mask) {
+                    return util::Error{Untranslated("Inconsistent P2C batch signature mask")};
+                }
+                p2c->signature_algorithms_mask = mask;
+                output.SetPayToDomain(*p2c);
+                ++changed;
+            }
+        }
+        if (changed != count) return util::Error{Untranslated("Inconsistent P2C batch output count")};
+        for (auto& input : tx.vin) {
+            input.scriptSig.clear();
+            input.scriptWitness.SetNull();
+        }
+        if (!m_wallet->SignTransaction(tx)) {
+            return util::Error{Untranslated("Unable to sign the alternative P2C signature mask")};
+        }
+        const auto alternate{MakeTransactionRef(std::move(tx))};
+        // Typed P2PK inputs have fixed-size signatures; changing this one-byte
+        // field must not alter the displayed fee rate or transaction weight.
+        if (GetTransactionWeight(*alternate) != GetTransactionWeight(*created.tx)) {
+            return util::Error{Untranslated("Alternative P2C signature mask changed the transaction weight")};
+        }
+        created.tx = alternate;
+    }
+    m_alternative_transactions = std::move(alternatives);
+    m_alternative_mask = mask;
+    return {};
+}
+
+util::Result<void> P2CTransactionBatch::SelectSignatureAlgorithmsMask(uint8_t mask)
+{
+    if (m_commit_attempted || m_mask_selected) {
+        return util::Error{Untranslated("P2C signature mask was already finalized")};
+    }
+    if (mask != m_signature_algorithms_mask) {
+        if (mask != m_alternative_mask || m_alternative_transactions.empty()) {
+            return util::Error{Untranslated("P2C signature mask was not prepared for approval")};
+        }
+        m_transactions.swap(m_alternative_transactions);
+        m_signature_algorithms_mask = mask;
+    }
+    m_alternative_transactions.clear();
+    m_alternative_mask = 0;
+    m_mask_selected = true;
+    return {};
 }
 
 util::Result<void> P2CTransactionBatch::Commit(const std::optional<std::string>& comment, const std::optional<std::string>& comment_to)

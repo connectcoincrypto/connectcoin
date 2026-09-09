@@ -142,7 +142,7 @@ void AddOutputs(CMutableTransaction& rawTx, const UniValue& outputs_in)
             if (!value.isObject()) throw JSONRPCError(RPC_INVALID_PARAMETER, "p2c output must be an object");
             const UniValue& spec{value.get_obj()};
             static const std::set<std::string> allowed{
-                "amount", "domain", "connection_work_target", "root_certificates_version",
+                "amount", "domain", "connection_work_target", "root_certificates_version", "signature_algorithms_mask",
             };
             for (const auto& key : spec.getKeys()) {
                 if (!allowed.contains(key)) throw JSONRPCError(RPC_INVALID_PARAMETER, "Unknown p2c field: " + key);
@@ -167,10 +167,16 @@ void AddOutputs(CMutableTransaction& rawTx, const UniValue& outputs_in)
             if (!IsSupportedP2CRootCertificatesVersion(roots_version)) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "unsupported p2c root_certificates_version");
             }
+            const UniValue& mask_value{spec.find_value("signature_algorithms_mask")};
+            const int64_t mask{mask_value.isNull() ? PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL : mask_value.getInt<int64_t>()};
+            if (mask < 1 || mask > PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "signature_algorithms_mask must be between 1 and 7");
+            }
             rawTx.vout.emplace_back(amount, PayToDomainOutput{
                 .domain = domain,
                 .connection_work_target = *target,
                 .root_certificates_version = roots_version,
+                .signature_algorithms_mask = static_cast<uint8_t>(mask),
             });
             return;
         }
@@ -448,6 +454,7 @@ std::vector<RPCResult> TxDoc(const TxDocOptions& opts)
                 {RPCResult::Type::STR, "domain", /*optional=*/true, "Canonical P2C DNS domain"},
                 {RPCResult::Type::STR_HEX, "connection_work_target", /*optional=*/true, "Maximum accepted P2C connection-work hash"},
                 {RPCResult::Type::NUM, "root_certificates_version", /*optional=*/true, "Immutable P2C root bundle version"},
+                {RPCResult::Type::NUM, "signature_algorithms_mask", /*optional=*/true, "Allowed P2C TLS signature schemes: bit 0 ECDSA P-256/SHA-256, bit 1 RSA-PSS-RSAE/SHA-256, bit 2 RSA-PSS-PSS/SHA-256"},
                 {RPCResult::Type::OBJ, "scriptPubKey", "", ScriptPubKeyDoc()},
             }
         );
@@ -496,6 +503,7 @@ std::vector<RPCResult> TxDoc(const TxDocOptions& opts)
                     {RPCResult::Type::STR, "domain", /*optional=*/true, "Canonical P2C DNS domain"},
                     {RPCResult::Type::STR_HEX, "connection_work_target", /*optional=*/true, "Maximum accepted P2C connection-work hash"},
                     {RPCResult::Type::NUM, "root_certificates_version", /*optional=*/true, "Immutable P2C root bundle version"},
+                    {RPCResult::Type::NUM, "signature_algorithms_mask", /*optional=*/true, "Allowed P2C TLS signature schemes: bit 0 ECDSA P-256/SHA-256, bit 1 RSA-PSS-RSAE/SHA-256, bit 2 RSA-PSS-PSS/SHA-256"},
                     {RPCResult::Type::OBJ, "scriptPubKey", "", ScriptPubKeyDoc()},
                 },
                 opts.wallet ?

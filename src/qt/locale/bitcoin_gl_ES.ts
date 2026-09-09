@@ -1434,8 +1434,24 @@ Intentos: %5 | Enviadas: %6
         <translation>Crear recompensas pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Financia recompensas independentes por probas válidas de conexión TLS. Calquera persoa que cumpra os requisitos pode reclamalas. Esta páxina non establece conexións HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Financia recompensas independentes por probas de conexión TLS válidas. Durante os tres segundos de confirmación, esta páxina comproba a compatibilidade do dominio coas sinaturas RSA mediante unha negociación TLS. Non se envía ningunha solicitude HTTP.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Comprobando a compatibilidade coas sinaturas RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS con SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Todos os algoritmos compatibles</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Sinaturas permitidas: %1 (máscara %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

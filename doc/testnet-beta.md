@@ -10,7 +10,7 @@ adopted, or erased; `-reindex` cannot enable the network.
 Use `-testnet4` for the public-test-network profile or `-regtest` for local
 tests. The name `testnet4` is an inherited internal identifier, not the fourth
 public ConnectCoin beta. All four test-chain genesis blocks and message starts
-were reset for P2C v2 on September 9, 2026, as described below.
+were reset for P2C mask v1 on September 9, 2026, as described below.
 
 The daemon, GUI and command-line tools default to `testnet4` during beta testing,
 even without a `connectcoin.conf` file. An explicit network selection in the
@@ -82,17 +82,17 @@ An optional [CPU miner](cpu-mining.md) is available from the wallet's Mining
 tab or the `startmining` RPC. It supports testnet4 and regtest, is disabled at
 each startup, and does not require a loaded wallet when given a reward address.
 
-## P2C v2 genesis reset (September 9, 2026)
+## P2C mask v1 genesis reset (September 9, 2026)
 
 The testnet4 beta genesis allocates `10,000,000 CC` to the same wallet-owned
 type-1 public key generated on September 7. No new private key is needed:
 
 - Public key: `2ef316afd6177619f68ecfc6521fc3fcbf7faa2b25273f6ddea7971fae0de144`
 - Address: `tcc1p9me3dt7kzampna5welr9y87rljlhl23ty5nn7mw757t3ltsdu9zqu5cd3u`
-- Genesis: `38cae555fb78f44c31e7d6859d0476252b321dae8b6312afefe0a45fc3fd112a`
-- Coinbase transaction / Merkle root: `e70bc6f9408b4997f2b8f4f227bddd122282ceb4cc5b58d326081ee411441d4e`
-- Header time: `1788912001`; nonce: `199567`; difficulty bits: `0x1f00ffff`.
-- Message start: `4e 3d 81 78`; P2P port remains `48179`.
+- Genesis: `710dc5910cbef40216bd82ccfb66af2273b2b1d336b034c5794966904cb603bf`
+- Coinbase transaction / Merkle root: `e09a12d2aca740a06be984897fa268d4f03317c2363748d4ab69768ed92ca555`
+- Header time: `1788912001`; nonce: `913`; difficulty bits: `0x1f00ffff`.
+- Message start: `77 d6 6c bc`; P2P port remains `48179`.
 
 The header was mined with real RandomX v2. The private key is held in a local
 wallet, not this repository. The original key's ownership was verified during
@@ -105,26 +105,28 @@ and their previous public keys) are:
 
 | Chain | Header time | Nonce | Bits | Genesis hash |
 | --- | ---: | ---: | --- | --- |
-| Testnet3 | 1788912000 | 38388 | `1f00ffff` | `ca89051d3a1bcf96be2ed4943d347687af47b6fd0a155fc2b15ddcc103bd75af` |
-| Signet | 1788912002 | 27113 | `1f00ffff` | `2a62fd84425bc1f6dce0343ec3f6c08b782d76df54d52e5e3b8153f5d27d94b4` |
-| Regtest | 1296688602 | 26 | `207fffff` | `de48ff31cbff58a91ef359100fef13e6472f165e6f0410e52efcdacb1861f65a` |
+| Testnet3 | 1788912000 | 66621 | `1f00ffff` | `1025889d725c5d64c3ee38ab07d2de279ab57036a2482186c65806d6c0291787` |
+| Signet | 1788912002 | 2069 | `1f00ffff` | `a694dccdc04a316a4f4fe496f311aff981392f25ea18e4b7f77d9f449b9089fc` |
+| Regtest | 1296688602 | 20 | `207fffff` | `53c5145452f6957a2674ab904726afc2d7643c4a4fb9c2beab193ea983e500f0` |
 
-Each coinbase message is `ConnectCoin <network> | P2C v2 | 2026-09-09`, where
+Each coinbase message is `ConnectCoin <network> | P2C mask v1 | 2026-09-09`, where
 `<network>` is `testnet3`, `testnet4`, `signet`, or `regtest`. Regtest deliberately
 keeps its historical header clock so tests using historical mock times remain
 valid; its coinbase, Merkle root, nonce and chain identity are new. The genesis
 blocks use real RandomX, not test-only mock proof of work. The isolated historic
 mainnet test fixture is unchanged and is not an operational network.
 
-This is a new chain, not a migration of old test balances. Version-1 P2C proofs
-are not accepted. See [pay-to-connect.md](pay-to-connect.md) for the v2 hash.
+This is a new chain, not a migration of old test balances. “P2C mask v1” names
+the network/output-layout reset introducing the required one-byte signature
+mask; the TLS proof remains version 2 with work tag `ConnectCoin/P2C/work/v2`.
+Version-1 P2C proofs are not accepted. See [pay-to-connect.md](pay-to-connect.md).
 
 Wallet database identifiers are separate from P2P message starts and retain
 their pre-reset values. Backups from the same test-network profile remain
 recognizable without editing their SQLite headers. Other network profiles are
 still rejected; signet wallets also remain specific to their configured
 challenge. This compatibility preserves keys and wallet metadata, not the old
-chain or its funds. Temporary wallet files created by unreleased v2 development
+chain or its funds. Temporary wallet files created by unreleased reset development
 builds that used the new P2P magic as their database identifier are not accepted.
 The wallet's saved chain locator is a separate safeguard: a different genesis
 is still rejected by default, even when its database identifier matches. Only

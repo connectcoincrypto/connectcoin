@@ -102,7 +102,7 @@ static std::vector<RPCArg> CreateTxDoc()
             },
         },
         {"outputs", RPCArg::Type::ARR, RPCArg::Optional::NO, "Outputs specified as address/amount pairs or explicit p2c objects.\n"
-                "A p2c object has amount, domain, connection_work_target, and root_certificates_version.\n"
+                "A p2c object has amount, domain, connection_work_target, root_certificates_version, and optional signature_algorithms_mask.\n"
                 "Every p2c object serializes as output type 2.\n"
                 "Addresses may not be duplicated. On-chain transactions require at least one output.\n"
                 "Data/OP_RETURN outputs are not supported.\n"
@@ -121,6 +121,7 @@ static std::vector<RPCArg> CreateTxDoc()
                             {"domain", RPCArg::Type::STR, RPCArg::Optional::NO, "Canonical lower-case ASCII domain"},
                             {"connection_work_target", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "Maximum accepted connection-work hash"},
                             {"root_certificates_version", RPCArg::Type::NUM, RPCArg::Optional::NO, "Immutable trusted-root bundle version; version 1 is currently supported"},
+                            {"signature_algorithms_mask", RPCArg::Type::NUM, RPCArg::Default{PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL}, "Allowed TLS signature schemes: bit 0 ECDSA P-256/SHA-256, bit 1 RSA-PSS-RSAE/SHA-256, bit 2 RSA-PSS-PSS/SHA-256; from 1 through 7"},
                         }},
                     },
                 },

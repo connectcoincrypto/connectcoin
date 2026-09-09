@@ -4229,8 +4229,24 @@ Siste innløsning: %7
         <translation>Opprett pay-to-connect-belønninger</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Finansier uavhengige belønninger for gyldige TLS-tilkoblingsbevis. Alle som oppfyller kravene kan løse dem inn. Denne siden oppretter ikke HTTPS-tilkoblinger.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Finansier uavhengige belønninger for gyldige TLS-tilkoblingsbevis. I løpet av den tre sekunder lange bekreftelsen kontrollerer denne siden domenets støtte for RSA-signaturer med et TLS-håndtrykk. Ingen HTTP-forespørsel sendes.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Kontrollerer støtte for RSA-signaturer…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS med SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Alle støttede algoritmer</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Tillatte signaturer: %1 (maske %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>

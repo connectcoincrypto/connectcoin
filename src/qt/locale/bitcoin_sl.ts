@@ -4805,8 +4805,24 @@ Zadnji prevzem: %7
         <translation>Ustvari nagrade pay-to-connect</translation>
     </message>
     <message>
-        <source>Fund independent rewards for valid TLS connection proofs. Anyone who meets the requirements can claim them. This page does not make HTTPS connections.</source>
-        <translation>Financirajte neodvisne nagrade za veljavne dokaze povezav TLS. Prevzame jih lahko vsak, ki izpolnjuje zahteve. Ta stran ne vzpostavlja povezav HTTPS.</translation>
+        <source>Fund independent rewards for valid TLS connection proofs. During the three-second confirmation, this page checks the domain&apos;s RSA signature support with a TLS handshake. No HTTP request is sent.</source>
+        <translation>Financirajte neodvisne nagrade za veljavne dokaze povezave TLS. Med trisekundno potrditvijo ta stran s rokovanjem TLS preveri, ali domena podpira podpise RSA. Zahteva HTTP se ne pošlje.</translation>
+    </message>
+    <message>
+        <source>Checking RSA signature support…</source>
+        <translation>Preverjanje podpore za podpise RSA…</translation>
+    </message>
+    <message>
+        <source>RSA-PSS with SHA-256</source>
+        <translation>RSA-PSS s SHA-256</translation>
+    </message>
+    <message>
+        <source>All supported algorithms</source>
+        <translation>Vsi podprti algoritmi</translation>
+    </message>
+    <message>
+        <source>Allowed signatures: %1 (mask %2)</source>
+        <translation>Dovoljeni podpisi: %1 (maska %2)</translation>
     </message>
     <message>
         <source>Lower-case ASCII domain (use punycode for international domains), without a URL scheme, path, port or trailing dot.</source>
