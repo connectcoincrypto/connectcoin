@@ -25,4 +25,4 @@ target_sources(connectcoin-test
     walletdb_tests.cpp
     walletload_tests.cpp
 )
-target_link_libraries(connectcoin-test connectcoin_wallet)
+target_link_libraries(connectcoin-test connectcoin_wallet SQLite3::SQLite3)

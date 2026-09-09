@@ -42,6 +42,9 @@ FUZZ_TARGET(utxo_total_supply)
         ChainType::REGTEST,
         {
             .extra_args = {
+                // Recreate the chainstate for each input without writing an
+                // unbuffered debug log. Keep all database flushes and checks.
+                "-nodebuglogfile",
                 "-testactivationheight=bip34@2",
             },
         },
