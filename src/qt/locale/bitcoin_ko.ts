@@ -4290,7 +4290,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Partially Signed Transaction (*.psbt)</source>
-        <translation type="unfinished">부분적으로 서명된 ConnectCoin 트랜잭션 (* .psbt)</translation>
+        <translation type="unfinished">부분적으로 서명된 ConnectCoin 트랜잭션 (*.psbt)</translation>
     </message>
     <message>
         <source>PSBT file must be smaller than 100 MiB</source>

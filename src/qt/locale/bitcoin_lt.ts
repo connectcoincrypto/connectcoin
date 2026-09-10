@@ -2233,7 +2233,7 @@ Pasirašymas galimas tik su 'legacy' tipo adresais.</translation>
     </message>
     <message>
         <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
-        <translation type="unfinished">„connectcoin: //“ nėra galiojantis URI. Vietoj to naudokite „connectcoin:“.</translation>
+        <translation type="unfinished">„connectcoin://“ nėra galiojantis URI. Vietoj to naudokite „connectcoin:“.</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>

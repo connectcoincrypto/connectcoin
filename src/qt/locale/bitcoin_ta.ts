@@ -2344,11 +2344,11 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message>
         <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
-        <translation type="unfinished">'connectcoin: //' சரியான URI அல்ல. அதற்கு பதிலாக 'பிட்கின்:' பயன்படுத்தவும்.</translation>
+        <translation type="unfinished">'connectcoin://' சரியான URI அல்ல. அதற்கு பதிலாக 'connectcoin:' பயன்படுத்தவும்.</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
-        <translation type="unfinished">URI அலச முடியாது! தவறான பிட்கின் முகவரி அல்லது தவறான URI அளவுருக்கள் காரணமாக இது ஏற்படலாம்.</translation>
+        <translation type="unfinished">URI அலச முடியாது! தவறான ConnectCoin முகவரி அல்லது தவறான URI அளவுருக்கள் காரணமாக இது ஏற்படலாம்.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>

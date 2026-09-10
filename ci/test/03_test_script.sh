@@ -246,7 +246,8 @@ if [ "${RUN_TIDY}" = "true" ]; then
   mv tmp.json "${BASE_BUILD_DIR}/compile_commands.json"
 
   cd "${BASE_BUILD_DIR}/src/"
-  if ! ( run-clang-tidy-"${TIDY_LLVM_V}" -config-file="${BASE_ROOT_DIR}/src/.clang-tidy" -quiet -load="/tidy-build/libconnectcoin-tidy.so" "${MAKEJOBS}" | tee tmp.tidy-out.txt ); then
+  # Flush the Python driver's progress even when stdout is piped to tee.
+  if ! ( PYTHONUNBUFFERED=1 run-clang-tidy-"${TIDY_LLVM_V}" -config-file="${BASE_ROOT_DIR}/src/.clang-tidy" -quiet -load="/tidy-build/libconnectcoin-tidy.so" "${MAKEJOBS}" | tee tmp.tidy-out.txt ); then
     grep -C5 "error: " tmp.tidy-out.txt
     echo "^^^ ⚠️ Failure generated from clang-tidy"
     false
@@ -267,7 +268,7 @@ if [[ "${RUN_IWYU}" == true ]]; then
   run_iwyu() {
     mv "${BASE_BUILD_DIR}/$1" "${BASE_BUILD_DIR}/compile_commands.json"
     {
-      python3 "/include-what-you-use/iwyu_tool.py" \
+      python3 -u "/include-what-you-use/iwyu_tool.py" \
              -p "${BASE_BUILD_DIR}" "${MAKEJOBS}" \
              -- -Xiwyu --cxx17ns -Xiwyu --mapping_file="${BASE_ROOT_DIR}/contrib/devtools/iwyu/connectcoin.core.imp" \
              -Xiwyu --max_line_length=160 \

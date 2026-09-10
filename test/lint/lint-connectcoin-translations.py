@@ -24,6 +24,11 @@ QT_PLACEHOLDERS = re.compile(r"%L?(?:[1-9][0-9]*|n)")
 # <wallet name>, which may legitimately be translated in explanatory text.
 MARKUP = re.compile(r"</?(?:a|address|b|big|blockquote|body|br|caption|center|cite|code|dd|dfn|div|dl|dt|em|font|h[1-6]|head|hr|html|i|img|kbd|li|link|meta|nobr|ol|p|pre|qt|s|samp|small|span|strike|strong|style|sub|sup|table|tbody|td|tfoot|th|thead|title|tr|tt|u|ul|var)(?=[\s/>])[^<>]*>", re.IGNORECASE)
 COMMAND_FLAGS = re.compile(r"(?<![\w/])--?[A-Za-z][A-Za-z0-9_-]*")
+# These are functional literals, not prose: changing a URI scheme misdirects
+# users, and QFileDialog interprets the ASCII parenthesized wildcard itself.
+CONNECTCOIN_URIS = re.compile(r"(?<![A-Za-z0-9_+.-])connectcoin:/*")
+QUOTED_CONNECTCOIN_URI = re.compile(r"['\"]connectcoin:/*['\"]")
+FILE_FILTERS = re.compile(r"\([^()]*\*\.[^()]*\)")
 VOID_TAGS = {"br", "hr", "img", "link", "meta"}
 # Counts produced by Qt Linguist 6.11.1 for the exact language identifiers in
 # the bundled TS files, not inferred from their display names. Keep in sync
@@ -237,6 +242,12 @@ def main():
                     errors.append(f"{label}: changed rich-text markup")
                 if not balanced_markup(value):
                     errors.append(f"{label}: unbalanced rich-text markup")
+                # A colon in prose ("connectcoin: click-to-pay handler") may
+                # move in translation. Freeze explicitly quoted URI examples.
+                if QUOTED_CONNECTCOIN_URI.search(key[1]) and Counter(CONNECTCOIN_URIS.findall(key[1])) != Counter(CONNECTCOIN_URIS.findall(value)):
+                    errors.append(f"{label}: changed ConnectCoin URI literal")
+                if FILE_FILTERS.search(key[1]) and Counter(FILE_FILTERS.findall(key[1])) != Counter(FILE_FILTERS.findall(value)):
+                    errors.append(f"{label}: changed file filter")
                 source_flags = command_flag_tokens(key[1], flag_pattern)
                 # Do not invent options from translated hyphenated prose in
                 # messages without source flags (e.g. Cyrillic pay-to-connect).

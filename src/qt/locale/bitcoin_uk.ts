@@ -4331,7 +4331,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Partially Signed Transaction (*.psbt)</source>
-        <translation type="unfinished">Частково підписана ConnectCoin-транзакція (* .psbt)</translation>
+        <translation type="unfinished">Частково підписана ConnectCoin-транзакція (*.psbt)</translation>
     </message>
     <message>
         <source>PSBT file must be smaller than 100 MiB</source>

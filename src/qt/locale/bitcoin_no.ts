@@ -5531,7 +5531,7 @@ Aktiv belønningsadresse: %5</translation>
     <name>PaymentServer</name>
     <message>
         <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
-        <translation type="unfinished">'connectcoin: //' er ikke en gyldig URI. Bruk 'connectcoin:' i stedet.</translation>
+        <translation type="unfinished">'connectcoin://' er ikke en gyldig URI. Bruk 'connectcoin:' i stedet.</translation>
     </message>
     <message>
         <source>Cannot process payment request because BIP70 is not supported.

@@ -4310,7 +4310,7 @@ Siirry osioon Tiedosto &gt; Avaa lompakko ladataksesi lompakon.
     </message>
     <message>
         <source>Partially Signed Transaction (*.psbt)</source>
-        <translation type="unfinished">Osittain allekirjoitettu siirto (*.pbst)</translation>
+        <translation type="unfinished">Osittain allekirjoitettu siirto (*.psbt)</translation>
     </message>
     <message>
         <source>PSBT file must be smaller than 100 MiB</source>

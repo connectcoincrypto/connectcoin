@@ -2344,7 +2344,7 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message>
         <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
-        <translation type="unfinished">'//:ConnectCoin' אינה כתובת תקנית. נא להשתמש ב־"connectcoin:‎"‏ במקום.</translation>
+        <translation type="unfinished">'connectcoin://' אינה כתובת תקנית. נא להשתמש ב־"connectcoin:‎"‏ במקום.</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>

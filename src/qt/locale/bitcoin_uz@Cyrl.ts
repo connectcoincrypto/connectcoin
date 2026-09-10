@@ -4211,7 +4211,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Partially Signed Transaction (*.psbt)</source>
-        <translation>Қисман имзоланган транзакция (*.псбт)</translation>
+        <translation>Қисман имзоланган транзакция (*.psbt)</translation>
     </message>
     <message>
         <source>Unable to decode PSBT</source>

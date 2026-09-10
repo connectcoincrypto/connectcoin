@@ -84,12 +84,12 @@ jobs:
           # as described in:
           # https://git-scm.com/docs/git-rev-list
           MERGE_BASE=$(git rev-list -n1 --merges HEAD)
-          EXCLUDE_MERGE_BASE_ANCESTORS=
+          EXCLUDE_MERGE_BASE_ANCESTORS=()
           # MERGE_BASE can be empty due to limited fetch-depth
           if test -n "$MERGE_BASE"; then
-            EXCLUDE_MERGE_BASE_ANCESTORS=^${MERGE_BASE}^@
+            EXCLUDE_MERGE_BASE_ANCESTORS=("^${MERGE_BASE}^@")
           fi
-          echo "TEST_BASE=$(git rev-list -n${{ github.event.pull_request.commits }} --reverse HEAD $EXCLUDE_MERGE_BASE_ANCESTORS | head -1)" >> "$GITHUB_ENV"
+          echo "TEST_BASE=$(git rev-list -n${{ github.event.pull_request.commits }} --reverse HEAD "${EXCLUDE_MERGE_BASE_ANCESTORS[@]}" | head -1)" >> "$GITHUB_ENV"
       - run: |
           git fetch origin "${GITHUB_BASE_REF}"
           git config user.email "ci@example.com"

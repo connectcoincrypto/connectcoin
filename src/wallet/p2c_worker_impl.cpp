@@ -14,6 +14,7 @@
 #include <netaddress.h>
 #include <univalue.h>
 #include <util/strencodings.h>
+#include <util/string.h>
 #include <util/time.h>
 #include <util/translation.h>
 #include <wallet/coincontrol.h>
@@ -21,6 +22,7 @@
 #include <wallet/p2c_claim.h>
 #include <wallet/p2c_domain_stats.h>
 #include <wallet/p2c_tls.h>
+#include <wallet/p2c_worker_threads.h>
 #include <wallet/wallet.h>
 
 #include <algorithm>
@@ -38,6 +40,7 @@
 #include <optional>
 #include <set>
 #include <stdexcept>
+#include <string>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -101,6 +104,7 @@ struct P2CClaimWorkerImpl::Impl {
     std::string state{"disabled"};
     std::string domain;
     std::string last_error;
+    std::string capacity_error;
     std::string last_txid;
     Clock::time_point next_connection{};
     std::map<COutPoint, CTransactionRef> proposals;
@@ -723,6 +727,7 @@ struct P2CClaimWorkerImpl::Impl {
             std::atomic<bool> failed{false};
             std::exception_ptr search_error;
             std::vector<std::thread> connections;
+            P2CThreadPoolGrowth pool_growth;
             // Includes partial thread creation and coordinator exceptions.
             struct StopAndJoin {
                 std::atomic<bool>& stop;
@@ -741,9 +746,12 @@ struct P2CClaimWorkerImpl::Impl {
                 // remain idle, not allocate OS threads speculatively.
                 const bool has_work{[&] { std::lock_guard lock{work_mutex}; return !economic_order.empty(); }()};
                 if (has_work && connections.size() < static_cast<size_t>(concurrency)) {
-                    for (size_t i = connections.size(); i < static_cast<size_t>(concurrency) && !stop.load() && !failed; ++i) {
-                        if ([&] { std::lock_guard lock{work_mutex}; return economic_order.empty(); }()) break;
-                        connections.emplace_back([&] {
+                    const auto limited{pool_growth.Grow(connections, static_cast<size_t>(concurrency), [&] {
+                        if (stop.load() || failed.load()) return false;
+                        std::lock_guard lock{work_mutex};
+                        return !economic_order.empty();
+                    }, [&] {
+                        return std::thread{[&] {
                             try {
                                 Connect(stop, failed);
                             } catch (...) {
@@ -751,7 +759,13 @@ struct P2CClaimWorkerImpl::Impl {
                                 failed = true;
                                 wake.notify_all();
                             }
-                        });
+                        }};
+                    })};
+                    if (limited) {
+                        std::lock_guard lock{mutex};
+                        capacity_error = "P2C claiming limited to " + util::ToString(connections.size()) + " of " +
+                            util::ToString(concurrency) + " requested connection threads: " + *limited +
+                            ". Reconfigure claiming to retry.";
                     }
                 }
                 {
@@ -828,6 +842,7 @@ util::Result<void> P2CClaimWorkerImpl::Configure(int rate, int concurrency, std:
         m_impl->schedule_refreshes = 0;
         m_impl->state = rate == 0 ? "disabled" : "starting";
         m_impl->last_error.clear();
+        m_impl->capacity_error.clear();
     }
     if (rate != 0) {
         try {
@@ -856,7 +871,10 @@ UniValue P2CClaimWorkerImpl::Status() const
     result.pushKV("domain", m_impl->domain);
     result.pushKV("attempts", m_impl->attempts);
     result.pushKV("submitted", m_impl->submitted);
-    result.pushKV("last_error", m_impl->last_error);
+    // Successful claims may clear last_error, but must not hide reduced local
+    // capacity. Keep connection/search errors visible alongside that warning.
+    result.pushKV("last_error", m_impl->capacity_error.empty() ? m_impl->last_error :
+        m_impl->capacity_error + (m_impl->last_error.empty() ? "" : " " + m_impl->last_error));
     result.pushKV("last_txid", m_impl->last_txid);
     return result;
 }

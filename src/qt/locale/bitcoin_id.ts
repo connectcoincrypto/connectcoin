@@ -4000,7 +4000,7 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
     </message>
     <message>
         <source>Partially Signed Transaction (*.psbt)</source>
-        <translation type="unfinished">Transaksi yang Ditandatangani Sebagian (* .psbt)</translation>
+        <translation type="unfinished">Transaksi yang Ditandatangani Sebagian (*.psbt)</translation>
     </message>
     <message>
         <source>PSBT file must be smaller than 100 MiB</source>

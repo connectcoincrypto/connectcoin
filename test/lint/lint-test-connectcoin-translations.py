@@ -131,6 +131,34 @@ class TranslationCatalogTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn('changed placeholders', errors)
 
+    def test_uri_literals_are_not_translated_or_reformatted(self):
+        source = "'connectcoin://' is not a valid URI. Use 'connectcoin:' instead."
+        valid = "'connectcoin://' não é uma URI válida. Use 'connectcoin:' no lugar."
+        self.assertEqual(self.run_main_with_translation(valid, source=source, context_name='PaymentServer'), (0, ''))
+        self.assertEqual(self.run_main_with_translation('Não é possível iniciar o manipulador de pagamentos ConnectCoin.',
+            source='Cannot start connectcoin: click-to-pay handler', context_name='PaymentServer'), (0, ''))
+        for bad in (valid.replace('connectcoin://', 'connectcoin: //'),
+                    valid.replace('connectcoin://', '//:ConnectCoin'),
+                    valid.replace('connectcoin://', 'connectcoin:///'),
+                    valid.replace("'connectcoin:'", "'bitcoin:'"),
+                    valid.replace("'connectcoin:'", "'பிட்கின்:'")):
+            with self.subTest(bad=bad):
+                code, errors = self.run_main_with_translation(bad, source=source, context_name='PaymentServer')
+                self.assertEqual(code, 1)
+                self.assertIn('changed ConnectCoin URI literal', errors)
+
+    def test_file_filter_wildcards_and_ascii_parentheses_are_preserved(self):
+        source = 'Partially Signed Transaction (*.psbt)'
+        valid = 'Transação parcialmente assinada (*.psbt)'
+        self.assertEqual(self.run_main_with_translation(valid, source=source, context_name='WalletFrame'), (0, ''))
+        self.assertEqual(self.run_main_with_translation('Arquivo separado por vírgulas (*.csv)',
+            source='Comma separated file', context_name='AddressBookPage'), (0, ''))
+        for pattern in ('(*.псбт)', '(*.pbst)', '(* .psbt)', '(psbt.*)', '\uff08*.psbt\uff09'):
+            with self.subTest(pattern=pattern):
+                code, errors = self.run_main_with_translation('Transação ' + pattern, source=source, context_name='WalletFrame')
+                self.assertEqual(code, 1)
+                self.assertIn('changed file filter', errors)
+
     def test_available_unfinished_is_not_english_fallback(self):
         self.assertTrue(CATALOG.available(ET.fromstring('<translation type="unfinished">Carteira</translation>')))
         self.assertFalse(CATALOG.available(None))
@@ -162,7 +190,8 @@ class TranslationCatalogTests(unittest.TestCase):
         self.assertFalse(CATALOG.untranslated_sentence('Send P2C', 'Send P2C'))  # Correct Danish/Norwegian.
         self.assertFalse(CATALOG.untranslated_sentence('Stop HTTPS (0)', 'Stop HTTPS (0)'))  # Also correct Irish/Danish.
         self.assertFalse(CATALOG.untranslated_sentence('%n GB', '%n GB'))
-        self.assertFalse(CATALOG.untranslated_sentence('(%n GB needed for full chain)', '（完整区块链需要 %n GB）'))
+        # Keep intentional Chinese fullwidth punctuation explicit for Ruff.
+        self.assertFalse(CATALOG.untranslated_sentence('(%n GB needed for full chain)', '\uff08完整区块链需要 %n GB\uff09'))
         self.assertFalse(CATALOG.untranslated_sentence('ConnectCoin supports P2PK addresses', 'ConnectCoin 支持 P2PK 地址'))
 
     def test_case_sensitive_context_and_disambiguation(self):

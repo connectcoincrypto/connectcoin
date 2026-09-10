@@ -1586,6 +1586,12 @@ void WalletTests::connectcoinTranslations()
         }
         QVERIFY2(!translator.translate("BitcoinGUI", "Control CPU mining").isEmpty(), qPrintable(locale));
         QVERIFY2(!translator.translate("OptionsDialog", "Enable pop-up notifications").isEmpty(), qPrintable(locale));
+        // These translations are executable UI literals, not just labels.
+        const auto psbt_filter = translator.translate("WalletFrame", "Partially Signed Transaction (*.psbt)");
+        QVERIFY2(psbt_filter.contains("(*.psbt)"), qPrintable(locale + ": " + psbt_filter));
+        const auto uri_error = translator.translate("PaymentServer", "'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.");
+        QCOMPARE(uri_error.count("connectcoin://"), 1);
+        QCOMPARE(uri_error.count("connectcoin:"), 2);
         QVERIFY2(!translator.translate("OptionsDialog", "Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.").isEmpty(), qPrintable(locale));
         QVERIFY2(!translator.translate("bitcoin-core", "ConnectCoin supports only type-1 P2PK (bech32m) addresses").isEmpty(), qPrintable(locale));
         QVERIFY2(!translator.translate("bitcoin-core", "Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.").isEmpty(), qPrintable(locale));

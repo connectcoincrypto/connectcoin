@@ -32,6 +32,13 @@ if(ENABLE_WALLET)
   # Embed the source catalog only in tests, so full compiled-resource coverage
   # can also be checked when the test binary runs outside the source tree.
   qt6_add_resources(CONNECTCOIN_TRANSLATION_TEST_QRC translation_test.qrc)
+  # Like the main Qt resources, rcc output can contain trailing whitespace.
+  # Keep the workaround restricted to generated code (QTBUG-141858).
+  get_target_property(warn_flags warn_interface INTERFACE_COMPILE_OPTIONS)
+  if("-Wtrailing-whitespace=any" IN_LIST warn_flags)
+    set_property(SOURCE ${CONNECTCOIN_TRANSLATION_TEST_QRC} APPEND PROPERTY COMPILE_OPTIONS -Wno-trailing-whitespace)
+  endif()
+  unset(warn_flags)
   target_sources(connectcoin-test-qt
     PRIVATE
       ${CONNECTCOIN_TRANSLATION_TEST_QRC}

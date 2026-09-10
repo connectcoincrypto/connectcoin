@@ -150,8 +150,11 @@ prompt confirmation if demand rises before submission.
   they are not a node-wide limit shared by multiple wallets. Concurrency accepts
   any positive 32-bit integer (default **1000**), with no separate 64-connection cap. It is a maximum,
   not guaranteed throughput: OS thread/socket limits, memory, the selected rate
-  and server responsiveness determine actual parallelism. Failure to allocate a
-  connection worker stops the search with an error, joining already-started workers.
+  and server responsiveness determine actual parallelism. If the OS refuses
+  additional connection threads, already-started workers keep searching and
+  `last_error` reports the reduced capacity alongside any connection error.
+  Growth is not retried until claiming is reconfigured. If even the first worker
+  cannot start, the search stops with an error. Stop/unload still joins every worker.
 - An empty allowlist permits all supported public domains with confirmed bounties.
   HTTPS reveals your IP to those domains. Connections are direct, on port 443;
   private/unroutable addresses are excluded. A configured name, IPv4 or IPv6 proxy

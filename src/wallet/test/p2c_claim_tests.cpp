@@ -26,6 +26,7 @@
 #include <wallet/p2c_tls.h>
 #include <wallet/p2c_tls_lifecycle.h>
 #include <wallet/p2c_worker.h>
+#include <wallet/p2c_worker_threads.h>
 #include <wallet/test/p2c_tls_fixture.h>
 #include <wallet/test/util.h>
 #include <wallet/test/wallet_test_fixture.h>
@@ -46,6 +47,7 @@
 #include <set>
 #include <span>
 #include <stdexcept>
+#include <system_error>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -86,6 +88,108 @@ public:
 }
 
 BOOST_FIXTURE_TEST_SUITE(p2c_claim_tests, WalletTestingSetup)
+
+BOOST_AUTO_TEST_CASE(worker_thread_pool_keeps_partial_capacity)
+{
+    P2CThreadPoolGrowth growth;
+    std::vector<std::thread> connections;
+    std::mutex mutex;
+    std::condition_variable wake;
+    bool released{false};
+    unsigned started{0};
+    unsigned finished{0};
+    struct ReleaseAndJoin {
+        std::vector<std::thread>& connections;
+        std::mutex& mutex;
+        std::condition_variable& wake;
+        bool& released;
+        ~ReleaseAndJoin()
+        {
+            { std::lock_guard lock{mutex}; released = true; }
+            wake.notify_all();
+            for (auto& thread : connections) if (thread.joinable()) thread.join();
+        }
+    } release_and_join{connections, mutex, wake, released};
+    unsigned creations{0};
+    const auto create = [&]() -> std::thread {
+        if (++creations == 3) throw std::system_error{std::make_error_code(std::errc::resource_unavailable_try_again)};
+        return std::thread{[&] {
+            std::unique_lock lock{mutex};
+            ++started;
+            wake.notify_all();
+            wake.wait(lock, [&] { return released; });
+            ++finished;
+        }};
+    };
+    const auto limited{growth.Grow(connections, 1000, [] { return true; }, create)};
+    BOOST_REQUIRE(limited);
+    BOOST_CHECK(!limited->empty());
+    BOOST_CHECK_EQUAL(connections.size(), 2U);
+    BOOST_CHECK_EQUAL(creations, 3U);
+    {
+        std::unique_lock lock{mutex};
+        BOOST_REQUIRE(wake.wait_for(lock, std::chrono::seconds{5}, [&] { return started == 2; }));
+        BOOST_CHECK_EQUAL(finished, 0U); // Partial workers continue, not cancelled.
+    }
+    for (int i = 0; i < 10; ++i) {
+        BOOST_CHECK(!growth.Grow(connections, 1000, [] { return true; }, create));
+    }
+    BOOST_CHECK_EQUAL(creations, 3U); // No retry loop after a resource failure.
+    BOOST_CHECK(connections[0].joinable());
+    BOOST_CHECK(connections[1].joinable());
+}
+
+BOOST_AUTO_TEST_CASE(worker_thread_pool_first_creation_failure_propagates)
+{
+    P2CThreadPoolGrowth growth;
+    std::vector<std::thread> connections;
+    unsigned creations{0};
+    BOOST_CHECK_THROW(growth.Grow(connections, 1000, [] { return true; }, [&]() -> std::thread {
+        ++creations;
+        throw std::system_error{std::make_error_code(std::errc::resource_unavailable_try_again)};
+    }), std::system_error);
+    BOOST_CHECK_EQUAL(creations, 1U);
+    BOOST_CHECK(connections.empty());
+}
+
+BOOST_AUTO_TEST_CASE(worker_thread_pool_does_not_swallow_unexpected_errors)
+{
+    P2CThreadPoolGrowth growth;
+    std::vector<std::thread> connections;
+    BOOST_CHECK_THROW(growth.Grow(connections, 1000, [] { return true; }, []() -> std::thread {
+        throw std::runtime_error{"unexpected factory failure"};
+    }), std::runtime_error);
+    BOOST_CHECK(connections.empty());
+    unsigned creations{0};
+    // A system_error outside the actual thread-creation callback is not an
+    // OS capacity failure and must propagate without attempting creation.
+    BOOST_CHECK_THROW(growth.Grow(connections, 1000, []() -> bool {
+        throw std::system_error{std::make_error_code(std::errc::io_error)};
+    }, [&] { ++creations; return std::thread{}; }), std::system_error);
+    BOOST_CHECK_EQUAL(creations, 0U);
+    BOOST_CHECK(connections.empty());
+}
+
+BOOST_AUTO_TEST_CASE(worker_thread_pool_stops_growth_on_cancellation)
+{
+    P2CThreadPoolGrowth growth;
+    std::vector<std::thread> connections;
+    bool stopped{true};
+    unsigned creations{0};
+    const auto create = [&] {
+        ++creations;
+        stopped = true;
+        return std::thread{}; // No OS resources needed to test stop boundaries.
+    };
+    BOOST_CHECK(!growth.Grow(connections, 1000, [&] { return !stopped; }, create));
+    BOOST_CHECK_EQUAL(creations, 0U);
+    stopped = false;
+    BOOST_CHECK(!growth.Grow(connections, 1000, [&] { return !stopped; }, create));
+    BOOST_CHECK_EQUAL(creations, 1U);
+    BOOST_CHECK_EQUAL(connections.size(), 1U);
+    BOOST_CHECK(!growth.Grow(connections, 1000, [&] { return !stopped; }, create));
+    BOOST_CHECK_EQUAL(creations, 1U);
+}
 
 BOOST_AUTO_TEST_CASE(tls_capture_v2_authenticates_but_does_not_hash_certificate_verify)
 {
