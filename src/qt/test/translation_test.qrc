@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/translation-test">
+        <file alias="source.ts">../locale/bitcoin_en.ts</file>
+    </qresource>
+</RCC>

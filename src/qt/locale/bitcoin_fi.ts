@@ -58,9 +58,9 @@
         <translation type="unfinished">V&amp;alitse</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Nämä ovat Bitcoin-osoitteesi maksujen vastaanottoa varten. Käytä painiketta "Luo uusi vastaanotto-osoite" vastaanottovälilehdessä luodaksesi uusia osoitteita.
+        <translation type="unfinished">Nämä ovat ConnectCoin-osoitteesi maksujen vastaanottoa varten. Käytä painiketta "Luo uusi vastaanotto-osoite" vastaanottovälilehdessä luodaksesi uusia osoitteita.
 Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translation>
     </message>
     <message>
@@ -100,6 +100,10 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">Vienti epäonnistui</translation>
+    </message>
+    <message>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Nämä ovat ConnectCoin-osoitteesi maksujen lähettämiseen. Tarkista aina summa ja vastaanotto-osoite ennen kolikoiden lähettämistä.</translation>
     </message>
 </context>
 <context>
@@ -160,8 +164,8 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation type="unfinished">Vahvista lompakon salaaminen</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">Varoitus: Jos salaat lompakkosi ja menetät tunnuslauseesi, &lt;b&gt;MENETÄT KAIKKI BITCOINISI&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">Varoitus: Jos salaat lompakkosi ja menetät tunnuslauseesi, &lt;b&gt;MENETÄT KAIKKI CONNECTCOINISI&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -173,7 +177,7 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
     </message>
     <message>
         <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation type="unfinished">Syötä uusi salasanalause lompakolle &lt;br/&gt;Käytä salasanalausetta, jossa on &lt;b&gt;vähintään kymmenen sattumanvaraista merkkiä tai &lt;b&gt;vähintään kahdeksan sanaa&lt;/b&gt; .</translation>
+        <translation>Anna lompakolle uusi tunnuslause.&lt;br/&gt;Käytä tunnuslausetta, jossa on &lt;b&gt;vähintään kymmenen satunnaista merkkiä&lt;/b&gt; tai &lt;b&gt;vähintään kahdeksan sanaa&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase for the wallet.</source>
@@ -188,7 +192,7 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation type="unfinished">Takaisin</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
         <translation type="unfinished">Muista, että salaamalla lompakkosi et täysin pysty suojaamaan bitcoineja varkaudelta, jotka aiheutuvat koneellasi olevista haittaohjelmista.</translation>
     </message>
     <message>
@@ -323,8 +327,8 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation type="unfinished">Määrä</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Syötä Bitcoin-osoite (esim. %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">Syötä ConnectCoin-osoite (esim. %1)</translation>
     </message>
     <message>
         <source>Unroutable</source>
@@ -429,6 +433,75 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <source>default wallet</source>
         <translation type="unfinished">oletuslompakko</translation>
     </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>Yksityinen lähetys</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -498,8 +571,8 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation type="unfinished">Välipalvelin on &lt;b&gt;käytössä&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Lähetä kolikoita Bitcoin-osoitteeseen</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">Lähetä kolikoita ConnectCoin-osoitteeseen</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -542,16 +615,16 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation type="unfinished">Allekirjoita &amp;viesti...</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Allekirjoita viestisi omalla Bitcoin -osoitteellasi todistaaksesi, että omistat ne</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">Allekirjoita viestisi omalla ConnectCoin -osoitteellasi todistaaksesi, että omistat ne</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">&amp;Varmenna viesti...</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">Varmista, että viestisi on allekirjoitettu määritetyllä Bitcoin -osoitteella</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">Varmista, että viestisi on allekirjoitettu määritetyllä ConnectCoin -osoitteella</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -610,8 +683,8 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation type="unfinished">Yhdistetään vertaisiin...</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Pyydä maksuja (Luo QR koodit ja bitcoin: URIt)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">Pyydä maksuja (Luo QR koodit ja connectcoin: URIt)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -665,16 +738,16 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation type="unfinished">Rahansiirtohistoria on ajan tasalla</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">Lataa osittain allekirjoitettu bitcoin-siirtotapahtuma</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">Lataa osittain allekirjoitettu ConnectCoin-siirtotapahtuma</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">Lataa PSBT &amp;leikepöydältä…</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">Lataa osittain allekirjoitettu bitcoin-siirtotapahtuma leikepöydältä</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">Lataa osittain allekirjoitettu ConnectCoin-siirtotapahtuma leikepöydältä</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -693,8 +766,8 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation type="unfinished">&amp;Vastaanotto-osoitteet</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">Avaa bitcoin: URI</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">Avaa connectcoin: URI</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -731,8 +804,8 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation type="unfinished">Siirrä lompakko</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Näytä %1 ohjeet saadaksesi listan mahdollisista Bitcoinin komentorivivalinnoista</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">Näytä %1 ohjeet saadaksesi listan mahdollisista ConnectCoinin komentorivivalinnoista</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -808,11 +881,11 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation type="unfinished">N&amp;äytä</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform>%n aktiivinen yhteys Bitcoin-verkkoon.</numerusform>
-            <numerusform>%n aktiivista yhteyttä Bitcoin-verkkoon.</numerusform>
+            <numerusform>%n aktiivinen yhteys ConnectCoin-verkkoon.</numerusform>
+            <numerusform>%n aktiivista yhteyttä ConnectCoin-verkkoon.</numerusform>
         </translation>
     </message>
     <message>
@@ -922,6 +995,54 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>Luo pay-to-connect-palkkioita</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Louhinta</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>Hallitse CPU-louhintaa</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Kaikki tiedostot</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Vientivirhe</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>Vienti onnistui</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>Vie nykyisestä lompakosta vain seurattava versio, joka voidaan palauttaa toiselle solmulle.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>Vie vain seurattava lompakko</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>Palauta ja siirrä lompakkotiedosto…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>Tallenna vain seurattavan lompakon vienti</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>Lompakko on viety kohteeseen </translation>
     </message>
 </context>
 <context>
@@ -1065,6 +1186,10 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <source>(change)</source>
         <translation type="unfinished">(vaihtoraha)</translation>
     </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>Voi vaihdella +/- %1 connectia syötettä kohden.</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1175,6 +1300,34 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">Siirto onnistui</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Jos solmu on karsittu ja lompakko luotiin ennen karsittua korkeutta, siirto voi epäonnistua siirrettyä lompakkoa ladattaessa.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Lataa lompakko siirron jälkeen</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>Lompakon palauttaminen kopioi varmuuskopiotiedoston lompakkohakemistoon ja sijoittaa sen tavallisen lompakkohakemistorakenteen mukaisesti. Alkuperäistä tiedostoa ei muuteta.
+
+Lompakon siirtäminen muuntaa palautetun lompakon yhdeksi tai useammaksi kuvaajalompakoksi. Lompakosta on tehtävä uusi varmuuskopio.
+Jos lompakko sisältää vain seurattavia skriptejä, luodaan uusi lompakko, joka sisältää ne.
+Jos lompakko sisältää ratkaistavissa olevia mutta ei seurattavia skriptejä, luodaan erillinen uusi lompakko niitä varten.
+
+Siirtoprosessi luo lompakosta varmuuskopion ennen siirtoa. Varmuuskopion nimi on &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak, ja se löytyy tämän lompakon hakemistosta. Virheellisen siirron jälkeen varmuuskopio voidaan palauttaa «Palauta lompakko» -toiminnolla.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>Lompakkoa ei ladattu siirron jälkeen. Voit avata sen valikosta «Tiedosto &gt; Avaa lompakko».</translation>
     </message>
 </context>
 <context>
@@ -1312,6 +1465,10 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
         <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
         <translation type="unfinished">Käännetään ilman ulkoista allekirjoitustukea (tarvitaan ulkoista allekirjoitusta varten)</translation>
     </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>Luo tyhjä lompakko. Tyhjissä lompakoissa ei aluksi ole yksityisiä avaimia tai skriptejä. Yksityisiä avaimia ja osoitteita voidaan tuoda kuvaajien avulla myöhemmin.</translation>
+    </message>
 </context>
 <context>
     <name>EditAddressDialog</name>
@@ -1348,8 +1505,8 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
         <translation type="unfinished">Muokkaa lähettävää osoitetta</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">Antamasi osoite "%1" ei ole kelvollinen Bitcoin-osoite.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">Antamasi osoite "%1" ei ole kelvollinen ConnectCoin-osoite.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1520,6 +1677,14 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
         <source>Error</source>
         <translation type="unfinished">Virhe</translation>
     </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 lataa ja tallentaa kopion ConnectCoin-lohkoketjusta.</translation>
+    </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1528,8 +1693,8 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
         <translation type="unfinished">Lomake</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">Viimeiset tapahtumat eivät välttämättä vielä näy, joten lompakkosi saldo voi olla virheellinen. Tieto korjautuu, kunhan lompakkosi synkronointi bitcoin-verkon kanssa on päättynyt. Tiedot näkyvät alla.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">Viimeiset tapahtumat eivät välttämättä vielä näy, joten lompakkosi saldo voi olla virheellinen. Tieto korjautuu, kunhan lompakkosi synkronointi ConnectCoin-verkon kanssa on päättynyt. Tiedot näkyvät alla.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1583,17 +1748,25 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">Tuntematon. Esi-synkronointi otsikot (%1, %2%)...</translation>
     </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Verkko ei hyväksy yrityksiä käyttää ConnectCoin-varoja, joihin vielä näyttämättömät tapahtumat vaikuttavat.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">Avaa bitcoin URI</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">Avaa ConnectCoin URI</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">Liitä osoite leikepöydältä</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1636,8 +1809,8 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
         <translation type="unfinished">Täysi polku %1 yhteensopivaan komentosarjaan (esim. C:\Downloads\hwi.exe tai /Users/you/Downloads/hwi.py). Varo: haittaohjelmat voivat varastaa kolikkosi!</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished">Avaa reitittimen Bitcoin-asiakasohjelman portti automaattisesti. Tämä toimii vain, jos reitittimesi tukee PCP:tä tai NAT-PMP:tä ja se on otettu käyttöön. Ulkoinen portti voi olla satunnainen.</translation>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation type="unfinished">Avaa reitittimen ConnectCoin-asiakasohjelman portti automaattisesti. Tämä toimii vain, jos reitittimesi tukee PCP:tä tai NAT-PMP:tä ja se on otettu käyttöön. Ulkoinen portti voi olla satunnainen.</translation>
     </message>
     <message>
         <source>Map port using PCP or NA&amp;T-PMP</source>
@@ -1771,8 +1944,8 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
         <translation type="unfinished">Hyväksy sisääntulevia yhteyksiä</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Yhdistä Bitcoin-verkkoon SOCKS5-välityspalvelimen kautta.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">Yhdistä ConnectCoin-verkkoon SOCKS5-välityspalvelimen kautta.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1832,11 +2005,11 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
-        <translation type="unfinished">Yksikkö jona bitcoin-määrät näytetään</translation>
+        <translation type="unfinished">Yksikkö jona ConnectCoin-määrät näytetään</translation>
     </message>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
-        <translation type="unfinished">Valitse mitä yksikköä käytetään ensisijaisesti bitcoin-määrien näyttämiseen.</translation>
+        <translation type="unfinished">Valitse mitä yksikköä käytetään ensisijaisesti ConnectCoin-määrien näyttämiseen.</translation>
     </message>
     <message>
         <source>Third-party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
@@ -1851,8 +2024,8 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
         <translation type="unfinished">Näytetäänkö kolikkokontrollin ominaisuuksia vai ei</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Yhdistä Bitcoin-verkkoon erillisen SOCKS5-välityspalvelimen kautta Torin onion-palveluja varten.</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">Yhdistä ConnectCoin-verkkoon erillisen SOCKS5-välityspalvelimen kautta Torin onion-palveluja varten.</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1929,6 +2102,42 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">Antamasi proxy-osoite on virheellinen.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Ota ponnahdusilmoitukset käyttöön</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Näytä työpöydän ponnahdusilmoitukset, myös saapuvista ja lähetetyistä tapahtumista. Oletuksena pois käytöstä. Virhe- ja vahvistusikkunat pysyvät käytössä.</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation>&amp;OK</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Karsinta vähentää merkittävästi tapahtumien tallentamiseen tarvittavaa levytilaa. Kaikki lohkot tarkistetaan silti kokonaan. Lompakot tulisi ladata käynnistyksessä ja pitää aktiivisina karsinnan ollessa käytössä, jotta ne pysyvät synkronoituina ennen vanhojen lohkotietojen poistamista; karsituista tiedoista jälkeen jäävät lompakot saattavat tarvita uudelleenindeksoinnin. Asetuksen peruuttaminen edellyttää koko lohkoketjun lataamista uudelleen.</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>Asetettu valitsimella -popupnotifications tai connectcoin.conf-tiedoston popupnotifications-asetuksella.</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1944,8 +2153,8 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
         <translation type="unfinished">Lomake</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">Näytetyt tiedot eivät välttämättä ole ajantasalla. Lompakkosi synkronoituu Bitcoin-verkon kanssa automaattisesti yhteyden muodostamisen jälkeen, mutta synkronointi on vielä meneillään.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">Näytetyt tiedot eivät välttämättä ole ajantasalla. Lompakkosi synkronoituu ConnectCoin-verkon kanssa automaattisesti yhteyden muodostamisen jälkeen, mutta synkronointi on vielä meneillään.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1981,7 +2190,7 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
     </message>
     <message>
         <source>Your current total balance</source>
-        <translation type="unfinished">Tililläsi tällä hetkellä olevien Bitcoinien määrä</translation>
+        <translation type="unfinished">Tililläsi tällä hetkellä olevien ConnectCoinien määrä</translation>
     </message>
     <message>
         <source>Recent transactions</source>
@@ -2036,9 +2245,9 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Allekirjoitettiin %n syöte, mutta lisää allekirjoituksia tarvitaan edelleen.</numerusform>
+            <numerusform>Allekirjoitettiin %n syötettä, mutta lisää allekirjoituksia tarvitaan edelleen.</numerusform>
         </translation>
     </message>
     <message>
@@ -2100,9 +2309,9 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Tapahtumassa on %n allekirjoittamaton syöte.</numerusform>
+            <numerusform>Tapahtumassa on %n allekirjoittamatonta syötettä.</numerusform>
         </translation>
     </message>
     <message>
@@ -2141,16 +2350,16 @@ Siirtoprosessi luo varmuuskopion lompakosta ennen siirtoa. Tämä varmuuskopioti
         <translation type="unfinished">Maksupyyntövirhe</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Bitcoinia ei voi käynnistää: klikkaa-maksaaksesi -käsittelijän virhe</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">ConnectCoinia ei voi käynnistää: klikkaa-maksaaksesi -käsittelijän virhe</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">URI käsittely</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin://' ei ole kelvollinen URI. Käytä 'bitcoin:' sen sijaan.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin://' ei ole kelvollinen URI. Käytä 'connectcoin:' sen sijaan.</translation>
     </message>
     <message>
         <source>Cannot process payment request because BIP70 is not supported.
@@ -2161,8 +2370,8 @@ BIP70:n laajalle levinneiden tietoturva-aukkojen vuoksi on erittäin suositeltav
 Jos saat tämän virheen, pyydä kauppiasta antamaan BIP21-yhteensopiva URI.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">URIa ei voitu jäsentää! Tämä voi johtua virheellisestä Bitcoin-osoitteesta tai väärin muotoilluista URI parametreista.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">URIa ei voitu jäsentää! Tämä voi johtua virheellisestä ConnectCoin-osoitteesta tai väärin muotoilluista URI parametreista.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -2315,8 +2524,8 @@ Jos saat tämän virheen, pyydä kauppiasta antamaan BIP21-yhteensopiva URI.</tr
         <translation type="unfinished">Paikalliset osoitteet</translation>
     </message>
     <message>
-        <source>Network addresses that your Bitcoin node is currently using to communicate with other nodes.</source>
-        <translation type="unfinished">Verkko-osoitteet, joita Bitcoin-solmusi käyttää tällä hetkellä kommunikoidakseen muiden solmujen kanssa.</translation>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation type="unfinished">Verkko-osoitteet, joita ConnectCoin-solmusi käyttää tällä hetkellä kommunikoidakseen muiden solmujen kanssa.</translation>
     </message>
     <message>
         <source>Block chain</source>
@@ -2745,6 +2954,59 @@ Lisätietoja konsolin käytöstä saat kirjoittamalla %6.
         <source>Unknown</source>
         <translation type="unfinished">Tuntematon</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Blocksdir</source>
+        <translation>Lohkohakemisto</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>Node window - [%1]</source>
+        <translation>Solmuikkuna - [%1]</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <extracomment>Explanatory text for an outbound peer connection that was established manually through one of several methods. The numbered arguments are stand-ins for the methods available to establish manual connections.</extracomment>
+        <translation>Lähtevä manuaalinen: lisätty RPC-kutsulla %1 tai asetuksilla %2/%3</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>Yksityinen lähetys: lyhytkestoinen yhteys yksityisyydeltään arkaluonteisten tapahtumien lähettämiseen</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2761,8 +3023,8 @@ Lisätietoja konsolin käytöstä saat kirjoittamalla %6.
         <translation type="unfinished">&amp;Viesti:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">Valinnainen viesti liitetään maksupyyntöön ja näytetään avattaessa. Viestiä ei lähetetä Bitcoin-verkkoon.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">Valinnainen viesti liitetään maksupyyntöön ja näytetään avattaessa. Viestiä ei lähetetä ConnectCoin-verkkoon.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -3064,8 +3326,8 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
 ) tapahtumakoolle johtaisi lopulta vain 50 satoshin maksuun.</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
-        <translation type="unfinished">Mikäli lohkoissa ei ole tilaa kaikille siirtotapahtumille, voi louhijat sekä välittävät solmut pakottaa vähimmäispalkkion. Tämän vähimmäispalkkion maksaminen on täysin OK, mutta huomaa, että se saattaa johtaa siihen, ettei siirto vahvistu koskaan, jos bitcoin-siirtoja on enemmän kuin mitä verkko pystyy käsittelemään.</translation>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation type="unfinished">Mikäli lohkoissa ei ole tilaa kaikille siirtotapahtumille, voi louhijat sekä välittävät solmut pakottaa vähimmäispalkkion. Tämän vähimmäispalkkion maksaminen on täysin OK, mutta huomaa, että se saattaa johtaa siihen, ettei siirto vahvistu koskaan, jos ConnectCoin-siirtoja on enemmän kuin mitä verkko pystyy käsittelemään.</translation>
     </message>
     <message>
         <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
@@ -3150,7 +3412,7 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
         <translation type="unfinished">L&amp;uo allekirjoittamaton</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <translation type="unfinished">Luo osittain allekirjoitetun bitcoin-siirtotapahtuman (PSBT) käytettäväksi mm. offline %1 lompakko tai PSBT-yhteensopiva hardware-lompakko.</translation>
     </message>
     <message>
@@ -3202,9 +3464,9 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
         <translation type="unfinished">Voit korottaa palkkiota myöhemmin (osoittaa Replace-By-Fee:tä, BIP-125).</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
-        <translation type="unfinished">Ole hyvä ja tarkista siirtoehdotuksesi. Tämä luo osittain allekirjoitetun Bitcoin-siirron (PBST), jonka voit tallentaa tai kopioida ja sitten allekirjoittaa esim. verkosta irrannaisella %1-lompakolla tai PBST-yhteensopivalla laitteistolompakolla.</translation>
+        <translation type="unfinished">Ole hyvä ja tarkista siirtoehdotuksesi. Tämä luo osittain allekirjoitetun ConnectCoin-siirron (PBST), jonka voit tallentaa tai kopioida ja sitten allekirjoittaa esim. verkosta irrannaisella %1-lompakolla tai PBST-yhteensopivalla laitteistolompakolla.</translation>
     </message>
     <message>
         <source>%1 from wallet '%2'</source>
@@ -3216,9 +3478,9 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
         <translation type="unfinished">Haluatko luoda tämän siirtotapahtuman?</translation>
     </message>
     <message>
-        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
-        <translation type="unfinished">Ole hyvä ja tarkista tapahtumasi. Voit luoda ja lähettää tämän tapahtuman tai luoda osittain allekirjoitetun Bitcoin-tapahtuman (PSBT), jonka voit tallentaa tai kopioida ja allekirjoittaa esimerkiksi offline-ympäristössä%1lompakkoosi tai PSBT-yhteensopivalla laitteistolompakolla.</translation>
+        <translation type="unfinished">Ole hyvä ja tarkista tapahtumasi. Voit luoda ja lähettää tämän tapahtuman tai luoda osittain allekirjoitetun ConnectCoin-tapahtuman (PSBT), jonka voit tallentaa tai kopioida ja allekirjoittaa esimerkiksi offline-ympäristössä%1lompakkoosi tai PSBT-yhteensopivalla laitteistolompakolla.</translation>
     </message>
     <message>
         <source>Please, review your transaction.</source>
@@ -3281,14 +3543,14 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Vahvistuksen arvioidaan alkavan %n lohkon kuluessa.</numerusform>
+            <numerusform>Vahvistuksen arvioidaan alkavan %n lohkon kuluessa.</numerusform>
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">Varoitus: Virheellinen Bitcoin-osoite</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">Varoitus: Virheellinen ConnectCoin-osoite</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -3305,6 +3567,36 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(ei nimikettä)</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1 to %2</source>
+        <translation>%1 osoitteeseen %2</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Määritä mukautettu maksu tapahtuman virtuaalikoon kB:tä (1 000 tavua) kohden.
+
+Huomaa: Koska maksu lasketaan tavukohtaisesti, maksutasolla «100 connectia / kvB» 500 virtuaalitavun tapahtuma (puolet yhdestä kvB:stä) johtaisi vain 50 connectin maksuun.</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>Käytetään nykyistä vähimmäismaksua. Vahvistusaikaa ei arvioida.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>Voit korottaa maksua myöhemmin.</translation>
     </message>
 </context>
 <context>
@@ -3326,8 +3618,8 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
         <translation type="unfinished">Valitse aikaisemmin käytetty osoite</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">Bitcoin-osoite johon maksu lähetetään</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">ConnectCoin-osoite johon maksu lähetetään</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -3362,8 +3654,20 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
         <translation type="unfinished">Aseta nimi tälle osoitteelle lisätäksesi sen käytettyjen osoitteiden listalle.</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">Viesti joka liitettiin bitcoin: URI:iin tallennetaan rahansiirtoon viitteeksi. Tätä viestiä ei lähetetä Bitcoin-verkkoon.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">Viesti joka liitettiin connectcoin: URI:iin tallennetaan rahansiirtoon viitteeksi. Tätä viestiä ei lähetetä ConnectCoin-verkkoon.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Maksu vähennetään lähetettävästä summasta. Vastaanottaja saa vähemmän ConnectCoinia kuin summakenttään syötät. Jos vastaanottajia on useita, maksu jaetaan tasan.</translation>
     </message>
 </context>
 <context>
@@ -3392,8 +3696,8 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
         <translation type="unfinished">Voit allekirjoittaa viestejä/sopimuksia vanhojen (P2PKH) osoitteidesi kanssa todistaaksesi, että voit vastaanottaa niihin lähetettyjä bitcoineja. Varo allekirjoittamasta mitään epämääräistä tai satunnaista, sillä phishing-hyökkäykset voivat yrittää huijata sinua allekirjoittamaan henkilöllisyytesi heille. Allekirjoita vain täysin yksityiskohtaiset lausunnot, joihin suostut.</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">Bitcoin-osoite jolla viesti allekirjoitetaan</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">ConnectCoin-osoite jolla viesti allekirjoitetaan</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3412,8 +3716,8 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
         <translation type="unfinished">Allekirjoitus</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation type="unfinished">Allekirjoita viesti todistaaksesi, että omistat tämän Bitcoin-osoitteen</translation>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation type="unfinished">Allekirjoita viesti todistaaksesi, että omistat tämän ConnectCoin-osoitteen</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -3436,8 +3740,8 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
         <translation type="unfinished">Syötä vastaanottajan osoite, viesti ja allekirjoitus (varmista että kopioit rivinvaihdot, välilyönnit, sarkaimet yms. täsmälleen) alle vahvistaaksesi viestin. Varo lukemasta allekirjoitukseen enempää kuin mitä viestissä itsessään on välttääksesi man-in-the-middle -hyökkäyksiltä. Huomaa, että tämä todentaa ainoastaan allekirjoittavan vastaanottajan osoitteen, tämä ei voi todentaa minkään tapahtuman lähettäjää!</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">Bitcoin-osoite jolla viesti on allekirjoitettu</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">ConnectCoin-osoite jolla viesti on allekirjoitettu</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -3448,8 +3752,8 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
         <translation type="unfinished">Viestin allekirjoittamisen yhteydessä annettu allekirjoitus</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">Tarkista viestin allekirjoitus varmistaaksesi, että se allekirjoitettiin tietyllä Bitcoin-osoitteella</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">Tarkista viestin allekirjoitus varmistaaksesi, että se allekirjoitettiin tietyllä ConnectCoin-osoitteella</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3510,6 +3814,26 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">Viesti varmistettu.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the clipboard</source>
+        <translation>Kopioi nykyinen allekirjoitus leikepöydälle</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>Annettu osoite ei viittaa vanhanmuotoiseen (P2PKH) avaimeen. Viestien allekirjoittamista SegWit-osoitteilla tai muilla kuin P2PKH-osoitetyypeillä ei tueta tässä %1-versiossa. Tarkista osoite ja yritä uudelleen.</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Voit allekirjoittaa viestejä tai sopimuksia vanhanmuotoisilla (P2PKH) osoitteillasi osoittaaksesi, että voit vastaanottaa niihin lähetettyjä ConnectCoin-varoja. Älä allekirjoita mitään epäselvää tai satunnaista, sillä tietojenkalasteluhyökkäykset voivat yrittää huijata sinua luovuttamaan henkilöllisyytesi allekirjoituksella. Allekirjoita vain yksityiskohtaisia lausumia, joiden kanssa olet samaa mieltä.</translation>
     </message>
 </context>
 <context>
@@ -3597,9 +3921,9 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>kypsyy vielä %n lohkon kuluttua</numerusform>
+            <numerusform>kypsyy vielä %n lohkon kuluttua</numerusform>
         </translation>
     </message>
     <message>
@@ -3953,6 +4277,10 @@ Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virt
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>Hae osoitteella, P2C-verkkotunnuksella, tapahtumatunnisteella tai nimikkeellä</translation>
     </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -4122,8 +4450,8 @@ ilman, että käytetään mitään snapshot-tietoja. Ilmoita tästä tapauksesta
         <translation type="unfinished">Jaettu MIT -ohjelmistolisenssin alaisuudessa, katso mukana tuleva %s tiedosto tai %s</translation>
     </message>
     <message>
-        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
-        <translation type="unfinished">Virhe: Dump-tiedoston versio ei ole tuettu. Tämä bitcoin-lompakon versio tukee vain version 1 dump-tiedostoja. Annetun dump-tiedoston versio %s</translation>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Virhe: Dump-tiedoston versio ei ole tuettu. Tämä ConnectCoin-lompakon versio tukee vain version 1 dump-tiedostoja. Annetun dump-tiedoston versio %s</translation>
     </message>
     <message>
         <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
@@ -4195,7 +4523,7 @@ ilman, että käytetään mitään snapshot-tietoja. Ilmoita tästä tapauksesta
     </message>
     <message>
         <source>Cannot set -peerblockfilters without -blockfilterindex.</source>
-        <translation type="unfinished">-peerblockfiltersiä ei voida asettaa ilman -blockfilterindexiä.</translation>
+        <translation>Asetusta -peerblockfilters ei voida määrittää ilman asetusta -blockfilterindex.</translation>
     </message>
     <message>
         <source>
@@ -4347,7 +4675,7 @@ Ei voinut palauttaa lompakon varmuuskopiota..</translation>
     </message>
     <message>
         <source>Ignoring duplicate -wallet %s.</source>
-        <translation type="unfinished">Ohitetaan kaksois -lompakko %s.</translation>
+        <translation>Ohitetaan toistuva -wallet %s.</translation>
     </message>
     <message>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
@@ -4491,11 +4819,11 @@ Ei voinut palauttaa lompakon varmuuskopiota..</translation>
     </message>
     <message>
         <source>Specified -walletdir "%s" does not exist</source>
-        <translation type="unfinished">Määriteltyä lompakon hakemistoa "%s" ei ole olemassa.</translation>
+        <translation>Asetuksella -walletdir määriteltyä hakemistoa "%s" ei ole olemassa</translation>
     </message>
     <message>
         <source>Specified -walletdir "%s" is a relative path</source>
-        <translation type="unfinished">Määritelty lompakkohakemisto "%s" sijaitsee suhteellisessa polussa</translation>
+        <translation>Asetuksella -walletdir määritelty polku "%s" on suhteellinen</translation>
     </message>
     <message>
         <source>Specified -walletdir "%s" is not a directory</source>
@@ -4595,7 +4923,7 @@ Ei voinut palauttaa lompakon varmuuskopiota..</translation>
     </message>
     <message>
         <source>Unknown -blockfilterindex value %s.</source>
-        <translation type="unfinished">Tuntematon -lohkosuodatusindeksiarvo %s.</translation>
+        <translation>Tuntematon -blockfilterindex-arvo %s.</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -4648,6 +4976,620 @@ Ei voinut palauttaa lompakon varmuuskopiota..</translation>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Asetustiedostoa ei voitu kirjoittaa</translation>
+    </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>Vaihtorahan kohteen on oltava tyypin 1 P2PK-kohde (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin tukee vain tyypin 1 P2PK-osoitteita (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin tukee vain tyypin 1 P2PK-vaihtorahaosoitteita (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>ConnectCoin-siirrot edellyttävät kelvollisia tyypin 1 kohteita tai tyypin 2 PAY_TO_CONNECT-ulostuloja</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>ConnectCoinin tyypin 1 ulostulot tukevat vain SIGHASH_DEFAULT-tilaa</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>Syöte ei ole täydellinen tyypin 1 kulutus SIGHASH_DEFAULT-tilassa</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>Syöte edellyttää P2C-todisteen täydellisiä todistajatietoja</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>Pääverkkoa ei ole käynnistetty: genesis-lohkoa ei ole määritelty. Käytä julkiseen testaukseen valitsinta -testnet4 tai paikalliseen testaukseen valitsinta -regtest.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>Tälle kehityskoosteelle ei ole määritetty projektin hallinnoimaa julkista lähdekoodin URL-osoitetta.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Tiedostokuvaajia ei ole riittävästi saatavilla. Kokeile pienentää -rpcmaxconnections-arvoa tai käyttää oletusarvoa %d</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>Osallistu kehitykseen, jos %s on mielestäsi hyödyllinen.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Harkitse asetuksen %s (%s) tai %s (%s) muuttamista.</translation>
+    </message>
+    <message>
+        <source>%s is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation>%s on asetettu erittäin suureksi! Näin suuri maksu voitaisiin maksaa yhdestä tapahtumasta.</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf on vanhentunut ja poistetaan kokonaan seuraavassa julkaisussa.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>%zu MiB:n dbcache voi olla liian suuri järjestelmälle, jossa on vain %zu MiB muistia.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>Tapahtui vakava sisäinen virhe, katso lisätiedot kohteesta %s: %s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>Assumeutxo-tietoja ei löytynyt annetulle lohkohajautukselle '%s'.</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version %d pre-selected input with a version 3 tx</source>
+        <translation>Vahvistamatonta version %d ennalta valittua syötettä ei voi käyttää version 3 tapahtumassa</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version 3 pre-selected input with a version %d tx</source>
+        <translation>Vahvistamatonta version 3 ennalta valittua syötettä ei voi käyttää version %d tapahtumassa</translation>
+    </message>
+    <message>
+        <source>Cannot obtain a lock on directory %s. %s is probably already running.</source>
+        <translation>Hakemistoa %s ei voida lukita. %s on luultavasti jo käynnissä.</translation>
+    </message>
+    <message>
+        <source>Cannot provide specific connections and have addrman find outgoing connections at the same time.</source>
+        <translation>Määrättyjä yhteyksiä ei voi antaa ja samalla antaa addrmanin etsiä lähteviä yhteyksiä.</translation>
+    </message>
+    <message>
+        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
+        <translation>Asetusta -forcednsseed ei voi asettaa todeksi, kun -dnsseed on epätosi.</translation>
+    </message>
+    <message>
+        <source>Cannot write to directory '%s'; check permissions.</source>
+        <translation>Hakemistoon '%s' ei voida kirjoittaa; tarkista oikeudet.</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>Löytyi vioittunut lohko, mikä viittaa mahdolliseen laitteistovikaan.</translation>
+    </message>
+    <message>
+        <source>Could not generate scriptPubKeys (cache is empty)</source>
+        <translation>scriptPubKeys-arvoja ei voitu luoda (välimuisti on tyhjä)</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>Upotettuja asmap-tietoja ei voitu lukea</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>Luodaan lompakkoa…</translation>
+    </message>
+    <message>
+        <source>Disk space for %s may not accommodate the block files. Approximately %u GB of data will be stored in this directory.</source>
+        <translation>Kohteen %s levytila ei ehkä riitä lohkotiedostoille. Hakemistoon tallennetaan noin %u GB tietoja.</translation>
+    </message>
+    <message>
+        <source>Do you want to rebuild the databases now?</source>
+        <translation>Haluatko rakentaa tietokannat uudelleen nyt?</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>Osoitteelle %s on päällekkäinen sidontamääritys. Tarkista -bind-, -bind=...=onion- ja -whitebind-asetukset.</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>Elliptisten käyrien salauksen toimivuustarkistus epäonnistui. %s suljetaan.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>Upotettuja asmap-tietoja ei ole saatavilla</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>Virhe luotaessa kohdetta %s: version metatietoja ei voitu kirjoittaa.</translation>
+    </message>
+    <message>
+        <source>Error loading %s: External signer wallet being loaded without external signer support compiled</source>
+        <translation>Virhe ladattaessa kohdetta %s: ulkoisen allekirjoittajan lompakkoa ladataan, mutta ulkoisen allekirjoittajan tukea ei ole käännetty mukaan</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>Virhe ladattaessa kohdetta %s: lompakko on vanhanmuotoinen. Siirrä se kuvaajalompakoksi siirtotyökalulla (migratewallet RPC).</translation>
+    </message>
+    <message>
+        <source>Error loading databases</source>
+        <translation>Virhe tietokantojen lataamisessa</translation>
+    </message>
+    <message>
+        <source>Error loading wallet. Wallet requires blocks to be downloaded, and software does not currently support loading wallets while blocks are being downloaded out of order when using assumeutxo snapshots. Wallet should be able to load successfully after node sync reaches height %s</source>
+        <translation>Virhe lompakon lataamisessa. Lompakko edellyttää lohkojen lataamista, eikä ohjelmisto tällä hetkellä tue lompakkojen lataamista, kun lohkoja ladataan epäjärjestyksessä assumeutxo-tilannekuvia käytettäessä. Lompakon pitäisi latautua, kun solmun synkronointi saavuttaa korkeuden %s</translation>
+    </message>
+    <message>
+        <source>Error opening coins database</source>
+        <translation>Virhe kolikkotietokannan avaamisessa</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address metadata may be missing or incorrect.</source>
+        <translation>Virhe luettaessa kohdetta %s! Kaikki avaimet luettiin oikein, mutta tapahtumatiedot tai osoitteiden metatiedot voivat puuttua tai olla virheellisiä.</translation>
+    </message>
+    <message>
+        <source>Error reading %s! Transaction data may be missing or incorrect. Rescanning wallet.</source>
+        <translation>Virhe luettaessa kohdetta %s! Tapahtumatiedot voivat puuttua tai olla virheellisiä. Lompakkoa tarkistetaan uudelleen.</translation>
+    </message>
+    <message>
+        <source>Error starting/committing db txn for wallet transactions removal process</source>
+        <translation>Virhe aloitettaessa tai vahvistettaessa tietokantatapahtumaa lompakon tapahtumien poistamista varten</translation>
+    </message>
+    <message>
+        <source>Error: Address book data in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>Virhe: lompakon osoitekirjatietojen ei voida tunnistaa kuuluvan siirrettyihin lompakkoihin</translation>
+    </message>
+    <message>
+        <source>Error: Cannot extract destination from the generated scriptpubkey</source>
+        <translation>Virhe: kohdetta ei voida poimia luodusta scriptpubkey-arvosta</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Virhe: tapahtumaa %s ei voitu lisätä vain seurattavaan lompakkoon</translation>
+    </message>
+    <message>
+        <source>Error: Could not add watchonly tx %s to watchonly wallet</source>
+        <translation>Virhe: vain seurattavaa tapahtumaa %s ei voitu lisätä vain seurattavaan lompakkoon</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Virhe: tiedostoa '%s' ei voitu luoda</translation>
+    </message>
+    <message>
+        <source>Error: Could not delete watchonly transactions. </source>
+        <translation>Virhe: vain seurattavia tapahtumia ei voitu poistaa. </translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation>Virhe: vedostiedoston muototietue on virheellinen. Saatiin «%s», odotettiin «format».</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation>Virhe: vedostiedoston tunnistetietue on virheellinen. Saatiin «%s», odotettiin «%s».</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>Virhe: vedostiedosto määrittää tietokantamuodon, jota ei tueta (%s). Vain sqlite-tietokantavedoksia tuetaan</translation>
+    </message>
+    <message>
+        <source>Error: Duplicate descriptors created during migration. Your wallet may be corrupted.</source>
+        <translation>Virhe: siirron aikana luotiin päällekkäisiä kuvaajia. Lompakko voi olla vioittunut.</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Virhe: viennin kohde '%s' on jo olemassa</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Virhe: viennin kohde ei voi olla tyhjä</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet</source>
+        <translation>Virhe: uutta vain seurattavaa lompakkoa ei voitu luoda</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Virhe: uutta vain seurattavaa lompakkoa ei voitu luoda. %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation>Virhe: saatu avain ei ollut heksadesimaalimuodossa: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation>Virhe: saatu arvo ei ollut heksadesimaalimuodossa: %s</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>Virhe: kaikkia osoitekirjan tietueita ei siirretty</translation>
+    </message>
+    <message>
+        <source>Error: Not all transaction records were migrated</source>
+        <translation>Virhe: kaikkia tapahtumatietueita ei siirretty</translation>
+    </message>
+    <message>
+        <source>Error: This wallet is already a descriptor wallet</source>
+        <translation>Virhe: tämä lompakko on jo kuvaajalompakko</translation>
+    </message>
+    <message>
+        <source>Error: Transaction %s in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>Virhe: lompakon tapahtuman %s ei voida tunnistaa kuuluvan siirrettyihin lompakkoihin</translation>
+    </message>
+    <message>
+        <source>Error: Unable to begin reading all records in the database</source>
+        <translation>Virhe: kaikkien tietokantatietueiden lukemista ei voida aloittaa</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation>Virhe: versiota %u ei voida jäsentää uint32_t-arvoksi</translation>
+    </message>
+    <message>
+        <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
+        <translation>Virhe: tälle vanhanmuotoiselle lompakolle ei voida tuottaa kuvaajia. Anna lompakon salasana, jos se on salattu.</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read wallet's best block locator record</source>
+        <translation>Virhe: lompakon parhaan lohkon paikannintietuetta ei voida lukea</translation>
+    </message>
+    <message>
+        <source>Error: Unable to remove watchonly address book data</source>
+        <translation>Virhe: vain seurattavia osoitekirjatietoja ei voida poistaa</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write data to disk for wallet %s</source>
+        <translation>Virhe: lompakon %s tietoja ei voida kirjoittaa levylle</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write solvable wallet best block locator record</source>
+        <translation>Virhe: ratkaistavan lompakon parhaan lohkon paikannintietuetta ei voida kirjoittaa</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Virhe: vietyä lompakkoa ei voida kirjoittaa</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write watchonly wallet best block locator record</source>
+        <translation>Virhe: vain seurattavan lompakon parhaan lohkon paikannintietuetta ei voida kirjoittaa</translation>
+    </message>
+    <message>
+        <source>Error: Wallet does not exist</source>
+        <translation>Virhe: lompakkoa ei ole olemassa</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Virhe: lompakossa ei ole vietäviä kuvaajia</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Virhe: tietokantatapahtumaa ei voida vahvistaa vain seurattavan lompakon vientiä varten</translation>
+    </message>
+    <message>
+        <source>Error: cannot remove legacy wallet records</source>
+        <translation>Virhe: vanhanmuotoisen lompakon tietueita ei voida poistaa</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Virhe: tietokantatapahtumaa ei voida suorittaa uudelle vain seurattavalle lompakolle %s</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for wallet %s</source>
+        <translation>Virhe: tietokantatapahtumaa ei voida suorittaa lompakolle %s</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>Uudelleentarkistusvarausta ei saatu lompakon alustuksen aikana</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>Maksunkorotuksia ei voitu laskea, koska vahvistamattomat UTXO:t riippuvat valtavasta vahvistamattomien tapahtumien ryppäästä.</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>Lohkon peruutustiedostoa ei voitu sulkea.</translation>
+    </message>
+    <message>
+        <source>Failed to close file when writing block.</source>
+        <translation>Tiedostoa ei voitu sulkea lohkoa kirjoitettaessa.</translation>
+    </message>
+    <message>
+        <source>Failed to disconnect block.</source>
+        <translation>Lohkoa ei voitu irrottaa.</translation>
+    </message>
+    <message>
+        <source>Failed to read block.</source>
+        <translation>Lohkoa ei voitu lukea.</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>Tilannekuvan ketjutilahakemistoa (%s) ei voitu poistaa. Poista se käsin ennen uudelleenkäynnistystä.
+</translation>
+    </message>
+    <message>
+        <source>Failed to rename invalid peers.dat file. Please move or delete it and try again.</source>
+        <translation>Virheellisen peers.dat-tiedoston nimeä ei voitu muuttaa. Siirrä tai poista se ja yritä uudelleen.</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>Indeksejä ei voitu käynnistää, suljetaan…</translation>
+    </message>
+    <message>
+        <source>Failed to write block.</source>
+        <translation>Lohkoa ei voitu kirjoittaa.</translation>
+    </message>
+    <message>
+        <source>Failed to write undo data.</source>
+        <translation>Peruutustietoja ei voitu kirjoittaa.</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>Maksutaso (%s) on pienempi kuin asetettu vähimmäismaksutaso (%s).</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation>Tiedosto %s on jo olemassa. Jos olet varma, että haluat tämän, siirrä se ensin pois tieltä.</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Lohkotiedoston kirjoittaminen levylle epäonnistui. Syynä on todennäköisesti I/O-virhe.</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Peruutustiedoston kirjoittaminen levylle epäonnistui. Syynä on todennäköisesti I/O-virhe.</translation>
+    </message>
+    <message>
+        <source>Incompatible options: -dnsseed=1 was explicitly specified, but -onlynet forbids connections to IPv4/IPv6</source>
+        <translation>Yhteensopimattomat asetukset: -dnsseed=1 määritettiin nimenomaisesti, mutta -onlynet estää IPv4/IPv6-yhteydet</translation>
+    </message>
+    <message>
+        <source>Input not found or already spent</source>
+        <translation>Syötettä ei löytynyt tai se on jo käytetty</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>Virheellinen -proxy-osoite tai isäntänimi, päättyy merkkiin '=': '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation>Virheellinen summa asetukselle %s=&lt;amount&gt;: '%s' (sen on oltava vähintään minrelay-maksu %s, jotta tapahtumat eivät juutu)</translation>
+    </message>
+    <message>
+        <source>Invalid or corrupt peers.dat (%s). If you believe this is a bug, please report it to %s. As a workaround, you can move the file (%s) out of the way (rename, move, or delete) to have a new one created on the next start.</source>
+        <translation>Virheellinen tai vioittunut peers.dat (%s). Jos uskot tämän olevan ohjelmavirhe, ilmoita siitä osoitteeseen %s. Väliaikaisena ratkaisuna voit siirtää tiedoston (%s) pois tieltä (nimeä uudelleen, siirrä tai poista), jotta uusi luodaan seuraavalla käynnistyskerralla.</translation>
+    </message>
+    <message>
+        <source>Invalid value detected for '-wallet' or '-nowallet'. '-wallet' requires a string value, while '-nowallet' accepts only '1' to disable all wallets</source>
+        <translation>Virheellinen arvo asetukselle '-wallet' tai '-nowallet'. '-wallet' edellyttää merkkijonoarvoa, kun taas '-nowallet' hyväksyy vain arvon '1' kaikkien lompakoiden poistamiseksi käytöstä</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is less than transaction weight without inputs</source>
+        <translation>Tapahtuman enimmäispaino on pienempi kuin tapahtuman paino ilman syötteitä</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is too low, can not accommodate change output</source>
+        <translation>Tapahtuman enimmäispaino on liian pieni eikä vaihtorahatuloste mahdu siihen</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>Tapahtuman enimmäispainon on oltava välillä %d ja %d</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Vedostiedostoa ei annettu. createfromdump-komentoa varten on annettava -dumpfile=&lt;filename&gt;.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use dump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Vedostiedostoa ei annettu. dump-komentoa varten on annettava -dumpfile=&lt;filename&gt;.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. %d available, %d required.</source>
+        <translation>Tiedostokahvoja ei ole riittävästi saatavilla. Saatavilla %d, tarvitaan %d.</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>Vain suunta asetettiin, ei käyttöoikeuksia: '%s'</translation>
+    </message>
+    <message>
+        <source>Option '-checkpoints' is set but checkpoints were removed. This option has no effect.</source>
+        <translation>Asetus '-checkpoints' on käytössä, mutta tarkistuspisteet on poistettu. Asetuksella ei ole vaikutusta.</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Asetus '-limitancestorsize' on annettu, mutta edeltäjien kokorajat on korvattu ryppäiden kokorajoilla (katso -limitclustersize). Asetuksella ei ole vaikutusta.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Asetus '-limitdescendantsize' on annettu, mutta jälkeläisten kokorajat on korvattu ryppäiden kokorajoilla (katso -limitclustersize). Asetuksella ei ole vaikutusta.</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to CJDNS (-onlynet=cjdns) but -cjdnsreachable is not provided</source>
+        <translation>Lähtevät yhteydet on rajattu CJDNS:ään (-onlynet=cjdns), mutta -cjdnsreachable-asetusta ei annettu</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is explicitly forbidden: -onion=0</source>
+        <translation>Lähtevät yhteydet on rajattu Toriin (-onlynet=onion), mutta Tor-verkon välityspalvelin on nimenomaisesti estetty: -onion=0</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
+        <translation>Lähtevät yhteydet on rajattu Toriin (-onlynet=onion), mutta Tor-verkon välityspalvelinta ei ole annettu: mitään asetuksista -proxy, -onion tai -listenonion ei ole määritetty</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to i2p (-onlynet=i2p) but -i2psam is not provided</source>
+        <translation>Lähtevät yhteydet on rajattu i2p:hen (-onlynet=i2p), mutta -i2psam-asetusta ei annettu</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>Omien tapahtumien yksityistä lähetystä pyydettiin (-privatebroadcast), mutta -proxyrandomize on pois käytöstä. Yksityisten lähetysyhteyksien Tor-piirit voidaan yhdistää muihin Tor-yhteyksiin. Aseta -proxyrandomize=1 parhaan yksityisyyden saavuttamiseksi.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>Omien tapahtumien yksityistä lähetystä pyydettiin (-privatebroadcast), mutta myös -connect on määritetty. Ne eivät ole yhteensopivia, koska yksityisen lähetyksen on avattava uusia yhteyksiä satunnaisesti valittuihin Tor- tai I2P-vertaisiin. Harkitse sen sijaan asetuksia -maxconnections=0 -addnode=...</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>Omien tapahtumien yksityistä lähetystä pyydettiin (-privatebroadcast), mutta Tor- ja I2P-verkot eivät ole saavutettavissa</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -reindex-chainstate. Use full -reindex instead.</source>
+        <translation>Karsintatila ei ole yhteensopiva -reindex-chainstate-asetuksen kanssa. Käytä sen sijaan täydellistä -reindex-asetusta.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>Karsintatila ei ole yhteensopiva -txospenderindex-asetuksen kanssa.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
+        <translation>Karsinta: lompakon viimeisin synkronointi jää karsittujen tietojen taakse. Tarvitset -reindex-toiminnon (karsittu solmu lataa koko lohkoketjun uudelleen)</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>Nimenmuutos '%s' -&gt; '%s' epäonnistui. Taustaketjun tilan leveldb-hakemistoa ei voida siivota.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
+        <translation>Nimenmuutos '%s' -&gt; '%s' epäonnistui. Siirrä tai poista virheellinen tilannekuvahakemisto %s käsin; muuten sama virhe toistuu seuraavalla käynnistyskerralla.</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>Allekirjoittaja ei palauttanut osoitetta</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>Allekirjoittaja palautti odottamattoman osoitteen %s</translation>
+    </message>
+    <message>
+        <source>Signer returned error: %s</source>
+        <translation>Allekirjoittaja palautti virheen: %s</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>Järjestelmävirhe kirjoitettaessa levylle: %s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>Järjestelmävirhe ladattaessa ulkoista lohkotiedostoa: %s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>Järjestelmävirhe tallennettaessa lohkoa levylle: %s</translation>
+    </message>
+    <message>
+        <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
+        <translation>Polku %s käyttää exFAT-tiedostojärjestelmää, jossa tiedetään esiintyvän ajoittaisia vioittumisongelmia macOS:ssä. Siirrä hakemisto toiseen tiedostojärjestelmään tietojen menetyksen välttämiseksi.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>Asetusta -testactivationheight ei voi käyttää pääverkossa.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>Asetusta -vbparams ei voi käyttää pääverkossa.</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>Ennalta valittujen syötteiden ja lompakon automaattisen syötevalinnan yhdistelmä ylittää tapahtuman enimmäispainon. Lähetä pienempi summa tai yhdistä lompakkosi UTXO:t käsin</translation>
+    </message>
+    <message>
+        <source>The inputs size exceeds the maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>Syötteiden koko ylittää enimmäispainon. Lähetä pienempi summa tai yhdistä lompakkosi UTXO:t käsin</translation>
+    </message>
+    <message>
+        <source>The preselected coins total amount does not cover the transaction target. Please allow other inputs to be automatically selected or include more coins manually</source>
+        <translation>Ennalta valittujen kolikoiden yhteissumma ei kata tapahtuman tavoitetta. Salli muiden syötteiden automaattinen valinta tai lisää kolikoita käsin</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>Yhteissumma ylittää saldosi, kun %s tapahtumamaksu lisätään.</translation>
+    </message>
+    <message>
+        <source>The transactions removal process can only be executed within a db txn</source>
+        <translation>Tapahtumien poistoprosessi voidaan suorittaa vain tietokantatapahtuman sisällä</translation>
+    </message>
+    <message>
+        <source>There is no ScriptPubKeyManager for this address</source>
+        <translation>Tälle osoitteelle ei ole ScriptPubKeyManageria</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>Tapahtuma edellyttää yhtä nollasta poikkeavaa kohdetta, nollasta poikkeavaa maksutasoa tai ennalta valittua syötettä</translation>
+    </message>
+    <message>
+        <source>UTXO snapshot failed to validate. Restart to resume normal initial block download, or try loading a different snapshot.</source>
+        <translation>UTXO-tilannekuvan tarkistus epäonnistui. Käynnistä uudelleen jatkaaksesi tavallista lohkojen alkulatausta tai yritä ladata eri tilannekuva.</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Kuvaajien välimuistia ei voitu kirjoittaa</translation>
+    </message>
+    <message>
+        <source>Unconfirmed UTXOs are available, but spending them creates a chain of transactions that will be rejected by the mempool</source>
+        <translation>Vahvistamattomia UTXO:ita on saatavilla, mutta niiden käyttäminen luo tapahtumaketjun, jonka muistivaranto hylkää</translation>
+    </message>
+    <message>
+        <source>Unexpected legacy entry in descriptor wallet found. Loading wallet %s
+
+The wallet might have been tampered with or created with malicious intent.
+</source>
+        <translation>Kuvaajalompakosta löytyi odottamaton vanhanmuotoinen merkintä. Ladataan lompakkoa %s
+
+Lompakkoa on saatettu peukaloida tai se on voitu luoda vahingollisessa tarkoituksessa.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>Tuntematon vaihtoehto «%s» annettu asetuksessa -test=&lt;option&gt;.</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>Löytyi tuntematon kuvaaja. Ladataan lompakkoa %s
+
+Lompakko on ehkä luotu uudemmalla versiolla.
+Kokeile ohjelmiston uusinta versiota.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>Tuntematon verkko asetuksessa -proxy='%s': '%s'</translation>
+    </message>
+    <message>
+        <source>Unsupported category-specific logging level %1$s=%2$s. Expected %1$s=&lt;category&gt;:&lt;loglevel&gt;. Valid categories: %3$s. Valid loglevels: %4$s.</source>
+        <translation>Luokkakohtaista lokitasoa %1$s=%2$s ei tueta. Odotettiin %1$s=&lt;category&gt;:&lt;loglevel&gt;. Kelvolliset luokat: %3$s. Kelvolliset lokitasot: %4$s.</translation>
+    </message>
+    <message>
+        <source>Unsupported chainstate database format found. Please restart with -reindex-chainstate. This will rebuild the chainstate database.</source>
+        <translation>Löytyi ketjutilan tietokantamuoto, jota ei tueta. Käynnistä uudelleen asetuksella -reindex-chainstate. Tämä rakentaa ketjutilan tietokannan uudelleen.</translation>
+    </message>
+    <message>
+        <source>Unsupported global logging level %s=%s. Valid values: %s.</source>
+        <translation>Yleistä lokitasoa %s=%s ei tueta. Kelvolliset arvot: %s.</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>Varoitus: löytyi virheellinen ketju, joka on yli 6 lohkoa parasta ketjuamme pidempi. Syynä voi olla tietokannan vioittuminen tai konsensuksen yhteensopimattomuus vertaisten kanssa.</translation>
+    </message>
+    <message>
+        <source>Witness data for blocks after height %d requires validation. Please restart with -reindex.</source>
+        <translation>Korkeuden %d jälkeisten lohkojen todistajatiedot on tarkistettava. Käynnistä uudelleen asetuksella -reindex.</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>Tietokoneesi päiväys ja aika näyttävät poikkeavan verkosta yli %d minuuttia, mikä voi aiheuttaa konsensusvirheen. Kun olet tarkistanut tietokoneesi kellon, viestin pitäisi poistua solmun uudelleenkäynnistyksen jälkeen. Ilman uudelleenkäynnistystä sen pitäisi poistua automaattisesti, kun olet muodostanut riittävästi uusia lähteviä vertaisyhteyksiä; tämä voi viedä aikaa. Lisätietoja saat `getpeerinfo`- ja `getnetworkinfo`-RPC-menetelmien `timeoffset`-kentästä.</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>whitebind-asetusta voi käyttää vain saapuviin yhteyksiin (annettiin «out»)</translation>
     </message>
 </context>
 <context>
@@ -4996,7 +5938,92 @@ Juurivarmenteiden versio: %2</translation>
     <name>MiningPage</name>
     <message>
         <source>Optional: empty uses this wallet</source>
-        <translation>Valinnainen: tyhjä kenttä käyttää tätä lompakkoa</translation>
+        <translation>Valinnainen: tyhjänä käytetään tätä lompakkoa</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPU-säikeet:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Palkkio-osoitetta ei voitu luoda. Tarkista, että lompakko voi luoda vastaanotto-osoitteita.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Virhe</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>FAST-tila jakaa noin 2 GiB RandomX-muistia validoinnin kanssa. Useammat säikeet kuluttavat enemmän CPU-tehoa ja sähköä; jätä kapasiteettia solmulle. Tietoaineiston alustaminen voi kestää jonkin aikaa.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Louhi testiverkon lohkoja CPU:lla käyttäen RandomX:ää. Louhinta on pois käytöstä, kunnes käynnistät sen. Tämän solmun kaikki lompakot jakavat louhijan, ja louhinta jatkuu välilehteä vaihdettaessa tai lompakko suljettaessa.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Louhinta</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Louhitaan / valmistellaan RandomX:ää</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Uusi osoite tästä lompakosta</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Tämän verkon palkkio-osoite</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Palkkio-osoite:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Aloita louhinta</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Käynnistetään</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Tila: %1
+Hajautusnopeus: %2 H/s
+Hajautuksia: %3 | Hyväksytyt lohkot: %4
+Aktiivinen palkkio-osoite: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Lopeta louhinta</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Pysäytetty</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Pysäytetään (odotetaan nykyistä työtä)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Odotetaan solmun synkronoitumista</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Varoitus: %1 louhintasäiettä ylittää havaittujen loogisten CPU:iden määrän %2. Tämä voi pienentää hajautusnopeutta ja hidastaa solmua.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
     </message>
 </context>
 </TS>

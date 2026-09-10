@@ -34,8 +34,12 @@ class P2CAutoClaimTest(BitcoinTestFramework):
         claimant = node.get_wallet_rpc("auto-claimant")
         initial_status = claimant.getp2cclaimstatus()
         assert_equal(initial_status["connections_per_second"], 0)
-        assert_equal(initial_status["concurrency"], 4)
+        assert_equal(initial_status["concurrency"], 1000)
         assert_equal(initial_status["reward_address"], "")
+        # Omitting concurrency must apply the same default as a fresh wallet,
+        # including when disabling claims. This does not start HTTPS.
+        assert_equal(claimant.setp2cclaiming(0)["concurrency"], 1000)
+        assert_equal(claimant.setp2cclaiming(0, None)["concurrency"], 1000)
         assert "domain_round_seconds" not in initial_status
         for rate, concurrency in ((-2, 1), (1, 0), (1, -1)):
             assert_raises_rpc_error(-4, "Use rate", claimant.setp2cclaiming, rate, concurrency)
@@ -64,7 +68,7 @@ class P2CAutoClaimTest(BitcoinTestFramework):
 
         # Accept the full positive RPC integer range, not an arbitrary cap of
         # 64. An unmatched filter ensures no threads or connections are started.
-        for concurrency in (65, 128, 2**31 - 1):
+        for concurrency in (65, 128, 1000, 2**31 - 1):
             progress = claimant.setp2cclaiming(1, concurrency, ["never-funded.invalid"])
             assert_equal(progress["concurrency"], concurrency)
             self.wait_until(lambda: claimant.getp2cclaimstatus()["state"] == "waiting for bounties")
@@ -83,7 +87,7 @@ class P2CAutoClaimTest(BitcoinTestFramework):
         node.unloadwallet("auto-claimant")
         node.loadwallet("auto-claimant")
         assert_equal(claimant.getp2cclaimstatus()["connections_per_second"], 0)
-        assert_equal(claimant.getp2cclaimstatus()["concurrency"], 4)
+        assert_equal(claimant.getp2cclaimstatus()["concurrency"], 1000)
         claimant.setp2cclaiming(1, 2, ["never-funded.invalid"])
         claimant.setp2cclaiming(0)
         assert_equal(claimant.getp2cclaimstatus()["attempts"], 0)

@@ -58,13 +58,13 @@
         <translation type="unfinished">ជ្រើសរើស(&amp;h)</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">ទាំងនេះ​គឺជាអាសយដ្ឋាន Bitcoin របស់អ្នកសម្រាប់ធ្វើការផ្ញើការបង់ប្រាក់។ តែងតែពិនិត្យមើលចំនួនប្រាក់ និងអាសយដ្ឋានដែលទទួល មុនពេលផ្ញើប្រាក់។</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">ទាំងនេះ​គឺជាអាសយដ្ឋាន ConnectCoin របស់អ្នកសម្រាប់ធ្វើការផ្ញើការបង់ប្រាក់។ តែងតែពិនិត្យមើលចំនួនប្រាក់ និងអាសយដ្ឋានដែលទទួល មុនពេលផ្ញើប្រាក់។</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">ទាំងនេះគឺជាអាសយដ្ឋាន Bitcoin របស់អ្នកសម្រាប់ការទទួលការទូទាត់។ ប្រើប៊ូតុង 'បង្កើតអាសយដ្ឋានទទួលថ្មី' នៅក្នុងផ្ទាំងទទួល ដើម្បីបង្កើតអាសយដ្ឋានថ្មី។ 
+        <translation type="unfinished">ទាំងនេះគឺជាអាសយដ្ឋាន ConnectCoin របស់អ្នកសម្រាប់ការទទួលការទូទាត់។ ប្រើប៊ូតុង 'បង្កើតអាសយដ្ឋានទទួលថ្មី' នៅក្នុងផ្ទាំងទទួល ដើម្បីបង្កើតអាសយដ្ឋានថ្មី។
 ការចុះហត្ថលេខាគឺអាចធ្វើទៅបានតែជាមួយអាសយដ្ឋាននៃប្រភេទ 'legacy' ប៉ុណ្ណោះ។</translation>
     </message>
     <message>
@@ -164,8 +164,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">បញ្ជាក់ការអ៊ិនគ្រីបកាបូបចល័ត</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">ការព្រមាន៖ ប្រសិនបើអ្នកអ៊ិនគ្រីបកាបូបចល័តរបស់អ្នក ហើយអ្នកភ្លេចបាត់ឃ្លាសម្ងាត់ នោះអ្នកនិង &lt;b&gt;បាត់បង់ BITCOINS របស់អ្នកទាំងអស់&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">ការព្រមាន៖ ប្រសិនបើអ្នកអ៊ិនគ្រីបកាបូបចល័តរបស់អ្នក ហើយអ្នកភ្លេចបាត់ឃ្លាសម្ងាត់ នោះអ្នកនិង &lt;b&gt;បាត់បង់ CONNECTCOINS របស់អ្នកទាំងអស់&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -192,8 +192,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ត្រឡប់</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">សូមចងចាំថាការអ៊ិនគ្រីបកាបូបរបស់អ្នកមិនអាចការពារបានពេញលេញនូវ bitcoins របស់អ្នកពីការលួចដោយមេរោគដែលឆ្លងកុំព្យូទ័ររបស់អ្នក។</translation>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished">សូមចងចាំថាការអ៊ិនគ្រីបកាបូបរបស់អ្នកមិនអាចការពារបានពេញលេញនូវ ConnectCoins របស់អ្នកពីការលួចដោយមេរោគដែលឆ្លងកុំព្យូទ័ររបស់អ្នក។</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -257,6 +257,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Banned Until</source>
         <translation type="unfinished">បានហាមឃាត់រហូតដល់</translation>
+    </message>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/របាំងបណ្ដាញ</translation>
     </message>
 </context>
 <context>
@@ -350,44 +354,44 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n(ច្រើន)វិនាទី</numerusform>
-            <numerusform />
+        <translation>
+            <numerusform>%n វិនាទី</numerusform>
+            <numerusform>%n វិនាទី</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n(ច្រើន)នាទី</numerusform>
-            <numerusform />
+        <translation>
+            <numerusform>%n នាទី</numerusform>
+            <numerusform>%n នាទី</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n(ច្រើន)ម៉ោង</numerusform>
-            <numerusform />
+        <translation>
+            <numerusform>%n ម៉ោង</numerusform>
+            <numerusform>%n ម៉ោង</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n(ច្រើន)</numerusform>
-            <numerusform />
+        <translation>
+            <numerusform>%n ថ្ងៃ</numerusform>
+            <numerusform>%n ថ្ងៃ</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n(ច្រើន)</numerusform>
-            <numerusform />
+        <translation>
+            <numerusform>%n សប្តាហ៍</numerusform>
+            <numerusform>%n សប្តាហ៍</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n(ច្រើន)</numerusform>
-            <numerusform />
+        <translation>
+            <numerusform>%n ឆ្នាំ</numerusform>
+            <numerusform>%n ឆ្នាំ</numerusform>
         </translation>
     </message>
     <message>
@@ -397,6 +401,106 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>default wallet</source>
         <translation type="unfinished">កាបូបលំនាំដើម</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">បញ្ចូលអាសយដ្ឋាន ConnectCoin (ឧទាហរណ៏ %1)</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 និង %2</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 ថ្ងៃ</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 ម៉ោង</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 នាទី</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 វិនាទី</translation>
+    </message>
+    <message>
+        <source>Custom…</source>
+        <translation>ផ្ទាល់ខ្លួន…</translation>
+    </message>
+    <message>
+        <source>Default system font "%1"</source>
+        <translation>ពុម្ពអក្សរលំនាំដើមរបស់ប្រព័ន្ធ «%1»</translation>
+    </message>
+    <message>
+        <source>Embedded "%1"</source>
+        <translation>បានបង្កប់ «%1»</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <extracomment>Short-lived peer connection type that tests the aliveness of known addresses.</extracomment>
+        <translation>ការតភ្ជាប់សាកល្បង</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <extracomment>An inbound connection from a peer. An inbound connection is a connection initiated by a peer.</extracomment>
+        <translation>ចូល</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>មិនមាន</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <extracomment>An outbound connection to a peer. An outbound connection is a connection initiated by us.</extracomment>
+        <translation>ចេញ</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>ការផ្សាយឯកជន</translation>
     </message>
 </context>
 <context>
@@ -467,8 +571,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ប្រូកស៊ី ត្រូវបាន &lt;b&gt;អនុញ្ញាត&lt;/b&gt;៖ %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">ផ្ញើកាក់ទៅកាន់ អាសយដ្ឋាន Bitcoin មួយ</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">ផ្ញើកាក់ទៅកាន់ អាសយដ្ឋាន ConnectCoin មួយ</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -511,7 +615,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ចុះហត្ថលេខាសារ…</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
         <translation type="unfinished">ចុះហត្ថលេខាលើសារ អាសយដ្ឋានប៊ីតខញរបស់អ្នក ដើម្បីបញ្ចាក់ថាអ្នកជាម្ចាស់</translation>
     </message>
     <message>
@@ -519,7 +623,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ផ្ទៀងផ្ទាត់សារ…</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
         <translation type="unfinished">ធ្វើការបញ្ចាក់សារ ដើម្បីធានាថាសារទាំំងនោះបានចុះហត្ថលេខា ជាមួយអាសយដ្ខានប៊ីតខញ</translation>
     </message>
     <message>
@@ -579,7 +683,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">កំពុងភ្ជាប់ទៅមិត្តភក្ដិ...</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
         <translation type="unfinished">សំណើរទូរទាត់​(បង្កើតកូដ QR និង ប៊ីតខញ: URLs)</translation>
     </message>
     <message>
@@ -596,9 +700,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
-            <numerusform>បានដំណើរការ %n ប្លុកនៃប្រវត្តិប្រត្តិបត្តិការ។</numerusform>
-            <numerusform />
+        <translation>
+            <numerusform>ចំនួនប្លុកប្រវត្តិប្រតិបត្តិការដែលបានដំណើរការ៖ %n។</numerusform>
+            <numerusform>ចំនួនប្លុកប្រវត្តិប្រតិបត្តិការដែលបានដំណើរការ៖ %n។</numerusform>
         </translation>
     </message>
     <message>
@@ -626,7 +730,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ទាន់ពេល និង ទាន់សម័យ</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
         <translation type="unfinished">បង្ហាញប្រត្តិបត្តិការប៊ីតខញដែលបានចុះហត្ថលេខាដោយផ្នែក</translation>
     </message>
     <message>
@@ -634,7 +738,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ផ្ទុក PSBT ពី &amp;clipboard...</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
         <translation type="unfinished">បង្ហាញប្រត្តិបត្តិការប៊ីតខញដែលបានចុះហត្ថលេខាដោយផ្នែកពីក្ដារតម្រៀប</translation>
     </message>
     <message>
@@ -642,7 +746,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">អាសយដ្ឋានទទួល</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
+        <source>Open a connectcoin: URI</source>
         <translation type="unfinished">បើកប៊ីតខញមួយៈ URl</translation>
     </message>
     <message>
@@ -676,8 +780,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">កាបូបMigrate</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">បង្ហាញសារជំនួយ%1ដើម្បីទទួលបានបញ្ជីជាមួយនឹងជម្រើសបន្ទាត់ពាក្យបញ្ជា Bitcoin ដែលអាចធ្វើទៅបាន</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">បង្ហាញសារជំនួយ%1ដើម្បីទទួលបានបញ្ជីជាមួយនឹងជម្រើសបន្ទាត់ពាក្យបញ្ជា ConnectCoin ដែលអាចធ្វើទៅបាន</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -843,6 +947,111 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Create pay-to-connect bounties</source>
         <translation>បង្កើតរង្វាន់ pay-to-connect</translation>
     </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;ការជីកយករ៉ែ</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>គ្រប់គ្រងការជីកយករ៉ែដោយ CPU</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>%1 behind</source>
+        <translation>យឺតជាង %1</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to the ConnectCoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation>
+            <numerusform>ចំនួនការតភ្ជាប់សកម្មទៅបណ្តាញ ConnectCoin៖ %n។</numerusform>
+            <numerusform>ចំនួនការតភ្ជាប់សកម្មទៅបណ្តាញ ConnectCoin៖ %n។</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation>អាសយដ្ឋាន&amp;ផ្ញើ</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>ឯកសារទាំងអស់</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>កំហុសនាំចេញ</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>នាំចេញបានជោគជ័យ</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>នាំចេញកំណែសម្រាប់តែមើលនៃកាបូបបច្ចុប្បន្ន ដែលអាចស្តារនៅលើថ្នាំងផ្សេងបាន។</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>នាំចេញកាបូបសម្រាប់តែមើល</translation>
+    </message>
+    <message>
+        <source>Invalid Wallet Name</source>
+        <translation>ឈ្មោះកាបូបមិនត្រឹមត្រូវ</translation>
+    </message>
+    <message>
+        <source>Last received block was generated %1 ago.</source>
+        <translation>ប្លុកដែលទទួលចុងក្រោយត្រូវបានបង្កើតកាលពី %1 មុន។</translation>
+    </message>
+    <message>
+        <source>Migrate a wallet</source>
+        <translation>បម្លែងកាបូបទៅទម្រង់ថ្មី</translation>
+    </message>
+    <message>
+        <source>Node window</source>
+        <translation>បង្អួចថ្នាំង</translation>
+    </message>
+    <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>បើកកុងសូលបំបាត់កំហុស និងវិភាគបញ្ហារបស់ថ្នាំង</translation>
+    </message>
+    <message>
+        <source>Pre-syncing Headers (%1%)…</source>
+        <translation>កំពុងធ្វើសមកាលកម្មក្បាលប្លុកជាមុន (%1%)…</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>ស្តារ និងបម្លែងកាបូបទៅទម្រង់ថ្មី</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>ស្តារ និងបម្លែងច្បាប់បម្រុងកាបូបទៅទម្រង់ថ្មី</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>ស្តារ និងបម្លែងឯកសារកាបូបទៅទម្រង់ថ្មី…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>រក្សាទុកការនាំចេញកាបូបសម្រាប់តែមើល</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>កាបូបត្រូវបាននាំចេញទៅ </translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>ឈ្មោះកាបូបមិនអាចទទេបានទេ</translation>
+    </message>
+    <message>
+        <source>Zoom</source>
+        <translation>ពង្រីក</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -953,6 +1162,42 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(change)</source>
         <translation type="unfinished">(ផ្លាស់ប្តូរ)</translation>
     </message>
+    <message>
+        <source>Change:</source>
+        <translation type="unfinished">ប្តូរ៖</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation type="unfinished">ម៉ូតដើមឈើ</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation type="unfinished">ម៉ូតបញ្ជី</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation type="unfinished">ចម្លងចំនួនទឹកប្រាក់</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation type="unfinished">ចម្លងតម្លៃ</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation type="unfinished">ចម្លងការផ្លាស់ប្តូរ</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>អាចប្រែប្រួល +/- %1 connect ក្នុងមួយធាតុចូល។</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>ចម្លងចំនួនក្រោយដកថ្លៃសេវា</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>ចម្លងចំនួនបៃ</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1024,6 +1269,74 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Migration Successful</source>
         <translation type="unfinished">អន្ដោប្រវេសន៍ជោគជ័យ</translation>
     </message>
+    <message>
+        <source>Are you sure you wish to migrate the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>តើអ្នកប្រាកដថាចង់បម្លែងកាបូប &lt;i&gt;%1&lt;/i&gt; ទៅទម្រង់ថ្មីឬ?</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>តើអ្នកប្រាកដថាចង់ស្តារឯកសារកាបូប &lt;i&gt;%1&lt;/i&gt; ទៅជា &lt;i&gt;%2&lt;/i&gt; ហើយបម្លែងវាទៅទម្រង់ថ្មីឬ?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>ប្រសិនបើថ្នាំងបានលុបប្លុកចាស់ ហើយកាបូបត្រូវបានបង្កើតមុនកម្ពស់ប្លុកដែលបានលុប ដំណើរការបម្លែងអាចបរាជ័យនៅពេលព្យាយាមផ្ទុកកាបូបដែលបានបម្លែង។</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>ផ្ទុកកាបូបក្រោយការបម្លែង</translation>
+    </message>
+    <message>
+        <source>Migrate wallet</source>
+        <translation>បម្លែងកាបូបទៅទម្រង់ថ្មី</translation>
+    </message>
+    <message>
+        <source>Migrating the wallet will convert this wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>ការបម្លែងនឹងប្តូរកាបូបនេះទៅជាកាបូបធាតុពិពណ៌នាមួយ ឬច្រើន។ ត្រូវបង្កើតច្បាប់បម្រុងកាបូបថ្មី។
+ប្រសិនបើកាបូបនេះមានស្គ្រីបសម្រាប់តែមើល កាបូបថ្មីមួយនឹងត្រូវបង្កើតឡើងដើម្បីផ្ទុកស្គ្រីបទាំងនោះ។
+ប្រសិនបើកាបូបនេះមានស្គ្រីបដែលអាចដោះស្រាយបាន ប៉ុន្តែមិនត្រូវបានតាមមើល កាបូបថ្មីផ្សេងទៀតនឹងត្រូវបង្កើតឡើងដើម្បីផ្ទុកស្គ្រីបទាំងនោះ។
+
+ដំណើរការបម្លែងនឹងបង្កើតច្បាប់បម្រុងកាបូបមុនពេលបម្លែង។ ឯកសារបម្រុងនេះនឹងមានឈ្មោះ &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak ហើយអាចរកឃើញនៅក្នុងថតកាបូបនេះ។ ប្រសិនបើការបម្លែងមិនត្រឹមត្រូវ អាចស្តារច្បាប់បម្រុងដោយមុខងារ «ស្តារកាបូប»។</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>ស្តារ និងបម្លែងកាបូបទៅទម្រង់ថ្មី</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>ការស្តារកាបូបនឹងចម្លងឯកសារបម្រុងទៅថតកាបូប ហើយដាក់វាតាមរចនាសម្ព័ន្ធថតកាបូបស្តង់ដារ។ ឯកសារដើមនឹងមិនត្រូវបានកែប្រែទេ។
+
+ការបម្លែងនឹងប្តូរកាបូបដែលបានស្តារទៅជាកាបូបធាតុពិពណ៌នាមួយ ឬច្រើន។ ត្រូវបង្កើតច្បាប់បម្រុងកាបូបថ្មី។
+ប្រសិនបើកាបូបនេះមានស្គ្រីបសម្រាប់តែមើល កាបូបថ្មីមួយនឹងត្រូវបង្កើតឡើងដើម្បីផ្ទុកស្គ្រីបទាំងនោះ។
+ប្រសិនបើកាបូបនេះមានស្គ្រីបដែលអាចដោះស្រាយបាន ប៉ុន្តែមិនត្រូវបានតាមមើល កាបូបថ្មីផ្សេងទៀតនឹងត្រូវបង្កើតឡើងដើម្បីផ្ទុកស្គ្រីបទាំងនោះ។
+
+ដំណើរការបម្លែងនឹងបង្កើតច្បាប់បម្រុងកាបូបមុនពេលបម្លែង។ ឯកសារបម្រុងនេះនឹងមានឈ្មោះ &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak ហើយអាចរកឃើញនៅក្នុងថតកាបូបនេះ។ ប្រសិនបើការបម្លែងមិនត្រឹមត្រូវ អាចស្តារច្បាប់បម្រុងដោយមុខងារ «ស្តារកាបូប»។</translation>
+    </message>
+    <message>
+        <source>Solvable but not watched scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>ស្គ្រីបដែលអាចដោះស្រាយបាន ប៉ុន្តែមិនត្រូវបានតាមមើល ត្រូវបានផ្លាស់ទៅកាបូបថ្មីឈ្មោះ «%1»។</translation>
+    </message>
+    <message>
+        <source>The wallet '%1' was migrated successfully.</source>
+        <translation>កាបូប «%1» ត្រូវបានបម្លែងដោយជោគជ័យ។</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>កាបូបមិនត្រូវបានផ្ទុកក្រោយការបម្លែងទេ។ អ្នកអាចបើកវាពីម៉ឺនុយ «ឯកសារ &gt; បើកកាបូប»។</translation>
+    </message>
+    <message>
+        <source>Watchonly scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>ស្គ្រីបសម្រាប់តែមើលត្រូវបានផ្លាស់ទៅកាបូបថ្មីឈ្មោះ «%1»។</translation>
+    </message>
 </context>
 <context>
     <name>OpenWalletActivity</name>
@@ -1092,6 +1405,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Are you sure you wish to close all wallets?</source>
         <translation type="unfinished">តើអ្នកច្បាស់ថាអ្នកចង់បិទកាបូបអេឡិចត្រូនិចទាំងអស់?</translation>
     </message>
+    <message>
+        <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
+        <translation>ការបិទកាបូបយូរពេកអាចតម្រូវឱ្យធ្វើសមកាលកម្មខ្សែសង្វាក់ទាំងមូលឡើងវិញ ប្រសិនបើបើកការលុបប្លុកចាស់។</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletDialog</name>
@@ -1148,6 +1465,18 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
         <translation type="unfinished">ចងក្រងដោយមិនមានការគាំទ្រការចុះហត្ថលេខាខាងក្រៅ (ទាមទារសម្រាប់ការចុះហត្ថលេខាខាងក្រៅ)</translation>
     </message>
+    <message>
+        <source>Disable Private Keys</source>
+        <translation>បិទសោឯកជន</translation>
+    </message>
+    <message>
+        <source>Disable private keys for this wallet. Wallets with private keys disabled will have no private keys and cannot have an HD seed or imported private keys. This is ideal for watch-only wallets.</source>
+        <translation>បិទសោឯកជនសម្រាប់កាបូបនេះ។ កាបូបដែលបានបិទសោឯកជននឹងមិនមានសោឯកជន ហើយមិនអាចមានគ្រាប់ពូជ HD ឬសោឯកជនដែលនាំចូលបានទេ។ វាសមស្របសម្រាប់កាបូបសម្រាប់តែមើល។</translation>
+    </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>បង្កើតកាបូបទទេ។ ដំបូងកាបូបទទេមិនមានសោឯកជន ឬស្គ្រីបទេ។ អាចនាំចូលសោឯកជន និងអាសយដ្ឋាននៅពេលក្រោយតាមរយៈធាតុពិពណ៌នា។</translation>
+    </message>
 </context>
 <context>
     <name>EditAddressDialog</name>
@@ -1180,7 +1509,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">កែប្រែអាសយដ្ឋានបញ្ចូន</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
         <translation type="unfinished">អាសយដ្ឋានដែលបានបញ្ចូល  ៉​%1 ៉​គឺមិនមែនជាអាសយដ្ឋានត្រឹមត្រូវរបស់ប៊ីតខញ។</translation>
     </message>
     <message>
@@ -1198,6 +1527,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>New key generation failed.</source>
         <translation type="unfinished">បង្កើតលេខសំម្ងាត់ថ្មីមិនជោគជ័យ។</translation>
+    </message>
+    <message>
+        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
+        <translation>អាសយដ្ឋានដែលភ្ជាប់នឹងធាតុនេះក្នុងបញ្ជីអាសយដ្ឋាន។ អាចកែប្រែបានតែអាសយដ្ឋានផ្ញើប៉ុណ្ណោះ។</translation>
     </message>
 </context>
 <context>
@@ -1218,6 +1551,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Cannot create data directory here.</source>
         <translation type="unfinished">មិនអាចបង្កើតទីតាំងផ្ទុកទិន្នន័យនៅទីនេះ។</translation>
     </message>
+    <message>
+        <source>Directory already exists. Add %1 if you intend to create a new directory here.</source>
+        <translation>ថតមានរួចហើយ។ បន្ថែម %1 ប្រសិនបើអ្នកចង់បង្កើតថតថ្មីនៅទីនេះ។</translation>
+    </message>
 </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -1225,7 +1562,15 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>version</source>
         <translation type="unfinished">ជំនាន់</translation>
     </message>
-    </context>
+        <message>
+        <source>About %1</source>
+        <translation>អំពី %1</translation>
+    </message>
+    <message>
+        <source>Command-line options</source>
+        <translation>ជម្រើសបន្ទាត់ពាក្យបញ្ជា</translation>
+    </message>
+</context>
 <context>
     <name>ShutdownWindow</name>
     <message>
@@ -1264,28 +1609,28 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ប្រើទីតាំងផ្ទុកទិន្នន័យ ដែលមានការជ្រើសរើសមួយៈ</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
+        <source>ConnectCoin</source>
         <translation type="unfinished">ប៊ីតខញ</translation>
     </message>
     <message numerus="yes">
         <source>%n GB of space available</source>
-        <translation type="unfinished">
-            <numerusform>%nGB នៃកន្លែងទំនេរ</numerusform>
-            <numerusform />
+        <translation>
+            <numerusform>មានទំហំទំនេរ %n GB</numerusform>
+            <numerusform>មានទំហំទំនេរ %n GB</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
-        <translation type="unfinished">
-            <numerusform>(នៃ%n GB ដែលត្រូវការ)</numerusform>
-            <numerusform />
+        <translation>
+            <numerusform>(ក្នុងចំណោម %n GB ដែលត្រូវការ)</numerusform>
+            <numerusform>(ក្នុងចំណោម %n GB ដែលត្រូវការ)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>(%n GB needed for full chain)</source>
-        <translation type="unfinished">
-            <numerusform>(%n GB ត្រូវការសម្រាប់ខ្សែសង្វាក់ពេញលេញ)</numerusform>
-            <numerusform />
+        <translation>
+            <numerusform>(ត្រូវការ %n GB សម្រាប់ខ្សែសង្វាក់ទាំងមូល)</numerusform>
+            <numerusform>(ត្រូវការ %n GB សម្រាប់ខ្សែសង្វាក់ទាំងមូល)</numerusform>
         </translation>
     </message>
     <message>
@@ -1295,14 +1640,54 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message numerus="yes">
         <source>(sufficient to restore backups %n day(s) old)</source>
         <extracomment>Explanatory text on the capability of the current prune target.</extracomment>
-        <translation type="unfinished">
-            <numerusform>(គ្រប់គ្រាន់ដើម្បីស្ដារការបម្រុងទុក%nថ្ងៃចាស់)</numerusform>
-            <numerusform />
+        <translation>
+            <numerusform>(គ្រប់គ្រាន់សម្រាប់ស្តារច្បាប់បម្រុងដែលមានអាយុ %n ថ្ងៃ)</numerusform>
+            <numerusform>(គ្រប់គ្រាន់សម្រាប់ស្តារច្បាប់បម្រុងដែលមានអាយុ %n ថ្ងៃ)</numerusform>
         </translation>
     </message>
     <message>
         <source>Error</source>
         <translation type="unfinished">បញ្ហា</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 នឹងទាញយក និងរក្សាទុកច្បាប់ចម្លងនៃខ្សែសង្វាក់ប្លុក ConnectCoin។</translation>
+    </message>
+    <message>
+        <source>Approximately %1 GB of data will be stored in this directory.</source>
+        <translation>ទិន្នន័យប្រហែល %1 GB នឹងត្រូវរក្សាទុកក្នុងថតនេះ។</translation>
+    </message>
+    <message>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>ដោយសារនេះជាលើកដំបូងដែលកម្មវិធីត្រូវបានបើក អ្នកអាចជ្រើសរើសទីតាំងដែល %1 នឹងរក្សាទុកទិន្នន័យ។</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>ទិន្នន័យយ៉ាងហោចណាស់ %1 GB នឹងត្រូវរក្សាទុកក្នុងថតនេះ ហើយនឹងកើនឡើងតាមពេលវេលា។</translation>
+    </message>
+    <message>
+        <source>Error: Specified data directory "%1" cannot be created.</source>
+        <translation>កំហុស៖ មិនអាចបង្កើតថតទិន្នន័យដែលបានបញ្ជាក់ «%1» បានទេ។</translation>
+    </message>
+    <message>
+        <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
+        <translation>ប្រសិនបើអ្នកបានជ្រើសរើសកំណត់ទំហំផ្ទុកខ្សែសង្វាក់ប្លុក (លុបប្លុកចាស់) ទិន្នន័យប្រវត្តិសាស្ត្រនៅតែត្រូវទាញយក និងដំណើរការ ប៉ុន្តែនឹងត្រូវលុបនៅពេលក្រោយ ដើម្បីកាត់បន្ថយការប្រើប្រាស់ថាស។</translation>
+    </message>
+    <message>
+        <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
+        <translation>ការត្រឡប់ការកំណត់នេះវិញត្រូវការទាញយកខ្សែសង្វាក់ប្លុកទាំងមូលម្តងទៀត។ ការទាញយកខ្សែសង្វាក់ទាំងមូលជាមុន ហើយលុបប្លុកចាស់នៅពេលក្រោយ គឺលឿនជាង។ បិទមុខងារកម្រិតខ្ពស់មួយចំនួន។</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>កាបូបក៏នឹងត្រូវរក្សាទុកក្នុងថតនេះដែរ។</translation>
+    </message>
+    <message>
+        <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
+        <translation>ការធ្វើសមកាលកម្មដំបូងនេះត្រូវការធនធានច្រើន ហើយអាចបង្ហាញបញ្ហាផ្នែករឹងរបស់កុំព្យូទ័រ ដែលពីមុនមិនបានកត់សម្គាល់។ រាល់ពេលអ្នកបើក %1 វានឹងបន្តទាញយកពីកន្លែងដែលបានឈប់។</translation>
+    </message>
+    <message>
+        <source>Welcome to %1.</source>
+        <translation>សូមស្វាគមន៍មកកាន់ %1។</translation>
     </message>
 </context>
 <context>
@@ -1312,7 +1697,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ទម្រង់</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
         <translation type="unfinished">ប្រត្តិបត្តិការថ្មីៗនេះប្រហែលជាមិនអាចមើលឃើញ ហេតុដូច្នេះសមតុល្យនៅក្នងកាបូបអេឡិចត្រូនិចរបស់អ្នកប្រហែលជាមិនត្រឹមត្រូវ។ ព័ត៌មានត្រឹមត្រូវនៅពេលដែលកាបូបអេឡិចត្រូនិចរបស់អ្នកបានធ្វើសមកាលកម្មជាមួយបណ្តាញប៊ឺតខញ  សូមពិនិត្យព័ត៌មានលំម្អិតខាងក្រោម។</translation>
     </message>
     <message>
@@ -1363,11 +1748,19 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">មិនស្គាល់។ Pre-syncing Headers (%1, %2%)…</translation>
     </message>
+    <message>
+        <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
+        <translation>%1 កំពុងធ្វើសមកាលកម្ម។  វានឹងទាញយកក្បាលប្លុក និងប្លុកពីថ្នាំងដៃគូ ហើយផ្ទៀងផ្ទាត់រហូតដល់ចុងខ្សែសង្វាក់ប្លុក។</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>បណ្តាញនឹងមិនទទួលយកការព្យាយាមចំណាយប្រាក់ ConnectCoin ដែលរងឥទ្ធិពលពីប្រតិបត្តិការដែលមិនទាន់បង្ហាញទេ។</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
+        <source>Open ConnectCoin URI</source>
         <translation type="unfinished">បើកប៊ីតខញ​URl</translation>
     </message>
     <message>
@@ -1420,8 +1813,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ផ្លូវពេញទៅកាន់%1ស្គ្រីបដែលត្រូវគ្នា (ឧ. C:\Downloads\hwi.exe ឬ /Users/you/Downloads/hwi.py)។ ប្រយ័ត្ន៖ មេរោគអាចលួចកាក់របស់អ្នក!</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished">បើកច្រកម៉ាស៊ីនភ្ញៀវ Bitcoin ដោយស្វ័យប្រវត្តិនៅលើរ៉ោតទ័រ។ វាដំណើរការតែនៅពេលដែលរ៉ោតទ័ររបស់អ្នកគាំទ្រ PCP ឬ NAT-PMP ហើយវាត្រូវបានបើក។ ច្រកខាងក្រៅអាចជាចៃដន្យ។</translation>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation type="unfinished">បើកច្រកម៉ាស៊ីនភ្ញៀវ ConnectCoin ដោយស្វ័យប្រវត្តិនៅលើរ៉ោតទ័រ។ វាដំណើរការតែនៅពេលដែលរ៉ោតទ័ររបស់អ្នកគាំទ្រ PCP ឬ NAT-PMP ហើយវាត្រូវបានបើក។ ច្រកខាងក្រៅអាចជាចៃដន្យ។</translation>
     </message>
     <message>
         <source>Map port using PCP or NA&amp;T-PMP</source>
@@ -1503,7 +1896,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">អនុញ្ញាតឲ្យមានការតភ្ជាប់ដែលចូលមក</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
         <translation type="unfinished">ភ្ជាប់ទៅកាន់បណ្តាញប៊ឺតខញតាមរយៈ​ SOCKS5 proxy។</translation>
     </message>
     <message>
@@ -1567,7 +1960,189 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>This change would require a client restart.</source>
         <translation type="unfinished">ការផ្លាស់ប្តូរនេះនឹងត្រូវការចាប់ផ្តើមម៉ាស៊ីនកុំព្យូទ័រឡើងវិញ។​</translation>
     </message>
-    </context>
+        <message>
+        <source>Enable pop-up notifications</source>
+        <translation>បើកការជូនដំណឹងលេចឡើង</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>បង្ហាញការជូនដំណឹងលេចឡើងលើផ្ទៃតុ រួមទាំងប្រតិបត្តិការចូល និងផ្ញើចេញ។ បិទតាមលំនាំដើម។ ប្រអប់កំហុស និងការបញ្ជាក់នៅតែបើក។</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
+        <source>&amp;Cancel</source>
+        <translation>&amp;បោះបង់</translation>
+    </message>
+    <message>
+        <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
+        <translation>&amp;តភ្ជាប់តាមប្រូកស៊ី SOCKS5 (ប្រូកស៊ីលំនាំដើម)៖</translation>
+    </message>
+    <message>
+        <source>&amp;Minimize to the tray instead of the taskbar</source>
+        <translation>&amp;បង្រួមទៅតំបន់ជូនដំណឹងជំនួសរបារភារកិច្ច</translation>
+    </message>
+    <message>
+        <source>&amp;Network</source>
+        <translation>&amp;បណ្តាញ</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation>&amp;យល់ព្រម</translation>
+    </message>
+    <message>
+        <source>&amp;Show tray icon</source>
+        <translation>&amp;បង្ហាញរូបតំណាងក្នុងតំបន់ជូនដំណឹង</translation>
+    </message>
+    <message>
+        <source>&amp;Spend unconfirmed change</source>
+        <translation>&amp;ចំណាយប្រាក់អាប់ដែលមិនទាន់បញ្ជាក់</translation>
+    </message>
+    <message>
+        <source>&amp;Unit to show amounts in:</source>
+        <translation>&amp;ឯកតាសម្រាប់បង្ហាញចំនួនប្រាក់៖</translation>
+    </message>
+    <message>
+        <source>(0 = auto, &lt;0 = leave that many cores free)</source>
+        <translation>(0 = ស្វ័យប្រវត្តិ, &lt;0 = ទុកស្នូលទំនេរចំនួននេះ)</translation>
+    </message>
+    <message>
+        <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
+        <translation>ជ្រើសរើសឯកតារងលំនាំដើមសម្រាប់បង្ហាញក្នុងចំណុចប្រទាក់ និងពេលផ្ញើកាក់។</translation>
+    </message>
+    <message>
+        <source>Client restart required to activate changes.</source>
+        <extracomment>Text explaining that the settings changed will not come into effect until the client is restarted.</extracomment>
+        <translation>ត្រូវចាប់ផ្តើមកម្មវិធីឡើងវិញដើម្បីឱ្យការផ្លាស់ប្តូរមានប្រសិទ្ធភាព។</translation>
+    </message>
+    <message>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>តភ្ជាប់ទៅបណ្តាញ ConnectCoin តាមប្រូកស៊ី SOCKS5 ដាច់ដោយឡែកសម្រាប់សេវា Tor onion។</translation>
+    </message>
+    <message>
+        <source>Current settings will be backed up at "%1".</source>
+        <extracomment>Text explaining to the user that the client's current settings will be backed up at a specific location. %1 is a stand-in argument for the backup location's path.</extracomment>
+        <translation>ការកំណត់បច្ចុប្បន្ននឹងត្រូវបម្រុងទុកនៅ «%1»។</translation>
+    </message>
+    <message>
+        <source>Enable coin &amp;control features</source>
+        <translation>បើកមុខងារ&amp;គ្រប់គ្រងកាក់</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>ការបើកការលុបប្លុកចាស់កាត់បន្ថយទំហំថាសដែលត្រូវការសម្រាប់ផ្ទុកប្រតិបត្តិការយ៉ាងច្រើន។ ប្លុកទាំងអស់នៅតែត្រូវបានផ្ទៀងផ្ទាត់ពេញលេញ។ គួរផ្ទុកកាបូបនៅពេលចាប់ផ្តើម ហើយទុកឱ្យសកម្មពេលបើកការលុបប្លុកចាស់ ដើម្បីឱ្យវាធ្វើសមកាលកម្មមុនពេលទិន្នន័យប្លុកចាស់ត្រូវបានលុប។ កាបូបដែលយឺតជាងទិន្នន័យដែលបានលុបអាចត្រូវការបង្កើតលិបិក្រមឡើងវិញ។ ការត្រឡប់ការកំណត់នេះវិញត្រូវការទាញយកខ្សែសង្វាក់ប្លុកទាំងមូលម្តងទៀត។</translation>
+    </message>
+    <message>
+        <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
+        <translation>អាសយដ្ឋាន IP របស់ប្រូកស៊ី (ឧ. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
+    </message>
+    <message>
+        <source>If you disable the spending of unconfirmed change, the change from a transaction cannot be used until that transaction has at least one confirmation. This also affects how your balance is computed.</source>
+        <translation>ប្រសិនបើអ្នកបិទការចំណាយប្រាក់អាប់ដែលមិនទាន់បញ្ជាក់ ប្រាក់អាប់ពីប្រតិបត្តិការមិនអាចប្រើបានរហូតដល់ប្រតិបត្តិការនោះមានការបញ្ជាក់យ៉ាងហោចណាស់មួយ។ វាក៏ប៉ះពាល់ដល់របៀបគណនាសមតុល្យរបស់អ្នកផងដែរ។</translation>
+    </message>
+    <message>
+        <source>M&amp;inimize on close</source>
+        <translation>&amp;បង្រួមនៅពេលបិទ</translation>
+    </message>
+    <message>
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
+        <translation>បង្រួមជំនួសការចាកចេញពីកម្មវិធីនៅពេលបិទបង្អួច។ នៅពេលបើកជម្រើសនេះ កម្មវិធីនឹងបិទតែបន្ទាប់ពីជ្រើសរើស «ចាកចេញ» ក្នុងម៉ឺនុយប៉ុណ្ណោះ។</translation>
+    </message>
+    <message>
+        <source>Open Configuration File</source>
+        <translation>បើកឯកសារកំណត់រចនាសម្ព័ន្ធ</translation>
+    </message>
+    <message>
+        <source>Open the %1 configuration file from the working directory.</source>
+        <translation>បើកឯកសារកំណត់រចនាសម្ព័ន្ធ %1 ពីថតការងារ។</translation>
+    </message>
+    <message>
+        <source>Port of the proxy (e.g. 9050)</source>
+        <translation>ច្រករបស់ប្រូកស៊ី (ឧ. 9050)</translation>
+    </message>
+    <message>
+        <source>Proxy &amp;IP:</source>
+        <translation>&amp;IP របស់ប្រូកស៊ី៖</translation>
+    </message>
+    <message>
+        <source>Prune &amp;block storage to</source>
+        <translation>កាត់បន្ថយទំហំផ្ទុក&amp;ប្លុកមកត្រឹម</translation>
+    </message>
+    <message>
+        <source>Reset all client options to default.</source>
+        <translation>កំណត់ជម្រើសកម្មវិធីទាំងអស់ឡើងវិញទៅលំនាំដើម។</translation>
+    </message>
+    <message>
+        <source>Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>ការត្រឡប់ការកំណត់នេះវិញត្រូវការទាញយកខ្សែសង្វាក់ប្លុកទាំងមូលម្តងទៀត។</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>កំណត់ដោយ -popupnotifications ឬ popupnotifications ក្នុង connectcoin.conf។</translation>
+    </message>
+    <message>
+        <source>Show only a tray icon after minimizing the window.</source>
+        <translation>បង្ហាញតែរូបតំណាងក្នុងតំបន់ជូនដំណឹងក្រោយបង្រួមបង្អួច។</translation>
+    </message>
+    <message>
+        <source>Show the icon in the system tray.</source>
+        <translation>បង្ហាញរូបតំណាងក្នុងតំបន់ជូនដំណឹងរបស់ប្រព័ន្ធ។</translation>
+    </message>
+    <message>
+        <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
+        <translation>បង្ហាញថាតើប្រូកស៊ី SOCKS5 លំនាំដើមដែលបានផ្តល់ត្រូវបានប្រើដើម្បីទាក់ទងថ្នាំងដៃគូតាមប្រភេទបណ្តាញនេះឬអត់។</translation>
+    </message>
+    <message>
+        <source>The configuration file could not be opened.</source>
+        <translation>មិនអាចបើកឯកសារកំណត់រចនាសម្ព័ន្ធបានទេ។</translation>
+    </message>
+    <message>
+        <source>The supplied proxy address is invalid.</source>
+        <translation>អាសយដ្ឋានប្រូកស៊ីដែលបានផ្តល់មិនត្រឹមត្រូវ។</translation>
+    </message>
+    <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>អាចកំណត់ភាសាចំណុចប្រទាក់អ្នកប្រើនៅទីនេះ។ ការកំណត់នេះនឹងមានប្រសិទ្ធភាពក្រោយចាប់ផ្តើម %1 ឡើងវិញ។</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>ប្រើប្រូកស៊ី SOCKS&amp;5 ដាច់ដោយឡែកដើម្បីទាក់ទងថ្នាំងដៃគូតាមសេវា Tor onion៖</translation>
+    </message>
+    <message>
+        <source>Used for reaching peers via:</source>
+        <translation>ប្រើសម្រាប់ទាក់ទងថ្នាំងដៃគូតាម៖</translation>
+    </message>
+    <message>
+        <source>User Interface &amp;language:</source>
+        <translation>&amp;ភាសាចំណុចប្រទាក់អ្នកប្រើ៖</translation>
+    </message>
+    <message>
+        <source>Whether to show coin control features or not.</source>
+        <translation>ថាតើត្រូវបង្ហាញមុខងារគ្រប់គ្រងកាក់ឬអត់។</translation>
+    </message>
+    <message>
+        <source>default</source>
+        <translation>លំនាំដើម</translation>
+    </message>
+    <message>
+        <source>none</source>
+        <translation>គ្មាន</translation>
+    </message>
+</context>
 <context>
     <name>OptionsModel</name>
     <message>
@@ -1582,7 +2157,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ទម្រង់</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
         <translation type="unfinished">ព័ត៏មានបានបង្ហាញអាចហួសសពុលភាព។ កាបូបអេឡិចត្រូនិចរបស់អ្នកធ្វើសមកាលកម្មជាមួយនឹងបណ្តាញប៊ីតខញដោយស្វ័យប្រវត្ត បន្ទាប់ពីមានការតភ្ជាប់ ប៉ុន្តែដំណើរការនេះមិនទាន់បានបញ្ចប់នៅឡើយ។</translation>
     </message>
     <message>
@@ -1625,7 +2200,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Recent transactions</source>
         <translation type="unfinished">ព្រឹត្តិបត្តិការថ្មីៗ</translation>
     </message>
-    </context>
+        <message>
+        <source>Privacy mode activated for the Overview tab. To unmask the values, uncheck Settings-&gt;Mask values.</source>
+        <translation>របៀបឯកជនភាពត្រូវបានបើកសម្រាប់ផ្ទាំងទិដ្ឋភាពទូទៅ។ ដើម្បីបង្ហាញតម្លៃវិញ សូមដោះធីក ការកំណត់-&gt;លាក់តម្លៃ។</translation>
+    </message>
+</context>
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
@@ -1654,9 +2233,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>ចំនួនធាតុចូលដែលបានចុះហត្ថលេខា៖ %n ប៉ុន្តែនៅតែត្រូវការហត្ថលេខាបន្ថែម។</numerusform>
+            <numerusform>ចំនួនធាតុចូលដែលបានចុះហត្ថលេខា៖ %n ប៉ុន្តែនៅតែត្រូវការហត្ថលេខាបន្ថែម។</numerusform>
         </translation>
     </message>
     <message>
@@ -1710,9 +2289,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>ប្រតិបត្តិការមានធាតុចូលមិនទាន់ចុះហត្ថលេខាចំនួន %n។</numerusform>
+            <numerusform>ប្រតិបត្តិការមានធាតុចូលមិនទាន់ចុះហត្ថលេខាចំនួន %n។</numerusform>
         </translation>
     </message>
     <message>
@@ -1743,6 +2322,30 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Transaction status is unknown.</source>
         <translation type="unfinished">ស្ថានភាពប្រត្តិបត្តិការមិនត្រូវបានស្គាល់។</translation>
     </message>
+    <message>
+        <source>Failed to load transaction: %1</source>
+        <translation type="unfinished">មិនជោគជ័យក្នុងការបង្ហាញប្រត្តិបត្តិការៈ %1</translation>
+    </message>
+    <message>
+        <source>Failed to sign transaction: %1</source>
+        <translation type="unfinished">មិនជោគជ័យក្នុងការចុះហត្ថលេខាលើប្រត្តិបត្តិការៈ %1</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast failed: %1</source>
+        <translation type="unfinished">ផ្សព្វផ្សាយប្រត្តិបត្តិការមិនជោគជ័យៈ %1</translation>
+    </message>
+    <message>
+        <source>Broadcast Tx</source>
+        <translation>ផ្សាយប្រតិបត្តិការ</translation>
+    </message>
+    <message>
+        <source>Sign Tx</source>
+        <translation>ចុះហត្ថលេខាលើប្រតិបត្តិការ</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast successfully! Transaction ID: %1</source>
+        <translation>ផ្សាយប្រតិបត្តិការបានជោគជ័យ! លេខសម្គាល់ប្រតិបត្តិការ៖ %1</translation>
+    </message>
 </context>
 <context>
     <name>PaymentServer</name>
@@ -1758,7 +2361,27 @@ If you are receiving this error you should request the merchant provide a BIP21 
 ដោយសារបញ្ហាសុវត្ថិភាពរីករាលដាលនៅក្នុង BIP70 វាត្រូវបានណែនាំយ៉ាងខ្លាំងថាការណែនាំរបស់ពាណិជ្ជករណាមួយដើម្បីប្តូរកាបូបមិនត្រូវបានអើពើ។
 ប្រសិនបើអ្នកកំពុងទទួលបានកំហុសនេះ អ្នកគួរតែស្នើសុំពាណិជ្ជករផ្តល់ URI ដែលត្រូវគ្នា BIP21។</translation>
     </message>
-    </context>
+        <message>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation>'connectcoin://' មិនមែនជា URI ត្រឹមត្រូវទេ។ ប្រើ 'connectcoin:' ជំនួស។</translation>
+    </message>
+    <message>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation>មិនអាចចាប់ផ្តើមកម្មវិធីដោះស្រាយចុចដើម្បីបង់ប្រាក់ connectcoin: បានទេ</translation>
+    </message>
+    <message>
+        <source>Payment request file handling</source>
+        <translation>ការដោះស្រាយឯកសារសំណើទូទាត់</translation>
+    </message>
+    <message>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation>មិនអាចវិភាគ URI បានទេ! វាអាចបណ្តាលមកពីអាសយដ្ឋាន ConnectCoin មិនត្រឹមត្រូវ ឬប៉ារ៉ាម៉ែត្រ URI ខុសទម្រង់។</translation>
+    </message>
+    <message>
+        <source>URI handling</source>
+        <translation>ការដោះស្រាយ URI</translation>
+    </message>
+</context>
 <context>
     <name>PeerTableModel</name>
     <message>
@@ -1796,7 +2419,32 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <extracomment>Title of Peers Table column which states the network the peer connected through.</extracomment>
         <translation type="unfinished">បណ្តាញ</translation>
     </message>
-    </context>
+        <message>
+        <source>Inbound</source>
+        <extracomment>An Inbound Connection from a Peer.</extracomment>
+        <translation>ចូល</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <extracomment>An Outbound Connection to a Peer.</extracomment>
+        <translation>ចេញ</translation>
+    </message>
+    <message>
+        <source>Peer</source>
+        <extracomment>Title of Peers Table column which contains a unique number used to identify a connection.</extracomment>
+        <translation>ថ្នាំងដៃគូ</translation>
+    </message>
+    <message>
+        <source>Ping</source>
+        <extracomment>Title of Peers Table column which indicates the current latency of the connection with the peer.</extracomment>
+        <translation>ភីង</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <extracomment>Title of Peers Table column which contains the peer's User Agent string.</extracomment>
+        <translation>ភ្នាក់ងារអ្នកប្រើ</translation>
+    </message>
+</context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -2057,7 +2705,314 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <source>Never</source>
         <translation type="unfinished">មិនដែល</translation>
     </message>
-    </context>
+        <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;កុងសូល</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation>&amp;ផ្តាច់ការតភ្ជាប់</translation>
+    </message>
+    <message>
+        <source>&amp;Open</source>
+        <translation>&amp;បើក</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>&amp;ដោះការហាមឃាត់</translation>
+    </message>
+    <message>
+        <source>(peer: %1)</source>
+        <translation>(ថ្នាំងដៃគូ៖ %1)</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;ម៉ោង</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;សប្តាហ៍</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;ឆ្នាំ</translation>
+    </message>
+    <message>
+        <source>Addresses Rate-Limited</source>
+        <extracomment>Text title for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>អាសយដ្ឋានដែលត្រូវកំណត់អត្រា</translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation>ហាមឃាត់រយៈពេល</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>ខ្សែសង្វាក់ប្លុក</translation>
+    </message>
+    <message>
+        <source>Blocksdir</source>
+        <translation>ថតប្លុក</translation>
+    </message>
+    <message>
+        <source>Clear console</source>
+        <translation>សម្អាតកុងសូល</translation>
+    </message>
+    <message>
+        <source>Client version</source>
+        <translation>កំណែកម្មវិធី</translation>
+    </message>
+    <message>
+        <source>Current block height</source>
+        <translation>កម្ពស់ប្លុកបច្ចុប្បន្ន</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>ថតទិន្នន័យ</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>ឯកសារកំណត់ហេតុបំបាត់កំហុស</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation>ពេលវេលាដែលបានកន្លងផុតចាប់តាំងពីទទួលប្លុកថ្មីពីថ្នាំងដៃគូនេះ ដែលបានឆ្លងកាត់ការត្រួតពិនិត្យសុពលភាពដំបូង។</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <extracomment>Tooltip text for the Last Transaction field in the peer details area.</extracomment>
+        <translation>ពេលវេលាដែលបានកន្លងផុតចាប់តាំងពីទទួលប្រតិបត្តិការថ្មីពីថ្នាំងដៃគូនេះ ដែលត្រូវបានទទួលចូលក្នុង mempool របស់យើង។</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation>ការបញ្ជូនប្លុកបង្រួម BIP152 ដោយកម្រិតបញ្ជូនខ្ពស់៖ %1</translation>
+    </message>
+    <message>
+        <source>Inbound: initiated by peer</source>
+        <extracomment>Explanatory text for an inbound peer connection.</extracomment>
+        <translation>ចូល៖ ចាប់ផ្តើមដោយថ្នាំងដៃគូ</translation>
+    </message>
+    <message>
+        <source>Mapped AS</source>
+        <translation>AS ដែលបានផ្គូផ្គង</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>អាងអង្គចងចាំ</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>ភីងអប្បបរមា</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>មិនមាន</translation>
+    </message>
+    <message>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation>អាសយដ្ឋានបណ្តាញដែលថ្នាំង ConnectCoin របស់អ្នកកំពុងប្រើដើម្បីទាក់ទងជាមួយថ្នាំងផ្សេង។</translation>
+    </message>
+    <message>
+        <source>Node window</source>
+        <translation>បង្អួចថ្នាំង</translation>
+    </message>
+    <message>
+        <source>Node window - [%1]</source>
+        <translation>បង្អួចថ្នាំង - [%1]</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>បើកឯកសារកំណត់ហេតុបំបាត់កំហុសរបស់ %1 ពីថតទិន្នន័យបច្ចុប្បន្ន។ វាអាចចំណាយពេលពីរបីវិនាទីសម្រាប់ឯកសារកំណត់ហេតុធំៗ។</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to request addresses from a peer.</extracomment>
+        <translation>ការយកអាសយដ្ឋានចេញ៖ រយៈពេលខ្លី សម្រាប់ស្នើសុំអាសយដ្ឋាន</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>ការបញ្ជូនប្លុកចេញ៖ មិនបញ្ជូនប្រតិបត្តិការ ឬអាសយដ្ឋានទេ</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to test the aliveness of known addresses.</extracomment>
+        <translation>ការតភ្ជាប់សាកល្បងចេញ៖ រយៈពេលខ្លី សម្រាប់សាកល្បងអាសយដ្ឋាន</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays all network information. This is the default behavior for outbound connections.</extracomment>
+        <translation>ការបញ្ជូនពេញលេញចេញ៖ លំនាំដើម</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <extracomment>Explanatory text for an outbound peer connection that was established manually through one of several methods. The numbered arguments are stand-ins for the methods available to establish manual connections.</extracomment>
+        <translation>ការតភ្ជាប់ចេញដោយដៃ៖ បន្ថែមដោយ RPC %1 ឬជម្រើសកំណត់រចនាសម្ព័ន្ធ %2/%3</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>ពេលវេលាភីង</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>ការរង់ចាំភីង</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>ការផ្សាយឯកជន៖ រយៈពេលខ្លី សម្រាប់ផ្សាយប្រតិបត្តិការដែលត្រូវការការពារឯកជនភាព</translation>
+    </message>
+    <message>
+        <source>Session ID</source>
+        <translation>លេខសម្គាល់សម័យ</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>ប្លុកដែលបានធ្វើសមកាលកម្ម</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>ក្បាលប្លុកដែលបានធ្វើសមកាលកម្ម</translation>
+    </message>
+    <message>
+        <source>The BIP324 session ID string in hex.</source>
+        <translation>ខ្សែអក្សរលេខសម្គាល់សម័យ BIP324 ជាទម្រង់គោលដប់ប្រាំមួយ។</translation>
+    </message>
+    <message>
+        <source>The direction and type of peer connection: %1</source>
+        <translation>ទិស និងប្រភេទនៃការតភ្ជាប់ថ្នាំងដៃគូ៖ %1</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>រយៈពេលនៃភីងដែលកំពុងរង់ចាំចម្លើយ។</translation>
+    </message>
+    <message>
+        <source>The mapped Autonomous System used for diversifying peer selection.</source>
+        <translation>ប្រព័ន្ធស្វយ័តដែលបានផ្គូផ្គង ប្រើសម្រាប់ធ្វើឱ្យការជ្រើសរើសថ្នាំងដៃគូមានភាពចម្រុះ។</translation>
+    </message>
+    <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation>ពិធីការបណ្តាញដែលថ្នាំងដៃគូនេះតភ្ជាប់តាម៖ IPv4, IPv6, Onion, I2P ឬ CJDNS។</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</source>
+        <extracomment>Tooltip text for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>ចំនួនសរុបនៃអាសយដ្ឋានដែលទទួលពីថ្នាំងដៃគូនេះ ហើយត្រូវបានបោះចោល (មិនបានដំណើរការ) ដោយសារការកំណត់អត្រា។</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</source>
+        <extracomment>Tooltip text for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>ចំនួនសរុបនៃអាសយដ្ឋានដែលទទួលពីថ្នាំងដៃគូនេះ ហើយបានដំណើរការ (មិនរាប់បញ្ចូលអាសយដ្ឋានដែលត្រូវបានបោះចោលដោយសារការកំណត់អត្រា)។</translation>
+    </message>
+    <message>
+        <source>The transport layer version: %1</source>
+        <translation>កំណែស្រទាប់ដឹកជញ្ជូន៖ %1</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>គម្លាតពេលវេលា</translation>
+    </message>
+    <message>
+        <source>To specify a non-default location of the blocks directory use the '%1' option.</source>
+        <translation>ដើម្បីបញ្ជាក់ទីតាំងថតប្លុកដែលមិនមែនលំនាំដើម សូមប្រើជម្រើស «%1»។</translation>
+    </message>
+    <message>
+        <source>To specify a non-default location of the data directory use the '%1' option.</source>
+        <translation>ដើម្បីបញ្ជាក់ទីតាំងថតទិន្នន័យដែលមិនមែនលំនាំដើម សូមប្រើជម្រើស «%1»។</translation>
+    </message>
+    <message>
+        <source>Transport</source>
+        <translation>ការដឹកជញ្ជូន</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>មិនស្គាល់</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>ភ្នាក់ងារអ្នកប្រើ</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.
+Use up and down arrows to navigate history, and %2 to clear screen.
+Use %3 and %4 to increase or decrease the font size.
+Type %5 for an overview of available commands.
+For more information on using this console, type %6.
+
+%7WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.%8</source>
+        <extracomment>RPC console welcome message. Placeholders %7 and %8 are style tags for the warning content, and they are not space separated from the rest of the text intentionally.</extracomment>
+        <translation>សូមស្វាគមន៍មកកាន់កុងសូល RPC របស់ %1។
+ប្រើព្រួញឡើង និងចុះដើម្បីរុករកប្រវត្តិ ហើយប្រើ %2 ដើម្បីសម្អាតអេក្រង់។
+ប្រើ %3 និង %4 ដើម្បីបង្កើន ឬបន្ថយទំហំពុម្ពអក្សរ។
+វាយ %5 ដើម្បីមើលទិដ្ឋភាពទូទៅនៃពាក្យបញ្ជាដែលមាន។
+សម្រាប់ព័ត៌មានបន្ថែមអំពីការប្រើកុងសូលនេះ សូមវាយ %6។
+
+%7ព្រមាន៖ ជនបោកប្រាស់បានណែនាំអ្នកប្រើឱ្យវាយពាក្យបញ្ជានៅទីនេះ ហើយលួចប្រាក់ក្នុងកាបូបរបស់ពួកគេ។ កុំប្រើកុងសូលនេះ បើមិនយល់ច្បាស់អំពីផលវិបាកនៃពាក្យបញ្ជា។%8</translation>
+    </message>
+    <message>
+        <source>detecting: peer could be v1 or v2</source>
+        <extracomment>Explanatory text for "detecting" transport type.</extracomment>
+        <translation>កំពុងរកឃើញ៖ ថ្នាំងដៃគូអាចជា v1 ឬ v2</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation>ថ្នាំងដៃគូបានជ្រើសរើសយើងសម្រាប់ការបញ្ជូនកម្រិតបញ្ជូនខ្ពស់</translation>
+    </message>
+    <message>
+        <source>v1: unencrypted, plaintext transport protocol</source>
+        <extracomment>Explanatory text for v1 transport type.</extracomment>
+        <translation>v1៖ ពិធីការដឹកជញ្ជូនអត្ថបទធម្មតា ដែលមិនបានអ៊ិនគ្រីប</translation>
+    </message>
+    <message>
+        <source>v2: BIP324 encrypted transport protocol</source>
+        <extracomment>Explanatory text for v2 transport type.</extracomment>
+        <translation>v2៖ ពិធីការដឹកជញ្ជូនដែលអ៊ិនគ្រីប BIP324</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>តាមរយៈ %1</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation>យើងបានជ្រើសរើសថ្នាំងដៃគូនេះសម្រាប់ការបញ្ជូនកម្រិតបញ្ជូនខ្ពស់</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -2073,7 +3028,7 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <translation type="unfinished">&amp;សារ</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
         <translation type="unfinished">សារជាជម្រើសមួយក្នុងការភ្ជាប់ទៅនឹងសំណើរទូរទាត់ប្រាក់ ដែលនឹងត្រូវបង្ហាញនៅពេលដែលសំណើរត្រូវបានបើក។ កំណត់ចំណាំៈ សារនេះនឹងមិនត្រូវបានបញ្ចូនជាមួយការទូរទាត់ប្រាក់នៅលើបណ្តាញប៊ីតខញ។</translation>
     </message>
     <message>
@@ -2241,6 +3196,10 @@ If you are receiving this error you should request the merchant provide a BIP21 
     <message>
         <source>Requested</source>
         <translation type="unfinished">បានស្នើរសុំ</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>សារ</translation>
     </message>
 </context>
 <context>
@@ -2420,7 +3379,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">អ្នកអាចបង្កើនកម្រៃពេលក្រោយ( សញ្ញា ជំនួសដោយកម្រៃ BIP-125)។</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
         <translation type="unfinished">សូមពិនិត្យសំណើរប្រត្តិបត្តិការរបស់អ្នកឡើងវិញ។ វានឹងបង្កើតប្រត្តិបត្តិការប៊ីតខញដែលបានចុះហត្ថលេខាដោយផ្នែក (PSBT) ដែលអ្នកអាចរក្សាទុក ឬថតចម្លង រួចហើយសូមចុះហត្ថលេខា។ ឧទាហរណ៏ កាបូបអេឡិចត្រូនិចដែលមិនមានភ្ជាប់អ៊ីនធឺណេត %1 ឬកាបូបដែលមានផ្នែករឹងដែលអាចធ្វើការជាមួយ​ PSBT។</translation>
     </message>
@@ -2430,9 +3389,9 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">តើអ្នកចង់បង្កើតប្រតិបត្តិការនេះទេ?</translation>
     </message>
     <message>
-        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
-        <translation type="unfinished">សូមពិនិត្យមើលប្រតិបត្តិការរបស់អ្នក។ អ្នកអាចបង្កើត និងផ្ញើប្រតិបត្តិការនេះ ឬបង្កើតប្រតិបត្តិការ Bitcoin ដែលបានចុះហត្ថលេខាដោយផ្នែក (PSBT) ដែលអ្នកអាចរក្សាទុក ឬចម្លងហើយបន្ទាប់មកចុះហត្ថលេខាជាមួយ ឧ. %1កាបូបក្រៅបណ្តាញ ឬកាបូបហាដវែដែលត្រូវគ្នាជាមួយ PSBT ។</translation>
+        <translation type="unfinished">សូមពិនិត្យមើលប្រតិបត្តិការរបស់អ្នក។ អ្នកអាចបង្កើត និងផ្ញើប្រតិបត្តិការនេះ ឬបង្កើតប្រតិបត្តិការ ConnectCoin ដែលបានចុះហត្ថលេខាដោយផ្នែក (PSBT) ដែលអ្នកអាចរក្សាទុក ឬចម្លងហើយបន្ទាប់មកចុះហត្ថលេខាជាមួយ ឧ. %1កាបូបក្រៅបណ្តាញ ឬកាបូបហាដវែដែលត្រូវគ្នាជាមួយ PSBT ។</translation>
     </message>
     <message>
         <source>Please, review your transaction.</source>
@@ -2483,14 +3442,136 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform>ប៉ាន់ស្មានដើម្បីចាប់ផ្តើមការបញ្ជាក់នៅក្នុង%n(ច្រើន)ប្លុក។</numerusform>
-            <numerusform />
+        <translation>
+            <numerusform>ចំនួនប្លុកប៉ាន់ស្មានមុនពេលចាប់ផ្តើមបញ្ជាក់៖ %n។</numerusform>
+            <numerusform>ចំនួនប្លុកប៉ាន់ស្មានមុនពេលចាប់ផ្តើមបញ្ជាក់៖ %n។</numerusform>
         </translation>
     </message>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(គ្មាន​ស្លាក​សញ្ញា)</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation type="unfinished">ចម្លងចំនួនទឹកប្រាក់</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation type="unfinished">ចម្លងតម្លៃ</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation type="unfinished">ប្តូរ៖</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation type="unfinished">ចម្លងការផ្លាស់ប្តូរ</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>%1 (%2 blocks)</source>
+        <translation>%1 (%2 ប្លុក)</translation>
+    </message>
+    <message>
+        <source>%1 from wallet '%2'</source>
+        <translation>%1 ពីកាបូប «%2»</translation>
+    </message>
+    <message>
+        <source>%1 to '%2'</source>
+        <translation>%1 ទៅ «%2»</translation>
+    </message>
+    <message>
+        <source>Confirm custom change address</source>
+        <translation>បញ្ជាក់អាសយដ្ឋានប្រាក់អាប់ផ្ទាល់ខ្លួន</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>ចម្លងចំនួនក្រោយដកថ្លៃសេវា</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>ចម្លងចំនួនបៃ</translation>
+    </message>
+    <message>
+        <source>Cr&amp;eate Unsigned</source>
+        <translation>&amp;បង្កើតដោយមិនចុះហត្ថលេខា</translation>
+    </message>
+    <message>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation>បង្កើតប្រតិបត្តិការ ConnectCoin ដែលបានចុះហត្ថលេខាដោយផ្នែក (PSBT) សម្រាប់ប្រើជាមួយ ឧទាហរណ៍ កាបូប %1 ក្រៅបណ្តាញ ឬកាបូបផ្នែករឹងដែលត្រូវគ្នានឹង PSBT។</translation>
+    </message>
+    <message>
+        <source>Custom:</source>
+        <translation>ផ្ទាល់ខ្លួន៖</translation>
+    </message>
+    <message>
+        <source>Hide transaction fee settings</source>
+        <translation>លាក់ការកំណត់ថ្លៃសេវាប្រតិបត្តិការ</translation>
+    </message>
+    <message>
+        <source>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</source>
+        <translation>ប្រសិនបើបើកជម្រើសនេះ ប៉ុន្តែអាសយដ្ឋានប្រាក់អាប់ទទេ ឬមិនត្រឹមត្រូវ ប្រាក់អាប់នឹងត្រូវផ្ញើទៅអាសយដ្ឋានដែលបង្កើតថ្មី។</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk</source>
+        <translation>PSBT ត្រូវបានរក្សាទុកទៅថាស</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>បញ្ជាក់ថ្លៃសេវាផ្ទាល់ខ្លួនក្នុងមួយ kB (1,000 បៃ) នៃទំហំនិម្មិតរបស់ប្រតិបត្តិការ។
+
+ចំណាំ៖  ដោយសារថ្លៃសេវាត្រូវបានគណនាតាមបៃ អត្រាថ្លៃសេវា «100 connects ក្នុងមួយ kvB» សម្រាប់ប្រតិបត្តិការទំហំ 500 បៃនិម្មិត (ពាក់កណ្តាលនៃ 1 kvB) នឹងផ្តល់ថ្លៃសេវាត្រឹមតែ 50 connects ប៉ុណ្ណោះ។</translation>
+    </message>
+    <message>
+        <source>The PSBT has been copied to the clipboard. You can also save it.</source>
+        <translation>PSBT ត្រូវបានចម្លងទៅក្ដារតម្បៀតខ្ទាស់។ អ្នកក៏អាចរក្សាទុកវាបានដែរ។</translation>
+    </message>
+    <message>
+        <source>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</source>
+        <translation>អាសយដ្ឋានដែលអ្នកបានជ្រើសរើសសម្រាប់ប្រាក់អាប់មិនមែនជាផ្នែកនៃកាបូបនេះទេ។ ប្រាក់មួយផ្នែក ឬទាំងអស់ក្នុងកាបូបរបស់អ្នកអាចត្រូវផ្ញើទៅអាសយដ្ឋាននេះ។ តើអ្នកប្រាកដឬ?</translation>
+    </message>
+    <message>
+        <source>Unsigned Transaction</source>
+        <comment>PSBT copied</comment>
+        <extracomment>Caption of "PSBT has been copied" messagebox</extracomment>
+        <translation>ប្រតិបត្តិការមិនទាន់ចុះហត្ថលេខា</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>កំពុងប្រើថ្លៃសេវាអប្បបរមាបច្ចុប្បន្ន។ មិនបានប៉ាន់ស្មានពេលវេលាបញ្ជាក់ទេ។</translation>
+    </message>
+    <message>
+        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until you have validated the complete chain.</source>
+        <translation>ការប្រើ fallbackfee អាចធ្វើឱ្យផ្ញើប្រតិបត្តិការដែលចំណាយពេលច្រើនម៉ោង ឬច្រើនថ្ងៃ (ឬមិនដែល) ដើម្បីបញ្ជាក់។ សូមពិចារណាជ្រើសរើសថ្លៃសេវាដោយដៃ ឬរង់ចាំរហូតដល់អ្នកបានផ្ទៀងផ្ទាត់ខ្សែសង្វាក់ទាំងមូល។</translation>
+    </message>
+    <message>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation>ព្រមាន៖ បច្ចុប្បន្នមិនអាចប៉ាន់ស្មានថ្លៃសេវាបានទេ។</translation>
+    </message>
+    <message>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation>ព្រមាន៖ អាសយដ្ឋាន ConnectCoin មិនត្រឹមត្រូវ</translation>
+    </message>
+    <message>
+        <source>Warning: Unknown change address</source>
+        <translation>ព្រមាន៖ អាសយដ្ឋានប្រាក់អាប់មិនស្គាល់</translation>
+    </message>
+    <message>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation>នៅពេលបរិមាណប្រតិបត្តិការតិចជាងទំហំក្នុងប្លុក អ្នកជីកយកកាក់ និងថ្នាំងបញ្ជូនអាចតម្រូវថ្លៃសេវាអប្បបរមា។ ការបង់ត្រឹមថ្លៃអប្បបរមានេះគឺអាចទទួលយកបាន ប៉ុន្តែសូមដឹងថា ប្រតិបត្តិការអាចមិនដែលត្រូវបានបញ្ជាក់ នៅពេលតម្រូវការប្រតិបត្តិការ ConnectCoin ច្រើនជាងសមត្ថភាពដំណើរការរបស់បណ្តាញ។</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>អ្នកអាចបង្កើនថ្លៃសេវានៅពេលក្រោយ។</translation>
+    </message>
+    <message>
+        <source>per kilobyte</source>
+        <translation>ក្នុងមួយគីឡូបៃ</translation>
     </message>
 </context>
 <context>
@@ -2512,7 +3593,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">ជ្រើសរើសអាសយដ្ឋានដែលបានប្រើពីមុន</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
+        <source>The ConnectCoin address to send the payment to</source>
         <translation type="unfinished">អាសយដ្ឋានប៊ីតខញក្នុងការបញ្ចូនការទូរទាត់ប្រាក់ទៅកាន់</translation>
     </message>
     <message>
@@ -2535,14 +3616,42 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <source>Enter a label for this address to add it to the list of used addresses</source>
         <translation type="unfinished">បញ្ចូលស្លាក​សញ្ញាមួយ សម្រាប់អាសយដ្ឋាននេះ ដើម្បីបញ្ចូលវាទៅក្នងបញ្ចីរអាសយដ្ឋានដែលបានប្រើប្រាស់</translation>
     </message>
-    </context>
+        <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation>សារដែលភ្ជាប់នឹង URI connectcoin: ហើយនឹងរក្សាទុកជាមួយប្រតិបត្តិការសម្រាប់ជាឯកសារយោងរបស់អ្នក។ ចំណាំ៖ សារនេះនឹងមិនត្រូវផ្ញើតាមបណ្តាញ ConnectCoin ទេ។</translation>
+    </message>
+    <message>
+        <source>S&amp;ubtract fee from amount</source>
+        <translation>&amp;ដកថ្លៃសេវាពីចំនួនប្រាក់</translation>
+    </message>
+    <message>
+        <source>The amount to send in the selected unit</source>
+        <translation>ចំនួនប្រាក់ត្រូវផ្ញើក្នុងឯកតាដែលបានជ្រើសរើស</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>ថ្លៃសេវានឹងត្រូវដកពីចំនួនប្រាក់ដែលកំពុងផ្ញើ។ អ្នកទទួលនឹងទទួលបាន ConnectCoin តិចជាងចំនួនដែលអ្នកបញ្ចូលក្នុងប្រអប់ចំនួនប្រាក់។ ប្រសិនបើជ្រើសរើសអ្នកទទួលច្រើន ថ្លៃសេវានឹងចែកស្មើៗគ្នា។</translation>
+    </message>
+</context>
 <context>
     <name>SendConfirmationDialog</name>
     <message>
         <source>Send</source>
         <translation type="unfinished">បញ្ចូន</translation>
     </message>
-    </context>
+        <message>
+        <source>Create Unsigned</source>
+        <translation>បង្កើតដោយមិនចុះហត្ថលេខា</translation>
+    </message>
+</context>
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
@@ -2554,7 +3663,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">&amp;ចុះហត្ថលេខា សារ</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
+        <source>The ConnectCoin address to sign the message with</source>
         <translation type="unfinished">អាសយដ្ឋានប៊ីតខញនេះ ចុះហត្ថលេខានៅលើសារ</translation>
     </message>
     <message>
@@ -2574,7 +3683,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">ហត្ថលេខា</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
         <translation type="unfinished">ចុះហត្ថលេខាលើសារនេះដើម្បីបង្ហាញថាលោកអ្នកជាម្ចាស់អាសយដ្ឋានប៊ីតខញ</translation>
     </message>
     <message>
@@ -2602,7 +3711,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">ហត្ថលេខាត្រូវបានផ្តល់នៅពេលដែលសារត្រូវបានចុះហត្ថលេខា</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
         <translation type="unfinished">ផ្ទៀងផ្ទាត់សារដើម្បីធានាថាវាត្រូវបានចុះហត្ថលេខាជាមួយនឹងអាសយដ្ឋានប៊ីតខញជាក់លាក់។</translation>
     </message>
     <message>
@@ -2660,6 +3769,38 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">សារត្រូវបានផ្ទៀងផ្ទាត់។</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the clipboard</source>
+        <translation>ចម្លងហត្ថលេខាបច្ចុប្បន្នទៅក្ដារតម្បៀតខ្ទាស់</translation>
+    </message>
+    <message>
+        <source>Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
+        <translation>បញ្ចូលអាសយដ្ឋានអ្នកទទួល សារ (ត្រូវចម្លងការចុះបន្ទាត់ ចន្លោះ ថេប ជាដើមឱ្យដូចគ្នាទាំងស្រុង) និងហត្ថលេខាខាងក្រោមដើម្បីផ្ទៀងផ្ទាត់សារ។ កុំបកស្រាយហត្ថលេខាលើសពីអ្វីដែលមានក្នុងសារដែលបានចុះហត្ថលេខា ដើម្បីជៀសវាងការបោកបញ្ឆោតដោយការវាយប្រហារមនុស្សកណ្តាល។ សូមចំណាំថា វាគ្រាន់តែបញ្ជាក់ថាភាគីចុះហត្ថលេខាអាចទទួលប្រាក់តាមអាសយដ្ឋាននេះប៉ុណ្ណោះ វាមិនអាចបញ្ជាក់ថាអ្នកណាជាអ្នកផ្ញើប្រតិបត្តិការណាមួយទេ!</translation>
+    </message>
+    <message>
+        <source>Private key for the entered address is not available.</source>
+        <translation>មិនមានសោឯកជនសម្រាប់អាសយដ្ឋានដែលបានបញ្ចូលទេ។</translation>
+    </message>
+    <message>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation>អាសយដ្ឋាន ConnectCoin ដែលបានប្រើចុះហត្ថលេខាលើសារ</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>អាសយដ្ឋានដែលបានបញ្ចូលមិនសំដៅលើសោប្រភេទចាស់ (P2PKH) ទេ។ កំណែនេះនៃ %1 មិនគាំទ្រការចុះហត្ថលេខាលើសារសម្រាប់ SegWit និងប្រភេទអាសយដ្ឋានមិនមែន P2PKH ផ្សេងទៀតទេ។ សូមពិនិត្យអាសយដ្ឋាន ហើយព្យាយាមម្តងទៀត។</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>អ្នកអាចចុះហត្ថលេខាលើសារ/កិច្ចព្រមព្រៀងដោយអាសយដ្ឋានប្រភេទចាស់ (P2PKH) ដើម្បីបញ្ជាក់ថាអ្នកអាចទទួលប្រាក់ ConnectCoin ដែលផ្ញើទៅអាសយដ្ឋានទាំងនោះ។ កុំចុះហត្ថលេខាលើអ្វីដែលមិនច្បាស់លាស់ ឬចៃដន្យ ព្រោះការវាយប្រហារបន្លំអាចល្បួងអ្នកឱ្យចុះហត្ថលេខាផ្ទេរអត្តសញ្ញាណរបស់អ្នកទៅពួកគេ។ ចុះហត្ថលេខាតែលើសេចក្តីថ្លែងការណ៍ដែលមានព័ត៌មានលម្អិតពេញលេញ ហើយអ្នកយល់ព្រមប៉ុណ្ណោះ។</translation>
     </message>
 </context>
 <context>
@@ -2728,9 +3869,9 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>ចំនួនប្លុកនៅសល់មុនអាចចំណាយបាន៖ %n</numerusform>
+            <numerusform>ចំនួនប្លុកនៅសល់មុនអាចចំណាយបាន៖ %n</numerusform>
         </translation>
     </message>
     <message>
@@ -2781,12 +3922,75 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <source>P2C domain</source>
         <translation>ដែន P2C</translation>
     </message>
+    <message>
+        <source>%1 (Certificate was not verified)</source>
+        <translation>%1 (វិញ្ញាបនបត្រមិនត្រូវបានផ្ទៀងផ្ទាត់)</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is in the memory pool.</extracomment>
+        <translation>0/មិនទាន់បញ្ជាក់ នៅក្នុងអាងអង្គចងចាំ</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, not in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is not in the memory pool.</extracomment>
+        <translation>0/មិនទាន់បញ្ជាក់ មិននៅក្នុងអាងអង្គចងចាំ</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>ប្រាក់ចូល</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>ប្រាក់ចេញ</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>ព័ត៌មានបំបាត់កំហុស</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>កាក់ដែលបានបង្កើតត្រូវរង់ចាំឱ្យគ្រប់ %1 ប្លុក មុនពេលអាចចំណាយបាន។ នៅពេលអ្នកបង្កើតប្លុកនេះ វាត្រូវបានផ្សាយទៅបណ្តាញដើម្បីបន្ថែមទៅខ្សែសង្វាក់ប្លុក។ ប្រសិនបើវាមិនបានចូលក្នុងខ្សែសង្វាក់ ស្ថានភាពរបស់វានឹងប្តូរទៅ «មិនបានទទួលយក» ហើយមិនអាចចំណាយបានទេ។ វាអាចកើតឡើងម្តងម្កាល ប្រសិនបើថ្នាំងផ្សេងបង្កើតប្លុកក្នុងរយៈពេលពីរបីវិនាទីជិតពេលរបស់អ្នក។</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>ពាណិជ្ជករ</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>សារ</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>ចំនួនប្រាក់សុទ្ធ</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>លិបិក្រមធាតុចេញ</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>ប្រាក់ចូលសរុប</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>ប្រាក់ចេញសរុប</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that conflicts with a confirmed transaction.</extracomment>
+        <translation>ប៉ះទង្គិចជាមួយប្រតិបត្តិការដែលមានការបញ្ជាក់ %1 ដង</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
     <message>
         <source>Details for %1</source>
         <translation type="unfinished">លម្អិត %1</translation>
+    </message>
+    <message>
+        <source>This pane shows a detailed description of the transaction</source>
+        <translation>ផ្ទាំងនេះបង្ហាញការពិពណ៌នាលម្អិតអំពីប្រតិបត្តិការ</translation>
     </message>
 </context>
 <context>
@@ -2874,6 +4078,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
         <translation>គោលបំណងប្រតិបត្តិការដែលអ្នកប្រើកំណត់ ឬដែន P2C។</translation>
+    </message>
+    <message>
+        <source>Immature (%1 confirmations, will be available after %2)</source>
+        <translation>មិនទាន់អាចចំណាយបាន (ការបញ្ជាក់ %1 ដង នឹងអាចប្រើបានក្រោយ %2)</translation>
     </message>
 </context>
 <context>
@@ -2999,6 +4207,43 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>បញ្ចូលអាសយដ្ឋាន ដែន P2C លេខសម្គាល់ប្រតិបត្តិការ ឬស្លាកដើម្បីស្វែងរក</translation>
     </message>
+    <message>
+        <source>&amp;Edit address label</source>
+        <translation>&amp;កែស្លាកអាសយដ្ឋាន</translation>
+    </message>
+    <message>
+        <source>&amp;Show transaction details</source>
+        <translation>&amp;បង្ហាញព័ត៌មានលម្អិតប្រតិបត្តិការ</translation>
+    </message>
+    <message>
+        <source>A&amp;bandon transaction</source>
+        <translation>&amp;បោះបង់ការបន្តប្រតិបត្តិការ</translation>
+    </message>
+    <message>
+        <source>Copy &amp;raw transaction</source>
+        <translation>ចម្លងប្រតិបត្តិការ&amp;ឆៅ</translation>
+    </message>
+    <message>
+        <source>Copy full transaction &amp;details</source>
+        <translation>ចម្លង&amp;ព័ត៌មានលម្អិតប្រតិបត្តិការទាំងមូល</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>ចម្លង&amp;លេខសម្គាល់ប្រតិបត្តិការ</translation>
+    </message>
+    <message>
+        <source>Increase transaction &amp;fee</source>
+        <translation>បង្កើន&amp;ថ្លៃសេវាប្រតិបត្តិការ</translation>
+    </message>
+    <message>
+        <source>Range…</source>
+        <translation>ចន្លោះ…</translation>
+    </message>
+    <message>
+        <source>Show in %1</source>
+        <extracomment>Transactions table context menu action to show the selected transaction in a third-party block explorer. %1 is a stand-in argument for the URL of the explorer.</extracomment>
+        <translation>បង្ហាញក្នុង %1</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -3030,7 +4275,15 @@ Go to File &gt; Open Wallet to load a wallet.
         <source>Partially Signed Transaction (*.psbt)</source>
         <translation type="unfinished">ប្រត្តិបត្តិការ ដែលបានចុះហត្ថលេខាដោយផ្នែក (*.psbt)</translation>
     </message>
-    </context>
+        <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>ឯកសារ PSBT ត្រូវមានទំហំតូចជាង 100 MiB</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>មិនអាចឌិកូដ PSBT បានទេ</translation>
+    </message>
+</context>
 <context>
     <name>WalletModel</name>
     <message>
@@ -3062,7 +4315,43 @@ Go to File &gt; Open Wallet to load a wallet.
         <source>Could not commit transaction</source>
         <translation type="unfinished">មិនបានធ្វើប្រត្តិបត្តិការ</translation>
     </message>
-    </context>
+        <message>
+        <source>Can't display address</source>
+        <translation>មិនអាចបង្ហាញអាសយដ្ឋានបានទេ</translation>
+    </message>
+    <message>
+        <source>Can't draft transaction.</source>
+        <translation>មិនអាចរៀបចំសេចក្តីព្រាងប្រតិបត្តិការបានទេ។</translation>
+    </message>
+    <message>
+        <source>Confirm fee bump</source>
+        <translation>បញ្ជាក់ការបង្កើនថ្លៃសេវា</translation>
+    </message>
+    <message>
+        <source>Fee bump error</source>
+        <translation>កំហុសបង្កើនថ្លៃសេវា</translation>
+    </message>
+    <message>
+        <source>Fee-bump PSBT copied to clipboard</source>
+        <translation>PSBT សម្រាប់បង្កើនថ្លៃសេវាត្រូវបានចម្លងទៅក្ដារតម្បៀតខ្ទាស់</translation>
+    </message>
+    <message>
+        <source>Increase:</source>
+        <translation>ការកើនឡើង៖</translation>
+    </message>
+    <message>
+        <source>New fee:</source>
+        <translation>ថ្លៃសេវាថ្មី៖</translation>
+    </message>
+    <message>
+        <source>PSBT copied</source>
+        <translation>បានចម្លង PSBT</translation>
+    </message>
+    <message>
+        <source>Signer error</source>
+        <translation>កំហុសរបស់អ្នកចុះហត្ថលេខា</translation>
+    </message>
+</context>
 <context>
     <name>WalletView</name>
     <message>
@@ -3097,6 +4386,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Cancel</source>
         <translation type="unfinished">ចាកចេញ</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation>បម្រុងទុកកាបូប</translation>
     </message>
 </context>
 <context>
@@ -3204,6 +4497,1052 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">ការកំណត់ឯកសារមិនអាចសរសេរបានទេ។</translation>
+    </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>គោលដៅប្រាក់អាប់ត្រូវតែជាគោលដៅ P2PK ប្រភេទ 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin គាំទ្រតែអាសយដ្ឋាន P2PK ប្រភេទ 1 (bech32m) ប៉ុណ្ណោះ</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin គាំទ្រតែអាសយដ្ឋានប្រាក់អាប់ P2PK ប្រភេទ 1 (bech32m) ប៉ុណ្ណោះ</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>ប្រតិបត្តិការ ConnectCoin ត្រូវការគោលដៅប្រភេទ 1 ដែលមានសុពលភាព ឬលទ្ធផល PAY_TO_CONNECT ប្រភេទ 2</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>លទ្ធផល ConnectCoin ប្រភេទ 1 គាំទ្រតែ SIGHASH_DEFAULT ប៉ុណ្ណោះ</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>ធាតុចូលមិនមែនជាការចំណាយប្រភេទ 1 ពេញលេញដោយប្រើ SIGHASH_DEFAULT ទេ</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>ធាតុចូលត្រូវការទិន្នន័យសាក្សីពេញលេញសម្រាប់ភស្តុតាង P2C</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>បណ្តាញមេមិនទាន់ដំណើរការទេ៖ មិនបានកំណត់ប្លុកដំបូងទេ។ ប្រើ -testnet4 សម្រាប់ការធ្វើតេស្តសាធារណៈ ឬ -regtest សម្រាប់ការធ្វើតេស្តក្នុងម៉ាស៊ីន។</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>មិនមាន URL កូដប្រភពសាធារណៈដែលជាកម្មសិទ្ធិរបស់គម្រោងបានកំណត់រចនាសម្ព័ន្ធសម្រាប់កំណែអភិវឌ្ឍន៍នេះទេ។</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>មិនមានឧបករណ៍ពិពណ៌នាឯកសារគ្រប់គ្រាន់ទេ។ សាកល្បងបន្ថយ -rpcmaxconnections ឬប្រើតម្លៃលំនាំដើម %d</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>សូមចូលរួមចំណែក ប្រសិនបើអ្នកយល់ថា %s មានប្រយោជន៍។</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+សូមពិចារណាកែប្រែ %s (%s) ឬ %s (%s)។</translation>
+    </message>
+    <message>
+        <source>
+Unable to cleanup failed migration</source>
+        <translation>
+មិនអាចសម្អាតសំណល់ពីការបម្លែងដែលបរាជ័យបានទេ</translation>
+    </message>
+    <message>
+        <source>
+Unable to restore backup of wallet.</source>
+        <translation>
+មិនអាចស្តារច្បាប់បម្រុងកាបូបបានទេ។</translation>
+    </message>
+    <message>
+        <source>%s failed to validate the -assumeutxo snapshot state. This indicates a hardware problem, or a bug in the software, or a bad software modification that allowed an invalid snapshot to be loaded. As a result of this, the node will shut down and stop using any state that was built on the snapshot, resetting the chain height from %d to %d. On the next restart, the node will resume syncing from %d without using any snapshot data. Please report this incident to %s, including how you obtained the snapshot. The invalid snapshot chainstate will be left on disk in case it is helpful in diagnosing the issue that caused this error.</source>
+        <translation>%s មិនអាចផ្ទៀងផ្ទាត់ស្ថានភាពរូបថតទិន្នន័យ -assumeutxo បានទេ។ នេះបង្ហាញពីបញ្ហាផ្នែករឹង កំហុសកម្មវិធី ឬការកែប្រែកម្មវិធីមិនល្អដែលអនុញ្ញាតឱ្យផ្ទុករូបថតទិន្នន័យមិនត្រឹមត្រូវ។ ដូច្នេះ ថ្នាំងនឹងបិទ និងឈប់ប្រើស្ថានភាពណាមួយដែលបានបង្កើតលើរូបថតទិន្នន័យ ដោយកំណត់កម្ពស់ខ្សែសង្វាក់ពី %d ទៅ %d វិញ។ នៅការចាប់ផ្តើមបន្ទាប់ ថ្នាំងនឹងបន្តធ្វើសមកាលកម្មពី %d ដោយមិនប្រើទិន្នន័យពីរូបថតណាមួយ។ សូមរាយការណ៍ហេតុការណ៍នេះទៅ %s រួមទាំងវិធីដែលអ្នកបានទទួលរូបថតទិន្នន័យ។ ស្ថានភាពខ្សែសង្វាក់នៃរូបថតទិន្នន័យមិនត្រឹមត្រូវនឹងត្រូវទុកនៅលើថាស ក្នុងករណីវាមានប្រយោជន៍សម្រាប់វិភាគមូលហេតុនៃកំហុសនេះ។</translation>
+    </message>
+    <message>
+        <source>%s is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation>%s ត្រូវបានកំណត់ខ្ពស់ពេក! ថ្លៃសេវាធំបែបនេះអាចត្រូវបង់លើប្រតិបត្តិការតែមួយ។</translation>
+    </message>
+    <message>
+        <source>%s request to listen on port %u. This port is considered "bad" and thus it is unlikely that any peer will connect to it. See doc/p2p-bad-ports.md for details and a full list.</source>
+        <translation>%s ស្នើសុំស្តាប់នៅច្រក %u។ ច្រកនេះត្រូវបានចាត់ទុកថា «មិនល្អ» ដូច្នេះទំនងជាគ្មានថ្នាំងដៃគូណាតភ្ជាប់ទៅវាទេ។ មើល doc/p2p-bad-ports.md សម្រាប់ព័ត៌មានលម្អិត និងបញ្ជីពេញលេញ។</translation>
+    </message>
+    <message>
+        <source>-maxmempool must be at least %d MB</source>
+        <translation>-maxmempool ត្រូវមានយ៉ាងហោចណាស់ %d MB</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf លែងត្រូវបានណែនាំឱ្យប្រើ ហើយនឹងត្រូវដកចេញទាំងស្រុងក្នុងការចេញផ្សាយបន្ទាប់។</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>dbcache ទំហំ %zu MiB អាចធំពេកសម្រាប់អង្គចងចាំប្រព័ន្ធដែលមានត្រឹម %zu MiB។</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>មានកំហុសខាងក្នុងធ្ងន់ធ្ងរ សូមមើល %s សម្រាប់ព័ត៌មានលម្អិត៖ %s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>រកមិនឃើញទិន្នន័យ Assumeutxo សម្រាប់ហាសប្លុកដែលបានផ្តល់ '%s' ទេ។</translation>
+    </message>
+    <message>
+        <source>Block verification was interrupted</source>
+        <translation>ការផ្ទៀងផ្ទាត់ប្លុកត្រូវបានរំខាន</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version %d pre-selected input with a version 3 tx</source>
+        <translation>មិនអាចចំណាយធាតុចូលកំណែ %d ដែលមិនទាន់បញ្ជាក់ និងបានជ្រើសរើសជាមុន ដោយប្រតិបត្តិការកំណែ 3 បានទេ</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version 3 pre-selected input with a version %d tx</source>
+        <translation>មិនអាចចំណាយធាតុចូលកំណែ 3 ដែលមិនទាន់បញ្ជាក់ និងបានជ្រើសរើសជាមុន ដោយប្រតិបត្តិការកំណែ %d បានទេ</translation>
+    </message>
+    <message>
+        <source>Cannot obtain a lock on directory %s. %s is probably already running.</source>
+        <translation>មិនអាចចាក់សោថត %s បានទេ។ %s ប្រហែលជាកំពុងដំណើរការរួចហើយ។</translation>
+    </message>
+    <message>
+        <source>Cannot provide specific connections and have addrman find outgoing connections at the same time.</source>
+        <translation>មិនអាចផ្តល់ការតភ្ជាប់ជាក់លាក់ និងឱ្យ addrman ស្វែងរកការតភ្ជាប់ចេញក្នុងពេលតែមួយបានទេ។</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>មិនអាចដោះស្រាយអាសយដ្ឋាន -%s បានទេ៖ '%s'</translation>
+    </message>
+    <message>
+        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
+        <translation>មិនអាចកំណត់ -forcednsseed ជា true នៅពេលកំណត់ -dnsseed ជា false បានទេ។</translation>
+    </message>
+    <message>
+        <source>Cannot set -peerblockfilters without -blockfilterindex.</source>
+        <translation>មិនអាចកំណត់ -peerblockfilters ដោយគ្មាន -blockfilterindex បានទេ។</translation>
+    </message>
+    <message>
+        <source>Cannot write to directory '%s'; check permissions.</source>
+        <translation>មិនអាចសរសេរទៅថត '%s' បានទេ; សូមពិនិត្យសិទ្ធិ។</translation>
+    </message>
+    <message>
+        <source>Config setting for %s only applied on %s network when in [%s] section.</source>
+        <translation>ការកំណត់រចនាសម្ព័ន្ធសម្រាប់ %s អនុវត្តលើបណ្តាញ %s តែនៅពេលស្ថិតក្នុងផ្នែក [%s] ប៉ុណ្ណោះ។</translation>
+    </message>
+    <message>
+        <source>Copyright (C) %i-%i</source>
+        <translation>រក្សាសិទ្ធិ (C) %i-%i</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>រកឃើញប្លុកខូច ដែលបង្ហាញពីបញ្ហាផ្នែករឹងដែលអាចកើតមាន។</translation>
+    </message>
+    <message>
+        <source>Corrupted block database detected</source>
+        <translation>រកឃើញមូលដ្ឋានទិន្នន័យប្លុកខូច</translation>
+    </message>
+    <message>
+        <source>Could not find asmap file %s</source>
+        <translation>រកមិនឃើញឯកសារ asmap %s ទេ</translation>
+    </message>
+    <message>
+        <source>Could not generate scriptPubKeys (cache is empty)</source>
+        <translation>មិនអាចបង្កើត scriptPubKeys បានទេ (ឃ្លាំងសម្ងាត់ទទេ)</translation>
+    </message>
+    <message>
+        <source>Could not parse asmap file %s</source>
+        <translation>មិនអាចវិភាគឯកសារ asmap %s បានទេ</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>មិនអាចអានទិន្នន័យ asmap ដែលបានបង្កប់បានទេ</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>កំពុងបង្កើតកាបូប…</translation>
+    </message>
+    <message>
+        <source>Disk space for %s may not accommodate the block files. Approximately %u GB of data will be stored in this directory.</source>
+        <translation>ទំហំថាសសម្រាប់ %s អាចមិនគ្រប់គ្រាន់សម្រាប់ឯកសារប្លុក។ ទិន្នន័យប្រហែល %u GB នឹងត្រូវរក្សាទុកក្នុងថតនេះ។</translation>
+    </message>
+    <message>
+        <source>Distributed under the MIT software license, see the accompanying file %s or %s</source>
+        <translation>ចែកចាយក្រោមអាជ្ញាបណ្ណកម្មវិធី MIT សូមមើលឯកសារភ្ជាប់ %s ឬ %s</translation>
+    </message>
+    <message>
+        <source>Do you want to rebuild the databases now?</source>
+        <translation>តើអ្នកចង់បង្កើតមូលដ្ឋានទិន្នន័យឡើងវិញឥឡូវនេះឬ?</translation>
+    </message>
+    <message>
+        <source>Dump file %s does not exist.</source>
+        <translation>ឯកសារទិន្នន័យចម្លង %s មិនមានទេ។</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>ការកំណត់ចងភ្ជាប់ស្ទួនសម្រាប់អាសយដ្ឋាន %s។ សូមពិនិត្យការកំណត់ -bind, -bind=...=onion និង -whitebind។</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>ការត្រួតពិនិត្យភាពត្រឹមត្រូវនៃគ្រីបតូក្រាហ្វីខ្សែកោងអេលីបបរាជ័យ។ %s កំពុងបិទ។</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>មិនមានទិន្នន័យ asmap ដែលបានបង្កប់ទេ</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>កំហុសបង្កើត %s៖ មិនអាចសរសេរទិន្នន័យមេតាកំណែបានទេ។</translation>
+    </message>
+    <message>
+        <source>Error initializing block database</source>
+        <translation>កំហុសរៀបចំមូលដ្ឋានទិន្នន័យប្លុកដំបូង</translation>
+    </message>
+    <message>
+        <source>Error loading %s</source>
+        <translation>កំហុសផ្ទុក %s</translation>
+    </message>
+    <message>
+        <source>Error loading %s: External signer wallet being loaded without external signer support compiled</source>
+        <translation>កំហុសផ្ទុក %s៖ កំពុងផ្ទុកកាបូបអ្នកចុះហត្ថលេខាខាងក្រៅ ក្នុងកម្មវិធីដែលបានចងក្រងដោយគ្មានការគាំទ្រអ្នកចុះហត្ថលេខាខាងក្រៅ</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet corrupted</source>
+        <translation>កំហុសផ្ទុក %s៖ កាបូបខូច</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>កំហុសផ្ទុក %s៖ កាបូបនេះជាប្រភេទចាស់។ សូមបម្លែងទៅកាបូបធាតុពិពណ៌នាដោយប្រើឧបករណ៍បម្លែង (migratewallet RPC)។</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet requires newer version of %s</source>
+        <translation>កំហុសផ្ទុក %s៖ កាបូបត្រូវការកំណែថ្មីជាងនៃ %s</translation>
+    </message>
+    <message>
+        <source>Error loading block database</source>
+        <translation>កំហុសផ្ទុកមូលដ្ឋានទិន្នន័យប្លុក</translation>
+    </message>
+    <message>
+        <source>Error loading databases</source>
+        <translation>កំហុសផ្ទុកមូលដ្ឋានទិន្នន័យ</translation>
+    </message>
+    <message>
+        <source>Error loading wallet. Wallet requires blocks to be downloaded, and software does not currently support loading wallets while blocks are being downloaded out of order when using assumeutxo snapshots. Wallet should be able to load successfully after node sync reaches height %s</source>
+        <translation>កំហុសផ្ទុកកាបូប។ កាបូបត្រូវការទាញយកប្លុក ហើយបច្ចុប្បន្នកម្មវិធីមិនគាំទ្រការផ្ទុកកាបូបពេលប្លុកកំពុងទាញយកខុសលំដាប់ដោយប្រើរូបថតទិន្នន័យ assumeutxo ទេ។ កាបូបគួរអាចផ្ទុកបានជោគជ័យក្រោយការធ្វើសមកាលកម្មថ្នាំងឈានដល់កម្ពស់ %s</translation>
+    </message>
+    <message>
+        <source>Error opening block database</source>
+        <translation>កំហុសបើកមូលដ្ឋានទិន្នន័យប្លុក</translation>
+    </message>
+    <message>
+        <source>Error opening coins database</source>
+        <translation>កំហុសបើកមូលដ្ឋានទិន្នន័យកាក់</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address metadata may be missing or incorrect.</source>
+        <translation>កំហុសអាន %s! សោទាំងអស់ត្រូវបានអានត្រឹមត្រូវ ប៉ុន្តែទិន្នន័យប្រតិបត្តិការ ឬទិន្នន័យមេតាអាសយដ្ឋានអាចបាត់ ឬមិនត្រឹមត្រូវ។</translation>
+    </message>
+    <message>
+        <source>Error reading %s! Transaction data may be missing or incorrect. Rescanning wallet.</source>
+        <translation>កំហុសអាន %s! ទិន្នន័យប្រតិបត្តិការអាចបាត់ ឬមិនត្រឹមត្រូវ។ កំពុងស្កេនកាបូបឡើងវិញ។</translation>
+    </message>
+    <message>
+        <source>Error reading configuration file: %s</source>
+        <translation>កំហុសអានឯកសារកំណត់រចនាសម្ព័ន្ធ៖ %s</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation>កំហុសអានកំណត់ត្រាបន្ទាប់ពីមូលដ្ឋានទិន្នន័យកាបូប</translation>
+    </message>
+    <message>
+        <source>Error starting/committing db txn for wallet transactions removal process</source>
+        <translation>កំហុសចាប់ផ្តើម/បញ្ជាក់ប្រតិបត្តិការមូលដ្ឋានទិន្នន័យសម្រាប់ដំណើរការលុបប្រតិបត្តិការកាបូប</translation>
+    </message>
+    <message>
+        <source>Error: Address book data in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>កំហុស៖ មិនអាចកំណត់ថាទិន្នន័យសៀវភៅអាសយដ្ឋានក្នុងកាបូបជារបស់កាបូបដែលបានបម្លែងណាមួយបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Cannot extract destination from the generated scriptpubkey</source>
+        <translation>កំហុស៖ មិនអាចស្រង់គោលដៅពី scriptpubkey ដែលបានបង្កើតបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>កំហុស៖ មិនអាចបន្ថែមប្រតិបត្តិការ %s ទៅកាបូបសម្រាប់តែមើលបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Could not add watchonly tx %s to watchonly wallet</source>
+        <translation>កំហុស៖ មិនអាចបន្ថែមប្រតិបត្តិការសម្រាប់តែមើល %s ទៅកាបូបសម្រាប់តែមើលបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>កំហុស៖ មិនអាចបង្កើតឯកសារ '%s' បានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Could not delete watchonly transactions. </source>
+        <translation>កំហុស៖ មិនអាចលុបប្រតិបត្តិការសម្រាប់តែមើលបានទេ។ </translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation>កំហុស៖ មិនអាចបង្កើតទស្សន៍ទ្រនិចក្នុងមូលដ្ឋានទិន្នន័យបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is low for %s</source>
+        <translation>កំហុស៖ ទំហំថាសសម្រាប់ %s នៅសល់តិច</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation>កំហុស៖ ផលបូកផ្ទៀងផ្ទាត់នៃឯកសារទិន្នន័យចម្លងមិនត្រូវគ្នា។ គណនាបាន %s តែរំពឹង %s</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation>កំហុស៖ កំណត់ត្រាទម្រង់នៃឯកសារទិន្នន័យចម្លងមិនត្រឹមត្រូវ។ ទទួលបាន «%s» តែរំពឹង «format»។</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation>កំហុស៖ កំណត់ត្រាលេខសម្គាល់នៃឯកសារទិន្នន័យចម្លងមិនត្រឹមត្រូវ។ ទទួលបាន «%s» តែរំពឹង «%s»។</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>កំហុស៖ ឯកសារទិន្នន័យចម្លងបញ្ជាក់ទម្រង់មូលដ្ឋានទិន្នន័យដែលមិនគាំទ្រ (%s)។ គាំទ្រតែឯកសារទិន្នន័យចម្លងរបស់មូលដ្ឋានទិន្នន័យ sqlite ប៉ុណ្ណោះ</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation>កំហុស៖ កំណែឯកសារទិន្នន័យចម្លងមិនត្រូវបានគាំទ្រទេ។ កំណែ connectcoin-wallet នេះគាំទ្រតែឯកសារទិន្នន័យចម្លងកំណែ 1 ប៉ុណ្ណោះ។ ទទួលបានឯកសារកំណែ %s</translation>
+    </message>
+    <message>
+        <source>Error: Duplicate descriptors created during migration. Your wallet may be corrupted.</source>
+        <translation>កំហុស៖ ធាតុពិពណ៌នាស្ទួនត្រូវបានបង្កើតក្នុងអំឡុងការបម្លែង។ កាបូបរបស់អ្នកអាចខូច។</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>កំហុស៖ គោលដៅនាំចេញ '%s' មានរួចហើយ</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>កំហុស៖ គោលដៅនាំចេញមិនអាចទទេបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet</source>
+        <translation>កំហុស៖ មិនអាចបង្កើតកាបូបសម្រាប់តែមើលថ្មីបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>កំហុស៖ មិនអាចបង្កើតកាបូបសម្រាប់តែមើលថ្មីបានទេ។ %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation>កំហុស៖ ទទួលបានសោដែលមិនមែនជាគោលដប់ប្រាំមួយ៖ %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation>កំហុស៖ ទទួលបានតម្លៃដែលមិនមែនជាគោលដប់ប្រាំមួយ៖ %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>កំហុស៖ អាងសោអស់ហើយ សូមហៅ keypoolrefill ជាមុន</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation>កំហុស៖ ខ្វះផលបូកផ្ទៀងផ្ទាត់</translation>
+    </message>
+    <message>
+        <source>Error: No %s addresses available.</source>
+        <translation>កំហុស៖ មិនមានអាសយដ្ឋាន %s ទេ។</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>កំហុស៖ មិនមែនកំណត់ត្រាសៀវភៅអាសយដ្ឋានទាំងអស់ត្រូវបានបម្លែងទេ</translation>
+    </message>
+    <message>
+        <source>Error: Not all transaction records were migrated</source>
+        <translation>កំហុស៖ មិនមែនកំណត់ត្រាប្រតិបត្តិការទាំងអស់ត្រូវបានបម្លែងទេ</translation>
+    </message>
+    <message>
+        <source>Error: This wallet already uses SQLite</source>
+        <translation>កំហុស៖ កាបូបនេះប្រើ SQLite រួចហើយ</translation>
+    </message>
+    <message>
+        <source>Error: This wallet is already a descriptor wallet</source>
+        <translation>កំហុស៖ កាបូបនេះជាកាបូបធាតុពិពណ៌នារួចហើយ</translation>
+    </message>
+    <message>
+        <source>Error: Transaction %s in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>កំហុស៖ មិនអាចកំណត់ថាប្រតិបត្តិការ %s ក្នុងកាបូបជារបស់កាបូបដែលបានបម្លែងណាមួយបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Unable to begin reading all records in the database</source>
+        <translation>កំហុស៖ មិនអាចចាប់ផ្តើមអានកំណត់ត្រាទាំងអស់ក្នុងមូលដ្ឋានទិន្នន័យបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Unable to make a backup of your wallet</source>
+        <translation>កំហុស៖ មិនអាចបង្កើតច្បាប់បម្រុងកាបូបរបស់អ្នកបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation>កំហុស៖ មិនអាចវិភាគកំណែ %u ជា uint32_t បានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
+        <translation>កំហុស៖ មិនអាចបង្កើតធាតុពិពណ៌នាសម្រាប់កាបូបប្រភេទចាស់នេះបានទេ។ ត្រូវផ្តល់ឃ្លាសម្ងាត់របស់កាបូប ប្រសិនបើវាត្រូវបានអ៊ិនគ្រីប។</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read all records in the database</source>
+        <translation>កំហុស៖ មិនអាចអានកំណត់ត្រាទាំងអស់ក្នុងមូលដ្ឋានទិន្នន័យបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read wallet's best block locator record</source>
+        <translation>កំហុស៖ មិនអាចអានកំណត់ត្រាទីតាំងប្លុកល្អបំផុតរបស់កាបូបបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Unable to remove watchonly address book data</source>
+        <translation>កំហុស៖ មិនអាចលុបទិន្នន័យសៀវភៅអាសយដ្ឋានសម្រាប់តែមើលបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write data to disk for wallet %s</source>
+        <translation>កំហុស៖ មិនអាចសរសេរទិន្នន័យទៅថាសសម្រាប់កាបូប %s បានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation>កំហុស៖ មិនអាចសរសេរកំណត់ត្រាទៅកាបូបថ្មីបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write solvable wallet best block locator record</source>
+        <translation>កំហុស៖ មិនអាចសរសេរកំណត់ត្រាទីតាំងប្លុកល្អបំផុតរបស់កាបូបស្គ្រីបដែលអាចដោះស្រាយបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>កំហុស៖ មិនអាចសរសេរកាបូបដែលបាននាំចេញបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write watchonly wallet best block locator record</source>
+        <translation>កំហុស៖ មិនអាចសរសេរកំណត់ត្រាទីតាំងប្លុកល្អបំផុតរបស់កាបូបសម្រាប់តែមើលបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Wallet does not exist</source>
+        <translation>កំហុស៖ កាបូបមិនមានទេ</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>កំហុស៖ កាបូបមិនមានធាតុពិពណ៌នាសម្រាប់នាំចេញទេ</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>កំហុស៖ មិនអាចបញ្ជាក់ប្រតិបត្តិការមូលដ្ឋានទិន្នន័យសម្រាប់ការនាំចេញកាបូបសម្រាប់តែមើលបានទេ</translation>
+    </message>
+    <message>
+        <source>Error: cannot remove legacy wallet records</source>
+        <translation>កំហុស៖ មិនអាចលុបកំណត់ត្រាកាបូបប្រភេទចាស់បានទេ</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>កំហុស៖ មិនអាចអនុវត្តប្រតិបត្តិការមូលដ្ឋានទិន្នន័យសម្រាប់កាបូបសម្រាប់តែមើលថ្មី %s បានទេ</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for wallet %s</source>
+        <translation>កំហុស៖ មិនអាចអនុវត្តប្រតិបត្តិការមូលដ្ឋានទិន្នន័យសម្រាប់កាបូប %s បានទេ</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>មិនអាចទទួលការកក់សម្រាប់ស្កេនឡើងវិញ ក្នុងពេលរៀបចំកាបូបដំបូងបានទេ</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>មិនអាចគណនាថ្លៃសេវាបង្កើនបានទេ ព្រោះ UTXO ដែលមិនទាន់បញ្ជាក់ពឹងផ្អែកលើចង្កោមប្រតិបត្តិការមិនទាន់បញ្ជាក់ដ៏ធំសម្បើម។</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>មិនអាចបិទឯកសារត្រឡប់ប្លុកវិញបានទេ។</translation>
+    </message>
+    <message>
+        <source>Failed to close file when writing block.</source>
+        <translation>មិនអាចបិទឯកសារនៅពេលសរសេរប្លុកបានទេ។</translation>
+    </message>
+    <message>
+        <source>Failed to disconnect block.</source>
+        <translation>មិនអាចផ្តាច់ប្លុកបានទេ។</translation>
+    </message>
+    <message>
+        <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
+        <translation>មិនអាចស្តាប់នៅច្រកណាមួយបានទេ។ ប្រើ -listen=0 ប្រសិនបើអ្នកចង់បានបែបនេះ។</translation>
+    </message>
+    <message>
+        <source>Failed to read block.</source>
+        <translation>មិនអាចអានប្លុកបានទេ។</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>មិនអាចលុបថតស្ថានភាពខ្សែសង្វាក់របស់រូបថតទិន្នន័យ (%s) បានទេ។ លុបវាដោយដៃមុនពេលចាប់ផ្តើមឡើងវិញ។
+</translation>
+    </message>
+    <message>
+        <source>Failed to rename invalid peers.dat file. Please move or delete it and try again.</source>
+        <translation>មិនអាចប្តូរឈ្មោះឯកសារ peers.dat មិនត្រឹមត្រូវបានទេ។ សូមផ្លាស់ទី ឬលុបវា ហើយព្យាយាមម្តងទៀត។</translation>
+    </message>
+    <message>
+        <source>Failed to rescan the wallet during initialization</source>
+        <translation>មិនអាចស្កេនកាបូបឡើងវិញក្នុងពេលរៀបចំដំបូងបានទេ</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>មិនអាចចាប់ផ្តើមលិបិក្រមបានទេ កំពុងបិទ…</translation>
+    </message>
+    <message>
+        <source>Failed to write block.</source>
+        <translation>មិនអាចសរសេរប្លុកបានទេ។</translation>
+    </message>
+    <message>
+        <source>Failed to write undo data.</source>
+        <translation>មិនអាចសរសេរទិន្នន័យត្រឡប់វិញបានទេ។</translation>
+    </message>
+    <message>
+        <source>Failure removing transaction: %s</source>
+        <translation>បរាជ័យក្នុងការលុបប្រតិបត្តិការ៖ %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>អត្រាថ្លៃសេវា (%s) ទាបជាងការកំណត់អត្រាថ្លៃសេវាអប្បបរមា (%s)។</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation>ឯកសារ %s មានរួចហើយ។ ប្រសិនបើអ្នកប្រាកដថានេះជាអ្វីដែលអ្នកចង់បាន សូមផ្លាស់ទីវាចេញជាមុន។</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>បរាជ័យក្នុងការសរសេរទិន្នន័យឯកសារប្លុកទៅថាសឱ្យអស់។ វាទំនងជាបណ្តាលមកពីកំហុសបញ្ចូល/បញ្ចេញ។</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>បរាជ័យក្នុងការសរសេរទិន្នន័យឯកសារត្រឡប់វិញទៅថាសឱ្យអស់។ វាទំនងជាបណ្តាលមកពីកំហុសបញ្ចូល/បញ្ចេញ។</translation>
+    </message>
+    <message>
+        <source>Ignoring duplicate -wallet %s.</source>
+        <translation>មិនអើពើ -wallet %s ដែលស្ទួន។</translation>
+    </message>
+    <message>
+        <source>Incompatible options: -dnsseed=1 was explicitly specified, but -onlynet forbids connections to IPv4/IPv6</source>
+        <translation>ជម្រើសមិនត្រូវគ្នា៖ -dnsseed=1 ត្រូវបានបញ្ជាក់យ៉ាងច្បាស់ ប៉ុន្តែ -onlynet ហាមការតភ្ជាប់ទៅ IPv4/IPv6</translation>
+    </message>
+    <message>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation>រកឃើញប្លុកដើមដំបូងមិនត្រឹមត្រូវ ឬរកមិនឃើញ។ តើថតទិន្នន័យខុសសម្រាប់បណ្តាញឬ?</translation>
+    </message>
+    <message>
+        <source>Initialization sanity check failed. %s is shutting down.</source>
+        <translation>ការត្រួតពិនិត្យភាពត្រឹមត្រូវនៃការរៀបចំដំបូងបរាជ័យ។ %s កំពុងបិទ។</translation>
+    </message>
+    <message>
+        <source>Input not found or already spent</source>
+        <translation>រកមិនឃើញធាតុចូល ឬវាត្រូវបានចំណាយរួចហើយ</translation>
+    </message>
+    <message>
+        <source>Insufficient dbcache for block verification</source>
+        <translation>dbcache មិនគ្រប់គ្រាន់សម្រាប់ផ្ទៀងផ្ទាត់ប្លុក</translation>
+    </message>
+    <message>
+        <source>Invalid -i2psam address or hostname: '%s'</source>
+        <translation>អាសយដ្ឋាន ឬឈ្មោះម៉ាស៊ីន -i2psam មិនត្រឹមត្រូវ៖ '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -onion address or hostname: '%s'</source>
+        <translation>អាសយដ្ឋាន ឬឈ្មោះម៉ាស៊ីន -onion មិនត្រឹមត្រូវ៖ '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>អាសយដ្ឋាន ឬឈ្មោះម៉ាស៊ីន -proxy មិនត្រឹមត្រូវ បញ្ចប់ដោយ '='៖ '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname: '%s'</source>
+        <translation>អាសយដ្ឋាន ឬឈ្មោះម៉ាស៊ីន -proxy មិនត្រឹមត្រូវ៖ '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s'</source>
+        <translation>ចំនួនប្រាក់មិនត្រឹមត្រូវសម្រាប់ %s=&lt;amount&gt;៖ '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation>ចំនួនប្រាក់មិនត្រឹមត្រូវសម្រាប់ %s=&lt;amount&gt;៖ '%s' (ត្រូវមានយ៉ាងហោចណាស់ថ្លៃសេវា minrelay %s ដើម្បីជៀសវាងប្រតិបត្តិការជាប់គាំង)</translation>
+    </message>
+    <message>
+        <source>Invalid netmask specified in -whitelist: '%s'</source>
+        <translation>របាំងបណ្តាញមិនត្រឹមត្រូវត្រូវបានបញ្ជាក់ក្នុង -whitelist៖ '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid or corrupt peers.dat (%s). If you believe this is a bug, please report it to %s. As a workaround, you can move the file (%s) out of the way (rename, move, or delete) to have a new one created on the next start.</source>
+        <translation>peers.dat មិនត្រឹមត្រូវ ឬខូច (%s)។ ប្រសិនបើអ្នកគិតថានេះជាកំហុសកម្មវិធី សូមរាយការណ៍ទៅ %s។ ជាដំណោះស្រាយបណ្តោះអាសន្ន អ្នកអាចយកឯកសារ (%s) ចេញពីទីតាំងបច្ចុប្បន្ន (ប្តូរឈ្មោះ ផ្លាស់ទី ឬលុប) ដើម្បីឱ្យបង្កើតឯកសារថ្មីនៅការចាប់ផ្តើមបន្ទាប់។</translation>
+    </message>
+    <message>
+        <source>Invalid port specified in %s: '%s'</source>
+        <translation>ច្រកមិនត្រឹមត្រូវត្រូវបានបញ្ជាក់ក្នុង %s៖ '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid value detected for '-wallet' or '-nowallet'. '-wallet' requires a string value, while '-nowallet' accepts only '1' to disable all wallets</source>
+        <translation>រកឃើញតម្លៃមិនត្រឹមត្រូវសម្រាប់ '-wallet' ឬ '-nowallet'។ '-wallet' ត្រូវការតម្លៃខ្សែអក្សរ ខណៈ '-nowallet' ទទួលយកតែ '1' ដើម្បីបិទកាបូបទាំងអស់</translation>
+    </message>
+    <message>
+        <source>Listening for incoming connections failed (listen returned error %s)</source>
+        <translation>ការស្តាប់ការតភ្ជាប់ចូលបរាជ័យ (listen បានត្រឡប់កំហុស %s)</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses…</source>
+        <translation>កំពុងផ្ទុកអាសយដ្ឋាន P2P…</translation>
+    </message>
+    <message>
+        <source>Loading banlist…</source>
+        <translation>កំពុងផ្ទុកបញ្ជីហាមឃាត់…</translation>
+    </message>
+    <message>
+        <source>Loading block index…</source>
+        <translation>កំពុងផ្ទុកលិបិក្រមប្លុក…</translation>
+    </message>
+    <message>
+        <source>Loading wallet…</source>
+        <translation>កំពុងផ្ទុកកាបូប…</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is less than transaction weight without inputs</source>
+        <translation>ទម្ងន់ប្រតិបត្តិការអតិបរមាតិចជាងទម្ងន់ប្រតិបត្តិការដែលគ្មានធាតុចូល</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is too low, can not accommodate change output</source>
+        <translation>ទម្ងន់ប្រតិបត្តិការអតិបរមាទាបពេក មិនអាចផ្ទុកធាតុចេញប្រាក់អាប់បានទេ</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>ទម្ងន់ប្រតិបត្តិការអតិបរមាត្រូវនៅចន្លោះ %d និង %d</translation>
+    </message>
+    <message>
+        <source>Missing amount</source>
+        <translation>ខ្វះចំនួនប្រាក់</translation>
+    </message>
+    <message>
+        <source>Missing solving data for estimating transaction size</source>
+        <translation>ខ្វះទិន្នន័យដោះស្រាយសម្រាប់ប៉ាន់ស្មានទំហំប្រតិបត្តិការ</translation>
+    </message>
+    <message>
+        <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
+        <translation>បានផ្តល់អាសយដ្ឋានចងភ្ជាប់ onion ច្រើនជាងមួយ។ កំពុងប្រើ %s សម្រាប់សេវា Tor onion ដែលបង្កើតស្វ័យប្រវត្តិ។</translation>
+    </message>
+    <message>
+        <source>Need to specify a port with -whitebind: '%s'</source>
+        <translation>ត្រូវបញ្ជាក់ច្រកជាមួយ -whitebind៖ '%s'</translation>
+    </message>
+    <message>
+        <source>No addresses available</source>
+        <translation>មិនមានអាសយដ្ឋានទេ</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>មិនបានផ្តល់ឯកសារទិន្នន័យចម្លងទេ។ ដើម្បីប្រើ createfromdump ត្រូវផ្តល់ -dumpfile=&lt;filename&gt;។</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use dump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>មិនបានផ្តល់ឯកសារទិន្នន័យចម្លងទេ។ ដើម្បីប្រើ dump ត្រូវផ្តល់ -dumpfile=&lt;filename&gt;។</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. %d available, %d required.</source>
+        <translation>មិនមានធាតុពិពណ៌នាឯកសារគ្រប់គ្រាន់ទេ។ មាន %d តែត្រូវការ %d។</translation>
+    </message>
+    <message>
+        <source>Not found pre-selected input %s</source>
+        <translation>រកមិនឃើញធាតុចូលដែលបានជ្រើសរើសជាមុន %s ទេ</translation>
+    </message>
+    <message>
+        <source>Not solvable pre-selected input %s</source>
+        <translation>ធាតុចូលដែលបានជ្រើសរើសជាមុន %s មិនអាចដោះស្រាយបានទេ</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>បានកំណត់តែទិស ដោយគ្មានសិទ្ធិ៖ '%s'</translation>
+    </message>
+    <message>
+        <source>Option '-checkpoints' is set but checkpoints were removed. This option has no effect.</source>
+        <translation>ជម្រើស '-checkpoints' ត្រូវបានកំណត់ ប៉ុន្តែចំណុចត្រួតពិនិត្យត្រូវបានដកចេញហើយ។ ជម្រើសនេះគ្មានប្រសិទ្ធភាពទេ។</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>បានផ្តល់ជម្រើស '-limitancestorsize' ប៉ុន្តែដែនកំណត់ទំហំប្រតិបត្តិការមុនត្រូវបានជំនួសដោយដែនកំណត់ទំហំចង្កោម (មើល -limitclustersize)។ ជម្រើសនេះគ្មានប្រសិទ្ធភាពទេ។</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>បានផ្តល់ជម្រើស '-limitdescendantsize' ប៉ុន្តែដែនកំណត់ទំហំប្រតិបត្តិការកូនចៅត្រូវបានជំនួសដោយដែនកំណត់ទំហំចង្កោម (មើល -limitclustersize)។ ជម្រើសនេះគ្មានប្រសិទ្ធភាពទេ។</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to CJDNS (-onlynet=cjdns) but -cjdnsreachable is not provided</source>
+        <translation>ការតភ្ជាប់ចេញត្រូវបានកំណត់ត្រឹម CJDNS (-onlynet=cjdns) ប៉ុន្តែមិនបានផ្តល់ -cjdnsreachable ទេ</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is explicitly forbidden: -onion=0</source>
+        <translation>ការតភ្ជាប់ចេញត្រូវបានកំណត់ត្រឹម Tor (-onlynet=onion) ប៉ុន្តែប្រូកស៊ីសម្រាប់ចូលបណ្តាញ Tor ត្រូវបានហាមយ៉ាងច្បាស់៖ -onion=0</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
+        <translation>ការតភ្ជាប់ចេញត្រូវបានកំណត់ត្រឹម Tor (-onlynet=onion) ប៉ុន្តែមិនបានផ្តល់ប្រូកស៊ីសម្រាប់ចូលបណ្តាញ Tor ទេ៖ មិនបានផ្តល់ -proxy, -onion ឬ -listenonion ណាមួយទេ</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to i2p (-onlynet=i2p) but -i2psam is not provided</source>
+        <translation>ការតភ្ជាប់ចេញត្រូវបានកំណត់ត្រឹម i2p (-onlynet=i2p) ប៉ុន្តែមិនបានផ្តល់ -i2psam ទេ</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful. Visit %s for further information about the software.</source>
+        <translation>សូមចូលរួមចំណែក ប្រសិនបើអ្នកយល់ថា %s មានប្រយោជន៍។ ចូលទៅ %s សម្រាប់ព័ត៌មានបន្ថែមអំពីកម្មវិធី។</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>បានស្នើសុំការផ្សាយឯកជននៃប្រតិបត្តិការផ្ទាល់ខ្លួន (-privatebroadcast) ហើយ -proxyrandomize ត្រូវបានបិទ។ ផ្លូវ Tor សម្រាប់ការតភ្ជាប់ផ្សាយឯកជនអាចត្រូវបានភ្ជាប់ទំនាក់ទំនងជាមួយការតភ្ជាប់ផ្សេងតាម Tor។ ដើម្បីមានឯកជនភាពអតិបរមា សូមកំណត់ -proxyrandomize=1។</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>បានស្នើសុំការផ្សាយឯកជននៃប្រតិបត្តិការផ្ទាល់ខ្លួន (-privatebroadcast) ប៉ុន្តែ -connect ក៏ត្រូវបានកំណត់ដែរ។ វាមិនត្រូវគ្នាទេ ព្រោះការផ្សាយឯកជនត្រូវបើកការតភ្ជាប់ថ្មីទៅថ្នាំងដៃគូ Tor ឬ I2P ដែលបានជ្រើសរើសចៃដន្យ។ សូមពិចារណាប្រើ -maxconnections=0 -addnode=... ជំនួស</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>បានស្នើសុំការផ្សាយឯកជននៃប្រតិបត្តិការផ្ទាល់ខ្លួន (-privatebroadcast) ប៉ុន្តែមិនអាចចូលបណ្តាញ Tor ឬ I2P ណាមួយបានទេ</translation>
+    </message>
+    <message>
+        <source>Prune cannot be configured with a negative value.</source>
+        <translation>មិនអាចកំណត់ការលុបប្លុកចាស់ជាតម្លៃអវិជ្ជមានបានទេ។</translation>
+    </message>
+    <message>
+        <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
+        <translation>ការលុបប្លុកចាស់ត្រូវបានកំណត់ក្រោមអប្បបរមា %d MiB។  សូមប្រើចំនួនខ្ពស់ជាងនេះ។</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -reindex-chainstate. Use full -reindex instead.</source>
+        <translation>របៀបលុបប្លុកចាស់មិនត្រូវគ្នានឹង -reindex-chainstate ទេ។ ប្រើ -reindex ពេញលេញជំនួស។</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txindex.</source>
+        <translation>របៀបលុបប្លុកចាស់មិនត្រូវគ្នានឹង -txindex ទេ។</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>របៀបលុបប្លុកចាស់មិនត្រូវគ្នានឹង -txospenderindex ទេ។</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
+        <translation>ការលុបប្លុកចាស់៖ ការធ្វើសមកាលកម្មកាបូបចុងក្រោយចាស់ជាងទិន្នន័យដែលបានរក្សាទុក។ អ្នកត្រូវប្រើ -reindex (ទាញយកខ្សែសង្វាក់ប្លុកទាំងមូលម្តងទៀតសម្រាប់ថ្នាំងដែលបានលុបប្លុកចាស់)</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore…</source>
+        <translation>កំពុងលុបប្លុកចាស់ពីឃ្លាំងប្លុក…</translation>
+    </message>
+    <message>
+        <source>Reducing -maxconnections from %d to %d, because of system limitations.</source>
+        <translation>កំពុងបន្ថយ -maxconnections ពី %d ទៅ %d ដោយសារដែនកំណត់ប្រព័ន្ធ។</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>បរាជ័យក្នុងការប្តូរឈ្មោះ '%s' -&gt; '%s'។ មិនអាចសម្អាតថត leveldb នៃស្ថានភាពខ្សែសង្វាក់ផ្ទៃខាងក្រោយបានទេ។</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
+        <translation>បរាជ័យក្នុងការប្តូរឈ្មោះ '%s' -&gt; '%s'។ អ្នកគួរដោះស្រាយដោយផ្លាស់ទី ឬលុបថតរូបថតទិន្នន័យមិនត្រឹមត្រូវ %s ដោយដៃ បើមិនដូច្នោះទេ អ្នកនឹងជួបកំហុសដដែលនៅការចាប់ផ្តើមបន្ទាប់។</translation>
+    </message>
+    <message>
+        <source>Replaying blocks…</source>
+        <translation>កំពុងអនុវត្តប្លុកឡើងវិញ…</translation>
+    </message>
+    <message>
+        <source>Rescanning…</source>
+        <translation>កំពុងស្កេនឡើងវិញ…</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to execute statement to verify database: %s</source>
+        <translation>SQLiteDatabase៖ មិនអាចអនុវត្តសេចក្តីបញ្ជាសម្រាប់ផ្ទៀងផ្ទាត់មូលដ្ឋានទិន្នន័យបានទេ៖ %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to prepare statement to verify database: %s</source>
+        <translation>SQLiteDatabase៖ មិនអាចរៀបចំសេចក្តីបញ្ជាសម្រាប់ផ្ទៀងផ្ទាត់មូលដ្ឋានទិន្នន័យបានទេ៖ %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to read database verification error: %s</source>
+        <translation>SQLiteDatabase៖ មិនអាចអានកំហុសផ្ទៀងផ្ទាត់មូលដ្ឋានទិន្នន័យបានទេ៖ %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unexpected application id. Expected %u, got %u</source>
+        <translation>SQLiteDatabase៖ លេខសម្គាល់កម្មវិធីមិនរំពឹងទុក។ រំពឹង %u តែទទួលបាន %u</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is supported</source>
+        <translation>SQLiteDatabase៖ កំណែគ្រោងកាបូប sqlite %d មិនស្គាល់។ គាំទ្រតែកំណែ %d ប៉ុណ្ណោះ</translation>
+    </message>
+    <message>
+        <source>Section [%s] is not recognized.</source>
+        <translation>ផ្នែក [%s] មិនត្រូវបានស្គាល់ទេ។</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>អ្នកចុះហត្ថលេខាមិនបានបញ្ជូនអាសយដ្ឋានត្រឡប់មកវិញទេ</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>អ្នកចុះហត្ថលេខាបានបញ្ជូនអាសយដ្ឋានមិនរំពឹងទុក %s ត្រឡប់មកវិញ</translation>
+    </message>
+    <message>
+        <source>Signer returned error: %s</source>
+        <translation>អ្នកចុះហត្ថលេខាបានត្រឡប់កំហុស៖ %s</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" does not exist</source>
+        <translation>-walletdir «%s» ដែលបានបញ្ជាក់មិនមានទេ</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is a relative path</source>
+        <translation>-walletdir «%s» ដែលបានបញ្ជាក់ជាផ្លូវទាក់ទង</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is not a directory</source>
+        <translation>-walletdir «%s» ដែលបានបញ្ជាក់មិនមែនជាថតទេ</translation>
+    </message>
+    <message>
+        <source>Specified blocks directory "%s" does not exist.</source>
+        <translation>ថតប្លុកដែលបានបញ្ជាក់ «%s» មិនមានទេ។</translation>
+    </message>
+    <message>
+        <source>Specified data directory "%s" does not exist.</source>
+        <translation>ថតទិន្នន័យដែលបានបញ្ជាក់ «%s» មិនមានទេ។</translation>
+    </message>
+    <message>
+        <source>Starting network threads…</source>
+        <translation>កំពុងចាប់ផ្តើមខ្សែស្រឡាយបណ្តាញ…</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>កំហុសប្រព័ន្ធពេលសរសេរទិន្នន័យដែលនៅសល់ទៅថាស៖ %s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>កំហុសប្រព័ន្ធពេលផ្ទុកឯកសារប្លុកខាងក្រៅ៖ %s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>កំហុសប្រព័ន្ធពេលរក្សាទុកប្លុកទៅថាស៖ %s</translation>
+    </message>
+    <message>
+        <source>The %s developers</source>
+        <translation>អ្នកអភិវឌ្ឍ %s</translation>
+    </message>
+    <message>
+        <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
+        <translation>ផ្លូវ %s ប្រើ exFAT ដែលត្រូវបានដឹងថាមានបញ្ហាទិន្នន័យខូចម្តងម្កាលនៅលើ macOS។ ផ្លាស់ទីថតនេះទៅប្រព័ន្ធឯកសារផ្សេង ដើម្បីជៀសវាងការបាត់បង់ទិន្នន័យ។</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>មិនអាចប្រើជម្រើស -testactivationheight លើបណ្តាញមេបានទេ។</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>មិនអាចប្រើជម្រើស -vbparams លើបណ្តាញមេបានទេ។</translation>
+    </message>
+    <message>
+        <source>The block database contains a block which appears to be from the future. This may be due to your computer's date and time being set incorrectly. Only rebuild the block database if you are sure that your computer's date and time are correct</source>
+        <translation>មូលដ្ឋានទិន្នន័យប្លុកមានប្លុកដែលហាក់ដូចជាមកពីអនាគត។ វាអាចបណ្តាលមកពីកាលបរិច្ឆេទ និងម៉ោងកុំព្យូទ័ររបស់អ្នកត្រូវបានកំណត់មិនត្រឹមត្រូវ។ បង្កើតមូលដ្ឋានទិន្នន័យប្លុកឡើងវិញតែនៅពេលអ្នកប្រាកដថាកាលបរិច្ឆេទ និងម៉ោងកុំព្យូទ័រត្រឹមត្រូវប៉ុណ្ណោះ</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>ការរួមបញ្ចូលធាតុចូលដែលបានជ្រើសរើសជាមុន និងធាតុចូលដែលកាបូបជ្រើសរើសស្វ័យប្រវត្តិ លើសទម្ងន់ប្រតិបត្តិការអតិបរមា។ សូមព្យាយាមផ្ញើចំនួនតិចជាងនេះ ឬបង្រួបបង្រួម UTXO របស់កាបូបដោយដៃ</translation>
+    </message>
+    <message>
+        <source>The source code is available from %s.</source>
+        <translation>កូដប្រភពអាចរកបានពី %s។</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist</source>
+        <translation>ឯកសារកំណត់រចនាសម្ព័ន្ធដែលបានបញ្ជាក់ %s មិនមានទេ</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>ចំនួនសរុបលើសសមតុល្យរបស់អ្នក នៅពេលរួមបញ្ចូលថ្លៃសេវាប្រតិបត្តិការ %s។</translation>
+    </message>
+    <message>
+        <source>The transactions removal process can only be executed within a db txn</source>
+        <translation>ដំណើរការលុបប្រតិបត្តិការអាចអនុវត្តបានតែក្នុងប្រតិបត្តិការមូលដ្ឋានទិន្នន័យប៉ុណ្ណោះ</translation>
+    </message>
+    <message>
+        <source>There is no ScriptPubKeyManager for this address</source>
+        <translation>មិនមាន ScriptPubKeyManager សម្រាប់អាសយដ្ឋាននេះទេ</translation>
+    </message>
+    <message>
+        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
+        <translation>នេះជាកំណែសាកល្បងមុនចេញផ្សាយ - ប្រើដោយទទួលខុសត្រូវលើហានិភ័យផ្ទាល់ខ្លួន - កុំប្រើសម្រាប់ការជីកយកកាក់ ឬកម្មវិធីពាណិជ្ជករ</translation>
+    </message>
+    <message>
+        <source>This is experimental software.</source>
+        <translation>នេះជាកម្មវិធីពិសោធន៍។</translation>
+    </message>
+    <message>
+        <source>This is the transaction fee you may discard if change is smaller than dust at this level</source>
+        <translation>នេះជាកម្រិតថ្លៃសេវាប្រតិបត្តិការដែលអ្នកអាចបោះបង់ប្រាក់អាប់ ប្រសិនបើប្រាក់អាប់តូចជាងកម្រិតធូលីនៅកម្រិតនេះ</translation>
+    </message>
+    <message>
+        <source>Transaction %s does not belong to this wallet</source>
+        <translation>ប្រតិបត្តិការ %s មិនមែនជារបស់កាបូបនេះទេ</translation>
+    </message>
+    <message>
+        <source>Transaction change output index out of range</source>
+        <translation>លិបិក្រមធាតុចេញប្រាក់អាប់នៃប្រតិបត្តិការនៅក្រៅចន្លោះ</translation>
+    </message>
+    <message>
+        <source>Transaction needs a change address, but we can't generate it.</source>
+        <translation>ប្រតិបត្តិការត្រូវការអាសយដ្ឋានប្រាក់អាប់ ប៉ុន្តែយើងមិនអាចបង្កើតវាបានទេ។</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>ប្រតិបត្តិការត្រូវការគោលដៅមួយដែលមានតម្លៃមិនសូន្យ អត្រាថ្លៃសេវាមិនសូន្យ ឬធាតុចូលដែលបានជ្រើសរើសជាមុន</translation>
+    </message>
+    <message>
+        <source>UTXO snapshot failed to validate. Restart to resume normal initial block download, or try loading a different snapshot.</source>
+        <translation>ការផ្ទៀងផ្ទាត់រូបថតទិន្នន័យ UTXO បរាជ័យ។ ចាប់ផ្តើមឡើងវិញដើម្បីបន្តទាញយកប្លុកដំបូងតាមធម្មតា ឬព្យាយាមផ្ទុករូបថតទិន្នន័យផ្សេង។</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer (bind returned error %s)</source>
+        <translation>មិនអាចចងភ្ជាប់ទៅ %s លើកុំព្យូទ័រនេះបានទេ (bind បានត្រឡប់កំហុស %s)</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer. %s is probably already running.</source>
+        <translation>មិនអាចចងភ្ជាប់ទៅ %s លើកុំព្យូទ័រនេះបានទេ។ %s ប្រហែលជាកំពុងដំណើរការរួចហើយ។</translation>
+    </message>
+    <message>
+        <source>Unable to create the PID file '%s': %s</source>
+        <translation>មិនអាចបង្កើតឯកសារ PID '%s' បានទេ៖ %s</translation>
+    </message>
+    <message>
+        <source>Unable to find UTXO for external input</source>
+        <translation>មិនអាចរក UTXO សម្រាប់ធាតុចូលខាងក្រៅបានទេ</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation>មិនអាចបើក %s សម្រាប់សរសេរបានទេ</translation>
+    </message>
+    <message>
+        <source>Unable to parse -maxuploadtarget: '%s'</source>
+        <translation>មិនអាចវិភាគ -maxuploadtarget បានទេ៖ '%s'</translation>
+    </message>
+    <message>
+        <source>Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.</source>
+        <translation>មិនអាចអនុវត្តប្លុកឡើងវិញបានទេ។ អ្នកត្រូវបង្កើតមូលដ្ឋានទិន្នន័យឡើងវិញដោយប្រើ -reindex-chainstate។</translation>
+    </message>
+    <message>
+        <source>Unable to start HTTP server. See debug log for details.</source>
+        <translation>មិនអាចចាប់ផ្តើមម៉ាស៊ីនបម្រើ HTTP បានទេ។ សូមមើលកំណត់ហេតុបំបាត់កំហុសសម្រាប់ព័ត៌មានលម្អិត។</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>មិនអាចសរសេរឃ្លាំងសម្ងាត់ធាតុពិពណ៌នាបានទេ</translation>
+    </message>
+    <message>
+        <source>Unconfirmed UTXOs are available, but spending them creates a chain of transactions that will be rejected by the mempool</source>
+        <translation>មាន UTXO ដែលមិនទាន់បញ្ជាក់ ប៉ុន្តែការចំណាយវាបង្កើតខ្សែសង្វាក់ប្រតិបត្តិការដែល mempool នឹងបដិសេធ</translation>
+    </message>
+    <message>
+        <source>Unexpected legacy entry in descriptor wallet found. Loading wallet %s
+
+The wallet might have been tampered with or created with malicious intent.
+</source>
+        <translation>រកឃើញកំណត់ត្រាប្រភេទចាស់មិនរំពឹងទុកក្នុងកាបូបធាតុពិពណ៌នា។ កំពុងផ្ទុកកាបូប %s
+
+កាបូបអាចត្រូវបានកែប្រែដោយមិនត្រឹមត្រូវ ឬបង្កើតដោយចេតនាព្យាបាទ។
+</translation>
+    </message>
+    <message>
+        <source>Unknown -blockfilterindex value %s.</source>
+        <translation>តម្លៃ -blockfilterindex %s មិនស្គាល់។</translation>
+    </message>
+    <message>
+        <source>Unknown address type '%s'</source>
+        <translation>ប្រភេទអាសយដ្ឋាន '%s' មិនស្គាល់</translation>
+    </message>
+    <message>
+        <source>Unknown change type '%s'</source>
+        <translation>ប្រភេទប្រាក់អាប់ '%s' មិនស្គាល់</translation>
+    </message>
+    <message>
+        <source>Unknown network specified in -onlynet: '%s'</source>
+        <translation>បណ្តាញមិនស្គាល់ត្រូវបានបញ្ជាក់ក្នុង -onlynet៖ '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown new rules activated (versionbit %i)</source>
+        <translation>ច្បាប់ថ្មីមិនស្គាល់ត្រូវបានធ្វើឱ្យសកម្ម (versionbit %i)</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>ជម្រើស «%s» មិនស្គាល់ត្រូវបានផ្តល់ក្នុង -test=&lt;option&gt;។</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>រកឃើញធាតុពិពណ៌នាមិនស្គាល់។ កំពុងផ្ទុកកាបូប %s
+
+កាបូបអាចត្រូវបានបង្កើតដោយកំណែថ្មីជាង។
+សូមព្យាយាមដំណើរការកំណែកម្មវិធីថ្មីបំផុត។
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>បណ្តាញមិនស្គាល់ក្នុង -proxy='%s'៖ '%s'</translation>
+    </message>
+    <message>
+        <source>Unsupported category-specific logging level %1$s=%2$s. Expected %1$s=&lt;category&gt;:&lt;loglevel&gt;. Valid categories: %3$s. Valid loglevels: %4$s.</source>
+        <translation>កម្រិតកំណត់ហេតុជាក់លាក់តាមប្រភេទមិនគាំទ្រ %1$s=%2$s។ រំពឹង %1$s=&lt;category&gt;:&lt;loglevel&gt;។ ប្រភេទត្រឹមត្រូវ៖ %3$s។ កម្រិតកំណត់ហេតុត្រឹមត្រូវ៖ %4$s។</translation>
+    </message>
+    <message>
+        <source>Unsupported chainstate database format found. Please restart with -reindex-chainstate. This will rebuild the chainstate database.</source>
+        <translation>រកឃើញទម្រង់មូលដ្ឋានទិន្នន័យស្ថានភាពខ្សែសង្វាក់ដែលមិនគាំទ្រ។ សូមចាប់ផ្តើមឡើងវិញជាមួយ -reindex-chainstate។ វានឹងបង្កើតមូលដ្ឋានទិន្នន័យស្ថានភាពខ្សែសង្វាក់ឡើងវិញ។</translation>
+    </message>
+    <message>
+        <source>Unsupported global logging level %s=%s. Valid values: %s.</source>
+        <translation>កម្រិតកំណត់ហេតុសកលមិនគាំទ្រ %s=%s។ តម្លៃត្រឹមត្រូវ៖ %s។</translation>
+    </message>
+    <message>
+        <source>Unsupported logging category %s=%s.</source>
+        <translation>ប្រភេទកំណត់ហេតុមិនគាំទ្រ %s=%s។</translation>
+    </message>
+    <message>
+        <source>User Agent comment (%s) contains unsafe characters.</source>
+        <translation>មតិយោបល់ភ្នាក់ងារអ្នកប្រើ (%s) មានតួអក្សរមិនមានសុវត្ថិភាព។</translation>
+    </message>
+    <message>
+        <source>Verifying blocks…</source>
+        <translation>កំពុងផ្ទៀងផ្ទាត់ប្លុក…</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)…</source>
+        <translation>កំពុងផ្ទៀងផ្ទាត់កាបូប…</translation>
+    </message>
+    <message>
+        <source>Wallet file creation failed: %s</source>
+        <translation>ការបង្កើតឯកសារកាបូបបរាជ័យ៖ %s</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>ព្រមាន៖ រកឃើញខ្សែសង្វាក់មិនត្រឹមត្រូវដែលវែងជាងខ្សែសង្វាក់ល្អបំផុតរបស់យើងលើសពី 6 ប្លុក។ វាអាចបណ្តាលមកពីមូលដ្ឋានទិន្នន័យខូច ឬការមិនត្រូវគ្នានៃឯកច្ឆន្ទជាមួយថ្នាំងដៃគូ។</translation>
+    </message>
+    <message>
+        <source>Witness data for blocks after height %d requires validation. Please restart with -reindex.</source>
+        <translation>ទិន្នន័យសាក្សីសម្រាប់ប្លុកក្រោយកម្ពស់ %d ត្រូវការផ្ទៀងផ្ទាត់។ សូមចាប់ផ្តើមឡើងវិញជាមួយ -reindex។</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
+        <translation>អ្នកត្រូវបង្កើតមូលដ្ឋានទិន្នន័យឡើងវិញដោយប្រើ -reindex ដើម្បីត្រឡប់ទៅរបៀបមិនលុបប្លុកចាស់។  វានឹងទាញយកខ្សែសង្វាក់ប្លុកទាំងមូលម្តងទៀត</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>កាលបរិច្ឆេទ និងម៉ោងកុំព្យូទ័ររបស់អ្នកហាក់ដូចជាខុសពីបណ្តាញលើស %d នាទី ដែលអាចនាំឱ្យឯកច្ឆន្ទបរាជ័យ។ ក្រោយពេលអ្នកបានពិនិត្យនាឡិកាកុំព្យូទ័រ សារនេះគួរឈប់បង្ហាញនៅពេលចាប់ផ្តើមថ្នាំងឡើងវិញ។ បើមិនចាប់ផ្តើមឡើងវិញ វាគួរឈប់បង្ហាញស្វ័យប្រវត្តិក្រោយអ្នកបានតភ្ជាប់ទៅថ្នាំងដៃគូចេញថ្មីចំនួនគ្រប់គ្រាន់ ដែលអាចចំណាយពេលមួយរយៈ។ អ្នកអាចពិនិត្យវាល `timeoffset` នៃវិធីសាស្ត្រ RPC `getpeerinfo` និង `getnetworkinfo` ដើម្បីទទួលព័ត៌មានបន្ថែម។</translation>
+    </message>
+    <message>
+        <source>acceptstalefeeestimates is not supported on %s chain.</source>
+        <translation>acceptstalefeeestimates មិនត្រូវបានគាំទ្រលើខ្សែសង្វាក់ %s ទេ។</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>whitebind អាចប្រើបានតែសម្រាប់ការតភ្ជាប់ចូលប៉ុណ្ណោះ (បានផ្តល់ «out»)</translation>
     </message>
 </context>
 <context>
@@ -3552,7 +5891,92 @@ Root certificates version: %2</source>
     <name>MiningPage</name>
     <message>
         <source>Optional: empty uses this wallet</source>
-        <translation>មិនចាំបាច់បំពេញ៖ បើទុកទទេ នឹងប្រើកាបូបនេះ</translation>
+        <translation>ស្រេចចិត្ត៖ ទុកទទេនឹងប្រើកាបូបនេះ</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>ខ្សែដំណើរការ CPU៖</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>មិនអាចបង្កើតអាសយដ្ឋានរង្វាន់បានទេ។ សូមពិនិត្យថាកាបូបអាចបង្កើតអាសយដ្ឋានទទួលបាន។</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>កំហុស</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>របៀប FAST ចែករំលែកអង្គចងចាំ RandomX ប្រហែល 2 GiB ជាមួយការផ្ទៀងផ្ទាត់។ ខ្សែដំណើរការកាន់តែច្រើនប្រើធនធាន CPU និងថាមពលកាន់តែច្រើន; សូមទុកសមត្ថភាពឱ្យថ្នាំង។ ការរៀបចំសំណុំទិន្នន័យអាចចំណាយពេលបន្តិច។</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>ជីកយកប្លុកបណ្តាញសាកល្បងដោយ CPU របស់អ្នក ដោយប្រើ RandomX។ ការជីកយករ៉ែត្រូវបានបិទរហូតដល់អ្នកចាប់ផ្តើមវា។ កាបូបទាំងអស់ក្នុងថ្នាំងនេះប្រើកម្មវិធីជីករួមគ្នា ហើយវាបន្តនៅពេលអ្នកប្តូរផ្ទាំង ឬបិទកាបូប។</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>ការជីកយករ៉ែ</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>កំពុងជីកយករ៉ែ / រៀបចំ RandomX</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>អាសយដ្ឋានថ្មីពីកាបូបនេះ</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>អាសយដ្ឋានរង្វាន់សម្រាប់បណ្តាញនេះ</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>អាសយដ្ឋានរង្វាន់៖</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>ចាប់ផ្តើមជីកយករ៉ែ</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>កំពុងចាប់ផ្តើម</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>ស្ថានភាព៖ %1
+អត្រាហាស៖ %2 H/s
+ហាស៖ %3 | ប្លុកដែលបានទទួលយក៖ %4
+អាសយដ្ឋានរង្វាន់សកម្ម៖ %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>បញ្ឈប់ការជីកយករ៉ែ</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>បានបញ្ឈប់</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>កំពុងបញ្ឈប់ (រង់ចាំការងារបច្ចុប្បន្ន)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>រង់ចាំថ្នាំងធ្វើសមកាលកម្ម</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>ការព្រមាន៖ ខ្សែដំណើរការជីកយករ៉ែ %1 លើសចំនួន CPU ឡូជីខល %2 ដែលបានរកឃើញ។ វាអាចបន្ថយអត្រាហាស និងធ្វើឱ្យថ្នាំងយឺត។</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
     </message>
 </context>
 </TS>

@@ -90,7 +90,7 @@ struct P2CClaimWorkerImpl::Impl {
     std::atomic<bool> stop_requested{false};
     bool closing{false};
     int rate{0};
-    int concurrency{4};
+    int concurrency{DEFAULT_P2C_CLAIM_CONCURRENCY};
     std::vector<std::string> domains;
     std::string reward_address;
     std::optional<CTxDestination> payout_destination;

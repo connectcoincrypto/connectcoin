@@ -58,13 +58,13 @@
         <translation type="unfinished">&amp;Roghnaigh</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Seo iad do sheoltaí Bitcoin chun íocaíochtaí a sheoladh. Seiceáil i gcónaí an méid agus an seoladh glactha sula seoltar boinn.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">Seo iad do sheoltaí ConnectCoin chun íocaíochtaí a sheoladh. Seiceáil i gcónaí an méid agus an seoladh glactha sula seoltar boinn.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Seo iad do sheoltaí Bitcoin chun glacadh le híocaíochtaí. Úsáid an cnaipe ‘Cruthaigh seoladh glactha nua’ sa cluaisín glactha chun seoltaí nua a chruthú.
+        <translation type="unfinished">Seo iad do sheoltaí ConnectCoin chun glacadh le híocaíochtaí. Úsáid an cnaipe ‘Cruthaigh seoladh glactha nua’ sa cluaisín glactha chun seoltaí nua a chruthú.
 Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
     </message>
     <message>
@@ -164,8 +164,8 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
         <translation type="unfinished">Deimhnigh criptiú sparán</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">Rabhadh: Má chriptíonn tú do sparán agus má chailleann tú do pasfhrása, &lt;b&gt;caillfidh tú GACH CEANN DE DO BITCOIN&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">Rabhadh: Má chriptíonn tú do sparán agus má chailleann tú do pasfhrása, &lt;b&gt;caillfidh tú GACH CEANN DE DO CONNECTCOIN&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -177,7 +177,7 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
     </message>
     <message>
         <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation type="unfinished">Iontráil an pasfhrása nua don sparán. &lt;br/&gt;Le do thoil úsáid pasfhocail de &lt;b&gt;dheich gcarachtar randamacha nó níos mó&lt;/b&gt;, nó &lt;/b&gt;ocht bhfocal nó níos mó&lt;/b&gt;.</translation>
+        <translation>Iontráil an pasfhrása nua don sparán.&lt;br/&gt;Úsáid pasfhrása ina bhfuil &lt;b&gt;deich gcarachtar randamacha nó níos mó&lt;/b&gt;, nó &lt;b&gt;ocht bhfocal nó níos mó&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase for the wallet.</source>
@@ -192,8 +192,8 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
         <translation type="unfinished">Ar ais</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">Cuimhnigh nach dtugann chriptiú do sparán cosaint go hiomlán do do bitcoins ó bheith goidte ag bogearraí mailíseacha atá ag ionfhabhtú do ríomhaire.</translation>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished">Cuimhnigh nach dtugann chriptiú do sparán cosaint go hiomlán do do ConnectCoins ó bheith goidte ag bogearraí mailíseacha atá ag ionfhabhtú do ríomhaire.</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -327,8 +327,8 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
         <translation type="unfinished">Suim</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Iontráil seoladh Bitcoin (m.sh.%1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">Iontráil seoladh ConnectCoin (m.sh.%1)</translation>
     </message>
     <message>
         <source>Unroutable</source>
@@ -456,6 +456,58 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
         <source>default wallet</source>
         <translation type="unfinished">sparán réamhshocraithe</translation>
     </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -525,8 +577,8 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
         <translation type="unfinished">Seachfhreastalaí &lt;b&gt;cumasaithe&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Seol boinn chuig seoladh Bitcoin</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">Seol boinn chuig seoladh ConnectCoin</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -569,16 +621,16 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
         <translation type="unfinished">Sínigh &amp;teachtaireacht…</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Sínigh teachtaireachtaí le do sheoltaí Bitcoin chun a chruthú gur leat iad</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">Sínigh teachtaireachtaí le do sheoltaí ConnectCoin chun a chruthú gur leat iad</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">&amp;Fíoraigh teachtaireacht…</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">Teachtaireachtaí a fhíorú lena chinntiú go raibh siad sínithe le seoltaí sainithe Bitcoin</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">Teachtaireachtaí a fhíorú lena chinntiú go raibh siad sínithe le seoltaí sainithe ConnectCoin</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -641,8 +693,8 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
         <translation type="unfinished">Ag nascadh le piaraí…</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Iarr íocaíochtaí (gineann cóid QR agus bitcoin: URIs)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">Iarr íocaíochtaí (gineann cóid QR agus connectcoin: URIs)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -697,16 +749,16 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
         <translation type="unfinished">Suas chun dáta</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">Lódáil Idirbheart Bitcoin Sínithe go Páirteach</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">Lódáil Idirbheart ConnectCoin Sínithe go Páirteach</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">Luchtaigh PSBT ón &amp;gearrthaisce…</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">Lódáil Idirbheart Bitcoin Sínithe go Páirteach ón gearrthaisce</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">Lódáil Idirbheart ConnectCoin Sínithe go Páirteach ón gearrthaisce</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -725,8 +777,8 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
         <translation type="unfinished">S&amp;eoltaí glacadh</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">Oscail bitcoin: URI</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">Oscail connectcoin: URI</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -763,8 +815,8 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
         <translation type="unfinished">Imirce sparán</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Taispeáin an %1 teachtaireacht chabhrach chun liosta a fháil de roghanna Bitcoin líne na n-orduithe féideartha</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">Taispeáin an %1 teachtaireacht chabhrach chun liosta a fháil de roghanna ConnectCoin líne na n-orduithe féideartha</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -840,12 +892,12 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
         <translation type="unfinished">S&amp;conas</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform>%n nasc(í) gníomhacha le líonra Bitcoin.</numerusform>
-            <numerusform>%n nasc(í) gníomhacha le líonra Bitcoin.</numerusform>
-            <numerusform>%n nasc(í) gníomhacha le líonra Bitcoin.</numerusform>
+            <numerusform>%n nasc(í) gníomhacha le líonra ConnectCoin.</numerusform>
+            <numerusform>%n nasc(í) gníomhacha le líonra ConnectCoin.</numerusform>
+            <numerusform>%n nasc(í) gníomhacha le líonra ConnectCoin.</numerusform>
         </translation>
     </message>
     <message>
@@ -955,6 +1007,50 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>Cruthaigh luaíochtaí pay-to-connect</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Mianadóireacht</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>Rialaigh mianadóireacht CPU</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Gach Comhad</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Earráid Easpórtála</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>D’éirigh leis an Easpórtáil</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>Easpórtáil leagan faire amháin den sparán reatha ar féidir é a athchóiriú ar nód eile.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>Easpórtáil sparán faire amháin</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>Sábháil Easpórtáil Sparáin Faire Amháin</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>Easpórtáladh an sparán chuig </translation>
     </message>
 </context>
 <context>
@@ -1098,6 +1194,10 @@ Ní féidir síniú ach le seoltaí 'oidhreachta'.</translation>
         <source>(change)</source>
         <translation type="unfinished">(sóinseáil)</translation>
     </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>D’fhéadfadh sé athrú +/- %1 connect in aghaidh an ionchuir.</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1224,6 +1324,18 @@ Cruthófar cúltaca den sparán le linn an phróisis imirce sula ndéantar an t-
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">D'éirigh leis an Imirce</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Má tá an nód bearrtha agus má cruthaíodh an sparán roimh an airde bhearrtha, d’fhéadfadh teip ar an aistriú agus an sparán aistrithe á luchtú.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Luchtaigh an sparán tar éis an aistrithe</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>Níor luchtaíodh an sparán tar éis an aistrithe. Is féidir é a oscailt ón roghchlár «Comhad &gt; Oscail sparán».</translation>
     </message>
 </context>
 <context>
@@ -1401,8 +1513,8 @@ Cruthófar cúltaca den sparán le linn an phróisis imirce sula ndéantar an t-
         <translation type="unfinished">Eagarthóireacht seoladh seoladh</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">Níl seoladh bailí Bitcoin í an seoladh iontráilte "%1".</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">Níl seoladh bailí ConnectCoin í an seoladh iontráilte "%1".</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1573,6 +1685,18 @@ Cruthófar cúltaca den sparán le linn an phróisis imirce sula ndéantar an t-
         <source>Error</source>
         <translation type="unfinished">Earráid</translation>
     </message>
+    <message>
+        <source> GB</source>
+        <translation> GB</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>Íoslódálfaidh %1 agus stórálfaidh sé cóip de bhlocshlabhra ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1581,8 +1705,8 @@ Cruthófar cúltaca den sparán le linn an phróisis imirce sula ndéantar an t-
         <translation type="unfinished">Foirm</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">B’fhéidir nach mbeidh idirbhearta dheireanacha le feiceáil fós, agus dá bhrí sin d’fhéadfadh go mbeadh iarmhéid do sparán mícheart. Beidh an faisnéis seo ceart nuair a bheidh do sparán críochnaithe ag sioncrónú leis an líonra bitcoin, mar atá luaite thíos.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">B’fhéidir nach mbeidh idirbhearta dheireanacha le feiceáil fós, agus dá bhrí sin d’fhéadfadh go mbeadh iarmhéid do sparán mícheart. Beidh an faisnéis seo ceart nuair a bheidh do sparán críochnaithe ag sioncrónú leis an líonra ConnectCoin, mar atá luaite thíos.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1632,17 +1756,29 @@ Cruthófar cúltaca den sparán le linn an phróisis imirce sula ndéantar an t-
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">Anaithnid. Ceanntásca a Réamhshioncronú (%1, %2 %)…</translation>
     </message>
+    <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Ní ghlacfaidh an líonra le hiarrachtaí cistí ConnectCoin a chaitheamh a bhfuil tionchar ag idirbhearta nach bhfuil ar taispeáint fós orthu.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">Oscail URI bitcoin</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">Oscail URI ConnectCoin</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">Greamaigh seoladh ón gearrthaisce</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1685,8 +1821,8 @@ Cruthófar cúltaca den sparán le linn an phróisis imirce sula ndéantar an t-
         <translation type="unfinished">Conair iomlán chuig script comhoiriúnach %1 (m.sh. C:\Downloads\hwi.exe nó /Users/you/Downloads/hwi.py). Tabhair aire: is féidir le malware do bhoinn a ghoid!</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished">Oscail port chliant Bitcoin go huathoibríoch ar an ródaire. Ní oibríonn sé seo ach amháin má thacaíonn do ródaire le PCP nó NAT-PMP agus go bhfuil sé cumasaithe. D'fhéadfadh an port seachtrach a bheith randamach.</translation>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation type="unfinished">Oscail port chliant ConnectCoin go huathoibríoch ar an ródaire. Ní oibríonn sé seo ach amháin má thacaíonn do ródaire le PCP nó NAT-PMP agus go bhfuil sé cumasaithe. D'fhéadfadh an port seachtrach a bheith randamach.</translation>
     </message>
     <message>
         <source>Map port using PCP or NA&amp;T-PMP</source>
@@ -1816,8 +1952,8 @@ Cruthófar cúltaca den sparán le linn an phróisis imirce sula ndéantar an t-
         <translation type="unfinished">Ceadai&amp;gh naisc isteach</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Ceangail leis an líonra Bitcoin trí sheachfhreastalaí SOCKS5.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">Ceangail leis an líonra ConnectCoin trí sheachfhreastalaí SOCKS5.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1892,8 +2028,8 @@ Cruthófar cúltaca den sparán le linn an phróisis imirce sula ndéantar an t-
         <translation type="unfinished">Gnéithe rialúchán bonn a thaispeáint nó nach.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Ceangail le líonra Bitcoin trí seachfhreastalaí SOCKS5 ar leith do sheirbhísí Tor oinniún.</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">Ceangail le líonra ConnectCoin trí seachfhreastalaí SOCKS5 ar leith do sheirbhísí Tor oinniún.</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1974,6 +2110,46 @@ Cruthófar cúltaca den sparán le linn an phróisis imirce sula ndéantar an t-
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">Tá an seoladh seachfhreastalaí soláthartha neamhbhailí.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Cumasaigh fógraí aníos</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Taispeáin fógraí aníos ar an deasc, lena n-áirítear idirbhearta isteach agus seolta. Díchumasaithe de réir réamhshocraithe. Fanann dialóga earráide agus deimhnithe cumasaithe.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>&amp;Port:</source>
+        <translation>&amp;Port:</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Laghdaíonn bearradh go mór an spás diosca a theastaíonn chun idirbhearta a stóráil. Déantar gach bloc a bhailíochtú go hiomlán fós. Ba cheart sparáin a luchtú ag am tosaithe agus iad a choinneáil gníomhach fad atá bearradh cumasaithe, ionas go mbeidh siad sioncronaithe sula scriostar seansonraí bloc; d’fhéadfadh athinnéacsú a bheith ag teastáil ó sparáin atá ar gcúl ar na sonraí bearrtha. Chun an socrú seo a chealú, ní mór an blocshlabhra ar fad a íoslódáil arís.</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>Socraithe le -popupnotifications nó popupnotifications in connectcoin.conf.</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1989,8 +2165,8 @@ Cruthófar cúltaca den sparán le linn an phróisis imirce sula ndéantar an t-
         <translation type="unfinished">Foirm</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">Féadfaidh an fhaisnéis a thaispeántar a bheith as dáta. Déanann do sparán sioncrónú go huathoibríoch leis an líonra Bitcoin tar éis nasc a bhunú, ach níl an próiseas seo críochnaithe fós.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">Féadfaidh an fhaisnéis a thaispeántar a bheith as dáta. Déanann do sparán sioncrónú go huathoibríoch leis an líonra ConnectCoin tar éis nasc a bhunú, ach níl an próiseas seo críochnaithe fós.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -2188,16 +2364,16 @@ Cruthófar cúltaca den sparán le linn an phróisis imirce sula ndéantar an t-
         <translation type="unfinished">Earráid iarratais íocaíocht</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Ní féidir bitcoin a thosú: láimhseálaí cliceáil-chun-íoc</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">Ní féidir ConnectCoin a thosú: láimhseálaí cliceáil-chun-íoc</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">Láimhseála URI</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">Ní URI bailí é 'bitcoin://'. Úsáid 'bitcoin:' ina ionad.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">Ní URI bailí é 'connectcoin://'. Úsáid 'connectcoin:' ina ionad.</translation>
     </message>
     <message>
         <source>Cannot process payment request because BIP70 is not supported.
@@ -2208,8 +2384,8 @@ De bharr lochtanna slándála forleathan in BIP70, moltar go láidir neamhaird a
 Má tá an earráid seo á fáil agat ba cheart duit iarraidh ar an díoltóir URI atá comhoiriúnach le BIP21 a sholáthar.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">Ní féidir URI a pharsáil! Is féidir le seoladh neamhbhailí Bitcoin nó paraiméadair URI drochfhoirmithe a bheith mar an chúis.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">Ní féidir URI a pharsáil! Is féidir le seoladh neamhbhailí ConnectCoin nó paraiméadair URI drochfhoirmithe a bheith mar an chúis.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -2272,6 +2448,11 @@ Má tá an earráid seo á fáil agat ba cheart duit iarraidh ar an díoltóir U
         <source>Outbound</source>
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">Amach</translation>
+    </message>
+    <message>
+        <source>Ping</source>
+        <extracomment>Title of Peers Table column which indicates the current latency of the connection with the peer.</extracomment>
+        <translation>Ping</translation>
     </message>
 </context>
 <context>
@@ -2361,8 +2542,8 @@ Má tá an earráid seo á fáil agat ba cheart duit iarraidh ar an díoltóir U
         <translation type="unfinished">Seoltaí Áitiúla</translation>
     </message>
     <message>
-        <source>Network addresses that your Bitcoin node is currently using to communicate with other nodes.</source>
-        <translation type="unfinished">Seoltaí líonra go bhfuil do nód Bitcoin úsáid faoi láthair chun cumarsáid a dhéanamh le nóid eile.</translation>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation type="unfinished">Seoltaí líonra go bhfuil do nód ConnectCoin úsáid faoi láthair chun cumarsáid a dhéanamh le nóid eile.</translation>
     </message>
     <message>
         <source>Block chain</source>
@@ -2801,6 +2982,46 @@ Chun tuilleadh eolais a fháil faoin gconsól seo a úsáid, clóscríobh %6.
         <source>Unknown</source>
         <translation type="unfinished">Anaithnid</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2817,8 +3038,8 @@ Chun tuilleadh eolais a fháil faoin gconsól seo a úsáid, clóscríobh %6.
         <translation type="unfinished">&amp;Teachtaireacht</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">Teachtaireacht roghnach le ceangal leis an iarratas íocaíocht, a thaispeánfar nuair a osclaítear an iarraidh. Nóta: Ní sheolfar an teachtaireacht leis an íocaíocht thar líonra Bitcoin.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">Teachtaireacht roghnach le ceangal leis an iarratas íocaíocht, a thaispeánfar nuair a osclaítear an iarraidh. Nóta: Ní sheolfar an teachtaireacht leis an íocaíocht thar líonra ConnectCoin.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -3122,8 +3343,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
 Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní thabharfadh ráta táille "100 satoshis in aghaidh an kvB" le haghaidh méid idirbhirt 500 beart fíorúil (leath de 1 kvB) táille ach 50 satoshis ar deireadh thiar.</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
-        <translation type="unfinished">Nuair a bhíonn méid idirbhirt níos lú ná spás sna bloic, féadfaidh mianadóirí chomh maith le nóid athsheachadadh táille íosta a fhorfheidhmiú. Tá sé sách maith an táille íosta seo a íoc, ach bíodh a fhios agat go bhféadfadh idirbheart nach ndeimhnítear riamh a bheith mar thoradh air seo a nuair a bhíonn níos mó éilimh ar idirbhearta bitcoin ná mar is féidir leis an líonra a phróiseáil.</translation>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation type="unfinished">Nuair a bhíonn méid idirbhirt níos lú ná spás sna bloic, féadfaidh mianadóirí chomh maith le nóid athsheachadadh táille íosta a fhorfheidhmiú. Tá sé sách maith an táille íosta seo a íoc, ach bíodh a fhios agat go bhféadfadh idirbheart nach ndeimhnítear riamh a bheith mar thoradh air seo a nuair a bhíonn níos mó éilimh ar idirbhearta ConnectCoin ná mar is féidir leis an líonra a phróiseáil.</translation>
     </message>
     <message>
         <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
@@ -3208,8 +3429,8 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
         <translation type="unfinished">Cruthaigh Gan Sín</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation type="unfinished">Cruthaíonn Idirbheart Bitcoin Sínithe go Páirteach (IBSP) le húsáid le e.g. sparán as líne %1, nó sparán crua-earraí atá comhoiriúnach le IBSP.</translation>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation type="unfinished">Cruthaíonn Idirbheart ConnectCoin Sínithe go Páirteach (IBSP) le húsáid le e.g. sparán as líne %1, nó sparán crua-earraí atá comhoiriúnach le IBSP.</translation>
     </message>
     <message>
         <source>%1 to '%2'</source>
@@ -3264,9 +3485,9 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
         <translation type="unfinished">Féadfaidh tú an táille a mhéadú níos déanaí (comhartha chuig Athchuir-Le-Táille, BIP-125).</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
-        <translation type="unfinished">Le do thoil, déan athbhreithniú ar do thogra idirbhirt. Tabharfaidh sé seo Idirbheart Bitcoin Sínithe go Páirteach (IBSP) ar féidir leat a shábháil nó a chóipeáil agus a shíniú ansin le m.sh. sparán as líne %1, nó sparán crua-earraí atá comhoiriúnach le IBSP.</translation>
+        <translation type="unfinished">Le do thoil, déan athbhreithniú ar do thogra idirbhirt. Tabharfaidh sé seo Idirbheart ConnectCoin Sínithe go Páirteach (IBSP) ar féidir leat a shábháil nó a chóipeáil agus a shíniú ansin le m.sh. sparán as líne %1, nó sparán crua-earraí atá comhoiriúnach le IBSP.</translation>
     </message>
     <message>
         <source>%1 from wallet '%2'</source>
@@ -3278,9 +3499,9 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
         <translation type="unfinished">Ar mhaith leat an t-idirbheart seo a chruthú?</translation>
     </message>
     <message>
-        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
-        <translation type="unfinished">Le do thoil, athbhreithnigh d'idirbheart. Is féidir leat an t-idirbheart seo a chruthú agus a sheoladh nó Idirbheart Bitcoin Páirt-Sínithe (PSBT) a chruthú, ar féidir leat a shábháil nó a chóipeáil agus a shíniú ansin le, m.sh., sparán %1 as líne, nó sparán crua-earraí PSBT-comhoiriúnach.</translation>
+        <translation type="unfinished">Le do thoil, athbhreithnigh d'idirbheart. Is féidir leat an t-idirbheart seo a chruthú agus a sheoladh nó Idirbheart ConnectCoin Páirt-Sínithe (PSBT) a chruthú, ar féidir leat a shábháil nó a chóipeáil agus a shíniú ansin le, m.sh., sparán %1 as líne, nó sparán crua-earraí PSBT-comhoiriúnach.</translation>
     </message>
     <message>
         <source>Please, review your transaction.</source>
@@ -3350,8 +3571,8 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">Rabhadh: Seoladh neamhbhailí Bitcoin</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">Rabhadh: Seoladh neamhbhailí ConnectCoin</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -3368,6 +3589,32 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(gan lipéad)</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Sonraigh táille shaincheaptha in aghaidh kB (1,000 beart) de mhéid fíorúil an idirbhirt.
+
+Nóta: Ós rud é go ríomhtar an táille in aghaidh an bhirt, ní bheadh ach táille 50 connects ann dá gcuirfí ráta «100 connects in aghaidh kvB» i bhfeidhm ar idirbheart de 500 beart fíorúil (leath de 1 kvB).</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>An táille íosta reatha á húsáid. Ní mheastar an t-am deimhnithe.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>Is féidir leat an táille a mhéadú níos déanaí.</translation>
     </message>
 </context>
 <context>
@@ -3389,8 +3636,8 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
         <translation type="unfinished">Roghnaigh seoladh a úsáideadh roimhe seo</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">Seoladh Bitcoin chun an íocaíocht a sheoladh chuig</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">Seoladh ConnectCoin chun an íocaíocht a sheoladh chuig</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -3425,8 +3672,20 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
         <translation type="unfinished">Iontráil lipéad don seoladh seo chun é a chur le liosta na seoltaí úsáidte</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">Teachtaireacht a bhí ceangailte leis an bitcoin: URI a stórálfar leis an idirbheart le haghaidh do thagairt. Nóta: Ní sheolfar an teachtaireacht seo thar líonra Bitcoin.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">Teachtaireacht a bhí ceangailte leis an connectcoin: URI a stórálfar leis an idirbheart le haghaidh do thagairt. Nóta: Ní sheolfar an teachtaireacht seo thar líonra ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Bainfear an táille den mhéid atá á sheoladh. Gheobhaidh an faighteoir níos lú ConnectCoin ná mar a chuirfidh tú isteach sa réimse méide. Má roghnaítear roinnt faighteoirí, roinntear an táille go cothrom.</translation>
     </message>
 </context>
 <context>
@@ -3455,8 +3714,8 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
         <translation type="unfinished">Is féidir leat teachtaireachtaí/comhaontuithe a shíniú le do sheoltaí oidhreachta (P2PKH) lena chruthú gur féidir leat bitcoins a sheoltar chucu a fháil. Bí cúramach gan aon rud doiléir nó randamach a shíniú, mar seans go ndéanfaidh ionsaithe fioscaireachta iarracht tú a mhealladh chun d'aitheantas a shíniú leo. Ná sínigh ach ráitis mhionsonraithe a n-aontaíonn tú leo.</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">An seoladh Bitcoin chun an teachtaireacht a shíniú le</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">An seoladh ConnectCoin chun an teachtaireacht a shíniú le</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3479,8 +3738,8 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
         <translation type="unfinished">Cóipeáil an síniú reatha chuig an ghearrthaisce</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation type="unfinished">Sínigh an teachtaireacht chun a chruthú gur leat an seoladh Bitcoin seo</translation>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation type="unfinished">Sínigh an teachtaireacht chun a chruthú gur leat an seoladh ConnectCoin seo</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -3503,8 +3762,8 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
         <translation type="unfinished">Cuir isteach seoladh an ghlacadóra, teachtaireacht  (déan cinnte go gcóipeálann tú bristeacha líne, spásanna, táib, srl. go díreach) agus sínigh thíos chun an teachtaireacht a fhíorú. Bí cúramach gan níos mó a léamh isteach sa síniú ná mar atá sa teachtaireacht sínithe féin, ionas nach dtarlóidh ionsaí socadáin duit. Tabhair faoi deara nach gcruthóidh sé seo ach go bhfaigheann an páirtí sínithe leis an seoladh, ní féidir leis seolta aon idirbhirt a chruthú!</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">An seoladh Bitcoin a síníodh an teachtaireacht leis</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">An seoladh ConnectCoin a síníodh an teachtaireacht leis</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -3515,8 +3774,8 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
         <translation type="unfinished">An síniú a tugadh nuair a síníodh an teachtaireacht</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">Fíoraigh an teachtaireacht lena chinntiú go raibh sí sínithe leis an seoladh Bitcoin sainithe </translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">Fíoraigh an teachtaireacht lena chinntiú go raibh sí sínithe leis an seoladh ConnectCoin sainithe </translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3581,6 +3840,18 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">Teachtaireacht fíoraithe.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Is féidir leat teachtaireachtaí nó comhaontuithe a shíniú le do sheoltaí oidhreachta (P2PKH) chun a chruthú gur féidir leat cistí ConnectCoin a sheoltar chucu a fháil. Ná sínigh rud doiléir ná randamach, mar d’fhéadfadh ionsaithe fioscaireachta iarracht a dhéanamh tú a mhealladh chun d’aitheantas a thabhairt dóibh le síniú. Ná sínigh ach ráitis mhionsonraithe a n-aontaíonn tú leo.</translation>
     </message>
 </context>
 <context>
@@ -4025,6 +4296,10 @@ Nóta: Ós rud é go ríomhtar an táille ar bhonn in aghaidh an bheart, ní tha
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>Cuir isteach seoladh, fearann P2C, aitheantóir idirbhirt nó lipéad le cuardach</translation>
     </message>
+    <message>
+        <source>Other</source>
+        <translation>Eile</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -4216,8 +4491,8 @@ Téigh go Comhad &gt; Oscail Sparán chun sparán a lódáil.
         <translation type="unfinished">Earráid: Tá taifead aitheantóra Dumpfile mícheart. Fuair ​​​​tú "%s", bhíothas ag súil le "%s".</translation>
     </message>
     <message>
-        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
-        <translation type="unfinished">Earráid: Ní thacaítear leis an leagan Dumpfile. Ní thacaíonn an leagan seo de bitcoin-sparán ach le leagan 1 dumpfiles. Fuair ​​​​tú dumpfile le leagan %s</translation>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Earráid: Ní thacaítear leis an leagan Dumpfile. Ní thacaíonn an leagan seo de ConnectCoin-sparán ach le leagan 1 dumpfiles. Fuair ​​​​tú dumpfile le leagan %s</translation>
     </message>
     <message>
         <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
@@ -4257,7 +4532,7 @@ Téigh go Comhad &gt; Oscail Sparán chun sparán a lódáil.
     </message>
     <message>
         <source>Prune mode is incompatible with -reindex-chainstate. Use full -reindex instead.</source>
-        <translation type="unfinished">Níl an modh prúnaí ag luí le -reindex-chainstate. Úsáid lán-reindex ina ionad sin.</translation>
+        <translation>Níl modh an bhearrtha comhoiriúnach le -reindex-chainstate. Úsáid athinnéacsú iomlán le -reindex ina ionad sin.</translation>
     </message>
     <message>
         <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
@@ -4423,7 +4698,7 @@ Téigh go Comhad &gt; Oscail Sparán chun sparán a lódáil.
     </message>
     <message>
         <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
-        <translation type="unfinished">Naisc amach teoranta do Tor (-onlynet=onion) ach ní thugtar an seachfhreastalaí chun líonra Tor a bhaint amach: ní thugtar aon seachfhreastalaí, -oinniún nó -listenonion</translation>
+        <translation>Naisc amach teoranta do Tor (-onlynet=onion) ach ní thugtar an seachfhreastalaí chun líonra Tor a bhaint amach: ní thugtar aon cheann de -proxy, -onion ná -listenonion</translation>
     </message>
     <message>
         <source>Outbound connections restricted to i2p (-onlynet=i2p) but -i2psam is not provided</source>
@@ -4776,7 +5051,7 @@ Ní féidir cúltaca an sparán a chur ar ais.</translation>
     </message>
     <message>
         <source>Ignoring duplicate -wallet %s.</source>
-        <translation type="unfinished">Neamhaird ar sparán dhúbailt %s.</translation>
+        <translation>Ag déanamh neamhaird den rogha dhúblach -wallet %s.</translation>
     </message>
     <message>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
@@ -4808,7 +5083,7 @@ Ní féidir cúltaca an sparán a chur ar ais.</translation>
     </message>
     <message>
         <source>Invalid -proxy address or hostname: '%s'</source>
-        <translation type="unfinished">Seoladh seachfhreastalaí nó ainm óstach neamhbhailí: '%s'</translation>
+        <translation>Seoladh nó ainm óstaigh neamhbhailí le haghaidh -proxy: '%s'</translation>
     </message>
     <message>
         <source>Invalid P2P permission: '%s'</source>
@@ -4840,7 +5115,7 @@ Ní féidir cúltaca an sparán a chur ar ais.</translation>
     </message>
     <message>
         <source>Invalid netmask specified in -whitelist: '%s'</source>
-        <translation type="unfinished">Mascghréas neamhbhailí sonraithe sa geal-liosta: '%s'</translation>
+        <translation>Masc líonra neamhbhailí sonraithe in -whitelist: '%s'</translation>
     </message>
     <message>
         <source>Invalid port specified in %s: '%s'</source>
@@ -5246,6 +5521,116 @@ Déan iarracht an leagan bogearraí is déanaí a rith.
         <source>Settings file could not be written</source>
         <translation type="unfinished">Níorbh fhéidir an comhad socruithe a scríobh</translation>
     </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>Ní mór do cheann scríbe an tsóinseáil a bheith ina cheann scríbe P2PK de chineál 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>Ní thacaíonn ConnectCoin ach le seoltaí P2PK de chineál 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>Ní thacaíonn ConnectCoin ach le seoltaí sóinseála P2PK de chineál 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>Teastaíonn cinn scríbe bhailí de chineál 1 nó aschuir PAY_TO_CONNECT de chineál 2 ó idirbhearta ConnectCoin</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>Ní thacaíonn aschuir ConnectCoin de chineál 1 ach le SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>Ní caiteachas iomlán de chineál 1 le SIGHASH_DEFAULT é an t-ionchur</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>Teastaíonn sonraí finné iomlána do chruthúnas P2C ón ionchur</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>Níor seoladh an príomhlíonra: níl aon bhloc geineasa sainithe. Úsáid -testnet4 le haghaidh tástáil phoiblí nó -regtest le haghaidh tástáil áitiúil.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>Níl URL poiblí an chóid foinse atá faoi úinéireacht an tionscadail cumraithe don leagan forbartha seo.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Níl go leor tuairisceoirí comhaid ar fáil. Bain triail as -rpcmaxconnections a laghdú nó as an luach réamhshocraithe %d a úsáid</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>Déan do chion le do thoil má tá %s úsáideach duit.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Smaoinigh ar %s (%s) nó %s (%s) a athrú.</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>Tá -walletrbf as feidhm agus bainfear go hiomlán é sa chéad eisiúint eile.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>Tharla earráid inmheánach mharfach; féach %s le haghaidh sonraí: %s</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Earráid: Níorbh fhéidir idirbheart %s a chur leis an sparán faire amháin</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Earráid: Níorbh fhéidir an comhad '%s' a chruthú</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Earráid: Tá ceann scríbe na heaspórtála '%s' ann cheana</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Earráid: Ní féidir le ceann scríbe na heaspórtála a bheith folamh</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Earráid: Níorbh fhéidir sparán faire amháin nua a chruthú. %s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Earráid: Ní féidir an sparán easpórtáilte a scríobh</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Earráid: Níl tuairisceoirí le heaspórtáil sa sparán</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Earráid: Ní féidir idirbheart an bhunachair sonraí a chur i gcrích chun an sparán faire amháin a easpórtáil</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Earráid: Ní féidir idirbheart bunachair sonraí a rith don sparán faire amháin nua %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>Tá an ráta táille (%s) níos ísle ná an ráta táille íosta socraithe (%s).</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>Ní féidir an rogha -testactivationheight a úsáid ar an bpríomhlíonra.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>Ní féidir an rogha -vbparams a úsáid ar an bpríomhlíonra.</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Ní féidir taisce na dtuairisceoirí a scríobh</translation>
+    </message>
 </context>
 <context>
     <name>P2CClaimDialog</name>
@@ -5593,7 +5978,92 @@ Leagan na mbunteastas: %2</translation>
     <name>MiningPage</name>
     <message>
         <source>Optional: empty uses this wallet</source>
-        <translation>Roghnach: úsáidtear an sparán seo má tá an réimse folamh</translation>
+        <translation>Roghnach: má tá sé folamh úsáidtear an sparán seo</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>Snáitheanna CPU:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Níorbh fhéidir seoladh luaíochta a ghiniúint. Seiceáil gur féidir leis an sparán seoltaí glactha a ghiniúint.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Earráid</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>Roinneann mód FAST thart ar 2 GiB de chuimhne RandomX leis an mbailíochtú. Úsáideann níos mó snáitheanna níos mó acmhainní CPU agus leictreachais; fág acmhainn don nód. D’fhéadfadh tamall a bheith ag teastáil chun an tacar sonraí a thúsú.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Déan mianadóireacht ar bhloic an líonra tástála le do CPU ag úsáid RandomX. Tá an mhianadóireacht múchta go dtí go dtosaíonn tú í. Roinneann gach sparán sa nód seo an mianadóir céanna agus leanann sé ar aghaidh nuair a athraíonn tú cluaisíní nó a dhúnann tú sparán.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Mianadóireacht</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Ag mianadóireacht / RandomX á ullmhú</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Seoladh nua ón sparán seo</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Seoladh luaíochta don líonra seo</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Seoladh luaíochta:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Tosaigh mianadóireacht</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Ag tosú</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Staid: %1
+Ráta hais: %2 H/s
+Haiseanna: %3 | Bloic ghlactha: %4
+Seoladh luaíochta gníomhach: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Stop mianadóireacht</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Stoptha</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Ag stopadh (ag fanacht leis an obair reatha)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Ag fanacht leis an nód sioncronú</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Rabhadh: sáraíonn %1 snáithe mianadóireachta na %2 CPU loighciúla a braitheadh. D’fhéadfadh sé seo an ráta hais a laghdú agus an nód a mhoilliú.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
     </message>
 </context>
 </TS>

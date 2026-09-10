@@ -50,6 +50,7 @@
 #include <stdexcept>
 #include <thread>
 #include <tuple>
+#include <vector>
 
 #include <QAbstractButton>
 #include <QAbstractSpinBox>
@@ -80,6 +81,7 @@
 #include <QTextEdit>
 #include <QListView>
 #include <QDialogButtonBox>
+#include <QXmlStreamReader>
 
 using wallet::AddWallet;
 using wallet::CWallet;
@@ -706,9 +708,9 @@ void TestP2CGUI(interfaces::Node& node)
     QVERIFY(!page.findChild<QLabel*>("p2cClaimRoundHint"));
     QVERIFY(!page.findChild<QSpinBox*>("p2cClaimRoundSeconds"));
     QVERIFY(claim_rate && claim_unlimited && claim_concurrency && claim_stop && claim_status);
-    QCOMPARE(claim_concurrency->value(), 4);
-    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["concurrency"].getInt<int>(), 4);
-    QTRY_VERIFY(claim_status->text().contains("Concurrency: 4"));
+    QCOMPARE(claim_concurrency->value(), 1000);
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["concurrency"].getInt<int>(), 1000);
+    QTRY_VERIFY(claim_status->text().contains("Concurrency: 1000"));
     QCOMPARE(claim_concurrency->maximum(), std::numeric_limits<int>::max());
     claim_concurrency->selectAll();
     QTest::keyClicks(claim_concurrency, "128");
@@ -1503,5 +1505,99 @@ void WalletTests::p2cTranslations()
         QVERIFY(start);
         QCOMPARE(start->text(), QStringLiteral("Aplicar / iniciar resgates automáticos"));
         QVERIFY(!translator.value.translate("MiningPage", "Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.").isEmpty());
+    }
+}
+
+void WalletTests::connectcoinTranslations()
+{
+    // Check compiled .qm resources too: a populated TS alone does not prove
+    // that the translations are available in a shipped wallet.
+    struct SourceMessage {
+        QByteArray context;
+        QByteArray source;
+        QByteArray comment;
+        bool numerus{false};
+    };
+    std::vector<SourceMessage> messages;
+    QFile source_catalog(":/translation-test/source.ts");
+    QVERIFY(source_catalog.open(QIODevice::ReadOnly));
+    QXmlStreamReader xml(&source_catalog);
+    QVERIFY(xml.readNextStartElement());
+    QCOMPARE(xml.name(), QStringLiteral("TS"));
+    while (xml.readNextStartElement()) {
+        if (xml.name() != QStringLiteral("context")) {
+            xml.skipCurrentElement();
+            continue;
+        }
+        QByteArray context;
+        while (xml.readNextStartElement()) {
+            if (xml.name() == QStringLiteral("name")) {
+                context = xml.readElementText().toUtf8();
+            } else if (xml.name() == QStringLiteral("message")) {
+                SourceMessage message{context, {}, {}, xml.attributes().value("numerus") == QStringLiteral("yes")};
+                bool active{true};
+                while (xml.readNextStartElement()) {
+                    if (xml.name() == QStringLiteral("source")) {
+                        message.source = xml.readElementText().toUtf8();
+                    } else if (xml.name() == QStringLiteral("comment")) {
+                        message.comment = xml.readElementText().toUtf8();
+                    } else {
+                        if (xml.name() == QStringLiteral("translation")) {
+                            const auto type = xml.attributes().value("type");
+                            active = type != QStringLiteral("vanished") && type != QStringLiteral("obsolete");
+                        }
+                        xml.skipCurrentElement();
+                    }
+                }
+                if (active) messages.push_back(std::move(message));
+            } else {
+                xml.skipCurrentElement();
+            }
+        }
+    }
+    QVERIFY2(!xml.hasError(), qPrintable(xml.errorString()));
+    QVERIFY(messages.size() > 1000);
+    const auto locales = QDir(":/translations").entryList(QDir::Files);
+    QVERIFY(!locales.isEmpty());
+    for (const auto& locale : locales) {
+        QTranslator translator;
+        QVERIFY2(translator.load(":/translations/" + locale), qPrintable(locale));
+        for (const auto& message : messages) {
+            // These counts cover all plural branches in the bundled Qt locales.
+            // Query QTranslator directly, without base-language or English fallback.
+            for (const int count : {0, 1, 2, 3, 4, 5, 6, 11, 21, 100}) {
+                const auto text = translator.translate(message.context.constData(), message.source.constData(),
+                    message.comment.isEmpty() ? nullptr : message.comment.constData(), message.numerus ? count : -1);
+                QVERIFY2(!text.isEmpty(), qPrintable(locale + ": " + QString::fromUtf8(message.context) + ": " +
+                    QString::fromUtf8(message.source) + " (n=" + QString::number(count) + ")"));
+                if (!message.numerus) break;
+            }
+        }
+        for (const auto* source : {"Mining", "Start mining", "Stop mining", "Reward address:", "CPU threads:",
+                 "Waiting for the node to catch up", "Stopping (waiting for current work)",
+                 "State: %1\nHashrate: %2 H/s\nHashes: %3 | Accepted blocks: %4\nActive reward address: %5"}) {
+            const auto text = translator.translate("MiningPage", source);
+            QVERIFY2(!text.isEmpty(), qPrintable(locale + ": " + source));
+            if (QString::fromUtf8(source).contains("%5")) {
+                for (int index{1}; index <= 5; ++index) {
+                    QVERIFY2(text.contains("%" + QString::number(index)), qPrintable(locale + ": " + text));
+                }
+            }
+        }
+        QVERIFY2(!translator.translate("BitcoinGUI", "Control CPU mining").isEmpty(), qPrintable(locale));
+        QVERIFY2(!translator.translate("OptionsDialog", "Enable pop-up notifications").isEmpty(), qPrintable(locale));
+        QVERIFY2(!translator.translate("OptionsDialog", "Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.").isEmpty(), qPrintable(locale));
+        QVERIFY2(!translator.translate("bitcoin-core", "ConnectCoin supports only type-1 P2PK (bech32m) addresses").isEmpty(), qPrintable(locale));
+        QVERIFY2(!translator.translate("bitcoin-core", "Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.").isEmpty(), qPrintable(locale));
+    }
+    QTranslator portuguese;
+    QVERIFY(portuguese.load(":/translations/pt_BR"));
+    QVERIFY(!portuguese.translate("bitcoin-core", "ConnectCoin supports only type-1 P2PK (bech32m) addresses").isEmpty());
+    QVERIFY(!portuguese.translate("BitcoinGUI", "%n active connection(s) to the ConnectCoin network.", nullptr, 1).isEmpty());
+    QVERIFY(!portuguese.translate("BitcoinGUI", "%n active connection(s) to the ConnectCoin network.", nullptr, 2).isEmpty());
+    QTranslator arabic;
+    QVERIFY(arabic.load(":/translations/ar"));
+    for (const int count : {0, 1, 2, 3, 11, 100}) {
+        QVERIFY(!arabic.translate("BitcoinGUI", "%n active connection(s) to the ConnectCoin network.", nullptr, count).isEmpty());
     }
 }

@@ -54,13 +54,13 @@
         <translation type="unfinished">Избери</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Тези са вашите Биткойн адреси за изпращане на плащания. Винаги проверявайте количеството и получаващите адреси преди изпращане на монети. </translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">Тези са вашите ConnectCoin адреси за изпращане на плащания. Винаги проверявайте количеството и получаващите адреси преди изпращане на монети. </translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Това са вашите биткойн адреси за получаване на плащания. Използвайте бутона „Създаване на нови адреси“ в раздела за получаване, за да създадете нови адреси. Подписването е възможно само с адреси от типа „наследени“.</translation>
+        <translation type="unfinished">Това са вашите ConnectCoin адреси за получаване на плащания. Използвайте бутона „Създаване на нови адреси“ в раздела за получаване, за да създадете нови адреси. Подписването е възможно само с адреси от типа „наследени“.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -99,6 +99,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">Изнасянето се провали</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the clipboard</source>
+        <translation>Копиране на избрания адрес в клипборда</translation>
     </message>
 </context>
 <context>
@@ -159,7 +163,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Потвърди криптирането на порфейла</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
         <translation type="unfinished">ВНИМАНИЕ: Ако шифрирате вашият портфейл и изгубите паролата си, &lt;b&gt;ЩЕ ИЗГУБИТЕ ВСИЧКИТЕ СИ БИТКОИНИ&lt;/b&gt;!</translation>
     </message>
     <message>
@@ -187,8 +191,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Назад</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">Не забравяйте, че криптирането на вашия портфейл не може напълно да защити вашите биткойни от кражба от зловреден софтуер, заразяващ компютъра ви.</translation>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished">Не забравяйте, че криптирането на вашия портфейл не може напълно да защити вашите ConnectCoin от кражба от зловреден софтуер, заразяващ компютъра ви.</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -238,6 +242,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Warning: The Caps Lock key is on!</source>
         <translation type="unfinished">Внимание:Бутонът Caps Lock е включен.</translation>
     </message>
+    <message>
+        <source>The old passphrase entered for the wallet decryption is incorrect. It contains a null character (ie - a zero byte). If the passphrase was set with a version of this software prior to 25.0, please try again with only the characters up to — but not including — the first null character.</source>
+        <translation>Старата парола, въведена за дешифриране на портфейла, е неправилна. Тя съдържа нулев знак (т.е. нулев байт). Ако паролата е зададена с версия на този софтуер преди 25.0, опитайте отново само със знаците до първия нулев знак, без да го включвате.</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption is incorrect. It contains a null character (ie - a zero byte). If the passphrase was set with a version of this software prior to 25.0, please try again with only the characters up to — but not including — the first null character. If this is successful, please set a new passphrase to avoid this issue in the future.</source>
+        <translation>Паролата, въведена за дешифриране на портфейла, е неправилна. Тя съдържа нулев знак (т.е. нулев байт). Ако паролата е зададена с версия на този софтуер преди 25.0, опитайте отново само със знаците до първия нулев знак, без да го включвате. Ако това е успешно, задайте нова парола, за да избегнете този проблем в бъдеще.</translation>
+    </message>
 </context>
 <context>
     <name>BanTableModel</name>
@@ -283,7 +295,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>A fatal error occurred. Check that settings file is writable, or try running with -nosettings.</source>
         <extracomment>Explanatory text shown on startup when the settings file could not be written. Prompts user to check that we have the ability to write to the file. Explains that the user has the option of running without a settings file.</extracomment>
-        <translation type="unfinished">Възникна фатална грешка. Проверете че файла с настройки е редактируем или опирайте да стартирате без настройки.</translation>
+        <translation>Възникна фатална грешка. Проверете дали файлът с настройки е достъпен за запис или опитайте да стартирате с -nosettings.</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -302,8 +314,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Количество</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Въведете Биткойн адрес (например: %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">Въведете ConnectCoin адрес (например: %1)</translation>
     </message>
     <message>
         <source>Inbound</source>
@@ -345,37 +357,37 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n секунда</numerusform>
+            <numerusform>%n секунди</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n минута</numerusform>
+            <numerusform>%n минути</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n час</numerusform>
+            <numerusform>%n часа</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n ден</numerusform>
+            <numerusform>%n дни</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n седмица</numerusform>
+            <numerusform>%n седмици</numerusform>
         </translation>
     </message>
     <message>
@@ -384,9 +396,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n година</numerusform>
+            <numerusform>%n години</numerusform>
         </translation>
     </message>
     <message>
@@ -404,6 +416,90 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>default wallet</source>
         <translation type="unfinished">Портфейл по подразбиране</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <extracomment>Short-lived peer connection type that solicits known addresses from a peer.</extracomment>
+        <translation>Получаване на адреси</translation>
+    </message>
+    <message>
+        <source>Block Relay</source>
+        <extracomment>Peer connection type that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>Препредаване на блокове</translation>
+    </message>
+    <message>
+        <source>Custom…</source>
+        <translation>По избор…</translation>
+    </message>
+    <message>
+        <source>Default system font "%1"</source>
+        <translation>Системен шрифт по подразбиране „%1“</translation>
+    </message>
+    <message>
+        <source>Embedded "%1"</source>
+        <translation>Вграден „%1“</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <extracomment>Short-lived peer connection type that tests the aliveness of known addresses.</extracomment>
+        <translation>Сонда</translation>
+    </message>
+    <message>
+        <source>Full Relay</source>
+        <extracomment>Peer connection type that relays all network information.</extracomment>
+        <translation>Пълно препредаване</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <extracomment>Peer connection type established manually through one of several methods.</extracomment>
+        <translation>Ръчно</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>Поверително разпространяване</translation>
+    </message>
+    <message>
+        <source>Unroutable</source>
+        <translation>Немаршрутизируем</translation>
     </message>
 </context>
 <context>
@@ -474,8 +570,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Прокси е &lt;b&gt;разрешено&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Изпращане към Биткоин адрес</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">Изпращане към ConnectCoin адрес</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -518,16 +614,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Подпиши &amp;съобщение…</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Пишете съобщения със своя Биткойн адрес за да докажете,че е ваш.</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">Пишете съобщения със своя ConnectCoin адрес за да докажете,че е ваш.</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">&amp;Потвърди съобщение…</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">Потвърждаване на съобщения  за да се знае,че са написани с дадените Биткойн адреси.</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">Потвърждаване на съобщения  за да се знае,че са написани с дадените ConnectCoin адреси.</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -586,8 +682,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Свързване с рояк...</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Изискване на плащания(генерира QR кодове и биткойн: URIs)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">Изискване на плащания(генерира QR кодове и ConnectCoin: URIs)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -645,16 +741,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Ctrl+Q </translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">Заредете частично подписана Bitcoin трансакция</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">Заредете частично подписана ConnectCoin трансакция</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">Заредете PSBT (частично подписана Bitcoin трансакция) от &amp;клипборд...</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">Заредете частично подписана Bitcoin трансакция от клипборд</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">Заредете частично подписана ConnectCoin трансакция от клипборд</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -673,8 +769,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;Получаване на адреси</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">Отвори bitcoin: URI</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">Отвори connectcoin: URI</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -711,8 +807,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Мигрирайте портфейл</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Покажи %1 помощно съобщение за да получиш лист с възможни Биткойн команди</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">Покажи %1 помощно съобщение за да получиш лист с възможни ConnectCoin команди</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -775,11 +871,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;Покажи</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform>%n свързани активно към Bitcoin мрежата.</numerusform>
-            <numerusform>%n активно свързани към Биткойн мрежата. </numerusform>
+            <numerusform>%n свързани активно към ConnectCoin мрежата.</numerusform>
+            <numerusform>%n активно свързани към ConnectCoin мрежата. </numerusform>
         </translation>
     </message>
     <message>
@@ -889,6 +985,63 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>Създаване на награди pay-to-connect</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Копаене</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>Управление на CPU копаенето</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Всички файлове</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Грешка при експортиране</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>Успешно експортиране</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>Експортиране на версия на текущия портфейл само за наблюдение, която може да бъде възстановена на друг възел.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>Експортиране на портфейл само за наблюдение</translation>
+    </message>
+    <message>
+        <source>Invalid Wallet Name</source>
+        <translation>Невалидно име на портфейл</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>Възстановяване и мигриране на портфейл</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>Възстановяване и мигриране на резервно копие на портфейл</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>Възстановяване и мигриране на файл на портфейл…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>Запазване на експортирания портфейл само за наблюдение</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>Портфейлът е експортиран в </translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>Името на портфейла не може да е празно</translation>
     </message>
 </context>
 <context>
@@ -1032,6 +1185,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(change)</source>
         <translation type="unfinished">(промени)</translation>
     </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>Може да варира с +/- %1 connect на вход.</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1114,6 +1271,62 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">Миграцията е успешна</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>Сигурни ли сте, че искате да възстановите файла на портфейла &lt;i&gt;%1&lt;/i&gt; в &lt;i&gt;%2&lt;/i&gt; и да го мигрирате?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Ако възелът е подрязан и портфейлът е създаден преди височината на подрязване, процесът на миграция може да се провали при зареждането на мигрирания портфейл.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Зареждане на портфейла след миграцията</translation>
+    </message>
+    <message>
+        <source>Migrating the wallet will convert this wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>Миграцията ще преобразува този портфейл в един или повече портфейли с дескриптори. Ще трябва да се направи ново резервно копие на портфейла.
+Ако този портфейл съдържа скриптове само за наблюдение, ще бъде създаден нов портфейл с тях.
+Ако този портфейл съдържа разрешими, но ненаблюдавани скриптове, ще бъде създаден друг нов портфейл с тях.
+
+Процесът на миграция ще създаде резервно копие на портфейла преди мигрирането. Файлът ще се казва &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak и ще се намира в директорията на този портфейл. При неправилна миграция резервното копие може да бъде възстановено чрез функцията „Възстановяване на портфейл“.</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>Възстановяване и мигриране на портфейл</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>Възстановяването на портфейла ще копира резервния файл в директорията с портфейли и ще го постави в стандартната структура от директории на портфейла. Оригиналният файл няма да бъде променен.
+
+Миграцията ще преобразува възстановения портфейл в един или повече портфейли с дескриптори. Ще трябва да се направи ново резервно копие на портфейла.
+Ако този портфейл съдържа скриптове само за наблюдение, ще бъде създаден нов портфейл с тях.
+Ако този портфейл съдържа разрешими, но ненаблюдавани скриптове, ще бъде създаден друг нов портфейл с тях.
+
+Процесът на миграция ще създаде резервно копие на портфейла преди мигрирането. Файлът ще се казва &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak и ще се намира в директорията на този портфейл. При неправилна миграция резервното копие може да бъде възстановено чрез функцията „Възстановяване на портфейл“.</translation>
+    </message>
+    <message>
+        <source>Solvable but not watched scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>Разрешимите, но ненаблюдавани скриптове са мигрирани в нов портфейл с име '%1'.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>Портфейлът не е зареден след миграцията. Можете да го отворите от менюто „Файл &gt; Отваряне на портфейл“.</translation>
+    </message>
+    <message>
+        <source>Watchonly scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>Скриптовете само за наблюдение са мигрирани в нов портфейл с име '%1'.</translation>
     </message>
 </context>
 <context>
@@ -1251,6 +1464,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
         <translation type="unfinished">Компилиран без поддръжка на външни подписи (изисква се за външно подписване)</translation>
     </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>Създаване на празен портфейл. Празните портфейли първоначално нямат частни ключове или скриптове. Частни ключове и адреси могат да бъдат внесени по-късно чрез дескриптори.</translation>
+    </message>
 </context>
 <context>
     <name>EditAddressDialog</name>
@@ -1287,8 +1504,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Редактиране на адрес за изпращане</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">"%1" не е валиден Биткоин адрес.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">"%1" не е валиден ConnectCoin адрес.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1399,8 +1616,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Използване на директория ръчно</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation type="unfinished">Биткоин</translation>
+        <source>ConnectCoin</source>
+        <translation type="unfinished">ConnectCoin</translation>
     </message>
     <message numerus="yes">
         <source>%n GB of space available</source>
@@ -1411,16 +1628,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
-        <translation type="unfinished">
-            <numerusform>фе</numerusform>
-            <numerusform>(от %n гигабайта са нужни)</numerusform>
+        <translation>
+            <numerusform>(от необходимия %n GB)</numerusform>
+            <numerusform>(от необходимите %n GB)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>(%n GB needed for full chain)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>(%n GB е необходим за цялата верига)</numerusform>
+            <numerusform>(%n GB са необходими за цялата верига)</numerusform>
         </translation>
     </message>
     <message>
@@ -1459,6 +1676,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Error</source>
         <translation type="unfinished">грешка</translation>
     </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 ще изтегли и съхрани копие на блоковата верига на ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2 GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation>Когато натиснете OK, %1 ще започне да изтегля и обработва цялата блокова верига на %4 (%2 GB), започвайки от най-ранните транзакции през %3, когато %4 е пуснат първоначално.</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1467,8 +1692,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">форма</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">Последните трансакции все още не могат да се виждат и следователно балансът на портфейла ви може да бъде неправилен. Тази информация ще бъде правилна, след като портфейлът ви приключи синхронизирането с Bitcoin мрежата, както е подробно описано по-долу.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">Последните трансакции все още не могат да се виждат и следователно балансът на портфейла ви може да бъде неправилен. Тази информация ще бъде правилна, след като портфейлът ви приключи синхронизирането с ConnectCoin мрежата, както е подробно описано по-долу.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1522,17 +1747,25 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">Неизвестно. Предварителна синхронизация на хедъри (%1, %2%)…</translation>
     </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Опитите за харчене на средства в ConnectCoin, засегнати от все още непоказани транзакции, няма да бъдат приети от мрежата.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">Отвори bitcoin URI </translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">Отвори ConnectCoin URI </translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">Вмъкни от клипборда</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1685,8 +1918,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Позволи входящи връзки</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Свързване с Биткойн мрежата чрез SOCKS5  прокси.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">Свързване с ConnectCoin мрежата чрез SOCKS5  прокси.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1809,6 +2042,101 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">Текущият прокси адрес е невалиден.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Включване на изскачащи известия</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Показване на изскачащи известия на работния плот, включително за входящи и изпратени транзакции. Изключени по подразбиране. Диалоговите прозорци за грешки и потвърждение остават включени.</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>&amp;Show tray icon</source>
+        <translation>&amp;Показване на иконата в системната област</translation>
+    </message>
+    <message>
+        <source>&amp;Third-party transaction URLs</source>
+        <translation>URL адреси на транзакции от &amp;трети страни</translation>
+    </message>
+    <message>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation>Автоматично отваряне на порта на клиента ConnectCoin на рутера. Това работи само ако рутерът поддържа PCP или NAT-PMP и функцията е активирана. Външният порт може да бъде случаен.</translation>
+    </message>
+    <message>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Свързване към мрежата ConnectCoin чрез отделен SOCKS5 прокси сървър за onion услуги на Tor.</translation>
+    </message>
+    <message>
+        <source>Current settings will be backed up at "%1".</source>
+        <extracomment>Text explaining to the user that the client's current settings will be backed up at a specific location. %1 is a stand-in argument for the backup location's path.</extracomment>
+        <translation>Текущите настройки ще бъдат архивирани в „%1“.</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Включването на подрязване значително намалява дисковото пространство, необходимо за съхраняване на транзакции. Всички блокове продължават да се валидират изцяло. Портфейлите трябва да се зареждат при стартиране и да остават активни, докато подрязването е включено, за да са синхронизирани преди изтриването на стари блокови данни; портфейли, изостанали преди подрязаните данни, може да изискват преиндексиране. Отмяната на тази настройка изисква повторно изтегляне на цялата блокова верига.</translation>
+    </message>
+    <message>
+        <source>Font in the Overview tab: </source>
+        <translation>Шрифт в раздела „Преглед“: </translation>
+    </message>
+    <message>
+        <source>Full path to a %1 compatible script (e.g. C:\Downloads\hwi.exe or /Users/you/Downloads/hwi.py). Beware: malware can steal your coins!</source>
+        <translation>Пълен път до скрипт, съвместим с %1 (напр. C:\Downloads\hwi.exe или /Users/you/Downloads/hwi.py). Внимание: зловреден софтуер може да открадне монетите ви!</translation>
+    </message>
+    <message>
+        <source>Map port using PCP or NA&amp;T-PMP</source>
+        <translation>Пренасочване на порт чрез PCP или NA&amp;T-PMP</translation>
+    </message>
+    <message>
+        <source>Maximum database cache size. Make sure you have enough RAM. A larger cache can contribute to faster sync, after which the benefit is less pronounced for most use cases. Lowering the cache size will reduce memory usage. Unused mempool memory is shared for this cache.</source>
+        <extracomment>Tooltip text for Options window setting that sets the size of the database cache. Explains the corresponding effects of increasing/decreasing this value.</extracomment>
+        <translation>Максимален размер на кеша на базата данни. Уверете се, че имате достатъчно RAM. По-голям кеш може да ускори синхронизирането, след което ползата е по-слабо изразена в повечето случаи. Намаляването на кеша намалява използваната памет. Неизползваната памет на mempool се споделя с този кеш.</translation>
+    </message>
+    <message>
+        <source>Open the %1 configuration file from the working directory.</source>
+        <translation>Отваряне на конфигурационния файл на %1 от работната директория.</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>Задава се чрез -popupnotifications или popupnotifications в connectcoin.conf.</translation>
+    </message>
+    <message>
+        <source>Show the icon in the system tray.</source>
+        <translation>Показване на иконата в системната област.</translation>
+    </message>
+    <message>
+        <source>The configuration file is used to specify advanced user options which override GUI settings. Additionally, any command-line options will override this configuration file.</source>
+        <extracomment>Explanatory text about the priority order of instructions considered by client. The order from high to low being: command-line, configuration file, GUI settings.</extracomment>
+        <translation>Конфигурационният файл задава разширени потребителски опции, които имат предимство пред настройките на графичния интерфейс. Освен това всички опции от командния ред имат предимство пред конфигурационния файл.</translation>
+    </message>
+    <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>Тук може да се зададе езикът на потребителския интерфейс. Настройката ще влезе в сила след рестартиране на %1.</translation>
+    </message>
+    <message>
+        <source>Third-party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
+        <translation>URL адреси на трети страни (напр. блоков обозревател), които се показват като елементи в контекстното меню на раздела за транзакции. %s в URL адреса се заменя с хеша на транзакцията. Множество URL адреси се разделят с вертикална черта |.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Използване на отделен SOCKS&amp;5 прокси сървър за достигане до възли чрез onion услуги на Tor:</translation>
+    </message>
+    <message>
+        <source>Used for reaching peers via:</source>
+        <translation>Използва се за достигане до възли чрез:</translation>
+    </message>
 </context>
 <context>
     <name>OverviewPage</name>
@@ -1817,8 +2145,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">форма</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">Текущата информация на екрана може да не е актуална. Вашият портфейл ще се синхронизира автоматично с мрежата на Биткоин, щом поне една връзката с нея се установи; този процес все още не е приключил.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">Текущата информация на екрана може да не е актуална. Вашият портфейл ще се синхронизира автоматично с мрежата на ConnectCoin, щом поне една връзката с нея се установи; този процес все още не е приключил.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1860,7 +2188,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Recent transactions</source>
         <translation type="unfinished">Последни транзакции</translation>
     </message>
-    </context>
+        <message>
+        <source>Privacy mode activated for the Overview tab. To unmask the values, uncheck Settings-&gt;Mask values.</source>
+        <translation>Режимът за поверителност е включен за раздела „Преглед“. За да разкриете стойностите, махнете отметката от Настройки-&gt;Скриване на стойностите.</translation>
+    </message>
+</context>
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
@@ -1897,9 +2229,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Подписан е %n вход, но все още са необходими още подписи.</numerusform>
+            <numerusform>Подписани са %n входа, но все още са необходими още подписи.</numerusform>
         </translation>
     </message>
     <message>
@@ -1916,12 +2248,93 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Транзакцията има %n неподписан вход.</numerusform>
+            <numerusform>Транзакцията има %n неподписани входа.</numerusform>
         </translation>
     </message>
-    </context>
+        <message>
+        <source>(But no wallet is loaded.)</source>
+        <translation>(Но няма зареден портфейл.)</translation>
+    </message>
+    <message>
+        <source>(But this wallet cannot sign transactions.)</source>
+        <translation>(Но този портфейл не може да подписва транзакции.)</translation>
+    </message>
+    <message>
+        <source>(But this wallet does not have the right keys.)</source>
+        <translation>(Но този портфейл няма правилните ключове.)</translation>
+    </message>
+    <message>
+        <source>Broadcast Tx</source>
+        <translation>Разпространяване на транзакцията</translation>
+    </message>
+    <message>
+        <source>PSBT Operations</source>
+        <translation>Операции с PSBT</translation>
+    </message>
+    <message>
+        <source>PSBT copied to clipboard.</source>
+        <translation>PSBT е копирана в клипборда.</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk.</source>
+        <translation>PSBT е запазена на диска.</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation>Частично подписана транзакция (двоична)</translation>
+    </message>
+    <message>
+        <source>Pays transaction fee: </source>
+        <translation>Плаща такса за транзакция: </translation>
+    </message>
+    <message>
+        <source>Save Transaction Data</source>
+        <translation>Запазване на данните на транзакцията</translation>
+    </message>
+    <message>
+        <source>Sends %1 to %2</source>
+        <translation>Изпраща %1 на %2</translation>
+    </message>
+    <message>
+        <source>Signed transaction successfully. Transaction is ready to broadcast.</source>
+        <translation>Транзакцията е подписана успешно. Готова е за разпространяване.</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast failed: %1</source>
+        <translation>Разпространяването на транзакцията е неуспешно: %1</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast successfully! Transaction ID: %1</source>
+        <translation>Транзакцията е разпространена успешно! Идентификатор на транзакцията: %1</translation>
+    </message>
+    <message>
+        <source>Transaction is fully signed and ready for broadcast.</source>
+        <translation>Транзакцията е изцяло подписана и готова за разпространяване.</translation>
+    </message>
+    <message>
+        <source>Transaction is missing some information about inputs.</source>
+        <translation>В транзакцията липсва част от информацията за входовете.</translation>
+    </message>
+    <message>
+        <source>Transaction status is unknown.</source>
+        <translation>Състоянието на транзакцията е неизвестно.</translation>
+    </message>
+    <message>
+        <source>Transaction still needs signature(s).</source>
+        <translation>Транзакцията все още се нуждае от подписи.</translation>
+    </message>
+    <message>
+        <source>Unable to calculate transaction fee or total transaction amount.</source>
+        <translation>Не може да се изчисли таксата или общата сума на транзакцията.</translation>
+    </message>
+    <message>
+        <source>Unknown error processing transaction.</source>
+        <translation>Неизвестна грешка при обработката на транзакцията.</translation>
+    </message>
+</context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1929,8 +2342,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Възникна грешка по време назаявката за плащане</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Биткойн не можe да се стартира: click-to-pay handler</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation>Не може да се стартира обработчикът за плащане с щракване за connectcoin:</translation>
     </message>
     <message>
         <source>URI handling</source>
@@ -1939,6 +2352,22 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Payment request file handling</source>
         <translation type="unfinished">Файл за справяне със заявки</translation>
+    </message>
+    <message>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation>'connectcoin://' не е валиден URI. Вместо това използвайте 'connectcoin:'.</translation>
+    </message>
+    <message>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation>Заявката за плащане не може да бъде обработена, защото BIP70 не се поддържа.
+Поради широко разпространените уязвимости в BIP70 силно се препоръчва да пренебрегвате всякакви указания от търговци за смяна на портфейла.
+Ако получавате тази грешка, поискайте от търговеца URI, съвместим с BIP21.</translation>
+    </message>
+    <message>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation>URI не може да бъде разчетен! Причината може да е невалиден адрес на ConnectCoin или неправилно оформени URI параметри.</translation>
     </message>
 </context>
 <context>
@@ -1998,6 +2427,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">Изходящи</translation>
     </message>
+    <message>
+        <source>Peer</source>
+        <extracomment>Title of Peers Table column which contains a unique number used to identify a connection.</extracomment>
+        <translation>Отсрещен възел</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -2017,7 +2451,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Save QR Code</source>
         <translation type="unfinished">Запази QR Код</translation>
     </message>
-    </context>
+        <message>
+        <source>PNG Image</source>
+        <extracomment>Expanded name of the PNG file format. See: https://en.wikipedia.org/wiki/Portable_Network_Graphics.</extracomment>
+        <translation>PNG изображение</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image…</source>
+        <translation>&amp;Запазване на изображението…</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Полученият URI е твърде дълъг. Опитайте да съкратите текста на етикета/съобщението.</translation>
+    </message>
+</context>
 <context>
     <name>RPCConsole</name>
     <message>
@@ -2207,6 +2654,352 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Unknown</source>
         <translation type="unfinished">Неизвестен</translation>
     </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>&amp;Copy IP/Netmask</source>
+        <extracomment>Context menu action to copy the IP/Netmask of a banned peer. IP/Netmask is the combination of a peer's IP address and its Netmask. For IP address, see: https://en.wikipedia.org/wiki/IP_address.</extracomment>
+        <translation>&amp;Копиране на IP/мрежова маска</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation>&amp;Прекъсване на връзката</translation>
+    </message>
+    <message>
+        <source>&amp;Reset</source>
+        <translation>&amp;Нулиране</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>&amp;Отмяна на забраната</translation>
+    </message>
+    <message>
+        <source>(none)</source>
+        <translation>(няма)</translation>
+    </message>
+    <message>
+        <source>(peer: %1)</source>
+        <translation>(възел: %1)</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;час</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;седмица</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;година</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation>1 &amp;ден</translation>
+    </message>
+    <message>
+        <source>Address Relay</source>
+        <extracomment>Text title for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>Препредаване на адреси</translation>
+    </message>
+    <message>
+        <source>Addresses Processed</source>
+        <extracomment>Text title for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>Обработени адреси</translation>
+    </message>
+    <message>
+        <source>Addresses Rate-Limited</source>
+        <extracomment>Text title for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>Адреси с ограничена честота</translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation>Забрана за</translation>
+    </message>
+    <message>
+        <source>Banned peers</source>
+        <translation>Забранени възли</translation>
+    </message>
+    <message>
+        <source>Blocksdir</source>
+        <translation>Директория за блокове</translation>
+    </message>
+    <message>
+        <source>Current block height</source>
+        <translation>Текуща височина на блоковете</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>Текущ брой транзакции</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>Директория за данни</translation>
+    </message>
+    <message>
+        <source>Direction/Type</source>
+        <translation>Посока/тип</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation>Времето, изминало от получаването от този възел на нов блок, преминал първоначалните проверки за валидност.</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <extracomment>Tooltip text for the Last Transaction field in the peer details area.</extracomment>
+        <translation>Времето, изминало от получаването от този възел на нова транзакция, приета в нашия mempool.</translation>
+    </message>
+    <message>
+        <source>Executing command using "%1" wallet</source>
+        <translation>Изпълняване на команда чрез портфейла „%1“</translation>
+    </message>
+    <message>
+        <source>Executing…</source>
+        <extracomment>A console message indicating an entered command is currently being executed.</extracomment>
+        <translation>Изпълняване…</translation>
+    </message>
+    <message>
+        <source>Hide Peers Detail</source>
+        <translation>Скриване на подробностите за възлите</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation>Висока пропускателна способност</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation>Препредаване на компактни блокове BIP152 с висока пропускателна способност: %1</translation>
+    </message>
+    <message>
+        <source>Inbound: initiated by peer</source>
+        <extracomment>Explanatory text for an inbound peer connection.</extracomment>
+        <translation>Входяща: започната от отсрещния възел</translation>
+    </message>
+    <message>
+        <source>Increase font size</source>
+        <translation>Увеличаване на размера на шрифта</translation>
+    </message>
+    <message>
+        <source>Last Block</source>
+        <translation>Последен блок</translation>
+    </message>
+    <message>
+        <source>Last Transaction</source>
+        <translation>Последна транзакция</translation>
+    </message>
+    <message>
+        <source>Local Addresses</source>
+        <translation>Локални адреси</translation>
+    </message>
+    <message>
+        <source>Mapped AS</source>
+        <translation>Съпоставена автономна система</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>Пул в паметта</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Минимално време за ping</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Мрежовата активност е изключена</translation>
+    </message>
+    <message>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation>Мрежови адреси, които вашият възел ConnectCoin използва в момента за комуникация с други възли.</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>Никога</translation>
+    </message>
+    <message>
+        <source>Node window - [%1]</source>
+        <translation>Прозорец на възела - [%1]</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Отваряне на файла с дневника за отстраняване на грешки на %1 от текущата директория за данни. Това може да отнеме няколко секунди при големи дневници.</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to request addresses from a peer.</extracomment>
+        <translation>Изходящо получаване на адреси: краткотрайно, за заявяване на адреси</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>Изходящо препредаване на блокове: не препредава транзакции или адреси</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to test the aliveness of known addresses.</extracomment>
+        <translation>Изходяща сонда: краткотрайна, за проверка на адреси</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays all network information. This is the default behavior for outbound connections.</extracomment>
+        <translation>Изходящо пълно препредаване: по подразбиране</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <extracomment>Explanatory text for an outbound peer connection that was established manually through one of several methods. The numbered arguments are stand-ins for the methods available to establish manual connections.</extracomment>
+        <translation>Изходяща ръчна връзка: добавена чрез RPC %1 или опциите за конфигурация %2/%3</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Изчакване на ping</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>Поверително разпространяване: краткотрайно, за разпространяване на транзакции с чувствителни за поверителността данни</translation>
+    </message>
+    <message>
+        <source>Session ID</source>
+        <translation>Идентификатор на сесията</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>Синхронизирани заглавки</translation>
+    </message>
+    <message>
+        <source>The BIP324 session ID string in hex.</source>
+        <translation>Низът на идентификатора на сесията BIP324 в шестнадесетичен вид.</translation>
+    </message>
+    <message>
+        <source>The direction and type of peer connection: %1</source>
+        <translation>Посоката и типът на връзката с отсрещния възел: %1</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>Продължителността на текущ ping, който чака отговор.</translation>
+    </message>
+    <message>
+        <source>The mapped Autonomous System used for diversifying peer selection.</source>
+        <translation>Съпоставената автономна система, използвана за разнообразяване на избора на отсрещни възли.</translation>
+    </message>
+    <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation>Мрежовият протокол, чрез който е свързан този възел: IPv4, IPv6, Onion, I2P или CJDNS.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</source>
+        <extracomment>Tooltip text for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>Общият брой адреси, получени от този възел и отхвърлени (необработени) поради ограничаване на честотата.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</source>
+        <extracomment>Tooltip text for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>Общият брой адреси, получени от този възел и обработени (без адресите, отхвърлени поради ограничаване на честотата).</translation>
+    </message>
+    <message>
+        <source>The transport layer version: %1</source>
+        <translation>Версията на транспортния слой: %1</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>Времево отместване</translation>
+    </message>
+    <message>
+        <source>To specify a non-default location of the blocks directory use the '%1' option.</source>
+        <translation>За да зададете различно от стандартното местоположение на директорията за блокове, използвайте опцията '%1'.</translation>
+    </message>
+    <message>
+        <source>To specify a non-default location of the data directory use the '%1' option.</source>
+        <translation>За да зададете различно от стандартното местоположение на директорията за данни, използвайте опцията '%1'.</translation>
+    </message>
+    <message>
+        <source>Transaction Relay</source>
+        <translation>Препредаване на транзакции</translation>
+    </message>
+    <message>
+        <source>Transport</source>
+        <translation>Транспорт</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.
+Use up and down arrows to navigate history, and %2 to clear screen.
+Use %3 and %4 to increase or decrease the font size.
+Type %5 for an overview of available commands.
+For more information on using this console, type %6.
+
+%7WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.%8</source>
+        <extracomment>RPC console welcome message. Placeholders %7 and %8 are style tags for the warning content, and they are not space separated from the rest of the text intentionally.</extracomment>
+        <translation>Добре дошли в RPC конзолата на %1.
+Използвайте стрелките нагоре и надолу за навигация в историята и %2 за изчистване на екрана.
+Използвайте %3 и %4 за увеличаване или намаляване на размера на шрифта.
+Въведете %5 за преглед на наличните команди.
+За повече информация относно използването на тази конзола въведете %6.
+
+%7ПРЕДУПРЕЖДЕНИЕ: Измамници подканват потребителите да въвеждат команди тук и така крадат съдържанието на портфейлите им. Не използвайте тази конзола, без да разбирате напълно последствията от дадена команда.%8</translation>
+    </message>
+    <message>
+        <source>Whether we relay addresses to this peer.</source>
+        <extracomment>Tooltip text for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>Дали препредаваме адреси към този възел.</translation>
+    </message>
+    <message>
+        <source>Whether we relay transactions to this peer.</source>
+        <translation>Дали препредаваме транзакции към този възел.</translation>
+    </message>
+    <message>
+        <source>detecting: peer could be v1 or v2</source>
+        <extracomment>Explanatory text for "detecting" transport type.</extracomment>
+        <translation>откриване: възелът може да използва v1 или v2</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation>не е избрано препредаване с висока пропускателна способност</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation>отсрещният възел ни избра за препредаване с висока пропускателна способност</translation>
+    </message>
+    <message>
+        <source>v1: unencrypted, plaintext transport protocol</source>
+        <extracomment>Explanatory text for v1 transport type.</extracomment>
+        <translation>v1: нешифрован транспортен протокол с обикновен текст</translation>
+    </message>
+    <message>
+        <source>v2: BIP324 encrypted transport protocol</source>
+        <extracomment>Explanatory text for v2 transport type.</extracomment>
+        <translation>v2: шифрован транспортен протокол BIP324</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation>избрахме отсрещния възел за препредаване с висока пропускателна способност</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2270,7 +3063,43 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Could not unlock wallet.</source>
         <translation type="unfinished">Не може да отключите портфейла.</translation>
     </message>
-    </context>
+        <message>
+        <source>&amp;Create new receiving address</source>
+        <translation>&amp;Създаване на нов адрес за получаване</translation>
+    </message>
+    <message>
+        <source>An optional label to associate with the new receiving address (used by you to identify an invoice).  It is also attached to the payment request.</source>
+        <translation>Незадължителен етикет, свързан с новия адрес за получаване (използван от вас за разпознаване на фактура).  Прилага се и към заявката за плащане.</translation>
+    </message>
+    <message>
+        <source>An optional label to associate with the new receiving address.</source>
+        <translation>Незадължителен етикет, свързан с новия адрес за получаване.</translation>
+    </message>
+    <message>
+        <source>An optional message that is attached to the payment request and may be displayed to the sender.</source>
+        <translation>Незадължително съобщение, което се прилага към заявката за плащане и може да се покаже на подателя.</translation>
+    </message>
+    <message>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation>Незадължително съобщение към заявката за плащане, което ще се покаже при отварянето ѝ. Забележка: Съобщението няма да бъде изпратено заедно с плащането по мрежата ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>Copy &amp;message</source>
+        <translation>Копиране на &amp;съобщението</translation>
+    </message>
+    <message>
+        <source>Could not generate new %1 address</source>
+        <translation>Не може да се създаде нов адрес %1</translation>
+    </message>
+    <message>
+        <source>Remove the selected entries from the list</source>
+        <translation>Премахване на избраните записи от списъка</translation>
+    </message>
+    <message>
+        <source>Show the selected request (does the same as double clicking an entry)</source>
+        <translation>Показване на избраната заявка (същото като двукратно щракване върху запис)</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
@@ -2305,6 +3134,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Request payment to %1</source>
         <translation type="unfinished">Изискване на плащане от %1</translation>
     </message>
+    <message>
+        <source>&amp;Save Image…</source>
+        <translation>&amp;Запазване на изображението…</translation>
+    </message>
+    <message>
+        <source>&amp;Verify</source>
+        <translation>&amp;Проверка</translation>
+    </message>
+    <message>
+        <source>Address:</source>
+        <translation>Адрес:</translation>
+    </message>
+    <message>
+        <source>Request payment to …</source>
+        <translation>Заявяване на плащане към …</translation>
+    </message>
+    <message>
+        <source>Verify this address on e.g. a hardware wallet screen</source>
+        <translation>Проверете този адрес, например на екрана на хардуерен портфейл</translation>
+    </message>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -2328,7 +3177,15 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(no message)</source>
         <translation type="unfinished">(без съобщение)</translation>
     </message>
-    </context>
+        <message>
+        <source>(no amount requested)</source>
+        <translation>(няма заявена сума)</translation>
+    </message>
+    <message>
+        <source>Requested</source>
+        <translation>Заявено</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsDialog</name>
     <message>
@@ -2477,14 +3334,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Очаква се потвърждаването да започне в рамките на %n блок.</numerusform>
+            <numerusform>Очаква се потвърждаването да започне в рамките на %n блока.</numerusform>
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">Внимание: Невалиден Биткойн адрес</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">Внимание: Невалиден ConnectCoin адрес</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -2493,6 +3350,200 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(без етикет)</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>%1 (%2 blocks)</source>
+        <translation>%1 (%2 блока)</translation>
+    </message>
+    <message>
+        <source>%1 from wallet '%2'</source>
+        <translation>%1 от портфейла '%2'</translation>
+    </message>
+    <message>
+        <source>%1 to %2</source>
+        <translation>%1 към %2</translation>
+    </message>
+    <message>
+        <source>%1 to '%2'</source>
+        <translation>%1 към '%2'</translation>
+    </message>
+    <message>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks…)</source>
+        <translation>(Интелигентната такса все още не е инициализирана. Обикновено това отнема няколко блока…)</translation>
+    </message>
+    <message>
+        <source>A fee higher than %1 is considered an absurdly high fee.</source>
+        <translation>Такса над %1 се смята за абсурдно висока.</translation>
+    </message>
+    <message>
+        <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
+        <translation>Твърде ниска такса може да доведе до транзакция, която никога не се потвърждава (прочетете подсказката)</translation>
+    </message>
+    <message>
+        <source>Choose…</source>
+        <translation>Избор…</translation>
+    </message>
+    <message>
+        <source>Confirm custom change address</source>
+        <translation>Потвърждаване на персонализирания адрес за ресто</translation>
+    </message>
+    <message>
+        <source>Confirmation time target:</source>
+        <translation>Целево време за потвърждение:</translation>
+    </message>
+    <message>
+        <source>Connect your hardware wallet first.</source>
+        <translation>Първо свържете хардуерния си портфейл.</translation>
+    </message>
+    <message>
+        <source>Cr&amp;eate Unsigned</source>
+        <translation>Съ&amp;здаване без подпис</translation>
+    </message>
+    <message>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation>Създава частично подписана транзакция ConnectCoin (PSBT) за използване например с несвързан към мрежата портфейл %1 или хардуерен портфейл, съвместим с PSBT.</translation>
+    </message>
+    <message>
+        <source>Custom change address</source>
+        <translation>Персонализиран адрес за ресто</translation>
+    </message>
+    <message>
+        <source>Do you want to create this transaction?</source>
+        <extracomment>Message displayed when attempting to create a transaction. Cautionary text to prompt the user to verify that the displayed transaction details represent the transaction the user intends to create.</extracomment>
+        <translation>Искате ли да създадете тази транзакция?</translation>
+    </message>
+    <message>
+        <source>Duplicate address found: addresses should only be used once each.</source>
+        <translation>Намерен е дублиран адрес: всеки адрес трябва да се използва само веднъж.</translation>
+    </message>
+    <message>
+        <source>External balance:</source>
+        <translation>Външен баланс:</translation>
+    </message>
+    <message>
+        <source>External signer failure</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Неуспех на външното подписващо устройство</translation>
+    </message>
+    <message>
+        <source>External signer not found</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Външното подписващо устройство не е намерено</translation>
+    </message>
+    <message>
+        <source>Hide transaction fee settings</source>
+        <translation>Скриване на настройките за таксата на транзакцията</translation>
+    </message>
+    <message>
+        <source>Inputs…</source>
+        <translation>Входове…</translation>
+    </message>
+    <message>
+        <source>PSBT saved</source>
+        <extracomment>Popup message when a PSBT has been saved to a file</extracomment>
+        <translation>PSBT е запазена</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk</source>
+        <translation>PSBT е запазена на диска</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation>Частично подписана транзакция (двоична)</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
+        <translation>Прегледайте предложението си за транзакция. Това ще създаде частично подписана транзакция ConnectCoin (PSBT), която можете да запазите или копирате и след това да подпишете например с несвързан към мрежата портфейл %1 или хардуерен портфейл, съвместим с PSBT.</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction.</source>
+        <extracomment>Text to prompt a user to review the details of the transaction they are attempting to send.</extracomment>
+        <translation>Прегледайте транзакцията си.</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
+        <translation>Прегледайте транзакцията си. Можете да я създадете и изпратите или да създадете частично подписана транзакция ConnectCoin (PSBT), която можете да запазите или копирате и след това да подпишете например с несвързан към мрежата портфейл %1 или хардуерен портфейл, съвместим с PSBT.</translation>
+    </message>
+    <message>
+        <source>Save Transaction Data</source>
+        <translation>Запазване на данните на транзакцията</translation>
+    </message>
+    <message>
+        <source>Set external signer script path in Options -&gt; Wallet</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Задайте пътя до скрипта за външно подписване в Настройки -&gt; Портфейл</translation>
+    </message>
+    <message>
+        <source>Sign failed</source>
+        <translation>Подписването е неуспешно</translation>
+    </message>
+    <message>
+        <source>Sign on device</source>
+        <extracomment>"device" usually means a hardware wallet.</extracomment>
+        <translation>Подписване на устройството</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Задайте персонализирана такса за kB (1000 байта) от виртуалния размер на транзакцията.
+
+Забележка:  Тъй като таксата се изчислява на байт, ставка „100 connects за kvB“ за транзакция с размер 500 виртуални байта (половината от 1 kvB) би довела до крайна такса от само 50 connects.</translation>
+    </message>
+    <message>
+        <source>The PSBT has been copied to the clipboard. You can also save it.</source>
+        <translation>PSBT е копирана в клипборда. Можете и да я запазите.</translation>
+    </message>
+    <message>
+        <source>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</source>
+        <translation>Избраният от вас адрес за ресто не е част от този портфейл. Част или всички средства в портфейла ви може да бъдат изпратени на този адрес. Сигурни ли сте?</translation>
+    </message>
+    <message>
+        <source>The recipient address is not valid. Please recheck.</source>
+        <translation>Адресът на получателя е невалиден. Проверете го отново.</translation>
+    </message>
+    <message>
+        <source>To review recipient list click "Show Details…"</source>
+        <translation>За да прегледате списъка с получатели, натиснете „Показване на подробности…“</translation>
+    </message>
+    <message>
+        <source>Unsigned Transaction</source>
+        <comment>PSBT copied</comment>
+        <extracomment>Caption of "PSBT has been copied" messagebox</extracomment>
+        <translation>Неподписана транзакция</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>Използва се текущата минимална такса. Времето за потвърждение не е оценено.</translation>
+    </message>
+    <message>
+        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until you have validated the complete chain.</source>
+        <translation>Използването на fallbackfee може да доведе до изпращане на транзакция, чието потвърждение отнема часове или дни (или никога не настъпва). Обмислете ръчно задаване на таксата или изчакайте да валидирате цялата верига.</translation>
+    </message>
+    <message>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation>Предупреждение: В момента не е възможно оценяване на таксата.</translation>
+    </message>
+    <message>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation>Когато обемът на транзакциите е по-малък от пространството в блоковете, както копачите, така и препредаващите възли могат да налагат минимална такса. Плащането само на тази минимална такса е приемливо, но имайте предвид, че може да доведе до транзакция, която никога не се потвърждава, ако търсенето на транзакции ConnectCoin надвиши капацитета на мрежата.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>Можете да увеличите таксата по-късно.</translation>
     </message>
 </context>
 <context>
@@ -2529,7 +3580,39 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Message:</source>
         <translation type="unfinished">Съобщение:</translation>
     </message>
-    </context>
+        <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation>Съобщение, приложено към URI connectcoin:, което ще бъде запазено с транзакцията за ваша справка. Забележка: Това съобщение няма да бъде изпратено по мрежата ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>Enter a label for this address to add it to the list of used addresses</source>
+        <translation>Въведете етикет за този адрес, за да го добавите към списъка с използвани адреси</translation>
+    </message>
+    <message>
+        <source>S&amp;ubtract fee from amount</source>
+        <translation>&amp;Приспадане на таксата от сумата</translation>
+    </message>
+    <message>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation>Адресът на ConnectCoin, на който да се изпрати плащането</translation>
+    </message>
+    <message>
+        <source>The amount to send in the selected unit</source>
+        <translation>Сумата за изпращане в избраната единица</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Таксата ще бъде приспадната от изпращаната сума. Получателят ще получи по-малко ConnectCoin от въведеното в полето за сума. Ако са избрани няколко получатели, таксата се разделя поравно.</translation>
+    </message>
+</context>
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
@@ -2557,7 +3640,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Подпис</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
         <translation type="unfinished">Подпишете съобщение като доказателство, че притежавате определен адрес</translation>
     </message>
     <message>
@@ -2573,8 +3656,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;Провери</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">Проверете съобщение, за да сте сигурни че е подписано с определен Биткоин адрес</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">Проверете съобщение, за да сте сигурни че е подписано с определен ConnectCoin адрес</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -2627,6 +3710,58 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">Съобщението е потвърдено.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the clipboard</source>
+        <translation>Копиране на текущия подпис в клипборда</translation>
+    </message>
+    <message>
+        <source>Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
+        <translation>Въведете по-долу адреса на получателя, съобщението (копирайте точно новите редове, интервалите, табулациите и т.н.) и подписа, за да проверите съобщението. Не приписвайте на подписа повече смисъл от написаното в самото подписано съобщение, за да избегнете измама чрез атака с посредник. Имайте предвид, че това доказва само, че подписващият получава средства на този адрес, но не може да докаже кой е изпратил която и да е транзакция!</translation>
+    </message>
+    <message>
+        <source>No error</source>
+        <translation>Няма грешка</translation>
+    </message>
+    <message>
+        <source>Reset all sign message fields</source>
+        <translation>Нулиране на всички полета за подписване на съобщение</translation>
+    </message>
+    <message>
+        <source>Reset all verify message fields</source>
+        <translation>Нулиране на всички полета за проверка на съобщение</translation>
+    </message>
+    <message>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation>Адресът на ConnectCoin, с който е подписано съобщението</translation>
+    </message>
+    <message>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation>Адресът на ConnectCoin, с който да се подпише съобщението</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>Въведеният адрес не се отнася до ключ от стария тип (P2PKH). Тази версия на %1 не поддържа подписване на съобщения за SegWit и други типове адреси, различни от P2PKH. Проверете адреса и опитайте отново.</translation>
+    </message>
+    <message>
+        <source>The signature given when the message was signed</source>
+        <translation>Подписът, получен при подписването на съобщението</translation>
+    </message>
+    <message>
+        <source>The signed message to verify</source>
+        <translation>Подписаното съобщение за проверка</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Можете да подписвате съобщения/споразумения с адресите си от стария тип (P2PKH), за да докажете, че можете да получавате средства в ConnectCoin, изпратени към тях. Внимавайте да не подписвате нищо неясно или случайно, тъй като фишинг атаки може да ви подмамят да предоставите самоличността си чрез подпис. Подписвайте само напълно подробни изявления, с които сте съгласни.</translation>
     </message>
 </context>
 <context>
@@ -2683,9 +3818,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>узрява след още %n блок</numerusform>
+            <numerusform>узрява след още %n блока</numerusform>
         </translation>
     </message>
     <message>
@@ -2748,14 +3883,66 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>P2C domain</source>
         <translation>Домейн P2C</translation>
     </message>
-    </context>
+        <message>
+        <source>%1 (Certificate was not verified)</source>
+        <translation>%1 (Сертификатът не е проверен)</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is in the memory pool.</extracomment>
+        <translation>0/непотвърдена, в пула в паметта</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, not in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is not in the memory pool.</extracomment>
+        <translation>0/непотвърдена, извън пула в паметта</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>Входове</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>Индекс на изхода</translation>
+    </message>
+    <message>
+        <source>Transaction total size</source>
+        <translation>Общ размер на транзакцията</translation>
+    </message>
+    <message>
+        <source>Transaction virtual size</source>
+        <translation>Виртуален размер на транзакцията</translation>
+    </message>
+    <message>
+        <source>abandoned</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an abandoned transaction.</extracomment>
+        <translation>изоставена</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that conflicts with a confirmed transaction.</extracomment>
+        <translation>в конфликт с транзакция с %1 потвърждения</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>невярно</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>вярно</translation>
+    </message>
+</context>
 <context>
     <name>TransactionDescDialog</name>
     <message>
         <source>This pane shows a detailed description of the transaction</source>
         <translation type="unfinished">Описание на транзакцията</translation>
     </message>
-    </context>
+        <message>
+        <source>Details for %1</source>
+        <translation>Подробности за %1</translation>
+    </message>
+</context>
 <context>
     <name>TransactionTableModel</name>
     <message>
@@ -2837,6 +4024,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
         <translation>Зададеното от потребителя предназначение на транзакцията или домейнът P2C.</translation>
+    </message>
+    <message>
+        <source>(n/a)</source>
+        <translation>(неприложимо)</translation>
+    </message>
+    <message>
+        <source>Abandoned</source>
+        <translation>Изоставена</translation>
     </message>
 </context>
 <context>
@@ -2954,6 +4149,47 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>Въведете адрес, домейн P2C, идентификатор на транзакция или етикет за търсене</translation>
     </message>
+    <message>
+        <source>&amp;Edit address label</source>
+        <translation>&amp;Редактиране на етикета на адреса</translation>
+    </message>
+    <message>
+        <source>&amp;Show transaction details</source>
+        <translation>&amp;Показване на подробностите на транзакцията</translation>
+    </message>
+    <message>
+        <source>A&amp;bandon transaction</source>
+        <translation>&amp;Изоставяне на транзакцията</translation>
+    </message>
+    <message>
+        <source>Copy &amp;raw transaction</source>
+        <translation>Копиране на &amp;необработената транзакция</translation>
+    </message>
+    <message>
+        <source>Copy full transaction &amp;details</source>
+        <translation>Копиране на пълните &amp;подробности на транзакцията</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Копиране на &amp;идентификатора на транзакцията</translation>
+    </message>
+    <message>
+        <source>Increase transaction &amp;fee</source>
+        <translation>Увеличаване на &amp;таксата на транзакцията</translation>
+    </message>
+    <message>
+        <source>Range…</source>
+        <translation>Диапазон…</translation>
+    </message>
+    <message>
+        <source>Show in %1</source>
+        <extracomment>Transactions table context menu action to show the selected transaction in a third-party block explorer. %1 is a stand-in argument for the URL of the explorer.</extracomment>
+        <translation>Показване в %1</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the transaction history to %1.</source>
+        <translation>Възникна грешка при запазването на историята на транзакциите в %1.</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -2969,14 +4205,99 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Partially Signed Transaction (*.psbt)</source>
         <translation type="unfinished">Частично Подписана Транзакция (*.psbt)</translation>
     </message>
-    </context>
+        <message>
+        <source>Load Transaction Data</source>
+        <translation>Зареждане на данните на транзакцията</translation>
+    </message>
+    <message>
+        <source>No wallet has been loaded.
+Go to File &gt; Open Wallet to load a wallet.
+- OR -</source>
+        <translation>Няма зареден портфейл.
+Отидете на Файл &gt; Отваряне на портфейл, за да заредите портфейл.
+- ИЛИ -</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>PSBT файлът трябва да е по-малък от 100 MiB</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>PSBT не може да бъде декодирана</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>PSBT от клипборда не може да бъде декодирана (невалиден base64)</translation>
+    </message>
+</context>
 <context>
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
         <translation type="unfinished">Изпращане</translation>
     </message>
-    </context>
+        <message>
+        <source>Can't display address</source>
+        <translation>Адресът не може да бъде показан</translation>
+    </message>
+    <message>
+        <source>Can't draft transaction.</source>
+        <translation>Не може да се подготви транзакцията.</translation>
+    </message>
+    <message>
+        <source>Can't sign transaction.</source>
+        <translation>Транзакцията не може да бъде подписана.</translation>
+    </message>
+    <message>
+        <source>Confirm fee bump</source>
+        <translation>Потвърждаване на увеличението на таксата</translation>
+    </message>
+    <message>
+        <source>Could not commit transaction</source>
+        <translation>Транзакцията не може да бъде записана</translation>
+    </message>
+    <message>
+        <source>Current fee:</source>
+        <translation>Текуща такса:</translation>
+    </message>
+    <message>
+        <source>Do you want to increase the fee?</source>
+        <extracomment>Asks a user if they would like to manually increase the fee of a transaction that has already been created.</extracomment>
+        <translation>Искате ли да увеличите таксата?</translation>
+    </message>
+    <message>
+        <source>Fee bump error</source>
+        <translation>Грешка при увеличаване на таксата</translation>
+    </message>
+    <message>
+        <source>Fee-bump PSBT copied to clipboard</source>
+        <translation>PSBT за увеличаване на таксата е копирана в клипборда</translation>
+    </message>
+    <message>
+        <source>Increase:</source>
+        <translation>Увеличение:</translation>
+    </message>
+    <message>
+        <source>Increasing transaction fee failed</source>
+        <translation>Увеличаването на таксата на транзакцията е неуспешно</translation>
+    </message>
+    <message>
+        <source>New fee:</source>
+        <translation>Нова такса:</translation>
+    </message>
+    <message>
+        <source>PSBT copied</source>
+        <translation>PSBT е копирана</translation>
+    </message>
+    <message>
+        <source>Signer error</source>
+        <translation>Грешка в подписващото устройство</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation>Предупреждение: Допълнителната такса може да бъде платена чрез намаляване на изходите за ресто или добавяне на входове, когато е необходимо. Може да бъде добавен нов изход за ресто, ако такъв още няма. Тези промени могат да разкрият поверителна информация.</translation>
+    </message>
+</context>
 <context>
     <name>WalletView</name>
     <message>
@@ -3106,6 +4427,1072 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Файла с настройки не може да бъде записан.</translation>
+    </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>Получателят на рестото трябва да е получател P2PK от тип 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin поддържа само P2PK адреси от тип 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin поддържа само P2PK адреси за ресто от тип 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>Транзакциите в ConnectCoin изискват валидни получатели от тип 1 или изходи PAY_TO_CONNECT от тип 2</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>Изходите на ConnectCoin от тип 1 поддържат само SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>Входът не е пълно изразходване от тип 1 със SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>Входът изисква пълни свидетелски данни за P2C доказателство</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>Основната мрежа не е стартирана: не е определен генезис блок. Използвайте -testnet4 за публично тестване или -regtest за локално тестване.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>За тази развойна компилация не е зададен публичен URL адрес на изходния код, управляван от проекта.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Няма достатъчно налични файлови дескриптори. Опитайте да намалите -rpcmaxconnections или да използвате стойността по подразбиране %d</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>Моля, допринесете, ако намирате %s за полезен.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Обмислете промяна на %s (%s) или %s (%s).</translation>
+    </message>
+    <message>
+        <source>
+Unable to cleanup failed migration</source>
+        <translation>
+Не може да се извърши почистване след неуспешната миграция</translation>
+    </message>
+    <message>
+        <source>
+Unable to restore backup of wallet.</source>
+        <translation>
+Резервното копие на портфейла не може да бъде възстановено.</translation>
+    </message>
+    <message>
+        <source>%s failed to validate the -assumeutxo snapshot state. This indicates a hardware problem, or a bug in the software, or a bad software modification that allowed an invalid snapshot to be loaded. As a result of this, the node will shut down and stop using any state that was built on the snapshot, resetting the chain height from %d to %d. On the next restart, the node will resume syncing from %d without using any snapshot data. Please report this incident to %s, including how you obtained the snapshot. The invalid snapshot chainstate will be left on disk in case it is helpful in diagnosing the issue that caused this error.</source>
+        <translation>%s не успя да валидира състоянието на моментната снимка -assumeutxo. Това сочи хардуерен проблем, грешка в софтуера или неправилна промяна на софтуера, позволила зареждане на невалидна моментна снимка. Поради това възелът ще се изключи и ще спре да използва всички състояния, изградени върху снимката, като върне височината на веригата от %d на %d. При следващото стартиране възелът ще продължи синхронизирането от %d, без да използва данни от моментната снимка. Докладвайте този случай на %s, като посочите как сте получили снимката. Състоянието на веригата от невалидната снимка ще остане на диска, ако е полезно за диагностициране на причината за тази грешка.</translation>
+    </message>
+    <message>
+        <source>%s is set very high!</source>
+        <translation>%s е зададено на много висока стойност!</translation>
+    </message>
+    <message>
+        <source>%s is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation>%s е зададено на много висока стойност! Толкова голяма такса може да бъде платена за една-единствена транзакция.</translation>
+    </message>
+    <message>
+        <source>%s request to listen on port %u. This port is considered "bad" and thus it is unlikely that any peer will connect to it. See doc/p2p-bad-ports.md for details and a full list.</source>
+        <translation>%s заявява слушане на порт %u. Този порт се смята за „неподходящ“ и затова е малко вероятно някой възел да се свърже с него. Вижте doc/p2p-bad-ports.md за подробности и пълен списък.</translation>
+    </message>
+    <message>
+        <source>-maxmempool must be at least %d MB</source>
+        <translation>-maxmempool трябва да е поне %d MB</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf е остаряло и ще бъде напълно премахнато в следващата версия.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>dbcache от %zu MiB може да е твърде голям за системна памет от само %zu MiB.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>Възникна фатална вътрешна грешка. Вижте %s за подробности: %s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>Не са намерени данни Assumeutxo за дадения хеш на блок '%s'.</translation>
+    </message>
+    <message>
+        <source>Block verification was interrupted</source>
+        <translation>Проверката на блоковете е прекъсната</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version %d pre-selected input with a version 3 tx</source>
+        <translation>Не може да се изхарчи предварително избран непотвърден вход от версия %d с транзакция от версия 3</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version 3 pre-selected input with a version %d tx</source>
+        <translation>Не може да се изхарчи предварително избран непотвърден вход от версия 3 с транзакция от версия %d</translation>
+    </message>
+    <message>
+        <source>Cannot obtain a lock on directory %s. %s is probably already running.</source>
+        <translation>Директорията %s не може да бъде заключена. Вероятно %s вече работи.</translation>
+    </message>
+    <message>
+        <source>Cannot provide specific connections and have addrman find outgoing connections at the same time.</source>
+        <translation>Не може да се задават конкретни връзки и едновременно да се позволява на addrman да намира изходящи връзки.</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>Адресът за -%s не може да бъде разрешен: '%s'</translation>
+    </message>
+    <message>
+        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
+        <translation>Не може да се зададе -forcednsseed на true, когато -dnsseed е зададено на false.</translation>
+    </message>
+    <message>
+        <source>Cannot set -peerblockfilters without -blockfilterindex.</source>
+        <translation>Не може да се зададе -peerblockfilters без -blockfilterindex.</translation>
+    </message>
+    <message>
+        <source>Cannot write to directory '%s'; check permissions.</source>
+        <translation>Не може да се записва в директорията '%s'; проверете разрешенията.</translation>
+    </message>
+    <message>
+        <source>Copyright (C) %i-%i</source>
+        <translation>Авторски права (C) %i-%i</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>Намерен е повреден блок, което показва възможна хардуерна неизправност.</translation>
+    </message>
+    <message>
+        <source>Corrupted block database detected</source>
+        <translation>Открита е повредена база данни с блокове</translation>
+    </message>
+    <message>
+        <source>Could not find asmap file %s</source>
+        <translation>Файлът asmap %s не е намерен</translation>
+    </message>
+    <message>
+        <source>Could not generate scriptPubKeys (cache is empty)</source>
+        <translation>Не могат да се генерират scriptPubKeys (кешът е празен)</translation>
+    </message>
+    <message>
+        <source>Could not parse asmap file %s</source>
+        <translation>Файлът asmap %s не може да бъде разчетен</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>Вградените asmap данни не могат да бъдат прочетени</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>Създаване на портфейл…</translation>
+    </message>
+    <message>
+        <source>Disk space for %s may not accommodate the block files. Approximately %u GB of data will be stored in this directory.</source>
+        <translation>Дисковото пространство за %s може да не е достатъчно за файловете с блокове. Приблизително %u GB данни ще бъдат съхранени в тази директория.</translation>
+    </message>
+    <message>
+        <source>Disk space is too low!</source>
+        <translation>Дисковото пространство е твърде малко!</translation>
+    </message>
+    <message>
+        <source>Distributed under the MIT software license, see the accompanying file %s or %s</source>
+        <translation>Разпространява се под софтуерния лиценз MIT; вижте приложения файл %s или %s</translation>
+    </message>
+    <message>
+        <source>Do you want to rebuild the databases now?</source>
+        <translation>Искате ли да изградите базите данни отново сега?</translation>
+    </message>
+    <message>
+        <source>Dump file %s does not exist.</source>
+        <translation>Файлът с пълен експорт %s не съществува.</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>Дублирана конфигурация за обвързване на адрес %s. Проверете настройките -bind, -bind=...=onion и -whitebind.</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>Проверката за изправност на криптографията с елиптични криви е неуспешна. %s се изключва.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>Вградените asmap данни не са налични</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>Грешка при създаване на %s: Метаданните за версията не могат да бъдат записани.</translation>
+    </message>
+    <message>
+        <source>Error loading %s</source>
+        <translation>Грешка при зареждане на %s</translation>
+    </message>
+    <message>
+        <source>Error loading %s: External signer wallet being loaded without external signer support compiled</source>
+        <translation>Грешка при зареждане на %s: Зарежда се портфейл с външно подписващо устройство, без да е компилирана поддръжка за външно подписване</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet corrupted</source>
+        <translation>Грешка при зареждане на %s: Портфейлът е повреден</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>Грешка при зареждане на %s: Портфейлът е от стария тип. Мигрирайте го към портфейл с дескриптори чрез инструмента за миграция (RPC migratewallet).</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet requires newer version of %s</source>
+        <translation>Грешка при зареждане на %s: Портфейлът изисква по-нова версия на %s</translation>
+    </message>
+    <message>
+        <source>Error loading block database</source>
+        <translation>Грешка при зареждане на базата данни с блокове</translation>
+    </message>
+    <message>
+        <source>Error loading databases</source>
+        <translation>Грешка при зареждане на базите данни</translation>
+    </message>
+    <message>
+        <source>Error loading wallet. Wallet requires blocks to be downloaded, and software does not currently support loading wallets while blocks are being downloaded out of order when using assumeutxo snapshots. Wallet should be able to load successfully after node sync reaches height %s</source>
+        <translation>Грешка при зареждане на портфейла. Портфейлът изисква изтегляне на блокове, а софтуерът в момента не поддържа зареждане на портфейли, докато блоковете се изтеглят извън реда им при използване на моментни снимки assumeutxo. Портфейлът би трябвало да се зареди успешно, след като синхронизирането на възела достигне височина %s</translation>
+    </message>
+    <message>
+        <source>Error opening block database</source>
+        <translation>Грешка при отваряне на базата данни с блокове</translation>
+    </message>
+    <message>
+        <source>Error opening coins database</source>
+        <translation>Грешка при отваряне на базата данни с монети</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address metadata may be missing or incorrect.</source>
+        <translation>Грешка при четене на %s! Всички ключове са прочетени правилно, но данни за транзакции или метаданни за адреси може да липсват или да са неправилни.</translation>
+    </message>
+    <message>
+        <source>Error reading %s! Transaction data may be missing or incorrect. Rescanning wallet.</source>
+        <translation>Грешка при четене на %s! Данните за транзакциите може да липсват или да са неправилни. Портфейлът се сканира отново.</translation>
+    </message>
+    <message>
+        <source>Error reading configuration file: %s</source>
+        <translation>Грешка при четене на конфигурационния файл: %s</translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation>Грешка при четене от базата данни; изключване.</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation>Грешка при четене на следващия запис от базата данни на портфейла</translation>
+    </message>
+    <message>
+        <source>Error starting/committing db txn for wallet transactions removal process</source>
+        <translation>Грешка при започване/потвърждаване на транзакцията в базата данни за процеса на премахване на транзакции от портфейла</translation>
+    </message>
+    <message>
+        <source>Error: Address book data in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>Грешка: Не може да се определи на кои мигрирани портфейли принадлежат данните от адресната книга на портфейла</translation>
+    </message>
+    <message>
+        <source>Error: Cannot extract destination from the generated scriptpubkey</source>
+        <translation>Грешка: Не може да се извлече местоназначението от генерирания scriptpubkey</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Грешка: Транзакцията %s не може да бъде добавена към портфейла само за наблюдение</translation>
+    </message>
+    <message>
+        <source>Error: Could not add watchonly tx %s to watchonly wallet</source>
+        <translation>Грешка: Транзакцията само за наблюдение %s не може да бъде добавена към портфейла само за наблюдение</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Грешка: Файлът '%s' не може да бъде създаден</translation>
+    </message>
+    <message>
+        <source>Error: Could not delete watchonly transactions. </source>
+        <translation>Грешка: Транзакциите само за наблюдение не могат да бъдат изтрити. </translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation>Грешка: Не може да се създаде курсор в базата данни</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is low for %s</source>
+        <translation>Грешка: Дисковото пространство за %s е малко</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation>Грешка: Контролната сума на файла с пълен експорт не съвпада. Изчислена %s, очаквана %s</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation>Грешка: Записът за формат във файла с пълен експорт е неправилен. Получено „%s“, очаквано „format“.</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation>Грешка: Записът за идентификатор във файла с пълен експорт е неправилен. Получено „%s“, очаквано „%s“.</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>Грешка: Файлът с пълен експорт задава неподдържан формат на база данни (%s). Поддържат се само пълни експорти на бази данни sqlite</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation>Грешка: Версията на файла с пълен експорт не се поддържа. Тази версия на connectcoin-wallet поддържа само файлове с пълен експорт от версия 1. Получен е файл от версия %s</translation>
+    </message>
+    <message>
+        <source>Error: Duplicate descriptors created during migration. Your wallet may be corrupted.</source>
+        <translation>Грешка: По време на миграцията са създадени дублирани дескриптори. Портфейлът ви може да е повреден.</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Грешка: Местоназначението за експортиране '%s' вече съществува</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Грешка: Местоназначението за експортиране не може да е празно</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet</source>
+        <translation>Грешка: Не може да се създаде нов портфейл само за наблюдение</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Грешка: Не може да се създаде нов портфейл само за наблюдение. %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation>Грешка: Получен е ключ, който не е шестнадесетичен: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation>Грешка: Получена е стойност, която не е шестнадесетична: %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>Грешка: Резервът от ключове е изчерпан; първо извикайте keypoolrefill</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation>Грешка: Липсва контролна сума</translation>
+    </message>
+    <message>
+        <source>Error: No %s addresses available.</source>
+        <translation>Грешка: Няма налични адреси %s.</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>Грешка: Не всички записи от адресната книга са мигрирани</translation>
+    </message>
+    <message>
+        <source>Error: Not all transaction records were migrated</source>
+        <translation>Грешка: Не всички записи на транзакции са мигрирани</translation>
+    </message>
+    <message>
+        <source>Error: This wallet already uses SQLite</source>
+        <translation>Грешка: Този портфейл вече използва SQLite</translation>
+    </message>
+    <message>
+        <source>Error: This wallet is already a descriptor wallet</source>
+        <translation>Грешка: Този портфейл вече е портфейл с дескриптори</translation>
+    </message>
+    <message>
+        <source>Error: Transaction %s in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>Грешка: Не може да се определи на кои мигрирани портфейли принадлежи транзакцията %s в портфейла</translation>
+    </message>
+    <message>
+        <source>Error: Unable to begin reading all records in the database</source>
+        <translation>Грешка: Не може да започне четенето на всички записи в базата данни</translation>
+    </message>
+    <message>
+        <source>Error: Unable to make a backup of your wallet</source>
+        <translation>Грешка: Не може да се направи резервно копие на портфейла ви</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation>Грешка: Версията %u не може да бъде разчетена като uint32_t</translation>
+    </message>
+    <message>
+        <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
+        <translation>Грешка: Не могат да се създадат дескриптори за този портфейл от стария тип. Уверете се, че сте предоставили паролата на портфейла, ако е шифрован.</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read all records in the database</source>
+        <translation>Грешка: Не могат да се прочетат всички записи в базата данни</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read wallet's best block locator record</source>
+        <translation>Грешка: Не може да се прочете записът за локализиране на най-добрия блок на портфейла</translation>
+    </message>
+    <message>
+        <source>Error: Unable to remove watchonly address book data</source>
+        <translation>Грешка: Не могат да се премахнат данните само за наблюдение от адресната книга</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write data to disk for wallet %s</source>
+        <translation>Грешка: Не могат да се запишат данни на диска за портфейла %s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation>Грешка: Записът не може да бъде записан в новия портфейл</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write solvable wallet best block locator record</source>
+        <translation>Грешка: Не може да се запише записът за локализиране на най-добрия блок на разрешимия портфейл</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Грешка: Експортираният портфейл не може да бъде записан</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write watchonly wallet best block locator record</source>
+        <translation>Грешка: Не може да се запише записът за локализиране на най-добрия блок на портфейла само за наблюдение</translation>
+    </message>
+    <message>
+        <source>Error: Wallet does not exist</source>
+        <translation>Грешка: Портфейлът не съществува</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Грешка: Портфейлът няма дескриптори за експортиране</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Грешка: Не може да се потвърди транзакцията в базата данни за експортиране на портфейла само за наблюдение</translation>
+    </message>
+    <message>
+        <source>Error: cannot remove legacy wallet records</source>
+        <translation>Грешка: Записите на портфейла от стария тип не могат да бъдат премахнати</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Грешка: Транзакцията в базата данни не може да бъде изпълнена за новия портфейл само за наблюдение %s</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for wallet %s</source>
+        <translation>Грешка: Транзакцията в базата данни не може да бъде изпълнена за портфейла %s</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>Не може да се получи резервация за повторно сканиране при инициализирането на портфейла</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>Не могат да се изчислят таксите за увеличение, защото непотвърдените UTXO зависят от огромен клъстер от непотвърдени транзакции.</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>Файлът за отмяна на блокове не може да бъде затворен.</translation>
+    </message>
+    <message>
+        <source>Failed to close file when writing block.</source>
+        <translation>Файлът не може да бъде затворен при записване на блока.</translation>
+    </message>
+    <message>
+        <source>Failed to disconnect block.</source>
+        <translation>Блокът не може да бъде откачен.</translation>
+    </message>
+    <message>
+        <source>Failed to read block.</source>
+        <translation>Блокът не може да бъде прочетен.</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>Директорията със състоянието на веригата от моментната снимка (%s) не може да бъде премахната. Премахнете я ръчно преди рестартиране.
+</translation>
+    </message>
+    <message>
+        <source>Failed to rename invalid peers.dat file. Please move or delete it and try again.</source>
+        <translation>Невалидният файл peers.dat не може да бъде преименуван. Преместете го или го изтрийте и опитайте отново.</translation>
+    </message>
+    <message>
+        <source>Failed to rescan the wallet during initialization</source>
+        <translation>Повторното сканиране на портфейла при инициализиране е неуспешно</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>Индексите не могат да бъдат стартирани; изключване…</translation>
+    </message>
+    <message>
+        <source>Failed to verify database</source>
+        <translation>Базата данни не може да бъде проверена</translation>
+    </message>
+    <message>
+        <source>Failed to write block.</source>
+        <translation>Блокът не може да бъде записан.</translation>
+    </message>
+    <message>
+        <source>Failed to write undo data.</source>
+        <translation>Данните за отмяна не могат да бъдат записани.</translation>
+    </message>
+    <message>
+        <source>Failure removing transaction: %s</source>
+        <translation>Неуспех при премахване на транзакция: %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>Ставката на таксата (%s) е по-ниска от зададената минимална ставка (%s).</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation>Файлът %s вече съществува. Ако сте сигурни, че това е желаното действие, първо го преместете другаде.</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Записването на буферираните данни от файла с блокове на диска е неуспешно. Вероятната причина е входно-изходна грешка.</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Записването на буферираните данни от файла за отмяна на диска е неуспешно. Вероятната причина е входно-изходна грешка.</translation>
+    </message>
+    <message>
+        <source>Ignoring duplicate -wallet %s.</source>
+        <translation>Пренебрегване на дублирано -wallet %s.</translation>
+    </message>
+    <message>
+        <source>Incompatible options: -dnsseed=1 was explicitly specified, but -onlynet forbids connections to IPv4/IPv6</source>
+        <translation>Несъвместими опции: Изрично е зададено -dnsseed=1, но -onlynet забранява връзки към IPv4/IPv6</translation>
+    </message>
+    <message>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation>Намерен е неправилен начален блок или такъв липсва. Грешна директория за данни за тази мрежа?</translation>
+    </message>
+    <message>
+        <source>Initialization sanity check failed. %s is shutting down.</source>
+        <translation>Проверката за изправност при инициализация е неуспешна. %s се изключва.</translation>
+    </message>
+    <message>
+        <source>Input not found or already spent</source>
+        <translation>Входът не е намерен или вече е изхарчен</translation>
+    </message>
+    <message>
+        <source>Insufficient dbcache for block verification</source>
+        <translation>Недостатъчен dbcache за проверка на блоковете</translation>
+    </message>
+    <message>
+        <source>Invalid -i2psam address or hostname: '%s'</source>
+        <translation>Невалиден адрес или име на хост за -i2psam: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -onion address or hostname: '%s'</source>
+        <translation>Невалиден адрес или име на хост за -onion: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>Невалиден адрес или име на хост за -proxy, завършва с '=': '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname: '%s'</source>
+        <translation>Невалиден адрес или име на хост за -proxy: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid P2P permission: '%s'</source>
+        <translation>Невалидно P2P разрешение: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s'</source>
+        <translation>Невалидна сума за %s=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation>Невалидна сума за %s=&lt;amount&gt;: '%s' (трябва да е поне таксата minrelay от %s, за да не заседнат транзакциите)</translation>
+    </message>
+    <message>
+        <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
+        <translation>Невалидна сума за -%s=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid netmask specified in -whitelist: '%s'</source>
+        <translation>Невалидна мрежова маска, зададена в -whitelist: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid or corrupt peers.dat (%s). If you believe this is a bug, please report it to %s. As a workaround, you can move the file (%s) out of the way (rename, move, or delete) to have a new one created on the next start.</source>
+        <translation>Невалиден или повреден peers.dat (%s). Ако смятате, че това е грешка в програмата, докладвайте я на %s. Като временно решение можете да отстраните файла (%s) (чрез преименуване, преместване или изтриване), за да се създаде нов при следващото стартиране.</translation>
+    </message>
+    <message>
+        <source>Invalid port specified in %s: '%s'</source>
+        <translation>Невалиден порт, зададен в %s: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid value detected for '-wallet' or '-nowallet'. '-wallet' requires a string value, while '-nowallet' accepts only '1' to disable all wallets</source>
+        <translation>Открита е невалидна стойност за '-wallet' или '-nowallet'. '-wallet' изисква текстов низ, а '-nowallet' приема само '1' за изключване на всички портфейли</translation>
+    </message>
+    <message>
+        <source>Listening for incoming connections failed (listen returned error %s)</source>
+        <translation>Слушането за входящи връзки е неуспешно (listen върна грешка %s)</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses…</source>
+        <translation>Зареждане на P2P адреси…</translation>
+    </message>
+    <message>
+        <source>Loading banlist…</source>
+        <translation>Зареждане на списъка със забрани…</translation>
+    </message>
+    <message>
+        <source>Loading block index…</source>
+        <translation>Зареждане на индекса на блоковете…</translation>
+    </message>
+    <message>
+        <source>Loading wallet…</source>
+        <translation>Зареждане на портфейла…</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is less than transaction weight without inputs</source>
+        <translation>Максималното тегло на транзакцията е по-малко от теглото на транзакцията без входове</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is too low, can not accommodate change output</source>
+        <translation>Максималното тегло на транзакцията е твърде ниско и не позволява изход за ресто</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>Максималното тегло на транзакцията трябва да е между %d и %d</translation>
+    </message>
+    <message>
+        <source>Missing amount</source>
+        <translation>Липсва сума</translation>
+    </message>
+    <message>
+        <source>Missing solving data for estimating transaction size</source>
+        <translation>Липсват данни за разрешаване, необходими за оценяване на размера на транзакцията</translation>
+    </message>
+    <message>
+        <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
+        <translation>Предоставен е повече от един onion адрес за обвързване. За автоматично създадената onion услуга на Tor се използва %s.</translation>
+    </message>
+    <message>
+        <source>Need to specify a port with -whitebind: '%s'</source>
+        <translation>Трябва да зададете порт с -whitebind: '%s'</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Не е предоставен файл с пълен експорт. За използване на createfromdump трябва да се зададе -dumpfile=&lt;filename&gt;.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use dump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Не е предоставен файл с пълен експорт. За използване на dump трябва да се зададе -dumpfile=&lt;filename&gt;.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. %d available, %d required.</source>
+        <translation>Няма достатъчно налични файлови дескриптори. Налични са %d, необходими са %d.</translation>
+    </message>
+    <message>
+        <source>Not found pre-selected input %s</source>
+        <translation>Предварително избраният вход %s не е намерен</translation>
+    </message>
+    <message>
+        <source>Not solvable pre-selected input %s</source>
+        <translation>Предварително избраният вход %s не е разрешим</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>Зададена е само посока, без разрешения: '%s'</translation>
+    </message>
+    <message>
+        <source>Option '-checkpoints' is set but checkpoints were removed. This option has no effect.</source>
+        <translation>Опцията '-checkpoints' е зададена, но контролните точки са премахнати. Тази опция няма действие.</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Опцията '-limitancestorsize' е зададена, но ограниченията за размера на предшествениците са заменени с ограничения за размера на клъстерите (вижте -limitclustersize). Тази опция няма действие.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Опцията '-limitdescendantsize' е зададена, но ограниченията за размера на наследниците са заменени с ограничения за размера на клъстерите (вижте -limitclustersize). Тази опция няма действие.</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to CJDNS (-onlynet=cjdns) but -cjdnsreachable is not provided</source>
+        <translation>Изходящите връзки са ограничени до CJDNS (-onlynet=cjdns), но -cjdnsreachable не е зададено</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is explicitly forbidden: -onion=0</source>
+        <translation>Изходящите връзки са ограничени до Tor (-onlynet=onion), но прокси сървърът за достъп до мрежата Tor е изрично забранен: -onion=0</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
+        <translation>Изходящите връзки са ограничени до Tor (-onlynet=onion), но не е предоставен прокси сървър за достъп до мрежата Tor: нито една от опциите -proxy, -onion или -listenonion не е зададена</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to i2p (-onlynet=i2p) but -i2psam is not provided</source>
+        <translation>Изходящите връзки са ограничени до i2p (-onlynet=i2p), но -i2psam не е зададено</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful. Visit %s for further information about the software.</source>
+        <translation>Моля, допринесете, ако намирате %s за полезен. Посетете %s за повече информация за софтуера.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>Поискано е поверително разпространяване на собствени транзакции (-privatebroadcast), а -proxyrandomize е изключено. Tor веригите за поверително разпространяване могат да бъдат свързани с други връзки през Tor. За максимална поверителност задайте -proxyrandomize=1.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>Поискано е поверително разпространяване на собствени транзакции (-privatebroadcast), но е настроено и -connect. Те са несъвместими, защото поверителното разпространяване трябва да отваря нови връзки към случайно избрани Tor или I2P възли. Обмислете използването на -maxconnections=0 -addnode=... вместо това</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>Поискано е поверително разпространяване на собствени транзакции (-privatebroadcast), но нито мрежата Tor, нито I2P е достъпна</translation>
+    </message>
+    <message>
+        <source>Prune cannot be configured with a negative value.</source>
+        <translation>Подрязването не може да бъде зададено с отрицателна стойност.</translation>
+    </message>
+    <message>
+        <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
+        <translation>Подрязването е зададено под минимума от %d MiB.  Използвайте по-голяма стойност.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -reindex-chainstate. Use full -reindex instead.</source>
+        <translation>Режимът на подрязване е несъвместим с -reindex-chainstate. Вместо това използвайте пълно преиндексиране с -reindex.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txindex.</source>
+        <translation>Режимът на подрязване е несъвместим с -txindex.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>Режимът на подрязване е несъвместим с -txospenderindex.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
+        <translation>Подрязване: Последната синхронизация на портфейла е преди подрязаните данни. Необходимо е -reindex (повторно изтегляне на цялата блокова верига при подрязан възел)</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore…</source>
+        <translation>Подрязване на хранилището за блокове…</translation>
+    </message>
+    <message>
+        <source>Reducing -maxconnections from %d to %d, because of system limitations.</source>
+        <translation>Намаляване на -maxconnections от %d на %d поради ограничения на системата.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>Преименуването на '%s' -&gt; '%s' е неуспешно. Не може да се почисти leveldb директорията на фоновото състояние на веригата.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
+        <translation>Преименуването на '%s' -&gt; '%s' е неуспешно. Решете проблема чрез ръчно преместване или изтриване на директорията с невалидната моментна снимка %s; иначе ще срещнете същата грешка при следващото стартиране.</translation>
+    </message>
+    <message>
+        <source>Replaying blocks…</source>
+        <translation>Повторно прилагане на блоковете…</translation>
+    </message>
+    <message>
+        <source>Rescanning…</source>
+        <translation>Повторно сканиране…</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to execute statement to verify database: %s</source>
+        <translation>SQLiteDatabase: Не може да се изпълни заявката за проверка на базата данни: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to prepare statement to verify database: %s</source>
+        <translation>SQLiteDatabase: Не може да се подготви заявката за проверка на базата данни: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to read database verification error: %s</source>
+        <translation>SQLiteDatabase: Не може да се прочете грешката при проверка на базата данни: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unexpected application id. Expected %u, got %u</source>
+        <translation>SQLiteDatabase: Неочакван идентификатор на приложението. Очакван %u, получен %u</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is supported</source>
+        <translation>SQLiteDatabase: Неизвестна версия %d на схемата на sqlite портфейла. Поддържа се само версия %d</translation>
+    </message>
+    <message>
+        <source>Section [%s] is not recognized.</source>
+        <translation>Разделът [%s] не е разпознат.</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>Подписващото устройство не върна адреса</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>Подписващото устройство върна неочакван адрес %s</translation>
+    </message>
+    <message>
+        <source>Signer returned error: %s</source>
+        <translation>Подписващото устройство върна грешка: %s</translation>
+    </message>
+    <message>
+        <source>Signing transaction failed</source>
+        <translation>Подписването на транзакцията е неуспешно</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" does not exist</source>
+        <translation>Зададената -walletdir „%s“ не съществува</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is a relative path</source>
+        <translation>Зададената -walletdir „%s“ е относителен път</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is not a directory</source>
+        <translation>Зададената -walletdir „%s“ не е директория</translation>
+    </message>
+    <message>
+        <source>Specified blocks directory "%s" does not exist.</source>
+        <translation>Зададената директория за блокове „%s“ не съществува.</translation>
+    </message>
+    <message>
+        <source>Specified data directory "%s" does not exist.</source>
+        <translation>Зададената директория за данни „%s“ не съществува.</translation>
+    </message>
+    <message>
+        <source>Starting network threads…</source>
+        <translation>Стартиране на мрежовите нишки…</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>Системна грешка при записване на буферирани данни: %s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>Системна грешка при зареждане на външен файл с блокове: %s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>Системна грешка при записване на блок на диска: %s</translation>
+    </message>
+    <message>
+        <source>The %s developers</source>
+        <translation>Разработчиците на %s</translation>
+    </message>
+    <message>
+        <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
+        <translation>Пътят %s използва exFAT, за която е известно, че понякога поврежда данни на macOS. Преместете тази директория в друга файлова система, за да избегнете загуба на данни.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>Опцията -testactivationheight не може да се използва в основната мрежа.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>Опцията -vbparams не може да се използва в основната мрежа.</translation>
+    </message>
+    <message>
+        <source>The block database contains a block which appears to be from the future. This may be due to your computer's date and time being set incorrectly. Only rebuild the block database if you are sure that your computer's date and time are correct</source>
+        <translation>Базата данни с блокове съдържа блок, който изглежда е от бъдещето. Това може да се дължи на неправилни дата и час на компютъра ви. Изградете отново базата данни с блокове само ако сте сигурни, че датата и часът на компютъра са правилни</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>Комбинацията от предварително избраните входове и автоматичния избор на входове от портфейла надвишава максималното тегло на транзакцията. Опитайте да изпратите по-малка сума или ръчно да обедините UTXO на портфейла си</translation>
+    </message>
+    <message>
+        <source>The inputs size exceeds the maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>Размерът на входовете надвишава максималното тегло. Опитайте да изпратите по-малка сума или ръчно да обедините UTXO на портфейла си</translation>
+    </message>
+    <message>
+        <source>The preselected coins total amount does not cover the transaction target. Please allow other inputs to be automatically selected or include more coins manually</source>
+        <translation>Общата сума на предварително избраните монети не покрива целевата сума на транзакцията. Позволете автоматичен избор на други входове или добавете още монети ръчно</translation>
+    </message>
+    <message>
+        <source>The source code is available from %s.</source>
+        <translation>Изходният код е достъпен от %s.</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist</source>
+        <translation>Зададеният конфигурационен файл %s не съществува</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>Общата сума надвишава баланса ви, когато се включи таксата за транзакция от %s.</translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to pay the fee</source>
+        <translation>Сумата на транзакцията е твърде малка за плащане на таксата</translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to send after the fee has been deducted</source>
+        <translation>Сумата на транзакцията е твърде малка за изпращане след приспадане на таксата</translation>
+    </message>
+    <message>
+        <source>The transactions removal process can only be executed within a db txn</source>
+        <translation>Процесът на премахване на транзакции може да се изпълни само в рамките на транзакция в базата данни</translation>
+    </message>
+    <message>
+        <source>There is no ScriptPubKeyManager for this address</source>
+        <translation>Няма ScriptPubKeyManager за този адрес</translation>
+    </message>
+    <message>
+        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
+        <translation>Това е предварителна тестова компилация - използвайте я на свой риск - не я използвайте за копаене или търговски приложения</translation>
+    </message>
+    <message>
+        <source>This is the maximum transaction fee you pay (in addition to the normal fee) to prioritize partial spend avoidance over regular coin selection.</source>
+        <translation>Това е максималната такса за транзакция, която плащате (в допълнение към нормалната такса), за да дадете приоритет на избягването на частично харчене пред обичайния избор на монети.</translation>
+    </message>
+    <message>
+        <source>This is the transaction fee you may discard if change is smaller than dust at this level</source>
+        <translation>Това е ставката на таксата, при която можете да отхвърлите рестото, ако то е под прага за прах при тази ставка</translation>
+    </message>
+    <message>
+        <source>This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>Това е таксата за транзакция, която може да платите, когато няма налични оценки на таксите.</translation>
+    </message>
+    <message>
+        <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>
+        <translation>Общата дължина на низа за мрежова версия (%i) надвишава максималната дължина (%i). Намалете броя или размера на uacomments.</translation>
+    </message>
+    <message>
+        <source>Transaction %s does not belong to this wallet</source>
+        <translation>Транзакцията %s не принадлежи на този портфейл</translation>
+    </message>
+    <message>
+        <source>Transaction change output index out of range</source>
+        <translation>Индексът на изхода за ресто на транзакцията е извън диапазона</translation>
+    </message>
+    <message>
+        <source>Transaction needs a change address, but we can't generate it.</source>
+        <translation>Транзакцията изисква адрес за ресто, но не можем да го генерираме.</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>Транзакцията изисква едно местоназначение с ненулева стойност, ненулева ставка на таксата или предварително избран вход</translation>
+    </message>
+    <message>
+        <source>UTXO snapshot failed to validate. Restart to resume normal initial block download, or try loading a different snapshot.</source>
+        <translation>Валидирането на моментната снимка UTXO е неуспешно. Рестартирайте, за да продължите нормалното първоначално изтегляне на блокове, или опитайте да заредите друга моментна снимка.</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer (bind returned error %s)</source>
+        <translation>Не може да се извърши обвързване с %s на този компютър (bind върна грешка %s)</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer. %s is probably already running.</source>
+        <translation>Не може да се извърши обвързване с %s на този компютър. Вероятно %s вече работи.</translation>
+    </message>
+    <message>
+        <source>Unable to create the PID file '%s': %s</source>
+        <translation>PID файлът '%s' не може да бъде създаден: %s</translation>
+    </message>
+    <message>
+        <source>Unable to find UTXO for external input</source>
+        <translation>Не може да се намери UTXO за външния вход</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation>Не може да се отвори %s за запис</translation>
+    </message>
+    <message>
+        <source>Unable to parse -maxuploadtarget: '%s'</source>
+        <translation>Не може да се разчете -maxuploadtarget: '%s'</translation>
+    </message>
+    <message>
+        <source>Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.</source>
+        <translation>Блоковете не могат да бъдат приложени отново. Ще трябва да изградите базата данни наново с -reindex-chainstate.</translation>
+    </message>
+    <message>
+        <source>Unable to start HTTP server. See debug log for details.</source>
+        <translation>HTTP сървърът не може да бъде стартиран. Вижте дневника за отстраняване на грешки за подробности.</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Кешът на дескрипторите не може да бъде записан</translation>
+    </message>
+    <message>
+        <source>Unconfirmed UTXOs are available, but spending them creates a chain of transactions that will be rejected by the mempool</source>
+        <translation>Налични са непотвърдени UTXO, но харченето им създава верига от транзакции, която ще бъде отхвърлена от mempool</translation>
+    </message>
+    <message>
+        <source>Unexpected legacy entry in descriptor wallet found. Loading wallet %s
+
+The wallet might have been tampered with or created with malicious intent.
+</source>
+        <translation>Намерен е неочакван запис от стария тип в портфейл с дескриптори. Зареждане на портфейла %s
+
+Портфейлът може да е бил подправен или създаден със злонамерена цел.
+</translation>
+    </message>
+    <message>
+        <source>Unknown -blockfilterindex value %s.</source>
+        <translation>Неизвестна стойност %s за -blockfilterindex.</translation>
+    </message>
+    <message>
+        <source>Unknown address type '%s'</source>
+        <translation>Неизвестен тип адрес '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown change type '%s'</source>
+        <translation>Неизвестен тип ресто '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown network specified in -onlynet: '%s'</source>
+        <translation>Неизвестна мрежа, зададена в -onlynet: '%s'</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>Неразпозната опция „%s“, подадена в -test=&lt;option&gt;.</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>Намерен е неразпознат дескриптор. Зареждане на портфейла %s
+
+Портфейлът може да е създаден с по-нова версия.
+Опитайте да използвате най-новата версия на софтуера.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>Неразпозната мрежа в -proxy='%s': '%s'</translation>
+    </message>
+    <message>
+        <source>Unsupported category-specific logging level %1$s=%2$s. Expected %1$s=&lt;category&gt;:&lt;loglevel&gt;. Valid categories: %3$s. Valid loglevels: %4$s.</source>
+        <translation>Неподдържано ниво на записване в дневника за конкретна категория %1$s=%2$s. Очаква се %1$s=&lt;category&gt;:&lt;loglevel&gt;. Валидни категории: %3$s. Валидни нива: %4$s.</translation>
+    </message>
+    <message>
+        <source>Unsupported chainstate database format found. Please restart with -reindex-chainstate. This will rebuild the chainstate database.</source>
+        <translation>Намерен е неподдържан формат на базата данни за състоянието на веригата. Рестартирайте с -reindex-chainstate. Това ще изгради базата данни за състоянието на веригата отново.</translation>
+    </message>
+    <message>
+        <source>Unsupported global logging level %s=%s. Valid values: %s.</source>
+        <translation>Неподдържано общо ниво на записване в дневника %s=%s. Валидни стойности: %s.</translation>
+    </message>
+    <message>
+        <source>Wallet file creation failed: %s</source>
+        <translation>Създаването на файла на портфейла е неуспешно: %s</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>Предупреждение: Намерена е невалидна верига, която е с повече от 6 блока по-дълга от най-добрата ни верига. Това може да се дължи на повреда в базата данни или на несъвместим консенсус с отсрещните възли.</translation>
+    </message>
+    <message>
+        <source>Warning: Private keys detected in wallet {%s} with disabled private keys</source>
+        <translation>Предупреждение: Открити са частни ключове в портфейла {%s}, в който частните ключове са изключени</translation>
+    </message>
+    <message>
+        <source>Witness data for blocks after height %d requires validation. Please restart with -reindex.</source>
+        <translation>Данните за свидетели за блокове след височина %d изискват валидиране. Рестартирайте с -reindex.</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
+        <translation>Трябва да изградите базата данни отново чрез -reindex, за да се върнете към режим без подрязване.  Това ще изтегли цялата блокова верига отново</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>Датата и часът на компютъра ви изглежда се различават с повече от %d минути от тези на мрежата, което може да доведе до грешка в консенсуса. След като проверите часовника на компютъра, това съобщение би трябвало да изчезне при рестартиране на възела. Без рестартиране то би трябвало да изчезне автоматично, след като се свържете с достатъчно нови изходящи възли, което може да отнеме време. За повече информация можете да прегледате полето `timeoffset` в RPC методите `getpeerinfo` и `getnetworkinfo`.</translation>
+    </message>
+    <message>
+        <source>acceptstalefeeestimates is not supported on %s chain.</source>
+        <translation>acceptstalefeeestimates не се поддържа във веригата %s.</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>whitebind може да се използва само за входящи връзки (подадено е „out“)</translation>
     </message>
 </context>
 <context>
@@ -3454,7 +5841,121 @@ Root certificates version: %2</source>
     <name>MiningPage</name>
     <message>
         <source>Optional: empty uses this wallet</source>
-        <translation>Незадължително: празно поле използва този портфейл</translation>
+        <translation>Незадължително: празно използва този портфейл</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPU нишки:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Неуспешно генериране на адрес за наградата. Проверете дали портфейлът може да генерира адреси за получаване.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Грешка</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>Режимът FAST споделя около 2 GiB RandomX памет с проверката. Повече нишки използват повече CPU ресурси и електроенергия; оставете капацитет за възела. Инициализирането на набора от данни може да отнеме време.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Копайте блокове в тестовата мрежа с CPU чрез RandomX. Копаенето е изключено, докато не го стартирате. Всички портфейли в този възел споделят копача и той продължава работа при смяна на раздела или затваряне на портфейл.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Копаене</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Копаене / подготовка на RandomX</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Нов адрес от този портфейл</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Адрес за наградата в тази мрежа</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Адрес за наградата:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Стартиране на копаенето</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Стартиране</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Състояние: %1
+Хешрейт: %2 H/s
+Хешове: %3 | Приети блокове: %4
+Активен адрес за наградата: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Спиране на копаенето</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Спряно</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Спиране (изчакване на текущата работа)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Изчакване на синхронизирането на възела</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Предупреждение: %1 нишки за копаене надвишават откритите %2 логически CPU. Това може да намали хешрейта и да забави възела.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsModel</name>
+    <message>
+        <source>Could not read setting "%1", %2.</source>
+        <translation>Настройката „%1“ не може да бъде прочетена, %2.</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Create Unsigned</source>
+        <translation>Създаване без подпис</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>Изпращане</translation>
+    </message>
+</context>
+<context>
+    <name>SplashScreen</name>
+    <message>
+        <source>(press q to shutdown and continue later)</source>
+        <translation>(натиснете q, за да изключите и да продължите по-късно)</translation>
+    </message>
+    <message>
+        <source>press q to shutdown</source>
+        <translation>натиснете q за изключване</translation>
     </message>
 </context>
 </TS>

@@ -58,13 +58,13 @@
         <translation type="unfinished">K&amp;iválaszt</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Ezek az Ön Bitcoin címei kifizetések küldéséhez. Mindig ellenőrizze az összeget és a fogadó címet mielőtt érméket küldene.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">Ezek az Ön ConnectCoin címei kifizetések küldéséhez. Mindig ellenőrizze az összeget és a fogadó címet mielőtt érméket küldene.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Ezek az Ön Bitcoin címei amelyeken fogadni tud Bitcoin utalásokat. Az "Új cím létrehozása" gombbal tud új címet létrehozni.
+        <translation type="unfinished">Ezek az Ön ConnectCoin címei amelyeken fogadni tud ConnectCoin utalásokat. Az "Új cím létrehozása" gombbal tud új címet létrehozni.
 Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
     </message>
     <message>
@@ -164,8 +164,8 @@ Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
         <translation type="unfinished">Tárca titkosításának megerősítése</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">Figyelmeztetés: Ha titkosítja a tárcáját és elveszíti a jelmondatát, akkor &lt;b&gt;AZ ÖSSZES BITCOINJA ELVÉSZ&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">Figyelmeztetés: Ha titkosítja a tárcáját és elveszíti a jelmondatát, akkor &lt;b&gt;AZ ÖSSZES CONNECTCOINJA ELVÉSZ&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -192,7 +192,7 @@ Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
         <translation type="unfinished">Vissza</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
         <translation type="unfinished">Ne feledje, hogy a tárca titkosítása nem nyújt teljes védelmet az adathalász programok fertőzésével szemben.</translation>
     </message>
     <message>
@@ -327,8 +327,8 @@ Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
         <translation type="unfinished">Összeg</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Adjon meg egy Bitcoin címet (pl: %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">Adjon meg egy ConnectCoin címet (pl: %1)</translation>
     </message>
     <message>
         <source>Unroutable</source>
@@ -437,6 +437,65 @@ Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
         <source>default wallet</source>
         <translation type="unfinished">alapértelmezett tárca</translation>
     </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>Privát továbbítás</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -506,8 +565,8 @@ Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
         <translation type="unfinished">A proxy &lt;b&gt;aktív&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Bitcoin küldése megadott címre</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">ConnectCoin küldése megadott címre</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -550,16 +609,16 @@ Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
         <translation type="unfinished">Üzenet &amp;aláírása…</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Üzenetek aláírása a Bitcoin-címeivel, amivel bizonyíthatja hogy a cím az Öné</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">Üzenetek aláírása a ConnectCoin-címeivel, amivel bizonyíthatja hogy a cím az Öné</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">Üzenet &amp;ellenőrzése…</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">Üzenetek ellenőrzése, hogy valóban a megjelölt Bitcoin-címekkel vannak-e aláírva</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">Üzenetek ellenőrzése, hogy valóban a megjelölt ConnectCoin-címekkel vannak-e aláírva</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -618,8 +677,8 @@ Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
         <translation type="unfinished">Csatlakozás partnerekhez…</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Fizetési kérelem (QR-kódot és "bitcoin:" URI azonosítót hoz létre)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">Fizetési kérelem (QR-kódot és "connectcoin:" URI azonosítót hoz létre)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -672,16 +731,16 @@ Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
         <translation type="unfinished">Naprakész</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">Részlegesen aláírt Bitcoin tranzakció (PSBT) betöltése</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">Részlegesen aláírt ConnectCoin tranzakció (PSBT) betöltése</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">PSBT betöltése &amp;vágólapról...</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">Részlegesen aláírt Bitcoin tranzakció (PSBT) betöltése vágólapról</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">Részlegesen aláírt ConnectCoin tranzakció (PSBT) betöltése vágólapról</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -700,8 +759,8 @@ Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
         <translation type="unfinished">&amp;Fogadó címek</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">Bitcoin URI megnyitása</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">ConnectCoin URI megnyitása</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -738,8 +797,8 @@ Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
         <translation type="unfinished">Egy tárca migrálása</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">A %1 súgó megjelenítése a Bitcoin lehetséges parancssori kapcsolóinak listájával</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">A %1 súgó megjelenítése a ConnectCoin lehetséges parancssori kapcsolóinak listájával</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -802,10 +861,10 @@ Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
         <translation type="unfinished">&amp;Mutat</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform>%n aktív kapcsolat a Bitcoin hálózathoz.</numerusform>
+            <numerusform>%n aktív kapcsolat a ConnectCoin hálózathoz.</numerusform>
         </translation>
     </message>
     <message>
@@ -915,6 +974,67 @@ Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>Pay-to-connect jutalmak létrehozása</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Bányászat</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>CPU-bányászat vezérlése</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Minden fájl</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Exportálási hiba</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>Sikeres exportálás</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>Az aktuális tárca csak megfigyelésre szolgáló változatának exportálása, amely másik csomóponton visszaállítható.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>Csak megfigyelésre szolgáló tárca exportálása</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>Tárca visszaállítása és áttelepítése</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>Tárca biztonsági mentésének visszaállítása és áttelepítése</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>Tárcafájl visszaállítása és áttelepítése…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>Csak megfigyelésre szolgáló tárca exportjának mentése</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>A tárca exportálásának helye: </translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>A tárca neve nem lehet üres</translation>
     </message>
 </context>
 <context>
@@ -1058,6 +1178,10 @@ Aláírni csak régi típusú, egyessel kezdődő címekkel lehet.</translation>
         <source>(change)</source>
         <translation type="unfinished">(visszajáró)</translation>
     </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>Bemenetenként +/- %1 connect(s) eltérés lehet.</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1160,6 +1284,42 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">Migrálás sikeres</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>Biztosan visszaállítja a(z) &lt;i&gt;%1&lt;/i&gt; tárcafájlt ide: &lt;i&gt;%2&lt;/i&gt;, és végrehajtja az áttelepítést?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Ha a csomópont metszett, és a tárcát a metszett blokkok magassága előtt hozták létre, az áttelepítés meghiúsulhat az áttelepített tárca betöltésekor.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Tárca betöltése az áttelepítés után</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>Tárca visszaállítása és áttelepítése</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>A tárca visszaállítása a biztonsági mentés fájlját a tárcák könyvtárába másolja, és a szokásos tárcakönyvtár-elrendezésbe helyezi. Az eredeti fájl nem módosul.
+
+Az áttelepítés a visszaállított tárcát egy vagy több leíróalapú tárcává alakítja. Új biztonsági mentést kell készíteni a tárcáról.
+Ha ez a tárca csak megfigyelésre szolgáló szkripteket tartalmaz, ezek számára új tárca jön létre.
+Ha ez a tárca megoldható, de nem megfigyelt szkripteket tartalmaz, ezek számára egy másik új tárca jön létre.
+
+Az áttelepítési folyamat az áttelepítés előtt biztonsági mentést készít a tárcáról. Ennek neve &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak lesz, és a tárca könyvtárában található. Hibás áttelepítés esetén a biztonsági mentés a „Tárca visszaállítása” funkcióval állítható vissza.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>A tárca nem töltődött be az áttelepítés után. A „Fájl &gt; Tárca megnyitása” menüből nyithatja meg.</translation>
     </message>
 </context>
 <context>
@@ -1297,6 +1457,10 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
         <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
         <translation type="unfinished">A program külső aláíró támogatás nélkül lett fordítva (követelmény külső aláírók használatához)</translation>
     </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>Üres tárca létrehozása. Az üres tárcák kezdetben nem tartalmaznak privát kulcsokat vagy szkripteket. Privát kulcsok és címek később leírók segítségével importálhatók.</translation>
+    </message>
 </context>
 <context>
     <name>EditAddressDialog</name>
@@ -1333,8 +1497,8 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
         <translation type="unfinished">Küldő cím szerkesztése</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">A megadott "%1" cím nem egy érvényes Bitcoin-cím.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">A megadott "%1" cím nem egy érvényes ConnectCoin-cím.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1501,6 +1665,14 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
         <source>Error</source>
         <translation type="unfinished">Hiba</translation>
     </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 letölti és tárolja a ConnectCoin blokkláncának egy példányát.</translation>
+    </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1509,8 +1681,8 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
         <translation type="unfinished">Űrlap</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">A legutóbbi tranzakciók még lehet, hogy nem láthatók emiatt előfordulhat, hogy a tárca egyenlege helytelen. A tárca azon nyomban az aktuális egyenleget fogja mutatni, amint befejezte a bitcoin hálózattal történő szinkronizációt, amely alább van részletezve.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">A legutóbbi tranzakciók még lehet, hogy nem láthatók emiatt előfordulhat, hogy a tárca egyenlege helytelen. A tárca azon nyomban az aktuális egyenleget fogja mutatni, amint befejezte a ConnectCoin hálózattal történő szinkronizációt, amely alább van részletezve.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1564,17 +1736,25 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">Ismeretlen. Fejlécek szinkronizálása (%1, %2%)…</translation>
     </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>A hálózat nem fogadja el az olyan ConnectCoin-összegek elköltésére irányuló kísérleteket, amelyeket még meg nem jelenített tranzakciók érintenek.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">Bitcoin URI megnyitása</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">ConnectCoin URI megnyitása</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">Cím beillesztése a vágólapról</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1617,8 +1797,8 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
         <translation type="unfinished">Teljes elérési útvonal a %1 kompatibilis szkripthez (pl. C:\Downloads\hwi.exe vagy /Users/felhasznalo/Downloads/hwi.py). Vigyázat: rosszindulatú programok ellophatják az érméit!</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished">A Bitcoin kliens port automatikus megnyitása a routeren. Ez csak akkor működik, ha a router támogatja a PCP-t vagy NAT-PMP-t és engedélyezve is van. A külső port lehet véletlenszerűen választott.</translation>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation type="unfinished">A ConnectCoin kliens port automatikus megnyitása a routeren. Ez csak akkor működik, ha a router támogatja a PCP-t vagy NAT-PMP-t és engedélyezve is van. A külső port lehet véletlenszerűen választott.</translation>
     </message>
     <message>
         <source>Map port using PCP or NA&amp;T-PMP</source>
@@ -1748,8 +1928,8 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
         <translation type="unfinished">Be&amp;jövő kapcsolatok engedélyezése</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Csatlakozás a Bitcoin hálózatához SOCKS5 proxyn keresztül</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">Csatlakozás a ConnectCoin hálózatához SOCKS5 proxyn keresztül</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1820,8 +2000,8 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
         <translation type="unfinished">Mutassa-e a pénzküldés beállításait.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Csatlakozás a Bitcoin hálózathoz külön SOCKS5 proxy használatával a Tor rejtett szolgáltatásainak eléréséhez.</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">Csatlakozás a ConnectCoin hálózathoz külön SOCKS5 proxy használatával a Tor rejtett szolgáltatásainak eléréséhez.</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1898,6 +2078,54 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">A megadott proxy cím nem érvényes.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Felugró értesítések engedélyezése</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Asztali felugró értesítések megjelenítése, a beérkező és elküldött tranzakciókról is. Alapértelmezés szerint kikapcsolva. A hiba- és megerősítő párbeszédablakok bekapcsolva maradnak.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation>&amp;OK</translation>
+    </message>
+    <message>
+        <source>&amp;Port:</source>
+        <translation>&amp;Port:</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>A metszés engedélyezése jelentősen csökkenti a tranzakciók tárolásához szükséges lemezterületet. Az összes blokk továbbra is teljes ellenőrzésen megy keresztül. A tárcákat induláskor be kell tölteni, és a metszés használata alatt aktívan kell tartani, hogy a régi blokkadatok törlése előtt szinkronizálódjanak; a metszett adatokhoz képest lemaradt tárcák újraindexelést igényelhetnek. A beállítás visszavonásához újra le kell tölteni a teljes blokkláncot.</translation>
+    </message>
+    <message>
+        <source>Proxy &amp;IP:</source>
+        <translation>Proxy &amp;IP:</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>A -popupnotifications vagy a connectcoin.conf fájl popupnotifications beállítása határozza meg.</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1913,8 +2141,8 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
         <translation type="unfinished">Űrlap</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">A kijelzett információ lehet, hogy elavult. A kapcsolat létrehozatalát követően tárcája automatikusan szinkronba kerül a Bitcoin hálózattal, de ez a folyamat még nem fejeződött be.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">A kijelzett információ lehet, hogy elavult. A kapcsolat létrehozatalát követően tárcája automatikusan szinkronba kerül a ConnectCoin hálózattal, de ez a folyamat még nem fejeződött be.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -2005,8 +2233,8 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
+        <translation>
+            <numerusform>%n bemenet aláírva, de további aláírások szükségesek.</numerusform>
         </translation>
     </message>
     <message>
@@ -2068,8 +2296,8 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
+        <translation>
+            <numerusform>A tranzakció %n aláíratlan bemenetet tartalmaz.</numerusform>
         </translation>
     </message>
     <message>
@@ -2108,16 +2336,16 @@ A migrációs folyamat készít biztonsági mentést a tárcáról migrálás el
         <translation type="unfinished">Hiba történt a fizetési kérelem során</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">A bitcoin nem tud elindulni: click-to-pay kezelő</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">A ConnectCoin nem tud elindulni: click-to-pay kezelő</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">URI kezelés</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin://' nem érvényes egységes erőforrás azonosító (URI). Használja helyette a 'bitcoin:'-t.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin://' nem érvényes egységes erőforrás azonosító (URI). Használja helyette a 'connectcoin:'-t.</translation>
     </message>
     <message>
         <source>Cannot process payment request because BIP70 is not supported.
@@ -2126,8 +2354,8 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <translation type="unfinished">A fizetési kérelmet nem lehet feldolgozni, mert a BIP70 nem támogatott. A jól ismert biztonsági hiányosságok miatt a BIP70-re való váltásra történő felhívásokat hagyja figyelmen kívül. Amennyiben ezt az üzenetet látja kérjen egy új, BIP21 kompatibilis URI-t.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">Nem sikerült az URI értelmezése! Ezt okozhatja érvénytelen Bitcoin cím, vagy rossz URI paraméterezés.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">Nem sikerült az URI értelmezése! Ezt okozhatja érvénytelen ConnectCoin cím, vagy rossz URI paraméterezés.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -2190,6 +2418,11 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <source>Outbound</source>
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">Kimenő</translation>
+    </message>
+    <message>
+        <source>Ping</source>
+        <extracomment>Title of Peers Table column which indicates the current latency of the connection with the peer.</extracomment>
+        <translation>Ping</translation>
     </message>
 </context>
 <context>
@@ -2279,8 +2512,8 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <translation type="unfinished">Helyi címek</translation>
     </message>
     <message>
-        <source>Network addresses that your Bitcoin node is currently using to communicate with other nodes.</source>
-        <translation type="unfinished">Hálózati címek amelyeken keresztül jelenleg a Bitcoin csomópontja a többi csomóponttal kommunikál.</translation>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation type="unfinished">Hálózati címek amelyeken keresztül jelenleg a ConnectCoin csomópontja a többi csomóponttal kommunikál.</translation>
     </message>
     <message>
         <source>Block chain</source>
@@ -2713,6 +2946,51 @@ Gépeljen %5 az elérhető parancsok áttekintéséhez. Több információért a
         <source>Unknown</source>
         <translation type="unfinished">Ismeretlen</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>Privát továbbítás: rövid életű kapcsolat az adatvédelem szempontjából érzékeny tranzakciók továbbításához</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2729,8 +3007,8 @@ Gépeljen %5 az elérhető parancsok áttekintéséhez. Több információért a
         <translation type="unfinished">&amp;Üzenet:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">Egy opcionális üzenet csatolása a fizetési kérelemhez, amely megjelenik a kérelem megnyitásakor. Megjegyzés: Az üzenet nem lesz elküldve a fizetséggel a Bitcoin hálózaton keresztül.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">Egy opcionális üzenet csatolása a fizetési kérelemhez, amely megjelenik a kérelem megnyitásakor. Megjegyzés: Az üzenet nem lesz elküldve a fizetséggel a ConnectCoin hálózaton keresztül.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -3030,7 +3308,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
 Megjegyzés: Mivel a díj bájtonként van kiszámítva, egy "100 satoshi kvB-nként"-ként megadott díj egy 500 virtuális bájt (1kvB fele) méretű tranzakció végül csak 50 satoshi-s díjat jelentene.</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
         <translation type="unfinished">Ha kevesebb a tranzakció, mint amennyi hely lenne egy blokkban, akkor a bányászok és a többi csomópont megkövetelheti a minimum díjat. Ezt a minimum díjat fizetni elegendő lehet de elképzelhető, hogy ez esetleg egy soha sem jóváhagyott tranzakciót eredményez ahogy a tranzakciók száma magasabb lesz, mint a hálózat által megengedett.</translation>
     </message>
     <message>
@@ -3116,8 +3394,8 @@ Megjegyzés: Mivel a díj bájtonként van kiszámítva, egy "100 satoshi kvB-nk
         <translation type="unfinished">&amp;Aláíratlan létrehozása</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation type="unfinished">Létrehoz egy Részlegesen Aláírt Bitcoin Tranzakciót (PSBT) melyet offline %1 tárcával vagy egy PSBT kompatibilis hardver tárcával használhat.</translation>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation type="unfinished">Létrehoz egy Részlegesen Aláírt ConnectCoin Tranzakciót (PSBT) melyet offline %1 tárcával vagy egy PSBT kompatibilis hardver tárcával használhat.</translation>
     </message>
     <message>
         <source>%1 to '%2'</source>
@@ -3172,7 +3450,7 @@ Megjegyzés: Mivel a díj bájtonként van kiszámítva, egy "100 satoshi kvB-nk
         <translation type="unfinished">Később növelheti a tranzakció díját (Replace-By-Fee-t jelez, BIP-125).</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
         <translation type="unfinished">Kérjük nézze át a tranzakciós javaslatot. Ez létrehoz egy részlegesen aláírt bitcoin tranzakciót (PSBT) amit elmenthet vagy kimásolhat amit később aláírhatja offline %1 tárcával vagy egy PSBT kompatibilis hardvertárcával.</translation>
     </message>
@@ -3186,7 +3464,7 @@ Megjegyzés: Mivel a díj bájtonként van kiszámítva, egy "100 satoshi kvB-nk
         <translation type="unfinished">Biztosan létrehozza ezt a tranzakciót?</translation>
     </message>
     <message>
-        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
         <translation type="unfinished">Kérjük nézze át a tranzakció részleteit. Véglegesítheti és elküldheti ezt a tranzakciót vagy létrehozhat egy részlegesen aláírt bitcoin tranzakciót (PSBT) amit elmentve vagy átmásolva aláírhat egy offline %1 tárcával, vagy PSBT-t támogató hardvertárcával.</translation>
     </message>
@@ -3256,8 +3534,8 @@ Megjegyzés: Mivel a díj bájtonként van kiszámítva, egy "100 satoshi kvB-nk
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">Figyelmeztetés: Érvénytelen Bitcoin cím</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">Figyelmeztetés: Érvénytelen ConnectCoin cím</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -3274,6 +3552,32 @@ Megjegyzés: Mivel a díj bájtonként van kiszámítva, egy "100 satoshi kvB-nk
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(nincs címke)</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Adjon meg egy egyéni díjat a tranzakció virtuális méretének minden kB-jára (1000 bájtjára).
+
+Megjegyzés:  Mivel a díj bájtonként számítódik, a „100 connects/kvB” díjráta egy 500 virtuális bájtos (fél kvB-os) tranzakciónál mindössze 50 connects díjat eredményez.</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>Az aktuális minimális díj van használatban. A megerősítési idő nincs megbecsülve.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>A díjat később is növelheti.</translation>
     </message>
 </context>
 <context>
@@ -3295,8 +3599,8 @@ Megjegyzés: Mivel a díj bájtonként van kiszámítva, egy "100 satoshi kvB-nk
         <translation type="unfinished">Válasszon egy korábban már használt címet</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">Erre a Bitcoin címre küldje az összeget</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">Erre a ConnectCoin címre küldje az összeget</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -3331,8 +3635,20 @@ Megjegyzés: Mivel a díj bájtonként van kiszámítva, egy "100 satoshi kvB-nk
         <translation type="unfinished">Adjon egy címkét ehhez a címhez, hogy bekerüljön a használt címek közé</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">Egy üzenet a bitcoin: URI-hoz csatolva, amely a tranzakciócal együtt lesz eltárolva az Ön számára. Megjegyzés: Ez az üzenet nem kerül elküldésre a Bitcoin hálózaton keresztül.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">Egy üzenet a connectcoin: URI-hoz csatolva, amely a tranzakciócal együtt lesz eltárolva az Ön számára. Megjegyzés: Ez az üzenet nem kerül elküldésre a ConnectCoin hálózaton keresztül.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>A díjat levonjuk a küldött összegből. A címzett kevesebb ConnectCoint kap, mint amennyit az összeg mezőben megadott. Több címzett kiválasztásakor a díj egyenlően oszlik meg.</translation>
     </message>
 </context>
 <context>
@@ -3361,8 +3677,8 @@ Megjegyzés: Mivel a díj bájtonként van kiszámítva, egy "100 satoshi kvB-nk
         <translation type="unfinished">Aláírhat üzeneteket/megállapodásokat a régí típusú (P2PKH) címeivel amivel bizonyítja, hogy fogadni és elkölteni is tudja az oda küldött bitcoint. Legyen óvatos és ne írjon alá semmilyen ködös vagy véletlenszerű üzenetet, mivel adathalászok megkísérelhetik rávenni a személyazonosságának átruházására. Csak olyan alaposan részletezett állításokat írjon alá amivel teljesen egyetért.</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">Bitcoin cím, amivel alá kívánja írni az üzenetet</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">ConnectCoin cím, amivel alá kívánja írni az üzenetet</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3385,8 +3701,8 @@ Megjegyzés: Mivel a díj bájtonként van kiszámítva, egy "100 satoshi kvB-nk
         <translation type="unfinished">A kiválasztott aláírás másolása a vágólapra</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation type="unfinished">Üzenet aláírása, ezzel bizonyítva, hogy Öné ez a Bitcoin cím</translation>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation type="unfinished">Üzenet aláírása, ezzel bizonyítva, hogy Öné ez a ConnectCoin cím</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -3409,8 +3725,8 @@ Megjegyzés: Mivel a díj bájtonként van kiszámítva, egy "100 satoshi kvB-nk
         <translation type="unfinished">Adja meg a fogadó címét, az üzenetet (megbizonyosodva arról, hogy az új-sor, szóköz, tab, stb. karaktereket is pontosan adta meg) és az aláírást az üzenet ellenőrzéséhez. Ügyeljen arra, ne gondoljon bele többet az aláírásba, mint amennyi az aláírt szövegben ténylegesen áll, hogy elkerülje a köztes-ember (man-in-the-middle) támadást. Megjegyzendő, hogy ez csak azt bizonyítja hogy az aláíró fél az adott címen tud fogadni, de azt nem tudja igazolni hogy képes-e akár egyetlen tranzakció feladására is!</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">Bitcoin cím, amivel aláírta az üzenetet</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">ConnectCoin cím, amivel aláírta az üzenetet</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -3421,8 +3737,8 @@ Megjegyzés: Mivel a díj bájtonként van kiszámítva, egy "100 satoshi kvB-nk
         <translation type="unfinished">A kapott aláírás amikor az üzenet alá lett írva.</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">Ellenőrizze az üzenetet, hogy valóban a megjelölt Bitcoin címmel van-e aláírva</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">Ellenőrizze az üzenetet, hogy valóban a megjelölt ConnectCoin címmel van-e aláírva</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3487,6 +3803,18 @@ Megjegyzés: Mivel a díj bájtonként van kiszámítva, egy "100 satoshi kvB-nk
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">Üzenet ellenőrizve.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Régi típusú (P2PKH) címeivel üzeneteket vagy megállapodásokat írhat alá annak bizonyítására, hogy fogadni tudja az oda küldött ConnectCoin-összegeket. Ne írjon alá semmi homályosat vagy véletlenszerűt: adathalász támadások olyan nyilatkozatok aláírására csábíthatják, amelyekkel mások visszaélhetnek a személyazonosságával. Csak olyan részletes nyilatkozatokat írjon alá, amelyekkel egyetért.</translation>
     </message>
 </context>
 <context>
@@ -4124,8 +4452,8 @@ A "Fájl &gt; Tárca megnyitása" menüben tölthet be egyet.
         <translation type="unfinished">Hiba: A dump fájl azonosító rekordja helytelen. Talált "%s", várt "%s".</translation>
     </message>
     <message>
-        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
-        <translation type="unfinished">Hiba: A dump fájl verziója nem támogatott. A bitcoin-wallet ez a kiadása csak 1-es verziójú dump fájlokat támogat. A talált dump fájl verziója %s.</translation>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Hiba: A dump fájl verziója nem támogatott. A connectcoin-wallet ez a kiadása csak 1-es verziójú dump fájlokat támogat. A talált dump fájl verziója %s.</translation>
     </message>
     <message>
         <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
@@ -4209,7 +4537,7 @@ A "Fájl &gt; Tárca megnyitása" menüben tölthet be egyet.
     </message>
     <message>
         <source>Unsupported category-specific logging level %1$s=%2$s. Expected %1$s=&lt;category&gt;:&lt;loglevel&gt;. Valid categories: %3$s. Valid loglevels: %4$s.</source>
-        <translation type="unfinished">Nem támogatott kategóriához kötött naplózási szint %1$=%2$s. Várt %1$s=&lt;category&gt;:&lt;loglevel&gt;. Érvényes kategóriák: %3$s. Érvényes naplózási szintek: %4$s.</translation>
+        <translation>Nem támogatott kategóriaspecifikus naplózási szint: %1$s=%2$s. Elvárt forma: %1$s=&lt;category&gt;:&lt;loglevel&gt;. Érvényes kategóriák: %3$s. Érvényes naplózási szintek: %4$s.</translation>
     </message>
     <message>
         <source>Unsupported chainstate database format found. Please restart with -reindex-chainstate. This will rebuild the chainstate database.</source>
@@ -5103,6 +5431,168 @@ Kérjük próbálja futtatni a legújabb szoftver verziót.
         <source>Settings file could not be written</source>
         <translation type="unfinished">Nem sikerült írni a beállítások fájlba</translation>
     </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>A visszajáró céljának 1-es típusú P2PK (bech32m) célnak kell lennie</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>A ConnectCoin csak az 1-es típusú P2PK (bech32m) címeket támogatja</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>A ConnectCoin csak az 1-es típusú P2PK (bech32m) visszajárócímeket támogatja</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>A ConnectCoin-tranzakciókhoz érvényes 1-es típusú célok vagy 2-es típusú PAY_TO_CONNECT kimenetek szükségesek</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>A ConnectCoin 1-es típusú kimenetei csak a SIGHASH_DEFAULT módot támogatják</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>A bemenet nem teljes, 1-es típusú költés SIGHASH_DEFAULT móddal</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>A bemenethez a P2C-bizonyíték teljes tanúadatai szükségesek</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>A főhálózat még nem indult el: nincs meghatározva genezisblokk. Nyilvános teszteléshez használja a -testnet4, helyi teszteléshez pedig a -regtest kapcsolót.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>Ehhez a fejlesztői változathoz nincs beállítva a projekt tulajdonában álló nyilvános forráskód-URL.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Nem áll rendelkezésre elegendő fájlleíró. Próbálja csökkenteni a -rpcmaxconnections értékét, vagy használja az alapértelmezett %d értéket</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>Kérjük, járuljon hozzá a projekthez, ha hasznosnak találja: %s.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Fontolja meg a következők módosítását: %s (%s) vagy %s (%s).</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>A -walletrbf elavult, és a következő kiadásban teljesen eltávolítjuk.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>A %zu MiB méretű dbcache túl nagy lehet a mindössze %zu MiB rendszermemóriához.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>Végzetes belső hiba történt; a részletek itt találhatók: %s: %s</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>Nem sikerült beolvasni a beágyazott asmap-adatokat</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>Ismétlődő kötési beállítás a(z) %s címhez. Ellenőrizze a -bind, -bind=...=onion és -whitebind beállításokat.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>A beágyazott asmap-adatok nem érhetők el</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>Hiba a(z) %s létrehozásakor: nem sikerült kiírni a verzió metaadatait.</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Hiba: a(z) %s tranzakciót nem sikerült hozzáadni a csak megfigyelésre szolgáló tárcához</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Hiba: a(z) '%s' fájlt nem sikerült létrehozni</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Hiba: az exportálás célja, '%s', már létezik</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Hiba: az exportálás célja nem lehet üres</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Hiba: nem sikerült létrehozni az új, csak megfigyelésre szolgáló tárcát. %s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Hiba: nem sikerült kiírni az exportált tárcát</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Hiba: a tárca nem tartalmaz exportálható leírókat</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Hiba: nem sikerült véglegesíteni a csak megfigyelésre szolgáló tárca exportálásához szükséges adatbázis-tranzakciót</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Hiba: nem sikerült végrehajtani az új, csak megfigyelésre szolgáló %s tárca adatbázis-tranzakcióját</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>A díjráta (%s) alacsonyabb a beállított minimális díjrátánál (%s).</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>A '-limitancestorsize' beállítás meg van adva, de az elődök méretkorlátját fürtméretkorlát váltotta fel (lásd: -limitclustersize). Ennek a beállításnak nincs hatása.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>A '-limitdescendantsize' beállítás meg van adva, de az utódok méretkorlátját fürtméretkorlát váltotta fel (lásd: -limitclustersize). Ennek a beállításnak nincs hatása.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>Saját tranzakciók privát továbbítását kérte (-privatebroadcast), és a -proxyrandomize ki van kapcsolva. A privát továbbítás Tor-kapcsolatainak áramkörei összekapcsolhatók más Tor-kapcsolatokkal. A legjobb adatvédelemhez állítsa be a következőt: -proxyrandomize=1.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>Saját tranzakciók privát továbbítását kérte (-privatebroadcast), de a -connect is be van állítva. Ezek nem kompatibilisek, mert a privát továbbításhoz új kapcsolatokat kell nyitni véletlenszerűen választott Tor- vagy I2P-partnerekhez. Ehelyett fontolja meg a -maxconnections=0 -addnode=... használatát</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>Saját tranzakciók privát továbbítását kérte (-privatebroadcast), de sem a Tor, sem az I2P hálózat nem érhető el</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>A metszett mód nem kompatibilis a -txospenderindex beállítással.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>A -testactivationheight beállítás nem használható a főhálózaton.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>A -vbparams beállítás nem használható a főhálózaton.</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>A végösszeg a(z) %s tranzakciós díj beszámításával meghaladja az egyenlegét.</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Nem sikerült kiírni a leírók gyorsítótárát</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>Figyelmeztetés: a legjobb láncunknál több mint 6 blokkal hosszabb érvénytelen láncot találtunk. Ezt adatbázis-sérülés vagy a partnerekkel fennálló konszenzus-inkompatibilitás okozhatja.</translation>
+    </message>
 </context>
 <context>
     <name>P2CClaimDialog</name>
@@ -5450,7 +5940,92 @@ Gyökértanúsítványok verziója: %2</translation>
     <name>MiningPage</name>
     <message>
         <source>Optional: empty uses this wallet</source>
-        <translation>Nem kötelező: üresen ezt a tárcát használja</translation>
+        <translation>Opcionális: üresen ezt a tárcát használja</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPU-szálak:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Nem sikerült jutalomcímet létrehozni. Ellenőrizze, hogy a tárca tud-e fogadási címeket létrehozni.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Hiba</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>A FAST mód körülbelül 2 GiB RandomX-memóriát oszt meg az ellenőrzéssel. Több szál több CPU-erőforrást és áramot használ; hagyjon kapacitást a csomópontnak. Az adatkészlet inicializálása eltarthat egy ideig.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Bányásszon teszthálózati blokkokat CPU-val, RandomX használatával. A bányászat az elindításáig ki van kapcsolva. A csomópont minden tárcája ugyanazt a bányászt használja, amely lapváltáskor vagy egy tárca bezárásakor is tovább működik.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Bányászat</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Bányászat / RandomX előkészítése</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Új cím ebből a tárcából</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Jutalomcím ehhez a hálózathoz</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Jutalomcím:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Bányászat indítása</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Indítás</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Állapot: %1
+Hashsebesség: %2 H/s
+Hashek: %3 | Elfogadott blokkok: %4
+Aktív jutalomcím: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Bányászat leállítása</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Leállítva</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Leállítás (várakozás az aktuális munkára)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Várakozás a csomópont szinkronizálására</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Figyelem: a(z) %1 bányászszál meghaladja az észlelt %2 logikai CPU számát. Ez csökkentheti a hashsebességet és lassíthatja a csomópontot.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
     </message>
 </context>
 </TS>

@@ -54,13 +54,13 @@
         <translation type="unfinished">Vy&amp;brať</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Toto sú Vaše Bitcoin adresy pre posielanie platieb. Vždy skontrolujte sumu a prijímaciu adresu pred poslaním mincí.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">Toto sú Vaše ConnectCoin adresy pre posielanie platieb. Vždy skontrolujte sumu a prijímaciu adresu pred poslaním mincí.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Toto sú vaše Bitcoin adresy pre prijímanie platieb. Pre vytvorenie nových adries kliknite na "Vytvoriť novú prijímaciu adresu" na karte "Prijať". Podpisovanie je možné iba s adresami typu "legacy".</translation>
+        <translation type="unfinished">Toto sú vaše ConnectCoin adresy pre prijímanie platieb. Pre vytvorenie nových adries kliknite na "Vytvoriť novú prijímaciu adresu" na karte "Prijať". Podpisovanie je možné iba s adresami typu "legacy".</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -99,6 +99,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">Export zlyhal</translation>
+    </message>
+    <message>
+        <source>Choose the address to receive coins with</source>
+        <translation>Vyberte adresu na prijímanie mincí</translation>
     </message>
 </context>
 <context>
@@ -159,8 +163,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Potvrďte zašifrovanie peňaženky</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">Varovanie: Ak zašifrujete peňaženku a stratíte heslo, &lt;b&gt;STRATÍTE VŠETKY VAŠE BITCOINY&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">Varovanie: Ak zašifrujete peňaženku a stratíte heslo, &lt;b&gt;STRATÍTE VŠETKY VAŠE CONNECTCOINY&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -187,7 +191,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Späť</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
         <translation type="unfinished">Pamätajte, že zašifrovanie peňaženky neochráni úplne vaše bitcoiny pred ukradnutím škodlivými programami vo vašom počítači.</translation>
     </message>
     <message>
@@ -322,8 +326,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Suma</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Zadajte bitcoin adresu (napr. %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">Zadajte ConnectCoin adresu (napr. %1)</translation>
     </message>
     <message>
         <source>Unroutable</source>
@@ -423,6 +427,86 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>default wallet</source>
         <translation type="unfinished">predvolená peňaženka</translation>
     </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <extracomment>Short-lived peer connection type that tests the aliveness of known addresses.</extracomment>
+        <translation>Sonda</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>Súkromné vysielanie</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -492,8 +576,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Proxy sú &lt;b&gt;zapnuté&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Poslať bitcoins na adresu</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">Poslať ConnectCoins na adresu</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -536,16 +620,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Podpísať &amp;správu…</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Podpísať správu s vašou Bitcoin adresou, aby ste preukázali, že ju vlastníte</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">Podpísať správu s vašou ConnectCoin adresou, aby ste preukázali, že ju vlastníte</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">O&amp;veriť správu…</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">Overiť, či boli správy podpísané uvedenou Bitcoin adresou</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">Overiť, či boli správy podpísané uvedenou ConnectCoin adresou</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -604,8 +688,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Pripája sa k partnerom…</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Vyžiadať platby (vygeneruje QR kódy a bitcoin: URI)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">Vyžiadať platby (vygeneruje QR kódy a connectcoin: URI)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -660,16 +744,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Aktualizovaný</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">Načítať sčasti podpísanú Bitcoin transakciu</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">Načítať sčasti podpísanú ConnectCoin transakciu</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">Načítať PSBT zo s&amp;chránky…</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">Načítať čiastočne podpísanú Bitcoin transakciu, ktorú ste skopírovali</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">Načítať čiastočne podpísanú ConnectCoin transakciu, ktorú ste skopírovali</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -688,8 +772,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;Prijímajúce adresy</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">Otvoriť bitcoin: URI</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">Otvoriť connectcoin: URI</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -726,8 +810,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Migrovať peňaženku</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Ukáž %1 zoznam možných nastavení Bitcoinu pomocou príkazového riadku</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">Ukáž %1 zoznam možných nastavení ConnectCoinu pomocou príkazového riadku</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -786,12 +870,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Z&amp;obraziť</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform>%n aktívne pripojenie do siete Bitcoin</numerusform>
-            <numerusform>%n aktívne pripojenia do siete Bitcoin</numerusform>
-            <numerusform>%n aktívnych pripojení do siete Bitcoin</numerusform>
+            <numerusform>%n aktívne pripojenie do siete ConnectCoin</numerusform>
+            <numerusform>%n aktívne pripojenia do siete ConnectCoin</numerusform>
+            <numerusform>%n aktívnych pripojení do siete ConnectCoin</numerusform>
         </translation>
     </message>
     <message>
@@ -901,6 +985,71 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>Vytvoriť odmeny pay-to-connect</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Ťažba</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>Ovládať ťažbu pomocou CPU</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Všetky súbory</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Chyba exportu</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>Export bol úspešný</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>Exportovať verziu aktuálnej peňaženky iba na sledovanie, ktorú možno obnoviť na inom uzle.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>Exportovať peňaženku iba na sledovanie</translation>
+    </message>
+    <message>
+        <source>Invalid Wallet Name</source>
+        <translation>Neplatný názov peňaženky</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>Obnoviť a migrovať peňaženku</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>Obnoviť a migrovať zálohu peňaženky</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>Obnoviť a migrovať súbor peňaženky…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>Uložiť export peňaženky iba na sledovanie</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>Peňaženka bola exportovaná do </translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>Názov peňaženky nesmie byť prázdny</translation>
     </message>
 </context>
 <context>
@@ -1044,6 +1193,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(change)</source>
         <translation type="unfinished">(zmena)</translation>
     </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>Môže sa líšiť o +/- %1 connect(s) na vstup.</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1146,6 +1299,42 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">Migrácia bola úspešná</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>Naozaj chcete obnoviť súbor peňaženky &lt;i&gt;%1&lt;/i&gt; do &lt;i&gt;%2&lt;/i&gt; a migrovať ho?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Ak uzol používa orezávanie a peňaženka bola vytvorená pred výškou orezaných blokov, proces migrácie môže zlyhať pri pokuse o načítanie migrovanej peňaženky.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Načítať peňaženku po migrácii</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>Obnoviť a migrovať peňaženku</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>Obnovenie peňaženky skopíruje súbor zálohy do adresára peňaženiek a umiestni ho do štandardného usporiadania adresárov peňaženky. Pôvodný súbor sa nezmení.
+
+Migrácia prevedie obnovenú peňaženku na jednu alebo viac deskriptorových peňaženiek. Bude potrebné vytvoriť novú zálohu peňaženky.
+Ak táto peňaženka obsahuje skripty iba na sledovanie, vytvorí sa nová peňaženka, ktorá ich bude obsahovať.
+Ak táto peňaženka obsahuje riešiteľné, ale nesledované skripty, vytvorí sa iná nová peňaženka, ktorá ich bude obsahovať.
+
+Proces migrácie vytvorí zálohu peňaženky pred migráciou. Súbor zálohy sa bude volať &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak a bude sa nachádzať v adresári tejto peňaženky. V prípade nesprávnej migrácie možno zálohu obnoviť pomocou funkcie „Obnoviť peňaženku“.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>Peňaženka nebola po migrácii načítaná. Môžete ju otvoriť cez ponuku „Súbor &gt; Otvoriť peňaženku“.</translation>
     </message>
 </context>
 <context>
@@ -1283,6 +1472,10 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
         <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
         <translation type="unfinished">Skompilované bez podpory externého podpisovania (potrebné pre externé podpisovanie)</translation>
     </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>Vytvoriť prázdnu peňaženku. Prázdne peňaženky spočiatku neobsahujú súkromné kľúče ani skripty. Súkromné kľúče a adresy možno neskôr importovať pomocou deskriptorov.</translation>
+    </message>
 </context>
 <context>
     <name>EditAddressDialog</name>
@@ -1319,8 +1512,8 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
         <translation type="unfinished">Upraviť odosielaciu adresu</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">Vložená adresa "%1" nieje platnou adresou Bitcoin.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">Vložená adresa "%1" nieje platnou adresou ConnectCoin.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1491,6 +1684,18 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
         <source>Error</source>
         <translation type="unfinished">Chyba</translation>
     </message>
+    <message>
+        <source> GB</source>
+        <translation> GB</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 stiahne a uloží kópiu reťazca blokov ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1499,8 +1704,8 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
         <translation type="unfinished">Formulár</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">Nedávne transakcie nemusia byť ešte viditeľné preto môže byť zostatok vo vašej peňaženke nesprávny. Táto informácia bude správna keď sa dokončí synchronizovanie peňaženky so sieťou bitcoin, ako je rozpísané nižšie.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">Nedávne transakcie nemusia byť ešte viditeľné preto môže byť zostatok vo vašej peňaženke nesprávny. Táto informácia bude správna keď sa dokončí synchronizovanie peňaženky so sieťou ConnectCoin, ako je rozpísané nižšie.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1554,17 +1759,25 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">Neznámy. Synchronizujú sa hlavičky (%1, %2%)…</translation>
     </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Sieť neprijme pokusy minúť prostriedky ConnectCoin ovplyvnené transakciami, ktoré sa ešte nezobrazujú.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">Otvoriť bitcoin URI</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">Otvoriť ConnectCoin URI</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">Vložiť adresu zo schránky</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1607,8 +1820,8 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
         <translation type="unfinished">Plná cesta k skriptu kompatibilnému s %1 (napr. C:\Stiahnuté súbory\hwi.exe alebo /Users/Vy/Stiahnuté súbory/hwi.py). Pozor: škodlivé programy môžu ukradnúť vaše mince!</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished">Automaticky otvoriť port pre Bitcoin na routeri. Toto funguje len ak router podporuje NAT-PMP a je táto podpora aktivovaná. Externý port môže byť náhodný.</translation>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation type="unfinished">Automaticky otvoriť port pre ConnectCoin na routeri. Toto funguje len ak router podporuje NAT-PMP a je táto podpora aktivovaná. Externý port môže byť náhodný.</translation>
     </message>
     <message>
         <source>Map port using PCP or NA&amp;T-PMP</source>
@@ -1734,8 +1947,8 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
         <translation type="unfinished">Povoliť prichá&amp;dzajúce spojenia</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Pripojiť do siete Bitcoin cez proxy server SOCKS5.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">Pripojiť do siete ConnectCoin cez proxy server SOCKS5.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1791,7 +2004,7 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
     </message>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
-        <translation type="unfinished">Zvoľte ako deliť bitcoin pri zobrazovaní pri platbách a užívateľskom rozhraní.</translation>
+        <translation type="unfinished">Zvoľte ako deliť ConnectCoin pri zobrazovaní pri platbách a užívateľskom rozhraní.</translation>
     </message>
     <message>
         <source>Third-party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
@@ -1806,8 +2019,8 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
         <translation type="unfinished">Či zobrazovať možnosti kontroly mincí alebo nie.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Pripojiť k Bitcoin sieti skrz samostatnú SOCKS5 proxy pre službu Tor.</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">Pripojiť k ConnectCoin sieti skrz samostatnú SOCKS5 proxy pre službu Tor.</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1884,6 +2097,58 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">Zadaná proxy adresa je neplatná.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Povoliť vyskakovacie oznámenia</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Zobrazovať vyskakovacie oznámenia na ploche vrátane prijatých a odoslaných transakcií. Predvolene vypnuté. Dialógové okná chýb a potvrdení zostávajú zapnuté.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation>&amp;OK</translation>
+    </message>
+    <message>
+        <source>&amp;Port:</source>
+        <translation>&amp;Port:</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Zapnutie orezávania výrazne znižuje miesto na disku potrebné na uchovávanie transakcií. Všetky bloky sa naďalej úplne overujú. Peňaženky by sa mali načítať pri spustení a zostať aktívne počas zapnutého orezávania, aby sa synchronizovali pred odstránením údajov starých blokov; peňaženky, ktorých synchronizácia zaostáva za orezanými údajmi, môžu vyžadovať opätovné indexovanie. Zrušenie tohto nastavenia vyžaduje opätovné stiahnutie celého reťazca blokov.</translation>
+    </message>
+    <message>
+        <source>Expert</source>
+        <translation>Expert</translation>
+    </message>
+    <message>
+        <source>Proxy &amp;IP:</source>
+        <translation>Proxy &amp;IP:</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>Nastavené pomocou -popupnotifications alebo popupnotifications v connectcoin.conf.</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1899,8 +2164,8 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
         <translation type="unfinished">Formulár</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">Zobrazené informácie môžu byť neaktuálne. Vaša peňaženka sa automaticky synchronizuje so sieťou Bitcoin po nadviazaní spojenia, ale tento proces ešte nie je ukončený.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">Zobrazené informácie môžu byť neaktuálne. Vaša peňaženka sa automaticky synchronizuje so sieťou ConnectCoin po nadviazaní spojenia, ale tento proces ešte nie je ukončený.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1991,10 +2256,10 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Bol podpísaný %n vstup, ale stále sú potrebné ďalšie podpisy.</numerusform>
+            <numerusform>Boli podpísané %n vstupy, ale stále sú potrebné ďalšie podpisy.</numerusform>
+            <numerusform>Bolo podpísaných %n vstupov, ale stále sú potrebné ďalšie podpisy.</numerusform>
         </translation>
     </message>
     <message>
@@ -2056,10 +2321,10 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Transakcia má %n nepodpísaný vstup.</numerusform>
+            <numerusform>Transakcia má %n nepodpísané vstupy.</numerusform>
+            <numerusform>Transakcia má %n nepodpísaných vstupov.</numerusform>
         </translation>
     </message>
     <message>
@@ -2098,16 +2363,16 @@ Proces migrácie vytvorí zálohu peňaženky pred samotnou migráciou. Tento z�
         <translation type="unfinished">Chyba pri vyžiadaní platby</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Nemôžeme spustiť Bitcoin: obsluha click-to-pay</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">Nemôžeme spustiť ConnectCoin: obsluha click-to-pay</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">URI manipulácia</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin://' je neplatná URI. Použite 'bitcoin:'</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin://' je neplatná URI. Použite 'connectcoin:'</translation>
     </message>
     <message>
         <source>Cannot process payment request because BIP70 is not supported.
@@ -2118,8 +2383,8 @@ Kvôli bezpečnostným chybám v BIP70 sa odporúča ignorovať pokyny obchodní
 Ak ste dostali túto chybu mali by ste požiadať obchodníka o URI kompatibilné s BIP21.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">URI sa nedá analyzovať! To môže byť spôsobené neplatnou Bitcoin adresou alebo zle nastavenými vlastnosťami URI.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">URI sa nedá analyzovať! To môže byť spôsobené neplatnou ConnectCoin adresou alebo zle nastavenými vlastnosťami URI.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -2276,8 +2541,8 @@ Ak ste dostali túto chybu mali by ste požiadať obchodníka o URI kompatibiln�
         <translation type="unfinished">Lokálne adresy</translation>
     </message>
     <message>
-        <source>Network addresses that your Bitcoin node is currently using to communicate with other nodes.</source>
-        <translation type="unfinished">Sieťové adresy, ktoré váš Bitcoin uzol momentálne používa na komunikáciu s inými uzlami.</translation>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation type="unfinished">Sieťové adresy, ktoré váš ConnectCoin uzol momentálne používa na komunikáciu s inými uzlami.</translation>
     </message>
     <message>
         <source>Block chain</source>
@@ -2707,6 +2972,55 @@ Pre viac informácií o používaní tejto konzoly napíšte %6.
         <source>Unknown</source>
         <translation type="unfinished">neznámy</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>Súkromné vysielanie: krátkodobé, na vysielanie transakcií citlivých z hľadiska súkromia</translation>
+    </message>
+    <message>
+        <source>Transport</source>
+        <translation>Prenos</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2723,8 +3037,8 @@ Pre viac informácií o používaní tejto konzoly napíšte %6.
         <translation type="unfinished">&amp;Správa:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">Pridať voliteľnú správu k výzve na zaplatenie, ktorá sa zobrazí keď bude výzva otvorená. Poznámka: Správa nebude poslaná s platbou cez sieť Bitcoin.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">Pridať voliteľnú správu k výzve na zaplatenie, ktorá sa zobrazí keď bude výzva otvorená. Poznámka: Správa nebude poslaná s platbou cez sieť ConnectCoin.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -3024,7 +3338,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
 Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 satoshi za kB" pri veľkosti transakcie 500 bajtov (polovica z 1 kB) by stál len 50 satoshi.</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
         <translation type="unfinished">Ak je v blokoch menej objemu transakcií ako priestoru, ťažiari ako aj vysielacie uzly, môžu uplatniť minimálny poplatok. Platiť iba minimálny poplatok je v poriadku, ale uvedomte si, že to môže mať za následok transakciu, ktorá sa nikdy nepotvrdí, akonáhle je väčší dopyt po bitcoinových transakciách, než dokáže sieť spracovať.</translation>
     </message>
     <message>
@@ -3110,8 +3424,8 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
         <translation type="unfinished">Vy&amp;tvoriť bez podpisu</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation type="unfinished">Vytvorí čiastočne podpísanú Bitcoin transakciu (Partially Signed Bitcoin Transaction - PSBT) na použitie napríklad s offline %1 peňaženkou alebo v hardvérovej peňaženke kompatibilnej s PSBT.</translation>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation type="unfinished">Vytvorí čiastočne podpísanú ConnectCoin transakciu (Partially Signed ConnectCoin Transaction - PSBT) na použitie napríklad s offline %1 peňaženkou alebo v hardvérovej peňaženke kompatibilnej s PSBT.</translation>
     </message>
     <message>
         <source>%1 to '%2'</source>
@@ -3166,7 +3480,7 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
         <translation type="unfinished">Poplatok môžete navýšiť neskôr (vysiela sa "Replace-By-Fee" - nahradenie poplatkom, BIP-125).</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
         <translation type="unfinished">Prečítajte si prosím svoj návrh transakcie. Výsledkom bude čiastočne podpísaná bitcoinová transakcia (PSBT), ktorú môžete uložiť alebo skopírovať a potom podpísať napr. cez offline peňaženku %1 alebo hardvérovú peňaženku kompatibilnú s PSBT.</translation>
     </message>
@@ -3180,7 +3494,7 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
         <translation type="unfinished">Chcete vytvoriť túto transakciu?</translation>
     </message>
     <message>
-        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
         <translation type="unfinished">Skontrolujte prosím svoj návrh transakcie. Môžete vytvoriť a odoslať túto transakciu alebo vytvoriť čiastočne podpísanú bitcoinovú transakciu (PSBT), ktorú môžete uložiť alebo skopírovať a potom podpísať napr. cez offline peňaženku %1 alebo hardvérovú peňaženku kompatibilnú s PSBT.</translation>
     </message>
@@ -3252,8 +3566,8 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">Varovanie: Neplatná Bitcoin adresa</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">Varovanie: Neplatná ConnectCoin adresa</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -3270,6 +3584,32 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(bez popisu)</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Zadajte vlastný poplatok za kB (1 000 bajtov) virtuálnej veľkosti transakcie.
+
+Poznámka:  Keďže sa poplatok počíta za každý bajt, sadzba „100 connects za kvB“ pri transakcii s veľkosťou 500 virtuálnych bajtov (polovica 1 kvB) vytvorí poplatok iba 50 connects.</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>Používa sa aktuálny minimálny poplatok. Čas potvrdenia nie je odhadnutý.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>Poplatok môžete neskôr zvýšiť.</translation>
     </message>
 </context>
 <context>
@@ -3291,7 +3631,7 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
         <translation type="unfinished">Vybrať predtým použitú adresu</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
+        <source>The ConnectCoin address to send the payment to</source>
         <translation type="unfinished">Zvoľte adresu kam poslať platbu</translation>
     </message>
     <message>
@@ -3327,8 +3667,20 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
         <translation type="unfinished">Vložte popis pre túto adresu aby sa uložila do zoznamu použitých adries</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">Správa ktorá bola pripojená k bitcoin: URI a ktorá bude uložená s transakcou pre Vaše potreby. Poznámka: Táto správa nebude poslaná cez sieť Bitcoin.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">Správa ktorá bola pripojená k connectcoin: URI a ktorá bude uložená s transakcou pre Vaše potreby. Poznámka: Táto správa nebude poslaná cez sieť ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Poplatok sa odpočíta z odosielanej sumy. Príjemca dostane menej ConnectCoin, než zadáte do poľa sumy. Ak je vybraných viac príjemcov, poplatok sa rozdelí rovnomerne.</translation>
     </message>
 </context>
 <context>
@@ -3357,8 +3709,8 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
         <translation type="unfinished">Môžete podpísať správy svojou zastaralou adresou (P2PKH) a dokázať, že viete prijímať mince zaslané na túto adresu. Buďte však opatrní, a nepodpisujte nič nejasné a všeobecné, nakoľko útoky typu "phishing" Vás môžu lákať k prepísaniu Vašej identity na nich. Podpisujte len podrobné prehlásenia, s ktorými plne súhlasíte.</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">Bitcoin adresa pre podpísanie správy s</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">ConnectCoin adresa pre podpísanie správy s</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3381,7 +3733,7 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
         <translation type="unfinished">Skopírovať aktuálny podpis do schránky</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
         <translation type="unfinished">Podpíšte správu aby ste dokázali že vlastníte túto adresu</translation>
     </message>
     <message>
@@ -3405,8 +3757,8 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
         <translation type="unfinished">Vložte adresu príjemcu, správu (uistite sa, že presne kopírujete ukončenia riadkov, medzery, odrážky, atď.) a podpis pre potvrdenie správy. Buďte opatrní a nedomýšľajte si viac než je uvedené v samotnej podpísanej správe a môžete sa tak vyhnúť podvodu MITM útokom. Toto len potvrdzuje, že podpisujúca strana môže prijímať na tejto adrese, nepotvrdzuje to vlastníctvo žiadnej transakcie!</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">Adresa Bitcoin, ktorou bola podpísaná správa</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">Adresa ConnectCoin, ktorou bola podpísaná správa</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -3417,8 +3769,8 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
         <translation type="unfinished">Poskytnutý podpis pri podpísaní správy</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">Overím správy sa uistiť že bola podpísaná označenou Bitcoin adresou</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">Overím správy sa uistiť že bola podpísaná označenou ConnectCoin adresou</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3483,6 +3835,18 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">Správa overená.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Pomocou svojich starších adries (P2PKH) môžete podpisovať správy alebo dohody a dokázať tak, že môžete prijímať prostriedky ConnectCoin odoslané na tieto adresy. Nepodpisujte nič neurčité ani náhodné: phishingové útoky vás môžu naviesť na podpísanie vyhlásení umožňujúcich zneužiť vašu identitu. Podpisujte iba podrobné vyhlásenia, s ktorými súhlasíte.</translation>
     </message>
 </context>
 <context>
@@ -3766,6 +4130,10 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
         <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
         <translation>Používateľom určený zámer/účel transakcie alebo doména P2C.</translation>
     </message>
+    <message>
+        <source>(n/a)</source>
+        <translation>(nedostupné)</translation>
+    </message>
 </context>
 <context>
     <name>TransactionView</name>
@@ -3922,6 +4290,10 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok pri sadzbe "100 sat
     <message>
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>Zadajte adresu, doménu P2C, ID transakcie alebo štítok na vyhľadávanie</translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
     </message>
 </context>
 <context>
@@ -4114,8 +4486,8 @@ Choďte do Súbor &gt; Otvoriť Peňaženku, pre načítanie peňaženky.
         <translation type="unfinished">Chyba: Záznam identifikátora v súbore dumpu je nesprávny. Obdržaný "%s", očakávaný "%s".</translation>
     </message>
     <message>
-        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
-        <translation type="unfinished">Chyba: Verzia súboru dumpu nie je podporovaná. Táto verzia peňaženky bitcoin podporuje iba súbory dumpu verzie 1. Obdržal som súbor s verziou %s</translation>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Chyba: Verzia súboru dumpu nie je podporovaná. Táto verzia peňaženky ConnectCoin podporuje iba súbory dumpu verzie 1. Obdržal som súbor s verziou %s</translation>
     </message>
     <message>
         <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
@@ -4329,7 +4701,7 @@ Choďte do Súbor &gt; Otvoriť Peňaženku, pre načítanie peňaženky.
     </message>
     <message>
         <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
-        <translation type="unfinished">Orezanie: posledná synchronizácia peňaženky presahuje rámec orezaných dát. Je potrebné -reindexovať (v prípade orezaného uzla znova stiahnuť celý blockchain).</translation>
+        <translation>Orezanie: posledná synchronizácia peňaženky presahuje rámec orezaných dát. Je potrebné použiť -reindex (v prípade orezaného uzla znova stiahnuť celý blockchain)</translation>
     </message>
     <message>
         <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
@@ -5086,6 +5458,176 @@ Spustite najnovšiu verziu softvéru.
         <source>Settings file could not be written</source>
         <translation type="unfinished">Súbor nastavení nemohol byť zapísaný</translation>
     </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>Cieľ výdavku musí byť cieľ P2PK typu 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin podporuje iba adresy P2PK typu 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin podporuje iba adresy výdavku P2PK typu 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>Transakcie ConnectCoin vyžadujú platné ciele typu 1 alebo výstupy PAY_TO_CONNECT typu 2</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>Výstupy ConnectCoin typu 1 podporujú iba SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>Vstup nie je úplným minutím typu 1 so SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>Vstup vyžaduje úplné svedecké údaje dôkazu P2C</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>Hlavná sieť nebola spustená: nie je definovaný počiatočný blok. Na verejné testovanie použite -testnet4 a na lokálne testovanie -regtest.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>Pre toto vývojové zostavenie nie je nastavená verejná URL zdrojového kódu vo vlastníctve projektu.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Nie je dostupný dostatok deskriptorov súborov. Skúste znížiť -rpcmaxconnections alebo použiť predvolenú hodnotu %d</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>Prispejte, ak považujete %s za užitočný.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Zvážte úpravu %s (%s) alebo %s (%s).</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>Možnosť -walletrbf je zastaraná a v nasledujúcom vydaní bude úplne odstránená.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>Vyrovnávacia pamäť dbcache s veľkosťou %zu MiB môže byť príliš veľká pre systémovú pamäť s veľkosťou iba %zu MiB.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>Vyskytla sa závažná vnútorná chyba; podrobnosti nájdete v %s: %s</translation>
+    </message>
+    <message>
+        <source>Copyright (C) %i-%i</source>
+        <translation>Autorské práva (C) %i-%i</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>Nepodarilo sa prečítať vložené údaje asmap</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>Vytvára sa peňaženka…</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>Duplicitná konfigurácia väzby pre adresu %s. Skontrolujte nastavenia -bind, -bind=...=onion a -whitebind.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>Vložené údaje asmap nie sú dostupné</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>Chyba pri vytváraní %s: nepodarilo sa zapísať metadáta verzie.</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Chyba: nepodarilo sa pridať transakciu %s do peňaženky iba na sledovanie</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Chyba: nepodarilo sa vytvoriť súbor '%s'</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Chyba: cieľ exportu '%s' už existuje</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Chyba: cieľ exportu nesmie byť prázdny</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Chyba: nepodarilo sa vytvoriť novú peňaženku iba na sledovanie. %s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Chyba: nepodarilo sa zapísať exportovanú peňaženku</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Chyba: peňaženka neobsahuje deskriptory na export</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Chyba: nepodarilo sa potvrdiť databázovú transakciu na export peňaženky iba na sledovanie</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Chyba: nepodarilo sa vykonať databázovú transakciu pre novú peňaženku iba na sledovanie %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>Sadzba poplatku (%s) je nižšia ako nastavená minimálna sadzba (%s).</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Bola zadaná možnosť '-limitancestorsize', ale limity veľkosti predkov boli nahradené limitmi veľkosti zhlukov (pozri -limitclustersize). Táto možnosť nemá žiadny účinok.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Bola zadaná možnosť '-limitdescendantsize', ale limity veľkosti potomkov boli nahradené limitmi veľkosti zhlukov (pozri -limitclustersize). Táto možnosť nemá žiadny účinok.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>Bolo vyžiadané súkromné vysielanie vlastných transakcií (-privatebroadcast) a -proxyrandomize je vypnuté. Okruhy Tor pre spojenia súkromného vysielania môžu byť prepojené s inými spojeniami cez Tor. Pre maximálne súkromie nastavte -proxyrandomize=1.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>Bolo vyžiadané súkromné vysielanie vlastných transakcií (-privatebroadcast), ale je nastavené aj -connect. Tieto možnosti sú nekompatibilné, pretože súkromné vysielanie musí otvárať nové spojenia s náhodne vybranými partnermi Tor alebo I2P. Namiesto toho zvážte použitie -maxconnections=0 -addnode=...</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>Bolo vyžiadané súkromné vysielanie vlastných transakcií (-privatebroadcast), ale nie je dostupná sieť Tor ani I2P</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>Režim orezávania je nekompatibilný s -txospenderindex.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>Možnosť -testactivationheight sa nesmie používať v hlavnej sieti.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>Možnosť -vbparams sa nesmie používať v hlavnej sieti.</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>Celková suma po započítaní transakčného poplatku %s presahuje váš zostatok.</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Nepodarilo sa zapísať vyrovnávaciu pamäť deskriptorov</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>Varovanie: našiel sa neplatný reťazec o viac ako 6 blokov dlhší než náš najlepší reťazec. Príčinou môže byť poškodenie databázy alebo nekompatibilita konsenzu s partnermi.</translation>
+    </message>
 </context>
 <context>
     <name>P2CClaimDialog</name>
@@ -5434,6 +5976,91 @@ Verzia koreňových certifikátov: %2</translation>
     <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Voliteľné: prázdne pole použije túto peňaženku</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>Vlákna CPU:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Nepodarilo sa vygenerovať adresu na odmenu. Skontrolujte, či peňaženka môže generovať prijímacie adresy.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Chyba</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>Režim FAST zdieľa približne 2 GiB pamäte RandomX s overovaním. Viac vlákien využíva viac CPU a energie; ponechajte kapacitu pre uzol. Inicializácia súboru údajov môže chvíľu trvať.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Ťažte bloky testovacej siete pomocou CPU a RandomX. Ťažba je vypnutá, kým ju nespustíte. Ťažiar je spoločný pre všetky peňaženky v tomto uzle a pokračuje pri prepnutí karty alebo zatvorení peňaženky.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Ťažba</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Ťažba / príprava RandomX</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Nová adresa z tejto peňaženky</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Adresa na odmenu pre túto sieť</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Adresa na odmenu:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Spustiť ťažbu</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Spúšťa sa</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Stav: %1
+Rýchlosť hašovania: %2 H/s
+Haše: %3 | Prijaté bloky: %4
+Aktívna adresa na odmenu: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Zastaviť ťažbu</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Zastavené</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Zastavuje sa (čaká sa na aktuálnu prácu)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Čaká sa na synchronizáciu uzla</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Upozornenie: počet ťažobných vlákien %1 prekračuje počet zistených logických CPU %2. Môže to znížiť rýchlosť hašovania a spomaliť uzol.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
     </message>
 </context>
 </TS>

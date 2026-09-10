@@ -54,13 +54,13 @@
         <translation type="unfinished">&amp;בחירה</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">אלה כתובות הביטקוין שלך לשליחת תשלומים. חשוב לבדוק את הסכום ואת הכתובת המקבלת לפני שליחת מטבעות.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">אלה כתובות הConnectCoin שלך לשליחת תשלומים. חשוב לבדוק את הסכום ואת הכתובת המקבלת לפני שליחת מטבעות.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">אלה כתובת הביטקוין שלך לקבלת תשלומים. ניתן להשתמש בכפתור „יצירת כתובת קבלה חדשה” בלשונית הקבלה ליצירת כתובות חדשות.
+        <translation type="unfinished">אלה כתובת הConnectCoin שלך לקבלת תשלומים. ניתן להשתמש בכפתור „יצירת כתובת קבלה חדשה” בלשונית הקבלה ליצירת כתובות חדשות.
 חתימה אפשרית רק עבור כתובות מסוג „legacy”.</translation>
     </message>
     <message>
@@ -100,6 +100,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">הייצוא נכשל</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the clipboard</source>
+        <translation>העתקת הכתובת שנבחרה כעת ללוח</translation>
     </message>
 </context>
 <context>
@@ -160,7 +164,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">אישור הצפנת הארנק</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
         <translation type="unfinished">אזהרה: הצפנת הארנק שלך ושיכחת הסיסמה &lt;b&gt;תגרום לאיבוד כל הביטקוינים שלך&lt;/b&gt;!</translation>
     </message>
     <message>
@@ -188,7 +192,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">חזרה</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
         <translation type="unfinished">זכור שהצפנת הארנק לא יכולה להגן עליך לגמרי מגניבת המטבעות שלך על ידי תוכנה זדונית שנמצאת על המחשב שלך.</translation>
     </message>
     <message>
@@ -239,12 +243,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Warning: The Caps Lock key is on!</source>
         <translation type="unfinished">אזהרה: מקש Caps Lock פעיל!</translation>
     </message>
+    <message>
+        <source>The old passphrase entered for the wallet decryption is incorrect. It contains a null character (ie - a zero byte). If the passphrase was set with a version of this software prior to 25.0, please try again with only the characters up to — but not including — the first null character.</source>
+        <translation>ביטוי הסיסמה הישן שהוזן לפענוח הארנק שגוי. הוא מכיל תו null (כלומר בית אפס). אם ביטוי הסיסמה נקבע בגרסת תוכנה מוקדמת מ־25.0, יש לנסות שוב עם התווים שלפני תו ה־null הראשון בלבד — בלי לכלול אותו.</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption is incorrect. It contains a null character (ie - a zero byte). If the passphrase was set with a version of this software prior to 25.0, please try again with only the characters up to — but not including — the first null character. If this is successful, please set a new passphrase to avoid this issue in the future.</source>
+        <translation>ביטוי הסיסמה שהוזן לפענוח הארנק שגוי. הוא מכיל תו null (כלומר בית אפס). אם ביטוי הסיסמה נקבע בגרסת תוכנה מוקדמת מ־25.0, יש לנסות שוב עם התווים שלפני תו ה־null הראשון בלבד — בלי לכלול אותו. אם הפעולה מצליחה, יש לקבוע ביטוי סיסמה חדש כדי למנוע את הבעיה בעתיד.</translation>
+    </message>
 </context>
 <context>
     <name>BanTableModel</name>
     <message>
         <source>Banned Until</source>
         <translation type="unfinished">חסום עד</translation>
+    </message>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/מסכת רשת</translation>
     </message>
 </context>
 <context>
@@ -299,8 +315,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">סכום</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">נא לספק כתובת ביטקוין (למשל: %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">נא לספק כתובת ConnectCoin (למשל: %1)</translation>
     </message>
     <message>
         <source>Inbound</source>
@@ -342,37 +358,37 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>מספר השניות: %n</numerusform>
+            <numerusform>מספר השניות: %n</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>מספר הדקות: %n</numerusform>
+            <numerusform>מספר הדקות: %n</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>מספר השעות: %n</numerusform>
+            <numerusform>מספר השעות: %n</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>מספר הימים: %n</numerusform>
+            <numerusform>מספר הימים: %n</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>מספר השבועות: %n</numerusform>
+            <numerusform>מספר השבועות: %n</numerusform>
         </translation>
     </message>
     <message>
@@ -381,9 +397,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>מספר השנים: %n</numerusform>
+            <numerusform>מספר השנים: %n</numerusform>
         </translation>
     </message>
     <message>
@@ -405,6 +421,86 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>default wallet</source>
         <translation type="unfinished">ארנק בררת מחדל</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <extracomment>Short-lived peer connection type that solicits known addresses from a peer.</extracomment>
+        <translation>שליפת כתובות</translation>
+    </message>
+    <message>
+        <source>Block Relay</source>
+        <extracomment>Peer connection type that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>ממסר בלוקים</translation>
+    </message>
+    <message>
+        <source>Custom…</source>
+        <translation>התאמה אישית…</translation>
+    </message>
+    <message>
+        <source>Default system font "%1"</source>
+        <translation>גופן המערכת המוגדר כברירת מחדל "%1"</translation>
+    </message>
+    <message>
+        <source>Embedded "%1"</source>
+        <translation>מוטמע "%1"</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <extracomment>Short-lived peer connection type that tests the aliveness of known addresses.</extracomment>
+        <translation>חיבור בדיקה</translation>
+    </message>
+    <message>
+        <source>Full Relay</source>
+        <extracomment>Peer connection type that relays all network information.</extracomment>
+        <translation>ממסר מלא</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <extracomment>Peer connection type established manually through one of several methods.</extracomment>
+        <translation>ידני</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>שידור פרטי</translation>
+    </message>
+    <message>
+        <source>Unroutable</source>
+        <translation>לא ניתן לניתוב</translation>
     </message>
 </context>
 <context>
@@ -475,8 +571,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">שרת הפרוקסי &lt;b&gt;פעיל&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">שליחת מטבעות לכתובת ביטקוין</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">שליחת מטבעות לכתובת ConnectCoin</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -519,16 +615,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;חתימה על הודעה…</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">חתום על הודעות עם כתובות הביטקוין שלך כדי להוכיח שהן בבעלותך</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">חתום על הודעות עם כתובות הConnectCoin שלך כדי להוכיח שהן בבעלותך</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">&amp;אשר הודעה</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">אמת הודעות כדי להבטיח שהן נחתמו עם כתובת ביטקוין מסוימות</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">אמת הודעות כדי להבטיח שהן נחתמו עם כתובת ConnectCoin מסוימות</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -587,8 +683,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">מתחבר לעמיתים</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">בקשת תשלומים (יצירה של קודים מסוג QR וסכימות כתובות משאב של :bitcoin)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">בקשת תשלומים (יצירה של קודים מסוג QR וסכימות כתובות משאב של :ConnectCoin)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -604,9 +700,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>מספר הבלוקים שעובדו בהיסטוריית העסקאות: %n.</numerusform>
+            <numerusform>מספר הבלוקים שעובדו בהיסטוריית העסקאות: %n.</numerusform>
         </translation>
     </message>
     <message>
@@ -642,16 +738,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">עדכני</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">העלה עיסקת ביטקוין חתומה חלקית</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">העלה עיסקת ConnectCoin חתומה חלקית</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">העלאת PSBT מהקליפבורד...</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">טעינת עסקת ביטקוין חתומה חלקית מלוח הגזירים</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">טעינת עסקת ConnectCoin חתומה חלקית מלוח הגזירים</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -670,8 +766,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;כתובות לקבלה</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">פתיחת ביטקוין: כתובת משאב</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">פתיחת ConnectCoin: כתובת משאב</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -705,11 +801,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Migrate a wallet</source>
-        <translation type="unfinished">הסבת ארנק לביטקוין</translation>
+        <translation type="unfinished">הסבת ארנק לConnectCoin</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">יש להציג את הודעת העזרה של %1 כדי להציג רשימה עם אפשרויות שורת פקודה לביטקוין</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">יש להציג את הודעת העזרה של %1 כדי להציג רשימה עם אפשרויות שורת פקודה לConnectCoin</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -884,6 +980,79 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Create pay-to-connect bounties</source>
         <translation>יצירת פרסי pay-to-connect</translation>
     </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;כרייה</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>שליטה בכרייה באמצעות CPU</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to the ConnectCoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation>
+            <numerusform>מספר החיבורים הפעילים לרשת ConnectCoin: %n.</numerusform>
+            <numerusform>מספר החיבורים הפעילים לרשת ConnectCoin: %n.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>כל הקבצים</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>שגיאת ייצוא</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>הייצוא הצליח</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>ייצוא גרסה לצפייה בלבד של הארנק הנוכחי, שניתן לשחזר בצומת אחר.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>ייצוא ארנק לצפייה בלבד</translation>
+    </message>
+    <message>
+        <source>Invalid Wallet Name</source>
+        <translation>שם הארנק אינו תקין</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>שחזור והסבת ארנק</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>שחזור והסבת גיבוי ארנק</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>שחזור והסבת קובץ ארנק…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>שמירת ייצוא של ארנק לצפייה בלבד</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>הארנק יוצא אל </translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>שם הארנק אינו יכול להיות ריק</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -1014,6 +1183,22 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(change)</source>
         <translation type="unfinished">(עודף)</translation>
     </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation>&amp;ביטול נעילת פלטים שלא נוצלו</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>ייתכן שינוי של +/- %1 connect לכל קלט.</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID and output index</source>
+        <translation>העתקת &amp;מזהה העסקה ואינדקס הפלט</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation>&amp;נעילת פלטים שלא נוצלו</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1034,6 +1219,15 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Too many external signers found</source>
         <translation type="unfinished">נמצאו יותר מדי חותמים חיצוניים</translation>
     </message>
+    <message>
+        <source>Can't list signers</source>
+        <translation>לא ניתן להציג את רשימת החותמים</translation>
+    </message>
+    <message>
+        <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
+        <translation>יצירת הארנק &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
 </context>
 <context>
     <name>MigrateWalletActivity</name>
@@ -1046,7 +1240,92 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>Title of progress window which is displayed when wallets are being restored.</extracomment>
         <translation type="unfinished">שחזור ארנק</translation>
     </message>
-    </context>
+        <message>
+        <source>Are you sure you wish to migrate the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>להסב את הארנק &lt;i&gt;%1&lt;/i&gt;?</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>לשחזר את קובץ הארנק &lt;i&gt;%1&lt;/i&gt; אל &lt;i&gt;%2&lt;/i&gt; ולהסב אותו?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>אם הצומת גזום והארנק נוצר לפני הגובה שנגזם, תהליך ההסבה עלול להיכשל בעת ניסיון לטעון את הארנק שהוסב.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>טעינת הארנק לאחר ההסבה</translation>
+    </message>
+    <message>
+        <source>Migrate wallet</source>
+        <translation>הסבת ארנק</translation>
+    </message>
+    <message>
+        <source>Migrating Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <translation>הסבת הארנק &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
+    <message>
+        <source>Migrating the wallet will convert this wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>הסבת הארנק תהפוך אותו לארנק מתארים אחד או יותר. יהיה צורך ליצור גיבוי חדש של הארנק.
+אם ארנק זה מכיל סקריפטים לצפייה בלבד, ייווצר ארנק חדש המכיל אותם.
+אם ארנק זה מכיל סקריפטים פתירים שאינם במעקב, ייווצר ארנק חדש נפרד המכיל אותם.
+
+תהליך ההסבה ייצור גיבוי של הארנק לפני ההסבה. שם קובץ הגיבוי יהיה &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak והוא יימצא בתיקיית הארנק. במקרה של הסבה שגויה, ניתן לשחזר את הגיבוי באמצעות הפעולה "שחזור ארנק".</translation>
+    </message>
+    <message>
+        <source>Migration Successful</source>
+        <translation>ההסבה הצליחה</translation>
+    </message>
+    <message>
+        <source>Migration failed</source>
+        <translation>ההסבה נכשלה</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>שחזור והסבת ארנק</translation>
+    </message>
+    <message>
+        <source>Restoring Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the restore wallets progress window which indicates to the user that wallets are currently being restored.</extracomment>
+        <translation>שחזור הארנק &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>שחזור הארנק יעתיק את קובץ הגיבוי לתיקיית הארנקים וימקם אותו במבנה תיקיות הארנק הרגיל. הקובץ המקורי לא ישתנה.
+
+הסבת הארנק תהפוך את הארנק המשוחזר לארנק מתארים אחד או יותר. יהיה צורך ליצור גיבוי חדש של הארנק.
+אם ארנק זה מכיל סקריפטים לצפייה בלבד, ייווצר ארנק חדש המכיל אותם.
+אם ארנק זה מכיל סקריפטים פתירים שאינם במעקב, ייווצר ארנק חדש נפרד המכיל אותם.
+
+תהליך ההסבה ייצור גיבוי של הארנק לפני ההסבה. שם קובץ הגיבוי יהיה &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak והוא יימצא בתיקיית הארנק. במקרה של הסבה שגויה, ניתן לשחזר את הגיבוי באמצעות הפעולה "שחזור ארנק".</translation>
+    </message>
+    <message>
+        <source>Solvable but not watched scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>סקריפטים פתירים שאינם במעקב הועברו לארנק חדש בשם '%1'.</translation>
+    </message>
+    <message>
+        <source>The wallet '%1' was migrated successfully.</source>
+        <translation>הארנק '%1' הוסב בהצלחה.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>הארנק לא נטען לאחר ההסבה. ניתן לפתוח אותו דרך התפריט "קובץ &gt; פתיחת ארנק".</translation>
+    </message>
+    <message>
+        <source>Watchonly scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>סקריפטים לצפייה בלבד הועברו לארנק חדש בשם '%1'.</translation>
+    </message>
+</context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1075,7 +1354,27 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>Title of progress window which is displayed when wallets are being restored.</extracomment>
         <translation type="unfinished">שחזור ארנק</translation>
     </message>
-    </context>
+        <message>
+        <source>Restore wallet failed</source>
+        <extracomment>Title of message box which is displayed when the wallet could not be restored.</extracomment>
+        <translation>שחזור הארנק נכשל</translation>
+    </message>
+    <message>
+        <source>Restore wallet message</source>
+        <extracomment>Title of message box which is displayed when the wallet is successfully restored.</extracomment>
+        <translation>הודעת שחזור ארנק</translation>
+    </message>
+    <message>
+        <source>Restore wallet warning</source>
+        <extracomment>Title of message box which is displayed when the wallet is restored with some warning.</extracomment>
+        <translation>אזהרת שחזור ארנק</translation>
+    </message>
+    <message>
+        <source>Restoring Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the restore wallets progress window which indicates to the user that wallets are currently being restored.</extracomment>
+        <translation>שחזור הארנק &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
+</context>
 <context>
     <name>WalletController</name>
     <message>
@@ -1145,7 +1444,28 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Create</source>
         <translation type="unfinished">יצירה</translation>
     </message>
-    </context>
+        <message>
+        <source>Compiled without external signing support (required for external signing)</source>
+        <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
+        <translation>נבנה ללא תמיכה בחתימה חיצונית (נדרשת לחתימה חיצונית)</translation>
+    </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>יצירת ארנק ריק. בתחילה אין בארנקים ריקים מפתחות פרטיים או סקריפטים. ניתן לייבא מפתחות פרטיים וכתובות באמצעות מתארים בשלב מאוחר יותר.</translation>
+    </message>
+    <message>
+        <source>Please provide a name and, if desired, enable any advanced options</source>
+        <translation>יש לספק שם ולהפעיל אפשרויות מתקדמות לפי הצורך</translation>
+    </message>
+    <message>
+        <source>Use an external signing device such as a hardware wallet. Configure the external signer script in wallet preferences first.</source>
+        <translation>שימוש בהתקן חתימה חיצוני, כגון ארנק חומרה. תחילה יש להגדיר את סקריפט החותם החיצוני בהעדפות הארנק.</translation>
+    </message>
+    <message>
+        <source>You are one step away from creating your new wallet!</source>
+        <translation>נותר רק צעד אחד ליצירת הארנק החדש שלך!</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1181,8 +1501,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">עריכת כתובת השליחה</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">הכתובת שסיפקת "%1" אינה כתובת ביטקוין תקנית.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">הכתובת שסיפקת "%1" אינה כתובת ConnectCoin תקנית.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1245,6 +1565,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation type="unfinished">אין לכבות את המחשב עד שחלון זה נעלם.</translation>
     </message>
+    <message>
+        <source>%1 is shutting down…</source>
+        <translation>%1 נסגר…</translation>
+    </message>
 </context>
 <context>
     <name>Intro</name>
@@ -1289,14 +1613,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">שימוש בתיקיית נתונים מותאמת אישית:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation type="unfinished">ביטקוין</translation>
+        <source>ConnectCoin</source>
+        <translation type="unfinished">ConnectCoin</translation>
     </message>
     <message numerus="yes">
         <source>%n GB of space available</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>שטח פנוי: %n GB</numerusform>
+            <numerusform>שטח פנוי: %n GB</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -1324,9 +1648,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message numerus="yes">
         <source>(sufficient to restore backups %n day(s) old)</source>
         <extracomment>Explanatory text on the capability of the current prune target.</extracomment>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>(מספיק לשחזור גיבויים שגילם בימים הוא %n)</numerusform>
+            <numerusform>(מספיק לשחזור גיבויים שגילם בימים הוא %n)</numerusform>
         </translation>
     </message>
     <message>
@@ -1345,6 +1669,18 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Error</source>
         <translation type="unfinished">שגיאה</translation>
     </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 יוריד וישמור עותק של שרשרת הבלוקים של ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>Choose data directory</source>
+        <translation>בחירת תיקיית הנתונים</translation>
+    </message>
+    <message>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2 GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation>לאחר לחיצה על אישור, %1 יתחיל להוריד ולעבד את כל שרשרת הבלוקים של %4 (%2 GB), החל מהעסקאות הראשונות ב־%3, כאשר %4 הושק לראשונה.</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1353,8 +1689,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">טופס</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">ייתכן שהעברות שבוצעו לאחרונה לא יופיעו עדיין, ולכן המאזן בארנק שלך יהיה שגוי. המידע הנכון יוצג במלואו כאשר הארנק שלך יסיים להסתנכרן עם רשת הביטקוין, כמפורט למטה.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">ייתכן שהעברות שבוצעו לאחרונה לא יופיעו עדיין, ולכן המאזן בארנק שלך יהיה שגוי. המידע הנכון יוצג במלואו כאשר הארנק שלך יסיים להסתנכרן עם רשת הConnectCoin, כמפורט למטה.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1392,12 +1728,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
         <translation type="unfinished">%1 מסתנכנים כרגע.  תתבצע הורדת כותרות ובלוקים מעמיתים תוך אימותם עד הגעה לראש שרשרת הבלוקים .</translation>
     </message>
-    </context>
+        <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>הרשת לא תקבל ניסיונות להוציא כספי ConnectCoin המושפעים מעסקאות שטרם מוצגות.</translation>
+    </message>
+    <message>
+        <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
+        <translation>לא ידוע. סנכרון מקדים של כותרות (%1, %2%)…</translation>
+    </message>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)…</source>
+        <translation>לא ידוע. סנכרון כותרות (%1, %2%)…</translation>
+    </message>
+    <message>
+        <source>Unknown…</source>
+        <translation>לא ידוע…</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">פתיחת כתובת משאב ביטקוין</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">פתיחת כתובת משאב ConnectCoin</translation>
     </message>
     <message>
         <source>URI:</source>
@@ -1512,8 +1868,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">לאפשר חיבורים &amp;נכנסים</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">התחבר לרשת הביטקוין דרך פרוקסי SOCKS5.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">התחבר לרשת הConnectCoin דרך פרוקסי SOCKS5.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1576,8 +1932,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">האם להציג תכונות שליטת מטבע או לא.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">התחבר לרשת ביטקוין דרך פרוקסי נפרד SOCKS5 proxy לשרותי שכבות בצל (onion services).</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">התחבר לרשת ConnectCoin דרך פרוקסי נפרד SOCKS5 proxy לשרותי שכבות בצל (onion services).</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1648,6 +2004,132 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">כתובת המתווך שסופקה אינה תקינה.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>הפעלת התראות קופצות</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>הצגת התראות קופצות בשולחן העבודה, כולל עסקאות נכנסות ונשלחות. כבוי כברירת מחדל. חלונות שגיאה ואישור נשארים פעילים.</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
+        <source>&amp;External signer script path</source>
+        <translation>&amp;נתיב סקריפט החותם החיצוני</translation>
+    </message>
+    <message>
+        <source>&amp;Show tray icon</source>
+        <translation>&amp;הצגת סמל במגש המערכת</translation>
+    </message>
+    <message>
+        <source>&amp;Third-party transaction URLs</source>
+        <translation>כתובות URL לעסקאות של &amp;צדדים שלישיים</translation>
+    </message>
+    <message>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation>פתיחה אוטומטית של פתחת לקוח ConnectCoin בנתב. פעולה זו פועלת רק אם הנתב תומך ב־PCP או ב־NAT-PMP והאפשרות מופעלת. הפתחה החיצונית עשויה להיבחר באקראי.</translation>
+    </message>
+    <message>
+        <source>Compiled without external signing support (required for external signing)</source>
+        <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
+        <translation>נבנה ללא תמיכה בחתימה חיצונית (נדרשת לחתימה חיצונית)</translation>
+    </message>
+    <message>
+        <source>Current settings will be backed up at "%1".</source>
+        <extracomment>Text explaining to the user that the client's current settings will be backed up at a specific location. %1 is a stand-in argument for the backup location's path.</extracomment>
+        <translation>ההגדרות הנוכחיות יגובו ב־"%1".</translation>
+    </message>
+    <message>
+        <source>Enable &amp;PSBT controls</source>
+        <extracomment>An options window setting to enable PSBT controls.</extracomment>
+        <translation>הפעלת פקדי &amp;PSBT</translation>
+    </message>
+    <message>
+        <source>Enable R&amp;PC server</source>
+        <extracomment>An Options window setting to enable the RPC server.</extracomment>
+        <translation>הפעלת שרת R&amp;PC</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>הפעלת גיזום מפחיתה משמעותית את שטח הדיסק הנדרש לאחסון עסקאות. כל הבלוקים עדיין עוברים אימות מלא. יש לטעון ארנקים בהפעלה ולהשאירם פעילים בזמן שגיזום מופעל, כדי שיישארו מסונכרנים לפני מחיקת נתוני בלוקים ישנים; ארנקים שיפגרו אחרי הנתונים שנגזמו עשויים לדרוש בנייה מחדש של האינדקס. ביטול הגדרה זו מחייב הורדה חוזרת של כל שרשרת הבלוקים.</translation>
+    </message>
+    <message>
+        <source>External Signer (e.g. hardware wallet)</source>
+        <translation>חותם חיצוני (למשל ארנק חומרה)</translation>
+    </message>
+    <message>
+        <source>Font in the Overview tab: </source>
+        <translation>גופן בלשונית הסקירה: </translation>
+    </message>
+    <message>
+        <source>Full path to a %1 compatible script (e.g. C:\Downloads\hwi.exe or /Users/you/Downloads/hwi.py). Beware: malware can steal your coins!</source>
+        <translation>נתיב מלא לסקריפט התואם ל־%1 (למשל C:\Downloads\hwi.exe או /Users/you/Downloads/hwi.py). זהירות: נוזקה יכולה לגנוב את המטבעות שלך!</translation>
+    </message>
+    <message>
+        <source>Map port using PCP or NA&amp;T-PMP</source>
+        <translation>מיפוי פתחה באמצעות PCP או NA&amp;T-PMP</translation>
+    </message>
+    <message>
+        <source>Maximum database cache size. Make sure you have enough RAM. A larger cache can contribute to faster sync, after which the benefit is less pronounced for most use cases. Lowering the cache size will reduce memory usage. Unused mempool memory is shared for this cache.</source>
+        <extracomment>Tooltip text for Options window setting that sets the size of the database cache. Explains the corresponding effects of increasing/decreasing this value.</extracomment>
+        <translation>הגודל המרבי של מטמון מסד הנתונים. יש לוודא שיש מספיק RAM. מטמון גדול יותר יכול לזרז את הסנכרון, ולאחר מכן התועלת קטנה ברוב השימושים. הקטנת המטמון תפחית את צריכת הזיכרון. זיכרון mempool שאינו בשימוש משותף עם מטמון זה.</translation>
+    </message>
+    <message>
+        <source>Options set in this dialog are overridden by the command line:</source>
+        <translation>שורת הפקודה גוברת על האפשרויות שנקבעו בחלון זה:</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>נקבע באמצעות -popupnotifications או popupnotifications ב־connectcoin.conf.</translation>
+    </message>
+    <message>
+        <source>Set the number of script verification threads. Negative values correspond to the number of cores you want to leave free to the system.</source>
+        <extracomment>Tooltip text for Options window setting that sets the number of script verification threads. Explains that negative values mean to leave these many cores free to the system.</extracomment>
+        <translation>קביעת מספר התהליכונים לאימות סקריפטים. ערכים שליליים מציינים את מספר הליבות שברצונך להשאיר פנויות למערכת.</translation>
+    </message>
+    <message>
+        <source>Show the icon in the system tray.</source>
+        <translation>הצגת הסמל במגש המערכת.</translation>
+    </message>
+    <message>
+        <source>Subtract &amp;fee from amount by default</source>
+        <extracomment>An Options window setting to set subtracting the fee from a sending amount as default.</extracomment>
+        <translation>הפחתת &amp;עמלה מהסכום כברירת מחדל</translation>
+    </message>
+    <message>
+        <source>Third-party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
+        <translation>כתובות URL של צדדים שלישיים (למשל סייר בלוקים) שמופיעות בלשונית העסקאות כפריטי תפריט הקשר. %s בכתובת ה־URL מוחלף בגיבוב העסקה. כתובות URL מרובות מופרדות בקו אנכי |.</translation>
+    </message>
+    <message>
+        <source>This allows you or a third party tool to communicate with the node through command-line and JSON-RPC commands.</source>
+        <extracomment>Tooltip text for Options window setting that enables the RPC server.</extracomment>
+        <translation>אפשרות זו מאפשרת לך או לכלי של צד שלישי לתקשר עם הצומת באמצעות שורת הפקודה ופקודות JSON-RPC.</translation>
+    </message>
+    <message>
+        <source>Whether to set subtract fee from amount as default or not.</source>
+        <extracomment>Tooltip text for Options window setting that sets subtracting the fee from a sending amount as default.</extracomment>
+        <translation>האם להפחית את העמלה מהסכום כברירת מחדל.</translation>
+    </message>
+    <message>
+        <source>Whether to show PSBT controls.</source>
+        <extracomment>Tooltip text for options window setting that enables PSBT controls.</extracomment>
+        <translation>האם להציג פקדי PSBT.</translation>
+    </message>
 </context>
 <context>
     <name>OverviewPage</name>
@@ -1656,8 +2138,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">טופס</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">המידע המוצג עשוי להיות מיושן. הארנק שלך מסתנכרן באופן אוטומטי עם רשת הביטקוין לאחר יצירת החיבור, אך התהליך טרם הסתיים.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">המידע המוצג עשוי להיות מיושן. הארנק שלך מסתנכרן באופן אוטומטי עם רשת הConnectCoin לאחר יצירת החיבור, אך התהליך טרם הסתיים.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1740,9 +2222,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>מספר הקלטים שנחתמו: %n. עדיין נדרשות חתימות נוספות.</numerusform>
+            <numerusform>מספר הקלטים שנחתמו: %n. עדיין נדרשות חתימות נוספות.</numerusform>
         </translation>
     </message>
     <message>
@@ -1795,9 +2277,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>מספר הקלטים הלא חתומים בעסקה: %n.</numerusform>
+            <numerusform>מספר הקלטים הלא חתומים בעסקה: %n.</numerusform>
         </translation>
     </message>
     <message>
@@ -1824,6 +2306,27 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Transaction status is unknown.</source>
         <translation type="unfinished">סטטוס העיסקה אינו ידוע.</translation>
     </message>
+    <message>
+        <source>(But no wallet is loaded.)</source>
+        <translation>(אך לא נטען ארנק.)</translation>
+    </message>
+    <message>
+        <source>Cannot sign inputs while wallet is locked.</source>
+        <translation>לא ניתן לחתום על קלטים כשהארנק נעול.</translation>
+    </message>
+    <message>
+        <source>PSBT Operations</source>
+        <translation>פעולות PSBT</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation>עסקה חתומה חלקית (בינארי)</translation>
+    </message>
+    <message>
+        <source>Sends %1 to %2</source>
+        <translation>שליחת %1 אל %2</translation>
+    </message>
 </context>
 <context>
     <name>PaymentServer</name>
@@ -1832,24 +2335,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">שגיאת בקשת תשלום</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">לא ניתן להפעיל את המקשר bitcoin: click-to-pay</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">לא ניתן להפעיל את המקשר connectcoin: click-to-pay</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">טיפול בכתובות</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'//:bitcoin' אינה כתובת תקנית. נא להשתמש ב־"bitcoin:‎"‏ במקום.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'//:ConnectCoin' אינה כתובת תקנית. נא להשתמש ב־"connectcoin:‎"‏ במקום.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">לא ניתן לנתח את כתובת המשאב! מצב זה יכול לקרות עקב כתובת ביטקוין שגויה או פרמטרים שגויים בכתובת המשאב.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">לא ניתן לנתח את כתובת המשאב! מצב זה יכול לקרות עקב כתובת ConnectCoin שגויה או פרמטרים שגויים בכתובת המשאב.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
         <translation type="unfinished">טיפול בקובצי בקשות תשלום</translation>
+    </message>
+    <message>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation>לא ניתן לעבד את בקשת התשלום מכיוון ש־BIP70 אינו נתמך.
+בשל ליקויי אבטחה נרחבים ב־BIP70, מומלץ מאוד להתעלם מהוראות של סוחרים להחליף ארנק.
+אם שגיאה זו מופיעה, יש לבקש מהסוחר לספק URI התואם ל־BIP21.</translation>
     </message>
 </context>
 <context>
@@ -1904,6 +2415,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">תעבורה יוצאת</translation>
     </message>
+    <message>
+        <source>Age</source>
+        <extracomment>Title of Peers Table column which indicates the duration (length of time) since the peer connection started.</extracomment>
+        <translation>גיל</translation>
+    </message>
+    <message>
+        <source>Peer</source>
+        <extracomment>Title of Peers Table column which contains a unique number used to identify a connection.</extracomment>
+        <translation>עמית</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1927,7 +2448,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Save QR Code</source>
         <translation type="unfinished">שמירת קוד QR</translation>
     </message>
-    </context>
+        <message>
+        <source>PNG Image</source>
+        <extracomment>Expanded name of the PNG file format. See: https://en.wikipedia.org/wiki/Portable_Network_Graphics.</extracomment>
+        <translation>תמונת PNG</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image…</source>
+        <translation>&amp;שמירת תמונה…</translation>
+    </message>
+</context>
 <context>
     <name>RPCConsole</name>
     <message>
@@ -2207,6 +2737,262 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Unknown</source>
         <translation type="unfinished">לא ידוע</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>&amp;Copy IP/Netmask</source>
+        <extracomment>Context menu action to copy the IP/Netmask of a banned peer. IP/Netmask is the combination of a peer's IP address and its Netmask. For IP address, see: https://en.wikipedia.org/wiki/IP_address.</extracomment>
+        <translation>&amp;העתקת IP/מסכת רשת</translation>
+    </message>
+    <message>
+        <source>(peer: %1)</source>
+        <translation>(עמית: %1)</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation>&amp;יום אחד</translation>
+    </message>
+    <message>
+        <source>Address Relay</source>
+        <extracomment>Text title for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>ממסר כתובות</translation>
+    </message>
+    <message>
+        <source>Addresses Processed</source>
+        <extracomment>Text title for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>כתובות שעובדו</translation>
+    </message>
+    <message>
+        <source>Addresses Rate-Limited</source>
+        <extracomment>Text title for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>כתובות שקצב העיבוד שלהן הוגבל</translation>
+    </message>
+    <message>
+        <source>Blocksdir</source>
+        <translation>תיקיית הבלוקים</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>תיקיית הנתונים</translation>
+    </message>
+    <message>
+        <source>Direction/Type</source>
+        <translation>כיוון/סוג</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation>הזמן שחלף מאז קבלת בלוק חדש מעמית זה שעבר בדיקות תקינות ראשוניות.</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <extracomment>Tooltip text for the Last Transaction field in the peer details area.</extracomment>
+        <translation>הזמן שחלף מאז קבלת עסקה חדשה מעמית זה שהתקבלה ל־mempool שלנו.</translation>
+    </message>
+    <message>
+        <source>Executing…</source>
+        <extracomment>A console message indicating an entered command is currently being executed.</extracomment>
+        <translation>ביצוע…</translation>
+    </message>
+    <message>
+        <source>Hide Peers Detail</source>
+        <translation>הסתרת פרטי עמיתים</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation>רוחב פס גבוה</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation>ממסר בלוקים דחוסים לפי BIP152 ברוחב פס גבוה: %1</translation>
+    </message>
+    <message>
+        <source>Inbound: initiated by peer</source>
+        <extracomment>Explanatory text for an inbound peer connection.</extracomment>
+        <translation>נכנס: נפתח ביוזמת העמית</translation>
+    </message>
+    <message>
+        <source>Last Block</source>
+        <translation>הבלוק האחרון</translation>
+    </message>
+    <message>
+        <source>Last Transaction</source>
+        <translation>העסקה האחרונה</translation>
+    </message>
+    <message>
+        <source>Local Addresses</source>
+        <translation>כתובות מקומיות</translation>
+    </message>
+    <message>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation>כתובות הרשת שבהן צומת ConnectCoin שלך משתמש כעת לתקשורת עם צמתים אחרים.</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>מעולם לא</translation>
+    </message>
+    <message>
+        <source>Node window - [%1]</source>
+        <translation>חלון הצומת - [%1]</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to request addresses from a peer.</extracomment>
+        <translation>שליפת כתובות יוצאת: קצרת מועד, לבקשת כתובות</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>ממסר בלוקים יוצא: אינו מעביר עסקאות או כתובות</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to test the aliveness of known addresses.</extracomment>
+        <translation>חיבור בדיקה יוצא: קצר מועד, לבדיקת כתובות</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays all network information. This is the default behavior for outbound connections.</extracomment>
+        <translation>ממסר מלא יוצא: ברירת המחדל</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <extracomment>Explanatory text for an outbound peer connection that was established manually through one of several methods. The numbered arguments are stand-ins for the methods available to establish manual connections.</extracomment>
+        <translation>חיבור ידני יוצא: נוסף באמצעות RPC %1 או אפשרויות התצורה %2/%3</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>שידור פרטי: קצר מועד, לשידור עסקאות רגישות מבחינת פרטיות</translation>
+    </message>
+    <message>
+        <source>Session ID</source>
+        <translation>מזהה הפעלה</translation>
+    </message>
+    <message>
+        <source>The BIP324 session ID string in hex.</source>
+        <translation>מחרוזת מזהה ההפעלה של BIP324 בייצוג הקסדצימלי.</translation>
+    </message>
+    <message>
+        <source>The direction and type of peer connection: %1</source>
+        <translation>הכיוון והסוג של החיבור לעמית: %1</translation>
+    </message>
+    <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation>פרוטוקול הרשת שבאמצעותו עמית זה מחובר: IPv4, IPv6, Onion, I2P או CJDNS.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</source>
+        <extracomment>Tooltip text for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>המספר הכולל של כתובות שהתקבלו מעמית זה ונזנחו (לא עובדו) עקב הגבלת קצב.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</source>
+        <extracomment>Tooltip text for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>המספר הכולל של כתובות שהתקבלו מעמית זה ועובדו (לא כולל כתובות שנזנחו עקב הגבלת קצב).</translation>
+    </message>
+    <message>
+        <source>The transport layer version: %1</source>
+        <translation>גרסת שכבת התעבורה: %1</translation>
+    </message>
+    <message>
+        <source>Transaction Relay</source>
+        <translation>ממסר עסקאות</translation>
+    </message>
+    <message>
+        <source>Transport</source>
+        <translation>תעבורה</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.
+Use up and down arrows to navigate history, and %2 to clear screen.
+Use %3 and %4 to increase or decrease the font size.
+Type %5 for an overview of available commands.
+For more information on using this console, type %6.
+
+%7WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.%8</source>
+        <extracomment>RPC console welcome message. Placeholders %7 and %8 are style tags for the warning content, and they are not space separated from the rest of the text intentionally.</extracomment>
+        <translation>ברוכים הבאים למסוף RPC של %1.
+יש להשתמש בחצים למעלה ולמטה לניווט בהיסטוריה, וב־%2 לניקוי המסך.
+יש להשתמש ב־%3 וב־%4 להגדלת הגופן או להקטנתו.
+יש להקליד %5 לסקירת הפקודות הזמינות.
+למידע נוסף על השימוש במסוף זה, יש להקליד %6.
+
+%7אזהרה: נוכלים מורים למשתמשים להקליד כאן פקודות וגונבים את תוכן הארנקים שלהם. אין להשתמש במסוף זה ללא הבנה מלאה של השלכות הפקודה.%8</translation>
+    </message>
+    <message>
+        <source>Whether we relay addresses to this peer.</source>
+        <extracomment>Tooltip text for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>האם אנו מעבירים כתובות לעמית זה.</translation>
+    </message>
+    <message>
+        <source>Whether we relay transactions to this peer.</source>
+        <translation>האם אנו מעבירים עסקאות לעמית זה.</translation>
+    </message>
+    <message>
+        <source>detecting: peer could be v1 or v2</source>
+        <extracomment>Explanatory text for "detecting" transport type.</extracomment>
+        <translation>זיהוי: העמית עשוי להיות v1 או v2</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation>לא נבחר ממסר ברוחב פס גבוה</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation>העמית בחר בנו לממסר ברוחב פס גבוה</translation>
+    </message>
+    <message>
+        <source>v1: unencrypted, plaintext transport protocol</source>
+        <extracomment>Explanatory text for v1 transport type.</extracomment>
+        <translation>v1: פרוטוקול תעבורה לא מוצפן בטקסט גלוי</translation>
+    </message>
+    <message>
+        <source>v2: BIP324 encrypted transport protocol</source>
+        <extracomment>Explanatory text for v2 transport type.</extracomment>
+        <translation>v2: פרוטוקול תעבורה מוצפן לפי BIP324</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation>בחרנו בעמית לממסר ברוחב פס גבוה</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2223,8 +3009,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">הו&amp;דעה:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">הודעת רשות לצירוף לבקשת התשלום שתוצג בעת פתיחת הבקשה. לתשומת לבך: ההודעה לא תישלח עם התשלום ברשת ביטקוין.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">הודעת רשות לצירוף לבקשת התשלום שתוצג בעת פתיחת הבקשה. לתשומת לבך: ההודעה לא תישלח עם התשלום ברשת ConnectCoin.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -2302,6 +3088,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Could not generate new %1 address</source>
         <translation type="unfinished">לא ניתן לייצר כתובת %1 חדשה</translation>
     </message>
+    <message>
+        <source>Copy &amp;message</source>
+        <translation>העתקת &amp;הודעה</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -2340,6 +3130,22 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Request payment to %1</source>
         <translation type="unfinished">בקשת תשלום אל %1</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image…</source>
+        <translation>&amp;שמירת תמונה…</translation>
+    </message>
+    <message>
+        <source>&amp;Verify</source>
+        <translation>&amp;אימות</translation>
+    </message>
+    <message>
+        <source>Request payment to …</source>
+        <translation>בקשת תשלום אל …</translation>
+    </message>
+    <message>
+        <source>Verify this address on e.g. a hardware wallet screen</source>
+        <translation>אימות כתובת זו, למשל על גבי מסך ארנק חומרה</translation>
     </message>
 </context>
 <context>
@@ -2468,8 +3274,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">הסתרת הגדרות עמלת עסקה</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
-        <translation type="unfinished">כאשר יש פחות נפח עסקאות מאשר מקום בבלוק, כורים וכן צמתות מקשרות יכולות להכתיב עמלות מינימום. התשלום של עמלת מינימום הנו תקין, אך יש לקחת בחשבון שהדבר יכול לגרום לעסקה שלא תאושר ברגע שיש יותר ביקוש לעסקאות ביטקוין מאשר הרשת יכולה לעבד.</translation>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation type="unfinished">כאשר יש פחות נפח עסקאות מאשר מקום בבלוק, כורים וכן צמתות מקשרות יכולות להכתיב עמלות מינימום. התשלום של עמלת מינימום הנו תקין, אך יש לקחת בחשבון שהדבר יכול לגרום לעסקה שלא תאושר ברגע שיש יותר ביקוש לעסקאות ConnectCoin מאשר הרשת יכולה לעבד.</translation>
     </message>
     <message>
         <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
@@ -2536,8 +3342,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">י&amp;צירת לא חתומה</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation type="unfinished">יוצר עסקת ביטקוין חתומה חלקית (PSBT) לשימוש עם ארנק %1 לא מחובר למשל, או עם PSBT ארנק חומרה תואם.</translation>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation type="unfinished">יוצר עסקת ConnectCoin חתומה חלקית (PSBT) לשימוש עם ארנק %1 לא מחובר למשל, או עם PSBT ארנק חומרה תואם.</translation>
     </message>
     <message>
         <source>%1 to '%2'</source>
@@ -2569,9 +3375,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">תוכלו להגדיל את העמלה מאוחר יותר (איתות Replace-By-Fee, BIP-125).</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
-        <translation type="unfinished">בבקשה לסקור את העיסקה המוצעת. הדבר יצור עיסקת ביטקוין חתומה חלקית (PSBT) אשר ניתן לשמור או להעתיק ואז לחתום עם למשל ארנק לא מקוון %1, או עם ארנק חומרה תואם-PSBT.</translation>
+        <translation type="unfinished">בבקשה לסקור את העיסקה המוצעת. הדבר יצור עיסקת ConnectCoin חתומה חלקית (PSBT) אשר ניתן לשמור או להעתיק ואז לחתום עם למשל ארנק לא מקוון %1, או עם ארנק חומרה תואם-PSBT.</translation>
     </message>
     <message>
         <source>Please, review your transaction.</source>
@@ -2620,13 +3426,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>מספר הבלוקים המשוער עד לתחילת האישור: %n.</numerusform>
+            <numerusform>מספר הבלוקים המשוער עד לתחילת האישור: %n.</numerusform>
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
+        <source>Warning: Invalid ConnectCoin address</source>
         <translation type="unfinished">אזהרה: כתובת ביטקיון שגויה</translation>
     </message>
     <message>
@@ -2644,6 +3450,109 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(ללא תוית)</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>%1 from wallet '%2'</source>
+        <translation>%1 מהארנק '%2'</translation>
+    </message>
+    <message>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks…)</source>
+        <translation>(העמלה החכמה טרם אותחלה. בדרך כלל נדרשים לכך כמה בלוקים…)</translation>
+    </message>
+    <message>
+        <source>Choose…</source>
+        <translation>בחירה…</translation>
+    </message>
+    <message>
+        <source>Connect your hardware wallet first.</source>
+        <translation>יש לחבר תחילה את ארנק החומרה.</translation>
+    </message>
+    <message>
+        <source>Do you want to create this transaction?</source>
+        <extracomment>Message displayed when attempting to create a transaction. Cautionary text to prompt the user to verify that the displayed transaction details represent the transaction the user intends to create.</extracomment>
+        <translation>ליצור עסקה זו?</translation>
+    </message>
+    <message>
+        <source>External balance:</source>
+        <translation>יתרה חיצונית:</translation>
+    </message>
+    <message>
+        <source>External signer failure</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>כשל בחותם החיצוני</translation>
+    </message>
+    <message>
+        <source>External signer not found</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>החותם החיצוני לא נמצא</translation>
+    </message>
+    <message>
+        <source>Inputs…</source>
+        <translation>קלטים…</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk</source>
+        <translation>PSBT נשמר לדיסק</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation>עסקה חתומה חלקית (בינארי)</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
+        <translation>יש לבדוק את העסקה. ניתן ליצור ולשלוח אותה או ליצור עסקת ConnectCoin חתומה חלקית (PSBT), שאפשר לשמור או להעתיק ולאחר מכן לחתום עליה, למשל באמצעות ארנק %1 שאינו מחובר לרשת או ארנק חומרה התואם ל־PSBT.</translation>
+    </message>
+    <message>
+        <source>Set external signer script path in Options -&gt; Wallet</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>יש להגדיר את נתיב סקריפט החותם החיצוני דרך אפשרויות -&gt; ארנק</translation>
+    </message>
+    <message>
+        <source>Sign on device</source>
+        <extracomment>"device" usually means a hardware wallet.</extracomment>
+        <translation>חתימה בהתקן</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>יש לציין עמלה מותאמת אישית לכל kB (1,000 בתים) של הגודל הווירטואלי של העסקה.
+
+הערה:  העמלה מחושבת לפי בתים, ולכן שיעור עמלה של "100 connects לכל kvB" עבור עסקה בגודל 500 בתים וירטואליים (חצי מ־1 kvB) יוביל בסופו של דבר לעמלה של 50 connects בלבד.</translation>
+    </message>
+    <message>
+        <source>The PSBT has been copied to the clipboard. You can also save it.</source>
+        <translation>ה־PSBT הועתק ללוח. ניתן גם לשמור אותו.</translation>
+    </message>
+    <message>
+        <source>To review recipient list click "Show Details…"</source>
+        <translation>לבדיקת רשימת הנמענים יש ללחוץ על "הצגת פרטים…"</translation>
+    </message>
+    <message>
+        <source>Unsigned Transaction</source>
+        <comment>PSBT copied</comment>
+        <extracomment>Caption of "PSBT has been copied" messagebox</extracomment>
+        <translation>עסקה לא חתומה</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>נעשה שימוש בעמלה המזערית הנוכחית. אין הערכה של זמן האישור.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>ניתן להגדיל את העמלה מאוחר יותר.</translation>
     </message>
 </context>
 <context>
@@ -2665,8 +3574,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">בחירת כתובת שהייתה בשימוש</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">כתובת הביטקוין של המוטב</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">כתובת הConnectCoin של המוטב</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -2701,8 +3610,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">יש לתת תווית לכתובת זו כדי להוסיף אותה לרשימת הכתובות בשימוש</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">הודעה שצורפה לביטקוין: כתובת שתאוחסן בהעברה לצורך מעקב מצדך. לתשומת לבך: הודעה זו לא תישלח ברשת הביטקוין.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">הודעה שצורפה לConnectCoin: כתובת שתאוחסן בהעברה לצורך מעקב מצדך. לתשומת לבך: הודעה זו לא תישלח ברשת הConnectCoin.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>העמלה תנוכה מהסכום שנשלח. הנמען יקבל פחות ConnectCoin מהסכום שהוזן בשדה הסכום. אם נבחרו כמה נמענים, העמלה תחולק ביניהם באופן שווה.</translation>
     </message>
 </context>
 <context>
@@ -2727,8 +3648,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">חתימה על הו&amp;דעה</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">כתובת הביטקוין איתה לחתום את ההודעה</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">כתובת הConnectCoin איתה לחתום את ההודעה</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -2747,8 +3668,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">חתימה</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation type="unfinished">ניתן לחתום על ההודעה כדי להוכיח שכתובת ביטקוין זו בבעלותך</translation>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation type="unfinished">ניתן לחתום על ההודעה כדי להוכיח שכתובת ConnectCoin זו בבעלותך</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -2771,8 +3692,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">יש להזין את כתובת הנמען, ההודעה (נא לוודא שהעתקת במדויק את תווי קפיצות השורה, רווחים, טאבים וכדומה). והחתימה מתחת אשר מאמתת את ההודעה. יש להיזהר שלא לקרוא לתוך החתימה יותר מאשר בהודעה החתומה עצמה, כדי להימנע מניצול לרעה של המתווך שבדרך. יש לשים לב שהדבר רק מוכיח שהצד החותם מקבל עם הכתובת. הדבר אינו מוכיח משלוח כלשהו של עסקה!</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">כתובת הביטקוין שאיתה נחתמה ההודעה</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">כתובת הConnectCoin שאיתה נחתמה ההודעה</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -2783,8 +3704,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">החתימה שניתנת כאשר ההודעה נחתמה</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">ניתן לאמת את ההודעה כדי להבטיח שהיא נחתמה עם כתובת הביטקוין הנתונה</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">ניתן לאמת את ההודעה כדי להבטיח שהיא נחתמה עם כתובת הConnectCoin הנתונה</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -2845,6 +3766,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">ההודעה עברה וידוא.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the clipboard</source>
+        <translation>העתקת החתימה הנוכחית ללוח</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>הכתובת שהוזנה אינה מפנה למפתח מהסוג הישן (P2PKH). גרסה זו של %1 אינה תומכת בחתימת הודעות עבור SegWit וסוגי כתובות אחרים שאינם P2PKH. יש לבדוק את הכתובת ולנסות שוב.</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>ניתן לחתום על הודעות או הסכמים באמצעות הכתובות שלך מהסוג הישן (P2PKH), כדי להוכיח שניתן לקבל כספי ConnectCoin הנשלחים אליהן. יש להיזהר ולא לחתום על דבר עמום או אקראי, שכן התקפות דיוג עלולות להטעות אותך ולגרום לך לחתום על העברת זהותך לתוקפים. יש לחתום רק על הצהרות מפורטות במלואן שהסכמת להן.</translation>
     </message>
 </context>
 <context>
@@ -2911,9 +3852,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>מספר הבלוקים שנותרו להבשלה: %n</numerusform>
+            <numerusform>מספר הבלוקים שנותרו להבשלה: %n</numerusform>
         </translation>
     </message>
     <message>
@@ -2999,6 +3940,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>P2C domain</source>
         <translation>מתחם P2C</translation>
+    </message>
+    <message>
+        <source>%1 (Certificate was not verified)</source>
+        <translation>%1 (התעודה לא אומתה)</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is in the memory pool.</extracomment>
+        <translation>0/לא אושרה, במאגר הזיכרון</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, not in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is not in the memory pool.</extracomment>
+        <translation>0/לא אושרה, לא במאגר הזיכרון</translation>
     </message>
 </context>
 <context>
@@ -3230,6 +4185,43 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>יש להזין כתובת, מתחם P2C, מזהה עסקה או תווית לחיפוש</translation>
     </message>
+    <message>
+        <source>&amp;Edit address label</source>
+        <translation>&amp;עריכת תווית הכתובת</translation>
+    </message>
+    <message>
+        <source>&amp;Show transaction details</source>
+        <translation>&amp;הצגת פרטי העסקה</translation>
+    </message>
+    <message>
+        <source>A&amp;bandon transaction</source>
+        <translation>&amp;נטישת עסקה</translation>
+    </message>
+    <message>
+        <source>Copy &amp;raw transaction</source>
+        <translation>העתקת עסקה &amp;גולמית</translation>
+    </message>
+    <message>
+        <source>Copy full transaction &amp;details</source>
+        <translation>העתקת &amp;פרטי העסקה המלאים</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>העתקת &amp;מזהה העסקה</translation>
+    </message>
+    <message>
+        <source>Increase transaction &amp;fee</source>
+        <translation>הגדלת &amp;עמלת העסקה</translation>
+    </message>
+    <message>
+        <source>Range…</source>
+        <translation>טווח…</translation>
+    </message>
+    <message>
+        <source>Show in %1</source>
+        <extracomment>Transactions table context menu action to show the selected transaction in a third-party block explorer. %1 is a stand-in argument for the URL of the explorer.</extracomment>
+        <translation>הצגה ב־%1</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -3321,7 +4313,23 @@ Go to File &gt; Open Wallet to load a wallet.
         <source>Could not commit transaction</source>
         <translation type="unfinished">שילוב העסקה נכשל</translation>
     </message>
-    </context>
+        <message>
+        <source>Can't display address</source>
+        <translation>לא ניתן להציג את הכתובת</translation>
+    </message>
+    <message>
+        <source>Fee-bump PSBT copied to clipboard</source>
+        <translation>PSBT להגדלת עמלה הועתק ללוח</translation>
+    </message>
+    <message>
+        <source>Signer error</source>
+        <translation>שגיאת חותם</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation>אזהרה: העמלה הנוספת עשויה להיות משולמת באמצעות הקטנת פלטי העודף או הוספת קלטים לפי הצורך. ייתכן שיתווסף פלט עודף חדש אם אינו קיים. שינויים אלה עלולים לחשוף מידע פרטי.</translation>
+    </message>
+</context>
 <context>
     <name>WalletView</name>
     <message>
@@ -3410,7 +4418,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.</source>
-        <translation type="unfinished">שידור-חוזר של הבלוקים לא הצליח. תצטרכו לבצע בנייה מחדש של מאגר הנתונים באמצעות הדגל reindex-chainstate-.</translation>
+        <translation>לא ניתן לעבד מחדש את הבלוקים. יהיה עליך לבנות מחדש את מסד הנתונים באמצעות -reindex-chainstate.</translation>
     </message>
     <message>
         <source>Warning: Private keys detected in wallet {%s} with disabled private keys</source>
@@ -3522,7 +4530,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Ignoring duplicate -wallet %s.</source>
-        <translation type="unfinished">מתעלם ארנק-כפול %s.</translation>
+        <translation>מתעלם מהאפשרות הכפולה -wallet %s.</translation>
     </message>
     <message>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
@@ -3683,6 +4691,844 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">לא ניתן לכתוב אל קובץ ההגדרות</translation>
+    </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>יעד העודף חייב להיות יעד P2PK מסוג 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin תומך רק בכתובות P2PK מסוג 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin תומך רק בכתובות עודף P2PK מסוג 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>עסקאות ConnectCoin דורשות יעדים תקינים מסוג 1 או פלטי PAY_TO_CONNECT מסוג 2</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>פלטי ConnectCoin מסוג 1 תומכים רק ב-SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>הקלט אינו הוצאה מלאה מסוג 1 עם SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>הקלט דורש נתוני עדות מלאים להוכחת P2C</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>הרשת הראשית טרם הושקה: לא הוגדר בלוק בראשית. לבדיקות ציבוריות יש להשתמש באפשרות -testnet4 ולבדיקות מקומיות באפשרות -regtest.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>לא הוגדרה כתובת URL ציבורית לקוד המקור שבבעלות המיזם עבור גרסת פיתוח זו.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>אין מספיק מתארי קבצים זמינים. כדאי להקטין את -rpcmaxconnections או להשתמש בערך ברירת המחדל %d</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>נשמח לתרומה אם %s מועיל לך.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+כדאי לשקול לשנות את %s (%s) או את %s (%s).</translation>
+    </message>
+    <message>
+        <source>
+Unable to cleanup failed migration</source>
+        <translation>
+לא ניתן לנקות את ההסבה שנכשלה</translation>
+    </message>
+    <message>
+        <source>
+Unable to restore backup of wallet.</source>
+        <translation>
+לא ניתן לשחזר את גיבוי הארנק.</translation>
+    </message>
+    <message>
+        <source>%s failed to validate the -assumeutxo snapshot state. This indicates a hardware problem, or a bug in the software, or a bad software modification that allowed an invalid snapshot to be loaded. As a result of this, the node will shut down and stop using any state that was built on the snapshot, resetting the chain height from %d to %d. On the next restart, the node will resume syncing from %d without using any snapshot data. Please report this incident to %s, including how you obtained the snapshot. The invalid snapshot chainstate will be left on disk in case it is helpful in diagnosing the issue that caused this error.</source>
+        <translation>%s לא הצליח לאמת את מצב תמונת המצב של -assumeutxo. הדבר מצביע על בעיית חומרה, תקלה בתוכנה או שינוי שגוי בתוכנה שאפשר לטעון תמונת מצב לא תקינה. כתוצאה מכך הצומת ייסגר ויפסיק להשתמש בכל מצב שנבנה על תמונת המצב, וגובה השרשרת יאופס מ־%d ל־%d. בהפעלה הבאה הצומת ימשיך בסנכרון מ־%d בלי להשתמש בנתוני תמונת מצב כלשהם. יש לדווח על אירוע זה ל־%s, לרבות אופן השגת תמונת המצב. מצב השרשרת של תמונת המצב הלא תקינה יישאר בדיסק למקרה שיועיל באבחון הגורם לשגיאה זו.</translation>
+    </message>
+    <message>
+        <source>%s is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation>%s מוגדר לערך גבוה מאוד! עמלה בסדר גודל זה עשויה להיות משולמת על עסקה אחת.</translation>
+    </message>
+    <message>
+        <source>%s request to listen on port %u. This port is considered "bad" and thus it is unlikely that any peer will connect to it. See doc/p2p-bad-ports.md for details and a full list.</source>
+        <translation>%s מבקש להאזין בפתחה %u. פתחה זו נחשבת "בעייתית" ולכן לא סביר שעמית כלשהו יתחבר אליה. פרטים ורשימה מלאה נמצאים ב־doc/p2p-bad-ports.md.</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>השימוש ב־-walletrbf מיושן והאפשרות תוסר לחלוטין בגרסה הבאה.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>dbcache בגודל %zu MiB עשוי להיות גדול מדי לזיכרון מערכת בגודל %zu MiB בלבד.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>אירעה שגיאה פנימית חמורה, פרטים נוספים ב־%s: %s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>לא נמצאו נתוני Assumeutxo עבור גיבוב הבלוק הנתון '%s'.</translation>
+    </message>
+    <message>
+        <source>Block verification was interrupted</source>
+        <translation>אימות הבלוקים הופסק</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version %d pre-selected input with a version 3 tx</source>
+        <translation>לא ניתן להוציא קלט לא מאושר שנבחר מראש מגרסה %d באמצעות עסקה מגרסה 3</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version 3 pre-selected input with a version %d tx</source>
+        <translation>לא ניתן להוציא קלט לא מאושר שנבחר מראש מגרסה 3 באמצעות עסקה מגרסה %d</translation>
+    </message>
+    <message>
+        <source>Cannot obtain a lock on directory %s. %s is probably already running.</source>
+        <translation>לא ניתן לנעול את התיקייה %s. כנראה ש־%s כבר פועל.</translation>
+    </message>
+    <message>
+        <source>Cannot provide specific connections and have addrman find outgoing connections at the same time.</source>
+        <translation>לא ניתן לספק חיבורים מסוימים ובמקביל לאפשר ל־addrman למצוא חיבורים יוצאים.</translation>
+    </message>
+    <message>
+        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
+        <translation>לא ניתן להגדיר את -forcednsseed לערך true כאשר -dnsseed מוגדר לערך false.</translation>
+    </message>
+    <message>
+        <source>Cannot write to directory '%s'; check permissions.</source>
+        <translation>לא ניתן לכתוב לתיקייה '%s'; יש לבדוק הרשאות.</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>נמצא בלוק פגום המצביע על כשל חומרה אפשרי.</translation>
+    </message>
+    <message>
+        <source>Could not generate scriptPubKeys (cache is empty)</source>
+        <translation>לא ניתן ליצור scriptPubKeys (המטמון ריק)</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>לא ניתן לקרוא את נתוני asmap המוטמעים</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>יצירת ארנק…</translation>
+    </message>
+    <message>
+        <source>Disk space for %s may not accommodate the block files. Approximately %u GB of data will be stored in this directory.</source>
+        <translation>ייתכן ששטח הדיסק עבור %s לא יספיק לקובצי הבלוקים. בתיקייה זו יאוחסנו כ־%u GB של נתונים.</translation>
+    </message>
+    <message>
+        <source>Do you want to rebuild the databases now?</source>
+        <translation>לבנות מחדש את מסדי הנתונים כעת?</translation>
+    </message>
+    <message>
+        <source>Dump file %s does not exist.</source>
+        <translation>קובץ ההטלה %s אינו קיים.</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>הגדרת קישור כפולה עבור הכתובת %s. יש לבדוק את ההגדרות -bind, -bind=...=onion ו־-whitebind.</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>בדיקת התקינות של ההצפנה בעקומות אליפטיות נכשלה. %s נסגר.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>נתוני asmap מוטמעים אינם זמינים</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>שגיאה ביצירת %s: לא ניתן לכתוב נתוני־על של הגרסה.</translation>
+    </message>
+    <message>
+        <source>Error loading %s: External signer wallet being loaded without external signer support compiled</source>
+        <translation>שגיאה בטעינת %s: נטען ארנק עם חותם חיצוני, אך התוכנה נבנתה ללא תמיכה בחותם חיצוני</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>שגיאה בטעינת %s: זהו ארנק מהסוג הישן. יש להסב אותו לארנק מתארים באמצעות כלי ההסבה (migratewallet RPC).</translation>
+    </message>
+    <message>
+        <source>Error loading databases</source>
+        <translation>שגיאה בטעינת מסדי נתונים</translation>
+    </message>
+    <message>
+        <source>Error loading wallet. Wallet requires blocks to be downloaded, and software does not currently support loading wallets while blocks are being downloaded out of order when using assumeutxo snapshots. Wallet should be able to load successfully after node sync reaches height %s</source>
+        <translation>שגיאה בטעינת הארנק. הארנק דורש הורדת בלוקים, והתוכנה אינה תומכת כעת בטעינת ארנקים בזמן הורדת בלוקים שלא לפי הסדר בעת שימוש בתמונות מצב assumeutxo. הארנק אמור להיטען בהצלחה לאחר שסנכרון הצומת יגיע לגובה %s</translation>
+    </message>
+    <message>
+        <source>Error opening coins database</source>
+        <translation>שגיאה בפתיחת מסד נתוני המטבעות</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address metadata may be missing or incorrect.</source>
+        <translation>שגיאה בקריאת %s! כל המפתחות נקראו כראוי, אך נתוני עסקאות או נתוני־על של כתובות עשויים להיות חסרים או שגויים.</translation>
+    </message>
+    <message>
+        <source>Error reading %s! Transaction data may be missing or incorrect. Rescanning wallet.</source>
+        <translation>שגיאה בקריאת %s! ייתכן שנתוני עסקאות חסרים או שגויים. מתבצעת סריקה מחדש של הארנק.</translation>
+    </message>
+    <message>
+        <source>Error reading configuration file: %s</source>
+        <translation>שגיאה בקריאת קובץ התצורה: %s</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation>שגיאה בקריאת הרשומה הבאה ממסד נתוני הארנק</translation>
+    </message>
+    <message>
+        <source>Error starting/committing db txn for wallet transactions removal process</source>
+        <translation>שגיאה בהתחלת עסקת מסד נתונים או בקיבועה לצורך תהליך הסרת עסקאות הארנק</translation>
+    </message>
+    <message>
+        <source>Error: Address book data in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>שגיאה: לא ניתן לזהות לאילו ארנקים מוסבים שייכים נתוני פנקס הכתובות בארנק</translation>
+    </message>
+    <message>
+        <source>Error: Cannot extract destination from the generated scriptpubkey</source>
+        <translation>שגיאה: לא ניתן לחלץ יעד מתוך ה־scriptpubkey שנוצר</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>שגיאה: לא ניתן להוסיף את העסקה %s לארנק לצפייה בלבד</translation>
+    </message>
+    <message>
+        <source>Error: Could not add watchonly tx %s to watchonly wallet</source>
+        <translation>שגיאה: לא ניתן להוסיף את העסקה לצפייה בלבד %s לארנק לצפייה בלבד</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>שגיאה: לא ניתן ליצור את הקובץ '%s'</translation>
+    </message>
+    <message>
+        <source>Error: Could not delete watchonly transactions. </source>
+        <translation>שגיאה: לא ניתן למחוק עסקאות לצפייה בלבד. </translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation>שגיאה: לא ניתן ליצור סמן במסד הנתונים</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation>שגיאה: סכום הביקורת של קובץ ההטלה אינו תואם. חושב %s, צפוי %s</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation>שגיאה: רשומת התבנית בקובץ ההטלה שגויה. התקבל "%s", צפוי "format".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation>שגיאה: רשומת המזהה בקובץ ההטלה שגויה. התקבל "%s", צפוי "%s".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>שגיאה: קובץ ההטלה מציין תבנית מסד נתונים שאינה נתמכת (%s). נתמכות רק הטלות של מסדי נתונים מסוג sqlite</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation>שגיאה: גרסת קובץ ההטלה אינה נתמכת. גרסה זו של connectcoin-wallet תומכת רק בקובצי הטלה מגרסה 1. התקבל קובץ הטלה מגרסה %s</translation>
+    </message>
+    <message>
+        <source>Error: Duplicate descriptors created during migration. Your wallet may be corrupted.</source>
+        <translation>שגיאה: נוצרו מתארים כפולים במהלך ההסבה. ייתכן שהארנק פגום.</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>שגיאה: יעד הייצוא '%s' כבר קיים</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>שגיאה: יעד הייצוא אינו יכול להיות ריק</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet</source>
+        <translation>שגיאה: יצירת ארנק חדש לצפייה בלבד נכשלה</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>שגיאה: יצירת ארנק חדש לצפייה בלבד נכשלה. %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation>שגיאה: התקבל מפתח שאינו הקסדצימלי: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation>שגיאה: התקבל ערך שאינו הקסדצימלי: %s</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation>שגיאה: חסר סכום ביקורת</translation>
+    </message>
+    <message>
+        <source>Error: No %s addresses available.</source>
+        <translation>שגיאה: אין כתובות %s זמינות.</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>שגיאה: לא כל רשומות פנקס הכתובות הוסבו</translation>
+    </message>
+    <message>
+        <source>Error: Not all transaction records were migrated</source>
+        <translation>שגיאה: לא כל רשומות העסקאות הוסבו</translation>
+    </message>
+    <message>
+        <source>Error: This wallet already uses SQLite</source>
+        <translation>שגיאה: ארנק זה כבר משתמש ב־SQLite</translation>
+    </message>
+    <message>
+        <source>Error: This wallet is already a descriptor wallet</source>
+        <translation>שגיאה: ארנק זה כבר מבוסס על מתארים</translation>
+    </message>
+    <message>
+        <source>Error: Transaction %s in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>שגיאה: לא ניתן לזהות לאילו ארנקים מוסבים שייכת העסקה %s בארנק</translation>
+    </message>
+    <message>
+        <source>Error: Unable to begin reading all records in the database</source>
+        <translation>שגיאה: לא ניתן להתחיל לקרוא את כל הרשומות במסד הנתונים</translation>
+    </message>
+    <message>
+        <source>Error: Unable to make a backup of your wallet</source>
+        <translation>שגיאה: לא ניתן ליצור גיבוי של הארנק שלך</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation>שגיאה: לא ניתן לפענח את הגרסה %u כ־uint32_t</translation>
+    </message>
+    <message>
+        <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
+        <translation>שגיאה: לא ניתן ליצור מתארים לארנק זה מהסוג הישן. יש להקפיד לספק את ביטוי הסיסמה של הארנק אם הוא מוצפן.</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read all records in the database</source>
+        <translation>שגיאה: לא ניתן לקרוא את כל הרשומות במסד הנתונים</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read wallet's best block locator record</source>
+        <translation>שגיאה: לא ניתן לקרוא את רשומת מאתר הבלוק הטוב ביותר של הארנק</translation>
+    </message>
+    <message>
+        <source>Error: Unable to remove watchonly address book data</source>
+        <translation>שגיאה: לא ניתן להסיר את נתוני פנקס הכתובות לצפייה בלבד</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write data to disk for wallet %s</source>
+        <translation>שגיאה: לא ניתן לכתוב נתונים לדיסק עבור הארנק %s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation>שגיאה: לא ניתן לכתוב רשומה לארנק החדש</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write solvable wallet best block locator record</source>
+        <translation>שגיאה: לא ניתן לכתוב את רשומת מאתר הבלוק הטוב ביותר של הארנק עם הסקריפטים הפתירים</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>שגיאה: לא ניתן לכתוב את הארנק המיוצא</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write watchonly wallet best block locator record</source>
+        <translation>שגיאה: לא ניתן לכתוב את רשומת מאתר הבלוק הטוב ביותר של הארנק לצפייה בלבד</translation>
+    </message>
+    <message>
+        <source>Error: Wallet does not exist</source>
+        <translation>שגיאה: הארנק אינו קיים</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>שגיאה: אין בארנק מתארים לייצוא</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>שגיאה: לא ניתן לקבע את עסקת מסד הנתונים לייצוא הארנק לצפייה בלבד</translation>
+    </message>
+    <message>
+        <source>Error: cannot remove legacy wallet records</source>
+        <translation>שגיאה: לא ניתן להסיר רשומות ארנק מהסוג הישן</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>שגיאה: לא ניתן לבצע עסקת מסד נתונים עבור הארנק החדש לצפייה בלבד %s</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for wallet %s</source>
+        <translation>שגיאה: לא ניתן לבצע עסקת מסד נתונים עבור הארנק %s</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>לא ניתן לשריין סריקה מחדש במהלך אתחול הארנק</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>לא ניתן לחשב את תוספות העמלה, מכיוון שפלטי UTXO לא מאושרים תלויים באשכול עצום של עסקאות לא מאושרות.</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>סגירת קובץ ביטול הבלוקים נכשלה.</translation>
+    </message>
+    <message>
+        <source>Failed to close file when writing block.</source>
+        <translation>סגירת הקובץ בעת כתיבת בלוק נכשלה.</translation>
+    </message>
+    <message>
+        <source>Failed to disconnect block.</source>
+        <translation>ניתוק הבלוק נכשל.</translation>
+    </message>
+    <message>
+        <source>Failed to read block.</source>
+        <translation>קריאת הבלוק נכשלה.</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>הסרת תיקיית מצב השרשרת של תמונת המצב (%s) נכשלה. יש להסירה ידנית לפני ההפעלה מחדש.
+</translation>
+    </message>
+    <message>
+        <source>Failed to rename invalid peers.dat file. Please move or delete it and try again.</source>
+        <translation>שינוי שם קובץ peers.dat הלא תקין נכשל. יש להעבירו או למחוק אותו ולנסות שוב.</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>הפעלת האינדקסים נכשלה, מתבצעת סגירה…</translation>
+    </message>
+    <message>
+        <source>Failed to write block.</source>
+        <translation>כתיבת הבלוק נכשלה.</translation>
+    </message>
+    <message>
+        <source>Failed to write undo data.</source>
+        <translation>כתיבת נתוני הביטול נכשלה.</translation>
+    </message>
+    <message>
+        <source>Failure removing transaction: %s</source>
+        <translation>הסרת העסקה נכשלה: %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>שיעור העמלה (%s) נמוך משיעור העמלה המזערי שהוגדר (%s).</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation>הקובץ %s כבר קיים. אם זה אכן רצונך, יש להעבירו למקום אחר תחילה.</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>כתיבת הנתונים הממתינים של קובץ הבלוקים לדיסק נכשלה. כנראה שהסיבה היא שגיאת I/O.</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>כתיבת הנתונים הממתינים של קובץ נתוני הביטול לדיסק נכשלה. כנראה שהסיבה היא שגיאת I/O.</translation>
+    </message>
+    <message>
+        <source>Incompatible options: -dnsseed=1 was explicitly specified, but -onlynet forbids connections to IPv4/IPv6</source>
+        <translation>אפשרויות שאינן תואמות: -dnsseed=1 צוין במפורש, אך -onlynet אוסר חיבורים ל־IPv4/IPv6</translation>
+    </message>
+    <message>
+        <source>Input not found or already spent</source>
+        <translation>הקלט לא נמצא או שכבר נוצל</translation>
+    </message>
+    <message>
+        <source>Insufficient dbcache for block verification</source>
+        <translation>אין די dbcache לאימות בלוקים</translation>
+    </message>
+    <message>
+        <source>Invalid -i2psam address or hostname: '%s'</source>
+        <translation>כתובת או שם מארח לא תקינים עבור -i2psam: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>כתובת או שם מארח לא תקינים עבור -proxy, מסתיימים ב־'=': '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s'</source>
+        <translation>סכום לא תקין עבור %s=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation>סכום לא תקין עבור %s=&lt;amount&gt;: '%s' (נדרשת לפחות עמלת minrelay של %s כדי למנוע עסקאות תקועות)</translation>
+    </message>
+    <message>
+        <source>Invalid or corrupt peers.dat (%s). If you believe this is a bug, please report it to %s. As a workaround, you can move the file (%s) out of the way (rename, move, or delete) to have a new one created on the next start.</source>
+        <translation>peers.dat אינו תקין או פגום (%s). אם לדעתך מדובר בתקלה, יש לדווח עליה ל־%s. כפתרון זמני ניתן להזיז את הקובץ (%s) ממקומו (לשנות שם, להעביר או למחוק) כדי שייווצר קובץ חדש בהפעלה הבאה.</translation>
+    </message>
+    <message>
+        <source>Invalid port specified in %s: '%s'</source>
+        <translation>פתחה לא תקינה צוינה ב־%s: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid value detected for '-wallet' or '-nowallet'. '-wallet' requires a string value, while '-nowallet' accepts only '1' to disable all wallets</source>
+        <translation>זוהה ערך לא תקין עבור '-wallet' או '-nowallet'. האפשרות '-wallet' דורשת ערך מחרוזת, ואילו '-nowallet' מקבלת רק '1' להשבתת כל הארנקים</translation>
+    </message>
+    <message>
+        <source>Listening for incoming connections failed (listen returned error %s)</source>
+        <translation>האזנה לחיבורים נכנסים נכשלה (listen החזיר שגיאה %s)</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses…</source>
+        <translation>טעינת כתובות P2P…</translation>
+    </message>
+    <message>
+        <source>Loading banlist…</source>
+        <translation>טעינת רשימת החסימות…</translation>
+    </message>
+    <message>
+        <source>Loading block index…</source>
+        <translation>טעינת אינדקס הבלוקים…</translation>
+    </message>
+    <message>
+        <source>Loading wallet…</source>
+        <translation>טעינת הארנק…</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is less than transaction weight without inputs</source>
+        <translation>משקל העסקה המרבי קטן ממשקל העסקה ללא קלטים</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is too low, can not accommodate change output</source>
+        <translation>משקל העסקה המרבי נמוך מדי ואינו מאפשר לכלול פלט עודף</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>משקל העסקה המרבי חייב להיות בין %d לבין %d</translation>
+    </message>
+    <message>
+        <source>Missing amount</source>
+        <translation>חסר סכום</translation>
+    </message>
+    <message>
+        <source>Missing solving data for estimating transaction size</source>
+        <translation>חסרים נתוני פתרון להערכת גודל העסקה</translation>
+    </message>
+    <message>
+        <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
+        <translation>סופקה יותר מכתובת קישור onion אחת. נעשה שימוש ב־%s עבור שירות Tor onion שנוצר אוטומטית.</translation>
+    </message>
+    <message>
+        <source>No addresses available</source>
+        <translation>אין כתובות זמינות</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>לא סופק קובץ הטלה. לשימוש ב־createfromdump יש לספק -dumpfile=&lt;filename&gt;.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use dump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>לא סופק קובץ הטלה. לשימוש ב־dump יש לספק -dumpfile=&lt;filename&gt;.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. %d available, %d required.</source>
+        <translation>אין די מתארי קבצים זמינים. זמינים %d, נדרשים %d.</translation>
+    </message>
+    <message>
+        <source>Not found pre-selected input %s</source>
+        <translation>לא נמצא הקלט שנבחר מראש %s</translation>
+    </message>
+    <message>
+        <source>Not solvable pre-selected input %s</source>
+        <translation>הקלט שנבחר מראש %s אינו פתיר</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>נקבע רק כיוון, ללא הרשאות: '%s'</translation>
+    </message>
+    <message>
+        <source>Option '-checkpoints' is set but checkpoints were removed. This option has no effect.</source>
+        <translation>האפשרות '-checkpoints' נקבעה אך נקודות הביקורת הוסרו. לאפשרות זו אין השפעה.</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>האפשרות '-limitancestorsize' ניתנה אך מגבלות גודל עסקאות האב הוחלפו במגבלות גודל אשכול (ראו -limitclustersize). לאפשרות זו אין השפעה.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>האפשרות '-limitdescendantsize' ניתנה אך מגבלות גודל עסקאות הצאצאים הוחלפו במגבלות גודל אשכול (ראו -limitclustersize). לאפשרות זו אין השפעה.</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to CJDNS (-onlynet=cjdns) but -cjdnsreachable is not provided</source>
+        <translation>חיבורים יוצאים הוגבלו ל־CJDNS (-onlynet=cjdns), אך -cjdnsreachable לא סופק</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is explicitly forbidden: -onion=0</source>
+        <translation>חיבורים יוצאים הוגבלו ל־Tor (-onlynet=onion), אך המתווך לגישה לרשת Tor נאסר במפורש: -onion=0</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
+        <translation>חיבורים יוצאים הוגבלו ל־Tor (-onlynet=onion), אך לא סופק מתווך לגישה לרשת Tor: לא צוינה אף אחת מהאפשרויות -proxy, -onion או -listenonion</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to i2p (-onlynet=i2p) but -i2psam is not provided</source>
+        <translation>חיבורים יוצאים הוגבלו ל־i2p (-onlynet=i2p), אך -i2psam לא סופק</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>התבקש שידור פרטי של עסקאות עצמיות (-privatebroadcast) והאפשרות -proxyrandomize מושבתת. ניתן לקשר מעגלי Tor המשמשים לחיבורי שידור פרטי לחיבורים אחרים דרך Tor. לפרטיות מרבית יש להגדיר -proxyrandomize=1.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>התבקש שידור פרטי של עסקאות עצמיות (-privatebroadcast), אך גם -connect הוגדר. האפשרויות אינן תואמות מכיוון ששידור פרטי דורש פתיחת חיבורים חדשים לעמיתי Tor או I2P שנבחרים באקראי. כדאי לשקול להשתמש במקום זאת ב־-maxconnections=0 -addnode=...</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>התבקש שידור פרטי של עסקאות עצמיות (-privatebroadcast), אך לא ניתן להגיע לאף אחת מהרשתות Tor או I2P</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -reindex-chainstate. Use full -reindex instead.</source>
+        <translation>מצב גיזום אינו תואם ל־-reindex-chainstate. יש להשתמש ב־-reindex מלא במקום זאת.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>מצב גיזום אינו תואם ל־-txospenderindex.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
+        <translation>גיזום: הסנכרון האחרון של הארנק קודם לנתונים שנגזמו. נדרש -reindex (הורדה חוזרת של כל שרשרת הבלוקים במקרה של צומת גזום)</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore…</source>
+        <translation>גיזום מאגר הבלוקים…</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>שינוי השם מ־'%s' ל־'%s' נכשל. לא ניתן לנקות את תיקיית leveldb של מצב השרשרת ברקע.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
+        <translation>שינוי השם מ־'%s' ל־'%s' נכשל. יש לפתור זאת באמצעות העברה או מחיקה ידנית של תיקיית תמונת המצב הלא תקינה %s, אחרת אותה שגיאה תתרחש בהפעלה הבאה.</translation>
+    </message>
+    <message>
+        <source>Replaying blocks…</source>
+        <translation>החלה חוזרת של בלוקים…</translation>
+    </message>
+    <message>
+        <source>Rescanning…</source>
+        <translation>סריקה מחדש…</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to execute statement to verify database: %s</source>
+        <translation>SQLiteDatabase: ביצוע ההוראה לאימות מסד הנתונים נכשל: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to prepare statement to verify database: %s</source>
+        <translation>SQLiteDatabase: הכנת ההוראה לאימות מסד הנתונים נכשלה: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to read database verification error: %s</source>
+        <translation>SQLiteDatabase: קריאת שגיאת אימות מסד הנתונים נכשלה: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unexpected application id. Expected %u, got %u</source>
+        <translation>SQLiteDatabase: מזהה יישום לא צפוי. צפוי %u, התקבל %u</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is supported</source>
+        <translation>SQLiteDatabase: גרסת סכמת ארנק sqlite אינה מוכרת: %d. רק גרסה %d נתמכת</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>החותם לא החזיר את הכתובת</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>החותם החזיר כתובת לא צפויה %s</translation>
+    </message>
+    <message>
+        <source>Signer returned error: %s</source>
+        <translation>החותם החזיר שגיאה: %s</translation>
+    </message>
+    <message>
+        <source>Specified data directory "%s" does not exist.</source>
+        <translation>תיקיית הנתונים שצוינה "%s" אינה קיימת.</translation>
+    </message>
+    <message>
+        <source>Starting network threads…</source>
+        <translation>הפעלת תהליכוני רשת…</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>שגיאת מערכת בעת ריקון המאגרים לדיסק: %s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>שגיאת מערכת בעת טעינת קובץ בלוקים חיצוני: %s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>שגיאת מערכת בעת שמירת בלוק לדיסק: %s</translation>
+    </message>
+    <message>
+        <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
+        <translation>הנתיב %s משתמש ב־exFAT, הידועה בבעיות השחתת נתונים לסירוגין ב־macOS. יש להעביר תיקייה זו למערכת קבצים אחרת כדי למנוע אובדן נתונים.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>אין להשתמש באפשרות -testactivationheight ברשת mainnet.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>אין להשתמש באפשרות -vbparams ברשת mainnet.</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>השילוב של הקלטים שנבחרו מראש עם בחירת הקלטים האוטומטית של הארנק חורג ממשקל העסקה המרבי. יש לנסות לשלוח סכום קטן יותר או לאחד ידנית את פלטי UTXO של הארנק</translation>
+    </message>
+    <message>
+        <source>The inputs size exceeds the maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>גודל הקלטים חורג מהמשקל המרבי. יש לנסות לשלוח סכום קטן יותר או לאחד ידנית את פלטי UTXO של הארנק</translation>
+    </message>
+    <message>
+        <source>The preselected coins total amount does not cover the transaction target. Please allow other inputs to be automatically selected or include more coins manually</source>
+        <translation>סכום המטבעות שנבחרו מראש אינו מכסה את יעד העסקה. יש לאפשר בחירה אוטומטית של קלטים אחרים או להוסיף מטבעות ידנית</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist</source>
+        <translation>קובץ התצורה שצוין %s אינו קיים</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>הסכום הכולל חורג מהיתרה שלך לאחר הכללת עמלת העסקה בסך %s.</translation>
+    </message>
+    <message>
+        <source>The transactions removal process can only be executed within a db txn</source>
+        <translation>ניתן לבצע את תהליך הסרת העסקאות רק בתוך עסקת מסד נתונים</translation>
+    </message>
+    <message>
+        <source>There is no ScriptPubKeyManager for this address</source>
+        <translation>אין ScriptPubKeyManager עבור כתובת זו</translation>
+    </message>
+    <message>
+        <source>Transaction %s does not belong to this wallet</source>
+        <translation>העסקה %s אינה שייכת לארנק זה</translation>
+    </message>
+    <message>
+        <source>Transaction change output index out of range</source>
+        <translation>אינדקס פלט העודף של העסקה מחוץ לטווח</translation>
+    </message>
+    <message>
+        <source>Transaction needs a change address, but we can't generate it.</source>
+        <translation>העסקה זקוקה לכתובת עודף, אך לא ניתן ליצור אותה.</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>העסקה דורשת יעד אחד בעל סכום שאינו אפס, שיעור עמלה שאינו אפס או קלט שנבחר מראש</translation>
+    </message>
+    <message>
+        <source>UTXO snapshot failed to validate. Restart to resume normal initial block download, or try loading a different snapshot.</source>
+        <translation>אימות תמונת המצב של UTXO נכשל. יש להפעיל מחדש כדי להמשיך בהורדת הבלוקים הראשונית הרגילה, או לנסות לטעון תמונת מצב אחרת.</translation>
+    </message>
+    <message>
+        <source>Unable to find UTXO for external input</source>
+        <translation>לא ניתן למצוא UTXO עבור קלט חיצוני</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation>לא ניתן לפתוח את %s לכתיבה</translation>
+    </message>
+    <message>
+        <source>Unable to parse -maxuploadtarget: '%s'</source>
+        <translation>לא ניתן לפענח את -maxuploadtarget: '%s'</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>לא ניתן לכתוב את מטמון המתארים</translation>
+    </message>
+    <message>
+        <source>Unconfirmed UTXOs are available, but spending them creates a chain of transactions that will be rejected by the mempool</source>
+        <translation>קיימים פלטי UTXO לא מאושרים, אך הוצאתם תיצור שרשרת עסקאות שתידחה על ידי ה־mempool</translation>
+    </message>
+    <message>
+        <source>Unexpected legacy entry in descriptor wallet found. Loading wallet %s
+
+The wallet might have been tampered with or created with malicious intent.
+</source>
+        <translation>נמצאה רשומה לא צפויה מהסוג הישן בארנק מתארים. טעינת הארנק %s
+
+ייתכן שהארנק שונה ללא רשות או נוצר בכוונת זדון.
+</translation>
+    </message>
+    <message>
+        <source>Unknown new rules activated (versionbit %i)</source>
+        <translation>הופעלו כללים חדשים לא מוכרים (versionbit %i)</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>סופקה אפשרות לא מוכרת "%s" ב־-test=&lt;option&gt;.</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>נמצא מתאר לא מוכר. טעינת הארנק %s
+
+ייתכן שהארנק נוצר בגרסה חדשה יותר.
+יש לנסות להפעיל את גרסת התוכנה העדכנית ביותר.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>רשת לא מוכרת ב־-proxy='%s': '%s'</translation>
+    </message>
+    <message>
+        <source>Unsupported category-specific logging level %1$s=%2$s. Expected %1$s=&lt;category&gt;:&lt;loglevel&gt;. Valid categories: %3$s. Valid loglevels: %4$s.</source>
+        <translation>רמת רישום לא נתמכת עבור קטגוריה מסוימת %1$s=%2$s. צפוי %1$s=&lt;category&gt;:&lt;loglevel&gt;. קטגוריות תקינות: %3$s. רמות רישום תקינות: %4$s.</translation>
+    </message>
+    <message>
+        <source>Unsupported chainstate database format found. Please restart with -reindex-chainstate. This will rebuild the chainstate database.</source>
+        <translation>נמצאה תבנית לא נתמכת של מסד נתוני מצב השרשרת. יש להפעיל מחדש עם -reindex-chainstate. פעולה זו תבנה מחדש את מסד נתוני מצב השרשרת.</translation>
+    </message>
+    <message>
+        <source>Unsupported global logging level %s=%s. Valid values: %s.</source>
+        <translation>רמת רישום כללית לא נתמכת %s=%s. ערכים תקינים: %s.</translation>
+    </message>
+    <message>
+        <source>Verifying blocks…</source>
+        <translation>אימות בלוקים…</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)…</source>
+        <translation>אימות ארנקים…</translation>
+    </message>
+    <message>
+        <source>Wallet file creation failed: %s</source>
+        <translation>יצירת קובץ הארנק נכשלה: %s</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>אזהרה: נמצאה שרשרת לא תקינה הארוכה ביותר מ־6 בלוקים מהשרשרת הטובה ביותר שלנו. הדבר עלול לנבוע מהשחתת מסד הנתונים או מאי־תאימות בכללי ההסכמה עם עמיתים.</translation>
+    </message>
+    <message>
+        <source>Witness data for blocks after height %d requires validation. Please restart with -reindex.</source>
+        <translation>נדרש אימות של נתוני העדות לבלוקים אחרי גובה %d. יש להפעיל מחדש עם -reindex.</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>נראה שהתאריך והשעה במחשב שלך סוטים מהרשת ביותר מ־%d דקות; הדבר עלול לגרום לכשל בהסכמה. לאחר אימות שעון המחשב, הודעה זו לא אמורה להופיע עוד בהפעלה מחדש של הצומת. ללא הפעלה מחדש, היא אמורה להיעלם אוטומטית לאחר חיבור למספר מספיק של עמיתים יוצאים חדשים, דבר שעלול לקחת זמן. ניתן לבדוק את השדה `timeoffset` בשיטות RPC `getpeerinfo` ו־`getnetworkinfo` לקבלת מידע נוסף.</translation>
+    </message>
+    <message>
+        <source>acceptstalefeeestimates is not supported on %s chain.</source>
+        <translation>acceptstalefeeestimates אינו נתמך בשרשרת %s.</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>ניתן להשתמש ב־whitebind רק לחיבורים נכנסים (הועבר "out")</translation>
     </message>
 </context>
 <context>
@@ -4032,6 +5878,122 @@ Root certificates version: %2</source>
     <message>
         <source>Optional: empty uses this wallet</source>
         <translation>רשות: שדה ריק משתמש בארנק זה</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>תהליכוני CPU:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>לא ניתן ליצור כתובת לתגמול. יש לבדוק שהארנק יכול ליצור כתובות לקבלה.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>שגיאה</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>מצב FAST משתף כ־2 GiB של זיכרון RandomX עם האימות. יותר תהליכונים צורכים יותר משאבי CPU וחשמל; יש להשאיר קיבולת לצומת. אתחול מערך הנתונים עשוי להימשך זמן מה.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>כריית בלוקים ברשת הבדיקה באמצעות CPU ו־RandomX. הכרייה כבויה עד להפעלתה. הכורה משותף לכל הארנקים בצומת זה וממשיך לפעול בעת מעבר בין לשוניות או סגירת ארנק.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>כרייה</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>כרייה / הכנת RandomX</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>כתובת חדשה מארנק זה</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>כתובת לתגמול ברשת זו</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>כתובת לתגמול:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>התחלת כרייה</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>בתהליך הפעלה</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>מצב: %1
+קצב גיבוב: %2 H/s
+גיבובים: %3 | בלוקים שהתקבלו: %4
+כתובת תגמול פעילה: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>עצירת כרייה</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>נעצר</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>בתהליך עצירה (המתנה לעבודה הנוכחית)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>המתנה להשלמת הסנכרון של הצומת</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>אזהרה: %1 תהליכוני כרייה חורגים מ־%2 יחידות ה־CPU הלוגיות שזוהו. הדבר עלול להפחית את קצב הגיבוב ולהאט את הצומת.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
+    </message>
+</context>
+<context>
+    <name>LoadWalletsActivity</name>
+    <message>
+        <source>Load Wallets</source>
+        <extracomment>Title of progress window which is displayed when wallets are being loaded.</extracomment>
+        <translation>טעינת ארנקים</translation>
+    </message>
+    <message>
+        <source>Loading wallets…</source>
+        <extracomment>Descriptive text of the load wallets progress window which indicates to the user that wallets are currently being loaded.</extracomment>
+        <translation>טעינת ארנקים…</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsModel</name>
+    <message>
+        <source>Could not read setting "%1", %2.</source>
+        <translation>לא ניתן לקרוא את ההגדרה "%1", %2.</translation>
+    </message>
+</context>
+<context>
+    <name>SplashScreen</name>
+    <message>
+        <source>(press q to shutdown and continue later)</source>
+        <translation>(יש ללחוץ על q לסגירה ולהמשך מאוחר יותר)</translation>
+    </message>
+    <message>
+        <source>press q to shutdown</source>
+        <translation>יש ללחוץ על q לסגירה</translation>
     </message>
 </context>
 </TS>

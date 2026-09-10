@@ -191,10 +191,13 @@ export macros, and C symbol prefix are named `libconnectcoinkernel`,
 `connectcoinkernel.h`, `CONNECTCOINKERNEL_*`, and `cck_*`. Do not reintroduce
 the inherited public `libbitcoinkernel`, `BITCOINKERNEL_*`, or `btck_*` names.
 
-Translation catalogs are also inherited. New ConnectCoin source strings fall
-back to English until a project-owned translation workflow is established; old
-translated Bitcoin product strings are not considered approved ConnectCoin
-branding.
+Translation catalogs retain their inherited filenames and Qt context names.
+ConnectCoin maintains their user-visible product terminology and translations
+through its [translation workflow](translation_process.md). The
+[coverage report](translation-coverage.md) distinguishes translated messages
+from runtime English fallbacks; AI-assisted updates are not native-speaker
+approval. Historical references, attribution, and protocol identifiers must not
+be changed as a side effect of translating product text.
 
 The inherited previous-release downloader and compatibility fixtures remain
 inactive reference material. Bitcoin Core release binaries are not valid

@@ -58,13 +58,13 @@
         <translation type="unfinished">選擇 &amp;h</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">這些是你要付款過去的 Bitcoin 位址。在付款之前，務必要檢查金額和收款位址是否正確。</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">這些是你要付款過去的 ConnectCoin 位址。在付款之前，務必要檢查金額和收款位址是否正確。</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">這些是您的比特幣接收地址。使用“接收”標籤中的“產生新的接收地址”按鈕產生新的地址。只能使用“傳統”類型的地址進行簽名。</translation>
+        <translation type="unfinished">這些是您的ConnectCoin接收地址。使用“接收”標籤中的“產生新的接收地址”按鈕產生新的地址。只能使用“傳統”類型的地址進行簽名。</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -163,8 +163,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">確認錢包加密</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">警告: 如果你將錢包加密後又忘記密碼，你就會&lt;b&gt;失去所有 Bitcoin 了&lt;/b&gt;！</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">警告: 如果你將錢包加密後又忘記密碼，你就會&lt;b&gt;失去所有 ConnectCoin 了&lt;/b&gt;！</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -191,8 +191,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">返回</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">請記得將錢包加密不能完全防止你的 Bitcoins 經被入侵電腦的惡意程式偷取。</translation>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished">請記得將錢包加密不能完全防止你的 ConnectCoins 經被入侵電腦的惡意程式偷取。</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -326,8 +326,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">金额</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">輸入一個 Bitcoin 位址 (例如 %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">輸入一個 ConnectCoin 位址 (例如 %1)</translation>
     </message>
     <message>
         <source>Unroutable</source>
@@ -448,6 +448,53 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>default wallet</source>
         <translation type="unfinished">預設錢包</translation>
     </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation type="unfinished">未知</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>隱私廣播</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -514,11 +561,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Proxy is &lt;b&gt;enabled&lt;/b&gt;: %1</source>
-        <translation type="unfinished">代理服务器已&lt;b&gt;启用&lt;/b&gt;: %1</translation>
+        <translation>代理伺服器已&lt;b&gt;啟用&lt;/b&gt;：%1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">付款至一個 Bitcoin 位址</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">付款至一個 ConnectCoin 位址</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -549,8 +596,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">修改密码(&amp;C)</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">用比特币地址关联的私钥为消息签名，以证明您拥有这个比特币地址</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">用ConnectCoin地址关联的私钥为消息签名，以证明您拥有这个ConnectCoin地址</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -593,8 +640,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">处理磁盘上的区块...</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">要求付款 (產生QR碼 bitcoin: URIs)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">要求付款 (產生QR碼 connectcoin: URIs)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -643,16 +690,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">已更新至最新版本</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">加载部分签名比特币交易（PSBT）</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">加载部分签名ConnectCoin交易（PSBT）</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">從剪貼簿載入PSBT</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">从剪贴板中加载部分签名比特币交易（PSBT）</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">从剪贴板中加载部分签名ConnectCoin交易（PSBT）</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -671,8 +718,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">收款地址(&amp;R)</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">打开bitcoin:开头的URI</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">打开connectcoin:开头的URI</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -709,8 +756,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">迁移一个钱包</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">显示%1帮助消息以获得可能包含Bitcoin命令行选项的列表</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">显示%1帮助消息以获得可能包含ConnectCoin命令行选项的列表</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -786,10 +833,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">显示(&amp;H)</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
-        <translation type="unfinished">
-            <numerusform> %n 与比特币网络接。</numerusform>
+        <translation>
+            <numerusform>與 ConnectCoin 網絡有 %n 個活躍連線。</numerusform>
         </translation>
     </message>
     <message>
@@ -889,6 +936,104 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>建立 pay-to-connect 懸賞</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>挖礦(&amp;M)</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>控制 CPU 挖礦</translation>
+    </message>
+    <message>
+        <source>&amp;Options…</source>
+        <translation type="unfinished">&amp;選項...</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>Disable network activity</source>
+        <extracomment>A context menu item.</extracomment>
+        <translation type="unfinished">關閉網路紀錄</translation>
+    </message>
+    <message>
+        <source>Last received block was generated %1 ago.</source>
+        <translation type="unfinished">最近收到的區塊是在 %1 以前生出來的。</translation>
+    </message>
+    <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation type="unfinished">顯示節點選項卡</translation>
+    </message>
+    <message>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">驗證訊息是用來確定訊息是用指定的ConnectCoin地址簽名的</translation>
+    </message>
+    <message>
+        <source>&amp;Encrypt Wallet…</source>
+        <translation> 加密钱包(&amp;E)</translation>
+    </message>
+    <message>
+        <source>&amp;Verify message…</source>
+        <translation>驗證訊息(&amp;V)…</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>所有檔案</translation>
+    </message>
+    <message>
+        <source>Close All Wallets…</source>
+        <translation> 关所有钱包...</translation>
+    </message>
+    <message>
+        <source>Connecting to peers…</source>
+        <translation>正在連線到對等節點…</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>匯出錯誤</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>匯出成功</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>匯出目前錢包的僅供觀察版本，以便在其他節點上還原。</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>匯出僅供觀察錢包</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>還原並遷移錢包檔案…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>儲存僅供觀察錢包匯出檔案</translation>
+    </message>
+    <message>
+        <source>Sign &amp;message…</source>
+        <translation>簽署訊息(&amp;M)…</translation>
+    </message>
+    <message>
+        <source>Synchronizing with network…</source>
+        <translation>正在與網路同步…</translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)…</source>
+        <translation>正在同步區塊標頭（%1%）…</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>錢包已匯出至 </translation>
     </message>
 </context>
 <context>
@@ -1012,7 +1157,31 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>change from %1 (%2)</source>
         <translation type="unfinished">找零來自於 %1 (%2)</translation>
     </message>
-    </context>
+        <message>
+        <source>(change)</source>
+        <translation type="unfinished">(找零)</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation type="unfinished">(un)全選</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation type="unfinished">找零金額:</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation type="unfinished">確認次數</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation type="unfinished">收款標記</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>每個輸入可能相差 +/- %1 connect。</translation>
+    </message>
+</context>
 <context>
     <name>CreateWalletActivity</name>
     <message>
@@ -1027,7 +1196,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Create wallet failed</source>
-        <translation type="unfinished">創建錢包失敗&lt;br&gt;</translation>
+        <translation>建立錢包失敗</translation>
     </message>
     <message>
         <source>Create wallet warning</source>
@@ -1110,6 +1279,34 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>Migration Successful</source>
         <translation type="unfinished">迁移成功</translation>
     </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>如果節點啟用了修剪，且錢包的建立時間早於已修剪的區塊高度，遷移程序可能在載入遷移後的錢包時失敗。</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>遷移後載入錢包</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>還原錢包會將備份檔案複製到錢包目錄，並按照標準錢包目錄結構存放。原始檔案不會被修改。
+
+遷移錢包會將還原的錢包轉換為一個或多個描述符錢包。之後需要建立新的錢包備份。
+如果此錢包包含僅供觀察的指令碼，將建立一個包含這些指令碼的新錢包。
+如果此錢包包含可求解但未被觀察的指令碼，將另外建立一個包含這些指令碼的新錢包。
+
+遷移程序會在遷移前備份錢包。備份檔案名稱為 &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak，可以在此錢包的目錄中找到。如果遷移不正確，可以透過「還原錢包」功能還原該備份。</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>遷移後未載入錢包。您可以從「檔案 &gt; 開啟錢包」選單開啟它。</translation>
+    </message>
 </context>
 <context>
     <name>OpenWalletActivity</name>
@@ -1126,7 +1323,12 @@ The migration process will create a backup of the wallet before migrating. This 
         <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
         <translation type="unfinished">開啟錢包</translation>
     </message>
-    </context>
+        <message>
+        <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
+        <translation>打开钱包&lt;b&gt;%1&lt;/b&gt;...</translation>
+    </message>
+</context>
 <context>
     <name>RestoreWalletActivity</name>
     <message>
@@ -1172,6 +1374,10 @@ The migration process will create a backup of the wallet before migrating. This 
     <message>
         <source>Are you sure you wish to close all wallets?</source>
         <translation type="unfinished">您確定要關閉所有錢包嗎？</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation type="unfinished">您確定要關閉錢包 &lt;i&gt;%1&lt;/i&gt; 嗎？</translation>
     </message>
 </context>
 <context>
@@ -1220,7 +1426,28 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>Create</source>
         <translation type="unfinished">創建</translation>
     </message>
-    </context>
+        <message>
+        <source>Compiled without external signing support (required for external signing)</source>
+        <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
+        <translation type="unfinished">軟體未編譯外接簽證功能所需的軟體庫(外接簽證必須有此功能)</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">加密錢包</translation>
+    </message>
+    <message>
+        <source>External signer</source>
+        <translation>外部簽署器</translation>
+    </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>建立空白錢包。空白錢包最初不含私鑰或指令碼。之後可以使用描述符匯入私鑰和位址。</translation>
+    </message>
+    <message>
+        <source>Use an external signing device such as a hardware wallet. Configure the external signer script in wallet preferences first.</source>
+        <translation>使用外部簽署裝置，例如硬體錢包。請先在錢包偏好設定中設定外部簽署器指令碼。</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1270,6 +1497,10 @@ The migration process will create a backup of the wallet before migrating. This 
     <message>
         <source>New key generation failed.</source>
         <translation type="unfinished">產生新的密鑰失敗了。</translation>
+    </message>
+    <message>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">輸入的地址 %1 並不是有效的ConnectCoin地址。</translation>
     </message>
 </context>
 <context>
@@ -1345,7 +1576,7 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message>
         <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2 GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
-        <translation type="unfinished">當你點擊「確認」，%1會開始下載，並從%3年最早的交易，處裡整個%4區塊鏈(大小:%2GB)</translation>
+        <translation>按下「確定」後，%1 會開始下載並處理完整的 %4 區塊鏈（%2 GB），從 %4 於 %3 年最初啟動時的最早交易開始。</translation>
     </message>
     <message>
         <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
@@ -1373,8 +1604,8 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message numerus="yes">
         <source>(%n GB needed for full chain)</source>
-        <translation type="unfinished">
-            <numerusform>（完整區塊鏈需要%n GB）</numerusform>
+        <translation>
+            <numerusform>（完整區塊鏈需要 %n GB）</numerusform>
         </translation>
     </message>
     <message>
@@ -1412,6 +1643,22 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>Error</source>
         <translation type="unfinished">錯誤</translation>
     </message>
+    <message>
+        <source>Limit block chain storage to</source>
+        <translation type="unfinished">將區塊鏈儲存限制為</translation>
+    </message>
+    <message>
+        <source> GB</source>
+        <translation> GB</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 將下載並儲存 ConnectCoin 區塊鏈的副本。</translation>
+    </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1420,8 +1667,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">窗体</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">最近的交易可能還看不到，因此錢包餘額可能不正確。在錢包軟體完成跟 bitcoin 網路的同步後，這裡的資訊就會正確。詳情請見下面。</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">最近的交易可能還看不到，因此錢包餘額可能不正確。在錢包軟體完成跟 ConnectCoin 網路的同步後，這裡的資訊就會正確。詳情請見下面。</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1471,17 +1718,29 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">不明。正在預先同步標頭(%1, %2%)...</translation>
     </message>
+    <message>
+        <source>Esc</source>
+        <translation type="unfinished">離開鍵</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>嘗試花費受尚未顯示的交易影響的 ConnectCoin 資金將不會被網路接受。</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">打开比特币URI</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">打开ConnectCoinURI</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">從剪貼簿粘貼錢包位址</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1524,8 +1783,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">与%1兼容的脚本文件路径（例如 C:\Downloads\hwi.exe 或者 /Users/you/Downloads/hwi.py ）。注意：恶意软件可以偷币！</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished">自动在路由器上打开比特币客户端端口。仅当您的路由器支持PCP或NAT-PMP并且已启用时才有效。外部端口可能是随机的。</translation>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation type="unfinished">自动在路由器上打开ConnectCoin客户端端口。仅当您的路由器支持PCP或NAT-PMP并且已启用时才有效。外部端口可能是随机的。</translation>
     </message>
     <message>
         <source>Map port using PCP or NA&amp;T-PMP</source>
@@ -1655,8 +1914,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">允许传入连接(&amp;G)</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">透過 SOCKS5 代理伺服器來連線到 Bitcoin 網路。</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">透過 SOCKS5 代理伺服器來連線到 ConnectCoin 網路。</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1720,7 +1979,7 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
-        <translation type="unfinished">选择显示及发送比特币时使用的最小单位。</translation>
+        <translation type="unfinished">选择显示及发送ConnectCoin时使用的最小单位。</translation>
     </message>
     <message>
         <source>Third-party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
@@ -1735,8 +1994,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">是否显示手动选币功能。</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">连接比特币网络时专门为Tor onion服务使用另一个 SOCKS5 代理。</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">连接ConnectCoin网络时专门为Tor onion服务使用另一个 SOCKS5 代理。</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1812,6 +2071,47 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">提供的代理服务器地址无效。</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>啟用彈出通知</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>顯示桌面彈出通知，包括收到及傳送的交易。預設停用。錯誤與確認對話框仍保持啟用。</translation>
+    </message>
+    <message>
+        <source>Compiled without external signing support (required for external signing)</source>
+        <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
+        <translation type="unfinished">軟體未編譯外接簽證功能所需的軟體庫(外接簽證必須有此功能)</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation type="unfinished">GB (十億位元組)</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>啟用修剪會大幅減少儲存交易所需的磁碟空間。所有區塊仍會經過完整驗證。啟用修剪期間，應在啟動時載入錢包並保持其處於作用中狀態，以便在舊區塊資料刪除前保持同步；同步進度落後於已修剪資料的錢包可能需要重建索引。還原此設定需要重新下載整個區塊鏈。</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>由 -popupnotifications 或 connectcoin.conf 中的 popupnotifications 設定。</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1827,8 +2127,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">窗体</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">顯示的資訊可能是過期的。跟 Bitcoin 網路的連線建立後，你的錢包會自動和網路同步，但是這個步驟還沒完成。</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">顯示的資訊可能是過期的。跟 ConnectCoin 網路的連線建立後，你的錢包會自動和網路同步，但是這個步驟還沒完成。</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1919,8 +2219,8 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
+        <translation>
+            <numerusform>已簽署 %n 個輸入，但仍需更多簽章。</numerusform>
         </translation>
     </message>
     <message>
@@ -1974,8 +2274,8 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
+        <translation>
+            <numerusform>交易包含 %n 個未簽署的輸入。</numerusform>
         </translation>
     </message>
     <message>
@@ -2006,6 +2306,14 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>Transaction status is unknown.</source>
         <translation type="unfinished">交易状态未知。</translation>
     </message>
+    <message>
+        <source>Transaction broadcast failed: %1</source>
+        <translation>交易廣播失敗： %1</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast successfully! Transaction ID: %1</source>
+        <translation>交易成功廣播！交易 ID： %1</translation>
+    </message>
 </context>
 <context>
     <name>PaymentServer</name>
@@ -2014,16 +2322,16 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">支付请求出错</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">无法启动 bitcoin: 协议的“一键支付”处理程序</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">无法启动 connectcoin: 协议的“一键支付”处理程序</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">URI 處理</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">字首為 bitcoin:// 不是有效的 URI，請改用 bitcoin: 開頭。</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">字首為 connectcoin:// 不是有效的 URI，請改用 connectcoin: 開頭。</translation>
     </message>
     <message>
         <source>Cannot process payment request because BIP70 is not supported.
@@ -2034,8 +2342,8 @@ If you are receiving this error you should request the merchant provide a BIP21 
 如果您看到了这个错误，您应该要求商家提供兼容BIP21的URI。</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">无法解析 URI 地址！可能是因为比特币地址无效，或是 URI 参数格式错误。</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">无法解析 URI 地址！可能是因为ConnectCoin地址无效，或是 URI 参数格式错误。</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -2098,6 +2406,11 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <source>Outbound</source>
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">傳出</translation>
+    </message>
+    <message>
+        <source>Ping</source>
+        <extracomment>Title of Peers Table column which indicates the current latency of the connection with the peer.</extracomment>
+        <translation type="unfinished">Ping  時間</translation>
     </message>
 </context>
 <context>
@@ -2183,8 +2496,8 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <translation type="unfinished">本地地址</translation>
     </message>
     <message>
-        <source>Network addresses that your Bitcoin node is currently using to communicate with other nodes.</source>
-        <translation type="unfinished">您的比特币节点正在使用网络地址与其他节点联系。</translation>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation type="unfinished">您的ConnectCoin节点正在使用网络地址与其他节点联系。</translation>
     </message>
     <message>
         <source>Block chain</source>
@@ -2618,6 +2931,55 @@ For more information on using this console, type %6.
         <source>Unknown</source>
         <translation type="unfinished">未知</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation type="unfinished">未知</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>隱私廣播：用於廣播隱私敏感交易的短期連線</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2634,8 +2996,8 @@ For more information on using this console, type %6.
         <translation type="unfinished">訊息(&amp;M):</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">可在支付请求上备注一条信息，在打开支付请求时可以看到。注意:该消息不是通过比特币网络传送。</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">可在支付请求上备注一条信息，在打开支付请求时可以看到。注意:该消息不是通过ConnectCoin网络传送。</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -2819,6 +3181,10 @@ For more information on using this console, type %6.
         <source>Requested</source>
         <translation type="unfinished">请求金额</translation>
     </message>
+    <message>
+        <source>Date</source>
+        <translation type="unfinished">日期</translation>
+    </message>
 </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -2927,8 +3293,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
 注意：由於手續費是按每字節計算的，對於虛擬大小為500字節（半千字節）的交易，手續費率為「每千字節100聰」，最終將只收取50聰的手續費。</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
-        <translation type="unfinished">當交易量小於可用區塊空間時，礦工和節點可能會執行最低手續費率限制。 以這個最低費率來支付手續費也是可以的，但請注意，一旦交易需求超出比特幣網路能處理的限度，你的交易可能永遠無法確認。</translation>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation type="unfinished">當交易量小於可用區塊空間時，礦工和節點可能會執行最低手續費率限制。 以這個最低費率來支付手續費也是可以的，但請注意，一旦交易需求超出ConnectCoin網路能處理的限度，你的交易可能永遠無法確認。</translation>
     </message>
     <message>
         <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
@@ -3013,8 +3379,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">创建未签名交易(&amp;E)</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation type="unfinished">创建一个“部分签名比特币交易”（PSBT），以用于诸如离线%1钱包，或是兼容PSBT的硬件钱包这类用途。</translation>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation type="unfinished">创建一个“部分签名ConnectCoin交易”（PSBT），以用于诸如离线%1钱包，或是兼容PSBT的硬件钱包这类用途。</translation>
     </message>
     <message>
         <source>%1 to %2</source>
@@ -3051,9 +3417,9 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">你可以之後再提高手續費(有 BIP-125 手續費追加的標記)</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
-        <translation type="unfinished">請檢查您的交易提案。這將產生部分簽名的比特幣交易（PSBT），您可以儲存或複製該交易，然後使用簽名。離線%1錢包或與PSBT相容的硬體錢包。</translation>
+        <translation type="unfinished">請檢查您的交易提案。這將產生部分簽名的ConnectCoin交易（PSBT），您可以儲存或複製該交易，然後使用簽名。離線%1錢包或與PSBT相容的硬體錢包。</translation>
     </message>
     <message>
         <source>%1 from wallet '%2'</source>
@@ -3065,9 +3431,9 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">要创建这笔交易吗？</translation>
     </message>
     <message>
-        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
-        <translation type="unfinished">请务必仔细检查您的交易。你可以创建并发送这笔交易；也可以创建一个“部分签名比特币交易(PSBT)”，它可以被保存下来或被复制出去，然后就可以对它进行签名，比如用离线%1钱包，或是用兼容PSBT的硬件钱包。</translation>
+        <translation type="unfinished">请务必仔细检查您的交易。你可以创建并发送这笔交易；也可以创建一个“部分签名ConnectCoin交易(PSBT)”，它可以被保存下来或被复制出去，然后就可以对它进行签名，比如用离线%1钱包，或是用兼容PSBT的硬件钱包。</translation>
     </message>
     <message>
         <source>Please, review your transaction.</source>
@@ -3135,8 +3501,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">警告: 比特币地址无效</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">警告: ConnectCoin地址无效</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -3148,11 +3514,59 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     </message>
     <message>
         <source>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</source>
-        <translation type="unfinished">你选择的找零地址未被包含在本钱包中，你钱包中的部分或全部金额将被发送至该地址。你确定要这样做吗？</translation>
+        <translation>您為找零選擇的地址不屬於此錢包。錢包中的部分或全部資金可能會被發送到該地址。您確定嗎？</translation>
     </message>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(無標記)</translation>
+    </message>
+    <message>
+        <source>%1 to '%2'</source>
+        <translation type="unfinished">%1 到 '%2'</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation type="unfinished">找零金額:</translation>
+    </message>
+    <message>
+        <source>External signer not found</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation type="unfinished">未找到外部簽名器</translation>
+    </message>
+    <message>
+        <source>PSBT saved</source>
+        <extracomment>Popup message when a PSBT has been saved to a file</extracomment>
+        <translation type="unfinished">PSBT已儲存</translation>
+    </message>
+    <message>
+        <source>To review recipient list click "Show Details…"</source>
+        <translation type="unfinished">要查看收件人列表，請單擊"顯示詳細訊息..."</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>指定按交易虛擬大小每 kB（1,000 位元組）計算的自訂手續費。
+
+注意：  手續費按位元組計算，因此，若手續費率為「每 kvB 100 connects」，而交易大小為 500 虛擬位元組（1 kvB 的一半），最終手續費只會是 50 connects。</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>正在使用目前最低手續費。未估算確認時間。</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>您可以稍後提高手續費。</translation>
     </message>
 </context>
 <context>
@@ -3174,8 +3588,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">选择以前用过的地址</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">將支付發送到的比特幣地址給</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">將支付發送到的ConnectCoin地址給</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -3210,8 +3624,20 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">請輸入這個地址的標籤，來把它加進去已使用過地址清單。</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">附加在 Bitcoin 付款協議的資源識別碼(URI)中的訊息，會和交易內容一起存起來，給你自己做參考。注意: 這個訊息不會送到 Bitcoin 網路上。</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">附加在 ConnectCoin 付款協議的資源識別碼(URI)中的訊息，會和交易內容一起存起來，給你自己做參考。注意: 這個訊息不會送到 ConnectCoin 網路上。</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>手續費將從傳送金額中扣除。收款人收到的 ConnectCoin 將少於您在金額欄中輸入的數額。如果選擇了多個收款人，手續費將平均分攤。</translation>
     </message>
 </context>
 <context>
@@ -3236,7 +3662,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">簽署訊息(&amp;S)</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
+        <source>The ConnectCoin address to sign the message with</source>
         <translation type="unfinished">用来对消息签名的地址</translation>
     </message>
     <message>
@@ -3260,7 +3686,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">复制当前签名至剪贴板</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
         <translation type="unfinished">签名消息，以证明这个地址属于您</translation>
     </message>
     <message>
@@ -3281,10 +3707,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     </message>
     <message>
         <source>Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation type="unfinished">请在下面输入接收者地址、消息（确保换行符、空格符、制表符等完全相同）和签名以验证消息。请仔细核对签名信息，以提防中间人攻击。请注意，这只是证明接收方可以用这个地址签名，它不能证明任何交易的发送人身份！</translation>
+        <translation>在下方輸入接收者地址、訊息（請確保換行、空格、定位字元等都原樣複製）和簽名，以驗證訊息。不要把簽名理解為對已簽名訊息本身以外內容的證明，以免遭受中間人攻擊。請注意，這只能證明簽名方能夠透過該地址接收資金，不能證明其為任何交易的發送者！</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
+        <source>The ConnectCoin address the message was signed with</source>
         <translation type="unfinished">用来签名消息的地址</translation>
     </message>
     <message>
@@ -3296,8 +3722,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">对消息进行签署得到的签名数据</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">驗證這個訊息來確定是用指定的比特幣地址簽名的</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">驗證這個訊息來確定是用指定的ConnectCoin地址簽名的</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3358,6 +3784,22 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">消息验证成功。</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>輸入的位址不對應傳統（P2PKH）金鑰。此版本的 %1 不支援使用 SegWit 或其他非 P2PKH 位址類型簽署訊息。請檢查位址後重試。</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>您可以使用傳統（P2PKH）位址簽署訊息或協議，以證明您能夠接收傳送到這些位址的 ConnectCoin 資金。請勿簽署含糊或隨機的內容，因為網路釣魚攻擊可能誘騙您簽署可被用於冒充您身分的聲明。只簽署內容充分明確且您同意的聲明。</translation>
     </message>
 </context>
 <context>
@@ -3514,7 +3956,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     </message>
     <message>
         <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation type="unfinished">新挖出的比特币在可以使用前必须经过 %1 个区块确认的成熟过程。当您挖出此区块后，它将被广播到网络中以加入区块链。如果它未成功进入区块链，其状态将变更为“不接受”并且不可使用。这可能偶尔会发生，在另一个节点比你早几秒钟成功挖出一个区块时就会这样。</translation>
+        <translation type="unfinished">新挖出的ConnectCoin在可以使用前必须经过 %1 个区块确认的成熟过程。当您挖出此区块后，它将被广播到网络中以加入区块链。如果它未成功进入区块链，其状态将变更为“不接受”并且不可使用。这可能偶尔会发生，在另一个节点比你早几秒钟成功挖出一个区块时就会这样。</translation>
     </message>
     <message>
         <source>Debug information</source>
@@ -3646,7 +4088,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
         <translation>用戶定義的交易用途，或 P2C 網域。</translation>
     </message>
-    </context>
+        <message>
+        <source>Amount removed from or added to balance.</source>
+        <translation type="unfinished">要減掉或加進餘額的金額。</translation>
+    </message>
+</context>
 <context>
     <name>TransactionView</name>
     <message>
@@ -3906,6 +4352,14 @@ Go to File &gt; Open Wallet to load a wallet.
         <source>Can't display address</source>
         <translation type="unfinished">無法顯示錢包位址</translation>
     </message>
+    <message>
+        <source>Fee-bump PSBT copied to clipboard</source>
+        <translation>提高手續費的 PSBT 已複製到剪貼簿</translation>
+    </message>
+    <message>
+        <source>Signer error</source>
+        <translation>簽署器錯誤</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -3992,8 +4446,8 @@ Go to File &gt; Open Wallet to load a wallet.
 %s。</translation>
     </message>
     <message>
-        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
-        <translation type="unfinished">错误: 转储文件版本不被支持。这个版本的 bitcoin-wallet 只支持版本为 1 的转储文件。得到的转储文件版本却是%s</translation>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">错误: 转储文件版本不被支持。这个版本的 connectcoin-wallet 只支持版本为 1 的转储文件。得到的转储文件版本却是%s</translation>
     </message>
     <message>
         <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
@@ -4667,7 +5121,7 @@ Unable to restore backup of wallet.</source>
     </message>
     <message>
         <source>Unable to parse -maxuploadtarget: '%s'</source>
-        <translation type="unfinished">無法解析-最大上傳目標:'%s'</translation>
+        <translation>無法解析 -maxuploadtarget：'%s'</translation>
     </message>
     <message>
         <source>Unknown -blockfilterindex value %s.</source>
@@ -4784,6 +5238,342 @@ Please try running the latest software version.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">无法写入设置文件</translation>
+    </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>找零目的地必須是類型1的P2PK（bech32m）目的地</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin僅支援類型1的P2PK（bech32m）地址</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin僅支援類型1的P2PK（bech32m）找零地址</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>ConnectCoin交易需要有效的類型1目的地或類型2的PAY_TO_CONNECT輸出</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>ConnectCoin的類型1輸出僅支援SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>輸入不是使用SIGHASH_DEFAULT的完整類型1花費</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>輸入需要完整的P2C證明見證資料</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>主網尚未啟動：未定義創世區塊。請使用-testnet4進行公開測試，或使用-regtest進行本機測試。</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>此開發版本尚未設定由項目擁有的公開原始碼URL。</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>可用的檔案描述符不足。請嘗試減小-rpcmaxconnections，或使用預設值%d</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>如果您覺得%s有用，歡迎貢獻。</translation>
+    </message>
+    <message>
+        <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
+        <translation type="unfinished">在任意的通訊埠聽候失敗。如果你希望這樣的話，可以設定 -listen=0.</translation>
+    </message>
+    <message>
+        <source>Failed to rescan the wallet during initialization</source>
+        <translation type="unfinished">初始化時重新掃描錢包失敗了</translation>
+    </message>
+    <message>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation type="unfinished">創世區塊不正確或找不到。資料目錄錯了嗎？</translation>
+    </message>
+    <message>
+        <source>Initialization sanity check failed. %s is shutting down.</source>
+        <translation type="unfinished">初始化時的基本檢查失敗了。%s 就要關閉了。</translation>
+    </message>
+    <message>
+        <source>Invalid netmask specified in -whitelist: '%s'</source>
+        <translation type="unfinished">指定在 -whitelist 的網段無效: '%s'</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses…</source>
+        <translation type="unfinished">載入P2P地址中...</translation>
+    </message>
+    <message>
+        <source>Need to specify a port with -whitebind: '%s'</source>
+        <translation type="unfinished">指定 -whitebind 時必須包含通訊埠: '%s'</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful. Visit %s for further information about the software.</source>
+        <translation type="unfinished">如果你覺得 %s 有用，可以幫助我們。關於這個軟體的更多資訊請見 %s。</translation>
+    </message>
+    <message>
+        <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
+        <translation type="unfinished">設定的修剪值小於最小需求的 %d 百萬位元組(MiB)。請指定大一點的數字。</translation>
+    </message>
+    <message>
+        <source>Rescanning…</source>
+        <translation type="unfinished">重新掃描中...</translation>
+    </message>
+    <message>
+        <source>Section [%s] is not recognized.</source>
+        <translation type="unfinished">無法辨識配置章節 [%s]。</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is not a directory</source>
+        <translation type="unfinished">以 -walletdir 指定的路徑 "%s" 不是個目錄</translation>
+    </message>
+    <message>
+        <source>The wallet will avoid paying less than the minimum relay fee.</source>
+        <translation type="unfinished">錢包軟體會付多於最小轉發費用的手續費。</translation>
+    </message>
+    <message>
+        <source>Transaction amount too small</source>
+        <translation type="unfinished">交易金額太小</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer (bind returned error %s)</source>
+        <translation type="unfinished">無法和這台電腦上的 %s 繫結(回傳錯誤 %s)</translation>
+    </message>
+    <message>
+        <source>Unable to start HTTP server. See debug log for details.</source>
+        <translation type="unfinished">無法啟動 HTTP 伺服器。詳情請看除錯紀錄。</translation>
+    </message>
+    <message>
+        <source>Unknown change type '%s'</source>
+        <translation type="unfinished">不明的找零位址類型 '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown new rules activated (versionbit %i)</source>
+        <translation type="unfinished">未知的交易已經有新規則激活 (versionbit %i)</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+請考慮修改 %s (%s) 或 %s (%s)。</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf 已棄用，將在下個版本中完全移除。</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>%zu MiB 的 dbcache 對於只有 %zu MiB 系統記憶體的裝置可能過大。</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>發生致命內部錯誤，詳情請查看 %s：%s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>找不到指定區塊雜湊 '%s' 對應的 Assumeutxo 資料。</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>發現損壞的區塊，可能表示硬體發生故障。</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>無法讀取內建 asmap 資料</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>位址 %s 存在重複的繫結設定。請檢查 -bind、-bind=...=onion 和 -whitebind 設定。</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>橢圓曲線密碼學自我檢查失敗。%s 正在關閉。</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>內建 asmap 資料無法使用</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>建立 %s 時發生錯誤：無法寫入版本中繼資料。</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>錯誤：無法將交易 %s 加入僅供觀察錢包</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>錯誤：無法建立檔案 '%s'</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>錯誤：匯出目標 '%s' 已存在</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>錯誤：匯出目標不能為空</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>錯誤：建立新的僅供觀察錢包失敗。%s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>錯誤：無法寫入匯出的錢包</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>錯誤：錢包沒有可匯出的描述符</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>錯誤：無法提交用於匯出僅供觀察錢包的資料庫交易</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>錯誤：無法為新的僅供觀察錢包 %s 執行資料庫交易</translation>
+    </message>
+    <message>
+        <source>Failed to disconnect block.</source>
+        <translation>斷開區塊失敗。</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>移除快照鏈狀態目錄（%s）失敗。請在重新啟動前手動移除它。
+</translation>
+    </message>
+    <message>
+        <source>Failed to write undo data.</source>
+        <translation>寫入復原資料失敗。</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>手續費率（%s）低於設定的最低手續費率（%s）。</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>將區塊檔案寫入磁碟失敗。這很可能是 I/O 錯誤造成的。</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>將復原檔案寫入磁碟失敗。這很可能是 I/O 錯誤造成的。</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is less than transaction weight without inputs</source>
+        <translation>最大交易權重小於不含輸入時的交易權重</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is too low, can not accommodate change output</source>
+        <translation>最大交易權重過低，無法容納找零輸出</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>最大交易權重必須介於 %d 和 %d 之間</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>僅設定了方向，未設定權限：'%s'</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>設定了 '-limitancestorsize' 選項，但祖先大小限制已被交易群集大小限制取代（參見 -limitclustersize）。此選項不再生效。</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>設定了 '-limitdescendantsize' 選項，但後代大小限制已被交易群集大小限制取代（參見 -limitclustersize）。此選項不再生效。</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>已要求對自己的交易進行隱私廣播（-privatebroadcast），但停用了 -proxyrandomize。隱私廣播連線的 Tor 線路可能被關聯到其他 Tor 連線。為了最大程度保護隱私，請設定 -proxyrandomize=1。</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>已要求對自己的交易進行隱私廣播（-privatebroadcast），但同時也設定了 -connect。兩者不相容，因為隱私廣播需要與隨機選取的 Tor 或 I2P 對等節點建立新連線。請考慮改用 -maxconnections=0 -addnode=...</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>已要求對自己的交易進行隱私廣播（-privatebroadcast），但 Tor 和 I2P 網路均無法連線</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>修剪模式與 -txospenderindex 不相容。</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>將 '%s' 重新命名為 '%s' 失敗。無法清理背景鏈狀態的 leveldb 目錄。</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unexpected application id. Expected %u, got %u</source>
+        <translation>SQLiteDatabase：非預期的應用程式識別碼。預期為 %u，實際為 %u</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>簽署器未回傳位址</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>簽署器回傳了非預期的位址 %s</translation>
+    </message>
+    <message>
+        <source>Signer returned error: %s</source>
+        <translation>簽署器傳回錯誤：%s</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>寫入時發生系統錯誤：%s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>載入外部區塊檔案時發生系統錯誤：%s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>將區塊儲存到磁碟時發生系統錯誤：%s</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>-testactivationheight 選項不能用於主網。</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>-vbparams 選項不能用於主網。</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>預選輸入與錢包自動選取的輸入合在一起超過了交易的最大權重。請嘗試傳送更小的金額，或手動合併錢包中的 UTXO</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>加上 %s 的交易手續費後，總額超過了您的餘額。</translation>
+    </message>
+    <message>
+        <source>There is no ScriptPubKeyManager for this address</source>
+        <translation>此位址沒有對應的 ScriptPubKeyManager</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>無法寫入描述符快取</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>-test=&lt;option&gt; 中提供了無法辨識的選項 "%s"。</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>警告：發現一條比目前最佳鏈長超過 6 個區塊的無效鏈。這可能是資料庫損壞或與對等節點的共識規則不相容造成的。</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>您電腦的日期和時間似乎與網路相差超過 %d 分鐘，這可能導致共識失敗。確認電腦時鐘無誤後，重新啟動節點應能使此訊息消失。如果不重新啟動，連線到足夠多的新對外對等節點後，此訊息也應自動停止顯示，但可能需要一些時間。您可以檢查 getpeerinfo 和 getnetworkinfo RPC 方法中的 timeoffset 欄位以取得更多資訊。</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>whitebind 只能用於傳入連線（傳入了 "out"）</translation>
     </message>
 </context>
 <context>
@@ -5133,6 +5923,97 @@ Root certificates version: %2</source>
     <message>
         <source>Optional: empty uses this wallet</source>
         <translation>選填：留空則使用此錢包</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPU 執行緒數目：</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>無法產生獎勵地址。請檢查錢包能否產生收款地址。</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>錯誤</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>FAST 模式與驗證程序共用約 2 GiB 的 RandomX 記憶體。更多執行緒會佔用更多 CPU 並消耗更多電力；請為節點預留資源。初始化資料集可能需要一些時間。</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>使用 RandomX，透過您的 CPU 挖掘測試網絡區塊。挖礦預設關閉，直到您主動啟動。此節點上的所有錢包共用同一挖礦程式，切換分頁或關閉錢包後仍會繼續執行。</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>挖礦</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>正在挖礦 / 準備 RandomX</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>從此錢包產生新地址</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>此網絡的獎勵地址</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>獎勵地址：</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>開始挖礦</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>正在啟動</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>狀態：%1
+雜湊率：%2 H/s
+雜湊數目：%3 | 已接受的區塊：%4
+目前獎勵地址：%5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>停止挖礦</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>已停止</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>正在停止（等待目前工作完成）</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>正在等待節點同步完成</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>警告：%1 個挖礦執行緒超過偵測到的 %2 個邏輯 CPU。這可能降低雜湊率並使節點變慢。</translation>
+    </message>
+</context>
+<context>
+    <name>LoadWalletsActivity</name>
+    <message>
+        <source>Load Wallets</source>
+        <extracomment>Title of progress window which is displayed when wallets are being loaded.</extracomment>
+        <translation> 加载钱包</translation>
+    </message>
+    <message>
+        <source>Loading wallets…</source>
+        <extracomment>Descriptive text of the load wallets progress window which indicates to the user that wallets are currently being loaded.</extracomment>
+        <translation> 載入錢包中...</translation>
     </message>
 </context>
 </TS>

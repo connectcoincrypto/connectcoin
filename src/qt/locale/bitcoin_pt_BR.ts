@@ -58,13 +58,13 @@
         <translation type="unfinished">Escol&amp;her</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Estes são os seus endereços Bitcoin para enviar pagamentos. Sempre confira o valor e o endereço de destino antes de enviar bitcoins.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">Estes são os seus endereços ConnectCoin para enviar pagamentos. Sempre confira o valor e o endereço de destino antes de enviar ConnectCoins.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Estes são seus endereços Bitcoin para receber pagamentos. Use o botão 'Criar novo endereço de recebimento' na aba receber para criar novos endereços.
+        <translation type="unfinished">Estes são seus endereços ConnectCoin para receber pagamentos. Use o botão 'Criar novo endereço de recebimento' na aba receber para criar novos endereços.
 Só é possível assinar com endereços do tipo 'legado'.</translation>
     </message>
     <message>
@@ -188,8 +188,8 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
         <translation type="unfinished">Voltar</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">Lembre-se que sua carteira criptografada não poderá proteger totalmente os seus bitcoins de serem roubados por softwares maldosos que infectem seu computador.</translation>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
+        <translation>Lembre-se de que criptografar a carteira não protege totalmente seus ConnectCoins contra roubo por programas maliciosos que infectem o computador.</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -247,6 +247,14 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
         <source>Warning: The Caps Lock key is on!</source>
         <translation type="unfinished">Aviso: tecla Caps Lock ativa!</translation>
     </message>
+    <message>
+        <source>Continue</source>
+        <translation>Continuar</translation>
+    </message>
+    <message>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation>Aviso: se criptografar a carteira e perder a frase-senha, &lt;b&gt;PERDERÁ TODOS OS SEUS FUNDOS CONNECTCOIN&lt;/b&gt;!</translation>
+    </message>
 </context>
 <context>
     <name>BanTableModel</name>
@@ -276,6 +284,10 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
     <message>
         <source>An internal error occurred. %1 will attempt to continue safely. This is an unexpected bug which can be reported as described below.</source>
         <translation type="unfinished">Ocorreu um erro interno. %1 vai tentar prosseguir com segurança. Este é um erro inesperado que você pode reportar como descrito abaixo.</translation>
+    </message>
+    <message>
+        <source>Runaway exception</source>
+        <translation>Exceção não tratada</translation>
     </message>
 </context>
 <context>
@@ -319,8 +331,8 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
         <translation type="unfinished">Quantia</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Informe um endereço Bitcoin (ex: %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">Informe um endereço ConnectCoin (ex: %1)</translation>
     </message>
     <message>
         <source>Ctrl+W</source>
@@ -394,6 +406,105 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
     <message>
         <source>default wallet</source>
         <translation type="unfinished">carteira padrão</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <extracomment>Short-lived peer connection type that solicits known addresses from a peer.</extracomment>
+        <translation>Busca de endereços</translation>
+    </message>
+    <message>
+        <source>Block Relay</source>
+        <extracomment>Peer connection type that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>Retransmissão de blocos</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <extracomment>Short-lived peer connection type that tests the aliveness of known addresses.</extracomment>
+        <translation>Sondagem</translation>
+    </message>
+    <message>
+        <source>Full Relay</source>
+        <extracomment>Peer connection type that relays all network information.</extracomment>
+        <translation>Retransmissão completa</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <extracomment>Peer connection type established manually through one of several methods.</extracomment>
+        <translation>Manual</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>Unroutable</source>
+        <translation>Não roteável</translation>
     </message>
 </context>
 <context>
@@ -472,8 +583,8 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
         <translation type="unfinished">Proxy &lt;b&gt;ativado&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Enviar moedas para um endereço Bitcoin</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">Enviar moedas para um endereço ConnectCoin</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -516,16 +627,16 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
         <translation type="unfinished">Assinar &amp;mensagem</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Assine mensagens com seus endereços Bitcoin para provar que você é dono delas</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation>Assinar mensagens com seus endereços ConnectCoin para provar que esses endereços pertencem a você</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">&amp;Verificar mensagem</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">Verificar mensagens para se assegurar que elas foram assinadas pelo dono de Endereços Bitcoin específicos</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">Verificar mensagens para se assegurar que elas foram assinadas pelo dono de Endereços ConnectCoin específicos</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -588,8 +699,8 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
         <translation type="unfinished">Conectando...</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Solicitações de pagamentos (gera códigos QR e bitcoin: URIs)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation>Solicitar pagamentos (gera códigos QR e URIs connectcoin:)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -643,16 +754,16 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
         <translation type="unfinished">Atualizado</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">Carregar Transação de Bitcoin Parcialmente Assinada</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">Carregar Transação de ConnectCoin Parcialmente Assinada</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">&amp;Carregar PSBT da área de transferência...</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">Carregar Transação de Bitcoin Parcialmente Assinada da área de transferência</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">Carregar Transação de ConnectCoin Parcialmente Assinada da área de transferência</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -671,8 +782,8 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
         <translation type="unfinished">Endereço de &amp;recebimento</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">Abrir um bitcoin: URI</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation>Abrir um URI connectcoin:</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -709,8 +820,8 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
         <translation type="unfinished">Migrar uma carteira</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Mostrar a mensagem de ajuda do %1 para obter uma lista com possíveis opções de linha de comando Bitcoin</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">Mostrar a mensagem de ajuda do %1 para obter uma lista com possíveis opções de linha de comando ConnectCoin</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -896,6 +1007,55 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
         <source>Create pay-to-connect bounties</source>
         <translation>Criar recompensas pay-to-connect</translation>
     </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to the ConnectCoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation>
+            <numerusform>%n conexão ativa com a rede ConnectCoin.</numerusform>
+            <numerusform>%n conexões ativas com a rede ConnectCoin.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Todos os arquivos</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Erro de exportação</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>Exportação concluída</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>Exportar uma versão somente de observação da carteira atual que pode ser restaurada em outro nó.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>Exportar carteira somente de observação</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>Salvar exportação da carteira somente de observação</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>A carteira foi exportada para </translation>
+    </message>
+    <message>
+        <source>Wallet Data</source>
+        <extracomment>Name of the wallet data file format.</extracomment>
+        <translation>Dados da carteira</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -1026,6 +1186,22 @@ Só é possível assinar com endereços do tipo 'legado'.</translation>
         <source>(change)</source>
         <translation type="unfinished">(troco)</translation>
     </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation>&amp;Desbloquear saídas não gastas</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bytes:</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>Pode variar +/- %1 connect(s) por entrada.</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation>B&amp;loquear saídas não gastas</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1152,6 +1328,18 @@ O processo de migração criará um backup da carteira antes da migração. Este
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">Êxito na migração</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Se o nó usar poda e a carteira tiver sido criada antes da altura dos blocos já podados, o processo de migração poderá falhar ao tentar carregar a carteira migrada.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Carregar carteira após a migração</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>A carteira não foi carregada após a migração. Ela pode ser aberta pelo menu "Arquivo &gt; Abrir carteira".</translation>
     </message>
 </context>
 <context>
@@ -1280,7 +1468,20 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <source>Create</source>
         <translation type="unfinished">Criar</translation>
     </message>
-    </context>
+        <message>
+        <source>Compiled without external signing support (required for external signing)</source>
+        <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
+        <translation>Compilado sem suporte à assinatura externa (necessário para assinar externamente)</translation>
+    </message>
+    <message>
+        <source>External signer</source>
+        <translation>Assinador externo</translation>
+    </message>
+    <message>
+        <source>Use an external signing device such as a hardware wallet. Configure the external signer script in wallet preferences first.</source>
+        <translation>Use um dispositivo externo de assinatura, como uma carteira de hardware. Configure primeiro o script de assinatura externa nas preferências da carteira.</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1316,7 +1517,7 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <translation type="unfinished">Editar endereço de envio</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
         <translation type="unfinished">O endereço digitado "%1" não é um endereço válido.</translation>
     </message>
     <message>
@@ -1488,6 +1689,14 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <source>Error</source>
         <translation type="unfinished">Erro</translation>
     </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 irá baixar e armazenar uma cópia da cadeia de blocos da ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1547,6 +1756,18 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">Desconhecido. Pré-Sincronizando Cabeçalhos (%1, %2%)...</translation>
     </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>A rede não aceitará tentativas de gastar fundos ConnectCoin afetados por transações que ainda não foram exibidas.</translation>
+    </message>
+    <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation>As transações recentes podem ainda não estar visíveis e, portanto, o saldo da carteira pode estar incorreto. Estas informações estarão corretas assim que a carteira terminar de sincronizar com a rede ConnectCoin, conforme detalhado abaixo.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
@@ -1558,6 +1779,14 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">Colar o endereço da área de transferência</translation>
+    </message>
+    <message>
+        <source>Open ConnectCoin URI</source>
+        <translation>Abrir URI da ConnectCoin</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1605,11 +1834,11 @@ O processo de migração criará um backup da carteira antes da migração. Este
     </message>
     <message>
         <source>Full path to a %1 compatible script (e.g. C:\Downloads\hwi.exe or /Users/you/Downloads/hwi.py). Beware: malware can steal your coins!</source>
-        <translation type="unfinished">Caminho completo para %1 um script compatível com Bitcoin Core (exemplo: C: \ Downloads \ hwi.exe ou /Users/you/Downloads/hwi.py). Cuidado: um malware pode roubar suas moedas!</translation>
+        <translation>Caminho completo para um script compatível com %1 (por exemplo, C:\Downloads\hwi.exe ou /Users/you/Downloads/hwi.py). Atenção: programas maliciosos podem roubar suas moedas!</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished">Abrir automaticamente a porta do cliente Bitcoin no router. Esta função apenas funciona se o router suportar PCP ou NAT-PMP e essas opções estiverem ativadas. A porta externa pode ser atribuída aleatoriamente.</translation>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation type="unfinished">Abrir automaticamente a porta do cliente ConnectCoin no router. Esta função apenas funciona se o router suportar PCP ou NAT-PMP e essas opções estiverem ativadas. A porta externa pode ser atribuída aleatoriamente.</translation>
     </message>
     <message>
         <source>Map port using PCP or NA&amp;T-PMP</source>
@@ -1690,7 +1919,7 @@ O processo de migração criará um backup da carteira antes da migração. Este
     <message>
         <source>Whether to set subtract fee from amount as default or not.</source>
         <extracomment>Tooltip text for Options window setting that sets subtracting the fee from a sending amount as default.</extracomment>
-        <translation type="unfinished">Mostra a quantia com a taxa já subtraída.</translation>
+        <translation>Define se a opção de subtrair a taxa da quantia será ativada por padrão.</translation>
     </message>
     <message>
         <source>Subtract &amp;fee from amount by default</source>
@@ -1732,8 +1961,8 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <translation type="unfinished">Permitir conexões de entrada</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Conectar na rede Bitcoin através de um proxy SOCKS5.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">Conectar na rede ConnectCoin através de um proxy SOCKS5.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1804,8 +2033,8 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <translation type="unfinished">Mostrar ou não opções de controle da moeda.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Conectar à rede Bitcoin através de um proxy SOCKS5 separado para serviços Tor onion.</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">Conectar à rede ConnectCoin através de um proxy SOCKS5 separado para serviços Tor onion.</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1873,6 +2102,59 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">O endereço proxy fornecido é inválido.</translation>
     </message>
+    <message>
+        <source>&amp;External signer script path</source>
+        <translation>Caminho do script de assinatura &amp;externa</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation>&amp;OK</translation>
+    </message>
+    <message>
+        <source>&amp;Show tray icon</source>
+        <translation>&amp;Mostrar ícone na bandeja</translation>
+    </message>
+    <message>
+        <source>Compiled without external signing support (required for external signing)</source>
+        <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
+        <translation>Compilado sem suporte à assinatura externa (necessário para assinar externamente)</translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation>Continuar</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Ativar a poda reduz significativamente o espaço em disco necessário para armazenar transações. Todos os blocos continuam sendo totalmente validados. As carteiras devem ser carregadas na inicialização e mantidas ativas enquanto a poda estiver ativada, para que permaneçam sincronizadas antes da exclusão dos dados de blocos antigos; carteiras cuja sincronização fique atrás dos dados podados podem exigir uma reindexação. Reverter esta configuração exige baixar novamente toda a cadeia de blocos.</translation>
+    </message>
+    <message>
+        <source>External Signer (e.g. hardware wallet)</source>
+        <translation>Assinador externo (por exemplo, uma carteira de hardware)</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Show the icon in the system tray.</source>
+        <translation>Mostrar o ícone na bandeja do sistema.</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1888,8 +2170,8 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <translation type="unfinished">Formulário</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">A informação mostrada pode estar desatualizada. Sua carteira sincroniza automaticamente com a rede Bitcoin depois que a conexão é estabelecida, mas este processo ainda não está completo.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">A informação mostrada pode estar desatualizada. Sua carteira sincroniza automaticamente com a rede ConnectCoin depois que a conexão é estabelecida, mas este processo ainda não está completo.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1930,6 +2212,10 @@ O processo de migração criará um backup da carteira antes da migração. Este
     <message>
         <source>Privacy mode activated for the Overview tab. To unmask the values, uncheck Settings-&gt;Mask values.</source>
         <translation type="unfinished">Modo de privacidade ativado para a barra Resumo. Para revelar os valores, desabilite Configurações-&gt;Mascarar valores</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Total:</translation>
     </message>
 </context>
 <context>
@@ -2068,6 +2354,11 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <source>Transaction status is unknown.</source>
         <translation type="unfinished">Situação da transação é desconhecida</translation>
     </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation>Transação parcialmente assinada (binária)</translation>
+    </message>
 </context>
 <context>
     <name>PaymentServer</name>
@@ -2076,24 +2367,32 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <translation type="unfinished">Erro no pedido de pagamento</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Não foi possível iniciar bitcoin: manipulador click-to-pay</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation>Não foi possível iniciar o processador de pagamentos por clique para URIs connectcoin:</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">Manipulação de URI</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin://' não é um URI válido. Use 'bitcoin:'.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin://' não é um URI válido. Use 'connectcoin:'.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
         <translation type="unfinished">A URI não pode ser analisada! Isto pode ser causado por um endereço inválido ou um parâmetro URI malformado.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
         <translation type="unfinished">Manipulação de arquivo de cobrança</translation>
+    </message>
+    <message>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation>Não foi possível processar a solicitação de pagamento porque BIP70 não é compatível.
+Devido às falhas de segurança generalizadas no BIP70, é altamente recomendável ignorar quaisquer instruções do comerciante para trocar de carteira.
+Se este erro aparecer, solicite ao comerciante um URI compatível com BIP21.</translation>
     </message>
 </context>
 <context>
@@ -2148,6 +2447,16 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">Saída</translation>
     </message>
+    <message>
+        <source>Ping</source>
+        <extracomment>Title of Peers Table column which indicates the current latency of the connection with the peer.</extracomment>
+        <translation>Ping</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <extracomment>Title of Peers Table column which contains the peer's User Agent string.</extracomment>
+        <translation>Agente do usuário</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -2175,7 +2484,12 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <source>Save QR Code</source>
         <translation type="unfinished">Salvar código QR</translation>
     </message>
-    </context>
+        <message>
+        <source>PNG Image</source>
+        <extracomment>Expanded name of the PNG file format. See: https://en.wikipedia.org/wiki/Portable_Network_Graphics.</extracomment>
+        <translation>Imagem PNG</translation>
+    </message>
+</context>
 <context>
     <name>RPCConsole</name>
     <message>
@@ -2227,8 +2541,8 @@ O processo de migração criará um backup da carteira antes da migração. Este
         <translation type="unfinished">Endereços locais</translation>
     </message>
     <message>
-        <source>Network addresses that your Bitcoin node is currently using to communicate with other nodes.</source>
-        <translation type="unfinished">Endereços de rede que seu nó Bitcoin está usando atualmente para se comunicar com outros nós.</translation>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation type="unfinished">Endereços de rede que seu nó ConnectCoin está usando atualmente para se comunicar com outros nós.</translation>
     </message>
     <message>
         <source>Block chain</source>
@@ -2547,13 +2861,13 @@ For more information on using this console, type %6.
 
 %7WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.%8</source>
         <extracomment>RPC console welcome message. Placeholders %7 and %8 are style tags for the warning content, and they are not space separated from the rest of the text intentionally.</extracomment>
-        <translation type="unfinished">Bem vindo ao %1 console de RPC.
-Utilize as setas para cima e para baixo para navegar no histórico, e %2 para limpar a tela.
-Utilize %3 e %4 para aumentar ou diminuir a tamanho da fonte.
-Digite %5 para ver os comandos disponíveis.
-Para mais informações sobre a utilização desse console. digite %6.
+        <translation>Bem-vindo ao console RPC do %1.
+Use as setas para cima e para baixo para navegar pelo histórico e %2 para limpar a tela.
+Use %3 e %4 para aumentar ou diminuir o tamanho da fonte.
+Digite %5 para ver uma lista dos comandos disponíveis.
+Para obter mais informações sobre o uso deste console, digite %6.
 
-%7 AVISO: Scammers estão ativamente influenciando usuário a digitarem comandos aqui, roubando os conteúdos de suas carteiras. Não use este terminal sem pleno conhecimento dos efeitos de cada comando.%8</translation>
+%7ATENÇÃO: Golpistas têm induzido usuários a digitar comandos aqui para roubar o conteúdo de suas carteiras. Não use este console sem compreender plenamente as consequências de um comando.%8</translation>
     </message>
     <message>
         <source>Executing…</source>
@@ -2588,6 +2902,129 @@ Para mais informações sobre a utilização desse console. digite %6.
         <source>Unknown</source>
         <translation type="unfinished">Desconhecido</translation>
     </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Console</translation>
+    </message>
+    <message>
+        <source>(peer: %1)</source>
+        <translation>(par: %1)</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation>1 d&amp;ia</translation>
+    </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>Direction/Type</source>
+        <translation>Direção/Tipo</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation>Tempo decorrido desde o recebimento de um bloco novo deste par que passou nas verificações iniciais de validade.</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <extracomment>Tooltip text for the Last Transaction field in the peer details area.</extracomment>
+        <translation>Tempo decorrido desde o recebimento de uma transação nova deste par que foi aceita em nosso mempool.</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation>Alta largura de banda</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation>Retransmissão de blocos compactos BIP152 em alta largura de banda: %1</translation>
+    </message>
+    <message>
+        <source>Inbound: initiated by peer</source>
+        <extracomment>Explanatory text for an inbound peer connection.</extracomment>
+        <translation>Entrada: iniciada pelo par</translation>
+    </message>
+    <message>
+        <source>Last Block</source>
+        <translation>Último bloco</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>Nunca</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to request addresses from a peer.</extracomment>
+        <translation>Saída para busca de endereços: de curta duração, para solicitar endereços</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>Saída para retransmissão de blocos: não retransmite transações nem endereços</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to test the aliveness of known addresses.</extracomment>
+        <translation>Saída de sondagem: de curta duração, para testar endereços</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays all network information. This is the default behavior for outbound connections.</extracomment>
+        <translation>Saída com retransmissão completa: padrão</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <extracomment>Explanatory text for an outbound peer connection that was established manually through one of several methods. The numbered arguments are stand-ins for the methods available to establish manual connections.</extracomment>
+        <translation>Saída manual: adicionada usando RPC %1 ou as opções de configuração %2/%3</translation>
+    </message>
+    <message>
+        <source>The direction and type of peer connection: %1</source>
+        <translation>A direção e o tipo de conexão com o par: %1</translation>
+    </message>
+    <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation>O protocolo de rede usado na conexão com este par: IPv4, IPv6, Onion, I2P ou CJDNS.</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Agente do usuário</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation>nenhuma retransmissão em alta largura de banda selecionada</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation>o par nos selecionou para retransmissão em alta largura de banda</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation>selecionamos o par para retransmissão em alta largura de banda</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2604,8 +3041,8 @@ Para mais informações sobre a utilização desse console. digite %6.
         <translation type="unfinished">&amp;Mensagem:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">Uma mensagem opcional que será anexada na cobrança e será mostrada quando ela for aberta. Nota: A mensagem não será enviada com o pagamento pela rede Bitcoin.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">Uma mensagem opcional que será anexada na cobrança e será mostrada quando ela for aberta. Nota: A mensagem não será enviada com o pagamento pela rede ConnectCoin.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -2691,6 +3128,18 @@ Para mais informações sobre a utilização desse console. digite %6.
         <source>Could not generate new %1 address</source>
         <translation type="unfinished">Não foi possível gerar novo endereço %1 </translation>
     </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation>Copiar &amp;quantia</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>Copiar &amp;rótulo</translation>
+    </message>
+    <message>
+        <source>Copy &amp;message</source>
+        <translation>Copiar &amp;mensagem</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -2737,6 +3186,14 @@ Para mais informações sobre a utilização desse console. digite %6.
     <message>
         <source>Request payment to %1</source>
         <translation type="unfinished">Pedido de pagamento para %1</translation>
+    </message>
+    <message>
+        <source>&amp;Verify</source>
+        <translation>&amp;Verificar</translation>
+    </message>
+    <message>
+        <source>Verify this address on e.g. a hardware wallet screen</source>
+        <translation>Verifique este endereço, por exemplo, na tela de uma carteira de hardware</translation>
     </message>
 </context>
 <context>
@@ -2953,8 +3410,8 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
         <translation type="unfinished">Cr&amp;iar Não Assinado</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation type="unfinished">Cria uma Transação de Bitcoin Parcialmente Assinada (PSBT) para usar com, por exemplo, uma carteira %1 offline ou uma carteira física compatível com PSBTs.</translation>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation type="unfinished">Cria uma Transação de ConnectCoin Parcialmente Assinada (PSBT) para usar com, por exemplo, uma carteira %1 offline ou uma carteira física compatível com PSBTs.</translation>
     </message>
     <message>
         <source>%1 to '%2'</source>
@@ -2990,9 +3447,9 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
         <translation type="unfinished">Você pode aumentar a taxa depois (sinaliza Replace-By-Fee, BIP-125).</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
-        <translation type="unfinished">Por favor, revise a transação. Será produzido uma Transação de Bitcoin Parcialmente Assinada (PSBT) que você pode copiar e assinar com, por exemplo, uma carteira %1 offline, ou uma carteira física compatível com PSBTs.</translation>
+        <translation>Revise sua proposta de transação. Será criada uma transação ConnectCoin parcialmente assinada (PSBT), que você pode salvar ou copiar e depois assinar com, por exemplo, uma carteira %1 sem conexão com a rede ou uma carteira de hardware compatível com PSBT.</translation>
     </message>
     <message>
         <source>%1 from wallet '%2'</source>
@@ -3004,9 +3461,9 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
         <translation type="unfinished">Deseja criar esta transação?</translation>
     </message>
     <message>
-        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
-        <translation type="unfinished">Por favor, revise a transação. Você pode assinar e enviar a transação ou criar uma Transação de Bitcoin Parcialmente Assinada (PSBT), que você pode copiar e assinar com, por exemplo, uma carteira %1 offline ou uma carteira física compatível com PSBTs.</translation>
+        <translation>Revise sua transação. Você pode criar e enviar esta transação ou criar uma transação ConnectCoin parcialmente assinada (PSBT), que pode salvar ou copiar e depois assinar com, por exemplo, uma carteira %1 sem conexão com a rede ou uma carteira de hardware compatível com PSBT.</translation>
     </message>
     <message>
         <source>Please, review your transaction.</source>
@@ -3075,8 +3532,8 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">Aviso: Endereço Bitcoin inválido</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">Aviso: Endereço ConnectCoin inválido</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -3093,6 +3550,69 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(sem rótulo)</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bytes:</translation>
+    </message>
+    <message>
+        <source>Connect your hardware wallet first.</source>
+        <translation>Conecte primeiro a carteira de hardware.</translation>
+    </message>
+    <message>
+        <source>External balance:</source>
+        <translation>Saldo externo:</translation>
+    </message>
+    <message>
+        <source>External signer failure</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Falha no assinador externo</translation>
+    </message>
+    <message>
+        <source>External signer not found</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Assinador externo não encontrado</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation>Transação parcialmente assinada (binária)</translation>
+    </message>
+    <message>
+        <source>Set external signer script path in Options -&gt; Wallet</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Defina o caminho do script de assinatura externa em Opções -&gt; Carteira</translation>
+    </message>
+    <message>
+        <source>Sign on device</source>
+        <extracomment>"device" usually means a hardware wallet.</extracomment>
+        <translation>Assinar no dispositivo</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Especifique uma taxa personalizada por kB (1.000 bytes) do tamanho virtual da transação.
+
+Nota:  Como a taxa é calculada por byte, uma taxa de "100 connects por kvB" para uma transação de 500 bytes virtuais (metade de 1 kvB) resultaria em uma taxa de apenas 50 connects.</translation>
+    </message>
+    <message>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation>Quando o volume de transações é menor que o espaço disponível nos blocos, os mineradores e os nós retransmissores podem exigir uma taxa mínima. É aceitável pagar apenas essa taxa mínima, mas isso pode resultar em uma transação que nunca seja confirmada caso a demanda por transações ConnectCoin ultrapasse a capacidade de processamento da rede.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>É possível aumentar a taxa mais tarde.</translation>
     </message>
 </context>
 <context>
@@ -3114,8 +3634,8 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
         <translation type="unfinished">Escolha um endereço usado anteriormente</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">O endereço Bitcoin para enviar o pagamento</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">O endereço ConnectCoin para enviar o pagamento</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -3150,8 +3670,20 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
         <translation type="unfinished">Digite um rótulo para este endereço para adicioná-lo no catálogo</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">A mensagem que foi anexada ao bitcoin: URI na qual será gravada na transação para sua referência. Nota: Essa mensagem não será gravada publicamente na rede Bitcoin.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation>Uma mensagem anexada ao URI connectcoin: que será armazenada com a transação para sua referência. Nota: esta mensagem não será enviada pela rede ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>A taxa será descontada da quantia enviada. O destinatário receberá menos ConnectCoin do que a quantia inserida no campo. Se vários destinatários forem selecionados, a taxa será dividida igualmente.</translation>
     </message>
 </context>
 <context>
@@ -3180,8 +3712,8 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
         <translation type="unfinished">Você pode assinar mensagens com seus endereços legados (P2PKH) para provar que pode receber bitcoins enviados a eles. Tenha cuidado para não assinar nada vago ou aleatório, pois ataques de phishing podem tentar enganá-lo para assinar sua identidade para eles. Assine apenas declarações totalmente detalhadas com as quais você concorda.</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">O endereço Bitcoin que assinará a mensagem</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">O endereço ConnectCoin que assinará a mensagem</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3200,8 +3732,8 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
         <translation type="unfinished">Assinatura</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation type="unfinished">Assinar mensagem para provar que você é dono deste endereço Bitcoin</translation>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation type="unfinished">Assinar mensagem para provar que você é dono deste endereço ConnectCoin</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -3224,8 +3756,8 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
         <translation type="unfinished">Coloque o endereço do autor, a mensagem (certifique-se de copiar toda a mensagem, incluindo quebras de linha, espaços, tabulações, etc.) e a assinatura abaixo para verificar a mensagem. Cuidado para não compreender mais da assinatura do que está na mensagem assinada de fato, para evitar ser enganado por um ataque man-in-the-middle. Note que isso somente prova que o signatário recebe com este endereço, não pode provar que é o remetente de nenhuma transação!</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">O endereço Bitcoin que foi usado para assinar a mensagem</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">O endereço ConnectCoin que foi usado para assinar a mensagem</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -3236,8 +3768,8 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
         <translation type="unfinished">A assinatura fornecida quando a mensagem foi assinada</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">Verificar mensagem para se assegurar que ela foi assinada pelo dono de um endereço Bitcoin específico</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">Verificar mensagem para se assegurar que ela foi assinada pelo dono de um endereço ConnectCoin específico</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3302,6 +3834,22 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">Mensagem verificada.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the clipboard</source>
+        <translation>Copiar a assinatura atual para a área de transferência</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>É possível assinar mensagens ou acordos com endereços legados (P2PKH) para provar que pode receber fundos ConnectCoin enviados a esses endereços. Tenha cuidado para não assinar nada vago ou aleatório, pois ataques de phishing podem tentar induzir a assinatura de declarações que permitam a terceiros se passar por você. Assine apenas declarações detalhadas com as quais concorda.</translation>
     </message>
 </context>
 <context>
@@ -3479,6 +4027,10 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
         <source>P2C domain</source>
         <translation>Domínio P2C</translation>
     </message>
+    <message>
+        <source>Status</source>
+        <translation>Estado</translation>
+    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -3580,6 +4132,10 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
     <message>
         <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
         <translation>Finalidade da transação definida pelo usuário, ou o domínio P2C.</translation>
+    </message>
+    <message>
+        <source>(n/a)</source>
+        <translation>(n/d)</translation>
     </message>
 </context>
 <context>
@@ -3710,6 +4266,38 @@ Nota: Como a taxa é calculada por byte, uma taxa de "100 satoshis por kvB" para
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>Digite o endereço, domínio P2C, ID da transação ou etiqueta para pesquisar</translation>
     </message>
+    <message>
+        <source>&amp;Edit address label</source>
+        <translation>&amp;Editar rótulo do endereço</translation>
+    </message>
+    <message>
+        <source>&amp;Show transaction details</source>
+        <translation>&amp;Mostrar detalhes da transação</translation>
+    </message>
+    <message>
+        <source>A&amp;bandon transaction</source>
+        <translation>A&amp;bandonar transação</translation>
+    </message>
+    <message>
+        <source>Copy &amp;raw transaction</source>
+        <translation>Copiar transação &amp;bruta</translation>
+    </message>
+    <message>
+        <source>Copy full transaction &amp;details</source>
+        <translation>Copiar todos os &amp;detalhes da transação</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Copiar &amp;ID da transação</translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <source>Increase transaction &amp;fee</source>
+        <translation>Aumentar a &amp;taxa da transação</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -3807,7 +4395,15 @@ Go to File &gt; Open Wallet to load a wallet.
         <source>Signer error</source>
         <translation type="unfinished">Erro do signatário</translation>
     </message>
-    </context>
+        <message>
+        <source>Can't display address</source>
+        <translation>Não foi possível exibir o endereço</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation>Aviso: a taxa adicional poderá ser paga reduzindo as saídas de troco ou adicionando entradas, quando necessário. Uma nova saída de troco poderá ser adicionada caso ainda não exista. Essas alterações podem comprometer a privacidade.</translation>
+    </message>
+</context>
 <context>
     <name>WalletView</name>
     <message>
@@ -3841,6 +4437,11 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Cancel</source>
         <translation type="unfinished">Cancelar</translation>
+    </message>
+    <message>
+        <source>Wallet Data</source>
+        <extracomment>Name of the wallet data file format.</extracomment>
+        <translation>Dados da carteira</translation>
     </message>
 </context>
 <context>
@@ -4061,7 +4662,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is explicitly forbidden: -onion=0</source>
-        <translation type="unfinished">As conexões de saída foram restringidas a rede Tor (-onlynet-onion) mas o proxy para alcançar a rede Tor foi explicitamente proibido: "-onion=0"</translation>
+        <translation>As conexões de saída foram restringidas à rede Tor (-onlynet=onion), mas o proxy para alcançar a rede Tor foi explicitamente proibido: -onion=0</translation>
     </message>
     <message>
         <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
@@ -4348,7 +4949,7 @@ Impossível restaurar backup da carteira.</translation>
     </message>
     <message>
         <source>Ignoring duplicate -wallet %s.</source>
-        <translation type="unfinished">Ignorando -carteira %s duplicada.</translation>
+        <translation>Ignorando a opção duplicada -wallet %s.</translation>
     </message>
     <message>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
@@ -4762,6 +5363,268 @@ Impossível restaurar backup da carteira.</translation>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Não foi possível editar o arquivo de configurações</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Considere modificar %s (%s) ou %s (%s).</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf está obsoleto e será completamente removido na próxima versão.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>Ocorreu um erro interno fatal. Consulte %s para obter detalhes: %s</translation>
+    </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>O destino do troco deve ser um destino P2PK do tipo 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>A ConnectCoin aceita apenas endereços P2PK do tipo 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>A ConnectCoin aceita apenas endereços de troco P2PK do tipo 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>As transações ConnectCoin exigem destinos válidos do tipo 1 ou saídas PAY_TO_CONNECT do tipo 2</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>As saídas ConnectCoin do tipo 1 aceitam apenas SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Copyright (C) %i-%i</source>
+        <translation>Direitos autorais (C) %i-%i</translation>
+    </message>
+    <message>
+        <source>Could not generate scriptPubKeys (cache is empty)</source>
+        <translation>Não foi possível gerar scriptPubKeys (o cache está vazio)</translation>
+    </message>
+    <message>
+        <source>Dump file %s does not exist.</source>
+        <translation>O arquivo de despejo %s não existe.</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>Erro ao carregar %s: a carteira é do tipo legado. Migre para uma carteira de descritores usando a ferramenta de migração (RPC migratewallet).</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation>Erro ao ler o próximo registro do banco de dados da carteira</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Erro: não foi possível adicionar a transação %s à carteira somente de observação</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Erro: não foi possível criar o arquivo '%s'</translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation>Erro: não foi possível criar um cursor no banco de dados</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation>Erro: a soma de verificação do arquivo de despejo não confere. Valor calculado: %s; esperado: %s</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation>Erro: o registro de formato do arquivo de despejo está incorreto. Recebido: "%s"; esperado: "format".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation>Erro: o registro de identificação do arquivo de despejo está incorreto. Recebido: "%s"; esperado: "%s".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>Erro: o arquivo de despejo especifica um formato de banco de dados não compatível (%s). Apenas despejos de bancos de dados sqlite são compatíveis</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation>Erro: a versão do arquivo de despejo não é compatível. Esta versão de connectcoin-wallet aceita apenas arquivos de despejo da versão 1. Foi recebido um arquivo de despejo da versão %s</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Erro: o destino da exportação '%s' já existe</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Erro: o destino da exportação não pode estar vazio</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Erro: falha ao criar uma nova carteira somente de observação. %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation>Erro: foi recebida uma chave que não está em formato hexadecimal: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation>Erro: foi recebido um valor que não está em formato hexadecimal: %s</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation>Erro: soma de verificação ausente</translation>
+    </message>
+    <message>
+        <source>Error: No %s addresses available.</source>
+        <translation>Erro: não há endereços %s disponíveis.</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>Erro: nem todos os registros do catálogo de endereços foram migrados</translation>
+    </message>
+    <message>
+        <source>Error: Not all transaction records were migrated</source>
+        <translation>Erro: nem todos os registros de transações foram migrados</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation>Erro: não foi possível gravar o registro na nova carteira</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Erro: não foi possível gravar a carteira exportada</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Erro: a carteira não possui descritores para exportar</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Erro: não foi possível confirmar a transação do banco de dados para exportar a carteira somente de observação</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Erro: não foi possível executar a transação do banco de dados para a nova carteira somente de observação %s</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>Falha ao obter a reserva para uma nova varredura durante a inicialização da carteira</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>Falha ao calcular o aumento de taxas, pois os UTXOs não confirmados dependem de um conjunto enorme de transações não confirmadas.</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>Falha ao fechar o arquivo de reversão de blocos.</translation>
+    </message>
+    <message>
+        <source>Failed to close file when writing block.</source>
+        <translation>Falha ao fechar o arquivo durante a gravação de um bloco.</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>Falha ao iniciar os índices; encerrando…</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>A taxa por unidade de tamanho (%s) é inferior ao mínimo configurado (%s).</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation>O arquivo %s já existe. Se tiver certeza de que deseja prosseguir, mova-o primeiro para outro local.</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>A entrada não é um gasto completo do tipo 1 com SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>A entrada exige um testemunho completo de prova P2C</translation>
+    </message>
+    <message>
+        <source>Invalid -i2psam address or hostname: '%s'</source>
+        <translation>Endereço ou nome de host inválido em -i2psam: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>Endereço ou nome de host inválido em -proxy, termina com '=': '%s'</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>A rede principal ainda não foi lançada: nenhum bloco gênesis está definido. Use -testnet4 para testes públicos ou -regtest para testes locais.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Nenhum arquivo de despejo foi informado. Para usar createfromdump, é necessário informar -dumpfile=&lt;filename&gt;.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use dump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Nenhum arquivo de despejo foi informado. Para usar dump, é necessário informar -dumpfile=&lt;filename&gt;.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>Nenhum URL público de código-fonte controlado pelo projeto está configurado para esta compilação de desenvolvimento.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Não há descritores de arquivo suficientes disponíveis. Tente reduzir -rpcmaxconnections ou usar o valor padrão de %d</translation>
+    </message>
+    <message>
+        <source>Option '-checkpoints' is set but checkpoints were removed. This option has no effect.</source>
+        <translation>A opção '-checkpoints' está definida, mas os pontos de verificação foram removidos. Esta opção não tem efeito.</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>Contribua se considerar %s útil.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
+        <translation>Poda: a última sincronização da carteira é anterior aos dados podados. É necessário usar -reindex (baixar novamente toda a cadeia de blocos no caso de um nó com poda)</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>A opção -testactivationheight não pode ser usada na rede principal.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>A opção -vbparams não pode ser usada na rede principal.</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist</source>
+        <translation>O arquivo de configuração especificado %s não existe</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>A transação exige um destino com valor diferente de zero, uma taxa por unidade de tamanho diferente de zero ou uma entrada pré-selecionada</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation>Não foi possível abrir %s para gravação</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Não foi possível gravar o cache de descritores</translation>
+    </message>
+    <message>
+        <source>Unknown new rules activated (versionbit %i)</source>
+        <translation>Novas regras desconhecidas foram ativadas (versionbit %i)</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>Foi encontrado um descritor não reconhecido. Carregando a carteira %s
+
+A carteira pode ter sido criada em uma versão mais recente.
+Tente executar a versão mais recente do software.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>Rede não reconhecida em -proxy='%s': '%s'</translation>
     </message>
 </context>
 <context>
@@ -5189,6 +6052,13 @@ Active reward address: %5</source>
 Taxa de hashes: %2 H/s
 Hashes: %3 | Blocos aceitos: %4
 Endereço de recompensa ativo: %5</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
     </message>
 </context>
 </TS>

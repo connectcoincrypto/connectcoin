@@ -58,13 +58,13 @@
         <translation type="unfinished">K&amp;iezen</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Dit zijn uw Bitcoin adressen om betalingen mee te verzenden. Controleer altijd het bedrag en het ontvangstadres voordat u uw bitcoins verzendt.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">Dit zijn uw ConnectCoin adressen om betalingen mee te verzenden. Controleer altijd het bedrag en het ontvangstadres voordat u uw ConnectCoins verzendt.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Dit zijn uw Bitcoin adressen voor het ontvangen van betalingen. Gebruik de 'Nieuw ontvangstadres maken' knop in de ontvangst tab om nieuwe adressen te maken.
+        <translation type="unfinished">Dit zijn uw ConnectCoin adressen voor het ontvangen van betalingen. Gebruik de 'Nieuw ontvangstadres maken' knop in de ontvangst tab om nieuwe adressen te maken.
 Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation>
     </message>
     <message>
@@ -116,6 +116,10 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
         <source>(no label)</source>
         <translation type="unfinished">(geen label)</translation>
     </message>
+    <message>
+        <source>Label</source>
+        <translation>Label</translation>
+    </message>
 </context>
 <context>
     <name>AskPassphraseDialog</name>
@@ -160,8 +164,8 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
         <translation type="unfinished">Bevestig versleuteling van de portemonnee</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">Waarschuwing: Als u uw portemonnee versleutelt en uw wachtwoord vergeet, zult u &lt;b&gt;AL UW BITCOINS VERLIEZEN&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">Waarschuwing: Als u uw portemonnee versleutelt en uw wachtwoord vergeet, zult u &lt;b&gt;AL UW CONNECTCOINS VERLIEZEN&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -184,8 +188,8 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
         <translation type="unfinished">Doorgaan</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">Onthoud dat het versleutelen van uw portemonnee uw bitcoins niet volledig kan beschermen tegen diefstal, bijvoorbeeld door malware die uw computer infecteert.</translation>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished">Onthoud dat het versleutelen van uw portemonnee uw ConnectCoins niet volledig kan beschermen tegen diefstal, bijvoorbeeld door malware die uw computer infecteert.</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -242,6 +246,10 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
     <message>
         <source>Warning: The Caps Lock key is on!</source>
         <translation type="unfinished">Waarschuwing: De Caps-Lock toets staat aan!</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>Terug</translation>
     </message>
 </context>
 <context>
@@ -385,6 +393,115 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
         <source>default wallet</source>
         <translation type="unfinished">standaard portemonnee</translation>
     </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Bedrag</translation>
+    </message>
+    <message>
+        <source>Unroutable</source>
+        <translation type="unfinished">Niet routeerbaar</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <extracomment>An inbound connection from a peer. An inbound connection is a connection initiated by a peer.</extracomment>
+        <translation type="unfinished">Inkomend</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <extracomment>An outbound connection to a peer. An outbound connection is a connection initiated by us.</extracomment>
+        <translation type="unfinished">Uitgaand</translation>
+    </message>
+    <message>
+        <source>Full Relay</source>
+        <extracomment>Peer connection type that relays all network information.</extracomment>
+        <translation type="unfinished">Volledige relay</translation>
+    </message>
+    <message>
+        <source>Block Relay</source>
+        <extracomment>Peer connection type that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation type="unfinished">Blok relay</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <extracomment>Peer connection type established manually through one of several methods.</extracomment>
+        <translation type="unfinished">Handmatig</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <extracomment>Short-lived peer connection type that tests the aliveness of known addresses.</extracomment>
+        <translation type="unfinished">Sensor</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <extracomment>Short-lived peer connection type that solicits known addresses from a peer.</extracomment>
+        <translation type="unfinished">Adres verkrijgen</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1d</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1s</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 min</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation>Voer een ConnectCoin-adres in (bijv. %1)</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -454,8 +571,8 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
         <translation type="unfinished">Proxy is &lt;b&gt;ingeschakeld&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Verstuur munten naar een Bitcoin adres</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">Verstuur munten naar een ConnectCoin adres</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -498,16 +615,16 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
         <translation type="unfinished">Onderteken &amp;bericht</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Onderteken berichten met uw Bitcoin adressen om te bewijzen dat u deze adressen bezit</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">Onderteken berichten met uw ConnectCoin adressen om te bewijzen dat u deze adressen bezit</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">&amp;Verifiëer Bericht...</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">Verifiëer handtekeningen om zeker te zijn dat de berichten zijn ondertekend met de gespecificeerde Bitcoin adressen</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">Verifiëer handtekeningen om zeker te zijn dat de berichten zijn ondertekend met de gespecificeerde ConnectCoin adressen</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -566,8 +683,8 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
         <translation type="unfinished">Verbinden met peers...</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Vraag betaling aan (genereert QR-codes en bitcoin: URI's)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">Vraag betaling aan (genereert QR-codes en connectcoin: URI's)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -583,9 +700,9 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
-            <numerusform>Processed %n block(s) of transaction history.</numerusform>
-            <numerusform>Processed %n block(s) of transaction history.</numerusform>
+        <translation>
+            <numerusform>%n blok uit de transactiegeschiedenis verwerkt.</numerusform>
+            <numerusform>%n blokken uit de transactiegeschiedenis verwerkt.</numerusform>
         </translation>
     </message>
     <message>
@@ -621,16 +738,16 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
         <translation type="unfinished">Bijgewerkt</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">Laad gedeeltelijk ondertekende Bitcoin-transactie</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">Laad gedeeltelijk ondertekende ConnectCoin-transactie</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">Laad PSBT vanaf klembord...</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">Laad gedeeltelijk ondertekende Bitcoin-transactie vanaf het klembord</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">Laad gedeeltelijk ondertekende ConnectCoin-transactie vanaf het klembord</translation>
     </message>
     <message>
         <source>Open node debugging and diagnostic console</source>
@@ -645,8 +762,8 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
         <translation type="unfinished">Ontvangstadressen</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">Open een bitcoin: URI</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">Open een connectcoin: URI</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -683,8 +800,8 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
         <translation type="unfinished">Een wallet migreren</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Toon het %1 hulpbericht om een lijst te krijgen met mogelijke Bitcoin commandoregelopties</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">Toon het %1 hulpbericht om een lijst te krijgen met mogelijke ConnectCoin commandoregelopties</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -752,11 +869,11 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
         <translation type="unfinished">&amp;Toon</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
-        <translation type="unfinished">
-            <numerusform>%n active connection(s) to Bitcoin network.</numerusform>
-            <numerusform>%n active connection(s) to Bitcoin network.</numerusform>
+        <translation>
+            <numerusform>%n actieve verbinding met het ConnectCoin-netwerk.</numerusform>
+            <numerusform>%n actieve verbindingen met het ConnectCoin-netwerk.</numerusform>
         </translation>
     </message>
     <message>
@@ -848,6 +965,84 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>Pay-to-connect-premies maken</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Mining</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>CPU-mining beheren</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>Node window</source>
+        <translation type="unfinished">Nodevenster</translation>
+    </message>
+    <message>
+        <source>Wallet: %1
+</source>
+        <translation type="unfinished">Portemonnee: %1
+</translation>
+    </message>
+    <message>
+        <source>%1 client</source>
+        <translation>%1-client</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Alle bestanden</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Exportfout</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>Export voltooid</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>Exporteer een versie van de huidige portemonnee die alleen kan volgen en op een ander knooppunt kan worden hersteld.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>Portemonnee voor alleen volgen exporteren</translation>
+    </message>
+    <message>
+        <source>Label: %1
+</source>
+        <translation>Label: %1
+</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>Portemonneebestand herstellen en migreren…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>Export van portemonnee voor alleen volgen opslaan</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>De portemonnee is geëxporteerd naar </translation>
+    </message>
+    <message>
+        <source>Type: %1
+</source>
+        <translation>Type: %1
+</translation>
+    </message>
+    <message>
+        <source>Zoom</source>
+        <translation>Zoom</translation>
     </message>
 </context>
 <context>
@@ -983,6 +1178,18 @@ Ondertekenen is alleen mogelijk met adressen van het type 'legacy'.</translation
         <source>(change)</source>
         <translation type="unfinished">(wijzig)</translation>
     </message>
+    <message>
+        <source>Date</source>
+        <translation type="unfinished">Datum</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bytes:</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>Kan per invoer +/- %1 connect verschillen.</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1092,6 +1299,38 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">Migreren succesvol</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Als het knooppunt oude blokken verwijdert en de portemonnee vóór de snoeihoogte is gemaakt, kan de migratie mislukken bij het laden van de gemigreerde portemonnee.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Portemonnee na migratie laden</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>Portemonnee herstellen en migreren</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>Bij het herstellen wordt het back-upbestand naar de portemonneemap gekopieerd en in de standaard mapstructuur geplaatst. Het oorspronkelijke bestand wordt niet gewijzigd.
+
+Bij de migratie wordt de herstelde portemonnee omgezet naar een of meer descriptorportemonnees. Er moet een nieuwe back-up van de portemonnee worden gemaakt.
+Als deze portemonnee scripts voor alleen volgen bevat, wordt hiervoor een nieuwe portemonnee gemaakt.
+Als deze portemonnee scripts bevat waarvoor de bestedingswijze bekend is, maar die niet worden gevolgd, wordt hiervoor een andere nieuwe portemonnee gemaakt.
+
+Vóór de migratie wordt een back-up van de portemonnee gemaakt. Dit bestand heet &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak en staat in de map van deze portemonnee. Als de migratie niet goed verloopt, kan de back-up worden hersteld met de functie ‘Portemonnee herstellen’.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>De portemonnee is na de migratie niet geladen. U kunt deze openen via het menu ‘Bestand &gt; Portemonnee openen’.</translation>
     </message>
 </context>
 <context>
@@ -1232,6 +1471,10 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
         <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
         <translation type="unfinished">Gecompileerd zonder ondersteuning voor externe ondertekenaars (vereist voor extern ondertekenen)</translation>
     </message>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished">Portemonnee</translation>
+    </message>
 </context>
 <context>
     <name>EditAddressDialog</name>
@@ -1264,8 +1507,8 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
         <translation type="unfinished">Bewerk verzendadres</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">Het opgegeven adres "%1" is een ongeldig Bitcoin adres.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">Het opgegeven adres "%1" is een ongeldig ConnectCoin adres.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1282,6 +1525,10 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
     <message>
         <source>New key generation failed.</source>
         <translation type="unfinished">Genereren nieuwe sleutel mislukt.</translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Label</translation>
     </message>
 </context>
 <context>
@@ -1381,23 +1628,23 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
     </message>
     <message numerus="yes">
         <source>%n GB of space available</source>
-        <translation type="unfinished">
-            <numerusform>%n GB of space available</numerusform>
-            <numerusform>%n GB of space available</numerusform>
+        <translation>
+            <numerusform>%n GB ruimte beschikbaar</numerusform>
+            <numerusform>%n GB ruimte beschikbaar</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
-        <translation type="unfinished">
-            <numerusform>(of %n GB needed)</numerusform>
-            <numerusform>(of %n GB needed)</numerusform>
+        <translation>
+            <numerusform>(van de benodigde %n GB)</numerusform>
+            <numerusform>(van de benodigde %n GB)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>(%n GB needed for full chain)</source>
-        <translation type="unfinished">
-            <numerusform>(%n GB needed for full chain)</numerusform>
-            <numerusform>(%n GB needed for full chain)</numerusform>
+        <translation>
+            <numerusform>(%n GB nodig voor de volledige keten)</numerusform>
+            <numerusform>(%n GB nodig voor de volledige keten)</numerusform>
         </translation>
     </message>
     <message>
@@ -1415,9 +1662,9 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
     <message numerus="yes">
         <source>(sufficient to restore backups %n day(s) old)</source>
         <extracomment>Explanatory text on the capability of the current prune target.</extracomment>
-        <translation type="unfinished">
-            <numerusform>(sufficient to restore backups %n day(s) old)</numerusform>
-            <numerusform>(sufficient to restore backups %n day(s) old)</numerusform>
+        <translation>
+            <numerusform>(voldoende om back-ups van %n dag oud te herstellen)</numerusform>
+            <numerusform>(voldoende om back-ups van %n dagen oud te herstellen)</numerusform>
         </translation>
     </message>
     <message>
@@ -1436,6 +1683,14 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
         <source>Error</source>
         <translation type="unfinished">Fout</translation>
     </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 zal een kopie van de ConnectCoin-blockchain downloaden en opslaan.</translation>
+    </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1444,8 +1699,8 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
         <translation type="unfinished">Vorm</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">Recente transacties zijn mogelijk nog niet zichtbaar. De balans van de wallet is daarom mogelijk niet correct. Deze informatie is correct zodra de synchronisatie van de wallet met het Bitcoinnetwerk gereed is, zoals onderaan toegelicht.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">Recente transacties zijn mogelijk nog niet zichtbaar. De balans van de wallet is daarom mogelijk niet correct. Deze informatie is correct zodra de synchronisatie van de wallet met het ConnectCoinnetwerk gereed is, zoals onderaan toegelicht.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1495,17 +1750,29 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">Onbekend. Blockheaders synchroniseren (%1, %2%)...</translation>
     </message>
+    <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Pogingen om ConnectCoin-tegoeden uit te geven die door nog niet weergegeven transacties worden beïnvloed, worden door het netwerk geweigerd.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">Open bitcoin-URI</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">Open ConnectCoin-URI</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">Plak adres vanuit klembord</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1548,8 +1815,8 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
         <translation type="unfinished">Volledig pad naar een %1 compatibel script (bijv. C:\Downloads\hwi.exe of /Gebruikers/gebruikersnaam/Downloads/hwi.py). Pas op: malware kan je munten stelen!</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished">Automatisch openen van de Bitcoin client poort op de router. Dit werkt alleen als de router PCP of NAT-PMP ondersteunt en het is ingeschakeld. De externe poort kan willekeurig zijn.</translation>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation type="unfinished">Automatisch openen van de ConnectCoin client poort op de router. Dit werkt alleen als de router PCP of NAT-PMP ondersteunt en het is ingeschakeld. De externe poort kan willekeurig zijn.</translation>
     </message>
     <message>
         <source>Map port using PCP or NA&amp;T-PMP</source>
@@ -1612,8 +1879,8 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
         <translation type="unfinished">Sta inkomende verbindingen toe</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Verbind met het Bitcoinnetwerk via een SOCKS5 proxy.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">Verbind met het ConnectCoinnetwerk via een SOCKS5 proxy.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1688,8 +1955,8 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
         <translation type="unfinished">Munt controle functies weergeven of niet.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Maak verbinding met het Bitcoin netwerk via een aparte SOCKS5-proxy voor Tor Onion-services.</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">Maak verbinding met het ConnectCoin netwerk via een aparte SOCKS5-proxy voor Tor Onion-services.</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1770,6 +2037,113 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">Het opgegeven proxyadres is ongeldig.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Pop-upmeldingen inschakelen</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Toon pop-upmeldingen op het bureaublad, inclusief inkomende en verzonden transacties. Standaard uitgeschakeld. Fout- en bevestigingsvensters blijven ingeschakeld.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Set the number of script verification threads. Negative values correspond to the number of cores you want to leave free to the system.</source>
+        <extracomment>Tooltip text for Options window setting that sets the number of script verification threads. Explains that negative values mean to leave these many cores free to the system.</extracomment>
+        <translation type="unfinished">Stel het aantal scriptverificatiethreads in. Negatieve waarden komen overeen met het aantal cores dat u vrij wilt laten voor het systeem.</translation>
+    </message>
+    <message>
+        <source>(0 = auto, &lt;0 = leave that many cores free)</source>
+        <translation type="unfinished">(0 = auto, &lt;0 = laat dit aantal kernen vrij)</translation>
+    </message>
+    <message>
+        <source>This allows you or a third party tool to communicate with the node through command-line and JSON-RPC commands.</source>
+        <extracomment>Tooltip text for Options window setting that enables the RPC server.</extracomment>
+        <translation type="unfinished">Hierdoor kunt u of een hulpprogramma van een derde partij communiceren met het knooppunt via opdrachtregel en JSON-RPC-opdrachten.</translation>
+    </message>
+    <message>
+        <source>Enable R&amp;PC server</source>
+        <extracomment>An Options window setting to enable the RPC server.</extracomment>
+        <translation type="unfinished">R&amp;PC server inschakelen</translation>
+    </message>
+    <message>
+        <source>Whether to set subtract fee from amount as default or not.</source>
+        <extracomment>Tooltip text for Options window setting that sets subtracting the fee from a sending amount as default.</extracomment>
+        <translation type="unfinished">Of de vergoeding standaard van het bedrag moet worden afgetrokken of niet.</translation>
+    </message>
+    <message>
+        <source>Subtract &amp;fee from amount by default</source>
+        <extracomment>An Options window setting to set subtracting the fee from a sending amount as default.</extracomment>
+        <translation type="unfinished">Trek standaard de transactiekosten a&amp;f van het bedrag.</translation>
+    </message>
+    <message>
+        <source>Enable coin &amp;control features</source>
+        <translation type="unfinished">Coin &amp;control activeren</translation>
+    </message>
+    <message>
+        <source>If you disable the spending of unconfirmed change, the change from a transaction cannot be used until that transaction has at least one confirmation. This also affects how your balance is computed.</source>
+        <translation type="unfinished">Indien het uitgeven van onbevestigd wisselgeld uitgeschakeld wordt dan kan het wisselgeld van een transactie niet worden gebruikt totdat de transactie ten minste een bevestiging heeft. Dit heeft ook invloed op de manier waarop uw saldo wordt berekend.</translation>
+    </message>
+    <message>
+        <source>&amp;Spend unconfirmed change</source>
+        <translation type="unfinished">&amp;Spendeer onbevestigd wisselgeld</translation>
+    </message>
+    <message>
+        <source>Enable &amp;PSBT controls</source>
+        <extracomment>An options window setting to enable PSBT controls.</extracomment>
+        <translation type="unfinished">&amp;PSBT besturingselementen inschakelen</translation>
+    </message>
+    <message>
+        <source>Whether to show PSBT controls.</source>
+        <extracomment>Tooltip text for options window setting that enables PSBT controls.</extracomment>
+        <translation type="unfinished"> PSBT besturingselementen weergegeven?</translation>
+    </message>
+    <message>
+        <source>External Signer (e.g. hardware wallet)</source>
+        <translation type="unfinished">Externe signer (bijv. hardware wallet)</translation>
+    </message>
+    <message>
+        <source>&amp;External signer script path</source>
+        <translation type="unfinished">&amp;Extern ondertekenscript directory</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Het verwijderen van oude blokken vermindert de benodigde schijfruimte voor transacties aanzienlijk. Alle blokken worden nog steeds volledig gevalideerd. Zolang deze functie is ingeschakeld, moeten portemonnees bij het opstarten worden geladen en actief blijven, zodat ze gesynchroniseerd zijn voordat oude blokgegevens worden verwijderd; achterlopende portemonnees kunnen herindexering nodig hebben. Als u deze instelling terugdraait, moet de hele blockchain opnieuw worden gedownload.</translation>
+    </message>
+    <message>
+        <source>Expert</source>
+        <translation>Geavanceerd</translation>
+    </message>
+    <message>
+        <source>Proxy &amp;IP:</source>
+        <translation>Proxy-&amp;IP:</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>Ingesteld via -popupnotifications of popupnotifications in connectcoin.conf.</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation>&amp;Portemonnee</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1785,8 +2159,8 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
         <translation type="unfinished">Vorm</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">De weergegeven informatie kan verouderd zijn. Uw wallet synchroniseert automatisch met het Bitcoinnetwerk nadat een verbinding is gelegd, maar dit proces is nog niet voltooid.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">De weergegeven informatie kan verouderd zijn. Uw wallet synchroniseert automatisch met het ConnectCoinnetwerk nadat een verbinding is gelegd, maar dit proces is nog niet voltooid.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1828,24 +2202,153 @@ Het migratieproces maakt voorafgaand aan het migreren een backup van de wallet. 
         <source>Recent transactions</source>
         <translation type="unfinished">Recente transacties</translation>
     </message>
-    </context>
+        <message>
+        <source>Privacy mode activated for the Overview tab. To unmask the values, uncheck Settings-&gt;Mask values.</source>
+        <translation type="unfinished">Privacymodus geactiveerd voor het tabblad Overzicht. Om de waarden te ontmaskeren, schakelt u Instellingen -&gt; Maskeer waarden uit.</translation>
+    </message>
+</context>
 <context>
     <name>PSBTOperationsDialog</name>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n invoer ondertekend, maar er zijn nog meer handtekeningen nodig.</numerusform>
+            <numerusform>%n invoeren ondertekend, maar er zijn nog meer handtekeningen nodig.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>De transactie heeft %n niet-ondertekende invoer.</numerusform>
+            <numerusform>De transactie heeft %n niet-ondertekende invoeren.</numerusform>
         </translation>
     </message>
-    </context>
+        <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation type="unfinished">Gedeeltelijk Ondertekende Transactie (Binair)</translation>
+    </message>
+    <message>
+        <source>Save Transaction Data</source>
+        <translation type="unfinished">Transactiedata Opslaan</translation>
+    </message>
+    <message>
+        <source>Total Amount</source>
+        <translation type="unfinished">Totaalbedrag</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation type="unfinished">of</translation>
+    </message>
+    <message>
+        <source>PSBT Operations</source>
+        <translation type="unfinished">PSBT Bewerkingen</translation>
+    </message>
+    <message>
+        <source>Sign Tx</source>
+        <translation type="unfinished">Signeer Tx</translation>
+    </message>
+    <message>
+        <source>Broadcast Tx</source>
+        <translation type="unfinished">Zend Tx uit</translation>
+    </message>
+    <message>
+        <source>Copy to Clipboard</source>
+        <translation type="unfinished">Kopieer naar klembord</translation>
+    </message>
+    <message>
+        <source>Save…</source>
+        <translation type="unfinished">Opslaan...</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Sluiten</translation>
+    </message>
+    <message>
+        <source>Failed to load transaction: %1</source>
+        <translation type="unfinished">Laden transactie niet gelukt: %1</translation>
+    </message>
+    <message>
+        <source>Failed to sign transaction: %1</source>
+        <translation type="unfinished">Tekenen transactie niet gelukt: %1</translation>
+    </message>
+    <message>
+        <source>Cannot sign inputs while wallet is locked.</source>
+        <translation type="unfinished">Kan invoer niet signen terwijl de wallet is vergrendeld.</translation>
+    </message>
+    <message>
+        <source>Could not sign any more inputs.</source>
+        <translation type="unfinished">Kon geen inputs meer ondertekenen.</translation>
+    </message>
+    <message>
+        <source>Signed transaction successfully. Transaction is ready to broadcast.</source>
+        <translation type="unfinished">Transactie succesvol getekend. Transactie is klaar voor verzending.</translation>
+    </message>
+    <message>
+        <source>Unknown error processing transaction.</source>
+        <translation type="unfinished">Onbekende fout bij verwerken van transactie.</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast successfully! Transaction ID: %1</source>
+        <translation type="unfinished">Transactie succesvol uitgezonden! Transactie-ID: %1</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast failed: %1</source>
+        <translation type="unfinished">Uitzenden transactie mislukt: %1</translation>
+    </message>
+    <message>
+        <source>PSBT copied to clipboard.</source>
+        <translation type="unfinished">PSBT gekopieerd naar klembord.</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk.</source>
+        <translation type="unfinished">PSBT opgeslagen op de schijf</translation>
+    </message>
+    <message>
+        <source>Sends %1 to %2</source>
+        <translation type="unfinished">Verzenden %1 van %2</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation type="unfinished">eigen adres</translation>
+    </message>
+    <message>
+        <source>Unable to calculate transaction fee or total transaction amount.</source>
+        <translation type="unfinished">Onmogelijk om de transactie kost of totale bedrag te berekenen.</translation>
+    </message>
+    <message>
+        <source>Pays transaction fee: </source>
+        <translation type="unfinished">Betaald transactiekosten:</translation>
+    </message>
+    <message>
+        <source>Transaction is missing some information about inputs.</source>
+        <translation type="unfinished">Transactie heeft nog ontbrekende informatie over ingaves.</translation>
+    </message>
+    <message>
+        <source>Transaction still needs signature(s).</source>
+        <translation type="unfinished">Transactie heeft nog handtekening(en) nodig.</translation>
+    </message>
+    <message>
+        <source>(But no wallet is loaded.)</source>
+        <translation type="unfinished">(Maar er is geen wallet geladen.)</translation>
+    </message>
+    <message>
+        <source>(But this wallet cannot sign transactions.)</source>
+        <translation type="unfinished">(Maar deze wallet kan geen transacties signen.)</translation>
+    </message>
+    <message>
+        <source>(But this wallet does not have the right keys.)</source>
+        <translation type="unfinished">(Maar deze wallet heeft niet de juiste sleutels.)</translation>
+    </message>
+    <message>
+        <source>Transaction is fully signed and ready for broadcast.</source>
+        <translation type="unfinished">Transactie is volledig getekend en is klaar voor verzending</translation>
+    </message>
+    <message>
+        <source>Transaction status is unknown.</source>
+        <translation type="unfinished">Transactie status is onbekend</translation>
+    </message>
+</context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -2116,6 +2619,303 @@ Voor meer informatie over het gebruik van deze console, type %6.
         <source>Unknown</source>
         <translation type="unfinished">Onbekend</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation type="unfinished">Tijd laatste blok</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation type="unfinished">Gesynchroniseerde headers</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation type="unfinished">Gesynchroniseerde blokken</translation>
+    </message>
+    <message>
+        <source>Last Transaction</source>
+        <translation type="unfinished">Laatste Transactie</translation>
+    </message>
+    <message>
+        <source>The mapped Autonomous System used for diversifying peer selection.</source>
+        <translation type="unfinished">Het in kaart gebrachte autonome systeem dat wordt gebruikt voor het diversifiëren van peer-selectie.</translation>
+    </message>
+    <message>
+        <source>Mapped AS</source>
+        <translation type="unfinished">AS in kaart gebracht.</translation>
+    </message>
+    <message>
+        <source>Whether we relay addresses to this peer.</source>
+        <extracomment>Tooltip text for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation type="unfinished">Of we adressen doorgeven aan deze peer.</translation>
+    </message>
+    <message>
+        <source>Address Relay</source>
+        <extracomment>Text title for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation type="unfinished">Adresrelay</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</source>
+        <extracomment>Tooltip text for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation type="unfinished">Het totaal aantal van deze peer ontvangen adressen dat verwerkt is (uitgezonderd de door rate-limiting gedropte adressen).</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</source>
+        <extracomment>Tooltip text for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation type="unfinished">Het totaal aantal van deze peer ontvangen adressen dat gedropt (niet verwerkt) is door rate-limiting.</translation>
+    </message>
+    <message>
+        <source>Addresses Processed</source>
+        <extracomment>Text title for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation type="unfinished">Adressen Verwerkt</translation>
+    </message>
+    <message>
+        <source>Addresses Rate-Limited</source>
+        <extracomment>Text title for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation type="unfinished">Adressen Tarief - Beperkt</translation>
+    </message>
+    <message>
+        <source>Node window</source>
+        <translation type="unfinished">Nodevenster</translation>
+    </message>
+    <message>
+        <source>Current block height</source>
+        <translation type="unfinished">Huidige block hoogte</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation type="unfinished">Open het %1 debug-logbestand van de huidige gegevensmap. Dit kan een aantal seconden duren voor grote logbestanden.</translation>
+    </message>
+    <message>
+        <source>Decrease font size</source>
+        <translation type="unfinished">Verklein lettergrootte</translation>
+    </message>
+    <message>
+        <source>Increase font size</source>
+        <translation type="unfinished">Vergroot lettergrootte</translation>
+    </message>
+    <message>
+        <source>Permissions</source>
+        <translation type="unfinished">Rechten</translation>
+    </message>
+    <message>
+        <source>The direction and type of peer connection: %1</source>
+        <translation type="unfinished">De richting en type peerverbinding: %1</translation>
+    </message>
+    <message>
+        <source>Direction/Type</source>
+        <translation type="unfinished">Richting/Type</translation>
+    </message>
+    <message>
+        <source>The BIP324 session ID string in hex.</source>
+        <translation>De BIP324-sessie-ID als hexadecimale tekenreeks.</translation>
+    </message>
+    <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation type="unfinished">Het netwerkprotocol waarmee deze peer verbonden is: IPv4, IPv6, Onion, I2P, of CJDNS.</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation type="unfinished">Diensten</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation type="unfinished">Hoge bandbreedte doorgave BIP152 compacte blokken: %1</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation type="unfinished">Hoge bandbreedte</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation type="unfinished">Connectie tijd</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation type="unfinished">Verstreken tijd sinds een nieuw blok dat initiële validatiecontrole doorstond ontvangen werd van deze peer.</translation>
+    </message>
+    <message>
+        <source>Last Block</source>
+        <translation type="unfinished">Laatste Blok</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <extracomment>Tooltip text for the Last Transaction field in the peer details area.</extracomment>
+        <translation type="unfinished">Verstreken tijd sinds een nieuwe in onze mempool geaccepteerde transactie ontvangen werd van deze peer.</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation type="unfinished">Laatst verstuurd</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation type="unfinished">Laatst ontvangen</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation type="unfinished">Ping Tijd</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation type="unfinished">De tijdsduur van een op het moment openstaande ping.</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation type="unfinished">Pingwachttijd</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation type="unfinished">Tijdcompensatie</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation type="unfinished">&amp;Netwerkverkeer</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation type="unfinished">Totalen</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation type="unfinished">Debuglogbestand</translation>
+    </message>
+    <message>
+        <source>Clear console</source>
+        <translation type="unfinished">Maak console leeg</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation type="unfinished">Uit:</translation>
+    </message>
+    <message>
+        <source>Inbound: initiated by peer</source>
+        <extracomment>Explanatory text for an inbound peer connection.</extracomment>
+        <translation type="unfinished">Inkomend: gestart door peer</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays all network information. This is the default behavior for outbound connections.</extracomment>
+        <translation type="unfinished">Uitgaande volledige relay: standaard</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation type="unfinished">Uitgaande blok relay: Geen transacties of adressen doorgeven</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <extracomment>Explanatory text for an outbound peer connection that was established manually through one of several methods. The numbered arguments are stand-ins for the methods available to establish manual connections.</extracomment>
+        <translation type="unfinished">Uitgaand handmatig: toegevoegd via RPC %1 of %2/%3 configuratieopties</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to test the aliveness of known addresses.</extracomment>
+        <translation type="unfinished">Uitgaande sensor: Kort levend, voor het testen van adressen</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to request addresses from a peer.</extracomment>
+        <translation type="unfinished">Uitgaand adres verkrijgen: Kort levend, voor opvragen van adressen</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>In;</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;Console</translation>
+    </message>
+    <message>
+        <source>&amp;Open</source>
+        <translation>&amp;Openen</translation>
+    </message>
+    <message>
+        <source>&amp;Peers</source>
+        <translation>&amp;Netwerkpeers</translation>
+    </message>
+    <message>
+        <source>&amp;Reset</source>
+        <translation>&amp;Herstellen</translation>
+    </message>
+    <message>
+        <source>(peer: %1)</source>
+        <translation>(netwerkpeer: %1)</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;week</translation>
+    </message>
+    <message>
+        <source>Blocksdir</source>
+        <translation>Blokkenmap</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>Hide Peers Detail</source>
+        <translation>Details van netwerkpeers verbergen</translation>
+    </message>
+    <message>
+        <source>Local Addresses</source>
+        <translation>Lokale adressen</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Minimale ping</translation>
+    </message>
+    <message>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation>Netwerkadressen die uw ConnectCoin-knooppunt momenteel gebruikt om met andere knooppunten te communiceren.</translation>
+    </message>
+    <message>
+        <source>Transport</source>
+        <translation>Transport</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Useragent</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>via %1</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2128,8 +2928,8 @@ Voor meer informatie over het gebruik van deze console, type %6.
         <translation type="unfinished">&amp;Bericht</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">Een optioneel bericht om bij te voegen aan het betalingsverzoek, welke zal getoond worden wanneer het verzoek is geopend. Opmerking: Het bericht zal niet worden verzonden met de betaling over het Bitcoin netwerk.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">Een optioneel bericht om bij te voegen aan het betalingsverzoek, welke zal getoond worden wanneer het verzoek is geopend. Opmerking: Het bericht zal niet worden verzonden met de betaling over het ConnectCoin netwerk.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -2227,6 +3027,10 @@ Voor meer informatie over het gebruik van deze console, type %6.
         <source>Could not generate new %1 address</source>
         <translation type="unfinished">Kan geen nieuw %1 adres genereren</translation>
     </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Label:</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -2278,6 +3082,10 @@ Voor meer informatie over het gebruik van deze console, type %6.
         <source>Request payment to %1</source>
         <translation type="unfinished">Betalingsverzoek tot %1</translation>
     </message>
+    <message>
+        <source>Label:</source>
+        <translation>Label:</translation>
+    </message>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -2304,6 +3112,10 @@ Voor meer informatie over het gebruik van deze console, type %6.
     <message>
         <source>Requested</source>
         <translation type="unfinished">Verzoek ingediend</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Label</translation>
     </message>
 </context>
 <context>
@@ -2405,7 +3217,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
 Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "100 satoshis per kvB" voor een transactie ten grootte van 500 virtuele bytes (de helft van 1 kvB) uiteindelijk een vergoeding van maar 50 satoshis betekenen.</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
         <translation type="unfinished">De minimale toeslag betalen is prima mits het transactievolume kleiner is dan de ruimte in de blokken. Let wel op dat dit tot gevolg kan hebben dat een transactie nooit wordt bevestigd als er meer vraag is naar bitcointransacties dan het netwerk kan verwerken.</translation>
     </message>
     <message>
@@ -2491,8 +3303,8 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
         <translation type="unfinished">Cr&amp;eëer Ongetekend</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation type="unfinished">Creëert een Gedeeltelijk Getekende Bitcoin Transactie (PSBT) om te gebruiken met b.v. een offline %1 wallet, of een PSBT-compatibele hardware wallet.</translation>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation type="unfinished">Creëert een Gedeeltelijk Getekende ConnectCoin Transactie (PSBT) om te gebruiken met b.v. een offline %1 wallet, of een PSBT-compatibele hardware wallet.</translation>
     </message>
     <message>
         <source>%1 to '%2'</source>
@@ -2547,9 +3359,9 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
         <translation type="unfinished">Je kunt de vergoeding later verhogen (signaleert Replace-By-Fee, BIP-125).</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
-        <translation type="unfinished">Controleer aub je transactievoorstel. Dit zal een Gedeeltelijk Getekende Bitcoin Transactie (PSBT) produceren die je kan opslaan of kopiëren en vervolgens ondertekenen met bijv. een offline %1 wallet, of een PSBT-combatibele hardware wallet.</translation>
+        <translation type="unfinished">Controleer aub je transactievoorstel. Dit zal een Gedeeltelijk Getekende ConnectCoin Transactie (PSBT) produceren die je kan opslaan of kopiëren en vervolgens ondertekenen met bijv. een offline %1 wallet, of een PSBT-combatibele hardware wallet.</translation>
     </message>
     <message>
         <source>%1 from wallet '%2'</source>
@@ -2561,9 +3373,9 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
         <translation type="unfinished">Wilt u deze transactie aanmaken?</translation>
     </message>
     <message>
-        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
-        <translation type="unfinished">Controleer aub je transactie. Je kan deze transactie creëren en verzenden, of een Gedeeltelijk Getekende Bitcoin Transactie (PSBT) maken, die je kan opslaan of kopiëren en daarna ondertekenen, bijv. met een offline %1 wallet, of een PSBT-combatibele hardware wallet.</translation>
+        <translation type="unfinished">Controleer aub je transactie. Je kan deze transactie creëren en verzenden, of een Gedeeltelijk Getekende ConnectCoin Transactie (PSBT) maken, die je kan opslaan of kopiëren en daarna ondertekenen, bijv. met een offline %1 wallet, of een PSBT-combatibele hardware wallet.</translation>
     </message>
     <message>
         <source>Please, review your transaction.</source>
@@ -2602,14 +3414,92 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform>Estimated to begin confirmation within %n block(s).</numerusform>
-            <numerusform>Estimated to begin confirmation within %n block(s).</numerusform>
+        <translation>
+            <numerusform>De bevestiging begint naar verwachting binnen %n blok.</numerusform>
+            <numerusform>De bevestiging begint naar verwachting binnen %n blokken.</numerusform>
         </translation>
     </message>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(geen label)</translation>
+    </message>
+    <message>
+        <source>The recipient address is not valid. Please recheck.</source>
+        <translation type="unfinished">Het adres van de ontvanger is niet geldig. Gelieve opnieuw te controleren.</translation>
+    </message>
+    <message>
+        <source>The amount to pay must be larger than 0.</source>
+        <translation type="unfinished">Het ingevoerde bedrag moet groter zijn dan 0.</translation>
+    </message>
+    <message>
+        <source>The amount exceeds your balance.</source>
+        <translation type="unfinished">Het bedrag is hoger dan uw huidige saldo.</translation>
+    </message>
+    <message>
+        <source>Duplicate address found: addresses should only be used once each.</source>
+        <translation type="unfinished">Dubbel adres gevonden: adressen mogen maar één keer worden gebruikt worden.</translation>
+    </message>
+    <message>
+        <source>Transaction creation failed!</source>
+        <translation type="unfinished">Transactiecreatie mislukt</translation>
+    </message>
+    <message>
+        <source>A fee higher than %1 is considered an absurdly high fee.</source>
+        <translation type="unfinished">Een vergoeding van meer dan %1 wordt beschouwd als een absurd hoge vergoeding.</translation>
+    </message>
+    <message>
+        <source>Warning: Unknown change address</source>
+        <translation type="unfinished">Waarschuwing: Onbekend wisselgeldadres</translation>
+    </message>
+    <message>
+        <source>Confirm custom change address</source>
+        <translation type="unfinished">Bevestig aangepast wisselgeldadres</translation>
+    </message>
+    <message>
+        <source>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</source>
+        <translation type="unfinished">Het wisselgeldadres dat u heeft geselecteerd maakt geen onderdeel uit van deze wallet. Enkele of alle saldo's in je wallet zouden naar dit adres kunnen worden verzonden. Weet je het zeker?</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bytes:</translation>
+    </message>
+    <message>
+        <source>Inputs…</source>
+        <translation>Invoeren…</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Geef een eigen vergoeding per kB (1.000 bytes) van de virtuele transactiegrootte op.
+
+Opmerking: Omdat de vergoeding per byte wordt berekend, levert een tarief van ‘100 connects per kvB’ voor een transactie van 500 virtuele bytes (de helft van 1 kvB) uiteindelijk een vergoeding van slechts 50 connects op.</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>De huidige minimumvergoeding wordt gebruikt. De bevestigingstijd wordt niet geschat.</translation>
+    </message>
+    <message>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation>Waarschuwing: Ongeldig ConnectCoin-adres</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>U kunt de vergoeding later verhogen.</translation>
+    </message>
+    <message>
+        <source>per kilobyte</source>
+        <translation>per kilobyte</translation>
     </message>
 </context>
 <context>
@@ -2618,7 +3508,151 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
         <source>Copy the current signature to the clipboard</source>
         <translation type="unfinished">Kopieer de huidige handtekening naar het klembord</translation>
     </message>
-    </context>
+        <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Clear &amp;All</source>
+        <translation type="unfinished">Verwijder &amp;alles</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation type="unfinished">Plak adres vanuit klembord</translation>
+    </message>
+    <message>
+        <source>Signatures - Sign / Verify a Message</source>
+        <translation type="unfinished">Handtekeningen – Onderteken een bericht / Verifiëer een handtekening</translation>
+    </message>
+    <message>
+        <source>&amp;Sign Message</source>
+        <translation type="unfinished">&amp;Onderteken bericht</translation>
+    </message>
+    <message>
+        <source>Choose previously used address</source>
+        <translation type="unfinished">Kies een eerder gebruikt adres</translation>
+    </message>
+    <message>
+        <source>Enter the message you want to sign here</source>
+        <translation type="unfinished">Typ hier het bericht dat u wilt ondertekenen</translation>
+    </message>
+    <message>
+        <source>Signature</source>
+        <translation type="unfinished">Handtekening</translation>
+    </message>
+    <message>
+        <source>Sign &amp;Message</source>
+        <translation type="unfinished">Onderteken &amp;bericht</translation>
+    </message>
+    <message>
+        <source>Reset all sign message fields</source>
+        <translation type="unfinished">Verwijder alles in de invulvelden</translation>
+    </message>
+    <message>
+        <source>&amp;Verify Message</source>
+        <translation type="unfinished">&amp;Verifiëer bericht</translation>
+    </message>
+    <message>
+        <source>Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
+        <translation>Voer hieronder het adres van de ontvanger, het bericht (kopieer regeleinden, spaties, tabs enzovoort exact) en de handtekening in om het bericht te verifiëren. Leid uit de handtekening niet meer af dan wat er in het ondertekende bericht zelf staat, om misleiding door een tussenpersoon te voorkomen. Dit bewijst alleen dat de ondertekenaar betalingen op het adres kan ontvangen; het bewijst niet dat die persoon een transactie heeft verzonden!</translation>
+    </message>
+    <message>
+        <source>The signed message to verify</source>
+        <translation type="unfinished">Het te controleren ondertekend bericht</translation>
+    </message>
+    <message>
+        <source>The signature given when the message was signed</source>
+        <translation type="unfinished">De handtekening waarmee het bericht ondertekend werd</translation>
+    </message>
+    <message>
+        <source>Verify &amp;Message</source>
+        <translation type="unfinished">Verifiëer &amp;bericht</translation>
+    </message>
+    <message>
+        <source>Reset all verify message fields</source>
+        <translation type="unfinished">Verwijder alles in de invulvelden</translation>
+    </message>
+    <message>
+        <source>Click "Sign Message" to generate signature</source>
+        <translation type="unfinished">Klik op "Onderteken Bericht" om de handtekening te genereren</translation>
+    </message>
+    <message>
+        <source>The entered address is invalid.</source>
+        <translation type="unfinished">Het opgegeven adres is ongeldig.</translation>
+    </message>
+    <message>
+        <source>Please check the address and try again.</source>
+        <translation type="unfinished">Controleer het adres en probeer het opnieuw.</translation>
+    </message>
+    <message>
+        <source>Wallet unlock was cancelled.</source>
+        <translation type="unfinished">Wallet ontsleutelen werd geannuleerd.</translation>
+    </message>
+    <message>
+        <source>No error</source>
+        <translation type="unfinished">Geen fout</translation>
+    </message>
+    <message>
+        <source>Private key for the entered address is not available.</source>
+        <translation type="unfinished">Geheime sleutel voor het ingevoerde adres is niet beschikbaar.</translation>
+    </message>
+    <message>
+        <source>Message signing failed.</source>
+        <translation type="unfinished">Ondertekenen van het bericht is mislukt.</translation>
+    </message>
+    <message>
+        <source>Message signed.</source>
+        <translation type="unfinished">Bericht ondertekend.</translation>
+    </message>
+    <message>
+        <source>The signature could not be decoded.</source>
+        <translation type="unfinished">De handtekening kon niet worden gedecodeerd.</translation>
+    </message>
+    <message>
+        <source>Please check the signature and try again.</source>
+        <translation type="unfinished">Controleer de handtekening en probeer het opnieuw.</translation>
+    </message>
+    <message>
+        <source>The signature did not match the message digest.</source>
+        <translation type="unfinished">De handtekening hoort niet bij het bericht.</translation>
+    </message>
+    <message>
+        <source>Message verification failed.</source>
+        <translation type="unfinished">Berichtverificatie mislukt.</translation>
+    </message>
+    <message>
+        <source>Message verified.</source>
+        <translation type="unfinished">Bericht geverifiëerd.</translation>
+    </message>
+    <message>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation>Onderteken het bericht om te bewijzen dat u dit ConnectCoin-adres bezit</translation>
+    </message>
+    <message>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation>Het ConnectCoin-adres waarmee het bericht is ondertekend</translation>
+    </message>
+    <message>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation>Het ConnectCoin-adres waarmee het bericht moet worden ondertekend</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>Het ingevoerde adres verwijst niet naar een sleutel van het oude type (P2PKH). Het ondertekenen van berichten voor SegWit en andere adressoorten dan P2PKH wordt in deze versie van %1 niet ondersteund. Controleer het adres en probeer het opnieuw.</translation>
+    </message>
+    <message>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation>Verifieer het bericht om te controleren of het met het opgegeven ConnectCoin-adres is ondertekend</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>U kunt berichten of overeenkomsten ondertekenen met uw adressen van het oude type (P2PKH) om aan te tonen dat u ConnectCoin-tegoeden kunt ontvangen die daarheen worden gestuurd. Onderteken niets vaags of willekeurigs: bij phishingaanvallen kan men u misleiden om een verklaring te ondertekenen waarmee een ander zich als u kan voordoen. Onderteken alleen volledig omschreven verklaringen waarmee u instemt.</translation>
+    </message>
+</context>
 <context>
     <name>TransactionDesc</name>
     <message>
@@ -2627,9 +3661,9 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform>matures in %n more block(s)</numerusform>
-            <numerusform>matures in %n more block(s)</numerusform>
+        <translation>
+            <numerusform>wordt besteedbaar na nog %n blok</numerusform>
+            <numerusform>wordt besteedbaar na nog %n blokken</numerusform>
         </translation>
     </message>
     <message>
@@ -2711,6 +3745,80 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     <message>
         <source>P2C domain</source>
         <translation>P2C-domein</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation type="unfinished">onbekend</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that conflicts with a confirmed transaction.</extracomment>
+        <translation type="unfinished">geconflicteerd met een transactie met %1 confirmaties</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is in the memory pool.</extracomment>
+        <translation type="unfinished">0/onbevestigd, in mempool</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, not in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is not in the memory pool.</extracomment>
+        <translation type="unfinished">0/onbevestigd, niet in mempool</translation>
+    </message>
+    <message>
+        <source>abandoned</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an abandoned transaction.</extracomment>
+        <translation type="unfinished">opgegeven</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents a transaction confirmed in at least one block, but less than 6 blocks.</extracomment>
+        <translation type="unfinished">%1/onbevestigd</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents a transaction confirmed in 6 or more blocks.</extracomment>
+        <translation type="unfinished">%1 bevestigingen</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation type="unfinished">Bron</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation type="unfinished">Gegenereerd</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation type="unfinished">Van</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation type="unfinished">Aan</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation type="unfinished">eigen adres</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>Bijschrijving</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>Invoeren</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>Uitvoerindex</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Status</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>label</translation>
     </message>
 </context>
 <context>
@@ -2809,6 +3917,14 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
     <message>
         <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
         <translation>Door de gebruiker opgegeven transactiedoel, of het P2C-domein.</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Label</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Type</translation>
     </message>
 </context>
 <context>
@@ -2955,6 +4071,22 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>Voer een adres, P2C-domein, transactie-ID of label in om te zoeken</translation>
     </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished">Adres</translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Label</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Type</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -3054,6 +4186,14 @@ Ga naar Bestand &gt; Wallet openen om een wallet te laden.
         <source>Can't display address</source>
         <translation type="unfinished">Adres kan niet weergegeven worden</translation>
     </message>
+    <message>
+        <source>Fee-bump PSBT copied to clipboard</source>
+        <translation>PSBT voor verhoging van de vergoeding naar het klembord gekopieerd</translation>
+    </message>
+    <message>
+        <source>Signer error</source>
+        <translation>Fout van ondertekenaar</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -3107,7 +4247,7 @@ Ga naar Bestand &gt; Wallet openen om een wallet te laden.
     </message>
     <message>
         <source>%s request to listen on port %u. This port is considered "bad" and thus it is unlikely that any peer will connect to it. See doc/p2p-bad-ports.md for details and a full list.</source>
-        <translation type="unfinished">%s verzoekt om te luisteren op poort %u. Deze poort wordt als "slecht" beschouwd en het is daarom onwaarschijnlijk dat Bitcoin Core peers er verbinding mee maken. Zie doc/p2p-bad-ports.md voor details en een volledige lijst.</translation>
+        <translation type="unfinished">%s verzoekt om te luisteren op poort %u. Deze poort wordt als "slecht" beschouwd en het is daarom onwaarschijnlijk dat ConnectCoin Core peers er verbinding mee maken. Zie doc/p2p-bad-ports.md voor details en een volledige lijst.</translation>
     </message>
     <message>
         <source>Disk space for %s may not accommodate the block files. Approximately %u GB of data will be stored in this directory.</source>
@@ -3138,7 +4278,7 @@ Ga naar Bestand &gt; Wallet openen om een wallet te laden.
         <translation type="unfinished">Fout: Identificatierecord van dumpbestand is onjuist. Gekregen "%s", verwacht "%s".</translation>
     </message>
     <message>
-        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
         <translation type="unfinished">Fout: Dumpbestandsversie wordt niet ondersteund. Deze versie bitcoinwallet ondersteunt alleen versie 1 dumpbestanden. Dumpbestand met versie %s gekregen</translation>
     </message>
     <message>
@@ -3799,7 +4939,7 @@ Kan mislukte migratie niet opschonen</translation>
     </message>
     <message>
         <source>Unknown -blockfilterindex value %s.</source>
-        <translation type="unfinished">Onbekende -blokfilterindexwaarde %s.</translation>
+        <translation>Onbekende waarde %s voor -blockfilterindex.</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -3880,6 +5020,400 @@ Kan mislukte migratie niet opschonen</translation>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Instelling bestand kan niet opgeschreven worden</translation>
+    </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>De wisselgeldbestemming moet een P2PK-bestemming van type 1 (bech32m) zijn</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin ondersteunt alleen P2PK-adressen van type 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin ondersteunt alleen P2PK-wisselgeldadressen van type 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>ConnectCoin-transacties vereisen geldige bestemmingen van type 1 of PAY_TO_CONNECT-uitgangen van type 2</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>ConnectCoin-uitgangen van type 1 ondersteunen alleen SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>De ingang is geen volledige besteding van type 1 met SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>De ingang vereist volledige witness-gegevens voor een P2C-bewijs</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>Het hoofdnetwerk is nog niet gelanceerd: er is geen genesisblok gedefinieerd. Gebruik -testnet4 voor openbare tests of -regtest voor lokale tests.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>Voor deze ontwikkelversie is geen openbare broncode-URL van het project ingesteld.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Er zijn onvoldoende bestandsdescriptors beschikbaar. Probeer -rpcmaxconnections te verlagen of de standaardwaarde %d te gebruiken</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>Draag alstublieft bij als u %s nuttig vindt.</translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to pay the fee</source>
+        <translation type="unfinished">Het transactiebedrag is te klein om transactiekosten in rekening te brengen</translation>
+    </message>
+    <message>
+        <source>The wallet will avoid paying less than the minimum relay fee.</source>
+        <translation type="unfinished">De wallet vermijdt minder te betalen dan de minimale vergoeding voor het doorgeven.</translation>
+    </message>
+    <message>
+        <source>This is experimental software.</source>
+        <translation type="unfinished">Dit is experimentele software.</translation>
+    </message>
+    <message>
+        <source>This is the minimum transaction fee you pay on every transaction.</source>
+        <translation type="unfinished">Dit is de minimum transactievergoeding dat je betaalt op elke transactie.</translation>
+    </message>
+    <message>
+        <source>Transaction %s does not belong to this wallet</source>
+        <translation type="unfinished">Transactie %s behoort niet tot deze wallet</translation>
+    </message>
+    <message>
+        <source>Transaction amount too small</source>
+        <translation type="unfinished">Transactiebedrag te klein</translation>
+    </message>
+    <message>
+        <source>Transaction amounts must not be negative</source>
+        <translation type="unfinished">Transactiebedragen moeten positief zijn</translation>
+    </message>
+    <message>
+        <source>Transaction change output index out of range</source>
+        <translation type="unfinished">Transactie change output is buiten bereik</translation>
+    </message>
+    <message>
+        <source>Transaction must have at least one recipient</source>
+        <translation type="unfinished">Transactie moet ten minste één ontvanger hebben</translation>
+    </message>
+    <message>
+        <source>Transaction needs a change address, but we can't generate it.</source>
+        <translation type="unfinished">De transactie heeft een 'change' adres nodig, maar we kunnen er geen genereren.</translation>
+    </message>
+    <message>
+        <source>Transaction too large</source>
+        <translation type="unfinished">Transactie te groot</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer (bind returned error %s)</source>
+        <translation type="unfinished">Niet in staat om aan %s te binden op deze computer (bind gaf error %s)</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer. %s is probably already running.</source>
+        <translation type="unfinished">Niet in staat om %s te verbinden op deze computer. %s draait waarschijnlijk al.</translation>
+    </message>
+    <message>
+        <source>Unable to create the PID file '%s': %s</source>
+        <translation type="unfinished">Kan de PID file niet creëren. '%s': %s</translation>
+    </message>
+    <message>
+        <source>Unable to find UTXO for external input</source>
+        <translation type="unfinished">Kan UTXO niet vinden voor externe invoer</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Overweeg %s (%s) of %s (%s) te wijzigen.</translation>
+    </message>
+    <message>
+        <source>
+Unable to restore backup of wallet.</source>
+        <translation>
+Kan de back-up van de portemonnee niet herstellen.</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf is verouderd en wordt in de volgende versie volledig verwijderd.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>Een databasecache van %zu MiB is mogelijk te groot voor slechts %zu MiB systeemgeheugen.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>Er is een fatale interne fout opgetreden; zie %s voor details: %s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>Geen Assumeutxo-gegevens gevonden voor de opgegeven blokhash '%s'.</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version 3 pre-selected input with a version %d tx</source>
+        <translation>Kan vooraf geselecteerde, onbevestigde invoer van versie 3 niet uitgeven met een transactie van versie %d</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>Beschadigd blok gevonden; dit kan op een hardwareprobleem wijzen.</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>Kan ingebouwde asmap-gegevens niet lezen</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>Dubbele bindingsconfiguratie voor adres %s. Controleer de instellingen -bind, -bind=...=onion en -whitebind.</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>De controle van elliptische-krommecryptografie is mislukt. %s wordt afgesloten.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>Ingebouwde asmap-gegevens zijn niet beschikbaar</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>Fout bij het maken van %s: kan de versiemetadata niet schrijven.</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>Fout bij het laden van %s: de portemonnee is van het oude type. Migreer naar een descriptorportemonnee met het migratiehulpmiddel (migratewallet RPC).</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Fout: kan transactie %s niet toevoegen aan de portemonnee voor alleen volgen</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Fout: kan bestand '%s' niet maken</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>Fout: het dumpbestand vermeldt een niet-ondersteund databaseformaat (%s). Alleen sqlite-databasedumps worden ondersteund</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Fout: exportbestemming '%s' bestaat al</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Fout: de exportbestemming mag niet leeg zijn</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Fout: kan geen nieuwe portemonnee voor alleen volgen maken. %s</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>Fout: niet alle adresboekvermeldingen zijn gemigreerd</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Fout: kan de geëxporteerde portemonnee niet schrijven</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Fout: de portemonnee heeft geen descriptors om te exporteren</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Fout: kan de databasetransactie voor de export van de portemonnee voor alleen volgen niet vastleggen</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Fout: de databasetransactie kan niet worden uitgevoerd voor de nieuwe portemonnee voor alleen volgen %s</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>Kan tijdens de initialisatie van de portemonnee geen exclusieve toegang voor een nieuwe scan reserveren</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>Kan de extra vergoedingen niet berekenen, omdat onbevestigde UTXO's afhankelijk zijn van een enorm cluster onbevestigde transacties.</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>Kan het bestand met herstelgegevens voor blokken niet sluiten.</translation>
+    </message>
+    <message>
+        <source>Failed to disconnect block.</source>
+        <translation>Kan het blok niet loskoppelen.</translation>
+    </message>
+    <message>
+        <source>Failed to read block.</source>
+        <translation>Kan het blok niet lezen.</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>Kan de chainstate-map van de momentopname (%s) niet verwijderen. Verwijder deze handmatig voordat u opnieuw start.
+</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>Kan de indexen niet starten; afsluiten…</translation>
+    </message>
+    <message>
+        <source>Failed to write block.</source>
+        <translation>Kan het blok niet schrijven.</translation>
+    </message>
+    <message>
+        <source>Failed to write undo data.</source>
+        <translation>Kan de herstelgegevens niet schrijven.</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>Het vergoedingstarief (%s) is lager dan het ingestelde minimumtarief (%s).</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Het wegschrijven van het blokbestand naar schijf is mislukt. Dit komt waarschijnlijk door een I/O-fout.</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Het wegschrijven van het bestand met herstelgegevens naar schijf is mislukt. Dit komt waarschijnlijk door een I/O-fout.</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>Ongeldig -proxy-adres of ongeldige hostnaam eindigt op '=': '%s'</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is less than transaction weight without inputs</source>
+        <translation>Het maximale transactiegewicht is lager dan het transactiegewicht zonder invoeren</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is too low, can not accommodate change output</source>
+        <translation>Het maximale transactiegewicht is te laag voor een wisselgelduitvoer</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>Het maximale transactiegewicht moet tussen %d en %d liggen</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>Alleen de richting is ingesteld, geen machtigingen: '%s'</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Optie '-limitancestorsize' is opgegeven, maar de groottelimieten voor voorouders zijn vervangen door groottelimieten voor clusters (zie -limitclustersize). Deze optie heeft geen effect.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Optie '-limitdescendantsize' is opgegeven, maar de groottelimieten voor nakomelingen zijn vervangen door groottelimieten voor clusters (zie -limitclustersize). Deze optie heeft geen effect.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>Privéverspreiding van eigen transacties is aangevraagd (-privatebroadcast) en -proxyrandomize is uitgeschakeld. Tor-circuits voor privéverspreiding kunnen aan andere Tor-verbindingen worden gekoppeld. Stel voor maximale privacy -proxyrandomize=1 in.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>Privéverspreiding van eigen transacties is aangevraagd (-privatebroadcast), maar -connect is ook ingesteld. Deze zijn onverenigbaar, omdat privéverspreiding nieuwe verbindingen met willekeurig gekozen Tor- of I2P-peers moet openen. Overweeg in plaats daarvan -maxconnections=0 -addnode=... te gebruiken</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>Privéverspreiding van eigen transacties is aangevraagd (-privatebroadcast), maar noch Tor noch I2P is bereikbaar</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>De modus voor het verwijderen van oude blokken is niet verenigbaar met -txospenderindex.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>Hernoemen van '%s' -&gt; '%s' is mislukt. Kan de leveldb-map van de achtergrond-chainstate niet opruimen.</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>De ondertekenaar heeft het adres niet teruggegeven</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>De ondertekenaar gaf het onverwachte adres %s terug</translation>
+    </message>
+    <message>
+        <source>Signer returned error: %s</source>
+        <translation>De ondertekenaar gaf een fout terug: %s</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>Systeemfout tijdens het wegschrijven: %s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>Systeemfout tijdens het laden van een extern blokbestand: %s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>Systeemfout tijdens het opslaan van een blok op schijf: %s</translation>
+    </message>
+    <message>
+        <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
+        <translation>Het pad %s gebruikt exFAT, waarvan bekend is dat er op macOS soms gegevensbeschadiging optreedt. Verplaats deze map naar een ander bestandssysteem om gegevensverlies te voorkomen.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>De optie -testactivationheight mag niet op het hoofdnetwerk worden gebruikt.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>De optie -vbparams mag niet op het hoofdnetwerk worden gebruikt.</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>De combinatie van vooraf geselecteerde invoeren en de automatisch door de portemonnee geselecteerde invoeren overschrijdt het maximale transactiegewicht. Probeer een kleiner bedrag te verzenden of de UTXO's van uw portemonnee handmatig samen te voegen</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>Het totaal overschrijdt uw saldo wanneer de transactievergoeding van %s wordt meegerekend.</translation>
+    </message>
+    <message>
+        <source>There is no ScriptPubKeyManager for this address</source>
+        <translation>Er is geen ScriptPubKeyManager voor dit adres</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>De transactie vereist één bestemming met een waarde groter dan nul, een vergoedingstarief groter dan nul of een vooraf geselecteerde invoer</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Kan de descriptorcache niet schrijven</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>Onbekende optie "%s" opgegeven in -test=&lt;option&gt;.</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>Onbekende descriptor gevonden. Portemonnee %s wordt geladen
+
+De portemonnee is mogelijk met een nieuwere versie gemaakt.
+Probeer de nieuwste softwareversie te gebruiken.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>Onbekend netwerk in -proxy='%s': '%s'</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>Waarschuwing: er is een ongeldige keten gevonden die meer dan 6 blokken langer is dan onze beste keten. Dit kan komen door een beschadigde database of door consensusregels die niet overeenkomen met die van andere knooppunten.</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>De datum en tijd van uw computer lijken meer dan %d minuten van het netwerk af te wijken; dit kan consensusproblemen veroorzaken. Nadat u de klok van uw computer hebt gecontroleerd, zou dit bericht na een herstart van uw knooppunt moeten verdwijnen. Zonder herstart zou het automatisch moeten verdwijnen nadat er voldoende nieuwe uitgaande verbindingen met netwerkpeers zijn gemaakt; dit kan enige tijd duren. Bekijk het veld `timeoffset` van de RPC-methoden `getpeerinfo` en `getnetworkinfo` voor meer informatie.</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>whitebind mag alleen voor inkomende verbindingen worden gebruikt ("out" is opgegeven)</translation>
     </message>
 </context>
 <context>
@@ -4229,6 +5763,278 @@ Versie basiscertificaten: %2</translation>
     <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Optioneel: leeg gebruikt deze portemonnee</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPU-threads:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Kon geen beloningsadres genereren. Controleer of de portemonnee ontvangstadressen kan genereren.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Fout</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>De FAST-modus deelt ongeveer 2 GiB RandomX-geheugen met de validatie. Meer threads gebruiken meer CPU en stroom; houd capaciteit over voor de node. Het initialiseren van de dataset kan even duren.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Mine testnetblokken met uw CPU via RandomX. Mining staat uit totdat u deze start. De miner wordt gedeeld door alle portemonnees in deze node en blijft werken als u van tabblad wisselt of een portemonnee sluit.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Mining</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Mining / RandomX voorbereiden</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Nieuw adres uit deze portemonnee</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Beloningsadres voor dit netwerk</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Beloningsadres:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Mining starten</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Bezig met starten</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Status: %1
+Hashrate: %2 H/s
+Hashes: %3 | Geaccepteerde blokken: %4
+Actief beloningsadres: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Mining stoppen</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Gestopt</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Bezig met stoppen (wacht op huidig werk)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Wachten tot de node is bijgewerkt</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Waarschuwing: %1 miningthreads overschrijden de %2 gedetecteerde logische CPU's. Dit kan de hashrate verlagen en de node vertragen.</translation>
+    </message>
+</context>
+<context>
+    <name>PeerTableModel</name>
+    <message>
+        <source>Network</source>
+        <extracomment>Title of Peers Table column which states the network the peer connected through.</extracomment>
+        <translation type="unfinished">Netwerk</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <extracomment>Title of Peers Table column which indicates the total amount of network information we have received from the peer.</extracomment>
+        <translation type="unfinished">Ontvangen</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <extracomment>Title of Peers Table column which indicates the total amount of network information we have sent to the peer.</extracomment>
+        <translation type="unfinished">Verstuurd</translation>
+    </message>
+    <message>
+        <source>Age</source>
+        <extracomment>Title of Peers Table column which indicates the duration (length of time) since the peer connection started.</extracomment>
+        <translation type="unfinished">Duur</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <extracomment>Title of Peers Table column which indicates the direction the peer connection was initiated from.</extracomment>
+        <translation type="unfinished">Directie</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <extracomment>Title of Peers Table column which contains the IP/Onion/I2P address of the connected peer.</extracomment>
+        <translation type="unfinished">Adres</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <extracomment>An Inbound Connection from a Peer.</extracomment>
+        <translation type="unfinished">Inkomend</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <extracomment>An Outbound Connection to a Peer.</extracomment>
+        <translation type="unfinished">Uitgaand</translation>
+    </message>
+    <message>
+        <source>Peer</source>
+        <extracomment>Title of Peers Table column which contains a unique number used to identify a connection.</extracomment>
+        <translation>Netwerkpeer</translation>
+    </message>
+    <message>
+        <source>Ping</source>
+        <extracomment>Title of Peers Table column which indicates the current latency of the connection with the peer.</extracomment>
+        <translation>Ping</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <extracomment>Title of Peers Table column which describes the type of peer connection. The "type" describes why the connection exists.</extracomment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <extracomment>Title of Peers Table column which contains the peer's User Agent string.</extracomment>
+        <translation>Useragent</translation>
+    </message>
+</context>
+<context>
+    <name>SendCoinsEntry</name>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished">Bericht:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation type="unfinished">Plak adres vanuit klembord</translation>
+    </message>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">B&amp;edrag:</translation>
+    </message>
+    <message>
+        <source>Pay &amp;To:</source>
+        <translation type="unfinished">Betaal &amp;aan:</translation>
+    </message>
+    <message>
+        <source>Choose previously used address</source>
+        <translation type="unfinished">Kies een eerder gebruikt adres</translation>
+    </message>
+    <message>
+        <source>Remove this entry</source>
+        <translation type="unfinished">Verwijder deze toevoeging</translation>
+    </message>
+    <message>
+        <source>The amount to send in the selected unit</source>
+        <translation type="unfinished">Het te sturen bedrag in de geselecteerde eenheid</translation>
+    </message>
+    <message>
+        <source>S&amp;ubtract fee from amount</source>
+        <translation type="unfinished">Trek de transactiekosten a&amp;f van het bedrag.</translation>
+    </message>
+    <message>
+        <source>Use available balance</source>
+        <translation type="unfinished">Gebruik beschikbaar saldo</translation>
+    </message>
+    <message>
+        <source>Enter a label for this address to add it to the list of used addresses</source>
+        <translation type="unfinished">Vul een label voor dit adres in om het aan de lijst met gebruikte adressen toe te voegen</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Label:</translation>
+    </message>
+    <message>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation>Een bericht dat aan de connectcoin:-URI was gekoppeld en ter informatie bij de transactie wordt opgeslagen. Opmerking: Dit bericht wordt niet via het ConnectCoin-netwerk verzonden.</translation>
+    </message>
+    <message>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation>Het ConnectCoin-adres waarnaar de betaling wordt verzonden</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>De vergoeding wordt van het te verzenden bedrag afgetrokken. De ontvanger krijgt minder ConnectCoin dan u in het bedragveld invoert. Bij meerdere ontvangers wordt de vergoeding gelijk verdeeld.</translation>
+    </message>
+</context>
+<context>
+    <name>PaymentServer</name>
+    <message>
+        <source>Payment request error</source>
+        <translation type="unfinished">Fout bij betalingsverzoek</translation>
+    </message>
+    <message>
+        <source>URI handling</source>
+        <translation type="unfinished">URI-behandeling</translation>
+    </message>
+    <message>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation type="unfinished">Kan betaalverzoek niet verwerken omdat BIP70 niet wordt ondersteund.
+Gezien de wijdverspreide beveiligingsproblemen in BIP70 is het sterk aanbevolen om iedere instructie om van wallet te wisselen te negeren.
+Als je deze fout ziet zou je de aanbieder moeten verzoeken om een BIP21-compatibele URI te verstrekken.</translation>
+    </message>
+    <message>
+        <source>Payment request file handling</source>
+        <translation type="unfinished">Betalingsverzoek bestandsafhandeling</translation>
+    </message>
+    <message>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation>'connectcoin://' is geen geldige URI. Gebruik in plaats daarvan 'connectcoin:'.</translation>
+    </message>
+    <message>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation>Kan de afhandeling van connectcoin:-betaallinks niet starten</translation>
+    </message>
+    <message>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation>De URI kan niet worden verwerkt! Dit kan komen door een ongeldig ConnectCoin-adres of onjuist opgemaakte URI-parameters.</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">Verstuur</translation>
+    </message>
+    <message>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">Creëer ongetekende</translation>
+    </message>
+</context>
+<context>
+    <name>SplashScreen</name>
+    <message>
+        <source>(press q to shutdown and continue later)</source>
+        <translation type="unfinished">(druk op q voor afsluiten en later doorgaan)</translation>
+    </message>
+    <message>
+        <source>press q to shutdown</source>
+        <translation type="unfinished">druk op q om af te sluiten</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
     </message>
 </context>
 </TS>

@@ -6,6 +6,7 @@
 #include <interfaces/wallet.h>
 #include <qt/walletmodel.h>
 #include <univalue.h>
+#include <wallet/p2c_worker.h>
 
 #include <QCheckBox>
 #include <QFormLayout>
@@ -54,7 +55,7 @@ P2CClaimDialog::P2CClaimDialog(QWidget* parent) : QWidget(parent)
     m_concurrency = new QSpinBox(this);
     m_concurrency->setObjectName("p2cClaimConcurrency");
     m_concurrency->setRange(1, std::numeric_limits<int>::max());
-    m_concurrency->setValue(4);
+    m_concurrency->setValue(wallet::DEFAULT_P2C_CLAIM_CONCURRENCY);
     form->addRow(tr("Simultaneous connections:"), m_concurrency);
     m_domains = new QLineEdit(this);
     m_domains->setObjectName("p2cClaimDomains");

@@ -54,11 +54,11 @@
         <translation type="unfinished">தே&amp;ர்வுசெய் </translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation type="unfinished">இவை பணம் அனுப்புவதற்கு உங்களின் பிட்காயின் முகவரிகள். பிட்காயின்களை அனுப்புவதற்கு முன் எப்பொழுதும் தொகையும் பெறுதலையும் சரிபார்க்கவும்.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">பிட்காயின் பெறுவதற்காக உங்கள் முகவரி இவை. புதிய முகவரிகளை உருவாக்க 'புதிய முகவரியை உருவாக்கு' என்ற பட்டனை கிளிக் செய்யவும்.
 கையொப்பமிடுவது 'மரபு' வகையின் முகவரிகளால் மட்டுமே சாத்தியமாகும்.</translation>
@@ -100,6 +100,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">ஏக்ஸ்போர்ட் தோல்வியடைந்தது</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the clipboard</source>
+        <translation>தற்போது தேர்ந்தெடுத்த முகவரியை இடைநிலைப் பலகைக்கு நகலெடுக்கவும்</translation>
     </message>
 </context>
 <context>
@@ -160,8 +164,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">பணப்பை குறியாக்கத்தை உறுதிப்படுத்துக</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">எச்சரிக்கை: உங்கள் பணப்பையை குறியாக்கி உங்கள் கடவுச்சொற்றொடரை இழந்தால், நீங்கள் உங்கள் பைட்கோனை இழக்கலாம்!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation>எச்சரிக்கை: உங்கள் பணப்பையைக் குறியாக்கிய பின் கடவுச்சொற்றொடரை இழந்தால், &lt;b&gt;உங்கள் CONNECTCOIN நிதி அனைத்தையும் இழப்பீர்கள்&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -173,7 +177,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation type="unfinished">வாலட்டை பாதுகாக்க புதிய கடவுச்சொல்லை உல்லிடவும். பத்து அல்லது அதற்கு மேற்பட்ட எழுத்துகள் அல்லது எட்டு அல்லது அதற்கு மேற்பட்ட எழுத்துக்களை கடவுச்சொல்லாக பயன்படுத்தவும்.</translation>
+        <translation>பணப்பைக்கான புதிய கடவுச்சொற்றொடரை உள்ளிடவும்.&lt;br/&gt;தயவுசெய்து &lt;b&gt;பத்து அல்லது அதற்கு மேற்பட்ட சீரற்ற எழுத்துக்குறிகள்&lt;/b&gt; அல்லது &lt;b&gt;எட்டு அல்லது அதற்கு மேற்பட்ட சொற்கள்&lt;/b&gt; கொண்ட கடவுச்சொற்றொடரைப் பயன்படுத்தவும்.</translation>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase for the wallet.</source>
@@ -188,7 +192,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">பின் செல்</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
         <translation type="unfinished">வாலட்டை குறியாக்கம் செய்தால் மட்டும் உங்கள் பிட்காயினை வைரஸிடம் இருந்து பாதுகாக்க இயலாது.</translation>
     </message>
     <message>
@@ -239,12 +243,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Warning: The Caps Lock key is on!</source>
         <translation type="unfinished">எச்சரிக்கை: Caps Lock விசை இயக்கத்தில் உள்ளது!</translation>
     </message>
+    <message>
+        <source>The old passphrase entered for the wallet decryption is incorrect. It contains a null character (ie - a zero byte). If the passphrase was set with a version of this software prior to 25.0, please try again with only the characters up to — but not including — the first null character.</source>
+        <translation>பணப்பையை மறைவிலக்க உள்ளிட்ட பழைய கடவுச்சொற்றொடர் தவறானது. அதில் நல் எழுத்து (அதாவது பூஜ்ஜிய பைட்) உள்ளது. இந்த மென்பொருளின் 25.0க்கு முந்தைய பதிப்பில் கடவுச்சொற்றொடர் அமைக்கப்பட்டிருந்தால், முதல் நல் எழுத்திற்கு முந்தைய எழுத்துகளை மட்டும் கொண்டு மீண்டும் முயலவும்; அந்த நல் எழுத்தைச் சேர்க்க வேண்டாம்.</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption is incorrect. It contains a null character (ie - a zero byte). If the passphrase was set with a version of this software prior to 25.0, please try again with only the characters up to — but not including — the first null character. If this is successful, please set a new passphrase to avoid this issue in the future.</source>
+        <translation>பணப்பையை மறைவிலக்க உள்ளிட்ட கடவுச்சொற்றொடர் தவறானது. அதில் நல் எழுத்து (அதாவது பூஜ்ஜிய பைட்) உள்ளது. இந்த மென்பொருளின் 25.0க்கு முந்தைய பதிப்பில் கடவுச்சொற்றொடர் அமைக்கப்பட்டிருந்தால், முதல் நல் எழுத்திற்கு முந்தைய எழுத்துகளை மட்டும் கொண்டு மீண்டும் முயலவும்; அந்த நல் எழுத்தைச் சேர்க்க வேண்டாம். இது வெற்றியடைந்தால், வருங்காலத்தில் இச்சிக்கலைத் தவிர்க்க புதிய கடவுச்சொற்றொடரை அமைக்கவும்.</translation>
+    </message>
 </context>
 <context>
     <name>BanTableModel</name>
     <message>
         <source>Banned Until</source>
         <translation type="unfinished">வரை தடை செய்யப்பட்டது</translation>
+    </message>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/வலையமைப்பு முகமூடி</translation>
     </message>
 </context>
 <context>
@@ -264,6 +280,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>An internal error occurred. %1 will attempt to continue safely. This is an unexpected bug which can be reported as described below.</source>
         <translation type="unfinished">உள் பிழை ஏற்பட்டது. %1  தொடர முயற்சிக்கும். இது எதிர்பாராத பிழை, கீழே விவரிக்கப்பட்டுள்ளபடி புகாரளிக்கலாம்.</translation>
+    </message>
+    <message>
+        <source>Settings file %1 might be corrupt or invalid.</source>
+        <translation>அமைப்புக் கோப்பு %1 சிதைந்ததாகவோ செல்லாததாகவோ இருக்கலாம்.</translation>
     </message>
 </context>
 <context>
@@ -295,7 +315,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">விலை</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
         <translation type="unfinished">ஒரு விக்கிபீடியா முகவரியை உள்ளிடவும் (எ.கா. %1)</translation>
     </message>
     <message>
@@ -314,37 +334,37 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n வினாடி</numerusform>
+            <numerusform>%n வினாடிகள்</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n நிமிடம்</numerusform>
+            <numerusform>%n நிமிடங்கள்</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n மணி நேரம்</numerusform>
+            <numerusform>%n மணி நேரங்கள்</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n நாள்</numerusform>
+            <numerusform>%n நாட்கள்</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n வாரம்</numerusform>
+            <numerusform>%n வாரங்கள்</numerusform>
         </translation>
     </message>
     <message>
@@ -353,14 +373,134 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n ஆண்டு</numerusform>
+            <numerusform>%n ஆண்டுகள்</numerusform>
         </translation>
     </message>
     <message>
         <source>default wallet</source>
         <translation type="unfinished">இயல்புநிலை வாலட்</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 நாள்</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 மணி</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 நிமி</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 மி.வி</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 வி</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <extracomment>Short-lived peer connection type that solicits known addresses from a peer.</extracomment>
+        <translation>முகவரி பெறுதல்</translation>
+    </message>
+    <message>
+        <source>Block Relay</source>
+        <extracomment>Peer connection type that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>தொகுதி மறுஅனுப்பல்</translation>
+    </message>
+    <message>
+        <source>Custom…</source>
+        <translation>தனிப்பயன்…</translation>
+    </message>
+    <message>
+        <source>Default system font "%1"</source>
+        <translation>கணினியின் இயல்புநிலை எழுத்துரு "%1"</translation>
+    </message>
+    <message>
+        <source>Embedded "%1"</source>
+        <translation>உட்பொதிந்த "%1"</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <extracomment>Short-lived peer connection type that tests the aliveness of known addresses.</extracomment>
+        <translation>சோதனை இணைப்பு</translation>
+    </message>
+    <message>
+        <source>Full Relay</source>
+        <extracomment>Peer connection type that relays all network information.</extracomment>
+        <translation>முழு மறுஅனுப்பல்</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <extracomment>Peer connection type established manually through one of several methods.</extracomment>
+        <translation>கைமுறை</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>பொருந்தாது</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>தனியுரிமை ஒளிபரப்பு</translation>
+    </message>
+    <message>
+        <source>Unroutable</source>
+        <translation>வழித்தடமிட முடியாதது</translation>
     </message>
 </context>
 <context>
@@ -431,7 +571,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ப்ராக்ஸி &lt;b&gt;இயக்கப்பட்டது&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
+        <source>Send coins to a ConnectCoin address</source>
         <translation type="unfinished">ஒரு விக்கிபீடியா முகவரிக்கு நாணயங்களை அனுப்பவும்</translation>
     </message>
     <message>
@@ -471,7 +611,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;கடவுச்சொல்லை மாற்றுக…</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
         <translation type="unfinished">உங்கள் பிட்டினின் முகவரியுடன் செய்திகளை உங்களிடம் வைத்திருப்பதை நிரூபிக்க</translation>
     </message>
     <message>
@@ -479,7 +619,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;செய்தியை சரிபார்க்கவும்...</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
         <translation type="unfinished">குறிப்பிடப்பட்ட விக்கிபீடியா முகவர்களுடன் கையொப்பமிடப்பட்டதை உறுதிப்படுத்த, செய்திகளை சரிபார்க்கவும்</translation>
     </message>
     <message>
@@ -503,8 +643,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">தாவல்கள் கருவிப்பட்டி</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">கொடுப்பனவுகளை கோருதல் (QR குறியீடுகள் மற்றும் bitcoin உருவாக்குகிறது: URI கள்)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">கொடுப்பனவுகளை கோருதல் (QR குறியீடுகள் மற்றும் ConnectCoin உருவாக்குகிறது: URI கள்)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -520,9 +660,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>பரிவர்த்தனை வரலாற்றில் %n ப்லாக் செயலாக்கப்பட்டது.</numerusform>
+            <numerusform>பரிவர்த்தனை வரலாற்றில் %n ப்லாக்ககள் செயலாக்கப்பட்டன.</numerusform>
         </translation>
     </message>
     <message>
@@ -554,7 +694,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">தேதி வரை</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
         <translation type="unfinished"> ஓரளவு கையொப்பமிடப்பட்ட பிட்காயின் பரிவர்த்தனையை ஏற்றவும்
 </translation>
     </message>
@@ -575,7 +715,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">முகவரிகள் பெறுதல்</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
+        <source>Open a connectcoin: URI</source>
         <translation type="unfinished">திற பிட்காயின்: URI</translation>
     </message>
     <message>
@@ -595,8 +735,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">அனைத்து பணப்பைகள் மூடு</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">சாத்தியமான Bitcoin கட்டளை-வரி விருப்பங்களைக் கொண்ட பட்டியலைப் பெற %1 உதவிச் செய்தியைக் காட்டு</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">சாத்தியமான ConnectCoin கட்டளை-வரி விருப்பங்களைக் கொண்ட பட்டியலைப் பெற %1 உதவிச் செய்தியைக் காட்டு</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -737,6 +877,182 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Create pay-to-connect bounties</source>
         <translation>pay-to-connect வெகுமதிகளை உருவாக்கு</translation>
     </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;மைனிங்</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>CPU மைனிங்கைக் கட்டுப்படுத்து</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to the ConnectCoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation>
+            <numerusform>ConnectCoin வலையமைப்புடன் %n செயலில் உள்ள இணைப்பு.</numerusform>
+            <numerusform>ConnectCoin வலையமைப்புடன் %n செயலில் உள்ள இணைப்புகள்.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>&amp;Hide</source>
+        <translation>&amp;மறை</translation>
+    </message>
+    <message>
+        <source>&amp;Load PSBT from file…</source>
+        <translation>கோப்பிலிருந்து PSBTஐ &amp;ஏற்றவும்…</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>அனைத்துக் கோப்புகள்</translation>
+    </message>
+    <message>
+        <source>Catching up…</source>
+        <translation>பிந்தைய நிலையை எட்டுகிறது…</translation>
+    </message>
+    <message>
+        <source>Click for more actions.</source>
+        <extracomment>A substring of the tooltip. "More actions" are available via the context menu.</extracomment>
+        <translation>மேலும் செயல்களுக்குக் கிளிக் செய்யவும்.</translation>
+    </message>
+    <message>
+        <source>Close All Wallets…</source>
+        <translation>அனைத்துப் பணப்பைகளையும் மூடவும்…</translation>
+    </message>
+    <message>
+        <source>Close Wallet…</source>
+        <translation>பணப்பையை மூடவும்…</translation>
+    </message>
+    <message>
+        <source>Connecting to peers…</source>
+        <translation>சக முனைகளுடன் இணைகிறது…</translation>
+    </message>
+    <message>
+        <source>Create Wallet…</source>
+        <translation>பணப்பையை உருவாக்கவும்…</translation>
+    </message>
+    <message>
+        <source>Disable network activity</source>
+        <extracomment>A context menu item.</extracomment>
+        <translation>வலையமைப்புச் செயல்பாட்டை முடக்கவும்</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>ஏற்றுமதிப் பிழை</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>ஏற்றுமதி வெற்றியடைந்தது</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>மற்றொரு முனையில் மீட்டமைக்கக்கூடிய தற்போதைய பணப்பையின் பார்வைக்கு-மட்டுமான பதிப்பை ஏற்றுமதி செய்யவும்.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>பார்வைக்கு-மட்டுமான பணப்பையை ஏற்றுமதி செய்யவும்</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk…</source>
+        <translation>வட்டிலுள்ள தொகுதிகள் அட்டவணையிடப்படுகின்றன…</translation>
+    </message>
+    <message>
+        <source>Invalid Wallet Name</source>
+        <translation>பணப்பையின் பெயர் செல்லாதது</translation>
+    </message>
+    <message>
+        <source>Load PSBT from &amp;clipboard…</source>
+        <translation>&amp;இடைநிலைப் பலகையிலிருந்து PSBTஐ ஏற்றவும்…</translation>
+    </message>
+    <message>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation>இடைநிலைப் பலகையிலிருந்து பகுதியளவு கையொப்பமிட்ட ConnectCoin பரிவர்த்தனையை ஏற்றவும்</translation>
+    </message>
+    <message>
+        <source>Load Wallet Backup</source>
+        <extracomment>The title for Restore Wallet File Windows</extracomment>
+        <translation>பணப்பைக் காப்புப்பிரதியை ஏற்றவும்</translation>
+    </message>
+    <message>
+        <source>Migrate Wallet</source>
+        <translation>பணப்பையை இடமாற்றவும்</translation>
+    </message>
+    <message>
+        <source>Migrate a wallet</source>
+        <translation>ஒரு பணப்பையை இடமாற்றவும்</translation>
+    </message>
+    <message>
+        <source>Pre-syncing Headers (%1%)…</source>
+        <translation>தலைப்புகள் முன்-ஒத்திசைக்கப்படுகின்றன (%1%)…</translation>
+    </message>
+    <message>
+        <source>Processing blocks on disk…</source>
+        <translation>வட்டிலுள்ள தொகுதிகள் செயலாக்கப்படுகின்றன…</translation>
+    </message>
+    <message>
+        <source>Restore Wallet…</source>
+        <extracomment>Name of the menu item that restores wallet from a backup file.</extracomment>
+        <translation>பணப்பையை மீட்டமைக்கவும்…</translation>
+    </message>
+    <message>
+        <source>Restore a wallet from a backup file</source>
+        <extracomment>Status tip for Restore Wallet menu item</extracomment>
+        <translation>காப்புப்பிரதிக் கோப்பிலிருந்து பணப்பையை மீட்டமைக்கவும்</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>பணப்பையை மீட்டமைத்து இடமாற்றவும்</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>பணப்பைக் காப்புப்பிரதியை மீட்டமைத்து இடமாற்றவும்</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>பணப்பைக் கோப்பை மீட்டமைத்து இடமாற்றவும்…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>பார்வைக்கு-மட்டுமான பணப்பை ஏற்றுமதியைச் சேமிக்கவும்</translation>
+    </message>
+    <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation>சக முனைகள் தாவலைக் காட்டவும்</translation>
+    </message>
+    <message>
+        <source>Sign &amp;message…</source>
+        <translation>&amp;செய்தியைக் கையொப்பமிடவும்…</translation>
+    </message>
+    <message>
+        <source>Synchronizing with network…</source>
+        <translation>வலையமைப்புடன் ஒத்திசைக்கிறது…</translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)…</source>
+        <translation>தலைப்புகள் ஒத்திசைக்கப்படுகின்றன (%1%)…</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>பணப்பை ஏற்றுமதி செய்யப்பட்ட இடம்: </translation>
+    </message>
+    <message>
+        <source>Wallet Data</source>
+        <extracomment>Name of the wallet data file format.</extracomment>
+        <translation>பணப்பைத் தரவு</translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>பணப்பையின் பெயர் காலியாக இருக்க முடியாது</translation>
+    </message>
 </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -855,6 +1171,34 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(change)</source>
         <translation type="unfinished">(மாற்றம்)</translation>
     </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>முகவரியை &amp;நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation>செலவிடாததன் &amp;பூட்டைத் திறக்கவும்</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>ஒவ்வொரு உள்ளீட்டிற்கும் +/- %1 connect வரை மாறலாம்.</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation>&amp;தொகையை நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>&amp;பெயர்ச்சீட்டை நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID and output index</source>
+        <translation>பரிவர்த்தனை &amp;ID மற்றும் வெளியீட்டு எண்ணை நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation>செலவிடாததைப் &amp;பூட்டவும்</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -871,7 +1215,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Create wallet warning</source>
         <translation type="unfinished">வாலட் உருவாக்கம் எச்சரிக்கை</translation>
     </message>
-    </context>
+        <message>
+        <source>Can't list signers</source>
+        <translation>கையொப்பமிடுவோரைப் பட்டியலிட முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
+        <translation>&lt;b&gt;%1&lt;/b&gt; பணப்பை உருவாக்கப்படுகிறது…</translation>
+    </message>
+    <message>
+        <source>Too many external signers found</source>
+        <translation>மிக அதிகமான வெளிப்புறக் கையொப்பமிடுவோர் கண்டறியப்பட்டனர்</translation>
+    </message>
+</context>
 <context>
     <name>MigrateWalletActivity</name>
     <message>
@@ -879,7 +1236,96 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>Title of progress window which is displayed when wallets are being restored.</extracomment>
         <translation type="unfinished">பணப்பையை மீட்டெடுக்க</translation>
     </message>
-    </context>
+        <message>
+        <source>Are you sure you wish to migrate the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>&lt;i&gt;%1&lt;/i&gt; பணப்பையை இடமாற்ற விரும்புகிறீர்கள் என்பது உறுதியா?</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>&lt;i&gt;%1&lt;/i&gt; பணப்பைக் கோப்பை &lt;i&gt;%2&lt;/i&gt; ஆக மீட்டமைத்து இடமாற்ற விரும்புகிறீர்கள் என்பது உறுதியா?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>முனையில் பழைய தொகுதிகள் அகற்றப்பட்டிருந்து, அகற்றப்பட்ட உயரத்திற்கு முன்னரே பணப்பை உருவாக்கப்பட்டிருந்தால், இடமாற்றப்பட்ட பணப்பையை ஏற்ற முயலும்போது இடமாற்றச் செயல்முறை தோல்வியடையலாம்.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>இடமாற்றத்திற்குப் பிறகு பணப்பையை ஏற்றவும்</translation>
+    </message>
+    <message>
+        <source>Migrate Wallet</source>
+        <translation>பணப்பையை இடமாற்றவும்</translation>
+    </message>
+    <message>
+        <source>Migrate wallet</source>
+        <translation>பணப்பையை இடமாற்றவும்</translation>
+    </message>
+    <message>
+        <source>Migrating Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <translation>&lt;b&gt;%1&lt;/b&gt; பணப்பை இடமாற்றப்படுகிறது…</translation>
+    </message>
+    <message>
+        <source>Migrating the wallet will convert this wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>பணப்பையை இடமாற்றுவது இதை ஒன்று அல்லது அதற்கு மேற்பட்ட விவரிப்பிப் பணப்பைகளாக மாற்றும். புதிய பணப்பைக் காப்புப்பிரதி உருவாக்கப்பட வேண்டும்.
+இந்தப் பணப்பையில் பார்வைக்கு-மட்டுமான நிரல்தொடர்கள் இருந்தால், அவற்றைக் கொண்ட புதிய பணப்பை உருவாக்கப்படும்.
+இந்தப் பணப்பையில் தீர்க்கக்கூடிய ஆனால் கண்காணிக்கப்படாத நிரல்தொடர்கள் இருந்தால், அவற்றைக் கொண்ட வேறொரு புதிய பணப்பை உருவாக்கப்படும்.
+
+இடமாற்றத்திற்கு முன் செயல்முறை பணப்பையின் காப்புப்பிரதியை உருவாக்கும். இந்தக் காப்புப்பிரதிக் கோப்பின் பெயர் &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak ஆக இருக்கும்; அது இந்தப் பணப்பையின் அடைவில் இருக்கும். இடமாற்றம் தவறாக நடந்தால், "பணப்பையை மீட்டமைக்கவும்" செயல்பாட்டின் மூலம் காப்புப்பிரதியை மீட்டமைக்கலாம்.</translation>
+    </message>
+    <message>
+        <source>Migration Successful</source>
+        <translation>இடமாற்றம் வெற்றியடைந்தது</translation>
+    </message>
+    <message>
+        <source>Migration failed</source>
+        <translation>இடமாற்றம் தோல்வியடைந்தது</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>பணப்பையை மீட்டமைத்து இடமாற்றவும்</translation>
+    </message>
+    <message>
+        <source>Restoring Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the restore wallets progress window which indicates to the user that wallets are currently being restored.</extracomment>
+        <translation>&lt;b&gt;%1&lt;/b&gt; பணப்பை மீட்டமைக்கப்படுகிறது…</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>பணப்பையை மீட்டமைப்பது காப்புப்பிரதிக் கோப்பை பணப்பைகள் அடைவில் நகலெடுத்து, வழக்கமான பணப்பை அடைவு அமைப்பில் வைக்கும். அசல் கோப்பு மாற்றப்படாது.
+
+இடமாற்றுவது மீட்டமைக்கப்பட்ட பணப்பையை ஒன்று அல்லது அதற்கு மேற்பட்ட விவரிப்பிப் பணப்பைகளாக மாற்றும். புதிய பணப்பைக் காப்புப்பிரதி உருவாக்கப்பட வேண்டும்.
+இந்தப் பணப்பையில் பார்வைக்கு-மட்டுமான நிரல்தொடர்கள் இருந்தால், அவற்றைக் கொண்ட புதிய பணப்பை உருவாக்கப்படும்.
+இந்தப் பணப்பையில் தீர்க்கக்கூடிய ஆனால் கண்காணிக்கப்படாத நிரல்தொடர்கள் இருந்தால், அவற்றைக் கொண்ட வேறொரு புதிய பணப்பை உருவாக்கப்படும்.
+
+இடமாற்றத்திற்கு முன் செயல்முறை பணப்பையின் காப்புப்பிரதியை உருவாக்கும். இந்தக் காப்புப்பிரதிக் கோப்பின் பெயர் &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak ஆக இருக்கும்; அது இந்தப் பணப்பையின் அடைவில் இருக்கும். இடமாற்றம் தவறாக நடந்தால், "பணப்பையை மீட்டமைக்கவும்" செயல்பாட்டின் மூலம் காப்புப்பிரதியை மீட்டமைக்கலாம்.</translation>
+    </message>
+    <message>
+        <source>Solvable but not watched scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>தீர்க்கக்கூடிய ஆனால் கண்காணிக்கப்படாத நிரல்தொடர்கள் '%1' எனப் பெயரிட்ட புதிய பணப்பைக்கு இடமாற்றப்பட்டன.</translation>
+    </message>
+    <message>
+        <source>The wallet '%1' was migrated successfully.</source>
+        <translation>'%1' பணப்பை வெற்றிகரமாக இடமாற்றப்பட்டது.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>இடமாற்றத்திற்குப் பிறகு பணப்பை ஏற்றப்படவில்லை. "கோப்பு &gt; பணப்பையைத் திறக்கவும்" பட்டியலிலிருந்து அதைத் திறக்கலாம்.</translation>
+    </message>
+    <message>
+        <source>Watchonly scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>பார்வைக்கு-மட்டுமான நிரல்தொடர்கள் '%1' எனப் பெயரிட்ட புதிய பணப்பைக்கு இடமாற்றப்பட்டன.</translation>
+    </message>
+</context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -895,7 +1341,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
         <translation type="unfinished">வாலட்டை திற</translation>
     </message>
-    </context>
+        <message>
+        <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
+        <translation>&lt;b&gt;%1&lt;/b&gt; பணப்பை திறக்கப்படுகிறது…</translation>
+    </message>
+</context>
 <context>
     <name>RestoreWalletActivity</name>
     <message>
@@ -903,7 +1354,27 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>Title of progress window which is displayed when wallets are being restored.</extracomment>
         <translation type="unfinished">பணப்பையை மீட்டெடுக்க</translation>
     </message>
-    </context>
+        <message>
+        <source>Restore wallet failed</source>
+        <extracomment>Title of message box which is displayed when the wallet could not be restored.</extracomment>
+        <translation>பணப்பை மீட்டமைப்பு தோல்வியடைந்தது</translation>
+    </message>
+    <message>
+        <source>Restore wallet message</source>
+        <extracomment>Title of message box which is displayed when the wallet is successfully restored.</extracomment>
+        <translation>பணப்பை மீட்டமைப்புச் செய்தி</translation>
+    </message>
+    <message>
+        <source>Restore wallet warning</source>
+        <extracomment>Title of message box which is displayed when the wallet is restored with some warning.</extracomment>
+        <translation>பணப்பை மீட்டமைப்பு எச்சரிக்கை</translation>
+    </message>
+    <message>
+        <source>Restoring Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the restore wallets progress window which indicates to the user that wallets are currently being restored.</extracomment>
+        <translation>&lt;b&gt;%1&lt;/b&gt; பணப்பை மீட்டமைக்கப்படுகிறது…</translation>
+    </message>
+</context>
 <context>
     <name>WalletController</name>
     <message>
@@ -922,7 +1393,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Close all wallets</source>
         <translation type="unfinished">அனைத்து பணப்பைகள் மூடு</translation>
     </message>
-    </context>
+        <message>
+        <source>Are you sure you wish to close all wallets?</source>
+        <translation>அனைத்துப் பணப்பைகளையும் மூட விரும்புகிறீர்கள் என்பது உறுதியா?</translation>
+    </message>
+</context>
 <context>
     <name>CreateWalletDialog</name>
     <message>
@@ -969,7 +1444,28 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Create</source>
         <translation type="unfinished">உருவாக்கு</translation>
     </message>
-    </context>
+        <message>
+        <source>Compiled without external signing support (required for external signing)</source>
+        <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
+        <translation>வெளிப்புறக் கையொப்ப ஆதரவின்றித் தொகுக்கப்பட்டது (வெளிப்புறக் கையொப்பமிடுதலுக்கு இது தேவை)</translation>
+    </message>
+    <message>
+        <source>External signer</source>
+        <translation>வெளிப்புறக் கையொப்பமிடுபவர்</translation>
+    </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>வெற்றுப் பணப்பையை உருவாக்கவும். வெற்றுப் பணப்பைகளில் தொடக்கத்தில் தனிப்பட்ட விசைகளோ நிரல்தொடர்களோ இருக்காது. பின்னர் விவரிப்பிகளைப் பயன்படுத்தி தனிப்பட்ட விசைகளையும் முகவரிகளையும் இறக்குமதி செய்யலாம்.</translation>
+    </message>
+    <message>
+        <source>Please provide a name and, if desired, enable any advanced options</source>
+        <translation>ஒரு பெயரை வழங்கவும்; விரும்பினால் மேம்பட்ட விருப்பங்களை இயக்கவும்</translation>
+    </message>
+    <message>
+        <source>You are one step away from creating your new wallet!</source>
+        <translation>உங்கள் புதிய பணப்பையை உருவாக்க இன்னும் ஓர் படிதான்!</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1005,7 +1501,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">முகவரியை அனுப்புவதைத் திருத்து</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
         <translation type="unfinished">உள்ளிட்ட முகவரி "%1" என்பது செல்லுபடியாகும் விக்கிபீடியா முகவரி அல்ல.</translation>
     </message>
     <message>
@@ -1069,6 +1565,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation type="unfinished">இந்த விண்டோ மறைந்து போகும் வரை கணினியை ஷட் டவுன் வேண்டாம்.</translation>
     </message>
+    <message>
+        <source>%1 is shutting down…</source>
+        <translation>%1 நிறுத்தப்படுகிறது…</translation>
+    </message>
 </context>
 <context>
     <name>Intro</name>
@@ -1106,9 +1606,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n GB of space available</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n GB இடம் உள்ளது</numerusform>
+            <numerusform>%n GB இடம் உள்ளது</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -1129,9 +1629,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message numerus="yes">
         <source>(sufficient to restore backups %n day(s) old)</source>
         <extracomment>Explanatory text on the capability of the current prune target.</extracomment>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>(%n நாள் பழைய காப்புப்பிரதிகளை மீட்டமைக்கப் போதுமானது)</numerusform>
+            <numerusform>(%n நாட்கள் பழைய காப்புப்பிரதிகளை மீட்டமைக்கப் போதுமானது)</numerusform>
         </translation>
     </message>
     <message>
@@ -1150,6 +1650,37 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Error</source>
         <translation type="unfinished">பிழை</translation>
     </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
+    <message>
+        <source> GB</source>
+        <translation> GB</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 ConnectCoin தொகுதிச்சங்கிலியின் நகலைப் பதிவிறக்கிச் சேமிக்கும்.</translation>
+    </message>
+    <message numerus="yes">
+        <source>(%n GB needed for full chain)</source>
+        <translation>
+            <numerusform>(முழுச் சங்கிலிக்கு %n GB தேவை)</numerusform>
+            <numerusform>(முழுச் சங்கிலிக்கு %n GB தேவை)</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Choose data directory</source>
+        <translation>தரவு அடைவைத் தேர்ந்தெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Limit block chain storage to</source>
+        <translation>தொகுதிச்சங்கிலிச் சேமிப்பின் வரம்பு</translation>
+    </message>
+    <message>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2 GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation>நீங்கள் சரி என்பதைக் கிளிக் செய்ததும், %4 முதலில் தொடங்கப்பட்ட %3இன் ஆரம்பப் பரிவர்த்தனைகளிலிருந்து முழு %4 தொகுதிச்சங்கிலியையும் (%2 GB) %1 பதிவிறக்கிச் செயலாக்கத் தொடங்கும்.</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1158,7 +1689,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">படிவம்</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
         <translation type="unfinished">சமீபத்திய பரிவர்த்தனைகள் இன்னும் காணப்படாமல் இருக்கலாம், எனவே உங்கள் பணப்பையின் சமநிலை தவறாக இருக்கலாம். கீழே விவரிக்கப்பட்டுள்ளபடி, உங்கள் பணப்பை பிட்ஃபோனை நெட்வொர்க்குடன் ஒத்திசைக்க முடிந்ததும் இந்த தகவல் சரியாக இருக்கும்.</translation>
     </message>
     <message>
@@ -1193,17 +1724,45 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Hide</source>
         <translation type="unfinished">மறை</translation>
     </message>
-    </context>
+        <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
+        <translation>%1 தற்போது ஒத்திசைகிறது.  தொகுதிச்சங்கிலியின் முனையை எட்டும் வரை சக முனைகளிலிருந்து தலைப்புகளையும் தொகுதிகளையும் பதிவிறக்கிச் சரிபார்க்கும்.</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>இதுவரை காட்டப்படாத பரிவர்த்தனைகளால் பாதிக்கப்படும் ConnectCoin நிதியைச் செலவிட முயல்வதை வலையமைப்பு ஏற்காது.</translation>
+    </message>
+    <message>
+        <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
+        <translation>தெரியவில்லை. தலைப்புகள் முன்-ஒத்திசைக்கப்படுகின்றன (%1, %2%)…</translation>
+    </message>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)…</source>
+        <translation>தெரியவில்லை. தலைப்புகள் ஒத்திசைக்கப்படுகின்றன (%1, %2%)…</translation>
+    </message>
+    <message>
+        <source>Unknown…</source>
+        <translation>தெரியவில்லை…</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
+        <source>Open ConnectCoin URI</source>
         <translation type="unfinished">பிட்காயின் யூ. ஆர். ஐ.யை திர</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">கிளிப்போர்டிலிருந்து முகவரியை பேஸ்ட் செய்யவும்</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1313,8 +1872,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Incomin &amp; g இணைப்புகளை அனுமதிக்கவும்</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Bitcoin பிணையத்துடன் SOCKS5 ப்ராக்ஸி மூலம் இணைக்கவும்.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">ConnectCoin பிணையத்துடன் SOCKS5 ப்ராக்ஸி மூலம் இணைக்கவும்.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1437,6 +1996,140 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">வழங்கப்பட்ட ப்ராக்ஸி முகவரி தவறானது.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>பாப்-அப் அறிவிப்புகளை இயக்கு</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>பெறப்பட்ட மற்றும் அனுப்பப்பட்ட பரிவர்த்தனைகள் உட்படத் திரையில் பாப்-அப் அறிவிப்புகளைக் காட்டு. இயல்பாக முடக்கப்பட்டுள்ளது. பிழை மற்றும் உறுதிப்படுத்தல் உரையாடல் பெட்டிகள் இயங்கும்.</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
+        <source>&amp;External signer script path</source>
+        <translation>&amp;வெளிப்புறக் கையொப்ப நிரல்தொடர் பாதை</translation>
+    </message>
+    <message>
+        <source>&amp;Show tray icon</source>
+        <translation>அறிவிப்புப் பகுதி சின்னத்தைக் &amp;காட்டவும்</translation>
+    </message>
+    <message>
+        <source>&amp;Third-party transaction URLs</source>
+        <translation>&amp;மூன்றாம் தரப்புப் பரிவர்த்தனை URLகள்</translation>
+    </message>
+    <message>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation>திசைவியில் ConnectCoin கிளையன்ட் துறையைத் தானாகத் திறக்கவும். திசைவி PCP அல்லது NAT-PMPஐ ஆதரித்து அது இயக்கப்பட்டிருந்தால் மட்டுமே இது இயங்கும். வெளிப்புறத் துறை சீரற்றதாக இருக்கலாம்.</translation>
+    </message>
+    <message>
+        <source>Compiled without external signing support (required for external signing)</source>
+        <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
+        <translation>வெளிப்புறக் கையொப்ப ஆதரவின்றித் தொகுக்கப்பட்டது (வெளிப்புறக் கையொப்பமிடுதலுக்கு இது தேவை)</translation>
+    </message>
+    <message>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Tor onion சேவைகளுக்கான தனி SOCKS5 பதிலி வழியாக ConnectCoin வலையமைப்புடன் இணைக்கவும்.</translation>
+    </message>
+    <message>
+        <source>Current settings will be backed up at "%1".</source>
+        <extracomment>Text explaining to the user that the client's current settings will be backed up at a specific location. %1 is a stand-in argument for the backup location's path.</extracomment>
+        <translation>தற்போதைய அமைப்புகள் "%1"இல் காப்பெடுக்கப்படும்.</translation>
+    </message>
+    <message>
+        <source>Enable &amp;PSBT controls</source>
+        <extracomment>An options window setting to enable PSBT controls.</extracomment>
+        <translation>&amp;PSBT கட்டுப்பாடுகளை இயக்கவும்</translation>
+    </message>
+    <message>
+        <source>Enable R&amp;PC server</source>
+        <extracomment>An Options window setting to enable the RPC server.</extracomment>
+        <translation>R&amp;PC சேவையகத்தை இயக்கவும்</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>பழைய தொகுதிகளை அகற்றுவதை இயக்குவது பரிவர்த்தனைகளைச் சேமிக்கத் தேவையான வட்டு இடத்தைப் பெரிதும் குறைக்கிறது. அனைத்துத் தொகுதிகளும் தொடர்ந்து முழுமையாகச் சரிபார்க்கப்படும். பழைய தொகுதித் தரவு அழிக்கப்படுவதற்கு முன் பணப்பைகள் ஒத்திசைந்திருக்க, இந்த வசதி இயக்கப்பட்டிருக்கும் போது பணப்பைகளைத் தொடக்கத்தில் ஏற்றி செயலில் வைத்திருக்க வேண்டும்; அகற்றப்பட்ட தரவுக்குப் பின்தங்கும் பணப்பைகளுக்கு மறு அட்டவணையிடல் தேவைப்படலாம். இந்த அமைப்பை மீட்டால் முழுத் தொகுதிச்சங்கிலியையும் மீண்டும் பதிவிறக்க வேண்டும்.</translation>
+    </message>
+    <message>
+        <source>External Signer (e.g. hardware wallet)</source>
+        <translation>வெளிப்புறக் கையொப்பமிடுபவர் (எ.கா. வன்பொருள் பணப்பை)</translation>
+    </message>
+    <message>
+        <source>Font in the Overview tab: </source>
+        <translation>மேலோட்டத் தாவலின் எழுத்துரு: </translation>
+    </message>
+    <message>
+        <source>Full path to a %1 compatible script (e.g. C:\Downloads\hwi.exe or /Users/you/Downloads/hwi.py). Beware: malware can steal your coins!</source>
+        <translation>%1 உடன் பொருந்தும் நிரல்தொடரின் முழுப் பாதை (எ.கா. C:\Downloads\hwi.exe அல்லது /Users/you/Downloads/hwi.py). எச்சரிக்கை: தீம்பொருள் உங்கள் நாணயங்களைத் திருடலாம்!</translation>
+    </message>
+    <message>
+        <source>Map port using PCP or NA&amp;T-PMP</source>
+        <translation>PCP அல்லது NA&amp;T-PMP மூலம் துறையை வரைபடுத்தவும்</translation>
+    </message>
+    <message>
+        <source>Maximum database cache size. Make sure you have enough RAM. A larger cache can contribute to faster sync, after which the benefit is less pronounced for most use cases. Lowering the cache size will reduce memory usage. Unused mempool memory is shared for this cache.</source>
+        <extracomment>Tooltip text for Options window setting that sets the size of the database cache. Explains the corresponding effects of increasing/decreasing this value.</extracomment>
+        <translation>தரவுத்தளத் தற்காலிகச் சேமிப்பின் அதிகபட்ச அளவு. போதுமான RAM இருப்பதை உறுதிசெய்யவும். பெரிய தற்காலிகச் சேமிப்பு ஒத்திசைவை விரைவாக்கலாம்; அதன் பிறகு பெரும்பாலான பயன்பாடுகளில் அதன் பயன் குறைவாக இருக்கும். தற்காலிகச் சேமிப்பைக் குறைப்பது நினைவகப் பயன்பாட்டைக் குறைக்கும். பயன்படுத்தப்படாத mempool நினைவகம் இந்தத் தற்காலிகச் சேமிப்புடன் பகிரப்படுகிறது.</translation>
+    </message>
+    <message>
+        <source>Options set in this dialog are overridden by the command line:</source>
+        <translation>இந்த உரையாடலில் அமைக்கப்பட்ட விருப்பங்களைக் கட்டளை வரி மேலெழுதுகிறது:</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>-popupnotifications அல்லது connectcoin.confஇல் உள்ள popupnotifications மூலம் அமைக்கப்படுகிறது.</translation>
+    </message>
+    <message>
+        <source>Set the number of script verification threads. Negative values correspond to the number of cores you want to leave free to the system.</source>
+        <extracomment>Tooltip text for Options window setting that sets the number of script verification threads. Explains that negative values mean to leave these many cores free to the system.</extracomment>
+        <translation>நிரல்தொடர் சரிபார்ப்பு இழைகளின் எண்ணிக்கையை அமைக்கவும். எதிர்மறை மதிப்புகள் கணினிக்காக நீங்கள் ஒதுக்காமல் விட விரும்பும் மையங்களின் எண்ணிக்கையைக் குறிக்கும்.</translation>
+    </message>
+    <message>
+        <source>Show the icon in the system tray.</source>
+        <translation>கணினியின் அறிவிப்புப் பகுதியில் சின்னத்தைக் காட்டவும்.</translation>
+    </message>
+    <message>
+        <source>Subtract &amp;fee from amount by default</source>
+        <extracomment>An Options window setting to set subtracting the fee from a sending amount as default.</extracomment>
+        <translation>இயல்பாகத் தொகையிலிருந்து &amp;கட்டணத்தைக் கழிக்கவும்</translation>
+    </message>
+    <message>
+        <source>Third-party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
+        <translation>பரிவர்த்தனைத் தாவலில் சூழல் பட்டியல் உருப்படிகளாகத் தோன்றும் மூன்றாம் தரப்பு URLகள் (எ.கா. தொகுதி உலாவி). URLஇல் உள்ள %s பரிவர்த்தனையின் ஹேஷால் மாற்றப்படும். பல URLகள் செங்குத்துப் பட்டை | மூலம் பிரிக்கப்படுகின்றன.</translation>
+    </message>
+    <message>
+        <source>This allows you or a third party tool to communicate with the node through command-line and JSON-RPC commands.</source>
+        <extracomment>Tooltip text for Options window setting that enables the RPC server.</extracomment>
+        <translation>கட்டளை வரி மற்றும் JSON-RPC கட்டளைகள் மூலம் நீங்களோ மூன்றாம் தரப்புக் கருவியோ முனையுடன் தொடர்புகொள்ள இது அனுமதிக்கிறது.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Tor onion சேவைகள் வழியாக சக முனைகளை அடைய தனி SOCKS&amp;5 பதிலியைப் பயன்படுத்தவும்:</translation>
+    </message>
+    <message>
+        <source>Whether to set subtract fee from amount as default or not.</source>
+        <extracomment>Tooltip text for Options window setting that sets subtracting the fee from a sending amount as default.</extracomment>
+        <translation>தொகையிலிருந்து கட்டணத்தைக் கழிக்கும் விருப்பத்தை இயல்பாக இயக்க வேண்டுமா என்பதை அமைக்கிறது.</translation>
+    </message>
+    <message>
+        <source>Whether to show PSBT controls.</source>
+        <extracomment>Tooltip text for options window setting that enables PSBT controls.</extracomment>
+        <translation>PSBT கட்டுப்பாடுகளைக் காட்ட வேண்டுமா.</translation>
+    </message>
+    <message>
+        <source>none</source>
+        <translation>எதுவுமில்லை</translation>
+    </message>
 </context>
 <context>
     <name>OverviewPage</name>
@@ -1445,7 +2138,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">படிவம்</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
         <translation type="unfinished">காட்டப்படும் தகவல் காலாவதியானதாக இருக்கலாம். ஒரு இணைப்பு நிறுவப்பட்ட பிறகு, உங்கள் பணப்பை தானாக பிட்கோடு நெட்வொர்க்குடன் ஒத்திசைக்கிறது, ஆனால் இந்த செயல்முறை இன்னும் முடிவடையவில்லை.</translation>
     </message>
     <message>
@@ -1488,7 +2181,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Recent transactions</source>
         <translation type="unfinished">சமீபத்திய பரிவர்த்தனைகள்</translation>
     </message>
-    </context>
+        <message>
+        <source>Privacy mode activated for the Overview tab. To unmask the values, uncheck Settings-&gt;Mask values.</source>
+        <translation>மேலோட்டத் தாவலுக்குத் தனியுரிமை முறை இயக்கப்பட்டுள்ளது. மதிப்புகளைக் காட்ட, அமைப்புகள்-&gt;மதிப்புகளை மறை என்பதன் தேர்வை நீக்கவும்.</translation>
+    </message>
+</context>
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
@@ -1501,9 +2198,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n உள்ளீடு கையொப்பமிடப்பட்டது, ஆனால் மேலும் கையொப்பங்கள் தேவை.</numerusform>
+            <numerusform>%n உள்ளீடுகள் கையொப்பமிடப்பட்டன, ஆனால் மேலும் கையொப்பங்கள் தேவை.</numerusform>
         </translation>
     </message>
     <message>
@@ -1520,12 +2217,117 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>பரிவர்த்தனையில் %n கையொப்பமிடாத உள்ளீடு உள்ளது.</numerusform>
+            <numerusform>பரிவர்த்தனையில் %n கையொப்பமிடாத உள்ளீடுகள் உள்ளன.</numerusform>
         </translation>
     </message>
-    </context>
+        <message>
+        <source>(But no wallet is loaded.)</source>
+        <translation>(ஆனால் பணப்பை எதுவும் ஏற்றப்படவில்லை.)</translation>
+    </message>
+    <message>
+        <source>(But this wallet cannot sign transactions.)</source>
+        <translation>(ஆனால் இந்தப் பணப்பையால் பரிவர்த்தனைகளைக் கையொப்பமிட முடியாது.)</translation>
+    </message>
+    <message>
+        <source>(But this wallet does not have the right keys.)</source>
+        <translation>(ஆனால் இந்தப் பணப்பையில் உரிய விசைகள் இல்லை.)</translation>
+    </message>
+    <message>
+        <source>Broadcast Tx</source>
+        <translation>பரிவர்த்தனையை ஒளிபரப்பவும்</translation>
+    </message>
+    <message>
+        <source>Cannot sign inputs while wallet is locked.</source>
+        <translation>பணப்பை பூட்டப்பட்டிருக்கும் போது உள்ளீடுகளைக் கையொப்பமிட முடியாது.</translation>
+    </message>
+    <message>
+        <source>Copy to Clipboard</source>
+        <translation>இடைநிலைப் பலகைக்கு நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Could not sign any more inputs.</source>
+        <translation>மேலும் உள்ளீடுகளைக் கையொப்பமிட முடியவில்லை.</translation>
+    </message>
+    <message>
+        <source>Failed to load transaction: %1</source>
+        <translation>பரிவர்த்தனையை ஏற்ற முடியவில்லை: %1</translation>
+    </message>
+    <message>
+        <source>Failed to sign transaction: %1</source>
+        <translation>பரிவர்த்தனையைக் கையொப்பமிட முடியவில்லை: %1</translation>
+    </message>
+    <message>
+        <source>PSBT Operations</source>
+        <translation>PSBT செயல்பாடுகள்</translation>
+    </message>
+    <message>
+        <source>PSBT copied to clipboard.</source>
+        <translation>PSBT இடைநிலைப் பலகைக்கு நகலெடுக்கப்பட்டது.</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk.</source>
+        <translation>PSBT வட்டில் சேமிக்கப்பட்டது.</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation>பகுதியளவு கையொப்பமிட்ட பரிவர்த்தனை (இருமம்)</translation>
+    </message>
+    <message>
+        <source>Pays transaction fee: </source>
+        <translation>செலுத்தப்படும் பரிவர்த்தனைக் கட்டணம்: </translation>
+    </message>
+    <message>
+        <source>Save Transaction Data</source>
+        <translation>பரிவர்த்தனைத் தரவைச் சேமிக்கவும்</translation>
+    </message>
+    <message>
+        <source>Save…</source>
+        <translation>சேமிக்கவும்…</translation>
+    </message>
+    <message>
+        <source>Sends %1 to %2</source>
+        <translation>%2க்கு %1 அனுப்புகிறது</translation>
+    </message>
+    <message>
+        <source>Signed transaction successfully. Transaction is ready to broadcast.</source>
+        <translation>பரிவர்த்தனை வெற்றிகரமாகக் கையொப்பமிடப்பட்டது. அது ஒளிபரப்பத் தயாராக உள்ளது.</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast failed: %1</source>
+        <translation>பரிவர்த்தனை ஒளிபரப்பு தோல்வியடைந்தது: %1</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast successfully! Transaction ID: %1</source>
+        <translation>பரிவர்த்தனை வெற்றிகரமாக ஒளிபரப்பப்பட்டது! பரிவர்த்தனை ID: %1</translation>
+    </message>
+    <message>
+        <source>Transaction is fully signed and ready for broadcast.</source>
+        <translation>பரிவர்த்தனை முழுமையாகக் கையொப்பமிடப்பட்டு ஒளிபரப்பத் தயாராக உள்ளது.</translation>
+    </message>
+    <message>
+        <source>Transaction is missing some information about inputs.</source>
+        <translation>பரிவர்த்தனையில் உள்ளீடுகள் பற்றிய சில தகவல்கள் இல்லை.</translation>
+    </message>
+    <message>
+        <source>Transaction status is unknown.</source>
+        <translation>பரிவர்த்தனையின் நிலை தெரியவில்லை.</translation>
+    </message>
+    <message>
+        <source>Transaction still needs signature(s).</source>
+        <translation>பரிவர்த்தனைக்கு இன்னும் கையொப்பங்கள் தேவை.</translation>
+    </message>
+    <message>
+        <source>Unable to calculate transaction fee or total transaction amount.</source>
+        <translation>பரிவர்த்தனைக் கட்டணத்தையோ மொத்தத் தொகையையோ கணக்கிட முடியவில்லை.</translation>
+    </message>
+    <message>
+        <source>Unknown error processing transaction.</source>
+        <translation>பரிவர்த்தனையைச் செயலாக்கும்போது தெரியாத பிழை.</translation>
+    </message>
+</context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1533,24 +2335,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">கட்டணம் கோரிக்கை பிழை</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Bitcoin தொடங்க முடியாது: கிளிக் க்கு ஊதியம் கையாளுதல்</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">ConnectCoin தொடங்க முடியாது: கிளிக் க்கு ஊதியம் கையாளுதல்</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">URI கையாளுதல்</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin: //' சரியான URI அல்ல. அதற்கு பதிலாக 'பிட்கின்:' பயன்படுத்தவும்.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin: //' சரியான URI அல்ல. அதற்கு பதிலாக 'பிட்கின்:' பயன்படுத்தவும்.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
         <translation type="unfinished">URI அலச முடியாது! தவறான பிட்கின் முகவரி அல்லது தவறான URI அளவுருக்கள் காரணமாக இது ஏற்படலாம்.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
         <translation type="unfinished">பணம் கோரிக்கை கோப்பு கையாளுதல்</translation>
+    </message>
+    <message>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation>BIP70 ஆதரிக்கப்படாததால் கட்டணக் கோரிக்கையைச் செயலாக்க முடியாது.
+BIP70இல் பரவலான பாதுகாப்புக் குறைகள் இருப்பதால், பணப்பையை மாற்றும்படி வணிகர்கள் வழங்கும் அறிவுறுத்தல்களைப் புறக்கணிக்க வலியுறுத்தப்படுகிறது.
+இந்தப் பிழையைப் பெற்றால், BIP21 உடன் பொருந்தும் URIஐ வழங்கும்படி வணிகரிடம் கேட்க வேண்டும்.</translation>
     </message>
 </context>
 <context>
@@ -1605,6 +2415,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">வெளி செல்லும்</translation>
     </message>
+    <message>
+        <source>Age</source>
+        <extracomment>Title of Peers Table column which indicates the duration (length of time) since the peer connection started.</extracomment>
+        <translation>வயது</translation>
+    </message>
+    <message>
+        <source>Peer</source>
+        <extracomment>Title of Peers Table column which contains a unique number used to identify a connection.</extracomment>
+        <translation>சக முனை</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1628,7 +2448,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Save QR Code</source>
         <translation type="unfinished">QR குறியீடு சேமிக்கவும்</translation>
     </message>
-    </context>
+        <message>
+        <source>PNG Image</source>
+        <extracomment>Expanded name of the PNG file format. See: https://en.wikipedia.org/wiki/Portable_Network_Graphics.</extracomment>
+        <translation>PNG படம்</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image…</source>
+        <translation>படத்தைச் &amp;சேமிக்கவும்…</translation>
+    </message>
+</context>
 <context>
     <name>RPCConsole</name>
     <message>
@@ -1887,6 +2716,283 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Unknown</source>
         <translation type="unfinished">அறியப்படாத</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>&amp;Copy IP/Netmask</source>
+        <extracomment>Context menu action to copy the IP/Netmask of a banned peer. IP/Netmask is the combination of a peer's IP address and its Netmask. For IP address, see: https://en.wikipedia.org/wiki/IP_address.</extracomment>
+        <translation>IP/வலையமைப்பு முகமூடியை &amp;நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer.</extracomment>
+        <translation>முகவரியை &amp;நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>(peer: %1)</source>
+        <translation>(சக முனை: %1)</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation>1 &amp;நாள்</translation>
+    </message>
+    <message>
+        <source>Address Relay</source>
+        <extracomment>Text title for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>முகவரி மறுஅனுப்பல்</translation>
+    </message>
+    <message>
+        <source>Addresses Processed</source>
+        <extracomment>Text title for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>செயலாக்கப்பட்ட முகவரிகள்</translation>
+    </message>
+    <message>
+        <source>Addresses Rate-Limited</source>
+        <extracomment>Text title for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>வீத வரம்பிடப்பட்ட முகவரிகள்</translation>
+    </message>
+    <message>
+        <source>Blocksdir</source>
+        <translation>தொகுதிகள் அடைவு</translation>
+    </message>
+    <message>
+        <source>Current block height</source>
+        <translation>தற்போதைய தொகுதி உயரம்</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>தரவு அடைவு</translation>
+    </message>
+    <message>
+        <source>Direction/Type</source>
+        <translation>திசை/வகை</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation>முதற்கட்டச் செல்லுபடிச் சோதனைகளைக் கடந்த புதிய தொகுதி இந்தச் சக முனையிலிருந்து பெறப்பட்டதிலிருந்து கடந்த நேரம்.</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <extracomment>Tooltip text for the Last Transaction field in the peer details area.</extracomment>
+        <translation>நமது mempool ஏற்றுக்கொண்ட புதிய பரிவர்த்தனை இந்தச் சக முனையிலிருந்து பெறப்பட்டதிலிருந்து கடந்த நேரம்.</translation>
+    </message>
+    <message>
+        <source>Executing…</source>
+        <extracomment>A console message indicating an entered command is currently being executed.</extracomment>
+        <translation>செயல்படுத்தப்படுகிறது…</translation>
+    </message>
+    <message>
+        <source>Hide Peers Detail</source>
+        <translation>சக முனைகளின் விவரங்களை மறைக்கவும்</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation>அதிக அலைவரிசை</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation>அதிக அலைவரிசை BIP152 சுருக்கத் தொகுதி மறுஅனுப்பல்: %1</translation>
+    </message>
+    <message>
+        <source>Inbound: initiated by peer</source>
+        <extracomment>Explanatory text for an inbound peer connection.</extracomment>
+        <translation>உள்வரும்: சக முனை தொடங்கியது</translation>
+    </message>
+    <message>
+        <source>Last Transaction</source>
+        <translation>கடைசிப் பரிவர்த்தனை</translation>
+    </message>
+    <message>
+        <source>Local Addresses</source>
+        <translation>உள்ளூர் முகவரிகள்</translation>
+    </message>
+    <message>
+        <source>Mapped AS</source>
+        <translation>வரைபடுத்தப்பட்ட AS</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>பொருந்தாது</translation>
+    </message>
+    <message>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation>மற்ற முனைகளுடன் தொடர்புகொள்ள உங்கள் ConnectCoin முனை தற்போது பயன்படுத்தும் வலையமைப்பு முகவரிகள்.</translation>
+    </message>
+    <message>
+        <source>Node window - [%1]</source>
+        <translation>முனைச் சாளரம் - [%1]</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to request addresses from a peer.</extracomment>
+        <translation>வெளிச்செல்லும் முகவரி பெறுதல்: முகவரிகளைக் கோருவதற்கான குறுகிய கால இணைப்பு</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>வெளிச்செல்லும் தொகுதி மறுஅனுப்பல்: பரிவர்த்தனைகளையோ முகவரிகளையோ மறுஅனுப்பாது</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to test the aliveness of known addresses.</extracomment>
+        <translation>வெளிச்செல்லும் சோதனை இணைப்பு: முகவரிகளைச் சோதிப்பதற்கான குறுகிய கால இணைப்பு</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays all network information. This is the default behavior for outbound connections.</extracomment>
+        <translation>வெளிச்செல்லும் முழு மறுஅனுப்பல்: இயல்புநிலை</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <extracomment>Explanatory text for an outbound peer connection that was established manually through one of several methods. The numbered arguments are stand-ins for the methods available to establish manual connections.</extracomment>
+        <translation>வெளிச்செல்லும் கைமுறை: %1 RPC அல்லது %2/%3 அமைப்பு விருப்பங்கள் மூலம் சேர்க்கப்பட்டது</translation>
+    </message>
+    <message>
+        <source>Permissions</source>
+        <translation>அனுமதிகள்</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>தனியுரிமை ஒளிபரப்பு: தனியுரிமைக்கு முக்கியமான பரிவர்த்தனைகளை ஒளிபரப்புவதற்கான குறுகிய கால இணைப்பு</translation>
+    </message>
+    <message>
+        <source>Session ID</source>
+        <translation>அமர்வு ID</translation>
+    </message>
+    <message>
+        <source>The BIP324 session ID string in hex.</source>
+        <translation>பதினாறும வடிவிலுள்ள BIP324 அமர்வு ID சரம்.</translation>
+    </message>
+    <message>
+        <source>The direction and type of peer connection: %1</source>
+        <translation>சக முனை இணைப்பின் திசையும் வகையும்: %1</translation>
+    </message>
+    <message>
+        <source>The mapped Autonomous System used for diversifying peer selection.</source>
+        <translation>சக முனைத் தேர்வைப் பல்வகைப்படுத்தப் பயன்படுத்தப்படும் வரைபடுத்தப்பட்ட தன்னாட்சி அமைப்பு.</translation>
+    </message>
+    <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation>இந்தச் சக முனை இணைந்துள்ள வலையமைப்பு நெறிமுறை: IPv4, IPv6, Onion, I2P அல்லது CJDNS.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</source>
+        <extracomment>Tooltip text for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>இந்தச் சக முனையிலிருந்து பெறப்பட்டு வீத வரம்பினால் கைவிடப்பட்ட (செயலாக்கப்படாத) முகவரிகளின் மொத்த எண்ணிக்கை.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</source>
+        <extracomment>Tooltip text for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>இந்தச் சக முனையிலிருந்து பெறப்பட்டுச் செயலாக்கப்பட்ட முகவரிகளின் மொத்த எண்ணிக்கை (வீத வரம்பினால் கைவிடப்பட்டவை நீங்கலாக).</translation>
+    </message>
+    <message>
+        <source>The transport layer version: %1</source>
+        <translation>போக்குவரத்து அடுக்கின் பதிப்பு: %1</translation>
+    </message>
+    <message>
+        <source>Transaction Relay</source>
+        <translation>பரிவர்த்தனை மறுஅனுப்பல்</translation>
+    </message>
+    <message>
+        <source>Transport</source>
+        <translation>போக்குவரத்து</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.
+Use up and down arrows to navigate history, and %2 to clear screen.
+Use %3 and %4 to increase or decrease the font size.
+Type %5 for an overview of available commands.
+For more information on using this console, type %6.
+
+%7WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.%8</source>
+        <extracomment>RPC console welcome message. Placeholders %7 and %8 are style tags for the warning content, and they are not space separated from the rest of the text intentionally.</extracomment>
+        <translation>%1 RPC பணிமுனையத்திற்கு வரவேற்கிறோம்.
+வரலாற்றில் செல்ல மேல், கீழ் அம்புகளையும், திரையை அழிக்க %2ஐயும் பயன்படுத்தவும்.
+எழுத்துரு அளவை அதிகரிக்க அல்லது குறைக்க %3 மற்றும் %4ஐப் பயன்படுத்தவும்.
+கிடைக்கும் கட்டளைகளின் மேலோட்டத்துக்கு %5 எனத் தட்டச்சிடவும்.
+இந்தப் பணிமுனையத்தைப் பயன்படுத்துவது பற்றிய கூடுதல் தகவலுக்கு %6 எனத் தட்டச்சிடவும்.
+
+%7எச்சரிக்கை: மோசடிக்காரர்கள் பயனர்களை இங்கு கட்டளைகளைத் தட்டச்சிடச் சொல்லி அவர்களின் பணப்பை நிதியைத் திருடுகிறார்கள். ஒரு கட்டளையின் விளைவுகளை முழுமையாகப் புரிந்துகொள்ளாமல் இந்தப் பணிமுனையத்தைப் பயன்படுத்த வேண்டாம்.%8</translation>
+    </message>
+    <message>
+        <source>Whether we relay addresses to this peer.</source>
+        <extracomment>Tooltip text for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>இந்தச் சக முனைக்கு நாம் முகவரிகளை மறுஅனுப்புகிறோமா.</translation>
+    </message>
+    <message>
+        <source>Whether we relay transactions to this peer.</source>
+        <translation>இந்தச் சக முனைக்கு நாம் பரிவர்த்தனைகளை மறுஅனுப்புகிறோமா.</translation>
+    </message>
+    <message>
+        <source>detecting: peer could be v1 or v2</source>
+        <extracomment>Explanatory text for "detecting" transport type.</extracomment>
+        <translation>கண்டறிகிறது: சக முனை v1 அல்லது v2 ஆக இருக்கலாம்</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation>அதிக அலைவரிசை மறுஅனுப்பல் தேர்ந்தெடுக்கப்படவில்லை</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation>அதிக அலைவரிசை மறுஅனுப்பலுக்குச் சக முனை நம்மைத் தேர்ந்தெடுத்தது</translation>
+    </message>
+    <message>
+        <source>v1: unencrypted, plaintext transport protocol</source>
+        <extracomment>Explanatory text for v1 transport type.</extracomment>
+        <translation>v1: மறையாக்கமற்ற, சாதாரண உரைப் போக்குவரத்து நெறிமுறை</translation>
+    </message>
+    <message>
+        <source>v2: BIP324 encrypted transport protocol</source>
+        <extracomment>Explanatory text for v2 transport type.</extracomment>
+        <translation>v2: BIP324 மறையாக்கப்பட்ட போக்குவரத்து நெறிமுறை</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>%1 வழியாக</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation>அதிக அலைவரிசை மறுஅனுப்பலுக்கு நாம் சக முனையைத் தேர்ந்தெடுத்தோம்</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -1903,8 +3009,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;செய்தி:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">கோரிக்கையை திறக்கும் போது காட்டப்படும் இது பணம் கோரிக்கை இணைக்க ஒரு விருப்ப செய்தி. குறிப்பு: Bitcoin நெட்வொர்க்கில் பணம் செலுத்தியவுடன் செய்தி அனுப்பப்படாது.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">கோரிக்கையை திறக்கும் போது காட்டப்படும் இது பணம் கோரிக்கை இணைக்க ஒரு விருப்ப செய்தி. குறிப்பு: ConnectCoin நெட்வொர்க்கில் பணம் செலுத்தியவுடன் செய்தி அனுப்பப்படாது.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -1958,7 +3064,35 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Could not unlock wallet.</source>
         <translation type="unfinished">பணப்பை திறக்க முடியவில்லை.</translation>
     </message>
-    </context>
+        <message>
+        <source>&amp;Copy address</source>
+        <translation>முகவரியை &amp;நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>An optional label to associate with the new receiving address (used by you to identify an invoice).  It is also attached to the payment request.</source>
+        <translation>புதிய பெறும் முகவரியுடன் இணைக்கக்கூடிய விருப்பப் பெயர்ச்சீட்டு (விலைப்பட்டியலை அடையாளம் காண நீங்கள் பயன்படுத்துவது).  இது கட்டணக் கோரிக்கையிலும் இணைக்கப்படும்.</translation>
+    </message>
+    <message>
+        <source>An optional message that is attached to the payment request and may be displayed to the sender.</source>
+        <translation>கட்டணக் கோரிக்கையில் இணைக்கப்பட்டு அனுப்புநருக்குக் காட்டப்படக்கூடிய விருப்பச் செய்தி.</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation>&amp;தொகையை நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>&amp;பெயர்ச்சீட்டை நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Copy &amp;message</source>
+        <translation>&amp;செய்தியை நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Could not generate new %1 address</source>
+        <translation>புதிய %1 முகவரியை உருவாக்க முடியவில்லை</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
@@ -1988,6 +3122,30 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Request payment to %1</source>
         <translation type="unfinished">%1 க்கு கட்டணம் கோரவும்</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image…</source>
+        <translation>படத்தைச் &amp;சேமிக்கவும்…</translation>
+    </message>
+    <message>
+        <source>&amp;Verify</source>
+        <translation>&amp;சரிபார்க்கவும்</translation>
+    </message>
+    <message>
+        <source>Address:</source>
+        <translation>முகவரி:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation>பெயர்ச்சீட்டு:</translation>
+    </message>
+    <message>
+        <source>Request payment to …</source>
+        <translation>இந்த முகவரிக்குக் கட்டணம் கோரவும்…</translation>
+    </message>
+    <message>
+        <source>Verify this address on e.g. a hardware wallet screen</source>
+        <translation>இந்த முகவரியை, எ.கா. வன்பொருள் பணப்பையின் திரையில் சரிபார்க்கவும்</translation>
     </message>
 </context>
 <context>
@@ -2112,8 +3270,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">படிவத்தின் அனைத்து துறையையும் அழி.</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
-        <translation type="unfinished">தொகுதிகள் உள்ள இடத்தை விட குறைவான பரிவர்த்தனை அளவு இருக்கும் போது, ​​சுரங்க தொழிலாளர்கள் மற்றும் ரிலேடிங் முனைகள் குறைந்தபட்ச கட்டணத்தைச் செயல்படுத்தலாம். இந்த குறைந்தபட்ச கட்டணத்தை மட்டும் செலுத்துவது நன்றாக உள்ளது, ஆனால் நெட்வொர்க்கில் செயல்படுவதை விட bitcoin பரிவர்த்தனைகளுக்கு இன்னும் கோரிக்கை தேவைப்பட்டால் இது ஒருபோதும் உறுதிப்படுத்தாத பரிவர்த்தனைக்கு காரணமாக இருக்கலாம்.</translation>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation type="unfinished">தொகுதிகள் உள்ள இடத்தை விட குறைவான பரிவர்த்தனை அளவு இருக்கும் போது, ​​சுரங்க தொழிலாளர்கள் மற்றும் ரிலேடிங் முனைகள் குறைந்தபட்ச கட்டணத்தைச் செயல்படுத்தலாம். இந்த குறைந்தபட்ச கட்டணத்தை மட்டும் செலுத்துவது நன்றாக உள்ளது, ஆனால் நெட்வொர்க்கில் செயல்படுவதை விட ConnectCoin பரிவர்த்தனைகளுக்கு இன்னும் கோரிக்கை தேவைப்பட்டால் இது ஒருபோதும் உறுதிப்படுத்தாத பரிவர்த்தனைக்கு காரணமாக இருக்கலாம்.</translation>
     </message>
     <message>
         <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
@@ -2238,13 +3396,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n பிளாக் உறுதிப்படுத்தலைத் தொடங்க மதிப்பிடப்பட்டுள்ளது.</numerusform>
+            <numerusform>%n பிளாக்குள் உறுதிப்படுத்தலைத் தொடங்க மதிப்பிடப்பட்டுள்ளது.</numerusform>
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
+        <source>Warning: Invalid ConnectCoin address</source>
         <translation type="unfinished">எச்சரிக்கை: தவறான பிட்காயின் முகவரி</translation>
     </message>
     <message>
@@ -2262,6 +3420,139 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(லேபிள் இல்லை)</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>%1 from wallet '%2'</source>
+        <translation>'%2' பணப்பையிலிருந்து %1</translation>
+    </message>
+    <message>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks…)</source>
+        <translation>(அறிவார்ந்த கட்டணம் இன்னும் தொடங்கப்படவில்லை. பொதுவாக இதற்கு சில தொகுதிகள் தேவை…)</translation>
+    </message>
+    <message>
+        <source>Choose…</source>
+        <translation>தேர்ந்தெடுக்கவும்…</translation>
+    </message>
+    <message>
+        <source>Connect your hardware wallet first.</source>
+        <translation>முதலில் உங்கள் வன்பொருள் பணப்பையை இணைக்கவும்.</translation>
+    </message>
+    <message>
+        <source>Cr&amp;eate Unsigned</source>
+        <translation>கையொப்பமிடாததை &amp;உருவாக்கவும்</translation>
+    </message>
+    <message>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation>இணையமற்ற %1 பணப்பை அல்லது PSBT உடன் பொருந்தும் வன்பொருள் பணப்பை போன்றவற்றில் பயன்படுத்த, பகுதியளவு கையொப்பமிட்ட ConnectCoin பரிவர்த்தனையை (PSBT) உருவாக்குகிறது.</translation>
+    </message>
+    <message>
+        <source>Do you want to create this transaction?</source>
+        <extracomment>Message displayed when attempting to create a transaction. Cautionary text to prompt the user to verify that the displayed transaction details represent the transaction the user intends to create.</extracomment>
+        <translation>இந்தப் பரிவர்த்தனையை உருவாக்க விரும்புகிறீர்களா?</translation>
+    </message>
+    <message>
+        <source>External balance:</source>
+        <translation>வெளிப்புற இருப்பு:</translation>
+    </message>
+    <message>
+        <source>External signer failure</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>வெளிப்புறக் கையொப்பமிடுபவர் தோல்வியடைந்தார்</translation>
+    </message>
+    <message>
+        <source>External signer not found</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>வெளிப்புறக் கையொப்பமிடுபவர் கிடைக்கவில்லை</translation>
+    </message>
+    <message>
+        <source>Hide transaction fee settings</source>
+        <translation>பரிவர்த்தனைக் கட்டண அமைப்புகளை மறைக்கவும்</translation>
+    </message>
+    <message>
+        <source>Inputs…</source>
+        <translation>உள்ளீடுகள்…</translation>
+    </message>
+    <message>
+        <source>PSBT saved</source>
+        <extracomment>Popup message when a PSBT has been saved to a file</extracomment>
+        <translation>PSBT சேமிக்கப்பட்டது</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk</source>
+        <translation>PSBT வட்டில் சேமிக்கப்பட்டது</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation>பகுதியளவு கையொப்பமிட்ட பரிவர்த்தனை (இருமம்)</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
+        <translation>உங்கள் பரிவர்த்தனை முன்மொழிவை மீளாய்வு செய்யவும். இது பகுதியளவு கையொப்பமிட்ட ConnectCoin பரிவர்த்தனையை (PSBT) உருவாக்கும்; இதைச் சேமித்தோ நகலெடுத்தோ பின்னர் இணையமற்ற %1 பணப்பை அல்லது PSBT உடன் பொருந்தும் வன்பொருள் பணப்பை மூலம் கையொப்பமிடலாம்.</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
+        <translation>உங்கள் பரிவர்த்தனையை மீளாய்வு செய்யவும். இதை உருவாக்கி அனுப்பலாம் அல்லது பகுதியளவு கையொப்பமிட்ட ConnectCoin பரிவர்த்தனையை (PSBT) உருவாக்கலாம்; அதைச் சேமித்தோ நகலெடுத்தோ பின்னர் இணையமற்ற %1 பணப்பை அல்லது PSBT உடன் பொருந்தும் வன்பொருள் பணப்பை மூலம் கையொப்பமிடலாம்.</translation>
+    </message>
+    <message>
+        <source>Save Transaction Data</source>
+        <translation>பரிவர்த்தனைத் தரவைச் சேமிக்கவும்</translation>
+    </message>
+    <message>
+        <source>Set external signer script path in Options -&gt; Wallet</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>விருப்பங்கள் -&gt; பணப்பையில் வெளிப்புறக் கையொப்ப நிரல்தொடரின் பாதையை அமைக்கவும்</translation>
+    </message>
+    <message>
+        <source>Sign failed</source>
+        <translation>கையொப்பமிடுதல் தோல்வியடைந்தது</translation>
+    </message>
+    <message>
+        <source>Sign on device</source>
+        <extracomment>"device" usually means a hardware wallet.</extracomment>
+        <translation>சாதனத்தில் கையொப்பமிடவும்</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>பரிவர்த்தனையின் மெய்நிகர் அளவின் ஒவ்வொரு kBக்கும் (1,000 பைட்கள்) தனிப்பயன் கட்டணத்தைக் குறிப்பிடவும்.
+
+குறிப்பு:  ஒவ்வொரு பைட் அடிப்படையில் கட்டணம் கணக்கிடப்படுவதால், 500 மெய்நிகர் பைட்கள் (1 kvBஇன் பாதி) அளவுள்ள பரிவர்த்தனைக்கு "ஒரு kvBக்கு 100 connects" என்ற வீதம் இறுதியில் 50 connects கட்டணத்தை மட்டுமே தரும்.</translation>
+    </message>
+    <message>
+        <source>The PSBT has been copied to the clipboard. You can also save it.</source>
+        <translation>PSBT இடைநிலைப் பலகைக்கு நகலெடுக்கப்பட்டுள்ளது. அதைச் சேமிக்கவும் முடியும்.</translation>
+    </message>
+    <message>
+        <source>To review recipient list click "Show Details…"</source>
+        <translation>பெறுநர் பட்டியலை மீளாய்வு செய்ய "விவரங்களைக் காட்டவும்…" என்பதைக் கிளிக் செய்யவும்</translation>
+    </message>
+    <message>
+        <source>Unsigned Transaction</source>
+        <comment>PSBT copied</comment>
+        <extracomment>Caption of "PSBT has been copied" messagebox</extracomment>
+        <translation>கையொப்பமிடாத பரிவர்த்தனை</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>தற்போதைய குறைந்தபட்சக் கட்டணம் பயன்படுத்தப்படுகிறது. உறுதிப்படுத்தும் நேரம் மதிப்பிடப்படவில்லை.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>பின்னர் கட்டணத்தை அதிகரிக்கலாம்.</translation>
     </message>
 </context>
 <context>
@@ -2283,7 +3574,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">முன்பு பயன்படுத்திய முகவரியைத் தேர்வுசெய்</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
+        <source>The ConnectCoin address to send the payment to</source>
         <translation type="unfinished">கட்டணத்தை அனுப்ப பிட்காயின் முகவரி</translation>
     </message>
     <message>
@@ -2315,8 +3606,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">இந்த முகவரியை பயன்படுத்தப்பட்ட முகவரிகளின் பட்டியலில் சேர்க்க ஒரு லேபிளை உள்ளிடவும்.</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
         <translation type="unfinished">பிட்காயினுடன் இணைக்கப்பட்ட செய்தி: உங்கள் எதிர்கால குறிப்புக்காக பரிவர்த்தனையுடன் யூஆர்ஐ சேமிக்கப்படும். குறிப்பு: இந்த செய்தி பிட்காயின் வலையமைப்பிற்கு அனுப்பப்படாது.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The amount to send in the selected unit</source>
+        <translation>தேர்ந்தெடுத்த அலகில் அனுப்ப வேண்டிய தொகை</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>அனுப்பப்படும் தொகையிலிருந்து கட்டணம் கழிக்கப்படும். தொகைப் புலத்தில் நீங்கள் உள்ளிட்டதைவிடக் குறைவான ConnectCoin பெறுநருக்குக் கிடைக்கும். பல பெறுநர்கள் தேர்ந்தெடுக்கப்பட்டால் கட்டணம் சமமாகப் பிரிக்கப்படும்.</translation>
     </message>
 </context>
 <context>
@@ -2325,7 +3632,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Send</source>
         <translation type="unfinished">அனுப்புவும்</translation>
     </message>
-    </context>
+        <message>
+        <source>Create Unsigned</source>
+        <translation>கையொப்பமிடாததை உருவாக்கவும்</translation>
+    </message>
+</context>
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
@@ -2337,7 +3648,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;செய்தியை கையொப்பமிடுங்கள்</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
+        <source>The ConnectCoin address to sign the message with</source>
         <translation type="unfinished">செய்தியை கையொப்பமிட பிட்காயின் முகவரி</translation>
     </message>
     <message>
@@ -2357,7 +3668,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">கையொப்பம்</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
         <translation type="unfinished">இந்த பிட்காயின் முகவரி உங்களுக்கு சொந்தமானது என்பதை நிரூபிக்க செய்தியை கையொப்பமிடுங்கள்</translation>
     </message>
     <message>
@@ -2377,7 +3688,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;செய்தியைச் சரிபார்க்கவும்</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
+        <source>The ConnectCoin address the message was signed with</source>
         <translation type="unfinished">செய்தி கையொப்பமிடப்பட்ட பிட்காயின் முகவரி</translation>
     </message>
     <message>
@@ -2385,7 +3696,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">சரிபார்க்க கையொப்பமிடப்பட்ட செய்தி</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
         <translation type="unfinished">குறிப்பிட்ட பிட்காயின் முகவரியுடன் கையொப்பமிடப்பட்டதா என்பதை உறுதிப்படுத்த இந்த செய்தியைச் சரிபார்க்கவும்</translation>
     </message>
     <message>
@@ -2448,12 +3759,44 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Message verified.</source>
         <translation type="unfinished">செய்தி சரிபார்க்கப்பட்டது.</translation>
     </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the clipboard</source>
+        <translation>தற்போதைய கையொப்பத்தை இடைநிலைப் பலகைக்கு நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
+        <translation>செய்தியைச் சரிபார்க்க கீழே பெறுநரின் முகவரி, செய்தி (வரி முறிவுகள், இடைவெளிகள், தாவல்கள் போன்றவற்றைத் துல்லியமாக நகலெடுக்கவும்), கையொப்பம் ஆகியவற்றை உள்ளிடவும். இடைநிலைத் தாக்குதலால் ஏமாற்றப்படாமல் இருக்க, கையொப்பமிட்ட செய்தியில் உள்ளதைவிடக் கூடுதலான பொருளைக் கையொப்பத்திலிருந்து ஊகிக்க வேண்டாம். கையொப்பமிடுபவர் அந்த முகவரியில் பெறுகிறார் என்பதை மட்டுமே இது நிரூபிக்கும்; எந்தப் பரிவர்த்தனையின் அனுப்புநர் யார் என்பதை இது நிரூபிக்காது!</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>உள்ளிட்ட முகவரி மரபுவழி (P2PKH) விசையைக் குறிக்கவில்லை. %1இன் இந்தப் பதிப்பில் SegWit மற்றும் பிற P2PKH அல்லாத முகவரி வகைகளுடன் செய்தி கையொப்பமிடுதல் ஆதரிக்கப்படவில்லை. முகவரியைச் சரிபார்த்து மீண்டும் முயலவும்.</translation>
+    </message>
+    <message>
+        <source>The signature given when the message was signed</source>
+        <translation>செய்தி கையொப்பமிடப்பட்டபோது வழங்கப்பட்ட கையொப்பம்</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>உங்கள் மரபுவழி (P2PKH) முகவரிகளுக்கு அனுப்பப்படும் ConnectCoin நிதியைப் பெற முடியும் என்பதை நிரூபிக்க, அந்த முகவரிகளுடன் செய்திகள்/ஒப்பந்தங்களைக் கையொப்பமிடலாம். தெளிவற்ற அல்லது சீரற்ற எதையும் கையொப்பமிட வேண்டாம்; உங்கள் அடையாளத்தை அவர்களுக்குக் கையளிக்கும்படி மோசடித் தாக்குதல்கள் உங்களை ஏமாற்ற முயலலாம். நீங்கள் ஒப்புக்கொள்ளும் முழு விவரங்களுள்ள அறிக்கைகளில் மட்டுமே கையொப்பமிடவும்.</translation>
+    </message>
 </context>
 <context>
     <name>SplashScreen</name>
     <message>
         <source>press q to shutdown</source>
         <translation type="unfinished">ஷட்டவுன் செய்ய, "q" ஐ அழுத்தவும்</translation>
+    </message>
+    <message>
+        <source>(press q to shutdown and continue later)</source>
+        <translation>(நிறுத்தி பின்னர் தொடர qஐ அழுத்தவும்)</translation>
     </message>
 </context>
 <context>
@@ -2520,9 +3863,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>மேலும் %n பிளாக்குகளில் முதிர்ச்சியடைகிறது</numerusform>
+            <numerusform>மேலும் %n பிளாக்குகளில் முதிர்ச்சியடைகிறது</numerusform>
         </translation>
     </message>
     <message>
@@ -2604,6 +3947,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>P2C domain</source>
         <translation>P2C களம்</translation>
+    </message>
+    <message>
+        <source>%1 (Certificate was not verified)</source>
+        <translation>%1 (சான்றிதழ் சரிபார்க்கப்படவில்லை)</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is in the memory pool.</extracomment>
+        <translation>0/உறுதிப்படுத்தப்படவில்லை, நினைவகக் குளத்தில் உள்ளது</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, not in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is not in the memory pool.</extracomment>
+        <translation>0/உறுதிப்படுத்தப்படவில்லை, நினைவகக் குளத்தில் இல்லை</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>உருவாக்கப்பட்ட நாணயங்களைச் செலவிடுவதற்கு முன் அவை %1 தொகுதிகள் முதிர வேண்டும். நீங்கள் இந்தத் தொகுதியை உருவாக்கியபோது, தொகுதிச்சங்கிலியில் சேர்க்க அது வலையமைப்பில் ஒளிபரப்பப்பட்டது. சங்கிலியில் சேராவிட்டால், அதன் நிலை "ஏற்கப்படவில்லை" என்று மாறும்; அதைச் செலவிட முடியாது. உங்கள் தொகுதி உருவான சில வினாடிகளுக்குள் மற்றொரு முனை தொகுதியை உருவாக்கினால் இது சில நேரங்களில் நிகழலாம்.</translation>
     </message>
 </context>
 <context>
@@ -2823,6 +4184,55 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>தேட முகவரி, P2C களம், பரிவர்த்தனை அடையாளம் அல்லது குறிப்பை உள்ளிடவும்</translation>
     </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>முகவரியை &amp;நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>&amp;Edit address label</source>
+        <translation>முகவரிப் பெயர்ச்சீட்டைத் &amp;திருத்தவும்</translation>
+    </message>
+    <message>
+        <source>&amp;Show transaction details</source>
+        <translation>பரிவர்த்தனை விவரங்களைக் &amp;காட்டவும்</translation>
+    </message>
+    <message>
+        <source>A&amp;bandon transaction</source>
+        <translation>பரிவர்த்தனையைக் &amp;கைவிடவும்</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation>&amp;தொகையை நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>&amp;பெயர்ச்சீட்டை நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Copy &amp;raw transaction</source>
+        <translation>&amp;மூலப் பரிவர்த்தனையை நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Copy full transaction &amp;details</source>
+        <translation>பரிவர்த்தனையின் முழு &amp;விவரங்களை நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>பரிவர்த்தனை &amp;IDஐ நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Increase transaction &amp;fee</source>
+        <translation>பரிவர்த்தனைக் &amp;கட்டணத்தை அதிகரிக்கவும்</translation>
+    </message>
+    <message>
+        <source>Range…</source>
+        <translation>வரம்பு…</translation>
+    </message>
+    <message>
+        <source>Show in %1</source>
+        <extracomment>Transactions table context menu action to show the selected transaction in a third-party block explorer. %1 is a stand-in argument for the URL of the explorer.</extracomment>
+        <translation>%1இல் காட்டவும்</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -2834,7 +4244,35 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Error</source>
         <translation type="unfinished">பிழை</translation>
     </message>
-    </context>
+        <message>
+        <source>Load Transaction Data</source>
+        <translation>பரிவர்த்தனைத் தரவை ஏற்றவும்</translation>
+    </message>
+    <message>
+        <source>No wallet has been loaded.
+Go to File &gt; Open Wallet to load a wallet.
+- OR -</source>
+        <translation>எந்தப் பணப்பையும் ஏற்றப்படவில்லை.
+பணப்பையை ஏற்ற கோப்பு &gt; பணப்பையைத் திறக்கவும் என்பதற்குச் செல்லவும்.
+- அல்லது -</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>PSBT கோப்பு 100 MiBஐ விடச் சிறியதாக இருக்க வேண்டும்</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>பகுதியளவு கையொப்பமிட்ட பரிவர்த்தனை (*.psbt)</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>PSBTஐப் புரிந்துகொள்ள முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>இடைநிலைப் பலகையிலிருந்து PSBTஐப் புரிந்துகொள்ள முடியவில்லை (செல்லாத base64)</translation>
+    </message>
+</context>
 <context>
     <name>WalletModel</name>
     <message>
@@ -2882,7 +4320,27 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Could not commit transaction</source>
         <translation type="unfinished">பரிவர்த்தனையை கமிட் செய்ய முடியவில்லை</translation>
     </message>
-    </context>
+        <message>
+        <source>Can't display address</source>
+        <translation>முகவரியைக் காட்ட முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Fee-bump PSBT copied to clipboard</source>
+        <translation>கட்டண உயர்வு PSBT இடைநிலைப் பலகைக்கு நகலெடுக்கப்பட்டது</translation>
+    </message>
+    <message>
+        <source>PSBT copied</source>
+        <translation>PSBT நகலெடுக்கப்பட்டது</translation>
+    </message>
+    <message>
+        <source>Signer error</source>
+        <translation>கையொப்பமிடுபவர் பிழை</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation>எச்சரிக்கை: தேவைப்பட்டால் மீதத் தொகை வெளியீடுகளைக் குறைத்தோ உள்ளீடுகளைச் சேர்த்தோ கூடுதல் கட்டணம் செலுத்தப்படலாம். ஏற்கெனவே மீதத் தொகை வெளியீடு இல்லாவிட்டால் புதிதாக ஒன்று சேர்க்கப்படலாம். இந்த மாற்றங்கள் தனியுரிமையை வெளிப்படுத்தக்கூடும்.</translation>
+    </message>
+</context>
 <context>
     <name>WalletView</name>
     <message>
@@ -2916,6 +4374,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Cancel</source>
         <translation type="unfinished">ரத்து</translation>
+    </message>
+    <message>
+        <source>Wallet Data</source>
+        <extracomment>Name of the wallet data file format.</extracomment>
+        <translation>பணப்பைத் தரவு</translation>
     </message>
 </context>
 <context>
@@ -2966,7 +4429,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>-maxmempool must be at least %d MB</source>
-        <translation type="unfinished">-மேக்ஸ்மெம்பூல் குறைந்தது %d எம்பி ஆக இருக்க வேண்டும்</translation>
+        <translation>-maxmempool குறைந்தது %d எம்பி ஆக இருக்க வேண்டும்</translation>
     </message>
     <message>
         <source>Cannot resolve -%s address: '%s'</source>
@@ -2974,7 +4437,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Cannot set -peerblockfilters without -blockfilterindex.</source>
-        <translation type="unfinished">-blockfiltersindex இல்லாத -peerblockfilters அமைப்பு முடியாது </translation>
+        <translation>-blockfilterindex இல்லாமல் -peerblockfilters ஐ அமைக்க முடியாது.</translation>
     </message>
     <message>
         <source>default wallet</source>
@@ -3026,7 +4489,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
-        <translation type="unfinished">எந்த போர்டிலும் கேட்க முடியவில்லை. இதை நீங்கள் கேட்க விரும்பினால் -லிசென்= 0 வை பயன்படுத்தவும்.</translation>
+        <translation>எந்த போர்டிலும் கேட்க முடியவில்லை. இதைத்தான் நீங்கள் விரும்பினால் -listen=0 பயன்படுத்தவும்.</translation>
     </message>
     <message>
         <source>Failed to rescan the wallet during initialization</source>
@@ -3054,7 +4517,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Invalid netmask specified in -whitelist: '%s'</source>
-        <translation type="unfinished">-அனுமதிப்பட்டியல் குறிப்பிடப்பட்ட தவறான நெட்மாஸ்க்: '%s'</translation>
+        <translation>-whitelist இல் குறிப்பிடப்பட்ட நெட்மாஸ்க் தவறானது: '%s'</translation>
     </message>
     <message>
         <source>Prune cannot be configured with a negative value.</source>
@@ -3147,6 +4610,932 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">அமைப்புகள் கோப்பை எழுத முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>மீதித் தொகையின் இலக்கு வகை-1 P2PK (bech32m) இலக்காக இருக்க வேண்டும்</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin வகை-1 P2PK (bech32m) முகவரிகளை மட்டுமே ஆதரிக்கிறது</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin வகை-1 P2PK (bech32m) மீதித் தொகை முகவரிகளை மட்டுமே ஆதரிக்கிறது</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>ConnectCoin பரிவர்த்தனைகளுக்குச் செல்லுபடியான வகை-1 இலக்குகள் அல்லது வகை-2 PAY_TO_CONNECT வெளியீடுகள் தேவை</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>ConnectCoin வகை-1 வெளியீடுகள் SIGHASH_DEFAULT-ஐ மட்டுமே ஆதரிக்கின்றன</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>உள்ளீடு SIGHASH_DEFAULT பயன்படுத்தும் முழுமையான வகை-1 செலவிடல் அல்ல</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>உள்ளீட்டிற்கு P2C நிரூபணத்தின் முழுமையான சாட்சித் தரவு தேவை</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>முதன்மை வலையமைப்பு இன்னும் தொடங்கப்படவில்லை: தொடக்கத் தொகுதி வரையறுக்கப்படவில்லை. பொதுச் சோதனைக்கு -testnet4 அல்லது உள்ளூர் சோதனைக்கு -regtest பயன்படுத்தவும்.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>இந்த மேம்பாட்டு உருவாக்கத்திற்குத் திட்டத்திற்குச் சொந்தமான பொது மூலக் குறியீட்டு URL அமைக்கப்படவில்லை.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>போதுமான கோப்பு விவரிப்பான்கள் கிடைக்கவில்லை. -rpcmaxconnections-ஐக் குறைக்கவும் அல்லது இயல்புநிலை மதிப்பான %d-ஐப் பயன்படுத்தவும்</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>%s பயனுள்ளதாக இருந்தால் தயவுசெய்து பங்களிக்கவும்.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+%s (%s) அல்லது %s (%s)ஐ மாற்றுவதைக் கருத்தில் கொள்ளவும்.</translation>
+    </message>
+    <message>
+        <source>
+Unable to cleanup failed migration</source>
+        <translation>
+தோல்வியடைந்த இடமாற்றத்தின் எச்சங்களை அகற்ற முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>
+Unable to restore backup of wallet.</source>
+        <translation>
+பணப்பையின் காப்புப்பிரதியை மீட்டமைக்க முடியவில்லை.</translation>
+    </message>
+    <message>
+        <source>%s failed to validate the -assumeutxo snapshot state. This indicates a hardware problem, or a bug in the software, or a bad software modification that allowed an invalid snapshot to be loaded. As a result of this, the node will shut down and stop using any state that was built on the snapshot, resetting the chain height from %d to %d. On the next restart, the node will resume syncing from %d without using any snapshot data. Please report this incident to %s, including how you obtained the snapshot. The invalid snapshot chainstate will be left on disk in case it is helpful in diagnosing the issue that caused this error.</source>
+        <translation>%s -assumeutxo நொடிப்பிடிப்பின் நிலையைச் சரிபார்க்கத் தவறியது. இது வன்பொருள் சிக்கல், மென்பொருள் பிழை அல்லது செல்லாத நொடிப்பிடிப்பை ஏற்ற அனுமதித்த தவறான மென்பொருள் மாற்றத்தைக் குறிக்கிறது. இதன் விளைவாக முனை நிறுத்தப்பட்டு, நொடிப்பிடிப்பை அடிப்படையாகக் கொண்ட எந்த நிலையையும் பயன்படுத்துவதை நிறுத்தி, சங்கிலி உயரத்தை %dஇலிருந்து %dக்கு மீட்டமைக்கும். அடுத்த மறுதொடக்கத்தில், நொடிப்பிடிப்புத் தரவு எதையும் பயன்படுத்தாமல் முனை %dஇலிருந்து ஒத்திசைவைத் தொடரும். நொடிப்பிடிப்பை எப்படிப் பெற்றீர்கள் என்பதுடன் இந்த நிகழ்வை %sக்குத் தெரிவிக்கவும். இந்தப் பிழைக்கான காரணத்தைக் கண்டறிய உதவக்கூடும் என்பதால் செல்லாத நொடிப்பிடிப்பின் சங்கிலி நிலை வட்டில் விடப்படும்.</translation>
+    </message>
+    <message>
+        <source>%s is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation>%s மிக அதிகமாக அமைக்கப்பட்டுள்ளது! இவ்வளவு பெரிய கட்டணம் ஒரே பரிவர்த்தனையில் செலுத்தப்படலாம்.</translation>
+    </message>
+    <message>
+        <source>%s request to listen on port %u. This port is considered "bad" and thus it is unlikely that any peer will connect to it. See doc/p2p-bad-ports.md for details and a full list.</source>
+        <translation>%s துறை %uஇல் கேட்கக் கோருகிறது. இந்தத் துறை "மோசமானது" என்று கருதப்படுவதால் எந்தச் சக முனையும் அதில் இணைவது சாத்தியமில்லை. விவரங்களுக்கும் முழுப் பட்டியலுக்கும் doc/p2p-bad-ports.mdஐப் பார்க்கவும்.</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf வழக்கொழிந்துவிட்டது; அடுத்த வெளியீட்டில் முற்றிலுமாக அகற்றப்படும்.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>%zu MiB dbcache, %zu MiB மட்டுமே கணினி நினைவகம் உள்ள அமைப்பிற்கு மிக அதிகமாக இருக்கலாம்.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>கடுமையான உள்பிழை ஏற்பட்டது; விவரங்களுக்கு %sஐப் பார்க்கவும்: %s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>கொடுக்கப்பட்ட தொகுதி ஹேஷ் '%s'க்கான Assumeutxo தரவு கிடைக்கவில்லை.</translation>
+    </message>
+    <message>
+        <source>Block verification was interrupted</source>
+        <translation>தொகுதிச் சரிபார்ப்பு குறுக்கிடப்பட்டது</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version %d pre-selected input with a version 3 tx</source>
+        <translation>முன்தேர்ந்தெடுக்கப்பட்ட உறுதிப்படுத்தப்படாத பதிப்பு %d உள்ளீட்டை, பதிப்பு 3 பரிவர்த்தனை மூலம் செலவிட முடியாது</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version 3 pre-selected input with a version %d tx</source>
+        <translation>முன்தேர்ந்தெடுக்கப்பட்ட உறுதிப்படுத்தப்படாத பதிப்பு 3 உள்ளீட்டை, பதிப்பு %d பரிவர்த்தனை மூலம் செலவிட முடியாது</translation>
+    </message>
+    <message>
+        <source>Cannot obtain a lock on directory %s. %s is probably already running.</source>
+        <translation>%s அடைவுக்குப் பூட்டைப் பெற முடியவில்லை. %s ஏற்கெனவே இயங்கிக்கொண்டிருக்கலாம்.</translation>
+    </message>
+    <message>
+        <source>Cannot provide specific connections and have addrman find outgoing connections at the same time.</source>
+        <translation>குறிப்பிட்ட இணைப்புகளை வழங்கிக்கொண்டே அதே நேரத்தில் addrmanஐ வெளிச்செல்லும் இணைப்புகளைத் தேடச் செய்ய முடியாது.</translation>
+    </message>
+    <message>
+        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
+        <translation>-dnsseedஐ false ஆக அமைக்கும்போது -forcednsseedஐ true ஆக அமைக்க முடியாது.</translation>
+    </message>
+    <message>
+        <source>Cannot write to directory '%s'; check permissions.</source>
+        <translation>'%s' அடைவில் எழுத முடியவில்லை; அனுமதிகளைச் சரிபார்க்கவும்.</translation>
+    </message>
+    <message>
+        <source>Config setting for %s only applied on %s network when in [%s] section.</source>
+        <translation>%sக்கான அமைப்பு, %s வலையமைப்பில் [%s] பிரிவில் இருந்தால் மட்டுமே பயன்படுத்தப்படும்.</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>வன்பொருள் தோல்வி இருக்கக்கூடும் எனக் குறிக்கும் சிதைந்த தொகுதி கிடைத்தது.</translation>
+    </message>
+    <message>
+        <source>Could not find asmap file %s</source>
+        <translation>asmap கோப்பு %s கிடைக்கவில்லை</translation>
+    </message>
+    <message>
+        <source>Could not generate scriptPubKeys (cache is empty)</source>
+        <translation>scriptPubKeys உருவாக்க முடியவில்லை (தற்காலிகச் சேமிப்பு காலியாக உள்ளது)</translation>
+    </message>
+    <message>
+        <source>Could not parse asmap file %s</source>
+        <translation>asmap கோப்பு %sஐப் பாகுபடுத்த முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>உட்பொதிந்த asmap தரவைப் படிக்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>பணப்பை உருவாக்கப்படுகிறது…</translation>
+    </message>
+    <message>
+        <source>Disk space for %s may not accommodate the block files. Approximately %u GB of data will be stored in this directory.</source>
+        <translation>%sக்கான வட்டு இடம் தொகுதிக் கோப்புகளுக்குப் போதாமல் இருக்கலாம். இந்த அடைவில் சுமார் %u GB தரவு சேமிக்கப்படும்.</translation>
+    </message>
+    <message>
+        <source>Disk space is too low!</source>
+        <translation>வட்டு இடம் மிகவும் குறைவாக உள்ளது!</translation>
+    </message>
+    <message>
+        <source>Do you want to rebuild the databases now?</source>
+        <translation>இப்போது தரவுத்தளங்களை மீண்டும் உருவாக்க விரும்புகிறீர்களா?</translation>
+    </message>
+    <message>
+        <source>Dump file %s does not exist.</source>
+        <translation>தரவு வெளியீட்டுக் கோப்பு %s இல்லை.</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>%s முகவரிக்கான பிணைப்பு அமைப்பு மீண்டும் கொடுக்கப்பட்டுள்ளது. -bind, -bind=...=onion மற்றும் -whitebind அமைப்புகளைச் சரிபார்க்கவும்.</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>நீள்வட்ட வளைவு மறையியலின் அடிப்படைச் சோதனை தோல்வியடைந்தது. %s நிறுத்தப்படுகிறது.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>உட்பொதிந்த asmap தரவு கிடைக்கவில்லை</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>%s உருவாக்குவதில் பிழை: பதிப்பின் மேல்தரவை எழுத முடியவில்லை.</translation>
+    </message>
+    <message>
+        <source>Error loading %s: External signer wallet being loaded without external signer support compiled</source>
+        <translation>%s ஏற்றுவதில் பிழை: வெளிப்புறக் கையொப்ப ஆதரவு தொகுக்கப்படாமல் வெளிப்புறக் கையொப்பப் பணப்பை ஏற்றப்படுகிறது</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>%s ஏற்றுவதில் பிழை: பணப்பை மரபுவழியானது. இடமாற்றக் கருவியை (migratewallet RPC) பயன்படுத்தி விவரிப்பிப் பணப்பைக்கு இடமாற்றவும்.</translation>
+    </message>
+    <message>
+        <source>Error loading databases</source>
+        <translation>தரவுத்தளங்களை ஏற்றுவதில் பிழை</translation>
+    </message>
+    <message>
+        <source>Error loading wallet. Wallet requires blocks to be downloaded, and software does not currently support loading wallets while blocks are being downloaded out of order when using assumeutxo snapshots. Wallet should be able to load successfully after node sync reaches height %s</source>
+        <translation>பணப்பையை ஏற்றுவதில் பிழை. பணப்பைக்குத் தொகுதிகள் பதிவிறக்கப்பட வேண்டும்; assumeutxo நொடிப்பிடிப்புகளைப் பயன்படுத்தும்போது தொகுதிகள் வரிசை தவறிப் பதிவிறக்கப்படுகையில் பணப்பைகளை ஏற்ற மென்பொருள் தற்போது ஆதரிக்கவில்லை. முனையின் ஒத்திசைவு %s உயரத்தை அடைந்தபின் பணப்பையை வெற்றிகரமாக ஏற்ற முடியும்</translation>
+    </message>
+    <message>
+        <source>Error opening coins database</source>
+        <translation>நாணயத் தரவுத்தளத்தைத் திறப்பதில் பிழை</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address metadata may be missing or incorrect.</source>
+        <translation>%sஐப் படிப்பதில் பிழை! அனைத்து விசைகளும் சரியாகப் படிக்கப்பட்டன, ஆனால் பரிவர்த்தனைத் தரவோ முகவரி மேல்தரவோ இல்லாமலோ தவறாகவோ இருக்கலாம்.</translation>
+    </message>
+    <message>
+        <source>Error reading %s! Transaction data may be missing or incorrect. Rescanning wallet.</source>
+        <translation>%sஐப் படிப்பதில் பிழை! பரிவர்த்தனைத் தரவு இல்லாமலோ தவறாகவோ இருக்கலாம். பணப்பை மீண்டும் வருடப்படுகிறது.</translation>
+    </message>
+    <message>
+        <source>Error reading configuration file: %s</source>
+        <translation>அமைப்புக் கோப்பைப் படிப்பதில் பிழை: %s</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation>பணப்பைத் தரவுத்தளத்திலிருந்து அடுத்த பதிவைப் படிப்பதில் பிழை</translation>
+    </message>
+    <message>
+        <source>Error starting/committing db txn for wallet transactions removal process</source>
+        <translation>பணப்பைப் பரிவர்த்தனைகளை அகற்றும் செயல்முறைக்கான தரவுத்தளப் பரிவர்த்தனையைத் தொடங்குவதில்/உறுதிசெய்வதில் பிழை</translation>
+    </message>
+    <message>
+        <source>Error: Address book data in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>பிழை: பணப்பையின் முகவரிப் புத்தகத் தரவு இடமாற்றப்பட்ட எந்தப் பணப்பைக்கு உரியது என அடையாளம் காண முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Cannot extract destination from the generated scriptpubkey</source>
+        <translation>பிழை: உருவாக்கப்பட்ட scriptpubkeyஇலிருந்து இலக்கைப் பிரித்தெடுக்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>பிழை: பரிவர்த்தனை %sஐப் பார்வைக்கு-மட்டுமான பணப்பையில் சேர்க்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Could not add watchonly tx %s to watchonly wallet</source>
+        <translation>பிழை: பார்வைக்கு-மட்டுமான பரிவர்த்தனை %sஐப் பார்வைக்கு-மட்டுமான பணப்பையில் சேர்க்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>பிழை: '%s' கோப்பை உருவாக்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Could not delete watchonly transactions. </source>
+        <translation>பிழை: பார்வைக்கு-மட்டுமான பரிவர்த்தனைகளை அழிக்க முடியவில்லை. </translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation>பிழை: தரவுத்தளத்தில் சுட்டியை உருவாக்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation>பிழை: தரவு வெளியீட்டுக் கோப்பின் சரிபார்ப்புத் தொகை பொருந்தவில்லை. கணக்கிட்டது %s, எதிர்பார்த்தது %s</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation>பிழை: தரவு வெளியீட்டுக் கோப்பின் வடிவப் பதிவு தவறானது. கிடைத்தது "%s", எதிர்பார்த்தது "format".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation>பிழை: தரவு வெளியீட்டுக் கோப்பின் அடையாளப் பதிவு தவறானது. கிடைத்தது "%s", எதிர்பார்த்தது "%s".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>பிழை: தரவு வெளியீட்டுக் கோப்பு ஆதரிக்கப்படாத தரவுத்தள வடிவத்தைக் (%s) குறிப்பிடுகிறது. sqlite தரவுத்தள வெளியீடுகள் மட்டுமே ஆதரிக்கப்படுகின்றன</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation>பிழை: தரவு வெளியீட்டுக் கோப்பின் பதிப்பு ஆதரிக்கப்படவில்லை. connectcoin-walletஇன் இந்தப் பதிப்பு, பதிப்பு 1 தரவு வெளியீட்டுக் கோப்புகளை மட்டுமே ஆதரிக்கிறது. கிடைத்த கோப்பின் பதிப்பு %s</translation>
+    </message>
+    <message>
+        <source>Error: Duplicate descriptors created during migration. Your wallet may be corrupted.</source>
+        <translation>பிழை: இடமாற்றத்தின்போது நகல் விவரிப்பிகள் உருவாக்கப்பட்டன. உங்கள் பணப்பை சிதைந்திருக்கலாம்.</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>பிழை: ஏற்றுமதி இலக்கு '%s' ஏற்கெனவே உள்ளது</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>பிழை: ஏற்றுமதி இலக்கு காலியாக இருக்க முடியாது</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet</source>
+        <translation>பிழை: புதிய பார்வைக்கு-மட்டுமான பணப்பையை உருவாக்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>பிழை: புதிய பார்வைக்கு-மட்டுமான பணப்பையை உருவாக்க முடியவில்லை. %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation>பிழை: பதினாறுமமாக இல்லாத விசை கிடைத்தது: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation>பிழை: பதினாறுமமாக இல்லாத மதிப்பு கிடைத்தது: %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>பிழை: விசைக் குளம் தீர்ந்துவிட்டது; முதலில் keypoolrefillஐ அழைக்கவும்</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation>பிழை: சரிபார்ப்புத் தொகை இல்லை</translation>
+    </message>
+    <message>
+        <source>Error: No %s addresses available.</source>
+        <translation>பிழை: %s முகவரிகள் கிடைக்கவில்லை.</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>பிழை: அனைத்து முகவரிப் புத்தகப் பதிவுகளும் இடமாற்றப்படவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Not all transaction records were migrated</source>
+        <translation>பிழை: அனைத்து பரிவர்த்தனைப் பதிவுகளும் இடமாற்றப்படவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: This wallet already uses SQLite</source>
+        <translation>பிழை: இந்தப் பணப்பை ஏற்கெனவே SQLite பயன்படுத்துகிறது</translation>
+    </message>
+    <message>
+        <source>Error: This wallet is already a descriptor wallet</source>
+        <translation>பிழை: இந்தப் பணப்பை ஏற்கெனவே விவரிப்பிப் பணப்பையாக உள்ளது</translation>
+    </message>
+    <message>
+        <source>Error: Transaction %s in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>பிழை: பணப்பையின் பரிவர்த்தனை %s இடமாற்றப்பட்ட எந்தப் பணப்பைக்கு உரியது என அடையாளம் காண முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Unable to begin reading all records in the database</source>
+        <translation>பிழை: தரவுத்தளத்தில் உள்ள அனைத்துப் பதிவுகளையும் படிக்கத் தொடங்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Unable to make a backup of your wallet</source>
+        <translation>பிழை: உங்கள் பணப்பையின் காப்புப்பிரதியை உருவாக்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation>பிழை: பதிப்பு %uஐ uint32_t ஆகப் பாகுபடுத்த முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
+        <translation>பிழை: இந்த மரபுவழிப் பணப்பைக்கான விவரிப்பிகளை உருவாக்க முடியவில்லை. பணப்பை மறையாக்கப்பட்டிருந்தால் அதன் கடவுச்சொற்றொடரை வழங்குவதை உறுதிசெய்யவும்.</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read all records in the database</source>
+        <translation>பிழை: தரவுத்தளத்தில் உள்ள அனைத்துப் பதிவுகளையும் படிக்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read wallet's best block locator record</source>
+        <translation>பிழை: பணப்பையின் சிறந்த தொகுதி இருப்பிடப் பதிவைப் படிக்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Unable to remove watchonly address book data</source>
+        <translation>பிழை: பார்வைக்கு-மட்டுமான முகவரிப் புத்தகத் தரவை அகற்ற முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write data to disk for wallet %s</source>
+        <translation>பிழை: பணப்பை %sக்கான தரவை வட்டில் எழுத முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation>பிழை: புதிய பணப்பையில் பதிவை எழுத முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write solvable wallet best block locator record</source>
+        <translation>பிழை: தீர்க்கக்கூடிய பணப்பையின் சிறந்த தொகுதி இருப்பிடப் பதிவை எழுத முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>பிழை: ஏற்றுமதி செய்யப்பட்ட பணப்பையை எழுத முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write watchonly wallet best block locator record</source>
+        <translation>பிழை: பார்வைக்கு-மட்டுமான பணப்பையின் சிறந்த தொகுதி இருப்பிடப் பதிவை எழுத முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: Wallet does not exist</source>
+        <translation>பிழை: பணப்பை இல்லை</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>பிழை: ஏற்றுமதி செய்யப் பணப்பையில் விவரிப்பிகள் இல்லை</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>பிழை: பார்வைக்கு-மட்டுமான பணப்பை ஏற்றுமதிக்கான தரவுத்தளப் பரிவர்த்தனையை உறுதிசெய்ய முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: cannot remove legacy wallet records</source>
+        <translation>பிழை: மரபுவழிப் பணப்பைப் பதிவுகளை அகற்ற முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>பிழை: புதிய பார்வைக்கு-மட்டுமான பணப்பை %sக்கான தரவுத்தளப் பரிவர்த்தனையை இயக்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for wallet %s</source>
+        <translation>பிழை: பணப்பை %sக்கான தரவுத்தளப் பரிவர்த்தனையை இயக்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>பணப்பை தொடங்கும்போது மறுவருடலுக்கான ஒதுக்கீட்டைப் பெற முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>உறுதிப்படுத்தப்படாத UTXOகள் மிகப்பெரிய உறுதிப்படுத்தப்படாத பரிவர்த்தனைக் குழுவைச் சார்ந்திருப்பதால் கட்டண உயர்வைக் கணக்கிட முடியவில்லை.</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>தொகுதி மீளமைவுக் கோப்பை மூட முடியவில்லை.</translation>
+    </message>
+    <message>
+        <source>Failed to close file when writing block.</source>
+        <translation>தொகுதியை எழுதும்போது கோப்பை மூட முடியவில்லை.</translation>
+    </message>
+    <message>
+        <source>Failed to disconnect block.</source>
+        <translation>தொகுதியைப் பிரிக்க முடியவில்லை.</translation>
+    </message>
+    <message>
+        <source>Failed to read block.</source>
+        <translation>தொகுதியைப் படிக்க முடியவில்லை.</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>நொடிப்பிடிப்பின் சங்கிலி நிலை அடைவை (%s) அகற்ற முடியவில்லை. மறுதொடக்கத்திற்கு முன் கைமுறையாக அகற்றவும்.
+</translation>
+    </message>
+    <message>
+        <source>Failed to rename invalid peers.dat file. Please move or delete it and try again.</source>
+        <translation>செல்லாத peers.dat கோப்பின் பெயரை மாற்ற முடியவில்லை. அதை நகர்த்தவோ அழிக்கவோ செய்து மீண்டும் முயலவும்.</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>அட்டவணைகளைத் தொடங்க முடியவில்லை; நிறுத்தப்படுகிறது…</translation>
+    </message>
+    <message>
+        <source>Failed to verify database</source>
+        <translation>தரவுத்தளத்தைச் சரிபார்க்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Failed to write block.</source>
+        <translation>தொகுதியை எழுத முடியவில்லை.</translation>
+    </message>
+    <message>
+        <source>Failed to write undo data.</source>
+        <translation>மீளமைவுத் தரவை எழுத முடியவில்லை.</translation>
+    </message>
+    <message>
+        <source>Failure removing transaction: %s</source>
+        <translation>பரிவர்த்தனையை அகற்றுவதில் தோல்வி: %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>கட்டண வீதம் (%s), குறைந்தபட்சக் கட்டண வீத அமைப்பைவிட (%s) குறைவாக உள்ளது.</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation>%s கோப்பு ஏற்கெனவே உள்ளது. இதைத்தான் விரும்புகிறீர்கள் என்பது உறுதியானால், முதலில் அதை வேறிடத்துக்கு நகர்த்தவும்.</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>தொகுதிக் கோப்பின் நிலுவைத் தரவை வட்டில் எழுத முடியவில்லை. இதற்கு I/O பிழை காரணமாக இருக்கலாம்.</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>மீளமைவுக் கோப்பின் நிலுவைத் தரவை வட்டில் எழுத முடியவில்லை. இதற்கு I/O பிழை காரணமாக இருக்கலாம்.</translation>
+    </message>
+    <message>
+        <source>Ignoring duplicate -wallet %s.</source>
+        <translation>மீண்டும் கொடுக்கப்பட்ட -wallet %s புறக்கணிக்கப்படுகிறது.</translation>
+    </message>
+    <message>
+        <source>Incompatible options: -dnsseed=1 was explicitly specified, but -onlynet forbids connections to IPv4/IPv6</source>
+        <translation>பொருந்தாத விருப்பங்கள்: -dnsseed=1 வெளிப்படையாகக் குறிப்பிடப்பட்டது, ஆனால் -onlynet IPv4/IPv6 இணைப்புகளைத் தடைசெய்கிறது</translation>
+    </message>
+    <message>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation>தவறான தொடக்கத் தொகுதி கிடைத்தது அல்லது தொடக்கத் தொகுதியே கிடைக்கவில்லை. வலையமைப்பிற்கான தரவு அடைவு தவறானதா?</translation>
+    </message>
+    <message>
+        <source>Initialization sanity check failed. %s is shutting down.</source>
+        <translation>தொடக்க அடிப்படைச் சோதனை தோல்வியடைந்தது. %s நிறுத்தப்படுகிறது.</translation>
+    </message>
+    <message>
+        <source>Input not found or already spent</source>
+        <translation>உள்ளீடு கிடைக்கவில்லை அல்லது ஏற்கெனவே செலவிடப்பட்டது</translation>
+    </message>
+    <message>
+        <source>Insufficient dbcache for block verification</source>
+        <translation>தொகுதிச் சரிபார்ப்பிற்கு dbcache போதவில்லை</translation>
+    </message>
+    <message>
+        <source>Invalid -i2psam address or hostname: '%s'</source>
+        <translation>செல்லாத -i2psam முகவரி அல்லது புரவலன் பெயர்: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>செல்லாத -proxy முகவரி அல்லது புரவலன் பெயர்; '='இல் முடிகிறது: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s'</source>
+        <translation>%s=&lt;amount&gt;க்கான செல்லாத தொகை: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation>%s=&lt;amount&gt;க்கான செல்லாத தொகை: '%s' (பரிவர்த்தனைகள் சிக்காமல் இருக்க குறைந்தபட்சம் %s minrelay கட்டணமாக இருக்க வேண்டும்)</translation>
+    </message>
+    <message>
+        <source>Invalid or corrupt peers.dat (%s). If you believe this is a bug, please report it to %s. As a workaround, you can move the file (%s) out of the way (rename, move, or delete) to have a new one created on the next start.</source>
+        <translation>செல்லாத அல்லது சிதைந்த peers.dat (%s). இது பிழை என நீங்கள் நம்பினால், %sக்குத் தெரிவிக்கவும். தற்காலிகத் தீர்வாக, கோப்பை (%s) நகர்த்தலாம் (பெயர்மாற்றம், நகர்த்தல் அல்லது அழித்தல்); அப்போது அடுத்த தொடக்கத்தில் புதிய கோப்பு உருவாக்கப்படும்.</translation>
+    </message>
+    <message>
+        <source>Invalid port specified in %s: '%s'</source>
+        <translation>%sஇல் செல்லாத துறை குறிப்பிடப்பட்டுள்ளது: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid value detected for '-wallet' or '-nowallet'. '-wallet' requires a string value, while '-nowallet' accepts only '1' to disable all wallets</source>
+        <translation>'-wallet' அல்லது '-nowallet'க்கான செல்லாத மதிப்பு கண்டறியப்பட்டது. '-wallet'க்கு ஒரு சர மதிப்பு தேவை; '-nowallet' அனைத்துப் பணப்பைகளையும் முடக்க '1'ஐ மட்டும் ஏற்கும்</translation>
+    </message>
+    <message>
+        <source>Listening for incoming connections failed (listen returned error %s)</source>
+        <translation>உள்வரும் இணைப்புகளைக் கேட்பது தோல்வியடைந்தது (listen பிழை %sஐத் திருப்பியது)</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses…</source>
+        <translation>P2P முகவரிகள் ஏற்றப்படுகின்றன…</translation>
+    </message>
+    <message>
+        <source>Loading banlist…</source>
+        <translation>தடைப்பட்டியல் ஏற்றப்படுகிறது…</translation>
+    </message>
+    <message>
+        <source>Loading block index…</source>
+        <translation>தொகுதி அட்டவணை ஏற்றப்படுகிறது…</translation>
+    </message>
+    <message>
+        <source>Loading wallet…</source>
+        <translation>பணப்பை ஏற்றப்படுகிறது…</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is less than transaction weight without inputs</source>
+        <translation>பரிவர்த்தனையின் அதிகபட்ச எடை, உள்ளீடுகளற்ற பரிவர்த்தனையின் எடையைவிடக் குறைவாக உள்ளது</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is too low, can not accommodate change output</source>
+        <translation>பரிவர்த்தனையின் அதிகபட்ச எடை மிகவும் குறைவு; மீதத் தொகை வெளியீட்டிற்கு இடமில்லை</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>பரிவர்த்தனையின் அதிகபட்ச எடை %dக்கும் %dக்கும் இடையில் இருக்க வேண்டும்</translation>
+    </message>
+    <message>
+        <source>Missing amount</source>
+        <translation>தொகை இல்லை</translation>
+    </message>
+    <message>
+        <source>Missing solving data for estimating transaction size</source>
+        <translation>பரிவர்த்தனை அளவை மதிப்பிடுவதற்கான தீர்வுத் தரவு இல்லை</translation>
+    </message>
+    <message>
+        <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
+        <translation>ஒன்றுக்கு மேற்பட்ட onion பிணைப்பு முகவரிகள் கொடுக்கப்பட்டுள்ளன. தானாக உருவாக்கப்பட்ட Tor onion சேவைக்கு %s பயன்படுத்தப்படுகிறது.</translation>
+    </message>
+    <message>
+        <source>Need to specify a port with -whitebind: '%s'</source>
+        <translation>-whitebind உடன் துறையைக் குறிப்பிட வேண்டும்: '%s'</translation>
+    </message>
+    <message>
+        <source>No addresses available</source>
+        <translation>முகவரிகள் கிடைக்கவில்லை</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>தரவு வெளியீட்டுக் கோப்பு வழங்கப்படவில்லை. createfromdump பயன்படுத்த -dumpfile=&lt;filename&gt; கொடுக்கப்பட வேண்டும்.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use dump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>தரவு வெளியீட்டுக் கோப்பு வழங்கப்படவில்லை. dump பயன்படுத்த -dumpfile=&lt;filename&gt; கொடுக்கப்பட வேண்டும்.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. %d available, %d required.</source>
+        <translation>போதுமான கோப்பு விவரிப்பிகள் இல்லை. %d உள்ளன, %d தேவை.</translation>
+    </message>
+    <message>
+        <source>Not found pre-selected input %s</source>
+        <translation>முன்தேர்ந்தெடுக்கப்பட்ட உள்ளீடு %s கிடைக்கவில்லை</translation>
+    </message>
+    <message>
+        <source>Not solvable pre-selected input %s</source>
+        <translation>முன்தேர்ந்தெடுக்கப்பட்ட உள்ளீடு %s தீர்க்க முடியாதது</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>திசை மட்டும் அமைக்கப்பட்டது; அனுமதிகள் இல்லை: '%s'</translation>
+    </message>
+    <message>
+        <source>Option '-checkpoints' is set but checkpoints were removed. This option has no effect.</source>
+        <translation>'-checkpoints' விருப்பம் அமைக்கப்பட்டுள்ளது, ஆனால் சோதனைப் புள்ளிகள் அகற்றப்பட்டன. இந்த விருப்பத்திற்கு விளைவு இல்லை.</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>'-limitancestorsize' விருப்பம் கொடுக்கப்பட்டுள்ளது, ஆனால் முன்னோர் பரிவர்த்தனை அளவு வரம்புகள் குழு அளவு வரம்புகளால் மாற்றப்பட்டன (-limitclustersize பார்க்கவும்). இந்த விருப்பத்திற்கு விளைவு இல்லை.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>'-limitdescendantsize' விருப்பம் கொடுக்கப்பட்டுள்ளது, ஆனால் பின்வரும் பரிவர்த்தனை அளவு வரம்புகள் குழு அளவு வரம்புகளால் மாற்றப்பட்டன (-limitclustersize பார்க்கவும்). இந்த விருப்பத்திற்கு விளைவு இல்லை.</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to CJDNS (-onlynet=cjdns) but -cjdnsreachable is not provided</source>
+        <translation>வெளிச்செல்லும் இணைப்புகள் CJDNSக்கு மட்டுப்படுத்தப்பட்டுள்ளன (-onlynet=cjdns), ஆனால் -cjdnsreachable வழங்கப்படவில்லை</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is explicitly forbidden: -onion=0</source>
+        <translation>வெளிச்செல்லும் இணைப்புகள் Torக்கு மட்டுப்படுத்தப்பட்டுள்ளன (-onlynet=onion), ஆனால் Tor வலையமைப்பை அடையும் பதிலி வெளிப்படையாகத் தடைசெய்யப்பட்டுள்ளது: -onion=0</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
+        <translation>வெளிச்செல்லும் இணைப்புகள் Torக்கு மட்டுப்படுத்தப்பட்டுள்ளன (-onlynet=onion), ஆனால் Tor வலையமைப்பை அடையும் பதிலி வழங்கப்படவில்லை: -proxy, -onion அல்லது -listenonion எதுவும் கொடுக்கப்படவில்லை</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to i2p (-onlynet=i2p) but -i2psam is not provided</source>
+        <translation>வெளிச்செல்லும் இணைப்புகள் i2pக்கு மட்டுப்படுத்தப்பட்டுள்ளன (-onlynet=i2p), ஆனால் -i2psam வழங்கப்படவில்லை</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>சொந்தப் பரிவர்த்தனைகளின் தனியுரிமை ஒளிபரப்பு கோரப்பட்டது (-privatebroadcast); -proxyrandomize முடக்கப்பட்டுள்ளது. தனியுரிமை ஒளிபரப்பு இணைப்புகளின் Tor சுற்றுகளை மற்ற Tor இணைப்புகளுடன் தொடர்புபடுத்த வாய்ப்புள்ளது. அதிகபட்சத் தனியுரிமைக்கு -proxyrandomize=1 அமைக்கவும்.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>சொந்தப் பரிவர்த்தனைகளின் தனியுரிமை ஒளிபரப்பு கோரப்பட்டது (-privatebroadcast), ஆனால் -connectஉம் அமைக்கப்பட்டுள்ளது. தனியுரிமை ஒளிபரப்பு சீரற்ற முறையில் தேர்ந்தெடுக்கப்பட்ட Tor அல்லது I2P சக முனைகளுடன் புதிய இணைப்புகளைத் திறக்க வேண்டியதால் இவை பொருந்தாது. பதிலாக -maxconnections=0 -addnode=... பயன்படுத்துவதைக் கருத்தில் கொள்ளவும்</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>சொந்தப் பரிவர்த்தனைகளின் தனியுரிமை ஒளிபரப்பு கோரப்பட்டது (-privatebroadcast), ஆனால் Tor அல்லது I2P வலையமைப்புகளில் எதையும் அடைய முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -reindex-chainstate. Use full -reindex instead.</source>
+        <translation>பழைய தொகுதிகளை அகற்றும் முறை -reindex-chainstate உடன் பொருந்தாது. பதிலாக முழு -reindex பயன்படுத்தவும்.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>பழைய தொகுதிகளை அகற்றும் முறை -txospenderindex உடன் பொருந்தாது.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
+        <translation>அகற்றல்: பணப்பையின் கடைசி ஒத்திசைவு அகற்றப்பட்ட தரவிற்கும் முந்தையது. -reindex தேவை (அகற்றல் முறையிலுள்ள முனை என்றால் முழுத் தொகுதிச்சங்கிலியையும் மீண்டும் பதிவிறக்க வேண்டும்)</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore…</source>
+        <translation>தொகுதிச் சேமிப்பிலிருந்து பழைய தரவு அகற்றப்படுகிறது…</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>'%s' -&gt; '%s' பெயர்மாற்றம் தோல்வியடைந்தது. பின்னணிச் சங்கிலி நிலையின் leveldb அடைவை அகற்ற முடியவில்லை.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
+        <translation>'%s' -&gt; '%s' பெயர்மாற்றம் தோல்வியடைந்தது. செல்லாத நொடிப்பிடிப்பு அடைவு %sஐ கைமுறையாக நகர்த்தியோ அழித்தோ தீர்க்க வேண்டும்; இல்லையெனில் அடுத்த தொடக்கத்திலும் இதே பிழை ஏற்படும்.</translation>
+    </message>
+    <message>
+        <source>Replaying blocks…</source>
+        <translation>தொகுதிகள் மீண்டும் செயல்படுத்தப்படுகின்றன…</translation>
+    </message>
+    <message>
+        <source>Rescanning…</source>
+        <translation>மீண்டும் வருடப்படுகிறது…</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to execute statement to verify database: %s</source>
+        <translation>SQLiteDatabase: தரவுத்தளத்தைச் சரிபார்க்கும் கூற்றைச் செயல்படுத்த முடியவில்லை: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to prepare statement to verify database: %s</source>
+        <translation>SQLiteDatabase: தரவுத்தளத்தைச் சரிபார்க்கும் கூற்றைத் தயாரிக்க முடியவில்லை: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to read database verification error: %s</source>
+        <translation>SQLiteDatabase: தரவுத்தளச் சரிபார்ப்புப் பிழையைப் படிக்க முடியவில்லை: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unexpected application id. Expected %u, got %u</source>
+        <translation>SQLiteDatabase: எதிர்பாராத பயன்பாட்டு id. எதிர்பார்த்தது %u, கிடைத்தது %u</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is supported</source>
+        <translation>SQLiteDatabase: தெரியாத sqlite பணப்பை வடிவமைப்புப் பதிப்பு %d. பதிப்பு %d மட்டுமே ஆதரிக்கப்படுகிறது</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>கையொப்பமிடுபவர் முகவரியைத் திருப்பித் தரவில்லை</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>கையொப்பமிடுபவர் எதிர்பாராத முகவரி %sஐத் திருப்பித் தந்தார்</translation>
+    </message>
+    <message>
+        <source>Signer returned error: %s</source>
+        <translation>கையொப்பமிடுபவர் பிழையைத் திருப்பினார்: %s</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is a relative path</source>
+        <translation>குறிப்பிட்ட -walletdir "%s" சார்புப் பாதையாகும்</translation>
+    </message>
+    <message>
+        <source>Specified data directory "%s" does not exist.</source>
+        <translation>குறிப்பிட்ட தரவு அடைவு "%s" இல்லை.</translation>
+    </message>
+    <message>
+        <source>Starting network threads…</source>
+        <translation>வலையமைப்பு இழைகள் தொடங்கப்படுகின்றன…</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>நிலுவைத் தரவை எழுதும்போது கணினிப் பிழை: %s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>வெளிப்புறத் தொகுதிக் கோப்பை ஏற்றும்போது கணினிப் பிழை: %s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>தொகுதியை வட்டில் சேமிக்கும்போது கணினிப் பிழை: %s</translation>
+    </message>
+    <message>
+        <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
+        <translation>%s பாதை exFAT பயன்படுத்துகிறது; macOSஇல் அவ்வப்போது சிதைவு சிக்கல்கள் இருப்பது அறியப்பட்டுள்ளது. தரவு இழப்பைத் தவிர்க்க இந்த அடைவை வேறு கோப்பு அமைப்பிற்கு நகர்த்தவும்.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>-testactivationheight விருப்பத்தை முதன்மை வலையமைப்பில் பயன்படுத்தக்கூடாது.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>-vbparams விருப்பத்தை முதன்மை வலையமைப்பில் பயன்படுத்தக்கூடாது.</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>முன்தேர்ந்தெடுக்கப்பட்ட உள்ளீடுகளும் பணப்பை தானாகத் தேர்ந்தெடுத்த உள்ளீடுகளும் சேர்ந்து பரிவர்த்தனையின் அதிகபட்ச எடையை மீறுகின்றன. குறைந்த தொகையை அனுப்ப முயலவும் அல்லது பணப்பையின் UTXOகளைக் கைமுறையாக ஒருங்கிணைக்கவும்</translation>
+    </message>
+    <message>
+        <source>The inputs size exceeds the maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>உள்ளீடுகளின் அளவு அதிகபட்ச எடையை மீறுகிறது. குறைந்த தொகையை அனுப்ப முயலவும் அல்லது பணப்பையின் UTXOகளைக் கைமுறையாக ஒருங்கிணைக்கவும்</translation>
+    </message>
+    <message>
+        <source>The preselected coins total amount does not cover the transaction target. Please allow other inputs to be automatically selected or include more coins manually</source>
+        <translation>முன்தேர்ந்தெடுக்கப்பட்ட நாணயங்களின் மொத்தத் தொகை பரிவர்த்தனை இலக்கிற்குப் போதவில்லை. பிற உள்ளீடுகள் தானாகத் தேர்ந்தெடுக்கப்பட அனுமதிக்கவும் அல்லது மேலும் நாணயங்களைக் கைமுறையாகச் சேர்க்கவும்</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist</source>
+        <translation>குறிப்பிட்ட அமைப்புக் கோப்பு %s இல்லை</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>%s பரிவர்த்தனைக் கட்டணத்தைச் சேர்த்தால் மொத்தம் உங்கள் இருப்பை மீறுகிறது.</translation>
+    </message>
+    <message>
+        <source>The transactions removal process can only be executed within a db txn</source>
+        <translation>பரிவர்த்தனைகளை அகற்றும் செயல்முறையைத் தரவுத்தளப் பரிவர்த்தனையின் உள்ளே மட்டுமே இயக்க முடியும்</translation>
+    </message>
+    <message>
+        <source>The wallet will avoid paying less than the minimum relay fee.</source>
+        <translation>குறைந்தபட்ச மறுஅனுப்பல் கட்டணத்தைவிடக் குறைவாகச் செலுத்துவதைப் பணப்பை தவிர்க்கும்.</translation>
+    </message>
+    <message>
+        <source>There is no ScriptPubKeyManager for this address</source>
+        <translation>இந்த முகவரிக்கு ScriptPubKeyManager இல்லை</translation>
+    </message>
+    <message>
+        <source>This is the maximum transaction fee you pay (in addition to the normal fee) to prioritize partial spend avoidance over regular coin selection.</source>
+        <translation>வழக்கமான நாணயத் தேர்வைவிட பகுதிச் செலவிடலைத் தவிர்ப்பதற்கு முன்னுரிமை தர நீங்கள் (வழக்கமான கட்டணத்திற்கு மேலாக) செலுத்தும் அதிகபட்சப் பரிவர்த்தனைக் கட்டணம் இதுவாகும்.</translation>
+    </message>
+    <message>
+        <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>
+        <translation>வலையமைப்புப் பதிப்புச் சரத்தின் மொத்த நீளம் (%i), அதிகபட்ச நீளத்தை (%i) மீறுகிறது. uacomments எண்ணிக்கையையோ அளவையோ குறைக்கவும்.</translation>
+    </message>
+    <message>
+        <source>Transaction %s does not belong to this wallet</source>
+        <translation>பரிவர்த்தனை %s இந்தப் பணப்பைக்கு உரியதல்ல</translation>
+    </message>
+    <message>
+        <source>Transaction change output index out of range</source>
+        <translation>பரிவர்த்தனையின் மீதத் தொகை வெளியீட்டு எண் வரம்பிற்கு வெளியே உள்ளது</translation>
+    </message>
+    <message>
+        <source>Transaction needs a change address, but we can't generate it.</source>
+        <translation>பரிவர்த்தனைக்கு மீதத் தொகை முகவரி தேவை, ஆனால் அதை உருவாக்க முடியவில்லை.</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>பரிவர்த்தனைக்குப் பூஜ்ஜியமல்லாத மதிப்புடைய ஓர் இலக்கு, பூஜ்ஜியமல்லாத கட்டண வீதம் அல்லது முன்தேர்ந்தெடுக்கப்பட்ட உள்ளீடு தேவை</translation>
+    </message>
+    <message>
+        <source>UTXO snapshot failed to validate. Restart to resume normal initial block download, or try loading a different snapshot.</source>
+        <translation>UTXO நொடிப்பிடிப்புச் சரிபார்ப்பு தோல்வியடைந்தது. வழக்கமான தொடக்கத் தொகுதிப் பதிவிறக்கத்தைத் தொடர மறுதொடக்கம் செய்யவும் அல்லது வேறொரு நொடிப்பிடிப்பை ஏற்ற முயலவும்.</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer (bind returned error %s)</source>
+        <translation>இந்தக் கணினியில் %s உடன் பிணைக்க முடியவில்லை (bind பிழை %sஐத் திருப்பியது)</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer. %s is probably already running.</source>
+        <translation>இந்தக் கணினியில் %s உடன் பிணைக்க முடியவில்லை. %s ஏற்கெனவே இயங்கிக்கொண்டிருக்கலாம்.</translation>
+    </message>
+    <message>
+        <source>Unable to find UTXO for external input</source>
+        <translation>வெளிப்புற உள்ளீட்டுக்கான UTXO கிடைக்கவில்லை</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation>%sஐ எழுதுவதற்குத் திறக்க முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Unable to parse -maxuploadtarget: '%s'</source>
+        <translation>-maxuploadtargetஐப் பாகுபடுத்த முடியவில்லை: '%s'</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>விவரிப்பித் தற்காலிகச் சேமிப்பை எழுத முடியவில்லை</translation>
+    </message>
+    <message>
+        <source>Unconfirmed UTXOs are available, but spending them creates a chain of transactions that will be rejected by the mempool</source>
+        <translation>உறுதிப்படுத்தப்படாத UTXOகள் உள்ளன, ஆனால் அவற்றைச் செலவிடுவது mempool நிராகரிக்கும் பரிவர்த்தனைச் சங்கிலியை உருவாக்கும்</translation>
+    </message>
+    <message>
+        <source>Unexpected legacy entry in descriptor wallet found. Loading wallet %s
+
+The wallet might have been tampered with or created with malicious intent.
+</source>
+        <translation>விவரிப்பிப் பணப்பையில் எதிர்பாராத மரபுவழிப் பதிவு கிடைத்தது. பணப்பை %s ஏற்றப்படுகிறது
+
+பணப்பை முறைகேடாக மாற்றப்பட்டிருக்கலாம் அல்லது தீய நோக்கத்துடன் உருவாக்கப்பட்டிருக்கலாம்.
+</translation>
+    </message>
+    <message>
+        <source>Unknown -blockfilterindex value %s.</source>
+        <translation>தெரியாத -blockfilterindex மதிப்பு %s.</translation>
+    </message>
+    <message>
+        <source>Unknown network specified in -onlynet: '%s'</source>
+        <translation>-onlynetஇல் தெரியாத வலையமைப்பு குறிப்பிடப்பட்டுள்ளது: '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown new rules activated (versionbit %i)</source>
+        <translation>தெரியாத புதிய விதிகள் இயக்கப்பட்டன (versionbit %i)</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>-test=&lt;option&gt;இல் அடையாளம் காணப்படாத விருப்பம் "%s" வழங்கப்பட்டது.</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>அடையாளம் காணப்படாத விவரிப்பி கிடைத்தது. பணப்பை %s ஏற்றப்படுகிறது
+
+பணப்பை புதிய பதிப்பில் உருவாக்கப்பட்டிருக்கலாம்.
+சமீபத்திய மென்பொருள் பதிப்பை இயக்க முயலவும்.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>-proxy='%s'இல் அடையாளம் காணப்படாத வலையமைப்பு: '%s'</translation>
+    </message>
+    <message>
+        <source>Unsupported category-specific logging level %1$s=%2$s. Expected %1$s=&lt;category&gt;:&lt;loglevel&gt;. Valid categories: %3$s. Valid loglevels: %4$s.</source>
+        <translation>வகை சார்ந்த பதிவுநிலை %1$s=%2$s ஆதரிக்கப்படவில்லை. எதிர்பார்த்தது %1$s=&lt;category&gt;:&lt;loglevel&gt;. செல்லுபடியான வகைகள்: %3$s. செல்லுபடியான பதிவுநிலைகள்: %4$s.</translation>
+    </message>
+    <message>
+        <source>Unsupported chainstate database format found. Please restart with -reindex-chainstate. This will rebuild the chainstate database.</source>
+        <translation>ஆதரிக்கப்படாத சங்கிலி நிலைத் தரவுத்தள வடிவம் கிடைத்தது. -reindex-chainstate உடன் மறுதொடக்கம் செய்யவும். இது சங்கிலி நிலைத் தரவுத்தளத்தை மீண்டும் உருவாக்கும்.</translation>
+    </message>
+    <message>
+        <source>Unsupported global logging level %s=%s. Valid values: %s.</source>
+        <translation>உலகளாவிய பதிவுநிலை %s=%s ஆதரிக்கப்படவில்லை. செல்லுபடியான மதிப்புகள்: %s.</translation>
+    </message>
+    <message>
+        <source>Unsupported logging category %s=%s.</source>
+        <translation>பதிவு வகை %s=%s ஆதரிக்கப்படவில்லை.</translation>
+    </message>
+    <message>
+        <source>User Agent comment (%s) contains unsafe characters.</source>
+        <translation>பயனர் முகவரின் கருத்தில் (%s) பாதுகாப்பற்ற எழுத்துகள் உள்ளன.</translation>
+    </message>
+    <message>
+        <source>Verifying blocks…</source>
+        <translation>தொகுதிகள் சரிபார்க்கப்படுகின்றன…</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)…</source>
+        <translation>பணப்பைகள் சரிபார்க்கப்படுகின்றன…</translation>
+    </message>
+    <message>
+        <source>Wallet file creation failed: %s</source>
+        <translation>பணப்பைக் கோப்பு உருவாக்கம் தோல்வியடைந்தது: %s</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>எச்சரிக்கை: நமது சிறந்த சங்கிலியைவிட 6 தொகுதிகளுக்கும் அதிக நீளமுள்ள செல்லாத சங்கிலி கிடைத்தது. இதற்கு தரவுத்தளச் சிதைவு அல்லது சக முனைகளுடன் ஒருமித்த விதிகள் பொருந்தாமை காரணமாக இருக்கலாம்.</translation>
+    </message>
+    <message>
+        <source>Warning: Private keys detected in wallet {%s} with disabled private keys</source>
+        <translation>எச்சரிக்கை: தனிப்பட்ட விசைகள் முடக்கப்பட்ட {%s} பணப்பையில் தனிப்பட்ட விசைகள் கண்டறியப்பட்டன</translation>
+    </message>
+    <message>
+        <source>Witness data for blocks after height %d requires validation. Please restart with -reindex.</source>
+        <translation>உயரம் %dக்குப் பிந்தைய தொகுதிகளின் சாட்சித் தரவு சரிபார்க்கப்பட வேண்டும். -reindex உடன் மறுதொடக்கம் செய்யவும்.</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
+        <translation>பழைய தொகுதிகளை அகற்றாத முறைக்குத் திரும்ப, -reindex பயன்படுத்தித் தரவுத்தளத்தை மீண்டும் உருவாக்க வேண்டும்.  இது முழுத் தொகுதிச்சங்கிலியையும் மீண்டும் பதிவிறக்கும்</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>உங்கள் கணினியின் தேதியும் நேரமும் வலையமைப்பைவிட %d நிமிடங்களுக்கும் அதிகமாக வேறுபடுவது போலத் தெரிகிறது; இது ஒருமித்த முடிவில் தோல்வியை ஏற்படுத்தலாம். கணினியின் கடிகாரத்தைச் சரிபார்த்தபின் முனையை மறுதொடக்கம் செய்தால் இந்தச் செய்தி மீண்டும் தோன்றக்கூடாது. மறுதொடக்கம் செய்யாவிட்டால் போதுமான புதிய வெளிச்செல்லும் சக முனைகளுடன் இணைந்தபின் இது தானாக மறைய வேண்டும்; இதற்குச் சிறிது நேரம் ஆகலாம். கூடுதல் தகவலுக்கு `getpeerinfo` மற்றும் `getnetworkinfo` RPC முறைகளின் `timeoffset` புலத்தைப் பார்க்கலாம்.</translation>
+    </message>
+    <message>
+        <source>acceptstalefeeestimates is not supported on %s chain.</source>
+        <translation>%s சங்கிலியில் acceptstalefeeestimates ஆதரிக்கப்படவில்லை.</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>whitebindஐ உள்வரும் இணைப்புகளுக்கு மட்டுமே பயன்படுத்தலாம் ("out" வழங்கப்பட்டது)</translation>
     </message>
 </context>
 <context>
@@ -3496,6 +5885,111 @@ Root certificates version: %2</source>
     <message>
         <source>Optional: empty uses this wallet</source>
         <translation>விருப்பத்திற்குரியது: காலியாக இருந்தால் இந்தப் பணப்பை பயன்படுத்தப்படும்</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPU இழைகள்:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>வெகுமதி முகவரியை உருவாக்க முடியவில்லை. பெறும் முகவரிகளைப் பணப்பை உருவாக்க முடியுமா என்று சரிபார்க்கவும்.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>பிழை</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>FAST பயன்முறை சுமார் 2 GiB RandomX நினைவகத்தைச் சரிபார்ப்புடன் பகிர்கிறது. அதிக இழைகள் அதிக CPU திறனையும் மின்சாரத்தையும் பயன்படுத்துகின்றன; முனையத்திற்கும் திறனை ஒதுக்கி வைக்கவும். தரவுத்தொகுப்பைத் தயாரிக்கச் சிறிது நேரம் ஆகலாம்.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>RandomX மூலம் உங்கள் CPU-ஐப் பயன்படுத்திச் சோதனை வலைப்பின்னலின் தொகுதிகளை மைன் செய்யுங்கள். நீங்கள் தொடங்கும் வரை மைனிங் அணைக்கப்பட்டிருக்கும். இந்த முனையத்தின் அனைத்துப் பணப்பைகளும் ஒரே மைனரைப் பகிர்கின்றன; தாவல்களை மாற்றினாலும் பணப்பையை மூடினாலும் அது தொடரும்.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>மைனிங்</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>மைனிங் / RandomX தயாராகிறது</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>இந்தப் பணப்பையிலிருந்து புதிய முகவரி</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>இந்த வலைப்பின்னலுக்கான வெகுமதி முகவரி</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>வெகுமதி முகவரி:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>மைனிங்கைத் தொடங்கு</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>தொடங்குகிறது</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>நிலை: %1
+ஹாஷ் வீதம்: %2 H/s
+ஹாஷ்கள்: %3 | ஏற்கப்பட்ட தொகுதிகள்: %4
+செயலில் உள்ள வெகுமதி முகவரி: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>மைனிங்கை நிறுத்து</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>நிறுத்தப்பட்டது</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>நிறுத்துகிறது (தற்போதைய பணி முடியக் காத்திருக்கிறது)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>முனையம் ஒத்திசைவடையக் காத்திருக்கிறது</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>எச்சரிக்கை: %1 மைனிங் இழைகள் கண்டறியப்பட்ட %2 தருக்க CPU-களைவிட அதிகம். இது ஹாஷ் வீதத்தைக் குறைத்து முனையத்தை மெதுவாக்கலாம்.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
+    </message>
+</context>
+<context>
+    <name>LoadWalletsActivity</name>
+    <message>
+        <source>Load Wallets</source>
+        <extracomment>Title of progress window which is displayed when wallets are being loaded.</extracomment>
+        <translation>பணப்பைகளை ஏற்றவும்</translation>
+    </message>
+    <message>
+        <source>Loading wallets…</source>
+        <extracomment>Descriptive text of the load wallets progress window which indicates to the user that wallets are currently being loaded.</extracomment>
+        <translation>பணப்பைகள் ஏற்றப்படுகின்றன…</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsModel</name>
+    <message>
+        <source>Could not read setting "%1", %2.</source>
+        <translation>அமைப்பு "%1"ஐப் படிக்க முடியவில்லை, %2.</translation>
     </message>
 </context>
 </TS>

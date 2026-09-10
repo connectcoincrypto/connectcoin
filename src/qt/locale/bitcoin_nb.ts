@@ -54,13 +54,13 @@
         <translation type="unfinished">&amp;Velg</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Dette er dine Bitcoin adresser for å sende betalinger. Husk å sjekke beløp og mottakeradressen før du sender mynter.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">Dette er dine ConnectCoin adresser for å sende betalinger. Husk å sjekke beløp og mottakeradressen før du sender mynter.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Dette er dine Bitcoin adresser for å motta betalinger. Bruk 'Lag ny mottaksadresse' knappen i motta tabben for å lage nye adresser. Signering er bare mulig for adresser av typen 'legacy'.</translation>
+        <translation type="unfinished">Dette er dine ConnectCoin adresser for å motta betalinger. Bruk 'Lag ny mottaksadresse' knappen i motta tabben for å lage nye adresser. Signering er bare mulig for adresser av typen 'legacy'.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -99,6 +99,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">Eksportering feilet</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the clipboard</source>
+        <translation>Kopier den valgte adressen til utklippstavlen</translation>
     </message>
 </context>
 <context>
@@ -159,8 +163,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Bekreft kryptering av lommeboken</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">Advarsel: Dersom du krypterer lommeboken og mister passordfrasen vil du &lt;b&gt;MISTE ALLE DINE BITCOIN&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">Advarsel: Dersom du krypterer lommeboken og mister passordfrasen vil du &lt;b&gt;MISTE ALLE DINE CONNECTCOIN&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -172,7 +176,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation type="unfinished">Angi den nye passordfrasen for lommeboken.&lt;br/&gt; Vennglist bruk en passordfrase med &lt;b&gt; ti eller flere tilfeldige tegn &lt;/b&gt;, eller &lt;b&gt; åtte eller flere ord.</translation>
+        <translation>Skriv inn den nye passordfrasen for lommeboken.&lt;br/&gt;Bruk en passordfrase med &lt;b&gt;ti eller flere tilfeldige tegn&lt;/b&gt;, eller &lt;b&gt;åtte eller flere ord&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase for the wallet.</source>
@@ -187,8 +191,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Tilbake</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">Husk at å kryptere lommeboken ikke vil beskytte dine bitcoins fullstendig fra å bli stjålet av skadevare som infiserer datamaskinen din.</translation>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished">Husk at å kryptere lommeboken ikke vil beskytte dine ConnectCoins fullstendig fra å bli stjålet av skadevare som infiserer datamaskinen din.</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -238,6 +242,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Warning: The Caps Lock key is on!</source>
         <translation type="unfinished">Advarsel: Caps Lock er på!</translation>
     </message>
+    <message>
+        <source>The old passphrase entered for the wallet decryption is incorrect. It contains a null character (ie - a zero byte). If the passphrase was set with a version of this software prior to 25.0, please try again with only the characters up to — but not including — the first null character.</source>
+        <translation>Den gamle passfrasen som ble oppgitt for å dekryptere lommeboken, er feil. Den inneholder et nulltegn (altså en nullbyte). Hvis passfrasen ble angitt med en programvareversjon før 25.0, kan du prøve igjen med bare tegnene frem til – men ikke inkludert – det første nulltegnet.</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption is incorrect. It contains a null character (ie - a zero byte). If the passphrase was set with a version of this software prior to 25.0, please try again with only the characters up to — but not including — the first null character. If this is successful, please set a new passphrase to avoid this issue in the future.</source>
+        <translation>Passfrasen som ble oppgitt for å dekryptere lommeboken, er feil. Den inneholder et nulltegn (altså en nullbyte). Hvis passfrasen ble angitt med en programvareversjon før 25.0, kan du prøve igjen med bare tegnene frem til – men ikke inkludert – det første nulltegnet. Hvis det lykkes, bør du angi en ny passfrase for å unngå problemet i fremtiden.</translation>
+    </message>
 </context>
 <context>
     <name>BanTableModel</name>
@@ -267,6 +279,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>An internal error occurred. %1 will attempt to continue safely. This is an unexpected bug which can be reported as described below.</source>
         <translation type="unfinished">En intern feil har oppstått. %1 vil forsøke å fortsette trygt. Dette er en uventet feil som kan bli rapportert som forklart nedenfor.</translation>
+    </message>
+    <message>
+        <source>Settings file %1 might be corrupt or invalid.</source>
+        <translation>Innstillingsfilen %1 kan være skadet eller ugyldig.</translation>
     </message>
 </context>
 <context>
@@ -298,8 +314,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Beløp</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Oppgi en Bitcoin-adresse (f.eks. %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">Oppgi en ConnectCoin-adresse (f.eks. %1)</translation>
     </message>
     <message>
         <source>Unroutable</source>
@@ -402,6 +418,89 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>default wallet</source>
         <translation type="unfinished">standard lommebok</translation>
     </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>Custom…</source>
+        <translation>Egendefinert…</translation>
+    </message>
+    <message>
+        <source>Default system font "%1"</source>
+        <translation>Systemets standardskrift «%1»</translation>
+    </message>
+    <message>
+        <source>Embedded "%1"</source>
+        <translation>Innebygd «%1»</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>Privat kringkasting</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -471,8 +570,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Proxy er &lt;b&gt;slått på&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Send mynter til en Bitcoin adresse</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">Send mynter til en ConnectCoin adresse</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -515,16 +614,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Signer &amp;melding...</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Signer meldingene med Bitcoin adresse for å bevise at diu eier dem</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">Signer meldingene med ConnectCoin adresse for å bevise at diu eier dem</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">&amp;Verifiser melding...</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">Verifiser meldinger for å sikre at de ble signert med en angitt Bitcoin adresse</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">Verifiser meldinger for å sikre at de ble signert med en angitt ConnectCoin adresse</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -583,8 +682,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Kobler til likemannsnettverket...</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Be om betalinger (genererer QR-koder og bitcoin-URIer)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">Be om betalinger (genererer QR-koder og ConnectCoin-URIer)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -600,9 +699,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Har prosessert %n blokk av transaksjonshistorien</numerusform>
+            <numerusform>Har prosessert %n blokker av transaksjonshistorien</numerusform>
         </translation>
     </message>
     <message>
@@ -638,12 +737,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Oppdatert</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">Last delvis signert Bitcoin transaksjon</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">Last delvis signert ConnectCoin transaksjon</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">Last Delvis Signert Bitcoin Transaksjon fra utklippstavle</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">Last Delvis Signert ConnectCoin Transaksjon fra utklippstavle</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -662,8 +761,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;Mottaker adresser</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">Åpne en bitcoin: URI</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">Åpne en connectcoin: URI</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -692,8 +791,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Lukk alle lommebøker</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Vis %1-hjelpemeldingen for å få en liste over mulige Bitcoin-kommandolinjealternativer</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">Vis %1-hjelpemeldingen for å få en liste over mulige ConnectCoin-kommandolinjealternativer</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -744,11 +843,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;Skjul</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform> %n aktiv tilkobling til Bitcoin-nettverket.</numerusform>
-            <numerusform>%n aktive tilkoblinger til Bitcoin-nettverket.</numerusform>
+            <numerusform> %n aktiv tilkobling til ConnectCoin-nettverket.</numerusform>
+            <numerusform>%n aktive tilkoblinger til ConnectCoin-nettverket.</numerusform>
         </translation>
     </message>
     <message>
@@ -852,6 +951,97 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>Opprett pay-to-connect-belønninger</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Utvinning</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>Styr CPU-utvinning</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Alle filer</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Eksportfeil</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>Eksport fullført</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>Eksporter en versjon av den gjeldende lommeboken som bare kan overvåke, og som kan gjenopprettes på en annen node.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>Eksporter lommebok kun for overvåking</translation>
+    </message>
+    <message>
+        <source>Invalid Wallet Name</source>
+        <translation>Ugyldig lommeboknavn</translation>
+    </message>
+    <message>
+        <source>Load PSBT from &amp;clipboard…</source>
+        <translation>Last PSBT fra &amp;utklippstavlen…</translation>
+    </message>
+    <message>
+        <source>Migrate Wallet</source>
+        <translation>Migrer lommebok</translation>
+    </message>
+    <message>
+        <source>Migrate a wallet</source>
+        <translation>Migrer en lommebok</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>Gjenopprett og migrer lommebok</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>Gjenopprett og migrer sikkerhetskopi av lommebok</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>Gjenopprett og migrer lommebokfil…</translation>
+    </message>
+    <message>
+        <source>S&amp;how</source>
+        <translation>&amp;Vis</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>Lagre eksport av lommebok kun for overvåking</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>Lommeboken er eksportert til </translation>
+    </message>
+    <message>
+        <source>Type: %1
+</source>
+        <translation>Type: %1
+</translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>Lommeboknavnet kan ikke være tomt</translation>
+    </message>
+    <message>
+        <source>Zoom</source>
+        <translation>Zoom</translation>
     </message>
 </context>
 <context>
@@ -987,6 +1177,18 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(change)</source>
         <translation type="unfinished">(veksel)</translation>
     </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Byte:</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>Kan variere +/- %1 connect per inndata.</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID and output index</source>
+        <translation>Kopier transaksjons-&amp;ID og utdataindeks</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -998,7 +1200,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
         <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
-        <translation type="unfinished">Lager lommebok &lt;b&gt;%1&lt;b&gt;...</translation>
+        <translation>Oppretter lommeboken &lt;b&gt;%1&lt;/b&gt;…</translation>
     </message>
     <message>
         <source>Create wallet failed</source>
@@ -1012,7 +1214,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Can't list signers</source>
         <translation type="unfinished">Kan ikke vise liste over undertegnere</translation>
     </message>
-    </context>
+        <message>
+        <source>Too many external signers found</source>
+        <translation>Fant for mange eksterne signerere</translation>
+    </message>
+</context>
 <context>
     <name>LoadWalletsActivity</name>
     <message>
@@ -1033,7 +1239,96 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>Title of progress window which is displayed when wallets are being restored.</extracomment>
         <translation type="unfinished">Gjenopprett lommebok</translation>
     </message>
-    </context>
+        <message>
+        <source>Are you sure you wish to migrate the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>Er du sikker på at du vil migrere lommeboken &lt;i&gt;%1&lt;/i&gt;?</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>Er du sikker på at du vil gjenopprette lommebokfilen &lt;i&gt;%1&lt;/i&gt; til &lt;i&gt;%2&lt;/i&gt; og migrere den?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Hvis noden er beskåret og lommeboken ble opprettet før beskjæringshøyden, kan migreringen mislykkes når den prøver å laste inn den migrerte lommeboken.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Last inn lommeboken etter migrering</translation>
+    </message>
+    <message>
+        <source>Migrate Wallet</source>
+        <translation>Migrer lommebok</translation>
+    </message>
+    <message>
+        <source>Migrate wallet</source>
+        <translation>Migrer lommebok</translation>
+    </message>
+    <message>
+        <source>Migrating Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <translation>Migrerer lommeboken &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
+    <message>
+        <source>Migrating the wallet will convert this wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>Migrering konverterer denne lommeboken til én eller flere deskriptorlommebøker. Du må lage en ny sikkerhetskopi av lommeboken.
+Hvis denne lommeboken inneholder skript kun for overvåking, opprettes en ny lommebok som inneholder disse skriptene.
+Hvis denne lommeboken inneholder skript som kan løses, men ikke overvåkes, opprettes en annen ny lommebok med disse skriptene.
+
+Migreringen oppretter en sikkerhetskopi av lommeboken før den migreres. Sikkerhetskopien får navnet &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak og finnes i lommebokens mappe. Ved en feilaktig migrering kan sikkerhetskopien gjenopprettes med funksjonen «Gjenopprett lommebok».</translation>
+    </message>
+    <message>
+        <source>Migration Successful</source>
+        <translation>Migrering fullført</translation>
+    </message>
+    <message>
+        <source>Migration failed</source>
+        <translation>Migrering mislyktes</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>Gjenopprett og migrer lommebok</translation>
+    </message>
+    <message>
+        <source>Restoring Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the restore wallets progress window which indicates to the user that wallets are currently being restored.</extracomment>
+        <translation>Gjenoppretter lommeboken &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>Gjenoppretting av lommeboken kopierer sikkerhetskopien til lommebokmappen og plasserer den i standard mappestruktur for lommebøker. Den opprinnelige filen endres ikke.
+
+Migrering konverterer den gjenopprettede lommeboken til én eller flere deskriptorlommebøker. Du må lage en ny sikkerhetskopi av lommeboken.
+Hvis denne lommeboken inneholder skript kun for overvåking, opprettes en ny lommebok som inneholder disse skriptene.
+Hvis denne lommeboken inneholder skript som kan løses, men ikke overvåkes, opprettes en annen ny lommebok med disse skriptene.
+
+Migreringen oppretter en sikkerhetskopi av lommeboken før den migreres. Sikkerhetskopien får navnet &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak og finnes i lommebokens mappe. Ved en feilaktig migrering kan sikkerhetskopien gjenopprettes med funksjonen «Gjenopprett lommebok».</translation>
+    </message>
+    <message>
+        <source>Solvable but not watched scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>Skript som kan løses, men ikke overvåkes, er migrert til en ny lommebok med navnet '%1'.</translation>
+    </message>
+    <message>
+        <source>The wallet '%1' was migrated successfully.</source>
+        <translation>Lommeboken '%1' ble migrert.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>Lommeboken ble ikke lastet inn etter migreringen. Du kan åpne den fra menyen «Fil &gt; Åpne lommebok».</translation>
+    </message>
+    <message>
+        <source>Watchonly scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>Skript kun for overvåking er migrert til en ny lommebok med navnet '%1'.</translation>
+    </message>
+</context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1062,7 +1357,27 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>Title of progress window which is displayed when wallets are being restored.</extracomment>
         <translation type="unfinished">Gjenopprett lommebok</translation>
     </message>
-    </context>
+        <message>
+        <source>Restore wallet failed</source>
+        <extracomment>Title of message box which is displayed when the wallet could not be restored.</extracomment>
+        <translation>Gjenoppretting av lommebok mislyktes</translation>
+    </message>
+    <message>
+        <source>Restore wallet message</source>
+        <extracomment>Title of message box which is displayed when the wallet is successfully restored.</extracomment>
+        <translation>Melding om gjenoppretting av lommebok</translation>
+    </message>
+    <message>
+        <source>Restore wallet warning</source>
+        <extracomment>Title of message box which is displayed when the wallet is restored with some warning.</extracomment>
+        <translation>Advarsel om gjenoppretting av lommebok</translation>
+    </message>
+    <message>
+        <source>Restoring Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the restore wallets progress window which indicates to the user that wallets are currently being restored.</extracomment>
+        <translation>Gjenoppretter lommeboken &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
+</context>
 <context>
     <name>WalletController</name>
     <message>
@@ -1145,6 +1460,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
         <translation type="unfinished">Kompilert uten støtte for ekstern undertegning (kreves for ekstern undertegning)</translation>
     </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>Opprett en tom lommebok. Tomme lommebøker inneholder i utgangspunktet verken private nøkler eller skript. Private nøkler og adresser kan importeres senere ved hjelp av deskriptorer.</translation>
+    </message>
+    <message>
+        <source>Please provide a name and, if desired, enable any advanced options</source>
+        <translation>Oppgi et navn, og aktiver eventuelle avanserte alternativer om ønskelig</translation>
+    </message>
 </context>
 <context>
     <name>EditAddressDialog</name>
@@ -1181,8 +1504,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Rediger utsendingsadresse</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">Den angitte adressen "%1" er ikke en gyldig Bitcoin-adresse.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">Den angitte adressen "%1" er ikke en gyldig ConnectCoin-adresse.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1294,9 +1617,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n GB of space available</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n GB ledig plass</numerusform>
+            <numerusform>%n GB ledig plass</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -1345,6 +1668,22 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Error</source>
         <translation type="unfinished">Feilmelding</translation>
     </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 vil laste ned og lagre en kopi av ConnectCoins blokkjede.</translation>
+    </message>
+    <message>
+        <source>Choose data directory</source>
+        <translation>Velg datamappe</translation>
+    </message>
+    <message>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2 GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation>Når du klikker OK, vil %1 begynne å laste ned og behandle hele %4-blokkjeden (%2 GB), fra de første transaksjonene i %3 da %4 ble lansert.</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1353,8 +1692,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Skjema</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">Det kan hende nylige transaksjoner ikke vises enda, og at lommeboksaldoen dermed blir uriktig. Denne informasjonen vil rette seg når synkronisering av lommeboka mot bitcoin-nettverket er fullført, som anvist nedenfor.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">Det kan hende nylige transaksjoner ikke vises enda, og at lommeboksaldoen dermed blir uriktig. Denne informasjonen vil rette seg når synkronisering av lommeboka mot ConnectCoin-nettverket er fullført, som anvist nedenfor.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1404,17 +1743,29 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">Ukjent.Synkroniser blokkhoder (%1,%2%)...</translation>
     </message>
+    <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Forsøk på å bruke ConnectCoin-midler som påvirkes av transaksjoner som ennå ikke er vist, blir ikke godtatt av nettverket.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">Åpne bitcoin URI</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">Åpne ConnectCoin URI</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">Lim inn adresse fra utklippstavlen</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1528,8 +1879,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Tillatt innkommend&amp;e tilkoblinger</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Koble til Bitcoin-nettverket gjennom en SOCKS5 proxy.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">Koble til ConnectCoin-nettverket gjennom en SOCKS5 proxy.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1585,15 +1936,15 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
-        <translation type="unfinished">Velg standard delt enhet for visning i grensesnittet og for sending av bitcoins.</translation>
+        <translation type="unfinished">Velg standard delt enhet for visning i grensesnittet og for sending av ConnectCoins.</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
         <translation type="unfinished">Skal myntkontroll funksjoner vises eller ikke.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Kobl til Bitcoin nettverket gjennom en separat SOCKS5 proxy for Tor onion tjenester. </translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">Kobl til ConnectCoin nettverket gjennom en separat SOCKS5 proxy for Tor onion tjenester. </translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1665,6 +2016,123 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">Angitt proxyadresse er ugyldig.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Aktiver sprettoppvarsler</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Vis sprettoppvarsler på skrivebordet, inkludert innkommende og sendte transaksjoner. Deaktivert som standard. Feil- og bekreftelsesdialoger forblir aktivert.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation>&amp;OK</translation>
+    </message>
+    <message>
+        <source>&amp;Port:</source>
+        <translation>&amp;Port:</translation>
+    </message>
+    <message>
+        <source>&amp;Third-party transaction URLs</source>
+        <translation>Transaksjonsnettadresser fra &amp;tredjeparter</translation>
+    </message>
+    <message>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation>Åpne automatisk ConnectCoin-klientens port på ruteren. Dette fungerer bare hvis ruteren støtter PCP eller NAT-PMP, og funksjonen er aktivert. Den eksterne porten kan være tilfeldig.</translation>
+    </message>
+    <message>
+        <source>Current settings will be backed up at "%1".</source>
+        <extracomment>Text explaining to the user that the client's current settings will be backed up at a specific location. %1 is a stand-in argument for the backup location's path.</extracomment>
+        <translation>Gjeldende innstillinger sikkerhetskopieres til «%1».</translation>
+    </message>
+    <message>
+        <source>Enable &amp;PSBT controls</source>
+        <extracomment>An options window setting to enable PSBT controls.</extracomment>
+        <translation>Aktiver &amp;PSBT-kontroller</translation>
+    </message>
+    <message>
+        <source>Enable R&amp;PC server</source>
+        <extracomment>An Options window setting to enable the RPC server.</extracomment>
+        <translation>Aktiver R&amp;PC-tjener</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Beskjæring reduserer diskplassen som kreves for å lagre transaksjoner, betydelig. Alle blokker blir fortsatt fullstendig validert. Lommebøker bør lastes inn ved oppstart og holdes aktive mens beskjæring er aktivert, slik at de forblir synkronisert før gamle blokkdata slettes; lommebøker som blir hengende etter beskårne data, kan kreve ny indeksering. Å tilbakestille denne innstillingen krever at hele blokkjeden lastes ned på nytt.</translation>
+    </message>
+    <message>
+        <source>Font in the Overview tab: </source>
+        <translation>Skrift i fanen Oversikt: </translation>
+    </message>
+    <message>
+        <source>Full path to a %1 compatible script (e.g. C:\Downloads\hwi.exe or /Users/you/Downloads/hwi.py). Beware: malware can steal your coins!</source>
+        <translation>Full bane til et skript som er kompatibelt med %1 (f.eks. C:\Downloads\hwi.exe eller /Users/you/Downloads/hwi.py). Vær oppmerksom: skadevare kan stjele myntene dine!</translation>
+    </message>
+    <message>
+        <source>Map port using PCP or NA&amp;T-PMP</source>
+        <translation>Tilordne port med PCP eller NA&amp;T-PMP</translation>
+    </message>
+    <message>
+        <source>Maximum database cache size. Make sure you have enough RAM. A larger cache can contribute to faster sync, after which the benefit is less pronounced for most use cases. Lowering the cache size will reduce memory usage. Unused mempool memory is shared for this cache.</source>
+        <extracomment>Tooltip text for Options window setting that sets the size of the database cache. Explains the corresponding effects of increasing/decreasing this value.</extracomment>
+        <translation>Maksimal størrelse på databasens hurtiglager. Sørg for å ha nok RAM. Et større hurtiglager kan gi raskere synkronisering, men etterpå er fordelen mindre tydelig i de fleste brukstilfeller. Et mindre hurtiglager reduserer minnebruken. Ubrukt minne i transaksjonspuljen deles med dette hurtiglageret.</translation>
+    </message>
+    <message>
+        <source>Proxy &amp;IP:</source>
+        <translation>Mellomtjenerens &amp;IP:</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>Angitt med -popupnotifications eller popupnotifications i connectcoin.conf.</translation>
+    </message>
+    <message>
+        <source>Set the number of script verification threads. Negative values correspond to the number of cores you want to leave free to the system.</source>
+        <extracomment>Tooltip text for Options window setting that sets the number of script verification threads. Explains that negative values mean to leave these many cores free to the system.</extracomment>
+        <translation>Angi antall tråder for skriptverifisering. Negative verdier angir hvor mange kjerner du vil la være ledige til systemet.</translation>
+    </message>
+    <message>
+        <source>Subtract &amp;fee from amount by default</source>
+        <extracomment>An Options window setting to set subtracting the fee from a sending amount as default.</extracomment>
+        <translation>Trekk &amp;gebyret fra beløpet som standard</translation>
+    </message>
+    <message>
+        <source>Third-party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
+        <translation>Tredjepartsnettadresser (f.eks. en blokkutforsker) som vises som elementer i hurtigmenyen i transaksjonsfanen. %s i nettadressen erstattes med transaksjonshashen. Flere nettadresser skilles med loddrett strek |.</translation>
+    </message>
+    <message>
+        <source>This allows you or a third party tool to communicate with the node through command-line and JSON-RPC commands.</source>
+        <extracomment>Tooltip text for Options window setting that enables the RPC server.</extracomment>
+        <translation>Dette lar deg eller et tredjepartsverktøy kommunisere med noden via kommandolinjen og JSON-RPC-kommandoer.</translation>
+    </message>
+    <message>
+        <source>Whether to set subtract fee from amount as default or not.</source>
+        <extracomment>Tooltip text for Options window setting that sets subtracting the fee from a sending amount as default.</extracomment>
+        <translation>Om gebyret skal trekkes fra beløpet som standard.</translation>
+    </message>
+    <message>
+        <source>Whether to show PSBT controls.</source>
+        <extracomment>Tooltip text for options window setting that enables PSBT controls.</extracomment>
+        <translation>Om PSBT-kontroller skal vises.</translation>
+    </message>
 </context>
 <context>
     <name>OverviewPage</name>
@@ -1673,8 +2141,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Skjema</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">Informasjonen som vises kan være foreldet. Din lommebok synkroniseres automatisk med Bitcoin-nettverket etter at tilkobling er opprettet, men denne prosessen er ikke ferdig enda.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">Informasjonen som vises kan være foreldet. Din lommebok synkroniseres automatisk med ConnectCoin-nettverket etter at tilkobling er opprettet, men denne prosessen er ikke ferdig enda.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1757,9 +2225,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n inndata er signert, men flere signaturer kreves fortsatt.</numerusform>
+            <numerusform>%n inndata er signert, men flere signaturer kreves fortsatt.</numerusform>
         </translation>
     </message>
     <message>
@@ -1817,9 +2285,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Transaksjonen har %n usignert inndata.</numerusform>
+            <numerusform>Transaksjonen har %n usignerte inndata.</numerusform>
         </translation>
     </message>
     <message>
@@ -1850,6 +2318,18 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Transaction status is unknown.</source>
         <translation type="unfinished">Transaksjonsstatus er ukjent.</translation>
     </message>
+    <message>
+        <source>Cannot sign inputs while wallet is locked.</source>
+        <translation>Kan ikke signere inndata mens lommeboken er låst.</translation>
+    </message>
+    <message>
+        <source>PSBT Operations</source>
+        <translation>PSBT-handlinger</translation>
+    </message>
+    <message>
+        <source>Sends %1 to %2</source>
+        <translation>Sender %1 til %2</translation>
+    </message>
 </context>
 <context>
     <name>PaymentServer</name>
@@ -1858,16 +2338,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Feil ved betalingsforespørsel</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Kan ikke starte bitcoin: Klikk-og-betal håndterer</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">Kan ikke starte connectcoin: Klikk-og-betal håndterer</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">URI-håndtering</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin: //' er ikke en gyldig URI. Bruk 'bitcoin:' i stedet.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin: //' er ikke en gyldig URI. Bruk 'connectcoin:' i stedet.</translation>
     </message>
     <message>
         <source>Cannot process payment request because BIP70 is not supported.
@@ -1878,8 +2358,8 @@ Grunnet utbredte sikkerhetshull i BIP70 er det sterkt anbefalt å ignorere instr
 Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 kompatibel URI.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">URI kan ikke fortolkes! Dette kan være forårsaket av en ugyldig bitcoin-adresse eller feilformede URI-parametre.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">URI kan ikke fortolkes! Dette kan være forårsaket av en ugyldig ConnectCoin-adresse eller feilformede URI-parametre.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -1942,6 +2422,11 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
         <source>Outbound</source>
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">Utgående</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <extracomment>Title of Peers Table column which describes the type of peer connection. The "type" describes why the connection exists.</extracomment>
+        <translation>Type</translation>
     </message>
 </context>
 <context>
@@ -2352,6 +2837,165 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
         <source>Unknown</source>
         <translation type="unfinished">Ukjent</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>&amp;Copy IP/Netmask</source>
+        <extracomment>Context menu action to copy the IP/Netmask of a banned peer. IP/Netmask is the combination of a peer's IP address and its Netmask. For IP address, see: https://en.wikipedia.org/wiki/IP_address.</extracomment>
+        <translation>&amp;Kopier IP/nettmaske</translation>
+    </message>
+    <message>
+        <source>Address Relay</source>
+        <extracomment>Text title for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>Videresending av adresser</translation>
+    </message>
+    <message>
+        <source>Addresses Rate-Limited</source>
+        <extracomment>Text title for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>Hastighetsbegrensede adresser</translation>
+    </message>
+    <message>
+        <source>Blocksdir</source>
+        <translation>Blokkmappe</translation>
+    </message>
+    <message>
+        <source>Hide Peers Detail</source>
+        <translation>Skjul detaljer om likemenn</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation>BIP152-videresending av kompakte blokker med høy båndbredde: %1</translation>
+    </message>
+    <message>
+        <source>Local Addresses</source>
+        <translation>Lokale adresser</translation>
+    </message>
+    <message>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation>Nettverksadresser som ConnectCoin-noden din for øyeblikket bruker til å kommunisere med andre noder.</translation>
+    </message>
+    <message>
+        <source>Node window - [%1]</source>
+        <translation>Nodevindu – [%1]</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <extracomment>Explanatory text for an outbound peer connection that was established manually through one of several methods. The numbered arguments are stand-ins for the methods available to establish manual connections.</extracomment>
+        <translation>Utgående manuell: lagt til med RPC %1 eller konfigurasjonsvalgene %2/%3</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>Privat kringkasting: kortvarig, for kringkasting av transaksjoner som krever personvern</translation>
+    </message>
+    <message>
+        <source>Session ID</source>
+        <translation>Økt-ID</translation>
+    </message>
+    <message>
+        <source>The BIP324 session ID string in hex.</source>
+        <translation>BIP324-øktens ID-streng i heksadesimal form.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</source>
+        <extracomment>Tooltip text for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>Totalt antall adresser mottatt fra denne likemannen som ble forkastet (ikke behandlet) på grunn av hastighetsbegrensning.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</source>
+        <extracomment>Tooltip text for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>Totalt antall adresser mottatt fra denne likemannen som ble behandlet (utelater adresser som ble forkastet på grunn av hastighetsbegrensning).</translation>
+    </message>
+    <message>
+        <source>The transport layer version: %1</source>
+        <translation>Transportlagets versjon: %1</translation>
+    </message>
+    <message>
+        <source>Transaction Relay</source>
+        <translation>Videresending av transaksjoner</translation>
+    </message>
+    <message>
+        <source>Transport</source>
+        <translation>Transport</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.
+Use up and down arrows to navigate history, and %2 to clear screen.
+Use %3 and %4 to increase or decrease the font size.
+Type %5 for an overview of available commands.
+For more information on using this console, type %6.
+
+%7WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.%8</source>
+        <extracomment>RPC console welcome message. Placeholders %7 and %8 are style tags for the warning content, and they are not space separated from the rest of the text intentionally.</extracomment>
+        <translation>Velkommen til RPC-konsollen for %1.
+Bruk pil opp og ned for å bla i historikken, og %2 for å tømme skjermen.
+Bruk %3 og %4 for å øke eller redusere skriftstørrelsen.
+Skriv %5 for en oversikt over tilgjengelige kommandoer.
+Skriv %6 for mer informasjon om bruk av denne konsollen.
+
+%7ADVARSEL: Svindlere har bedt brukere skrive kommandoer her og dermed stjålet innholdet i lommebøkene deres. Ikke bruk denne konsollen uten å forstå konsekvensene av en kommando fullt ut.%8</translation>
+    </message>
+    <message>
+        <source>Whether we relay addresses to this peer.</source>
+        <extracomment>Tooltip text for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>Om vi videresender adresser til denne likemannen.</translation>
+    </message>
+    <message>
+        <source>Whether we relay transactions to this peer.</source>
+        <translation>Om vi videresender transaksjoner til denne likemannen.</translation>
+    </message>
+    <message>
+        <source>detecting: peer could be v1 or v2</source>
+        <extracomment>Explanatory text for "detecting" transport type.</extracomment>
+        <translation>oppdager: likemannen kan bruke v1 eller v2</translation>
+    </message>
+    <message>
+        <source>v1: unencrypted, plaintext transport protocol</source>
+        <extracomment>Explanatory text for v1 transport type.</extracomment>
+        <translation>v1: ukryptert transportprotokoll med klartekst</translation>
+    </message>
+    <message>
+        <source>v2: BIP324 encrypted transport protocol</source>
+        <extracomment>Explanatory text for v2 transport type.</extracomment>
+        <translation>v2: BIP324-kryptert transportprotokoll</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>via %1</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2368,8 +3012,8 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
         <translation type="unfinished">&amp;Melding:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">En valgfri melding å tilknytte betalingsetterspørringen, som vil bli vist når forespørselen er åpnet. Meldingen vil ikke bli sendt med betalingen over Bitcoin-nettverket.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">En valgfri melding å tilknytte betalingsetterspørringen, som vil bli vist når forespørselen er åpnet. Meldingen vil ikke bli sendt med betalingen over ConnectCoin-nettverket.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -2542,7 +3186,7 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
     <name>SendCoinsDialog</name>
     <message>
         <source>Send Coins</source>
-        <translation type="unfinished">Send Bitcoins</translation>
+        <translation type="unfinished">Send ConnectCoins</translation>
     </message>
     <message>
         <source>Coin Control Features</source>
@@ -2633,8 +3277,8 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
         <translation type="unfinished">Skjul innstillinger for transaksjonsgebyr</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
-        <translation type="unfinished">Når det er mindre transaksjonsvolum enn plass i blokkene, kan minere så vel som noder håndheve et minimumsgebyr for videresending. Å kun betale minsteavgiften er helt greit, men vær klar over at dette kan skape en transaksjon som aldri blir bekreftet hvis det blir større etterspørsel etter bitcoin-transaksjoner enn nettverket kan behandle.</translation>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation type="unfinished">Når det er mindre transaksjonsvolum enn plass i blokkene, kan minere så vel som noder håndheve et minimumsgebyr for videresending. Å kun betale minsteavgiften er helt greit, men vær klar over at dette kan skape en transaksjon som aldri blir bekreftet hvis det blir større etterspørsel etter ConnectCoin-transaksjoner enn nettverket kan behandle.</translation>
     </message>
     <message>
         <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
@@ -2710,8 +3354,8 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
         <translation type="unfinished">Cr &amp; eate Usignert</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation type="unfinished">Oppretter en delvis signert Bitcoin-transaksjon (PSBT) for bruk med f.eks. en offline%1 lommebok eller en PSBT-kompatibel maskinvarelommebok.</translation>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation type="unfinished">Oppretter en delvis signert ConnectCoin-transaksjon (PSBT) for bruk med f.eks. en offline%1 lommebok eller en PSBT-kompatibel maskinvarelommebok.</translation>
     </message>
     <message>
         <source>%1 to '%2'</source>
@@ -2762,9 +3406,9 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
         <translation type="unfinished">Du kan øke gebyret senere (signaliserer Replace-By-Fee, BIP-125).</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
-        <translation type="unfinished">Se over ditt transaksjonsforslag. Dette kommer til å produsere en Delvis Signert Bitcoin Transaksjon (PSBT) som du kan lagre eller kopiere og så signere med f.eks. en offline %1 lommebok, eller en PSBT kompatibel hardware lommebok.</translation>
+        <translation type="unfinished">Se over ditt transaksjonsforslag. Dette kommer til å produsere en Delvis Signert ConnectCoin Transaksjon (PSBT) som du kan lagre eller kopiere og så signere med f.eks. en offline %1 lommebok, eller en PSBT kompatibel hardware lommebok.</translation>
     </message>
     <message>
         <source>Do you want to create this transaction?</source>
@@ -2818,14 +3462,14 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Antatt bekreftelsesbegynnelse innen %n blokk.</numerusform>
+            <numerusform>Antatt bekreftelsesbegynnelse innen %n blokker.</numerusform>
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">Advarsel Ugyldig bitcoin-adresse</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">Advarsel Ugyldig ConnectCoin-adresse</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -2842,6 +3486,76 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(ingen beskrivelse)</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>%1 from wallet '%2'</source>
+        <translation>%1 fra lommeboken '%2'</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Byte:</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk</source>
+        <translation>PSBT lagret på disk</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
+        <translation>Se gjennom transaksjonen. Du kan opprette og sende denne transaksjonen eller opprette en delvis signert ConnectCoin-transaksjon (PSBT), som du kan lagre eller kopiere og deretter signere med for eksempel en frakoblet %1-lommebok eller en PSBT-kompatibel maskinvarelommebok.</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation>S&amp;end</translation>
+    </message>
+    <message>
+        <source>Set external signer script path in Options -&gt; Wallet</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Angi banen til skriptet for ekstern signerer i Innstillinger -&gt; Lommebok</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Angi et egendefinert gebyr per kB (1 000 byte) av transaksjonens virtuelle størrelse.
+
+Merk: Siden gebyret beregnes per byte, vil en gebyrsats på «100 connect per kvB» for en transaksjon på 500 virtuelle byte (halvparten av 1 kvB) til slutt bare gi et gebyr på 50 connect.</translation>
+    </message>
+    <message>
+        <source>The PSBT has been copied to the clipboard. You can also save it.</source>
+        <translation>PSBT-en er kopiert til utklippstavlen. Du kan også lagre den.</translation>
+    </message>
+    <message>
+        <source>To review recipient list click "Show Details…"</source>
+        <translation>Klikk «Vis detaljer…» for å se gjennom mottakerlisten</translation>
+    </message>
+    <message>
+        <source>Unsigned Transaction</source>
+        <comment>PSBT copied</comment>
+        <extracomment>Caption of "PSBT has been copied" messagebox</extracomment>
+        <translation>Usignert transaksjon</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>Bruker gjeldende minimumsgebyr. Bekreftelsestiden anslås ikke.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>Du kan øke gebyret senere.</translation>
+    </message>
+    <message>
+        <source>per kilobyte</source>
+        <translation>per kilobyte</translation>
     </message>
 </context>
 <context>
@@ -2863,8 +3577,8 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
         <translation type="unfinished">Velg tidligere brukt adresse</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">Bitcoin-adressen betalingen skal sendes til</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">ConnectCoin-adressen betalingen skal sendes til</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -2899,8 +3613,20 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
         <translation type="unfinished">Skriv inn en merkelapp for denne adressen for å legge den til listen av brukte adresser</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">En melding som var tilknyttet bitcoinen: URI vil bli lagret med transaksjonen for din oversikt. Denne meldingen vil ikke bli sendt over Bitcoin-nettverket.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">En melding som var tilknyttet bitcoinen: URI vil bli lagret med transaksjonen for din oversikt. Denne meldingen vil ikke bli sendt over ConnectCoin-nettverket.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Gebyret trekkes fra beløpet som sendes. Mottakeren får mindre ConnectCoin enn du oppgir i beløpsfeltet. Hvis flere mottakere velges, fordeles gebyret likt.</translation>
     </message>
 </context>
 <context>
@@ -2908,6 +3634,10 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
     <message>
         <source>Create Unsigned</source>
         <translation type="unfinished">Lag usignert</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>Send</translation>
     </message>
 </context>
 <context>
@@ -2921,8 +3651,8 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
         <translation type="unfinished">&amp;Signer Melding</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">Bitcoin-adressen meldingen skal signeres med</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">ConnectCoin-adressen meldingen skal signeres med</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -2941,8 +3671,8 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
         <translation type="unfinished">Signatur</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation type="unfinished">Signer meldingen for å bevise at du eier denne Bitcoin-adressen</translation>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation type="unfinished">Signer meldingen for å bevise at du eier denne ConnectCoin-adressen</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -2965,8 +3695,8 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
         <translation type="unfinished">Skriv inn mottakerens adresse, melding (forsikre deg om at du kopier linjeskift, mellomrom, faner osv. nøyaktig) og underskrift nedenfor for å bekrefte meldingen. Vær forsiktig så du ikke leser mer ut av signaturen enn hva som er i den signerte meldingen i seg selv, for å unngå å bli lurt av et man-in-the-middle-angrep. Merk at dette bare beviser at den som signerer kan motta med adressen, dette beviser ikke hvem som har sendt transaksjoner!</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">Bitcoin-adressen meldingen ble signert med</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">ConnectCoin-adressen meldingen ble signert med</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -2977,8 +3707,8 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
         <translation type="unfinished">signaturen som ble gitt da meldingen ble signert</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">Verifiser meldingen for å være sikker på at den ble signert av den angitte Bitcoin-adressen</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">Verifiser meldingen for å være sikker på at den ble signert av den angitte ConnectCoin-adressen</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3039,6 +3769,26 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">Melding bekreftet.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the clipboard</source>
+        <translation>Kopier gjeldende signatur til utklippstavlen</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>Den oppgitte adressen viser ikke til en eldre nøkkel av typen P2PKH. Meldingssignering for SegWit og andre adressetyper enn P2PKH støttes ikke i denne versjonen av %1. Kontroller adressen og prøv igjen.</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Du kan signere meldinger eller avtaler med dine eldre adresser (P2PKH) for å bevise at du kan motta ConnectCoin-midler sendt til dem. Vær forsiktig med å signere noe uklart eller tilfeldig, siden nettfiskingsangrep kan prøve å lure deg til å overføre identiteten din til dem med en signatur. Signer bare fullstendige og detaljerte erklæringer du er enig i.</translation>
     </message>
 </context>
 <context>
@@ -3171,7 +3921,7 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
     </message>
     <message>
         <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation type="unfinished">Genererte bitcoins må modne %1 blokker før de kan brukes. Da du genererte denne blokken ble den kringkastet på nettverket for å bli lagt til i kjeden av blokker. Hvis den ikke kommer med i kjeden vil den endre seg til "ikke akseptert", og vil ikke kunne brukes. Dette vil noen ganger skje hvis en annen node genererer en blokk innen noen sekunder av din.</translation>
+        <translation type="unfinished">Genererte ConnectCoins må modne %1 blokker før de kan brukes. Da du genererte denne blokken ble den kringkastet på nettverket for å bli lagt til i kjeden av blokker. Hvis den ikke kommer med i kjeden vil den endre seg til "ikke akseptert", og vil ikke kunne brukes. Dette vil noen ganger skje hvis en annen node genererer en blokk innen noen sekunder av din.</translation>
     </message>
     <message>
         <source>Debug information</source>
@@ -3196,6 +3946,28 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
     <message>
         <source>P2C domain</source>
         <translation>P2C-domene</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>Inndata</translation>
+    </message>
+    <message>
+        <source>%1 (Certificate was not verified)</source>
+        <translation>%1 (Sertifikatet ble ikke verifisert)</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is in the memory pool.</extracomment>
+        <translation>0/ubekreftet, i transaksjonspuljen</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, not in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is not in the memory pool.</extracomment>
+        <translation>0/ubekreftet, ikke i transaksjonspuljen</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Status</translation>
     </message>
 </context>
 <context>
@@ -3294,6 +4066,14 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
     <message>
         <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
         <translation>Brukerdefinert hensikt/formål med transaksjonen, eller P2C-domenet.</translation>
+    </message>
+    <message>
+        <source>(n/a)</source>
+        <translation>(i/t)</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Type</translation>
     </message>
 </context>
 <context>
@@ -3435,6 +4215,27 @@ Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 k
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>Angi adresse, P2C-domene, transaksjons-ID eller etikett for å søke</translation>
     </message>
+    <message>
+        <source>A&amp;bandon transaction</source>
+        <translation>&amp;Oppgi transaksjonen</translation>
+    </message>
+    <message>
+        <source>Copy &amp;raw transaction</source>
+        <translation>Kopier &amp;råtransaksjon</translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <source>Show in %1</source>
+        <extracomment>Transactions table context menu action to show the selected transaction in a third-party block explorer. %1 is a stand-in argument for the URL of the explorer.</extracomment>
+        <translation>Vis i %1</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Type</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -3479,7 +4280,7 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
-        <translation type="unfinished">Send Bitcoins</translation>
+        <translation type="unfinished">Send ConnectCoins</translation>
     </message>
     <message>
         <source>Fee bump error</source>
@@ -3533,6 +4334,14 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
     <message>
         <source>Can't display address</source>
         <translation type="unfinished">Kan ikke vise adresse</translation>
+    </message>
+    <message>
+        <source>Fee-bump PSBT copied to clipboard</source>
+        <translation>PSBT for gebyrøkning kopiert til utklippstavlen</translation>
+    </message>
+    <message>
+        <source>Signer error</source>
+        <translation>Signererfeil</translation>
     </message>
 </context>
 <context>
@@ -3594,8 +4403,8 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
         <translation type="unfinished">Feil: Dumpfil identifiseringsoppføring stemmer ikke. Fikk "%s", forventet "%s".</translation>
     </message>
     <message>
-        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
-        <translation type="unfinished">Feil: Dumpfil versjon er ikke støttet. Denne versjonen av bitcoin-lommebok støtter kun versjon 1 dumpfiler. Fikk dumpfil med versjon %s</translation>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Feil: Dumpfil versjon er ikke støttet. Denne versjonen av ConnectCoin-lommebok støtter kun versjon 1 dumpfiler. Fikk dumpfil med versjon %s</translation>
     </message>
     <message>
         <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
@@ -3821,7 +4630,7 @@ Kunne ikke gjenopprette sikkerhetskopi av lommebok.</translation>
     </message>
     <message>
         <source>Invalid -proxy address or hostname: '%s'</source>
-        <translation type="unfinished">Ugyldig -mellomtjeneradresse eller vertsnavn: "%s"</translation>
+        <translation>Ugyldig adresse eller vertsnavn for -proxy: '%s'</translation>
     </message>
     <message>
         <source>Invalid P2P permission: '%s'</source>
@@ -3998,7 +4807,7 @@ Mangler løsningsdata for å estimere transaksjonsstørrelse</translation>
     </message>
     <message>
         <source>Unknown -blockfilterindex value %s.</source>
-        <translation type="unfinished">Ukjent -blokkfilterindex-verdi 1 %s.</translation>
+        <translation>Ukjent -blockfilterindex-verdi %s.</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -4043,6 +4852,698 @@ Mangler løsningsdata for å estimere transaksjonsstørrelse</translation>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Filen med innstillinger kunne ikke skrives</translation>
+    </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>Vekselpengemålet må være et P2PK-mål av type 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin støtter bare P2PK-adresser av type 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin støtter bare P2PK-vekselpengadresser av type 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>ConnectCoin-transaksjoner krever gyldige mål av type 1 eller PAY_TO_CONNECT-utganger av type 2</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>ConnectCoin-utganger av type 1 støtter bare SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>Inngangen er ikke en fullstendig innløsning av type 1 med SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>Inngangen krever fullstendige vitnedata for et P2C-bevis</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>Hovednettverket er ikke lansert: ingen genesisblokk er definert. Bruk -testnet4 for offentlig testing eller -regtest for lokal testing.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>Ingen offentlig kildekode-URL som tilhører prosjektet, er konfigurert for denne utviklingsversjonen.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Det er ikke nok filbeskrivere tilgjengelig. Prøv å redusere -rpcmaxconnections eller bruke standardverdien %d</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>Bidra gjerne hvis du synes %s er nyttig.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Vurder å endre %s (%s) eller %s (%s).</translation>
+    </message>
+    <message>
+        <source>
+Unable to cleanup failed migration</source>
+        <translation>
+Kunne ikke rydde opp etter mislykket migrering</translation>
+    </message>
+    <message>
+        <source>%s failed to validate the -assumeutxo snapshot state. This indicates a hardware problem, or a bug in the software, or a bad software modification that allowed an invalid snapshot to be loaded. As a result of this, the node will shut down and stop using any state that was built on the snapshot, resetting the chain height from %d to %d. On the next restart, the node will resume syncing from %d without using any snapshot data. Please report this incident to %s, including how you obtained the snapshot. The invalid snapshot chainstate will be left on disk in case it is helpful in diagnosing the issue that caused this error.</source>
+        <translation>%s kunne ikke validere tilstanden i -assumeutxo-øyeblikksbildet. Dette tyder på et maskinvareproblem, en programvarefeil eller en feilaktig programvareendring som tillot innlasting av et ugyldig øyeblikksbilde. Derfor lukkes noden og slutter å bruke tilstander basert på øyeblikksbildet, og kjedehøyden tilbakestilles fra %d til %d. Ved neste omstart gjenopptar noden synkroniseringen fra %d uten å bruke data fra øyeblikksbildet. Rapporter hendelsen til %s, og oppgi hvordan du fikk øyeblikksbildet. Kjedetilstanden fra det ugyldige øyeblikksbildet blir liggende på disken i tilfelle den kan bidra til å diagnostisere årsaken til feilen.</translation>
+    </message>
+    <message>
+        <source>%s is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation>%s er satt svært høyt! Så store gebyrer kan betales for én enkelt transaksjon.</translation>
+    </message>
+    <message>
+        <source>%s request to listen on port %u. This port is considered "bad" and thus it is unlikely that any peer will connect to it. See doc/p2p-bad-ports.md for details and a full list.</source>
+        <translation>%s ber om å lytte på port %u. Denne porten regnes som «uheldig», og det er derfor lite sannsynlig at noen likemann vil koble til den. Se doc/p2p-bad-ports.md for detaljer og en fullstendig liste.</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf er foreldet og vil bli helt fjernet i neste utgave.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>En dbcache på %zu MiB kan være for stor for et systemminne på bare %zu MiB.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>Det oppstod en alvorlig intern feil. Se %s for detaljer: %s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>Fant ikke assumeutxo-data for den angitte blokkhashen '%s'.</translation>
+    </message>
+    <message>
+        <source>Block verification was interrupted</source>
+        <translation>Blokkverifiseringen ble avbrutt</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version %d pre-selected input with a version 3 tx</source>
+        <translation>Kan ikke bruke forhåndsvalgte, ubekreftede inndata av versjon %d i en versjon 3-transaksjon</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version 3 pre-selected input with a version %d tx</source>
+        <translation>Kan ikke bruke forhåndsvalgte, ubekreftede inndata av versjon 3 i en versjon %d-transaksjon</translation>
+    </message>
+    <message>
+        <source>Cannot obtain a lock on directory %s. %s is probably already running.</source>
+        <translation>Kan ikke låse mappen %s. %s kjører sannsynligvis allerede.</translation>
+    </message>
+    <message>
+        <source>Cannot provide specific connections and have addrman find outgoing connections at the same time.</source>
+        <translation>Kan ikke angi bestemte forbindelser og samtidig la addrman finne utgående forbindelser.</translation>
+    </message>
+    <message>
+        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
+        <translation>Kan ikke sette -forcednsseed til true når -dnsseed er satt til false.</translation>
+    </message>
+    <message>
+        <source>Cannot write to directory '%s'; check permissions.</source>
+        <translation>Kan ikke skrive til mappen '%s'; kontroller tillatelsene.</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>Fant en skadet blokk som tyder på mulig maskinvarefeil.</translation>
+    </message>
+    <message>
+        <source>Could not generate scriptPubKeys (cache is empty)</source>
+        <translation>Kunne ikke generere scriptPubKeys (hurtiglageret er tomt)</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>Kunne ikke lese innebygde asmap-data</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>Oppretter lommebok…</translation>
+    </message>
+    <message>
+        <source>Disk space for %s may not accommodate the block files. Approximately %u GB of data will be stored in this directory.</source>
+        <translation>Diskplassen for %s er kanskje ikke stor nok til blokkfilene. Omtrent %u GB data vil bli lagret i denne mappen.</translation>
+    </message>
+    <message>
+        <source>Do you want to rebuild the databases now?</source>
+        <translation>Vil du bygge opp databasene på nytt nå?</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>Duplisert bindingskonfigurasjon for adressen %s. Kontroller innstillingene -bind, -bind=...=onion og -whitebind.</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>Kontroll av elliptisk kurvekryptografi mislyktes. %s avsluttes.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>Innebygde asmap-data er ikke tilgjengelige</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>Feil ved oppretting av %s: Kunne ikke skrive versjonsmetadata.</translation>
+    </message>
+    <message>
+        <source>Error loading %s: External signer wallet being loaded without external signer support compiled</source>
+        <translation>Feil ved innlasting av %s: En lommebok med ekstern signerer lastes inn uten at støtte for ekstern signerer er kompilert inn</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>Feil ved innlasting av %s: Lommeboken er av eldre type. Migrer til en deskriptorlommebok med migreringsverktøyet (migratewallet RPC).</translation>
+    </message>
+    <message>
+        <source>Error loading databases</source>
+        <translation>Feil ved innlasting av databaser</translation>
+    </message>
+    <message>
+        <source>Error loading wallet. Wallet requires blocks to be downloaded, and software does not currently support loading wallets while blocks are being downloaded out of order when using assumeutxo snapshots. Wallet should be able to load successfully after node sync reaches height %s</source>
+        <translation>Feil ved innlasting av lommebok. Lommeboken krever at blokker lastes ned, og programvaren støtter foreløpig ikke innlasting av lommebøker mens blokker lastes ned i vilkårlig rekkefølge ved bruk av assumeutxo-øyeblikksbilder. Lommeboken bør kunne lastes inn når nodens synkronisering når høyden %s</translation>
+    </message>
+    <message>
+        <source>Error opening coins database</source>
+        <translation>Feil ved åpning av myntdatabasen</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address metadata may be missing or incorrect.</source>
+        <translation>Feil ved lesing av %s! Alle nøkler ble lest riktig, men transaksjonsdata eller adressemetadata kan mangle eller være feil.</translation>
+    </message>
+    <message>
+        <source>Error reading %s! Transaction data may be missing or incorrect. Rescanning wallet.</source>
+        <translation>Feil ved lesing av %s! Transaksjonsdata kan mangle eller være feil. Skanner lommeboken på nytt.</translation>
+    </message>
+    <message>
+        <source>Error reading configuration file: %s</source>
+        <translation>Feil ved lesing av konfigurasjonsfil: %s</translation>
+    </message>
+    <message>
+        <source>Error starting/committing db txn for wallet transactions removal process</source>
+        <translation>Feil ved start eller commit av databasetransaksjon for fjerning av lommeboktransaksjoner</translation>
+    </message>
+    <message>
+        <source>Error: Address book data in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>Feil: Adressebokdata i lommeboken kan ikke identifiseres som tilhørende de migrerte lommebøkene</translation>
+    </message>
+    <message>
+        <source>Error: Cannot extract destination from the generated scriptpubkey</source>
+        <translation>Feil: Kan ikke hente ut mottakeren fra den genererte scriptpubkey</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Feil: Kunne ikke legge transaksjonen %s til lommeboken kun for overvåking</translation>
+    </message>
+    <message>
+        <source>Error: Could not add watchonly tx %s to watchonly wallet</source>
+        <translation>Feil: Kunne ikke legge overvåkingstransaksjonen %s til lommeboken kun for overvåking</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Feil: Kunne ikke opprette filen '%s'</translation>
+    </message>
+    <message>
+        <source>Error: Could not delete watchonly transactions. </source>
+        <translation>Feil: Kunne ikke slette transaksjoner kun for overvåking. </translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation>Feil: Kunne ikke opprette en databasemarkør</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>Feil: Dumpfilen angir et databaseformat som ikke støttes (%s). Bare sqlite-databasedumper støttes</translation>
+    </message>
+    <message>
+        <source>Error: Duplicate descriptors created during migration. Your wallet may be corrupted.</source>
+        <translation>Feil: Dupliserte deskriptorer ble opprettet under migreringen. Lommeboken kan være skadet.</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Feil: Eksportmålet '%s' finnes allerede</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Feil: Eksportmålet kan ikke være tomt</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet</source>
+        <translation>Feil: Kunne ikke opprette en ny lommebok kun for overvåking</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Feil: Kunne ikke opprette en ny lommebok kun for overvåking. %s</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>Feil: Ikke alle adressebokposter ble migrert</translation>
+    </message>
+    <message>
+        <source>Error: Not all transaction records were migrated</source>
+        <translation>Feil: Ikke alle transaksjonsposter ble migrert</translation>
+    </message>
+    <message>
+        <source>Error: This wallet already uses SQLite</source>
+        <translation>Feil: Denne lommeboken bruker allerede SQLite</translation>
+    </message>
+    <message>
+        <source>Error: This wallet is already a descriptor wallet</source>
+        <translation>Feil: Denne lommeboken er allerede en deskriptorlommebok</translation>
+    </message>
+    <message>
+        <source>Error: Transaction %s in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>Feil: Transaksjonen %s i lommeboken kan ikke identifiseres som tilhørende de migrerte lommebøkene</translation>
+    </message>
+    <message>
+        <source>Error: Unable to begin reading all records in the database</source>
+        <translation>Feil: Kunne ikke begynne å lese alle postene i databasen</translation>
+    </message>
+    <message>
+        <source>Error: Unable to make a backup of your wallet</source>
+        <translation>Feil: Kunne ikke lage en sikkerhetskopi av lommeboken</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation>Feil: Kunne ikke tolke versjon %u som en uint32_t</translation>
+    </message>
+    <message>
+        <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
+        <translation>Feil: Kunne ikke lage deskriptorer for denne eldre lommeboken. Sørg for å oppgi lommebokens passfrase hvis den er kryptert.</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read all records in the database</source>
+        <translation>Feil: Kunne ikke lese alle postene i databasen</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read wallet's best block locator record</source>
+        <translation>Feil: Kunne ikke lese lommebokens post med lokatoren for beste blokk</translation>
+    </message>
+    <message>
+        <source>Error: Unable to remove watchonly address book data</source>
+        <translation>Feil: Kunne ikke fjerne adressebokdata kun for overvåking</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write data to disk for wallet %s</source>
+        <translation>Feil: Kunne ikke skrive data til disk for lommeboken %s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write solvable wallet best block locator record</source>
+        <translation>Feil: Kunne ikke skrive posten med lokatoren for beste blokk i lommeboken med løsbare skript</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Feil: Kunne ikke skrive den eksporterte lommeboken</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write watchonly wallet best block locator record</source>
+        <translation>Feil: Kunne ikke skrive posten med lokatoren for beste blokk i lommeboken kun for overvåking</translation>
+    </message>
+    <message>
+        <source>Error: Wallet does not exist</source>
+        <translation>Feil: Lommeboken finnes ikke</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Feil: Lommeboken har ingen deskriptorer å eksportere</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Feil: Kan ikke fullføre databasetransaksjonen for eksport av lommeboken kun for overvåking</translation>
+    </message>
+    <message>
+        <source>Error: cannot remove legacy wallet records</source>
+        <translation>Feil: Kan ikke fjerne poster fra den eldre lommeboken</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Feil: Databasetransaksjonen kan ikke utføres for den nye lommeboken kun for overvåking %s</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for wallet %s</source>
+        <translation>Feil: Databasetransaksjonen kan ikke utføres for lommeboken %s</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>Kunne ikke reservere ny skanning under initialisering av lommeboken</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>Kunne ikke beregne gebyrøkninger fordi ubekreftede UTXO-er er avhengige av en enorm klynge av ubekreftede transaksjoner.</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>Kunne ikke lukke filen med angredata for blokker.</translation>
+    </message>
+    <message>
+        <source>Failed to close file when writing block.</source>
+        <translation>Kunne ikke lukke filen under skriving av blokk.</translation>
+    </message>
+    <message>
+        <source>Failed to disconnect block.</source>
+        <translation>Kunne ikke koble fra blokken.</translation>
+    </message>
+    <message>
+        <source>Failed to read block.</source>
+        <translation>Kunne ikke lese blokken.</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>Kunne ikke fjerne mappen for øyeblikksbildets kjedetilstand (%s). Fjern den manuelt før omstart.
+</translation>
+    </message>
+    <message>
+        <source>Failed to rename invalid peers.dat file. Please move or delete it and try again.</source>
+        <translation>Kunne ikke gi den ugyldige peers.dat-filen nytt navn. Flytt eller slett den og prøv igjen.</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>Kunne ikke starte indeksene, avslutter…</translation>
+    </message>
+    <message>
+        <source>Failed to write block.</source>
+        <translation>Kunne ikke skrive blokken.</translation>
+    </message>
+    <message>
+        <source>Failed to write undo data.</source>
+        <translation>Kunne ikke skrive angredata.</translation>
+    </message>
+    <message>
+        <source>Failure removing transaction: %s</source>
+        <translation>Kunne ikke fjerne transaksjonen: %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>Gebyrsatsen (%s) er lavere enn den innstilte minimumssatsen (%s).</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Kunne ikke tømme blokkfilbufferen til disk. Dette skyldes sannsynligvis en I/O-feil.</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Kunne ikke tømme angrefilbufferen til disk. Dette skyldes sannsynligvis en I/O-feil.</translation>
+    </message>
+    <message>
+        <source>Incompatible options: -dnsseed=1 was explicitly specified, but -onlynet forbids connections to IPv4/IPv6</source>
+        <translation>Uforenelige alternativer: -dnsseed=1 ble uttrykkelig angitt, men -onlynet forbyr forbindelser til IPv4/IPv6</translation>
+    </message>
+    <message>
+        <source>Insufficient dbcache for block verification</source>
+        <translation>Utilstrekkelig dbcache for blokkverifisering</translation>
+    </message>
+    <message>
+        <source>Invalid -i2psam address or hostname: '%s'</source>
+        <translation>Ugyldig -i2psam-adresse eller vertsnavn: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>Ugyldig -proxy-adresse eller vertsnavn, slutter med '=': '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s'</source>
+        <translation>Ugyldig beløp for %s=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation>Ugyldig beløp for %s=&lt;amount&gt;: '%s' (må være minst minrelay-gebyret på %s for å unngå fastlåste transaksjoner)</translation>
+    </message>
+    <message>
+        <source>Invalid or corrupt peers.dat (%s). If you believe this is a bug, please report it to %s. As a workaround, you can move the file (%s) out of the way (rename, move, or delete) to have a new one created on the next start.</source>
+        <translation>Ugyldig eller skadet peers.dat (%s). Hvis du mener dette er en programfeil, rapporter den til %s. Som en midlertidig løsning kan du flytte filen (%s) til side (endre navn, flytte eller slette den), slik at en ny opprettes ved neste oppstart.</translation>
+    </message>
+    <message>
+        <source>Invalid port specified in %s: '%s'</source>
+        <translation>Ugyldig port angitt i %s: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid value detected for '-wallet' or '-nowallet'. '-wallet' requires a string value, while '-nowallet' accepts only '1' to disable all wallets</source>
+        <translation>Ugyldig verdi for '-wallet' eller '-nowallet'. '-wallet' krever en strengverdi, mens '-nowallet' bare godtar '1' for å deaktivere alle lommebøker</translation>
+    </message>
+    <message>
+        <source>Listening for incoming connections failed (listen returned error %s)</source>
+        <translation>Kunne ikke lytte etter innkommende forbindelser (listen returnerte feilen %s)</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is less than transaction weight without inputs</source>
+        <translation>Maksimal transaksjonsvekt er mindre enn transaksjonens vekt uten inndata</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is too low, can not accommodate change output</source>
+        <translation>Maksimal transaksjonsvekt er for lav til å romme vekslepenger som utdata</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>Maksimal transaksjonsvekt må være mellom %d og %d</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Ingen dumpfil er oppgitt. For å bruke createfromdump må -dumpfile=&lt;filename&gt; oppgis.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use dump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Ingen dumpfil er oppgitt. For å bruke dump må -dumpfile=&lt;filename&gt; oppgis.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. %d available, %d required.</source>
+        <translation>Ikke nok filbeskrivelser tilgjengelig. %d tilgjengelige, %d påkrevd.</translation>
+    </message>
+    <message>
+        <source>Not found pre-selected input %s</source>
+        <translation>Fant ikke forhåndsvalgte inndata %s</translation>
+    </message>
+    <message>
+        <source>Not solvable pre-selected input %s</source>
+        <translation>Forhåndsvalgte inndata %s kan ikke løses</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>Bare retning ble angitt, ingen tillatelser: '%s'</translation>
+    </message>
+    <message>
+        <source>Option '-checkpoints' is set but checkpoints were removed. This option has no effect.</source>
+        <translation>Alternativet '-checkpoints' er angitt, men kontrollpunkter er fjernet. Dette alternativet har ingen virkning.</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Alternativet '-limitancestorsize' er angitt, men størrelsesgrenser for forfedre er erstattet med størrelsesgrenser for klynger (se -limitclustersize). Dette alternativet har ingen virkning.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Alternativet '-limitdescendantsize' er angitt, men størrelsesgrenser for etterkommere er erstattet med størrelsesgrenser for klynger (se -limitclustersize). Dette alternativet har ingen virkning.</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to CJDNS (-onlynet=cjdns) but -cjdnsreachable is not provided</source>
+        <translation>Utgående forbindelser er begrenset til CJDNS (-onlynet=cjdns), men -cjdnsreachable er ikke oppgitt</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is explicitly forbidden: -onion=0</source>
+        <translation>Utgående forbindelser er begrenset til Tor (-onlynet=onion), men mellomtjeneren for Tor-nettverket er uttrykkelig forbudt: -onion=0</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
+        <translation>Utgående forbindelser er begrenset til Tor (-onlynet=onion), men mellomtjeneren for Tor-nettverket er ikke oppgitt: ingen av -proxy, -onion eller -listenonion er angitt</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to i2p (-onlynet=i2p) but -i2psam is not provided</source>
+        <translation>Utgående forbindelser er begrenset til i2p (-onlynet=i2p), men -i2psam er ikke oppgitt</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>Privat kringkasting av egne transaksjoner er forespurt (-privatebroadcast), og -proxyrandomize er deaktivert. Tor-kretser for privat kringkasting kan knyttes til andre forbindelser over Tor. Sett -proxyrandomize=1 for best mulig personvern.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>Privat kringkasting av egne transaksjoner er forespurt (-privatebroadcast), men -connect er også konfigurert. De er uforenelige fordi privat kringkasting må åpne nye forbindelser til tilfeldig valgte Tor- eller I2P-likemenn. Vurder å bruke -maxconnections=0 -addnode=... i stedet</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>Privat kringkasting av egne transaksjoner er forespurt (-privatebroadcast), men verken Tor- eller I2P-nettverket kan nås</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -reindex-chainstate. Use full -reindex instead.</source>
+        <translation>Beskjæringsmodus er uforenelig med -reindex-chainstate. Bruk full -reindex i stedet.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>Beskjæringsmodus er uforenelig med -txospenderindex.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
+        <translation>Beskjæring: Lommebokens siste synkronisering ligger før de beskårne dataene. Du må bruke -reindex (laste ned hele blokkjeden på nytt hvis noden er beskåret)</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>Kunne ikke endre navn fra '%s' til '%s'. Kan ikke rydde opp i leveldb-mappen for bakgrunnskjedetilstanden.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
+        <translation>Kunne ikke endre navn fra '%s' til '%s'. Løs dette ved manuelt å flytte eller slette den ugyldige øyeblikksbildemappen %s, ellers vil samme feil oppstå ved neste oppstart.</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>Signereren returnerte ikke adressen</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>Signereren returnerte den uventede adressen %s</translation>
+    </message>
+    <message>
+        <source>Signer returned error: %s</source>
+        <translation>Signereren returnerte en feil: %s</translation>
+    </message>
+    <message>
+        <source>Specified data directory "%s" does not exist.</source>
+        <translation>Den angitte datamappen «%s» finnes ikke.</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>Systemfeil ved tømming av buffer: %s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>Systemfeil ved innlasting av ekstern blokkfil: %s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>Systemfeil ved lagring av blokk på disk: %s</translation>
+    </message>
+    <message>
+        <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
+        <translation>Banen %s bruker exFAT, som er kjent for sporadiske problemer med datakorrupsjon på macOS. Flytt denne mappen til et annet filsystem for å unngå tap av data.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>Alternativet -testactivationheight kan ikke brukes på hovednettet.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>Alternativet -vbparams kan ikke brukes på hovednettet.</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>Kombinasjonen av forhåndsvalgte inndata og lommebokens automatiske inndatavalg overskrider transaksjonens maksimale vekt. Prøv å sende et mindre beløp eller samle lommebokens UTXO-er manuelt</translation>
+    </message>
+    <message>
+        <source>The inputs size exceeds the maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>Størrelsen på inndataene overskrider maksimal vekt. Prøv å sende et mindre beløp eller samle lommebokens UTXO-er manuelt</translation>
+    </message>
+    <message>
+        <source>The preselected coins total amount does not cover the transaction target. Please allow other inputs to be automatically selected or include more coins manually</source>
+        <translation>Det samlede beløpet for de forhåndsvalgte myntene dekker ikke transaksjonens mål. Tillat automatisk valg av andre inndata, eller legg til flere mynter manuelt</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>Totalbeløpet overstiger saldoen din når transaksjonsgebyret på %s er medregnet.</translation>
+    </message>
+    <message>
+        <source>The transactions removal process can only be executed within a db txn</source>
+        <translation>Fjerning av transaksjoner kan bare utføres innenfor en databasetransaksjon</translation>
+    </message>
+    <message>
+        <source>There is no ScriptPubKeyManager for this address</source>
+        <translation>Det finnes ingen ScriptPubKeyManager for denne adressen</translation>
+    </message>
+    <message>
+        <source>Transaction %s does not belong to this wallet</source>
+        <translation>Transaksjonen %s tilhører ikke denne lommeboken</translation>
+    </message>
+    <message>
+        <source>Transaction change output index out of range</source>
+        <translation>Indeksen for transaksjonens vekslepenger som utdata er utenfor gyldig område</translation>
+    </message>
+    <message>
+        <source>Transaction needs a change address, but we can't generate it.</source>
+        <translation>Transaksjonen trenger en vekseladresse, men vi kan ikke generere den.</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>Transaksjonen krever en mottaker med verdi ulik null, en gebyrsats ulik null eller forhåndsvalgte inndata</translation>
+    </message>
+    <message>
+        <source>UTXO snapshot failed to validate. Restart to resume normal initial block download, or try loading a different snapshot.</source>
+        <translation>UTXO-øyeblikksbildet kunne ikke valideres. Start på nytt for å gjenoppta normal innledende blokknedlasting, eller prøv å laste inn et annet øyeblikksbilde.</translation>
+    </message>
+    <message>
+        <source>Unable to find UTXO for external input</source>
+        <translation>Kunne ikke finne UTXO for eksterne inndata</translation>
+    </message>
+    <message>
+        <source>Unable to parse -maxuploadtarget: '%s'</source>
+        <translation>Kunne ikke tolke -maxuploadtarget: '%s'</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Kunne ikke skrive deskriptorhurtiglageret</translation>
+    </message>
+    <message>
+        <source>Unconfirmed UTXOs are available, but spending them creates a chain of transactions that will be rejected by the mempool</source>
+        <translation>Ubekreftede UTXO-er er tilgjengelige, men å bruke dem oppretter en kjede av transaksjoner som transaksjonspuljen vil avvise</translation>
+    </message>
+    <message>
+        <source>Unexpected legacy entry in descriptor wallet found. Loading wallet %s
+
+The wallet might have been tampered with or created with malicious intent.
+</source>
+        <translation>Fant en uventet eldre oppføring i deskriptorlommeboken. Laster lommeboken %s
+
+Lommeboken kan ha blitt manipulert eller opprettet med ondsinnet hensikt.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>Ukjent alternativ «%s» angitt i -test=&lt;option&gt;.</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>Fant en ukjent deskriptor. Laster lommeboken %s
+
+Lommeboken kan være opprettet med en nyere versjon.
+Prøv å kjøre den nyeste programvareversjonen.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>Ukjent nettverk i -proxy='%s': '%s'</translation>
+    </message>
+    <message>
+        <source>Unsupported category-specific logging level %1$s=%2$s. Expected %1$s=&lt;category&gt;:&lt;loglevel&gt;. Valid categories: %3$s. Valid loglevels: %4$s.</source>
+        <translation>Kategorispesifikt loggnivå %1$s=%2$s støttes ikke. Forventet %1$s=&lt;category&gt;:&lt;loglevel&gt;. Gyldige kategorier: %3$s. Gyldige loggnivåer: %4$s.</translation>
+    </message>
+    <message>
+        <source>Unsupported chainstate database format found. Please restart with -reindex-chainstate. This will rebuild the chainstate database.</source>
+        <translation>Fant et kjedetilstandsdatabaseformat som ikke støttes. Start på nytt med -reindex-chainstate. Dette bygger opp kjedetilstandsdatabasen på nytt.</translation>
+    </message>
+    <message>
+        <source>Unsupported global logging level %s=%s. Valid values: %s.</source>
+        <translation>Globalt loggnivå %s=%s støttes ikke. Gyldige verdier: %s.</translation>
+    </message>
+    <message>
+        <source>Wallet file creation failed: %s</source>
+        <translation>Kunne ikke opprette lommebokfilen: %s</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>Advarsel: Fant en ugyldig kjede som er mer enn 6 blokker lengre enn vår beste kjede. Dette kan skyldes en skadet database eller uforenlige konsensusregler hos likemenn.</translation>
+    </message>
+    <message>
+        <source>Witness data for blocks after height %d requires validation. Please restart with -reindex.</source>
+        <translation>Vitnedata for blokker etter høyde %d må valideres. Start på nytt med -reindex.</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>Datamaskinens dato og klokkeslett ser ut til å avvike med mer enn %d minutter fra nettverket. Dette kan føre til konsensusfeil. Når du har kontrollert datamaskinens klokke, bør denne meldingen ikke lenger vises etter at du starter noden på nytt. Uten omstart bør den forsvinne automatisk etter at du har koblet til tilstrekkelig mange nye utgående likemenn, noe som kan ta litt tid. Du kan undersøke feltet `timeoffset` i RPC-metodene `getpeerinfo` og `getnetworkinfo` for mer informasjon.</translation>
+    </message>
+    <message>
+        <source>acceptstalefeeestimates is not supported on %s chain.</source>
+        <translation>acceptstalefeeestimates støttes ikke på kjeden %s.</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>whitebind kan bare brukes for innkommende forbindelser («out» ble oppgitt)</translation>
     </message>
 </context>
 <context>
@@ -4392,6 +5893,98 @@ Rotsertifikatversjon: %2</translation>
     <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Valgfritt: tomt felt bruker denne lommeboken</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPU-tråder:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Kunne ikke generere en belønningsadresse. Kontroller at lommeboken kan generere mottaksadresser.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Feil</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>FAST-modus deler omtrent 2 GiB RandomX-minne med valideringen. Flere tråder bruker mer CPU og strøm; la det være kapasitet igjen til noden. Det kan ta litt tid å initialisere datasettet.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Utvinn blokker på testnettet med CPU-en din ved hjelp av RandomX. Utvinning er avslått til du starter den. Utvinneren deles av alle lommebøkene i denne noden og fortsetter når du bytter fane eller lukker en lommebok.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Utvinning</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Utvinning / klargjør RandomX</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Ny adresse fra denne lommeboken</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Belønningsadresse for dette nettverket</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Belønningsadresse:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Start utvinning</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Starter</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Tilstand: %1
+Hashrate: %2 H/s
+Hasher: %3 | Godtatte blokker: %4
+Aktiv belønningsadresse: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Stopp utvinning</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Stoppet</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Stopper (venter på pågående arbeid)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Venter på at noden skal bli oppdatert</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Advarsel: %1 utvinningstråder overstiger de %2 logiske CPU-ene som ble oppdaget. Dette kan redusere hashraten og gjøre noden tregere.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsModel</name>
+    <message>
+        <source>Could not read setting "%1", %2.</source>
+        <translation>Kunne ikke lese innstillingen «%1», %2.</translation>
     </message>
 </context>
 </TS>

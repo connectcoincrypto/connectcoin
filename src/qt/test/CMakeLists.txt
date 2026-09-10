@@ -29,8 +29,12 @@ deploy_windows_qt_plugin(connectcoin-test-qt Qt6::QWindowsIntegrationPlugin plat
 deploy_windows_qt_plugin(connectcoin-test-qt Qt6::QModernWindowsStylePlugin styles)
 
 if(ENABLE_WALLET)
+  # Embed the source catalog only in tests, so full compiled-resource coverage
+  # can also be checked when the test binary runs outside the source tree.
+  qt6_add_resources(CONNECTCOIN_TRANSLATION_TEST_QRC translation_test.qrc)
   target_sources(connectcoin-test-qt
     PRIVATE
+      ${CONNECTCOIN_TRANSLATION_TEST_QRC}
       addressbooktests.cpp
       wallettests.cpp
       ../../wallet/test/wallet_test_fixture.cpp

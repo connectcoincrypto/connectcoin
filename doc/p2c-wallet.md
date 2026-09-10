@@ -119,6 +119,11 @@ connectcoin-cli -rpcwallet=claimant getp2cclaimstatus
 connectcoin-cli -rpcwallet=claimant setp2cclaiming 0
 ```
 
+The examples explicitly select four simultaneous connections. The GUI, initial
+worker status, and RPC default use **1000** simultaneous connections; omitting
+the RPC's second argument (or passing `null`) selects that default. HTTPS remains
+disabled when the wallet loads until you explicitly enable it.
+
 The optional fourth argument of `setp2cclaiming` is `address`. For example,
 `setp2cclaiming 1 4 '["example.com"]' "REWARD_ADDRESS"` sends rewards there.
 `getp2cclaimstatus.reward_address` reports this setting; an empty string means
@@ -143,7 +148,7 @@ prompt confirmation if demand rises before submission.
   displays `Unlimited` in the status, not the RPC sentinel `-1`.
 - Positive rates limit connection starts across all workers **in this wallet**;
   they are not a node-wide limit shared by multiple wallets. Concurrency accepts
-  any positive 32-bit integer, with no separate 64-connection cap. It is a maximum,
+  any positive 32-bit integer (default **1000**), with no separate 64-connection cap. It is a maximum,
   not guaranteed throughput: OS thread/socket limits, memory, the selected rate
   and server responsiveness determine actual parallelism. Failure to allocate a
   connection worker stops the search with an error, joining already-started workers.

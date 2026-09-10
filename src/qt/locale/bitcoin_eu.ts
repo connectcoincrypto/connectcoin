@@ -58,13 +58,13 @@
         <translation type="unfinished">&amp;Aukeratu</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Hauek dira ordainketak egiteko zure Bitcoin helbideak. Txanponak bidali aurretik, beti egiaztatu zenbatekoa eta hartzailearen helbidea.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">Hauek dira ordainketak egiteko zure ConnectCoin helbideak. Txanponak bidali aurretik, beti egiaztatu zenbatekoa eta hartzailearen helbidea.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Hauek dira ordainketak jasotzeko zure Bitcoin helbideak. Helbide berriak sortzeko, erabili 'Jasotzeko helbide berria sortu' botoia "jasotzea" fitxan.
+        <translation type="unfinished">Hauek dira ordainketak jasotzeko zure ConnectCoin helbideak. Helbide berriak sortzeko, erabili 'Jasotzeko helbide berria sortu' botoia "jasotzea" fitxan.
 Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
     </message>
     <message>
@@ -164,8 +164,8 @@ Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
         <translation type="unfinished">Zorroaren enkriptazioa berretsi</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">Abisua: Zure zorroa enkriptatzen baduzu eta zure pasahitza galtzen baduzu, &lt;b&gt;BITCOIN GUZTIAK GALDUKO DITUZU&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">Abisua: Zure zorroa enkriptatzen baduzu eta zure pasahitza galtzen baduzu, &lt;b&gt;CONNECTCOIN GUZTIAK GALDUKO DITUZU&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -192,7 +192,7 @@ Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
         <translation type="unfinished">Atzera</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
         <translation type="unfinished">Gogoan izan zorroaren enkripzioak ezin dituela zure bitcoinak zure ordenagailuan izan dezakezun malware batengandik lapurtuak izatetik guztiz babestu .</translation>
     </message>
     <message>
@@ -327,8 +327,8 @@ Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
         <translation type="unfinished">Kopurua</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Sartu Bitcoin helbide bat (adibidez:%1 )</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">Sartu ConnectCoin helbide bat (adibidez:%1 )</translation>
     </message>
     <message>
         <source>Unroutable</source>
@@ -442,6 +442,66 @@ Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
         <source>default wallet</source>
         <translation type="unfinished">Zorro lehenetsia</translation>
     </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Ez dago erabilgarri</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -511,8 +571,8 @@ Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
         <translation type="unfinished">Proxya &lt;b&gt;gaituta&lt;/b&gt; dago : %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Bidali txanponak Bitcoin helbide batera</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">Bidali txanponak ConnectCoin helbide batera</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -555,16 +615,16 @@ Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
         <translation type="unfinished">sinatu &amp;mezua</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Sinatu mezuak zure Bitcoin helbideekin haien jabetza duzula frogatzeko.</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">Sinatu mezuak zure ConnectCoin helbideekin haien jabetza duzula frogatzeko.</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">Mezua &amp;balioztatu...</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">Egiaztatu mezuak zehaztutako Bitcoin helbideekin sinatu direla ziurtatzeko.</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">Egiaztatu mezuak zehaztutako ConnectCoin helbideekin sinatu direla ziurtatzeko.</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -623,8 +683,8 @@ Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
         <translation type="unfinished">Pareekin konektatzen...</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Ordainketak eskatu (QR kodeak eta bitcoin: URIak sortzen ditu)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">Ordainketak eskatu (QR kodeak eta connectcoin: URIak sortzen ditu)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -678,16 +738,16 @@ Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
         <translation type="unfinished">Eguneratua</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">Zati batean sinatutako Bitcoin transakzioa kargatu</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">Zati batean sinatutako ConnectCoin transakzioa kargatu</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">kargatu PSBT arbeletik...</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">Kargatu zati batean sinatutako Bitcoin transakzioa arbeletik.</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">Kargatu zati batean sinatutako ConnectCoin transakzioa arbeletik.</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -706,8 +766,8 @@ Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
         <translation type="unfinished">&amp;Helbideak jasotzen</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">Ireki bitcoin bat: URI</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">Ireki ConnectCoin bat: URI</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -744,8 +804,8 @@ Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
         <translation type="unfinished">Zorroren bat migratu</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Erakutsi %1(r)en laguntza-mezua Bitcoin-en komando-lerroko aukera posibleen zerrenda lortzeko.</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">Erakutsi %1(r)en laguntza-mezua ConnectCoin-en komando-lerroko aukera posibleen zerrenda lortzeko.</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -821,11 +881,11 @@ Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
         <translation type="unfinished">E&amp;rakutsi</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform>%nBitcoin sarearekiko konexio aktibo.</numerusform>
-            <numerusform>%n konexio aktibo Bitcoin sarearekin.</numerusform>
+            <numerusform>%nConnectCoin sarearekiko konexio aktibo.</numerusform>
+            <numerusform>%n konexio aktibo ConnectCoin sarearekin.</numerusform>
         </translation>
     </message>
     <message>
@@ -935,6 +995,54 @@ Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>Sortu pay-to-connect sariak</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Meatzaritza</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>Kontrolatu CPU bidezko meatzaritza</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Fitxategi guztiak</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Esportazio-errorea</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>Esportazioa burutu da</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>Esportatu uneko diru-zorroaren behatzeko soilik den bertsioa, beste nodo batean leheneratu ahal izateko.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>Esportatu behatzeko soilik den diru-zorroa</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>Leheneratu eta migratu diru-zorroaren fitxategia…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>Gorde behatzeko soilik den diru-zorroaren esportazioa</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>Diru-zorroa hona esportatu da: </translation>
     </message>
 </context>
 <context>
@@ -1078,6 +1186,10 @@ Sinatzea soilik posible da 'legacy' motako helbideekin.</translation>
         <source>(change)</source>
         <translation type="unfinished">(bueltak)</translation>
     </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>Sarrerako +/- %1 connect alda daiteke.</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1204,6 +1316,18 @@ Migrazio-prozesuak zorroaren segurtasun-kopia bat sortuko du migratu aurretik. S
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">Migrazioa arrakastatsua izan da</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Nodoa inausita badago eta diru-zorroa inausitako altuera baino lehen sortu bazen, migrazioak huts egin dezake migratutako diru-zorroa kargatzen saiatzean.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Kargatu diru-zorroa migratu ondoren</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>Diru-zorroa ez da kargatu migratu ondoren. «Fitxategia &gt; Ireki diru-zorroa» menutik ireki dezakezu.</translation>
     </message>
 </context>
 <context>
@@ -1381,8 +1505,8 @@ Migrazio-prozesuak zorroaren segurtasun-kopia bat sortuko du migratu aurretik. S
         <translation type="unfinished">Bidaltzeko helbidea editatu</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">Sartutako "%1" helbidea ez da baliozko Bitcoin helbide bat.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">Sartutako "%1" helbidea ez da baliozko ConnectCoin helbide bat.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1553,6 +1677,14 @@ Migrazio-prozesuak zorroaren segurtasun-kopia bat sortuko du migratu aurretik. S
         <source>Error</source>
         <translation type="unfinished">Akatsa</translation>
     </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1(e)k ConnectCoin bloke-katearen kopia deskargatu eta gordeko du.</translation>
+    </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1561,8 +1693,8 @@ Migrazio-prozesuak zorroaren segurtasun-kopia bat sortuko du migratu aurretik. S
         <translation type="unfinished">Inprimakia</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">Azken transakzioak baliteke oraindik ikusgai ez egotea, eta, hortaz, zure zorroaren saldoa ez da zuzena izan daiteke. Informazio hau eguneratua egongo da zure zorroa Bitcoin sarearekin sinkronizatzea amaitzen duenean, behean zehazten den bezala.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">Azken transakzioak baliteke oraindik ikusgai ez egotea, eta, hortaz, zure zorroaren saldoa ez da zuzena izan daiteke. Informazio hau eguneratua egongo da zure zorroa ConnectCoin sarearekin sinkronizatzea amaitzen duenean, behean zehazten den bezala.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1612,12 +1744,20 @@ Migrazio-prozesuak zorroaren segurtasun-kopia bat sortuko du migratu aurretik. S
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">Ezezaguna. Aurre-sinkronizazio goiburuak (%1, %2%)…</translation>
     </message>
+    <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Sareak ez ditu onartuko oraindik bistaratu gabeko transakzioek eragindako ConnectCoin funtsak gastatzeko saiakerak.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">Ireki bitcoin URIa</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">Ireki ConnectCoin URIa</translation>
     </message>
     <message>
         <source>URI:</source>
@@ -1669,8 +1809,8 @@ Migrazio-prozesuak zorroaren segurtasun-kopia bat sortuko du migratu aurretik. S
         <translation type="unfinished">%1rekin bateragarria den script baten bide osoa (adib., C:\Downloads\hwi.exe edo /Users/you/Downloads/hwi.py). Kontuz: malware-ak zure txanponak lapur ditzake!</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished">Bitcoin bezeroaren portua automatikoki ireki router-ean. Honek bakarrik funtzionatzen du zure router-ak PCP edo NAT-PMP onartzen badu eta gaituta badago. Kanpoko portua ausazkoa izan daiteke.</translation>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation type="unfinished">ConnectCoin bezeroaren portua automatikoki ireki router-ean. Honek bakarrik funtzionatzen du zure router-ak PCP edo NAT-PMP onartzen badu eta gaituta badago. Kanpoko portua ausazkoa izan daiteke.</translation>
     </message>
     <message>
         <source>Map port using PCP or NA&amp;T-PMP</source>
@@ -1800,8 +1940,8 @@ Migrazio-prozesuak zorroaren segurtasun-kopia bat sortuko du migratu aurretik. S
         <translation type="unfinished">Sarbide konexioak baimendu</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Bitcoin sarearekin konektatu SOCKS5 proxy baten bidez.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">ConnectCoin sarearekin konektatu SOCKS5 proxy baten bidez.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1880,8 +2020,8 @@ Migrazio-prozesuak zorroaren segurtasun-kopia bat sortuko du migratu aurretik. S
         <translation type="unfinished">Moneta kontrolerako ezaugarriak erakutsi ala ez.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Bitcoin sarearekin konektatu Tor onion zerbitzuetarako bereizitako SOCKS5 proxy baten bidez.</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">ConnectCoin sarearekin konektatu Tor onion zerbitzuetarako bereizitako SOCKS5 proxy baten bidez.</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1962,6 +2102,42 @@ Migrazio-prozesuak zorroaren segurtasun-kopia bat sortuko du migratu aurretik. S
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">Zehaztutako proxy helbidea baliogabea da.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Gaitu jakinarazpen gainerakorrak</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Erakutsi mahaigaineko jakinarazpen gainerakorrak, jasotako eta bidalitako transakzioak barne. Lehenespenez desgaituta. Errore- eta berrespen-elkarrizketek gaituta jarraitzen dute.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Inausketak nabarmen murrizten du transakzioak gordetzeko behar den disko-lekua. Bloke guztiak osorik baliozkotzen dira oraindik. Inausketa gaituta dagoenean, diru-zorroak abioan kargatu eta aktibo mantendu behar dira, bloke zaharren datuak ezabatu baino lehen sinkronizatuta egon daitezen; inausitako datuen atzetik geratzen diren diru-zorroek berrindexatzea behar izan dezakete. Ezarpen hau lehengoratzeko, bloke-kate osoa berriro deskargatu behar da.</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>-popupnotifications bidez edo connectcoin.conf fitxategiko popupnotifications bidez ezarrita.</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1977,8 +2153,8 @@ Migrazio-prozesuak zorroaren segurtasun-kopia bat sortuko du migratu aurretik. S
         <translation type="unfinished">Inprimakia</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">Erakutsitako informazioa zaharkituta egon daiteke. Zure zorroak automatikoki sinkronizatzen du Bitcoin sarearekin konexioa ezarri ondoren, baina prozesu hori oraindik ez da amaitu.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">Erakutsitako informazioa zaharkituta egon daiteke. Zure zorroak automatikoki sinkronizatzen du ConnectCoin sarearekin konexioa ezarri ondoren, baina prozesu hori oraindik ez da amaitu.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -2069,9 +2245,9 @@ Migrazio-prozesuak zorroaren segurtasun-kopia bat sortuko du migratu aurretik. S
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n sarrera sinatu da, baina sinadura gehiago behar dira oraindik.</numerusform>
+            <numerusform>%n sarrera sinatu dira, baina sinadura gehiago behar dira oraindik.</numerusform>
         </translation>
     </message>
     <message>
@@ -2133,9 +2309,9 @@ Migrazio-prozesuak zorroaren segurtasun-kopia bat sortuko du migratu aurretik. S
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Transakzioak sinatu gabeko %n sarrera du.</numerusform>
+            <numerusform>Transakzioak sinatu gabeko %n sarrera ditu.</numerusform>
         </translation>
     </message>
     <message>
@@ -2174,16 +2350,16 @@ Migrazio-prozesuak zorroaren segurtasun-kopia bat sortuko du migratu aurretik. S
         <translation type="unfinished">Ordainketa eskaera akatsa</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Ezin da Bitcoin abiarazi: klik-ordaintzeko kudeatzailea.</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">Ezin da ConnectCoin abiarazi: klik-ordaintzeko kudeatzailea.</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">URI kudeaketa</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin://' ez da URI balioduna. Erabili 'bitcoin:' horren ordez.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin://' ez da URI balioduna. Erabili 'connectcoin:' horren ordez.</translation>
     </message>
     <message>
         <source>Cannot process payment request because BIP70 is not supported.
@@ -2194,8 +2370,8 @@ BIP70en segurtasun-gabezia zabalengatik, irmoki gomendatzen da merkatariek diru-
 Errore hau jasotzen baduzu, merkatariei BIP21-arekin bateragarria den URI bat emateko eskatu beharko zenieke</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">URIa ezin da analizatu! Hau Bitcoin helbide baliogabe batek edo gaizki osatutako URI parametroek eragin dezakete.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">URIa ezin da analizatu! Hau ConnectCoin helbide baliogabe batek edo gaizki osatutako URI parametroek eragin dezakete.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -2258,6 +2434,11 @@ Errore hau jasotzen baduzu, merkatariei BIP21-arekin bateragarria den URI bat em
         <source>Outbound</source>
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">Irteerakoa</translation>
+    </message>
+    <message>
+        <source>Ping</source>
+        <extracomment>Title of Peers Table column which indicates the current latency of the connection with the peer.</extracomment>
+        <translation>Ping</translation>
     </message>
 </context>
 <context>
@@ -2343,8 +2524,8 @@ Errore hau jasotzen baduzu, merkatariei BIP21-arekin bateragarria den URI bat em
         <translation type="unfinished">Helbide Lokalak</translation>
     </message>
     <message>
-        <source>Network addresses that your Bitcoin node is currently using to communicate with other nodes.</source>
-        <translation type="unfinished">Zure Bitcoin nodoak beste nodoekin komunikatzeko une honetan erabiltzen dituen sare-helbideak.</translation>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation type="unfinished">Zure ConnectCoin nodoak beste nodoekin komunikatzeko une honetan erabiltzen dituen sare-helbideak.</translation>
     </message>
     <message>
         <source>Block chain</source>
@@ -2783,6 +2964,50 @@ Kontsola hau erabiltzeko informazio gehiago nahi izanez gero, idatzi .
         <source>Unknown</source>
         <translation type="unfinished">Ezezaguna</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Ez dago erabilgarri</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2799,8 +3024,8 @@ Kontsola hau erabiltzeko informazio gehiago nahi izanez gero, idatzi .
         <translation type="unfinished">&amp;Mezua:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">Ordainketa eskaerari erants dakiokeen mezu aukerakoa, eskaera irekitzen denean bistaratuko dena. Oharra: mezua ez da Bitcoin sarean zehar bidaliko ordainketarekin batera.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">Ordainketa eskaerari erants dakiokeen mezu aukerakoa, eskaera irekitzen denean bistaratuko dena. Oharra: mezua ez da ConnectCoin sarean zehar bidaliko ordainketarekin batera.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -3096,8 +3321,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
 Oharra: Komisioa byte bakoitzeko kalkulatzen denez, "100 satoshi kvB bakoitzeko" komisio-tasa batek, 500 byte birtualeko (1 kvB-ren erdia) transakzio baten kasuan, azken batean 50 satoshiko komisioa emango luke.</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
-        <translation type="unfinished">Transakzio-bolumena bloketan dagoen espazioa baino txikiagoa denean, meatzaileek zein nodo errepikatzaileek gutxieneko komisio bat ezar dezakete. Komisio horretara mugatzea egokia izan daiteke, baina kontuan izan: Bitcoin transakzioen eskaera sarearen gaitasuna baino handiagoa denean, gutxieneko komisioa duten transakzioak inoiz ez baieztatzeko arriskua dago.</translation>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation type="unfinished">Transakzio-bolumena bloketan dagoen espazioa baino txikiagoa denean, meatzaileek zein nodo errepikatzaileek gutxieneko komisio bat ezar dezakete. Komisio horretara mugatzea egokia izan daiteke, baina kontuan izan: ConnectCoin transakzioen eskaera sarearen gaitasuna baino handiagoa denean, gutxieneko komisioa duten transakzioak inoiz ez baieztatzeko arriskua dago.</translation>
     </message>
     <message>
         <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
@@ -3182,8 +3407,8 @@ Oharra: Komisioa byte bakoitzeko kalkulatzen denez, "100 satoshi kvB bakoitzeko"
         <translation type="unfinished">Sortu sinatu gabea</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation type="unfinished">Partzialki Sinatutako Bitcoin Transakzio (PSBT) bat sortzen du, adibidez, lineaz kanpoko %1 zorro batekin edo PSBT bateragarria den hardware-zorro batekin erabiltzeko.</translation>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation type="unfinished">Partzialki Sinatutako ConnectCoin Transakzio (PSBT) bat sortzen du, adibidez, lineaz kanpoko %1 zorro batekin edo PSBT bateragarria den hardware-zorro batekin erabiltzeko.</translation>
     </message>
     <message>
         <source>%1 to '%2'</source>
@@ -3238,9 +3463,9 @@ Oharra: Komisioa byte bakoitzeko kalkulatzen denez, "100 satoshi kvB bakoitzeko"
         <translation type="unfinished">Komisioa geroago handitu dezakezu (Replace-By-Fee seinaleztapena, BIP-125).</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
-        <translation type="unfinished">Mesedez, berrikusi zure transakzio-proposamena. Honek Zati Batez Sinatutako Bitcoin Transakzio bat (PSBT) sortuko du, eta hori gorde edo kopiatu dezakezu, ondoren sinatzeko, adibidez, lineaz kanpoko %1 zorro batekin edo PSBT bateragarria den hardware zorro batekin.</translation>
+        <translation type="unfinished">Mesedez, berrikusi zure transakzio-proposamena. Honek Zati Batez Sinatutako ConnectCoin Transakzio bat (PSBT) sortuko du, eta hori gorde edo kopiatu dezakezu, ondoren sinatzeko, adibidez, lineaz kanpoko %1 zorro batekin edo PSBT bateragarria den hardware zorro batekin.</translation>
     </message>
     <message>
         <source>%1 from wallet '%2'</source>
@@ -3252,10 +3477,10 @@ Oharra: Komisioa byte bakoitzeko kalkulatzen denez, "100 satoshi kvB bakoitzeko"
         <translation type="unfinished">Transakzio hau sortu nahi duzu?</translation>
     </message>
     <message>
-        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
         <translation type="unfinished">Euskara Jasoa dijo:
-Mesedez, berrikusi zure transakzioa. Transakzio hau sor eta bidali dezakezu, edo bestela, Partzialki Sinatutako Bitcoin Transakzio (PSBT) bat sor dezakezu; hori gorde edo kopiatu, eta ondoren, adibidez, lineaz kanpoko %1 zorro batekin edo PSBT bateragarria den hardware-zorro batekin sinatu.</translation>
+Mesedez, berrikusi zure transakzioa. Transakzio hau sor eta bidali dezakezu, edo bestela, Partzialki Sinatutako ConnectCoin Transakzio (PSBT) bat sor dezakezu; hori gorde edo kopiatu, eta ondoren, adibidez, lineaz kanpoko %1 zorro batekin edo PSBT bateragarria den hardware-zorro batekin sinatu.</translation>
     </message>
     <message>
         <source>Please, review your transaction.</source>
@@ -3330,8 +3555,8 @@ Mesedez, berrikusi zure transakzioa. Transakzio hau sor eta bidali dezakezu, edo
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">Abisua: Bitcoin helbide baliogabea</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">Abisua: ConnectCoin helbide baliogabea</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -3348,6 +3573,26 @@ Mesedez, berrikusi zure transakzioa. Transakzio hau sor eta bidali dezakezu, edo
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(etiketarik ez)</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Zehaztu transakzioaren tamaina birtualaren kB (1.000 byte) bakoitzeko komisio pertsonalizatua.
+
+Oharra: komisioa byte bakoitzeko kalkulatzen denez, «100 connect kvB bakoitzeko» tasak 50 connect-eko komisioa baino ez luke emango 500 byte birtualeko transakzio batean (1 kvB-ren erdia).</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>Uneko gutxieneko komisioa erabiltzen. Berrespen-denbora ez da kalkulatzen.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>Komisioa geroago handitu dezakezu.</translation>
     </message>
 </context>
 <context>
@@ -3369,8 +3614,8 @@ Mesedez, berrikusi zure transakzioa. Transakzio hau sor eta bidali dezakezu, edo
         <translation type="unfinished">Aukeratu lehenago aukeraturiko helbidea</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">Ordaina bidaltzeko Bitcoin helbidea</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">Ordaina bidaltzeko ConnectCoin helbidea</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -3405,8 +3650,20 @@ Mesedez, berrikusi zure transakzioa. Transakzio hau sor eta bidali dezakezu, edo
         <translation type="unfinished">Sartu helbide honetarako etiketa bat erabilitako helbideen zerrendara gehitzeko</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">Bitcoin: URIari erantsitako mezua, transakzioarekin batera gordeko dena zure kontsultarako. Oharra: Mezu hau ez da Bitcoin sarean zehar bidaliko.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">ConnectCoin: URIari erantsitako mezua, transakzioarekin batera gordeko dena zure kontsultarako. Oharra: Mezu hau ez da ConnectCoin sarean zehar bidaliko.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Komisioa bidaltzen den zenbatekotik kenduko da. Hartzaileak zenbatekoaren eremuan sartutakoa baino ConnectCoin gutxiago jasoko du. Hartzaile bat baino gehiago hautatzen bada, komisioa berdin banatzen da.</translation>
     </message>
 </context>
 <context>
@@ -3435,8 +3692,8 @@ Mesedez, berrikusi zure transakzioa. Transakzio hau sor eta bidali dezakezu, edo
         <translation type="unfinished">Mezuak edo akordioak sinatu ditzakezu zure jatorrizko (P2PKH) helbideekin, helbide horietara bidalitako bitcoinak jasotzeko gaitasuna duzula frogatzeko. Kontuz ibili mezu lauso edo ausazkoak sinatzean, phishing erasoei esker zure identitatea lapurtu nahi dizuten iruzurrezko eskaerak izan baitaitezke. Sinatu soilik xehetasun osoak dituzten eta ados zauden adierazpenak.</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">Mezua sinatzeko erabiliko den Bitcoin helbidea</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">Mezua sinatzeko erabiliko den ConnectCoin helbidea</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3459,8 +3716,8 @@ Mesedez, berrikusi zure transakzioa. Transakzio hau sor eta bidali dezakezu, edo
         <translation type="unfinished">Kopiatu uneko sinadura arbelean</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation type="unfinished">Sinatu mezua Bitcoin helbide horren jabe zarela frogatzeko</translation>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation type="unfinished">Sinatu mezua ConnectCoin helbide horren jabe zarela frogatzeko</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -3483,8 +3740,8 @@ Mesedez, berrikusi zure transakzioa. Transakzio hau sor eta bidali dezakezu, edo
         <translation type="unfinished">Sartu hartzailearen helbidea, mezua (ziurtatu lerro-jauziak, zuriuneak, tabulazioak eta abar zehatz-mehatz kopiatzen dituzula) eta sinadura behean, mezua egiaztatzeko. Kontuz ibili sinadurari sinatutako mezuan agertzen ez diren esanahi gehigarririk ematen ez diogula, erdiko gizonaren (man-in-the-middle) eraso baten biktima ez izateko. Kontuan izan honek soilik frogatzen duela sinatzaileak helbide horrekin jasotzen duela; ez du transakziorik bidali duenik frogatzen!</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">Mezua sinatzeko erabili zen Bitcoin helbidea</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">Mezua sinatzeko erabili zen ConnectCoin helbidea</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -3495,8 +3752,8 @@ Mesedez, berrikusi zure transakzioa. Transakzio hau sor eta bidali dezakezu, edo
         <translation type="unfinished">Mezua sinatzean emandako sinadura</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">Egiaztatu mezua, zehaztutako Bitcoin helbidearekin sinatua izan zela bermatzeko</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">Egiaztatu mezua, zehaztutako ConnectCoin helbidearekin sinatua izan zela bermatzeko</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3561,6 +3818,18 @@ Mesedez, berrikusi zure transakzioa. Transakzio hau sor eta bidali dezakezu, edo
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">Mezua egiaztatua.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Mezuak edo akordioak zure helbide zaharrekin (P2PKH) sinatu ditzakezu, haietara bidalitako ConnectCoin funtsak jaso ditzakezula frogatzeko. Ez sinatu ezer lausorik edo ausazkorik, phishing-erasoek zure nortasuna sinaduraren bidez ematera engainatu baitezakete. Sinatu soilik ados zauden adierazpen zehatzak.</translation>
     </message>
 </context>
 <context>
@@ -3843,6 +4112,10 @@ Mesedez, berrikusi zure transakzioa. Transakzio hau sor eta bidali dezakezu, edo
         <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
         <translation>Erabiltzaileak zehaztutako transakzioaren asmoa/helburua, edo P2C domeinua.</translation>
     </message>
+    <message>
+        <source>(n/a)</source>
+        <translation>(ez dago erabilgarri)</translation>
+    </message>
 </context>
 <context>
     <name>TransactionView</name>
@@ -3999,6 +4272,10 @@ Mesedez, berrikusi zure transakzioa. Transakzio hau sor eta bidali dezakezu, edo
     <message>
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>Sartu helbidea, P2C domeinua, transakzioaren identifikatzailea edo etiketa bilatzeko</translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
     </message>
 </context>
 <context>
@@ -4191,8 +4468,8 @@ Joan Fitxategia &gt; Ireki Zorro menura zorro bat kargatzeko.
         <translation type="unfinished">Errorea: Dumpfile identifikatzaile erregistroa okerra da. Lortu "%s", espero zen "%s".</translation>
     </message>
     <message>
-        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
-        <translation type="unfinished">Errorea: Dump fitxategiaren bertsioa ez da onartzen. Bitcoin-wallet honen bertsio honek soilik 1. bertsioko dump fitxategiak onartzen ditu. Jasotako dump fitxategiak %s bertsioa du.</translation>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Errorea: Dump fitxategiaren bertsioa ez da onartzen. ConnectCoin-wallet honen bertsio honek soilik 1. bertsioko dump fitxategiak onartzen ditu. Jasotako dump fitxategiak %s bertsioa du.</translation>
     </message>
     <message>
         <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
@@ -4892,7 +5169,7 @@ Ezin izan da zorroaren babeskopia berreskuratu</translation>
     </message>
     <message>
         <source>Prune mode is incompatible with -txindex.</source>
-        <translation type="unfinished">Moztu modua -txindexekin bateragarria ez da.</translation>
+        <translation>Mozketa modua ez da bateragarria -txindex aukerarekin.</translation>
     </message>
     <message>
         <source>Pruning blockstore…</source>
@@ -5205,6 +5482,132 @@ Mesedez, saiatu softwarearen azken bertsioa exekutatzen.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Ezarpenen fitxategia ezin izan da idatzi</translation>
+    </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>Itzuli beharreko diruaren helmugak 1 motako P2PK (bech32m) helmuga izan behar du</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin-ek 1 motako P2PK (bech32m) helbideak soilik onartzen ditu</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin-ek 1 motako P2PK (bech32m) helbideak soilik onartzen ditu soberakina itzultzeko</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>ConnectCoin transakzioek 1 motako baliozko helmugak edo 2 motako PAY_TO_CONNECT irteerak behar dituzte</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>ConnectCoin-en 1 motako irteerek SIGHASH_DEFAULT soilik onartzen dute</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>Sarrera ez da SIGHASH_DEFAULT erabiltzen duen 1 motako gastu osoa</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>Sarrerak P2C frogaren lekuko-datu osoak behar ditu</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>Sare nagusia ez da abiarazi: ez dago sorrera-blokerik zehaztuta. Erabili -testnet4 proba publikoetarako edo -regtest tokiko probetarako.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>Garapen-konpilazio honetarako ez da konfiguratu proiektuaren jabetzako iturburu-kodearen URL publikorik.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Ez dago nahikoa fitxategi-deskribatzailerik erabilgarri. Saiatu -rpcmaxconnections murrizten edo %d balio lehenetsia erabiltzen</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>%s erabilgarria iruditzen bazaizu, lagundu proiektuan.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Aintzat hartu %s (%s) edo %s (%s) aldatzea.</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf zaharkituta dago eta erabat kenduko da hurrengo bertsioan.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>Barne-errore larri bat gertatu da; ikusi %s xehetasunetarako: %s</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>Ezin izan dira txertatutako asmap datuak irakurri</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>Txertatutako asmap datuak ez daude erabilgarri</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Errorea: ezin izan da %s transakzioa behatzeko soilik den diru-zorroan gehitu</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Errorea: ezin izan da '%s' fitxategia sortu</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Errorea: esportazioaren '%s' helmuga badago lehendik</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Errorea: esportazioaren helmuga ezin da hutsik egon</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Errorea: ezin izan da behatzeko soilik den diru-zorro berria sortu. %s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Errorea: ezin izan da esportatutako diru-zorroa idatzi</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Errorea: diru-zorroak ez du esportatzeko deskriptorerik</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Errorea: ezin da datu-basearen transakzioa berretsi behatzeko soilik den diru-zorroa esportatzeko</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Errorea: ezin da datu-basearen transakzioa exekutatu behatzeko soilik den %s diru-zorro berriarentzat</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>Komisio-tasa (%s) ezarritako gutxieneko komisio-tasa (%s) baino txikiagoa da.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>Inausketa-modua ez da bateragarria -txospenderindex aukerarekin.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>-testactivationheight aukera ezin da sare nagusian erabili.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>-vbparams aukera ezin da sare nagusian erabili.</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>Guztizkoak zure saldoa gainditzen du %s transakzio-komisioa gehitzean.</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Ezin izan da deskriptoreen cachea idatzi</translation>
     </message>
 </context>
 <context>
@@ -5553,7 +5956,92 @@ Erroko ziurtagirien bertsioa: %2</translation>
     <name>MiningPage</name>
     <message>
         <source>Optional: empty uses this wallet</source>
-        <translation>Aukerakoa: hutsik badago, zorro hau erabiltzen da</translation>
+        <translation>Aukerakoa: hutsik utzita diru-zorro hau erabiltzen da</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPU hariak:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Ezin izan da sari-helbiderik sortu. Egiaztatu diru-zorroak jasotzeko helbideak sor ditzakeela.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Errorea</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>FAST moduak 2 GiB inguruko RandomX memoria partekatzen du baliozkotzearekin. Hari gehiagok CPU baliabide eta elektrizitate gehiago erabiltzen dute; utzi ahalmena nodoarentzat. Datu-multzoa hasieratzeko denbora behar izan daiteke.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Egin proba-sareko blokeen meatzaritza CPUarekin RandomX erabiliz. Meatzaritza itzalita dago abiarazi arte. Nodo honetako diru-zorro guztiek meatzari bera partekatzen dute, eta hark lanean jarraitzen du fitxaz aldatzean edo diru-zorro bat ixtean.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Meatzaritza</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Meatzaritza / RandomX prestatzen</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Diru-zorro honetako helbide berria</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Sare honetako sari-helbidea</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Sari-helbidea:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Hasi meatzaritza</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Abiarazten</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Egoera: %1
+Hash-tasa: %2 H/s
+Hashak: %3 | Onartutako blokeak: %4
+Sari-helbide aktiboa: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Gelditu meatzaritza</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Geldituta</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Gelditzen (uneko lanaren zain)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Nodoa sinkronizatu arte zain</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Abisua: %1 meatzaritza-harik detektatutako %2 CPU logikoak gainditzen dituzte. Horrek hash-tasa murriztu eta nodoa moteldu dezake.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
     </message>
 </context>
 </TS>

@@ -23,6 +23,7 @@ class WalletTests : public QObject
 private Q_SLOTS:
     void walletTests();
     void p2cTranslations();
+    void connectcoinTranslations();
     void p2cTests();
     void miningPage();
 };

@@ -54,11 +54,11 @@
         <translation type="unfinished">&amp; પસંદ કરો</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation type="unfinished">આ તમારા ચુકવણી કરવા માટે ના સરનામાં છે, હંમેશા કિંમત અને મોકલવાના ના સરનામાં ચકાસી લેવા સિક્કા આપતા પહેલા.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">આ તમારુ ચૂકવણું લેવા માટે નું સરનામા છે. નવું સરનામું બનાવા માટે "મેળવવા" માટે ની ટેબ માં "ચૂકવણું લેવા માટે નવું સરનામુ બનાવો" બટન વાપરો.
 ડિજિટલી સહી કરવા માટે 'legacy એટલેકે જુના પ્રકાર નુ' પ્રકાર નું સરનામું હોવું જરૂરી છે.</translation>
@@ -100,6 +100,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">નિકાસ ની પ્ર્રાક્રિયા નિષ્ફળ ગયેલ છે</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the clipboard</source>
+        <translation>હાલમાં પસંદ કરેલું સરનામું ક્લિપબોર્ડ પર નકલ કરો</translation>
     </message>
 </context>
 <context>
@@ -160,7 +164,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">એન્ક્રિપ્શન ખાતરી કરો </translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
         <translation type="unfinished">ચેતવણી: જો તમે તમારા વૉલેટને એન્ક્રિપ્ટ કરો છો અને તમારો પાસફ્રેઝ ખોવાઈ જાય છે, &lt;b&gt; તો તમે તમારા બધા બિટકોઇન્સ ગુમાવશો&lt;/b&gt;!</translation>
     </message>
     <message>
@@ -173,7 +177,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation type="unfinished">વૉલેટ માટે નવો પાસફ્રેઝ દાખલ કરો. &lt;br&gt; કૃપા કરીને  &lt;b&gt; દસ અથવા વધુ અજાન્યા અક્ષરો &lt;/2&gt; અથવા &lt;b&gt; આઠ અથવા વધુ શબ્દોના પાસફ્રેઝનો ઉપયોગ કરો &lt;/b&gt; .</translation>
+        <translation>વૉલેટ માટે નવો પાસફ્રેઝ દાખલ કરો.&lt;br/&gt;કૃપા કરીને &lt;b&gt;દસ કે તેથી વધુ રેન્ડમ અક્ષરો&lt;/b&gt; અથવા &lt;b&gt;આઠ કે તેથી વધુ શબ્દો&lt;/b&gt; ધરાવતો પાસફ્રેઝ વાપરો.</translation>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase for the wallet.</source>
@@ -188,7 +192,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">પાછળ </translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
         <translation type="unfinished">યાદ રાખો કે તમારા વૉલેટને એન્ક્રિપ્ટ કરવાથી તમારા કમ્પ્યુટરને સંક્રમિત કરતા માલવેર દ્વારા ચોરાઈ જવાથી તમારા બિટકોઈનને સંપૂર્ણપણે સુરક્ષિત કરી શકાશે નહીં.</translation>
     </message>
     <message>
@@ -323,8 +327,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">રકમ</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Bitcoin સરનામું દાખલ કરો (દા.ત. %1 )</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">ConnectCoin સરનામું દાખલ કરો (દા.ત. %1 )</translation>
     </message>
     <message>
         <source>Unroutable</source>
@@ -402,28 +406,101 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n દિવસ</numerusform>
+            <numerusform>%n દિવસ</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n અઠવાડિયું</numerusform>
+            <numerusform>%n અઠવાડિયાં</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n વર્ષ</numerusform>
+            <numerusform>%n વર્ષ</numerusform>
         </translation>
     </message>
     <message>
         <source>default wallet</source>
         <translation type="unfinished">મૂળભૂત વૉલેટ</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 અને %2</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 દિવસ</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 કલાક</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 મિનિટ</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 મિલિસેકન્ડ</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 સેકન્ડ</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>ખાનગી પ્રસારણ</translation>
     </message>
 </context>
 <context>
@@ -494,7 +571,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">પ્રોક્સી &lt;b&gt;સક્ષમ છે &lt;/b&gt; : %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
+        <source>Send coins to a ConnectCoin address</source>
         <translation type="unfinished">બિટકોઈન એડ્રેસ પર સિક્કા મોકલો</translation>
     </message>
     <message>
@@ -538,7 +615,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">સહી&amp;સંદેશ...</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
         <translation type="unfinished">તમારા બિટકોઈન સરનામાંઓ સાથે તમે તેમના માલિક છો તે સાબિત કરવા માટે સંદેશાઓ પર સહી કરો</translation>
     </message>
     <message>
@@ -546,8 +623,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;સંદેશ ચકાસો...</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">સંદેશાઓની ખાતરી કરવા માટે કે તેઓ નિર્દિષ્ટ Bitcoin સરનામાંઓ સાથે સહી કરેલ છે તેની ખાતરી કરો</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">સંદેશાઓની ખાતરી કરવા માટે કે તેઓ નિર્દિષ્ટ ConnectCoin સરનામાંઓ સાથે સહી કરેલ છે તેની ખાતરી કરો</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -606,7 +683,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">સાથીદારોએ સાથે જોડાઈ…</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
         <translation type="unfinished">ચુકવણીની વિનંતી કરો (QR કોડ અને બિટકોઈન જનરેટ કરે છે: URI)</translation>
     </message>
     <message>
@@ -661,7 +738,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">આજ સુધીનુ</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
         <translation type="unfinished">આંશિક રીતે સહી કરેલ બિટકોઈન ટ્રાન્ઝેક્શન લોડ કરો</translation>
     </message>
     <message>
@@ -669,7 +746,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;ક્લિપબોર્ડ માંથી PSBT લોડ કરો...</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
         <translation type="unfinished">ક્લિપબોર્ડથી આંશિક રીતે સહી કરેલ બિટકોઈન ટ્રાન્ઝેક્શન લોડ કરો</translation>
     </message>
     <message>
@@ -689,7 +766,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;પ્રાપ્ત સરનામાં</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
+        <source>Open a connectcoin: URI</source>
         <translation type="unfinished">બીટકોઈન ખોલો: URI</translation>
     </message>
     <message>
@@ -727,7 +804,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">વૉલેટ સ્થાનાંતરિત કરો</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
         <translation type="unfinished">સંભવિત બિટકોઈન કમાન્ડ-લાઇન વિકલ્પો સાથે સૂચિ મેળવવા માટે મદદ સંદેશ બતાવો %1 </translation>
     </message>
     <message>
@@ -787,7 +864,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp; કેવી રીતે</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
             <numerusform>1%n બિટકોઈન નેટવર્ક સાથે સક્રિય જોડાણ(ઓ).</numerusform>
@@ -901,6 +978,71 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>pay-to-connect ઇનામો બનાવો</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;માઇનિંગ</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>CPU માઇનિંગ નિયંત્રિત કરો</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>બધી ફાઇલો</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>નિકાસમાં ભૂલ</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>નિકાસ સફળ થઈ</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>હાલના વૉલેટનું માત્ર-નિરીક્ષણ સંસ્કરણ નિકાસ કરો, જેને બીજા નોડ પર પુનઃસ્થાપિત કરી શકાય.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>માત્ર-નિરીક્ષણ વૉલેટ નિકાસ કરો</translation>
+    </message>
+    <message>
+        <source>Invalid Wallet Name</source>
+        <translation>વૉલેટનું નામ અમાન્ય છે</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>વૉલેટ પુનઃસ્થાપિત કરો અને સ્થળાંતર કરો</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>વૉલેટનો બૅકઅપ પુનઃસ્થાપિત કરો અને સ્થળાંતર કરો</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>વૉલેટ ફાઇલ પુનઃસ્થાપિત કરો અને સ્થળાંતર કરો…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>માત્ર-નિરીક્ષણ વૉલેટની નિકાસ સાચવો</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>વૉલેટની નિકાસ અહીં થઈ છે: </translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>વૉલેટનું નામ ખાલી ન હોઈ શકે</translation>
     </message>
 </context>
 <context>
@@ -1044,6 +1186,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(change)</source>
         <translation type="unfinished">(બદલો)</translation>
     </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>દરેક ઇનપુટ દીઠ +/- %1 connect જેટલો ફેરફાર થઈ શકે છે.</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1146,6 +1292,42 @@ The migration process will create a backup of the wallet before migrating. This 
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">સ્થળાંતર સફળ</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>શું તમે ખરેખર વૉલેટ ફાઇલ &lt;i&gt;%1&lt;/i&gt;ને &lt;i&gt;%2&lt;/i&gt; તરીકે પુનઃસ્થાપિત કરીને તેનું સ્થળાંતર કરવા માંગો છો?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>જો નોડમાં જૂના બ્લોકો કાપી કાઢવામાં આવ્યા હોય અને વૉલેટ તે ઊંચાઈ પહેલાં બનાવવામાં આવ્યું હોય, તો સ્થળાંતરિત વૉલેટ લોડ કરવાનો પ્રયાસ સ્થળાંતર પ્રક્રિયાને નિષ્ફળ કરી શકે છે.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>સ્થળાંતર પછી વૉલેટ લોડ કરો</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>વૉલેટ પુનઃસ્થાપિત કરો અને સ્થળાંતર કરો</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>વૉલેટ પુનઃસ્થાપિત કરવાથી બૅકઅપ ફાઇલ વૉલેટોની ડિરેક્ટરીમાં નકલ થશે અને પ્રમાણભૂત વૉલેટ ડિરેક્ટરી માળખામાં મૂકવામાં આવશે. મૂળ ફાઇલ બદલાશે નહીં.
+
+સ્થળાંતર કરવાથી પુનઃસ્થાપિત વૉલેટ એક અથવા વધુ ડિસ્ક્રિપ્ટર વૉલેટમાં રૂપાંતરિત થશે. નવો વૉલેટ બૅકઅપ બનાવવો પડશે.
+આ વૉલેટમાં માત્ર-નિરીક્ષણ સ્ક્રિપ્ટ હશે તો તે સ્ક્રિપ્ટ ધરાવતું નવું વૉલેટ બનાવવામાં આવશે.
+આ વૉલેટમાં ઉકેલી શકાય તેવી, પરંતુ નિરીક્ષણ ન થતી સ્ક્રિપ્ટ હશે તો તે ધરાવતું બીજું નવું વૉલેટ બનાવવામાં આવશે.
+
+સ્થળાંતર શરૂ થાય તે પહેલાં પ્રક્રિયા વૉલેટનો બૅકઅપ બનાવશે. આ બૅકઅપ ફાઇલનું નામ &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak હશે અને તે આ વૉલેટની ડિરેક્ટરીમાં મળશે. સ્થળાંતર ખોટું થાય તો "વૉલેટ પુનઃસ્થાપિત કરો" સુવિધાથી બૅકઅપ પુનઃસ્થાપિત કરી શકાય છે.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>સ્થળાંતર પછી વૉલેટ લોડ થયું નથી. તમે તેને "ફાઇલ &gt; વૉલેટ ખોલો" મેનુમાંથી ખોલી શકો છો.</translation>
     </message>
 </context>
 <context>
@@ -1283,6 +1465,10 @@ The migration process will create a backup of the wallet before migrating. This 
         <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
         <translation type="unfinished">બાહ્ય હસ્તાક્ષર આધાર વિના સંકલિત (બાહ્ય હસ્તાક્ષર માટે જરૂરી)</translation>
     </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>ખાલી વૉલેટ બનાવો. ખાલી વૉલેટમાં શરૂઆતમાં ખાનગી કીઓ કે સ્ક્રિપ્ટ હોતી નથી. પછીથી ડિસ્ક્રિપ્ટરો દ્વારા ખાનગી કીઓ અને સરનામાં આયાત કરી શકાય છે.</translation>
+    </message>
 </context>
 <context>
     <name>EditAddressDialog</name>
@@ -1319,7 +1505,7 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">મોકલવાનું સરનામું સંપાદિત કરો</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
         <translation type="unfinished">દાખલ કરેલ સરનામું "%1" માન્ય બીટકોઈન સરનામું નથી.</translation>
     </message>
     <message>
@@ -1435,7 +1621,7 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">કસ્ટમ ડેટા ડિરેક્ટરીનો ઉપયોગ કરો:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
+        <source>ConnectCoin</source>
         <translation type="unfinished">બીટકોઈન </translation>
     </message>
     <message numerus="yes">
@@ -1495,6 +1681,10 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>Error</source>
         <translation type="unfinished">ભૂલ</translation>
     </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 ConnectCoin બ્લોકચેઇનની નકલ ડાઉનલોડ કરીને સંગ્રહ કરશે.</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1503,7 +1693,7 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">ફોર્મ</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
         <translation type="unfinished">તાજેતરના વ્યવહારો હજુ સુધી દેખાતા ન હોઈ શકે અને તેથી તમારા વૉલેટનું બેલેન્સ ખોટું હોઈ શકે છે. એકવાર તમારું વૉલેટ બિટકોઇન નેટવર્ક સાથે સિંક્રનાઇઝ થઈ જાય પછી આ માહિતી સાચી હશે, જેમ કે નીચે વિગતવાર છે.</translation>
     </message>
     <message>
@@ -1558,17 +1748,25 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">અજ્ઞાત. પહેલાંથી સમન્વય હેડર્સ (%1,%2 %)…</translation>
     </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>હજુ સુધી ન દર્શાવાયેલા વ્યવહારોથી અસર પામેલા ConnectCoin ભંડોળને ખર્ચવાનો પ્રયાસ નેટવર્ક સ્વીકારશે નહીં.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
+        <source>Open ConnectCoin URI</source>
         <translation type="unfinished">બિટકોઈન URI ખોલો</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">ક્લિપબોર્ડમાંથી સરનામું પેસ્ટ કરો</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1734,8 +1932,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">ઇનકમિંગ કનેક્શન્સને મંજૂરી આપો</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">SOCKS5 પ્રોક્સી દ્વારા Bitcoin નેટવર્કથી કનેક્ટ થાઓ.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">SOCKS5 પ્રોક્સી દ્વારા ConnectCoin નેટવર્કથી કનેક્ટ થાઓ.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1814,7 +2012,7 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">સિક્કા નિયંત્રણ સુવિધાઓ દર્શાવવી કે નહીં.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
         <translation type="unfinished">ટોર ઓનિયન સેવાઓ માટે અલગ SOCKS5 પ્રોક્સી દ્વારા બિટકોઇન નેટવર્ક સાથે કનેક્ટ થાઓ.</translation>
     </message>
     <message>
@@ -1896,6 +2094,50 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">પૂરું પાડવામાં આવેલ પ્રોક્સી સરનામું અમાન્ય છે.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>પૉપ-અપ સૂચનાઓ ચાલુ કરો</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>આવતા અને મોકલેલા વ્યવહારો સહિત ડેસ્કટૉપ પૉપ-અપ સૂચનાઓ બતાવો. મૂળભૂત રીતે બંધ છે. ભૂલ અને પુષ્ટિના સંવાદો ચાલુ રહે છે.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation>રાઉટરમાં ConnectCoin ક્લાયન્ટનો પોર્ટ આપમેળે ખોલો. આ ત્યારે જ કામ કરે છે જ્યારે રાઉટર PCP અથવા NAT-PMPને સમર્થન આપે અને તે સક્ષમ હોય. બાહ્ય પોર્ટ રૅન્ડમ હોઈ શકે છે.</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>જૂના બ્લોકો કાપી કાઢવાની સુવિધા સક્ષમ કરવાથી વ્યવહારો સંગ્રહવા જરૂરી ડિસ્ક જગ્યા ઘણી ઘટે છે. બધા બ્લોકોનું હજી પણ સંપૂર્ણ સત્યાપન થાય છે. જૂના બ્લોકનો ડેટા કાઢી નાખતા પહેલાં વૉલેટ સમન્વિત રહે તે માટે, આ સુવિધા સક્ષમ હોય ત્યારે વૉલેટ શરૂઆતમાં લોડ કરીને સક્રિય રાખવા જોઈએ; કાઢી નાખેલા ડેટાથી પાછળ રહી ગયેલા વૉલેટને ફરી ઇન્ડેક્સ બનાવવાની જરૂર પડી શકે છે. આ સેટિંગ પાછું ફેરવવા આખી બ્લોકચેઇન ફરી ડાઉનલોડ કરવી પડશે.</translation>
+    </message>
+    <message>
+        <source>Map port using PCP or NA&amp;T-PMP</source>
+        <translation>PCP અથવા NA&amp;T-PMP દ્વારા પોર્ટ મેપ કરો</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>-popupnotifications અથવા connectcoin.confમાં popupnotifications દ્વારા સેટ થાય છે.</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1911,7 +2153,7 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">ફોર્મ</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
         <translation type="unfinished">પ્રદર્શિત માહિતી જૂની હોઈ શકે છે. કનેક્શન સ્થાપિત થયા પછી તમારું વૉલેટ આપમેળે બિટકોઇન નેટવર્ક સાથે સિંક્રનાઇઝ થાય છે, પરંતુ આ પ્રક્રિયા હજી પૂર્ણ થઈ નથી.</translation>
     </message>
     <message>
@@ -2003,9 +2245,9 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n ઇનપુટ પર સહી થઈ છે, પરંતુ હજુ વધુ સહીઓ જરૂરી છે.</numerusform>
+            <numerusform>%n ઇનપુટ પર સહી થઈ છે, પરંતુ હજુ વધુ સહીઓ જરૂરી છે.</numerusform>
         </translation>
     </message>
     <message>
@@ -2067,9 +2309,9 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>વ્યવહારમાં %n સહી વગરનું ઇનપુટ છે.</numerusform>
+            <numerusform>વ્યવહારમાં %n સહી વગરના ઇનપુટ છે.</numerusform>
         </translation>
     </message>
     <message>
@@ -2108,7 +2350,7 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">ચુકવણી વિનંતી ભૂલ</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
         <translation type="unfinished">બિટકોઇન શરૂ કરી શકતા નથી: ક્લિક-ટુ-પે હેન્ડલર</translation>
     </message>
     <message>
@@ -2116,8 +2358,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">URI હેન્ડલિંગ</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin://' એ માન્ય URI નથી. તેના બદલે 'bitcoin:' નો ઉપયોગ કરો.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin://' એ માન્ય URI નથી. તેના બદલે 'connectcoin:' નો ઉપયોગ કરો.</translation>
     </message>
     <message>
         <source>Cannot process payment request because BIP70 is not supported.
@@ -2128,8 +2370,8 @@ BIP70 માં વ્યાપક સુરક્ષા ખામીઓને �
 જો તમને આ ભૂલ મળી રહી હોય તો તમારે વેપારીને BIP21 સુસંગત URI પ્રદાન કરવાની વિનંતી કરવી જોઈએ.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">URI વિશ્લેષિત કરી શકાતું નથી! આ અમાન્ય Bitcoin સરનામું અથવા દૂષિત URI પરિમાણોને કારણે થઈ શકે છે.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">URI વિશ્લેષિત કરી શકાતું નથી! આ અમાન્ય ConnectCoin સરનામું અથવા દૂષિત URI પરિમાણોને કારણે થઈ શકે છે.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -2286,7 +2528,7 @@ BIP70 માં વ્યાપક સુરક્ષા ખામીઓને �
         <translation type="unfinished">સ્થાનિક સરનામું</translation>
     </message>
     <message>
-        <source>Network addresses that your Bitcoin node is currently using to communicate with other nodes.</source>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
         <translation type="unfinished">નેટવર્ક સરનામાં જેનો ઉપયોગ તમારા બિટકોઇન નોડ હાલમાં અન્ય નોડ્સ સાથે વાતચીત કરવા માટે કરી રહ્યા છે.</translation>
     </message>
     <message>
@@ -2725,6 +2967,47 @@ For more information on using this console, type %6.
         <source>Unknown</source>
         <translation type="unfinished">અજ્ઞાત</translation>
     </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;કન્સોલ</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;નેટવર્ક ટ્રાફિક</translation>
+    </message>
+    <message>
+        <source>Clear console</source>
+        <translation>કન્સોલ સાફ કરો</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>ડીબગ લોગ ફાઇલ</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>આવતું:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>જતું:</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>ખાનગી પ્રસારણ: ગોપનીયતા-સંવેદનશીલ વ્યવહારો પ્રસારિત કરવા માટે અલ્પજીવી જોડાણ</translation>
+    </message>
+    <message>
+        <source>The BIP324 session ID string in hex.</source>
+        <translation>હેક્સ સ્વરૂપમાં BIP324 સત્ર IDની સ્ટ્રિંગ.</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>કુલ</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2741,8 +3024,8 @@ For more information on using this console, type %6.
         <translation type="unfinished">&amp;સંદેશ:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">ચુકવણીની વિનંતી સાથે જોડવા માટેનો વૈકલ્પિક સંદેશ, જે વિનંતી ખોલવામાં આવશે ત્યારે પ્રદર્શિત થશે. નોંધ: Bitcoin નેટવર્ક પર ચુકવણી સાથે સંદેશ મોકલવામાં આવશે નહીં.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">ચુકવણીની વિનંતી સાથે જોડવા માટેનો વૈકલ્પિક સંદેશ, જે વિનંતી ખોલવામાં આવશે ત્યારે પ્રદર્શિત થશે. નોંધ: ConnectCoin નેટવર્ક પર ચુકવણી સાથે સંદેશ મોકલવામાં આવશે નહીં.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -2832,7 +3115,11 @@ For more information on using this console, type %6.
         <source>Could not unlock wallet.</source>
         <translation type="unfinished">વૉલેટ અનલૉક કરી શકાયું નથી.</translation>
     </message>
-    </context>
+        <message>
+        <source>Could not generate new %1 address</source>
+        <translation>નવું %1 સરનામું બનાવી શકાયું નહીં</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
@@ -2859,7 +3146,35 @@ For more information on using this console, type %6.
         <source>&amp;Save Image…</source>
         <translation type="unfinished">&amp;છબી સાચવો…</translation>
     </message>
-    </context>
+        <message>
+        <source>&amp;Verify</source>
+        <translation>&amp;સત્યાપન કરો</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;સરનામું નકલ કરો</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation>લેબલ:</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation>સંદેશ:</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>ચુકવણીની માહિતી</translation>
+    </message>
+    <message>
+        <source>Request payment to %1</source>
+        <translation>%1 પર ચુકવણીની વિનંતી કરો</translation>
+    </message>
+    <message>
+        <source>Verify this address on e.g. a hardware wallet screen</source>
+        <translation>આ સરનામું, ઉદાહરણ તરીકે, હાર્ડવેર વૉલેટની સ્ક્રીન પર ચકાસો</translation>
+    </message>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -2874,7 +3189,23 @@ For more information on using this console, type %6.
         <source>(no label)</source>
         <translation type="unfinished">લેબલ નથી</translation>
     </message>
-    </context>
+        <message>
+        <source>(no amount requested)</source>
+        <translation>(કોઈ રકમ માંગી નથી)</translation>
+    </message>
+    <message>
+        <source>(no message)</source>
+        <translation>(કોઈ સંદેશ નથી)</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>સંદેશ</translation>
+    </message>
+    <message>
+        <source>Requested</source>
+        <translation>માંગેલું</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsDialog</name>
     <message>
@@ -2964,14 +3295,275 @@ For more information on using this console, type %6.
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>અંદાજે %n બ્લોકમાં પુષ્ટિ શરૂ થશે.</numerusform>
+            <numerusform>અંદાજે %n બ્લોકમાં પુષ્ટિ શરૂ થશે.</numerusform>
         </translation>
     </message>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">લેબલ નથી</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>%1 (%2 blocks)</source>
+        <translation>%1 (%2 બ્લોક)</translation>
+    </message>
+    <message>
+        <source>%1 from wallet '%2'</source>
+        <translation>'%2' વૉલેટમાંથી %1</translation>
+    </message>
+    <message>
+        <source>%1 to %2</source>
+        <translation>%2ને %1</translation>
+    </message>
+    <message>
+        <source>%1 to '%2'</source>
+        <translation>'%2'ને %1</translation>
+    </message>
+    <message>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks…)</source>
+        <translation>(સ્માર્ટ ફી હજી તૈયાર નથી. સામાન્ય રીતે આમાં થોડા બ્લોક લાગે છે…)</translation>
+    </message>
+    <message>
+        <source>A fee higher than %1 is considered an absurdly high fee.</source>
+        <translation>%1 કરતાં વધુ ફી અતિશય ઊંચી ગણવામાં આવે છે.</translation>
+    </message>
+    <message>
+        <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
+        <translation>ખૂબ ઓછી ફીથી વ્યવહાર ક્યારેય પુષ્ટિ ન પામે એવું થઈ શકે છે (ટૂલટિપ વાંચો)</translation>
+    </message>
+    <message>
+        <source>Add &amp;Recipient</source>
+        <translation>&amp;પ્રાપ્તકર્તા ઉમેરો</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>બેલેન્સ:</translation>
+    </message>
+    <message>
+        <source>Choose…</source>
+        <translation>પસંદ કરો…</translation>
+    </message>
+    <message>
+        <source>Clear &amp;All</source>
+        <translation>&amp;બધું સાફ કરો</translation>
+    </message>
+    <message>
+        <source>Confirm custom change address</source>
+        <translation>કસ્ટમ બચત-પરત સરનામાની પુષ્ટિ કરો</translation>
+    </message>
+    <message>
+        <source>Confirm send coins</source>
+        <translation>નાણાં મોકલવાની પુષ્ટિ કરો</translation>
+    </message>
+    <message>
+        <source>Confirm the send action</source>
+        <translation>મોકલવાની ક્રિયાની પુષ્ટિ કરો</translation>
+    </message>
+    <message>
+        <source>Confirmation time target:</source>
+        <translation>પુષ્ટિ માટેનું લક્ષ્ય સમય:</translation>
+    </message>
+    <message>
+        <source>Connect your hardware wallet first.</source>
+        <translation>પહેલાં તમારું હાર્ડવેર વૉલેટ જોડો.</translation>
+    </message>
+    <message>
+        <source>Cr&amp;eate Unsigned</source>
+        <translation>સહી વગરનો વ્યવહાર &amp;બનાવો</translation>
+    </message>
+    <message>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation>ઉદાહરણ તરીકે ઑફલાઇન %1 વૉલેટ અથવા PSBT-સુસંગત હાર્ડવેર વૉલેટ સાથે વાપરવા માટે આંશિક સહી કરેલો ConnectCoin વ્યવહાર (PSBT) બનાવે છે.</translation>
+    </message>
+    <message>
+        <source>Custom:</source>
+        <translation>કસ્ટમ:</translation>
+    </message>
+    <message>
+        <source>Do you want to create this transaction?</source>
+        <extracomment>Message displayed when attempting to create a transaction. Cautionary text to prompt the user to verify that the displayed transaction details represent the transaction the user intends to create.</extracomment>
+        <translation>શું તમે આ વ્યવહાર બનાવવા માંગો છો?</translation>
+    </message>
+    <message>
+        <source>Duplicate address found: addresses should only be used once each.</source>
+        <translation>સરનામું ફરી વપરાયું છે: દરેક સરનામું માત્ર એક વાર જ વાપરવું જોઈએ.</translation>
+    </message>
+    <message>
+        <source>External balance:</source>
+        <translation>બાહ્ય બેલેન્સ:</translation>
+    </message>
+    <message>
+        <source>External signer failure</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>બાહ્ય સહીકર્તા નિષ્ફળ થયો</translation>
+    </message>
+    <message>
+        <source>External signer not found</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>બાહ્ય સહીકર્તા મળ્યો નહીં</translation>
+    </message>
+    <message>
+        <source>Hide transaction fee settings</source>
+        <translation>વ્યવહાર ફીના સેટિંગ છુપાવો</translation>
+    </message>
+    <message>
+        <source>Inputs…</source>
+        <translation>ઇનપુટ…</translation>
+    </message>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>ભંડોળ અપૂરતું છે!</translation>
+    </message>
+    <message>
+        <source>PSBT saved</source>
+        <extracomment>Popup message when a PSBT has been saved to a file</extracomment>
+        <translation>PSBT સાચવાયો</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk</source>
+        <translation>PSBT ડિસ્ક પર સાચવાયો</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
+        <translation>કૃપા કરીને તમારા સૂચિત વ્યવહારની સમીક્ષા કરો. આ આંશિક સહી કરેલો ConnectCoin વ્યવહાર (PSBT) બનાવશે, જેને તમે સાચવી અથવા નકલ કરીને પછી, ઉદાહરણ તરીકે, ઑફલાઇન %1 વૉલેટ કે PSBT-સુસંગત હાર્ડવેર વૉલેટથી સહી કરી શકો છો.</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction.</source>
+        <extracomment>Text to prompt a user to review the details of the transaction they are attempting to send.</extracomment>
+        <translation>કૃપા કરીને તમારા વ્યવહારની સમીક્ષા કરો.</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
+        <translation>કૃપા કરીને તમારા વ્યવહારની સમીક્ષા કરો. તમે આ વ્યવહાર બનાવીને મોકલી શકો છો અથવા આંશિક સહી કરેલો ConnectCoin વ્યવહાર (PSBT) બનાવી શકો છો, જેને સાચવી અથવા નકલ કરીને પછી, ઉદાહરણ તરીકે, ઑફલાઇન %1 વૉલેટ કે PSBT-સુસંગત હાર્ડવેર વૉલેટથી સહી કરી શકો છો.</translation>
+    </message>
+    <message>
+        <source>Recommended:</source>
+        <translation>ભલામણ:</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation>&amp;મોકલો</translation>
+    </message>
+    <message>
+        <source>Send Coins</source>
+        <translation>નાણાં મોકલો</translation>
+    </message>
+    <message>
+        <source>Send to multiple recipients at once</source>
+        <translation>એકસાથે અનેક પ્રાપ્તકર્તાઓને મોકલો</translation>
+    </message>
+    <message>
+        <source>Set external signer script path in Options -&gt; Wallet</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>વિકલ્પો -&gt; વૉલેટમાં બાહ્ય સહીકર્તાની સ્ક્રિપ્ટનો પાથ સેટ કરો</translation>
+    </message>
+    <message>
+        <source>Sign failed</source>
+        <translation>સહી કરવાનું નિષ્ફળ થયું</translation>
+    </message>
+    <message>
+        <source>Sign on device</source>
+        <extracomment>"device" usually means a hardware wallet.</extracomment>
+        <translation>ઉપકરણ પર સહી કરો</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>વ્યવહારના વર્ચ્યુઅલ કદના દરેક kB (1,000 બાઇટ) દીઠ કસ્ટમ ફી જણાવો.
+
+નોંધ:  ફી દરેક બાઇટ દીઠ ગણાતી હોવાથી, 500 વર્ચ્યુઅલ બાઇટ (1 kvBનો અડધો ભાગ)ના વ્યવહાર માટે "દરેક kvB દીઠ 100 connects"નો દર અંતે માત્ર 50 connectsની ફી આપશે.</translation>
+    </message>
+    <message>
+        <source>The PSBT has been copied to the clipboard. You can also save it.</source>
+        <translation>PSBT ક્લિપબોર્ડ પર નકલ થયો છે. તમે તેને સાચવી પણ શકો છો.</translation>
+    </message>
+    <message>
+        <source>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</source>
+        <translation>બચત પરત મેળવવા પસંદ કરેલું સરનામું આ વૉલેટનો ભાગ નથી. તમારા વૉલેટનાં અમુક અથવા બધાં નાણાં આ સરનામે મોકલાઈ શકે છે. શું તમને ખાતરી છે?</translation>
+    </message>
+    <message>
+        <source>The amount exceeds your balance.</source>
+        <translation>રકમ તમારા બેલેન્સ કરતાં વધારે છે.</translation>
+    </message>
+    <message>
+        <source>The amount to pay must be larger than 0.</source>
+        <translation>ચૂકવવાની રકમ 0 કરતાં વધુ હોવી જોઈએ.</translation>
+    </message>
+    <message>
+        <source>The recipient address is not valid. Please recheck.</source>
+        <translation>પ્રાપ્તકર્તાનું સરનામું માન્ય નથી. ફરી ચકાસો.</translation>
+    </message>
+    <message>
+        <source>To review recipient list click "Show Details…"</source>
+        <translation>પ્રાપ્તકર્તાઓની યાદી જોવા "વિગતો બતાવો…" ક્લિક કરો</translation>
+    </message>
+    <message>
+        <source>Transaction Fee:</source>
+        <translation>વ્યવહાર ફી:</translation>
+    </message>
+    <message>
+        <source>Transaction creation failed!</source>
+        <translation>વ્યવહાર બનાવવાનું નિષ્ફળ થયું!</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>વ્યવહાર ફી</translation>
+    </message>
+    <message>
+        <source>Unsigned Transaction</source>
+        <comment>PSBT copied</comment>
+        <extracomment>Caption of "PSBT has been copied" messagebox</extracomment>
+        <translation>સહી વગરનો વ્યવહાર</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>હાલની લઘુત્તમ ફી વપરાઈ રહી છે. પુષ્ટિ સમયનો અંદાજ આપેલો નથી.</translation>
+    </message>
+    <message>
+        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until you have validated the complete chain.</source>
+        <translation>fallbackfee વાપરવાથી મોકલેલા વ્યવહારની પુષ્ટિમાં ઘણા કલાકો કે દિવસો લાગી શકે છે (અથવા ક્યારેય પુષ્ટિ ન થાય). ફી જાતે પસંદ કરવાનું વિચારો અથવા આખી ચેઇનનું સત્યાપન પૂરું થાય ત્યાં સુધી રાહ જુઓ.</translation>
+    </message>
+    <message>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation>ચેતવણી: હાલમાં ફીનો અંદાજ શક્ય નથી.</translation>
+    </message>
+    <message>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation>ચેતવણી: અમાન્ય ConnectCoin સરનામું</translation>
+    </message>
+    <message>
+        <source>Warning: Unknown change address</source>
+        <translation>ચેતવણી: અજાણ્યું બચત-પરત સરનામું</translation>
+    </message>
+    <message>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation>વ્યવહારોનું પ્રમાણ બ્લોકમાં ઉપલબ્ધ જગ્યા કરતાં ઓછું હોય ત્યારે માઇનરો અને રિલે નોડ લઘુત્તમ ફી લાગુ કરી શકે છે. માત્ર આ લઘુત્તમ ફી ચૂકવવી પૂરતી છે, પરંતુ ConnectCoin વ્યવહારોની માંગ નેટવર્કની ક્ષમતા કરતાં વધી જાય ત્યારે આથી વ્યવહાર ક્યારેય પુષ્ટિ ન પામે એવું થઈ શકે છે.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>તમે પછી ફી વધારી શકો છો.</translation>
+    </message>
+    <message>
+        <source>automatically selected</source>
+        <translation>આપમેળે પસંદ કરેલું</translation>
+    </message>
+    <message>
+        <source>per kilobyte</source>
+        <translation>કિલોબાઇટ દીઠ</translation>
     </message>
 </context>
 <context>
@@ -2984,14 +3576,214 @@ For more information on using this console, type %6.
         <source>Paste address from clipboard</source>
         <translation type="unfinished">ક્લિપબોર્ડમાંથી સરનામું પેસ્ટ કરો</translation>
     </message>
-    </context>
+        <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation>connectcoin: URI સાથે જોડાયેલો સંદેશ, જે તમારા સંદર્ભ માટે વ્યવહાર સાથે સાચવાશે. નોંધ: આ સંદેશ ConnectCoin નેટવર્ક દ્વારા મોકલાશે નહીં.</translation>
+    </message>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation>&amp;રકમ:</translation>
+    </message>
+    <message>
+        <source>Choose previously used address</source>
+        <translation>પહેલાં વપરાયેલું સરનામું પસંદ કરો</translation>
+    </message>
+    <message>
+        <source>Enter a label for this address to add it to the list of used addresses</source>
+        <translation>આ સરનામાને વપરાયેલા સરનામાંની યાદીમાં ઉમેરવા માટે તેનું લેબલ દાખલ કરો</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation>સંદેશ:</translation>
+    </message>
+    <message>
+        <source>Pay &amp;To:</source>
+        <translation>&amp;ચુકવણી મેળવનાર:</translation>
+    </message>
+    <message>
+        <source>Remove this entry</source>
+        <translation>આ નોંધ દૂર કરો</translation>
+    </message>
+    <message>
+        <source>S&amp;ubtract fee from amount</source>
+        <translation>રકમમાંથી ફી &amp;બાદ કરો</translation>
+    </message>
+    <message>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation>ચુકવણી મોકલવાનું ConnectCoin સરનામું</translation>
+    </message>
+    <message>
+        <source>The amount to send in the selected unit</source>
+        <translation>પસંદ કરેલા એકમમાં મોકલવાની રકમ</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>મોકલાતી રકમમાંથી ફી બાદ થશે. પ્રાપ્તકર્તાને તમે રકમના ક્ષેત્રમાં દાખલ કરેલા કરતાં ઓછા ConnectCoin મળશે. અનેક પ્રાપ્તકર્તા પસંદ હોય તો ફી સરખા ભાગે વહેંચાશે.</translation>
+    </message>
+    <message>
+        <source>Use available balance</source>
+        <translation>ઉપલબ્ધ બેલેન્સ વાપરો</translation>
+    </message>
+</context>
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
         <source>Paste address from clipboard</source>
         <translation type="unfinished">ક્લિપબોર્ડમાંથી સરનામું પેસ્ટ કરો</translation>
     </message>
-    </context>
+        <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>&amp;Sign Message</source>
+        <translation>સંદેશ પર &amp;સહી કરો</translation>
+    </message>
+    <message>
+        <source>&amp;Verify Message</source>
+        <translation>સંદેશનું &amp;સત્યાપન કરો</translation>
+    </message>
+    <message>
+        <source>Choose previously used address</source>
+        <translation>પહેલાં વપરાયેલું સરનામું પસંદ કરો</translation>
+    </message>
+    <message>
+        <source>Clear &amp;All</source>
+        <translation>&amp;બધું સાફ કરો</translation>
+    </message>
+    <message>
+        <source>Click "Sign Message" to generate signature</source>
+        <translation>સહી બનાવવા "સંદેશ પર સહી કરો" ક્લિક કરો</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the clipboard</source>
+        <translation>હાલની સહી ક્લિપબોર્ડ પર નકલ કરો</translation>
+    </message>
+    <message>
+        <source>Enter the message you want to sign here</source>
+        <translation>તમે સહી કરવા માંગતા હો તે સંદેશ અહીં દાખલ કરો</translation>
+    </message>
+    <message>
+        <source>Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
+        <translation>સંદેશનું સત્યાપન કરવા નીચે પ્રાપ્તકર્તાનું સરનામું, સંદેશ (લાઇન બ્રેક, ખાલી જગ્યા, ટૅબ વગેરે બરાબર નકલ કરો) અને સહી દાખલ કરો. વચ્ચેના હુમલાખોરથી છેતરાવાથી બચવા, સહી કરેલા સંદેશમાં જે લખેલું છે તેના કરતાં વધુ અર્થ સહીમાંથી કાઢશો નહીં. નોંધો કે આ માત્ર એટલું સાબિત કરે છે કે સહી કરનાર તે સરનામે નાણાં મેળવી શકે છે; તે કોઈ વ્યવહાર કોણે મોકલ્યો હતો તે સાબિત કરી શકતું નથી!</translation>
+    </message>
+    <message>
+        <source>Message signed.</source>
+        <translation>સંદેશ પર સહી થઈ.</translation>
+    </message>
+    <message>
+        <source>Message signing failed.</source>
+        <translation>સંદેશ પર સહી કરવાનું નિષ્ફળ થયું.</translation>
+    </message>
+    <message>
+        <source>Message verification failed.</source>
+        <translation>સંદેશનું સત્યાપન નિષ્ફળ થયું.</translation>
+    </message>
+    <message>
+        <source>Message verified.</source>
+        <translation>સંદેશનું સત્યાપન થયું.</translation>
+    </message>
+    <message>
+        <source>No error</source>
+        <translation>કોઈ ભૂલ નથી</translation>
+    </message>
+    <message>
+        <source>Please check the address and try again.</source>
+        <translation>કૃપા કરીને સરનામું ચકાસીને ફરી પ્રયાસ કરો.</translation>
+    </message>
+    <message>
+        <source>Please check the signature and try again.</source>
+        <translation>કૃપા કરીને સહી ચકાસીને ફરી પ્રયાસ કરો.</translation>
+    </message>
+    <message>
+        <source>Private key for the entered address is not available.</source>
+        <translation>દાખલ કરેલા સરનામાની ખાનગી કી ઉપલબ્ધ નથી.</translation>
+    </message>
+    <message>
+        <source>Reset all sign message fields</source>
+        <translation>સંદેશ પર સહી કરવાનાં બધાં ક્ષેત્ર રીસેટ કરો</translation>
+    </message>
+    <message>
+        <source>Reset all verify message fields</source>
+        <translation>સંદેશના સત્યાપનનાં બધાં ક્ષેત્ર રીસેટ કરો</translation>
+    </message>
+    <message>
+        <source>Sign &amp;Message</source>
+        <translation>&amp;સંદેશ પર સહી કરો</translation>
+    </message>
+    <message>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation>આ ConnectCoin સરનામું તમારી માલિકીનું છે તે સાબિત કરવા સંદેશ પર સહી કરો</translation>
+    </message>
+    <message>
+        <source>Signature</source>
+        <translation>સહી</translation>
+    </message>
+    <message>
+        <source>Signatures - Sign / Verify a Message</source>
+        <translation>સહીઓ - સંદેશ પર સહી / સત્યાપન</translation>
+    </message>
+    <message>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation>સંદેશ પર સહી કરવા વપરાયેલું ConnectCoin સરનામું</translation>
+    </message>
+    <message>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation>સંદેશ પર સહી કરવા વાપરવાનું ConnectCoin સરનામું</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>દાખલ કરેલું સરનામું લેગસી (P2PKH) કીનું નથી. %1ના આ સંસ્કરણમાં SegWit અને અન્ય P2PKH સિવાયના સરનામાના પ્રકારો વડે સંદેશ પર સહી કરવાનું સમર્થન નથી. સરનામું ચકાસીને ફરી પ્રયાસ કરો.</translation>
+    </message>
+    <message>
+        <source>The entered address is invalid.</source>
+        <translation>દાખલ કરેલું સરનામું અમાન્ય છે.</translation>
+    </message>
+    <message>
+        <source>The signature could not be decoded.</source>
+        <translation>સહી ડીકોડ કરી શકાઈ નહીં.</translation>
+    </message>
+    <message>
+        <source>The signature did not match the message digest.</source>
+        <translation>સહી સંદેશના ડાઇજેસ્ટ સાથે મેળ ખાતી નથી.</translation>
+    </message>
+    <message>
+        <source>The signature given when the message was signed</source>
+        <translation>સંદેશ પર સહી કરતી વખતે આપેલી સહી</translation>
+    </message>
+    <message>
+        <source>The signed message to verify</source>
+        <translation>સત્યાપન કરવાનો સહી કરેલો સંદેશ</translation>
+    </message>
+    <message>
+        <source>Verify &amp;Message</source>
+        <translation>&amp;સંદેશનું સત્યાપન કરો</translation>
+    </message>
+    <message>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation>નિર્દિષ્ટ ConnectCoin સરનામાથી સહી થઈ છે તેની ખાતરી કરવા સંદેશનું સત્યાપન કરો</translation>
+    </message>
+    <message>
+        <source>Wallet unlock was cancelled.</source>
+        <translation>વૉલેટ અનલૉક કરવાનું રદ થયું.</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>તમારા લેગસી (P2PKH) સરનામાં પર મોકલાયેલું ConnectCoin ભંડોળ તમે મેળવી શકો છો તે સાબિત કરવા, તે સરનામાંથી સંદેશો/કરારો પર સહી કરી શકો છો. અસ્પષ્ટ કે રૅન્ડમ લખાણ પર સહી કરશો નહીં; ફિશિંગ હુમલા તમને છેતરીને તમારી ઓળખ તેમને સોંપાવવાનો પ્રયાસ કરી શકે છે. તમે સંમત હો તેવાં સંપૂર્ણ વિગતવાળાં નિવેદનો પર જ સહી કરો.</translation>
+    </message>
+</context>
 <context>
     <name>TransactionDesc</name>
     <message>
@@ -3016,9 +3808,9 @@ For more information on using this console, type %6.
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>વધુ %n બ્લોક પછી પરિપક્વ થશે</numerusform>
+            <numerusform>વધુ %n બ્લોક પછી પરિપક્વ થશે</numerusform>
         </translation>
     </message>
     <message>
@@ -3029,7 +3821,137 @@ For more information on using this console, type %6.
         <source>P2C domain</source>
         <translation>P2C ડોમેન</translation>
     </message>
-    </context>
+        <message>
+        <source>%1 (Certificate was not verified)</source>
+        <translation>%1 (પ્રમાણપત્રનું સત્યાપન થયું નથી)</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents a transaction confirmed in 6 or more blocks.</extracomment>
+        <translation>%1 પુષ્ટિઓ</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents a transaction confirmed in at least one block, but less than 6 blocks.</extracomment>
+        <translation>%1/અપુષ્ટ</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is in the memory pool.</extracomment>
+        <translation>0/અપુષ્ટ, મેમરી પૂલમાં</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, not in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is not in the memory pool.</extracomment>
+        <translation>0/અપુષ્ટ, મેમરી પૂલમાં નથી</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>ટિપ્પણી</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>જમા</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>ઉધાર</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>ડીબગ માહિતી</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>બનાવેલું</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>બનાવેલા સિક્કા ખર્ચી શકાય તે પહેલાં %1 બ્લોક સુધી પરિપક્વ થવા જોઈએ. તમે આ બ્લોક બનાવ્યો ત્યારે તેને બ્લોકચેઇનમાં ઉમેરવા નેટવર્ક પર પ્રસારિત કરવામાં આવ્યો હતો. જો તે ચેઇનમાં ન જોડાય, તો તેની સ્થિતિ "સ્વીકારાયું નથી" થશે અને તેને ખર્ચી શકાશે નહીં. તમારો બ્લોક બન્યાની થોડી સેકન્ડોમાં બીજો નોડ બ્લોક બનાવે ત્યારે આવું ક્યારેક બની શકે છે.</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>ઇનપુટ</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>વેપારી</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>સંદેશ</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>ચોખ્ખી રકમ</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>આઉટપુટ ઇન્ડેક્સ</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>સ્રોત</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>સ્થિતિ</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>કુલ જમા</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>કુલ ઉધાર</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>વ્યવહાર</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>વ્યવહાર ID</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>વ્યવહાર ફી</translation>
+    </message>
+    <message>
+        <source>Transaction total size</source>
+        <translation>વ્યવહારનું કુલ કદ</translation>
+    </message>
+    <message>
+        <source>Transaction virtual size</source>
+        <translation>વ્યવહારનું વર્ચ્યુઅલ કદ</translation>
+    </message>
+    <message>
+        <source>abandoned</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an abandoned transaction.</extracomment>
+        <translation>છોડી દીધેલો</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that conflicts with a confirmed transaction.</extracomment>
+        <translation>%1 પુષ્ટિઓવાળા વ્યવહાર સાથે વિરોધાભાસમાં છે</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>ખોટું</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>લેબલ</translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>સ્વીકારાયું નથી</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>સાચું</translation>
+    </message>
+</context>
 <context>
     <name>TransactionTableModel</name>
     <message>
@@ -3056,7 +3978,71 @@ For more information on using this console, type %6.
         <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
         <translation>વપરાશકર્તાએ નક્કી કરેલો વ્યવહારનો આશય/હેતુ, અથવા P2C ડોમેન.</translation>
     </message>
-    </context>
+        <message>
+        <source>(n/a)</source>
+        <translation>(લાગુ પડતું નથી)</translation>
+    </message>
+    <message>
+        <source>Abandoned</source>
+        <translation>છોડી દીધેલો</translation>
+    </message>
+    <message>
+        <source>Amount removed from or added to balance.</source>
+        <translation>બેલેન્સમાંથી બાદ કરેલી અથવા તેમાં ઉમેરેલી રકમ.</translation>
+    </message>
+    <message>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>પુષ્ટિ થઈ (%1 પુષ્ટિઓ)</translation>
+    </message>
+    <message>
+        <source>Confirming (%1 of %2 recommended confirmations)</source>
+        <translation>પુષ્ટિ થઈ રહી છે (ભલામણ કરેલી %2માંથી %1 પુષ્ટિઓ)</translation>
+    </message>
+    <message>
+        <source>Conflicted</source>
+        <translation>વિરોધાભાસમાં</translation>
+    </message>
+    <message>
+        <source>Date and time that the transaction was received.</source>
+        <translation>વ્યવહાર પ્રાપ્ત થયાની તારીખ અને સમય.</translation>
+    </message>
+    <message>
+        <source>Generated but not accepted</source>
+        <translation>બનાવેલો, પરંતુ સ્વીકારાયેલો નથી</translation>
+    </message>
+    <message>
+        <source>Immature (%1 confirmations, will be available after %2)</source>
+        <translation>અપરિપક્વ (%1 પુષ્ટિઓ, %2 પછી ઉપલબ્ધ થશે)</translation>
+    </message>
+    <message>
+        <source>Mined</source>
+        <translation>માઇનિંગથી મળેલો</translation>
+    </message>
+    <message>
+        <source>Received from</source>
+        <translation>આના તરફથી મળેલું</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>આના વડે મળેલું</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>આને મોકલેલું</translation>
+    </message>
+    <message>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>વ્યવહારની સ્થિતિ. પુષ્ટિઓની સંખ્યા જોવા આ ક્ષેત્ર પર કર્સર રાખો.</translation>
+    </message>
+    <message>
+        <source>Type of transaction.</source>
+        <translation>વ્યવહારનો પ્રકાર.</translation>
+    </message>
+    <message>
+        <source>Unconfirmed</source>
+        <translation>અપુષ્ટ</translation>
+    </message>
+</context>
 <context>
     <name>TransactionView</name>
     <message>
@@ -3104,7 +4090,116 @@ For more information on using this console, type %6.
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>શોધવા માટે સરનામું, P2C ડોમેન, વ્યવહાર આઈડી કે લેબલ દાખલ કરો</translation>
     </message>
-    </context>
+        <message>
+        <source>&amp;Edit address label</source>
+        <translation>સરનામાનું લેબલ &amp;સંપાદિત કરો</translation>
+    </message>
+    <message>
+        <source>&amp;Show transaction details</source>
+        <translation>વ્યવહારની વિગતો &amp;બતાવો</translation>
+    </message>
+    <message>
+        <source>A&amp;bandon transaction</source>
+        <translation>વ્યવહાર &amp;છોડી દો</translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation>બધા</translation>
+    </message>
+    <message>
+        <source>Copy &amp;raw transaction</source>
+        <translation>&amp;મૂળ સ્વરૂપનો વ્યવહાર નકલ કરો</translation>
+    </message>
+    <message>
+        <source>Copy full transaction &amp;details</source>
+        <translation>વ્યવહારની સંપૂર્ણ &amp;વિગતો નકલ કરો</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>વ્યવહાર &amp;ID નકલ કરો</translation>
+    </message>
+    <message>
+        <source>Export Transaction History</source>
+        <translation>વ્યવહાર ઇતિહાસ નિકાસ કરો</translation>
+    </message>
+    <message>
+        <source>Exporting Successful</source>
+        <translation>નિકાસ સફળ થઈ</translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <source>Increase transaction &amp;fee</source>
+        <translation>વ્યવહારની &amp;ફી વધારો</translation>
+    </message>
+    <message>
+        <source>Last month</source>
+        <translation>ગયા મહિને</translation>
+    </message>
+    <message>
+        <source>Min amount</source>
+        <translation>લઘુત્તમ રકમ</translation>
+    </message>
+    <message>
+        <source>Mined</source>
+        <translation>માઇનિંગથી મળેલો</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>અન્ય</translation>
+    </message>
+    <message>
+        <source>Range:</source>
+        <translation>શ્રેણી:</translation>
+    </message>
+    <message>
+        <source>Range…</source>
+        <translation>શ્રેણી…</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>આના વડે મળેલું</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>આને મોકલેલું</translation>
+    </message>
+    <message>
+        <source>Show in %1</source>
+        <extracomment>Transactions table context menu action to show the selected transaction in a third-party block explorer. %1 is a stand-in argument for the URL of the explorer.</extracomment>
+        <translation>%1માં બતાવો</translation>
+    </message>
+    <message>
+        <source>The transaction history was successfully saved to %1.</source>
+        <translation>વ્યવહાર ઇતિહાસ %1માં સફળતાપૂર્વક સાચવાયો.</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the transaction history to %1.</source>
+        <translation>વ્યવહાર ઇતિહાસ %1માં સાચવવાનો પ્રયાસ કરતી વખતે ભૂલ થઈ.</translation>
+    </message>
+    <message>
+        <source>This month</source>
+        <translation>આ મહિને</translation>
+    </message>
+    <message>
+        <source>This week</source>
+        <translation>આ અઠવાડિયે</translation>
+    </message>
+    <message>
+        <source>This year</source>
+        <translation>આ વર્ષે</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>આજે</translation>
+    </message>
+    <message>
+        <source>to</source>
+        <translation>સુધી</translation>
+    </message>
+</context>
 <context>
     <name>WalletFrame</name>
     <message>
@@ -3115,7 +4210,35 @@ For more information on using this console, type %6.
         <source>Error</source>
         <translation type="unfinished">ભૂલ</translation>
     </message>
-    </context>
+        <message>
+        <source>Load Transaction Data</source>
+        <translation>વ્યવહાર ડેટા લોડ કરો</translation>
+    </message>
+    <message>
+        <source>No wallet has been loaded.
+Go to File &gt; Open Wallet to load a wallet.
+- OR -</source>
+        <translation>કોઈ વૉલેટ લોડ થયું નથી.
+વૉલેટ લોડ કરવા ફાઇલ &gt; વૉલેટ ખોલો પર જાઓ.
+- અથવા -</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>PSBT ફાઇલ 100 MiB કરતાં નાની હોવી જોઈએ</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>આંશિક સહી કરેલો વ્યવહાર (*.psbt)</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>PSBT ડીકોડ કરી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>ક્લિપબોર્ડમાંથી PSBT ડીકોડ કરી શકાયો નહીં (અમાન્ય base64)</translation>
+    </message>
+</context>
 <context>
     <name>WalletView</name>
     <message>
@@ -3135,6 +4258,26 @@ For more information on using this console, type %6.
         <source>Cancel</source>
         <translation type="unfinished">રદ કરો</translation>
     </message>
+    <message>
+        <source>Backup Failed</source>
+        <translation>બૅકઅપ નિષ્ફળ થયો</translation>
+    </message>
+    <message>
+        <source>Backup Successful</source>
+        <translation>બૅકઅપ સફળ થયો</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation>વૉલેટનો બૅકઅપ લો</translation>
+    </message>
+    <message>
+        <source>The wallet data was successfully saved to %1.</source>
+        <translation>વૉલેટનો ડેટા %1માં સફળતાપૂર્વક સાચવાયો.</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1.</source>
+        <translation>વૉલેટનો ડેટા %1માં સાચવવાનો પ્રયાસ કરતી વખતે ભૂલ થઈ.</translation>
+    </message>
 </context>
 <context>
     <name>bitcoin-core</name>
@@ -3142,7 +4285,1153 @@ For more information on using this console, type %6.
         <source>default wallet</source>
         <translation type="unfinished">મૂળભૂત વૉલેટ</translation>
     </message>
-    </context>
+        <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>બાકીની રકમનું ગંતવ્ય પ્રકાર-1 P2PK (bech32m) ગંતવ્ય હોવું જોઈએ</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin માત્ર પ્રકાર-1 P2PK (bech32m) સરનામાંને સમર્થન આપે છે</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin બાકીની રકમ માટે માત્ર પ્રકાર-1 P2PK (bech32m) સરનામાંને સમર્થન આપે છે</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>ConnectCoin વ્યવહારો માટે માન્ય પ્રકાર-1 ગંતવ્યો અથવા પ્રકાર-2 PAY_TO_CONNECT આઉટપુટ જરૂરી છે</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>ConnectCoinના પ્રકાર-1 આઉટપુટ માત્ર SIGHASH_DEFAULTને સમર્થન આપે છે</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>ઇનપુટ SIGHASH_DEFAULT સાથેનો સંપૂર્ણ પ્રકાર-1 ખર્ચ નથી</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>ઇનપુટ માટે P2C પુરાવાનો સંપૂર્ણ સાક્ષી ડેટા જરૂરી છે</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>મુખ્ય નેટવર્ક હજી શરૂ થયું નથી: કોઈ જિનેસિસ બ્લોક નિર્ધારિત નથી. જાહેર પરીક્ષણ માટે -testnet4 અથવા સ્થાનિક પરીક્ષણ માટે -regtest વાપરો.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>આ વિકાસ બિલ્ડ માટે પ્રોજેક્ટની માલિકીનું કોઈ જાહેર સ્રોત કોડ URL ગોઠવાયેલું નથી.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>પૂરતા ફાઇલ ડિસ્ક્રિપ્ટર ઉપલબ્ધ નથી. -rpcmaxconnections ઘટાડવાનો અથવા મૂળભૂત મૂલ્ય %d વાપરવાનો પ્રયાસ કરો</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>જો તમને %s ઉપયોગી લાગે તો કૃપા કરીને યોગદાન આપો.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+%s (%s) અથવા %s (%s) બદલવાનું વિચારો.</translation>
+    </message>
+    <message>
+        <source>
+Unable to cleanup failed migration</source>
+        <translation>
+નિષ્ફળ સ્થળાંતરના અવશેષો દૂર કરી શકાયા નહીં</translation>
+    </message>
+    <message>
+        <source>
+Unable to restore backup of wallet.</source>
+        <translation>
+વૉલેટનો બૅકઅપ પુનઃસ્થાપિત કરી શકાયો નહીં.</translation>
+    </message>
+    <message>
+        <source>%s failed to validate the -assumeutxo snapshot state. This indicates a hardware problem, or a bug in the software, or a bad software modification that allowed an invalid snapshot to be loaded. As a result of this, the node will shut down and stop using any state that was built on the snapshot, resetting the chain height from %d to %d. On the next restart, the node will resume syncing from %d without using any snapshot data. Please report this incident to %s, including how you obtained the snapshot. The invalid snapshot chainstate will be left on disk in case it is helpful in diagnosing the issue that caused this error.</source>
+        <translation>%s -assumeutxo સ્નૅપશૉટની સ્થિતિનું સત્યાપન કરવામાં નિષ્ફળ થયું. આ હાર્ડવેરની સમસ્યા, સૉફ્ટવેરની ભૂલ અથવા અમાન્ય સ્નૅપશૉટ લોડ થવા દેતા ખોટા સૉફ્ટવેર ફેરફારનું સૂચન કરે છે. પરિણામે નોડ બંધ થશે અને સ્નૅપશૉટ પર આધારિત કોઈપણ સ્થિતિનો ઉપયોગ બંધ કરીને ચેઇનની ઊંચાઈ %dથી %d પર પાછી સેટ કરશે. ફરી શરૂ કરતાં નોડ સ્નૅપશૉટના ડેટા વગર %dથી સમન્વય ચાલુ રાખશે. સ્નૅપશૉટ કેવી રીતે મેળવ્યો તેની વિગત સાથે આ ઘટના %sને જણાવો. આ ભૂલનું કારણ શોધવામાં મદદરૂપ થઈ શકે તે માટે અમાન્ય સ્નૅપશૉટનું ચેઇનસ્ટેટ ડિસ્ક પર રાખવામાં આવશે.</translation>
+    </message>
+    <message>
+        <source>%s is set very high!</source>
+        <translation>%s ખૂબ ઊંચું સેટ કરેલું છે!</translation>
+    </message>
+    <message>
+        <source>%s is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation>%s ખૂબ ઊંચું સેટ કરેલું છે! આટલી મોટી ફી એક જ વ્યવહારમાં ચૂકવાઈ શકે છે.</translation>
+    </message>
+    <message>
+        <source>%s request to listen on port %u. This port is considered "bad" and thus it is unlikely that any peer will connect to it. See doc/p2p-bad-ports.md for details and a full list.</source>
+        <translation>%s પોર્ટ %u પર સાંભળવાની વિનંતી કરે છે. આ પોર્ટ "ખરાબ" ગણાય છે, તેથી કોઈ પીઅર તેની સાથે જોડાય તેવી શક્યતા ઓછી છે. વિગતો અને સંપૂર્ણ યાદી માટે doc/p2p-bad-ports.md જુઓ.</translation>
+    </message>
+    <message>
+        <source>-maxmempool must be at least %d MB</source>
+        <translation>-maxmempool ઓછામાં ઓછું %d MB હોવું જોઈએ</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf જૂનું થઈ ગયું છે અને આગામી પ્રકાશનમાં સંપૂર્ણપણે દૂર થશે.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>%zu MiBનું dbcache માત્ર %zu MiB સિસ્ટમ મેમરી માટે ખૂબ મોટું હોઈ શકે છે.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>ગંભીર આંતરિક ભૂલ થઈ, વિગતો માટે %s જુઓ: %s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>આપેલા બ્લોકહૅશ '%s' માટે Assumeutxo ડેટા મળ્યો નહીં.</translation>
+    </message>
+    <message>
+        <source>Block verification was interrupted</source>
+        <translation>બ્લોકનું સત્યાપન અટકાવાયું</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version %d pre-selected input with a version 3 tx</source>
+        <translation>અગાઉ પસંદ કરેલું અપુષ્ટ સંસ્કરણ %dનું ઇનપુટ સંસ્કરણ 3ના વ્યવહાર વડે ખર્ચી શકાય નહીં</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version 3 pre-selected input with a version %d tx</source>
+        <translation>અગાઉ પસંદ કરેલું અપુષ્ટ સંસ્કરણ 3નું ઇનપુટ સંસ્કરણ %dના વ્યવહાર વડે ખર્ચી શકાય નહીં</translation>
+    </message>
+    <message>
+        <source>Cannot obtain a lock on directory %s. %s is probably already running.</source>
+        <translation>%s ડિરેક્ટરી પર લૉક મેળવી શકાયો નહીં. %s કદાચ પહેલેથી ચાલી રહ્યું છે.</translation>
+    </message>
+    <message>
+        <source>Cannot provide specific connections and have addrman find outgoing connections at the same time.</source>
+        <translation>ચોક્કસ જોડાણો આપવાં અને તે જ સમયે addrman પાસે આઉટગોઇંગ જોડાણો શોધાવવાં શક્ય નથી.</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>-%s સરનામું ઉકેલી શકાયું નહીં: '%s'</translation>
+    </message>
+    <message>
+        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
+        <translation>-dnsseedને false સેટ કરતી વખતે -forcednsseedને true સેટ કરી શકાય નહીં.</translation>
+    </message>
+    <message>
+        <source>Cannot set -peerblockfilters without -blockfilterindex.</source>
+        <translation>-blockfilterindex વગર -peerblockfilters સેટ કરી શકાય નહીં.</translation>
+    </message>
+    <message>
+        <source>Cannot write to directory '%s'; check permissions.</source>
+        <translation>'%s' ડિરેક્ટરીમાં લખી શકાયું નહીં; પરવાનગીઓ ચકાસો.</translation>
+    </message>
+    <message>
+        <source>Config setting for %s only applied on %s network when in [%s] section.</source>
+        <translation>%s માટેનું રૂપરેખાંકન સેટિંગ %s નેટવર્ક પર માત્ર [%s] વિભાગમાં હોય ત્યારે જ લાગુ પડે છે.</translation>
+    </message>
+    <message>
+        <source>Copyright (C) %i-%i</source>
+        <translation>કૉપિરાઇટ (C) %i-%i</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>હાર્ડવેર નિષ્ફળતાની શક્યતા દર્શાવતો બગડેલો બ્લોક મળ્યો.</translation>
+    </message>
+    <message>
+        <source>Corrupted block database detected</source>
+        <translation>બગડેલો બ્લોક ડેટાબેઝ મળ્યો</translation>
+    </message>
+    <message>
+        <source>Could not find asmap file %s</source>
+        <translation>asmap ફાઇલ %s મળી નહીં</translation>
+    </message>
+    <message>
+        <source>Could not generate scriptPubKeys (cache is empty)</source>
+        <translation>scriptPubKeys બનાવી શકાયાં નહીં (કૅશ ખાલી છે)</translation>
+    </message>
+    <message>
+        <source>Could not parse asmap file %s</source>
+        <translation>asmap ફાઇલ %s પાર્સ કરી શકાઈ નહીં</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>અંતર્નિહિત asmap ડેટા વાંચી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>વૉલેટ બની રહ્યું છે…</translation>
+    </message>
+    <message>
+        <source>Disk space for %s may not accommodate the block files. Approximately %u GB of data will be stored in this directory.</source>
+        <translation>%s માટેની ડિસ્ક જગ્યા બ્લોક ફાઇલો માટે પૂરતી ન હોઈ શકે. આ ડિરેક્ટરીમાં લગભગ %u GB ડેટા સંગ્રહાશે.</translation>
+    </message>
+    <message>
+        <source>Disk space is too low!</source>
+        <translation>ડિસ્ક જગ્યા ખૂબ ઓછી છે!</translation>
+    </message>
+    <message>
+        <source>Distributed under the MIT software license, see the accompanying file %s or %s</source>
+        <translation>MIT સૉફ્ટવેર લાઇસન્સ હેઠળ વિતરિત, સાથેની ફાઇલ %s અથવા %s જુઓ</translation>
+    </message>
+    <message>
+        <source>Do you want to rebuild the databases now?</source>
+        <translation>શું તમે હમણાં ડેટાબેઝ ફરી બનાવવા માંગો છો?</translation>
+    </message>
+    <message>
+        <source>Done loading</source>
+        <translation>લોડ કરવાનું પૂરું થયું</translation>
+    </message>
+    <message>
+        <source>Dump file %s does not exist.</source>
+        <translation>ડમ્પ ફાઇલ %s અસ્તિત્વમાં નથી.</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>%s સરનામા માટે બાઇન્ડિંગ રૂપરેખાંકન પુનરાવર્તિત છે. -bind, -bind=...=onion અને -whitebind સેટિંગ ચકાસો.</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>એલિપ્ટિક કર્વ ક્રિપ્ટોગ્રાફીની પ્રાથમિક તપાસ નિષ્ફળ થઈ. %s બંધ થઈ રહ્યું છે.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>અંતર્નિહિત asmap ડેટા ઉપલબ્ધ નથી</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>%s બનાવવામાં ભૂલ: સંસ્કરણનો મેટાડેટા લખી શકાયો નહીં.</translation>
+    </message>
+    <message>
+        <source>Error initializing block database</source>
+        <translation>બ્લોક ડેટાબેઝ શરૂ કરવામાં ભૂલ</translation>
+    </message>
+    <message>
+        <source>Error loading %s</source>
+        <translation>%s લોડ કરવામાં ભૂલ</translation>
+    </message>
+    <message>
+        <source>Error loading %s: External signer wallet being loaded without external signer support compiled</source>
+        <translation>%s લોડ કરવામાં ભૂલ: બાહ્ય સહીકર્તાનું સમર્થન કમ્પાઇલ કર્યા વગર બાહ્ય સહીકર્તાવાળું વૉલેટ લોડ થઈ રહ્યું છે</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet corrupted</source>
+        <translation>%s લોડ કરવામાં ભૂલ: વૉલેટ બગડેલું છે</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>%s લોડ કરવામાં ભૂલ: વૉલેટ લેગસી છે. સ્થળાંતર સાધન (migratewallet RPC) દ્વારા ડિસ્ક્રિપ્ટર વૉલેટમાં સ્થળાંતર કરો.</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet requires newer version of %s</source>
+        <translation>%s લોડ કરવામાં ભૂલ: વૉલેટને %sનું નવું સંસ્કરણ જોઈએ છે</translation>
+    </message>
+    <message>
+        <source>Error loading block database</source>
+        <translation>બ્લોક ડેટાબેઝ લોડ કરવામાં ભૂલ</translation>
+    </message>
+    <message>
+        <source>Error loading databases</source>
+        <translation>ડેટાબેઝ લોડ કરવામાં ભૂલ</translation>
+    </message>
+    <message>
+        <source>Error loading wallet. Wallet requires blocks to be downloaded, and software does not currently support loading wallets while blocks are being downloaded out of order when using assumeutxo snapshots. Wallet should be able to load successfully after node sync reaches height %s</source>
+        <translation>વૉલેટ લોડ કરવામાં ભૂલ. વૉલેટ માટે બ્લોક ડાઉનલોડ કરવા જરૂરી છે, પરંતુ assumeutxo સ્નૅપશૉટ વાપરીને બ્લોકો ક્રમ વગર ડાઉનલોડ થતા હોય ત્યારે સૉફ્ટવેર હાલમાં વૉલેટ લોડ કરવાનું સમર્થન આપતું નથી. નોડનું સમન્વય %s ઊંચાઈએ પહોંચ્યા પછી વૉલેટ સફળતાપૂર્વક લોડ થવું જોઈએ</translation>
+    </message>
+    <message>
+        <source>Error opening block database</source>
+        <translation>બ્લોક ડેટાબેઝ ખોલવામાં ભૂલ</translation>
+    </message>
+    <message>
+        <source>Error opening coins database</source>
+        <translation>સિક્કાનો ડેટાબેઝ ખોલવામાં ભૂલ</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address metadata may be missing or incorrect.</source>
+        <translation>%s વાંચવામાં ભૂલ! બધી કીઓ બરાબર વાંચાઈ, પરંતુ વ્યવહાર ડેટા અથવા સરનામાનો મેટાડેટા ગાયબ કે ખોટો હોઈ શકે છે.</translation>
+    </message>
+    <message>
+        <source>Error reading %s! Transaction data may be missing or incorrect. Rescanning wallet.</source>
+        <translation>%s વાંચવામાં ભૂલ! વ્યવહાર ડેટા ગાયબ કે ખોટો હોઈ શકે છે. વૉલેટ ફરી સ્કૅન થઈ રહ્યું છે.</translation>
+    </message>
+    <message>
+        <source>Error reading configuration file: %s</source>
+        <translation>રૂપરેખાંકન ફાઇલ વાંચવામાં ભૂલ: %s</translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation>ડેટાબેઝ વાંચવામાં ભૂલ, બંધ થઈ રહ્યું છે.</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation>વૉલેટ ડેટાબેઝમાંથી આગળનો રેકોર્ડ વાંચવામાં ભૂલ</translation>
+    </message>
+    <message>
+        <source>Error starting/committing db txn for wallet transactions removal process</source>
+        <translation>વૉલેટના વ્યવહારો દૂર કરવાની પ્રક્રિયા માટે ડેટાબેઝ વ્યવહાર શરૂ/પ્રતિબદ્ધ કરવામાં ભૂલ</translation>
+    </message>
+    <message>
+        <source>Error: Address book data in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>ભૂલ: વૉલેટની સરનામા-પુસ્તિકાનો ડેટા સ્થળાંતરિત વૉલેટોમાંથી કયાનો છે તે ઓળખી શકાયું નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Cannot extract destination from the generated scriptpubkey</source>
+        <translation>ભૂલ: બનાવેલા scriptpubkeyમાંથી ગંતવ્ય કાઢી શકાયું નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>ભૂલ: વ્યવહાર %sને માત્ર-નિરીક્ષણ વૉલેટમાં ઉમેરી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Could not add watchonly tx %s to watchonly wallet</source>
+        <translation>ભૂલ: માત્ર-નિરીક્ષણ વ્યવહાર %sને માત્ર-નિરીક્ષણ વૉલેટમાં ઉમેરી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>ભૂલ: ફાઇલ '%s' બનાવી શકાઈ નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Could not delete watchonly transactions. </source>
+        <translation>ભૂલ: માત્ર-નિરીક્ષણ વ્યવહારો કાઢી શકાયા નહીં. </translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation>ભૂલ: ડેટાબેઝમાં કર્સર બનાવી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is low for %s</source>
+        <translation>ભૂલ: %s માટે ડિસ્ક જગ્યા ઓછી છે</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation>ભૂલ: ડમ્પ ફાઇલનો ચેકસમ મેળ ખાતો નથી. ગણાયેલો %s, અપેક્ષિત %s</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation>ભૂલ: ડમ્પ ફાઇલનો ફોર્મેટ રેકોર્ડ ખોટો છે. મળ્યો "%s", અપેક્ષિત "format".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation>ભૂલ: ડમ્પ ફાઇલનો ઓળખકર્તા રેકોર્ડ ખોટો છે. મળ્યો "%s", અપેક્ષિત "%s".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>ભૂલ: ડમ્પ ફાઇલ અસહાયિત ડેટાબેઝ ફોર્મેટ (%s) દર્શાવે છે. માત્ર sqlite ડેટાબેઝ ડમ્પનું સમર્થન છે</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation>ભૂલ: ડમ્પ ફાઇલના સંસ્કરણનું સમર્થન નથી. connectcoin-walletનું આ સંસ્કરણ માત્ર સંસ્કરણ 1ની ડમ્પ ફાઇલોને સમર્થન આપે છે. મળેલી ડમ્પ ફાઇલનું સંસ્કરણ %s છે</translation>
+    </message>
+    <message>
+        <source>Error: Duplicate descriptors created during migration. Your wallet may be corrupted.</source>
+        <translation>ભૂલ: સ્થળાંતર દરમ્યાન પુનરાવર્તિત ડિસ્ક્રિપ્ટરો બન્યાં. તમારું વૉલેટ બગડેલું હોઈ શકે છે.</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>ભૂલ: નિકાસનું ગંતવ્ય '%s' પહેલેથી છે</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>ભૂલ: નિકાસનું ગંતવ્ય ખાલી ન હોઈ શકે</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet</source>
+        <translation>ભૂલ: નવું માત્ર-નિરીક્ષણ વૉલેટ બનાવવાનું નિષ્ફળ થયું</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>ભૂલ: નવું માત્ર-નિરીક્ષણ વૉલેટ બનાવવાનું નિષ્ફળ થયું. %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation>ભૂલ: હેક્સ ન હોય તેવી કી મળી: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation>ભૂલ: હેક્સ ન હોય તેવું મૂલ્ય મળ્યું: %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>ભૂલ: કીપૂલ ખાલી થઈ ગયો, પહેલાં keypoolrefill કૉલ કરો</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation>ભૂલ: ચેકસમ ગાયબ છે</translation>
+    </message>
+    <message>
+        <source>Error: No %s addresses available.</source>
+        <translation>ભૂલ: કોઈ %s સરનામાં ઉપલબ્ધ નથી.</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>ભૂલ: સરનામા-પુસ્તિકાના બધા રેકોર્ડનું સ્થળાંતર થયું નથી</translation>
+    </message>
+    <message>
+        <source>Error: Not all transaction records were migrated</source>
+        <translation>ભૂલ: બધા વ્યવહાર રેકોર્ડનું સ્થળાંતર થયું નથી</translation>
+    </message>
+    <message>
+        <source>Error: This wallet already uses SQLite</source>
+        <translation>ભૂલ: આ વૉલેટ પહેલેથી SQLite વાપરે છે</translation>
+    </message>
+    <message>
+        <source>Error: This wallet is already a descriptor wallet</source>
+        <translation>ભૂલ: આ વૉલેટ પહેલેથી ડિસ્ક્રિપ્ટર વૉલેટ છે</translation>
+    </message>
+    <message>
+        <source>Error: Transaction %s in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>ભૂલ: વૉલેટનો વ્યવહાર %s સ્થળાંતરિત વૉલેટોમાંથી કયાનો છે તે ઓળખી શકાયું નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Unable to begin reading all records in the database</source>
+        <translation>ભૂલ: ડેટાબેઝના બધા રેકોર્ડ વાંચવાનું શરૂ કરી શકાયું નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Unable to make a backup of your wallet</source>
+        <translation>ભૂલ: તમારા વૉલેટનો બૅકઅપ બનાવી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation>ભૂલ: સંસ્કરણ %uને uint32_t તરીકે પાર્સ કરી શકાયું નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
+        <translation>ભૂલ: આ લેગસી વૉલેટ માટે ડિસ્ક્રિપ્ટરો બનાવી શકાયાં નહીં. વૉલેટ એન્ક્રિપ્ટ કરેલું હોય તો તેનો પાસફ્રેઝ આપવાની ખાતરી કરો.</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read all records in the database</source>
+        <translation>ભૂલ: ડેટાબેઝના બધા રેકોર્ડ વાંચી શકાયા નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read wallet's best block locator record</source>
+        <translation>ભૂલ: વૉલેટના શ્રેષ્ઠ બ્લોક લોકેટરનો રેકોર્ડ વાંચી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Unable to remove watchonly address book data</source>
+        <translation>ભૂલ: માત્ર-નિરીક્ષણ સરનામા-પુસ્તિકાનો ડેટા દૂર કરી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write data to disk for wallet %s</source>
+        <translation>ભૂલ: વૉલેટ %s માટે ડેટા ડિસ્ક પર લખી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation>ભૂલ: નવા વૉલેટમાં રેકોર્ડ લખી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write solvable wallet best block locator record</source>
+        <translation>ભૂલ: ઉકેલી શકાય તેવા વૉલેટના શ્રેષ્ઠ બ્લોક લોકેટરનો રેકોર્ડ લખી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>ભૂલ: નિકાસ કરેલું વૉલેટ લખી શકાયું નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write watchonly wallet best block locator record</source>
+        <translation>ભૂલ: માત્ર-નિરીક્ષણ વૉલેટના શ્રેષ્ઠ બ્લોક લોકેટરનો રેકોર્ડ લખી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Error: Wallet does not exist</source>
+        <translation>ભૂલ: વૉલેટ અસ્તિત્વમાં નથી</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>ભૂલ: વૉલેટમાં નિકાસ કરવા ડિસ્ક્રિપ્ટરો નથી</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>ભૂલ: માત્ર-નિરીક્ષણ વૉલેટની નિકાસ માટે ડેટાબેઝ વ્યવહાર પ્રતિબદ્ધ કરી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Error: cannot remove legacy wallet records</source>
+        <translation>ભૂલ: લેગસી વૉલેટના રેકોર્ડ દૂર કરી શકાયા નહીં</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>ભૂલ: નવા માત્ર-નિરીક્ષણ વૉલેટ %s માટે ડેટાબેઝ વ્યવહાર ચલાવી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for wallet %s</source>
+        <translation>ભૂલ: વૉલેટ %s માટે ડેટાબેઝ વ્યવહાર ચલાવી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>વૉલેટ શરૂ કરતી વખતે ફરી સ્કૅન કરવાની અનામત મેળવી શકાઈ નહીં</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>ફીનો વધારો ગણી શકાયો નહીં, કારણ કે અપુષ્ટ UTXO અપુષ્ટ વ્યવહારોના વિશાળ સમૂહ પર આધાર રાખે છે.</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>બ્લોકની પૂર્વવત્ કરવાની ફાઇલ બંધ કરી શકાઈ નહીં.</translation>
+    </message>
+    <message>
+        <source>Failed to close file when writing block.</source>
+        <translation>બ્લોક લખતી વખતે ફાઇલ બંધ કરી શકાઈ નહીં.</translation>
+    </message>
+    <message>
+        <source>Failed to disconnect block.</source>
+        <translation>બ્લોકને અલગ કરી શકાયો નહીં.</translation>
+    </message>
+    <message>
+        <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
+        <translation>કોઈ પોર્ટ પર સાંભળી શકાયું નહીં. જો તમે આ જ ઇચ્છતા હો તો -listen=0 વાપરો.</translation>
+    </message>
+    <message>
+        <source>Failed to read block.</source>
+        <translation>બ્લોક વાંચી શકાયો નહીં.</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>સ્નૅપશૉટ ચેઇનસ્ટેટ ડિરેક્ટરી (%s) દૂર કરી શકાઈ નહીં. ફરી શરૂ કરતાં પહેલાં તેને જાતે દૂર કરો.
+</translation>
+    </message>
+    <message>
+        <source>Failed to rename invalid peers.dat file. Please move or delete it and try again.</source>
+        <translation>અમાન્ય peers.dat ફાઇલનું નામ બદલી શકાયું નહીં. તેને ખસેડો અથવા કાઢીને ફરી પ્રયાસ કરો.</translation>
+    </message>
+    <message>
+        <source>Failed to rescan the wallet during initialization</source>
+        <translation>શરૂઆત દરમિયાન વૉલેટ ફરી સ્કૅન કરી શકાયું નહીં</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>ઇન્ડેક્સ શરૂ થઈ શક્યા નહીં, બંધ થઈ રહ્યું છે…</translation>
+    </message>
+    <message>
+        <source>Failed to verify database</source>
+        <translation>ડેટાબેઝનું સત્યાપન નિષ્ફળ થયું</translation>
+    </message>
+    <message>
+        <source>Failed to write block.</source>
+        <translation>બ્લોક લખી શકાયો નહીં.</translation>
+    </message>
+    <message>
+        <source>Failed to write undo data.</source>
+        <translation>પૂર્વવત્ કરવાનો ડેટા લખી શકાયો નહીં.</translation>
+    </message>
+    <message>
+        <source>Failure removing transaction: %s</source>
+        <translation>વ્યવહાર દૂર કરવામાં નિષ્ફળતા: %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>ફીનો દર (%s) લઘુત્તમ ફીના દરના સેટિંગ (%s) કરતાં ઓછો છે.</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation>%s ફાઇલ પહેલેથી છે. જો તમને ખાતરી હોય કે તમારે આ જ કરવું છે, તો પહેલાં તેને બીજે ખસેડો.</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>બ્લોક ફાઇલનો બાકી ડેટા ડિસ્ક પર લખી શકાયો નહીં. આ કદાચ I/O ભૂલનું પરિણામ છે.</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>પૂર્વવત્ કરવાની ફાઇલનો બાકી ડેટા ડિસ્ક પર લખી શકાયો નહીં. આ કદાચ I/O ભૂલનું પરિણામ છે.</translation>
+    </message>
+    <message>
+        <source>Ignoring duplicate -wallet %s.</source>
+        <translation>પુનરાવર્તિત -wallet %s અવગણાય છે.</translation>
+    </message>
+    <message>
+        <source>Incompatible options: -dnsseed=1 was explicitly specified, but -onlynet forbids connections to IPv4/IPv6</source>
+        <translation>અસુસંગત વિકલ્પો: -dnsseed=1 સ્પષ્ટ રીતે આપેલું છે, પરંતુ -onlynet IPv4/IPv6 જોડાણો પ્રતિબંધિત કરે છે</translation>
+    </message>
+    <message>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation>ખોટો જિનેસિસ બ્લોક મળ્યો અથવા જિનેસિસ બ્લોક મળ્યો નહીં. નેટવર્ક માટે ખોટી ડેટા ડિરેક્ટરી છે?</translation>
+    </message>
+    <message>
+        <source>Initialization sanity check failed. %s is shutting down.</source>
+        <translation>શરૂઆતની પ્રાથમિક તપાસ નિષ્ફળ થઈ. %s બંધ થઈ રહ્યું છે.</translation>
+    </message>
+    <message>
+        <source>Input not found or already spent</source>
+        <translation>ઇનપુટ મળ્યું નહીં અથવા પહેલેથી ખર્ચાઈ ગયું છે</translation>
+    </message>
+    <message>
+        <source>Insufficient dbcache for block verification</source>
+        <translation>બ્લોક સત્યાપન માટે dbcache અપૂરતું છે</translation>
+    </message>
+    <message>
+        <source>Insufficient funds</source>
+        <translation>અપૂરતું ભંડોળ</translation>
+    </message>
+    <message>
+        <source>Invalid -i2psam address or hostname: '%s'</source>
+        <translation>અમાન્ય -i2psam સરનામું અથવા હોસ્ટનામ: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -onion address or hostname: '%s'</source>
+        <translation>અમાન્ય -onion સરનામું અથવા હોસ્ટનામ: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>અમાન્ય -proxy સરનામું અથવા હોસ્ટનામ, '='થી સમાપ્ત થાય છે: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname: '%s'</source>
+        <translation>અમાન્ય -proxy સરનામું અથવા હોસ્ટનામ: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid P2P permission: '%s'</source>
+        <translation>અમાન્ય P2P પરવાનગી: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s'</source>
+        <translation>%s=&lt;amount&gt; માટે અમાન્ય રકમ: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation>%s=&lt;amount&gt; માટે અમાન્ય રકમ: '%s' (વ્યવહાર અટવાઈ ન જાય તે માટે ઓછામાં ઓછી %s minrelay ફી હોવી જોઈએ)</translation>
+    </message>
+    <message>
+        <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
+        <translation>-%s=&lt;amount&gt; માટે અમાન્ય રકમ: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid netmask specified in -whitelist: '%s'</source>
+        <translation>-whitelistમાં અમાન્ય નેટમાસ્ક આપ્યો છે: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid or corrupt peers.dat (%s). If you believe this is a bug, please report it to %s. As a workaround, you can move the file (%s) out of the way (rename, move, or delete) to have a new one created on the next start.</source>
+        <translation>અમાન્ય અથવા બગડેલી peers.dat (%s). આ બગ છે એવું માનતા હો તો %sને જાણ કરો. કામચલાઉ ઉકેલ તરીકે ફાઇલ (%s)ને હટાવી શકો છો (નામ બદલો, ખસેડો કે કાઢો), જેથી ફરી શરૂ કરતાં નવી ફાઇલ બને.</translation>
+    </message>
+    <message>
+        <source>Invalid port specified in %s: '%s'</source>
+        <translation>%sમાં અમાન્ય પોર્ટ આપ્યો છે: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid value detected for '-wallet' or '-nowallet'. '-wallet' requires a string value, while '-nowallet' accepts only '1' to disable all wallets</source>
+        <translation>'-wallet' અથવા '-nowallet' માટે અમાન્ય મૂલ્ય મળ્યું. '-wallet' માટે સ્ટ્રિંગ મૂલ્ય જરૂરી છે, જ્યારે '-nowallet' બધા વૉલેટ બંધ કરવા માત્ર '1' સ્વીકારે છે</translation>
+    </message>
+    <message>
+        <source>Listening for incoming connections failed (listen returned error %s)</source>
+        <translation>આવતાં જોડાણો માટે સાંભળવાનું નિષ્ફળ થયું (listenએ ભૂલ %s આપી)</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses…</source>
+        <translation>P2P સરનામાં લોડ થઈ રહ્યાં છે…</translation>
+    </message>
+    <message>
+        <source>Loading banlist…</source>
+        <translation>પ્રતિબંધ યાદી લોડ થઈ રહી છે…</translation>
+    </message>
+    <message>
+        <source>Loading block index…</source>
+        <translation>બ્લોક ઇન્ડેક્સ લોડ થઈ રહ્યો છે…</translation>
+    </message>
+    <message>
+        <source>Loading wallet…</source>
+        <translation>વૉલેટ લોડ થઈ રહ્યું છે…</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is less than transaction weight without inputs</source>
+        <translation>વ્યવહારનું મહત્તમ વજન ઇનપુટ વગરના વ્યવહારના વજન કરતાં ઓછું છે</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is too low, can not accommodate change output</source>
+        <translation>વ્યવહારનું મહત્તમ વજન ખૂબ ઓછું છે, બચત-પરત આઉટપુટ સમાવી શકાતું નથી</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>વ્યવહારનું મહત્તમ વજન %d અને %d વચ્ચે હોવું જોઈએ</translation>
+    </message>
+    <message>
+        <source>Missing amount</source>
+        <translation>રકમ ગાયબ છે</translation>
+    </message>
+    <message>
+        <source>Missing solving data for estimating transaction size</source>
+        <translation>વ્યવહારના કદનો અંદાજ કરવા માટેનો ઉકેલ ડેટા ગાયબ છે</translation>
+    </message>
+    <message>
+        <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
+        <translation>એકથી વધુ onion બાઇન્ડ સરનામાં આપ્યાં છે. આપમેળે બનાવેલી Tor onion સેવા માટે %s વપરાય છે.</translation>
+    </message>
+    <message>
+        <source>Need to specify a port with -whitebind: '%s'</source>
+        <translation>-whitebind સાથે પોર્ટ જણાવવો જરૂરી છે: '%s'</translation>
+    </message>
+    <message>
+        <source>No addresses available</source>
+        <translation>કોઈ સરનામાં ઉપલબ્ધ નથી</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>ડમ્પ ફાઇલ આપી નથી. createfromdump વાપરવા -dumpfile=&lt;filename&gt; આપવું જરૂરી છે.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use dump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>ડમ્પ ફાઇલ આપી નથી. dump વાપરવા -dumpfile=&lt;filename&gt; આપવું જરૂરી છે.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. %d available, %d required.</source>
+        <translation>પૂરતા ફાઇલ ડિસ્ક્રિપ્ટરો ઉપલબ્ધ નથી. %d ઉપલબ્ધ, %d જરૂરી.</translation>
+    </message>
+    <message>
+        <source>Not found pre-selected input %s</source>
+        <translation>અગાઉ પસંદ કરેલું ઇનપુટ %s મળ્યું નહીં</translation>
+    </message>
+    <message>
+        <source>Not solvable pre-selected input %s</source>
+        <translation>અગાઉ પસંદ કરેલું ઇનપુટ %s ઉકેલી શકાય તેમ નથી</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>માત્ર દિશા સેટ કરેલી છે, પરવાનગીઓ નથી: '%s'</translation>
+    </message>
+    <message>
+        <source>Option '-checkpoints' is set but checkpoints were removed. This option has no effect.</source>
+        <translation>'-checkpoints' વિકલ્પ સેટ છે, પરંતુ ચેકપોઇન્ટ દૂર કરાયા છે. આ વિકલ્પની અસર નથી.</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>'-limitancestorsize' વિકલ્પ આપેલો છે, પરંતુ પૂર્વવર્તી વ્યવહારોની કદ મર્યાદા સમૂહની કદ મર્યાદાથી બદલાઈ છે (-limitclustersize જુઓ). આ વિકલ્પની અસર નથી.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>'-limitdescendantsize' વિકલ્પ આપેલો છે, પરંતુ અનુગામી વ્યવહારોની કદ મર્યાદા સમૂહની કદ મર્યાદાથી બદલાઈ છે (-limitclustersize જુઓ). આ વિકલ્પની અસર નથી.</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to CJDNS (-onlynet=cjdns) but -cjdnsreachable is not provided</source>
+        <translation>આઉટગોઇંગ જોડાણો CJDNS સુધી મર્યાદિત છે (-onlynet=cjdns), પરંતુ -cjdnsreachable આપ્યું નથી</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is explicitly forbidden: -onion=0</source>
+        <translation>આઉટગોઇંગ જોડાણો Tor સુધી મર્યાદિત છે (-onlynet=onion), પરંતુ Tor નેટવર્ક સુધી પહોંચવાનો પ્રૉક્સી સ્પષ્ટ રીતે પ્રતિબંધિત છે: -onion=0</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
+        <translation>આઉટગોઇંગ જોડાણો Tor સુધી મર્યાદિત છે (-onlynet=onion), પરંતુ Tor નેટવર્ક સુધી પહોંચવાનો પ્રૉક્સી આપેલો નથી: -proxy, -onion કે -listenonion પૈકી કંઈ આપેલું નથી</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to i2p (-onlynet=i2p) but -i2psam is not provided</source>
+        <translation>આઉટગોઇંગ જોડાણો i2p સુધી મર્યાદિત છે (-onlynet=i2p), પરંતુ -i2psam આપ્યું નથી</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful. Visit %s for further information about the software.</source>
+        <translation>%s ઉપયોગી લાગે તો કૃપા કરીને યોગદાન આપો. સૉફ્ટવેર વિશે વધુ માહિતી માટે %sની મુલાકાત લો.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>પોતાના વ્યવહારોના ખાનગી પ્રસારણની વિનંતી છે (-privatebroadcast) અને -proxyrandomize અક્ષમ છે. ખાનગી પ્રસારણના Tor સર્કિટને અન્ય Tor જોડાણો સાથે સાંકળી શકવાની શક્યતા છે. મહત્તમ ગોપનીયતા માટે -proxyrandomize=1 સેટ કરો.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>પોતાના વ્યવહારોના ખાનગી પ્રસારણની વિનંતી છે (-privatebroadcast), પરંતુ -connect પણ ગોઠવેલું છે. તે અસુસંગત છે, કારણ કે ખાનગી પ્રસારણને રૅન્ડમ પસંદ કરેલા Tor અથવા I2P પીઅર સાથે નવા જોડાણો ખોલવા પડે છે. તેના બદલે -maxconnections=0 -addnode=... વાપરવાનું વિચારો</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>પોતાના વ્યવહારોના ખાનગી પ્રસારણની વિનંતી છે (-privatebroadcast), પરંતુ Tor કે I2P પૈકી કોઈ નેટવર્ક સુધી પહોંચી શકાતું નથી</translation>
+    </message>
+    <message>
+        <source>Prune cannot be configured with a negative value.</source>
+        <translation>જૂના બ્લોકો કાપી કાઢવા ઋણ મૂલ્ય ગોઠવી શકાતું નથી.</translation>
+    </message>
+    <message>
+        <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
+        <translation>જૂના બ્લોકો કાપી કાઢવા લઘુત્તમ %d MiB કરતાં ઓછું મૂલ્ય ગોઠવેલું છે.  કૃપા કરીને વધુ મોટો આંકડો વાપરો.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -reindex-chainstate. Use full -reindex instead.</source>
+        <translation>જૂના બ્લોકો કાપી કાઢવાનો મોડ -reindex-chainstate સાથે અસુસંગત છે. તેના બદલે સંપૂર્ણ -reindex વાપરો.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txindex.</source>
+        <translation>જૂના બ્લોકો કાપી કાઢવાનો મોડ -txindex સાથે અસુસંગત છે.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>જૂના બ્લોકો કાપી કાઢવાનો મોડ -txospenderindex સાથે અસુસંગત છે.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
+        <translation>પ્રૂન: વૉલેટનું છેલ્લું સમન્વય કાઢી નાખેલા ડેટા કરતાં પણ જૂનું છે. તમારે -reindex કરવું પડશે (પ્રૂન કરેલા નોડ માટે આખી બ્લોકચેઇન ફરી ડાઉનલોડ કરવી પડશે)</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore…</source>
+        <translation>બ્લોક સંગ્રહમાંથી જૂનો ડેટા કાઢવામાં આવે છે…</translation>
+    </message>
+    <message>
+        <source>Reducing -maxconnections from %d to %d, because of system limitations.</source>
+        <translation>સિસ્ટમ મર્યાદાઓને કારણે -maxconnections %dથી %d સુધી ઘટાડાય છે.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>'%s' -&gt; '%s' નામ બદલવાનું નિષ્ફળ થયું. પૃષ્ઠભૂમિના ચેઇનસ્ટેટની leveldb ડિરેક્ટરી સાફ કરી શકાઈ નહીં.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
+        <translation>'%s' -&gt; '%s' નામ બદલવાનું નિષ્ફળ થયું. અમાન્ય સ્નૅપશૉટ ડિરેક્ટરી %sને જાતે ખસેડીને અથવા કાઢીને આ ઉકેલો, નહીં તો ફરી શરૂ કરતાં આ જ ભૂલ ફરી આવશે.</translation>
+    </message>
+    <message>
+        <source>Replaying blocks…</source>
+        <translation>બ્લોકો ફરી લાગુ થાય છે…</translation>
+    </message>
+    <message>
+        <source>Rescanning…</source>
+        <translation>ફરી સ્કૅન થાય છે…</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to execute statement to verify database: %s</source>
+        <translation>SQLiteDatabase: ડેટાબેઝ ચકાસવા માટેનું સ્ટેટમેન્ટ ચલાવી શકાયું નહીં: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to prepare statement to verify database: %s</source>
+        <translation>SQLiteDatabase: ડેટાબેઝ ચકાસવા માટેનું સ્ટેટમેન્ટ તૈયાર થઈ શક્યું નહીં: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to read database verification error: %s</source>
+        <translation>SQLiteDatabase: ડેટાબેઝ સત્યાપનની ભૂલ વાંચી શકાઈ નહીં: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unexpected application id. Expected %u, got %u</source>
+        <translation>SQLiteDatabase: અનપેક્ષિત એપ્લિકેશન id. અપેક્ષિત %u, મળ્યું %u</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is supported</source>
+        <translation>SQLiteDatabase: અજાણ્યું sqlite વૉલેટ સ્કીમા સંસ્કરણ %d. માત્ર સંસ્કરણ %dનું સમર્થન છે</translation>
+    </message>
+    <message>
+        <source>Section [%s] is not recognized.</source>
+        <translation>વિભાગ [%s] ઓળખાયો નથી.</translation>
+    </message>
+    <message>
+        <source>Settings file could not be read</source>
+        <translation>સેટિંગ ફાઇલ વાંચી શકાઈ નહીં</translation>
+    </message>
+    <message>
+        <source>Settings file could not be written</source>
+        <translation>સેટિંગ ફાઇલ લખી શકાઈ નહીં</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>સહીકર્તાએ સરનામું પાછું આપ્યું નહીં</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>સહીકર્તાએ અનપેક્ષિત સરનામું %s પાછું આપ્યું</translation>
+    </message>
+    <message>
+        <source>Signer returned error: %s</source>
+        <translation>સહીકર્તાએ ભૂલ આપી: %s</translation>
+    </message>
+    <message>
+        <source>Signing transaction failed</source>
+        <translation>વ્યવહાર પર સહી કરવાનું નિષ્ફળ થયું</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" does not exist</source>
+        <translation>આપેલું -walletdir "%s" અસ્તિત્વમાં નથી</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is a relative path</source>
+        <translation>આપેલું -walletdir "%s" સાપેક્ષ પાથ છે</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is not a directory</source>
+        <translation>આપેલું -walletdir "%s" ડિરેક્ટરી નથી</translation>
+    </message>
+    <message>
+        <source>Specified blocks directory "%s" does not exist.</source>
+        <translation>આપેલી બ્લોક ડિરેક્ટરી "%s" અસ્તિત્વમાં નથી.</translation>
+    </message>
+    <message>
+        <source>Specified data directory "%s" does not exist.</source>
+        <translation>આપેલી ડેટા ડિરેક્ટરી "%s" અસ્તિત્વમાં નથી.</translation>
+    </message>
+    <message>
+        <source>Starting network threads…</source>
+        <translation>નેટવર્ક થ્રેડ શરૂ થાય છે…</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>બાકી ડેટા લખતી વખતે સિસ્ટમ ભૂલ: %s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>બાહ્ય બ્લોક ફાઇલ લોડ કરતી વખતે સિસ્ટમ ભૂલ: %s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>બ્લોક ડિસ્ક પર સાચવતી વખતે સિસ્ટમ ભૂલ: %s</translation>
+    </message>
+    <message>
+        <source>The %s developers</source>
+        <translation>%sના વિકાસકર્તાઓ</translation>
+    </message>
+    <message>
+        <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
+        <translation>%s પાથ exFAT વાપરે છે, જેમાં macOS પર ક્યારેક ડેટા બગડવાની સમસ્યાઓ જાણીતી છે. ડેટા ગુમાવાથી બચવા આ ડિરેક્ટરી બીજી ફાઇલસિસ્ટમમાં ખસેડો.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>-testactivationheight વિકલ્પ મુખ્ય નેટવર્ક પર વાપરી શકાતો નથી.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>-vbparams વિકલ્પ મુખ્ય નેટવર્ક પર વાપરી શકાતો નથી.</translation>
+    </message>
+    <message>
+        <source>The block database contains a block which appears to be from the future. This may be due to your computer's date and time being set incorrectly. Only rebuild the block database if you are sure that your computer's date and time are correct</source>
+        <translation>બ્લોક ડેટાબેઝમાં ભવિષ્યનો લાગતો બ્લોક છે. આ તમારા કમ્પ્યુટરની તારીખ અને સમય ખોટા હોવાને કારણે હોઈ શકે છે. કમ્પ્યુટરની તારીખ અને સમય સાચા હોવાની ખાતરી હોય ત્યારે જ બ્લોક ડેટાબેઝ ફરી બનાવો</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>અગાઉ પસંદ કરેલાં ઇનપુટ અને વૉલેટે આપમેળે પસંદ કરેલાં ઇનપુટનું જોડાણ વ્યવહારના મહત્તમ વજનથી વધુ છે. ઓછી રકમ મોકલી જુઓ અથવા તમારા વૉલેટના UTXO જાતે એકત્રિત કરો</translation>
+    </message>
+    <message>
+        <source>The inputs size exceeds the maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>ઇનપુટનું કદ મહત્તમ વજનથી વધુ છે. ઓછી રકમ મોકલી જુઓ અથવા તમારા વૉલેટના UTXO જાતે એકત્રિત કરો</translation>
+    </message>
+    <message>
+        <source>The preselected coins total amount does not cover the transaction target. Please allow other inputs to be automatically selected or include more coins manually</source>
+        <translation>અગાઉ પસંદ કરેલા સિક્કાની કુલ રકમ વ્યવહારના લક્ષ્યને પૂરી કરતી નથી. અન્ય ઇનપુટ આપમેળે પસંદ થવા દો અથવા વધુ સિક્કા જાતે ઉમેરો</translation>
+    </message>
+    <message>
+        <source>The source code is available from %s.</source>
+        <translation>સ્રોત કોડ %s પર ઉપલબ્ધ છે.</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist</source>
+        <translation>આપેલી રૂપરેખાંકન ફાઇલ %s અસ્તિત્વમાં નથી</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>%s વ્યવહાર ફી ઉમેરતાં કુલ રકમ તમારા બેલેન્સથી વધુ થાય છે.</translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to pay the fee</source>
+        <translation>વ્યવહારની રકમ ફી ચૂકવવા ખૂબ ઓછી છે</translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to send after the fee has been deducted</source>
+        <translation>ફી બાદ કર્યા પછી વ્યવહારની રકમ મોકલવા ખૂબ ઓછી છે</translation>
+    </message>
+    <message>
+        <source>The transactions removal process can only be executed within a db txn</source>
+        <translation>વ્યવહાર દૂર કરવાની પ્રક્રિયા માત્ર ડેટાબેઝ વ્યવહારની અંદર જ ચાલી શકે છે</translation>
+    </message>
+    <message>
+        <source>The wallet will avoid paying less than the minimum relay fee.</source>
+        <translation>વૉલેટ લઘુત્તમ રિલે ફી કરતાં ઓછી ફી ચૂકવવાનું ટાળશે.</translation>
+    </message>
+    <message>
+        <source>There is no ScriptPubKeyManager for this address</source>
+        <translation>આ સરનામા માટે ScriptPubKeyManager નથી</translation>
+    </message>
+    <message>
+        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
+        <translation>આ પ્રકાશન પહેલાંનું પરીક્ષણ બિલ્ડ છે - તમારા પોતાના જોખમે વાપરો - માઇનિંગ કે વ્યાપારી એપ્લિકેશનો માટે વાપરશો નહીં</translation>
+    </message>
+    <message>
+        <source>This is experimental software.</source>
+        <translation>આ પ્રાયોગિક સૉફ્ટવેર છે.</translation>
+    </message>
+    <message>
+        <source>This is the maximum transaction fee you pay (in addition to the normal fee) to prioritize partial spend avoidance over regular coin selection.</source>
+        <translation>સામાન્ય સિક્કા પસંદગી કરતાં આંશિક ખર્ચ ટાળવાને પ્રાધાન્ય આપવા તમે (સામાન્ય ફી ઉપરાંત) ચૂકવો તે મહત્તમ વ્યવહાર ફી આ છે.</translation>
+    </message>
+    <message>
+        <source>This is the minimum transaction fee you pay on every transaction.</source>
+        <translation>આ દરેક વ્યવહારમાં ચૂકવવાની લઘુત્તમ વ્યવહાર ફી છે.</translation>
+    </message>
+    <message>
+        <source>This is the transaction fee you may discard if change is smaller than dust at this level</source>
+        <translation>આ સ્તરે બચત-પરત રકમ ડસ્ટ કરતાં ઓછી હોય તો તેને છોડવા માટે વપરાતો વ્યવહાર ફીનો દર આ છે</translation>
+    </message>
+    <message>
+        <source>This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>ફીનો અંદાજ ઉપલબ્ધ ન હોય ત્યારે તમે ચૂકવી શકો તે વ્યવહાર ફી આ છે.</translation>
+    </message>
+    <message>
+        <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>
+        <translation>નેટવર્ક સંસ્કરણ સ્ટ્રિંગની કુલ લંબાઈ (%i) મહત્તમ લંબાઈ (%i)થી વધુ છે. uacommentsની સંખ્યા અથવા કદ ઘટાડો.</translation>
+    </message>
+    <message>
+        <source>Transaction %s does not belong to this wallet</source>
+        <translation>વ્યવહાર %s આ વૉલેટનો નથી</translation>
+    </message>
+    <message>
+        <source>Transaction amount too small</source>
+        <translation>વ્યવહારની રકમ ખૂબ ઓછી છે</translation>
+    </message>
+    <message>
+        <source>Transaction amounts must not be negative</source>
+        <translation>વ્યવહારની રકમ ઋણ ન હોઈ શકે</translation>
+    </message>
+    <message>
+        <source>Transaction change output index out of range</source>
+        <translation>વ્યવહારના બચત-પરત આઉટપુટનો ઇન્ડેક્સ મર્યાદાની બહાર છે</translation>
+    </message>
+    <message>
+        <source>Transaction must have at least one recipient</source>
+        <translation>વ્યવહારમાં ઓછામાં ઓછો એક પ્રાપ્તકર્તા હોવો જોઈએ</translation>
+    </message>
+    <message>
+        <source>Transaction needs a change address, but we can't generate it.</source>
+        <translation>વ્યવહારને બચત-પરત સરનામું જોઈએ છે, પરંતુ અમે તે બનાવી શકતા નથી.</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>વ્યવહારને શૂન્ય ન હોય એવા મૂલ્યનું એક ગંતવ્ય, શૂન્ય ન હોય એવો ફી દર અથવા અગાઉ પસંદ કરેલું ઇનપુટ જોઈએ છે</translation>
+    </message>
+    <message>
+        <source>Transaction too large</source>
+        <translation>વ્યવહાર ખૂબ મોટો છે</translation>
+    </message>
+    <message>
+        <source>UTXO snapshot failed to validate. Restart to resume normal initial block download, or try loading a different snapshot.</source>
+        <translation>UTXO સ્નૅપશૉટનું સત્યાપન નિષ્ફળ થયું. સામાન્ય શરૂઆતનું બ્લોક ડાઉનલોડ ચાલુ રાખવા ફરી શરૂ કરો અથવા બીજો સ્નૅપશૉટ લોડ કરીને જુઓ.</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer (bind returned error %s)</source>
+        <translation>આ કમ્પ્યુટર પર %s સાથે બાઇન્ડ થઈ શકાયું નહીં (bindએ ભૂલ %s આપી)</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer. %s is probably already running.</source>
+        <translation>આ કમ્પ્યુટર પર %s સાથે બાઇન્ડ થઈ શકાયું નહીં. %s કદાચ પહેલેથી ચાલી રહ્યું છે.</translation>
+    </message>
+    <message>
+        <source>Unable to create the PID file '%s': %s</source>
+        <translation>PID ફાઇલ '%s' બનાવી શકાઈ નહીં: %s</translation>
+    </message>
+    <message>
+        <source>Unable to find UTXO for external input</source>
+        <translation>બાહ્ય ઇનપુટ માટે UTXO મળ્યું નહીં</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation>%s લખવા માટે ખોલી શકાયું નહીં</translation>
+    </message>
+    <message>
+        <source>Unable to parse -maxuploadtarget: '%s'</source>
+        <translation>-maxuploadtarget પાર્સ થઈ શક્યું નહીં: '%s'</translation>
+    </message>
+    <message>
+        <source>Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.</source>
+        <translation>બ્લોકો ફરી લાગુ થઈ શક્યા નહીં. તમારે -reindex-chainstate વડે ડેટાબેઝ ફરી બનાવવો પડશે.</translation>
+    </message>
+    <message>
+        <source>Unable to start HTTP server. See debug log for details.</source>
+        <translation>HTTP સર્વર શરૂ થઈ શક્યું નહીં. વિગતો માટે ડીબગ લોગ જુઓ.</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>ડિસ્ક્રિપ્ટર કૅશ લખી શકાયું નહીં</translation>
+    </message>
+    <message>
+        <source>Unconfirmed UTXOs are available, but spending them creates a chain of transactions that will be rejected by the mempool</source>
+        <translation>અપુષ્ટ UTXO ઉપલબ્ધ છે, પરંતુ તેમને ખર્ચવાથી મેમપૂલ નકારશે એવી વ્યવહારોની સાંકળ બને છે</translation>
+    </message>
+    <message>
+        <source>Unexpected legacy entry in descriptor wallet found. Loading wallet %s
+
+The wallet might have been tampered with or created with malicious intent.
+</source>
+        <translation>ડિસ્ક્રિપ્ટર વૉલેટમાં અનપેક્ષિત લેગસી નોંધ મળી. વૉલેટ %s લોડ થાય છે
+
+વૉલેટ સાથે ચેડાં થયાં હોઈ શકે અથવા તે દૂષિત ઇરાદાથી બનાવેલું હોઈ શકે છે.
+</translation>
+    </message>
+    <message>
+        <source>Unknown -blockfilterindex value %s.</source>
+        <translation>અજાણ્યું -blockfilterindex મૂલ્ય %s.</translation>
+    </message>
+    <message>
+        <source>Unknown address type '%s'</source>
+        <translation>અજાણ્યો સરનામા પ્રકાર '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown change type '%s'</source>
+        <translation>અજાણ્યો બચત-પરત પ્રકાર '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown network specified in -onlynet: '%s'</source>
+        <translation>-onlynetમાં અજાણ્યું નેટવર્ક આપ્યું છે: '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown new rules activated (versionbit %i)</source>
+        <translation>અજાણ્યા નવા નિયમો સક્રિય થયા (versionbit %i)</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>-test=&lt;option&gt;માં ન ઓળખાયેલો વિકલ્પ "%s" આપ્યો છે.</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>ન ઓળખાયેલો ડિસ્ક્રિપ્ટર મળ્યો. વૉલેટ %s લોડ થાય છે
+
+વૉલેટ નવા સંસ્કરણમાં બનાવેલું હોઈ શકે છે.
+કૃપા કરીને સૉફ્ટવેરનું તાજેતરનું સંસ્કરણ ચલાવી જુઓ.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>-proxy='%s'માં ન ઓળખાયેલું નેટવર્ક: '%s'</translation>
+    </message>
+    <message>
+        <source>Unsupported category-specific logging level %1$s=%2$s. Expected %1$s=&lt;category&gt;:&lt;loglevel&gt;. Valid categories: %3$s. Valid loglevels: %4$s.</source>
+        <translation>શ્રેણી-વિશિષ્ટ લોગિંગ સ્તર %1$s=%2$sનું સમર્થન નથી. અપેક્ષિત %1$s=&lt;category&gt;:&lt;loglevel&gt;. માન્ય શ્રેણીઓ: %3$s. માન્ય લોગ સ્તરો: %4$s.</translation>
+    </message>
+    <message>
+        <source>Unsupported chainstate database format found. Please restart with -reindex-chainstate. This will rebuild the chainstate database.</source>
+        <translation>અસહાયિત ચેઇનસ્ટેટ ડેટાબેઝ ફોર્મેટ મળ્યું. -reindex-chainstate સાથે ફરી શરૂ કરો. આ ચેઇનસ્ટેટ ડેટાબેઝ ફરી બનાવશે.</translation>
+    </message>
+    <message>
+        <source>Unsupported global logging level %s=%s. Valid values: %s.</source>
+        <translation>વૈશ્વિક લોગિંગ સ્તર %s=%sનું સમર્થન નથી. માન્ય મૂલ્યો: %s.</translation>
+    </message>
+    <message>
+        <source>Unsupported logging category %s=%s.</source>
+        <translation>લોગિંગ શ્રેણી %s=%sનું સમર્થન નથી.</translation>
+    </message>
+    <message>
+        <source>User Agent comment (%s) contains unsafe characters.</source>
+        <translation>યુઝર એજન્ટની ટિપ્પણી (%s)માં અસુરક્ષિત અક્ષરો છે.</translation>
+    </message>
+    <message>
+        <source>Verifying blocks…</source>
+        <translation>બ્લોકોનું સત્યાપન થાય છે…</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)…</source>
+        <translation>વૉલેટોનું સત્યાપન થાય છે…</translation>
+    </message>
+    <message>
+        <source>Wallet file creation failed: %s</source>
+        <translation>વૉલેટ ફાઇલ બનાવવાનું નિષ્ફળ થયું: %s</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>ચેતવણી: અમારી શ્રેષ્ઠ ચેઇન કરતાં 6થી વધુ બ્લોક લાંબી અમાન્ય ચેઇન મળી છે. આ ડેટાબેઝ બગડવાથી અથવા પીઅરો સાથે સંમતિના નિયમો અસુસંગત હોવાથી હોઈ શકે છે.</translation>
+    </message>
+    <message>
+        <source>Warning: Private keys detected in wallet {%s} with disabled private keys</source>
+        <translation>ચેતવણી: ખાનગી કીઓ અક્ષમ હોય એવા વૉલેટ {%s}માં ખાનગી કીઓ મળી</translation>
+    </message>
+    <message>
+        <source>Witness data for blocks after height %d requires validation. Please restart with -reindex.</source>
+        <translation>ઊંચાઈ %d પછીના બ્લોકોના વિટનેસ ડેટાનું સત્યાપન જરૂરી છે. -reindex સાથે ફરી શરૂ કરો.</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
+        <translation>જૂના બ્લોકો ન કાઢતા મોડમાં પાછા જવા -reindex વડે ડેટાબેઝ ફરી બનાવવો પડશે.  આ આખી બ્લોકચેઇન ફરી ડાઉનલોડ કરશે</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>તમારા કમ્પ્યુટરની તારીખ અને સમય નેટવર્કથી %d મિનિટ કરતાં વધુ અલગ લાગે છે; આ સંમતિ નિષ્ફળતાનું કારણ બની શકે છે. કમ્પ્યુટરની ઘડિયાળ ચકાસ્યા પછી નોડ ફરી શરૂ કરો તો આ સંદેશ દેખાવો ન જોઈએ. ફરી શરૂ ન કરો તો પૂરતા નવા આઉટબાઉન્ડ પીઅરો સાથે જોડાયા પછી તે આપમેળે દેખાવાનું બંધ થવું જોઈએ, જેમાં થોડો સમય લાગી શકે છે. વધુ માહિતી માટે `getpeerinfo` અને `getnetworkinfo` RPC પદ્ધતિઓનું `timeoffset` ક્ષેત્ર જોઈ શકો છો.</translation>
+    </message>
+    <message>
+        <source>acceptstalefeeestimates is not supported on %s chain.</source>
+        <translation>%s ચેઇન પર acceptstalefeeestimatesનું સમર્થન નથી.</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>whitebind માત્ર આવતાં જોડાણો માટે વાપરી શકાય છે ("out" આપેલું છે)</translation>
+    </message>
+</context>
 <context>
     <name>P2CClaimDialog</name>
     <message>
@@ -3489,7 +5778,193 @@ Root certificates version: %2</source>
     <name>MiningPage</name>
     <message>
         <source>Optional: empty uses this wallet</source>
-        <translation>વૈકલ્પિક: ખાલી રાખવાથી આ વૉલેટ વપરાય છે</translation>
+        <translation>વૈકલ્પિક: ખાલી હોય તો આ વૉલેટ વપરાશે</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPU થ્રેડ:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>પુરસ્કારનું સરનામું બનાવી શકાયું નથી. વૉલેટ પ્રાપ્તિનાં સરનામાં બનાવી શકે છે કે નહીં તે તપાસો.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>ભૂલ</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>FAST મોડ ચકાસણી સાથે લગભગ 2 GiB RandomX મેમરી વહેંચે છે. વધુ થ્રેડ વધુ CPU સંસાધનો અને વીજળી વાપરે છે; નોડ માટે ક્ષમતા ખાલી રાખો. ડેટાસેટ તૈયાર કરવામાં થોડો સમય લાગી શકે છે.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>RandomX વડે તમારા CPU પર ટેસ્ટનેટ બ્લોક માઇન કરો. તમે શરૂ ન કરો ત્યાં સુધી માઇનિંગ બંધ રહે છે. આ નોડનાં બધાં વૉલેટ એક જ માઇનર વાપરે છે અને ટૅબ બદલવા કે વૉલેટ બંધ કરવા છતાં તે ચાલુ રહે છે.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>માઇનિંગ</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>માઇનિંગ / RandomX તૈયાર થઈ રહ્યું છે</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>આ વૉલેટનું નવું સરનામું</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>આ નેટવર્ક માટે પુરસ્કારનું સરનામું</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>પુરસ્કારનું સરનામું:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>માઇનિંગ શરૂ કરો</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>શરૂ થઈ રહ્યું છે</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>સ્થિતિ: %1
+હૅશ દર: %2 H/s
+હૅશ: %3 | સ્વીકારેલા બ્લોક: %4
+સક્રિય પુરસ્કાર સરનામું: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>માઇનિંગ રોકો</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>રોકાયેલું</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>રોકાઈ રહ્યું છે (હાલના કામની રાહ જોવાય છે)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>નોડ સિંક થવાની રાહ જોવાય છે</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>ચેતવણી: %1 માઇનિંગ થ્રેડ શોધાયેલા %2 લૉજિકલ CPU કરતાં વધુ છે. આથી હૅશ દર ઘટી શકે છે અને નોડ ધીમો પડી શકે છે.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Create Unsigned</source>
+        <translation>સહી વગરનો વ્યવહાર બનાવો</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>મોકલો</translation>
+    </message>
+</context>
+<context>
+    <name>SplashScreen</name>
+    <message>
+        <source>(press q to shutdown and continue later)</source>
+        <translation>(બંધ કરીને પછી ચાલુ રાખવા q દબાવો)</translation>
+    </message>
+    <message>
+        <source>press q to shutdown</source>
+        <translation>બંધ કરવા q દબાવો</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDescDialog</name>
+    <message>
+        <source>Details for %1</source>
+        <translation>%1ની વિગતો</translation>
+    </message>
+    <message>
+        <source>This pane shows a detailed description of the transaction</source>
+        <translation>આ પેનલ વ્યવહારનું વિગતવાર વર્ણન બતાવે છે</translation>
+    </message>
+</context>
+<context>
+    <name>WalletModel</name>
+    <message>
+        <source>Can't display address</source>
+        <translation>સરનામું બતાવી શકાયું નહીં</translation>
+    </message>
+    <message>
+        <source>Can't draft transaction.</source>
+        <translation>વ્યવહારનો મુસદ્દો બનાવી શકાયો નહીં.</translation>
+    </message>
+    <message>
+        <source>Can't sign transaction.</source>
+        <translation>વ્યવહાર પર સહી કરી શકાઈ નહીં.</translation>
+    </message>
+    <message>
+        <source>Confirm fee bump</source>
+        <translation>ફી વધારવાની પુષ્ટિ કરો</translation>
+    </message>
+    <message>
+        <source>Could not commit transaction</source>
+        <translation>વ્યવહાર પ્રતિબદ્ધ કરી શકાયો નહીં</translation>
+    </message>
+    <message>
+        <source>Current fee:</source>
+        <translation>હાલની ફી:</translation>
+    </message>
+    <message>
+        <source>Do you want to increase the fee?</source>
+        <extracomment>Asks a user if they would like to manually increase the fee of a transaction that has already been created.</extracomment>
+        <translation>શું તમે ફી વધારવા માંગો છો?</translation>
+    </message>
+    <message>
+        <source>Fee bump error</source>
+        <translation>ફી વધારવામાં ભૂલ</translation>
+    </message>
+    <message>
+        <source>Fee-bump PSBT copied to clipboard</source>
+        <translation>ફી વધારવાનો PSBT ક્લિપબોર્ડ પર નકલ થયો</translation>
+    </message>
+    <message>
+        <source>Increase:</source>
+        <translation>વધારો:</translation>
+    </message>
+    <message>
+        <source>Increasing transaction fee failed</source>
+        <translation>વ્યવહારની ફી વધારવાનું નિષ્ફળ થયું</translation>
+    </message>
+    <message>
+        <source>New fee:</source>
+        <translation>નવી ફી:</translation>
+    </message>
+    <message>
+        <source>PSBT copied</source>
+        <translation>PSBT નકલ થયો</translation>
+    </message>
+    <message>
+        <source>Send Coins</source>
+        <translation>નાણાં મોકલો</translation>
+    </message>
+    <message>
+        <source>Signer error</source>
+        <translation>સહીકર્તાની ભૂલ</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation>ચેતવણી: જરૂર પડે ત્યારે બચત-પરત આઉટપુટ ઘટાડીને અથવા ઇનપુટ ઉમેરીને વધારાની ફી ચૂકવાઈ શકે છે. જો પહેલેથી બચત-પરત આઉટપુટ ન હોય તો નવું ઉમેરાઈ શકે છે. આ ફેરફારોથી ગોપનીય માહિતી બહાર પડી શકે છે.</translation>
     </message>
 </context>
 </TS>

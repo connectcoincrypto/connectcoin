@@ -657,6 +657,8 @@ BOOST_FIXTURE_TEST_CASE(worker_retries_dns_reuses_endpoints_and_stops, TestChain
         return true;
     };
     auto worker{MakeP2CClaimWorker(*wallet)};
+    BOOST_CHECK_EQUAL(worker->Status()["concurrency"].getInt<int>(), 1000);
+    BOOST_CHECK_EQUAL(worker->Status()["connections_per_second"].getInt<int>(), 0);
     BOOST_REQUIRE(worker->Configure(-1, 1));
     BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
     BOOST_CHECK_EQUAL(lookups.load(), 0U);

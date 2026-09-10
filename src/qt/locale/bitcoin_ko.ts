@@ -58,13 +58,13 @@
         <translation type="unfinished">선택(&amp;H)</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">비트코인을 보내는 계좌 주소입니다. 코인을 보내기 전에 금액과 받는 주소를 항상 확인하십시오.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">ConnectCoin을 보내는 계좌 주소입니다. 코인을 보내기 전에 금액과 받는 주소를 항상 확인하십시오.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">비트코인을 받는 계좌 주소입니다. 신규 주소를 만들려면 수신 탭의 '새 수신 주소를 생성하기' 버튼을 사용하십시오.
+        <translation type="unfinished">ConnectCoin을 받는 계좌 주소입니다. 신규 주소를 만들려면 수신 탭의 '새 수신 주소를 생성하기' 버튼을 사용하십시오.
 서명은 '레거시' 타입의 주소만 가능합니다.</translation>
     </message>
     <message>
@@ -164,8 +164,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">지갑 암호화 승인</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">경고: 만약 암호화 된 지갑의 암호문을 잃어버릴 경우, &lt;b&gt;모든 비트코인들을 잃어버릴 수 있습니다&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation>경고: 지갑을 암호화한 뒤 암호 문구를 잃어버리면 &lt;b&gt;모든 CONNECTCOIN 자금을 잃게 됩니다&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -192,8 +192,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">뒤로가기</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">지갑을 암호화 해도 컴퓨터에 바이러스가 있을시 안전하지 않다는 것을 참고하세요.</translation>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
+        <translation>지갑을 암호화해도 컴퓨터에 침투한 악성 소프트웨어가 ConnectCoin을 훔치는 것을 완전히 막을 수는 없다는 점을 기억하세요.</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -233,7 +233,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>The passphrase entered for the wallet decryption is incorrect. It contains a null character (ie - a zero byte). If the passphrase was set with a version of this software prior to 25.0, please try again with only the characters up to — but not including — the first null character. If this is successful, please set a new passphrase to avoid this issue in the future.</source>
-        <translation type="unfinished">지갑 암호화 해제를 위해 입력된 비밀문구가 정확하지 않습니다. 비밀문구가 공백 문자 (0 바이트)를 포함하고 있습니다. 만약 비밀문구가 25.0 버전 이전의 비트코인 코어 소프트웨어에 의해 설정되었다면, 비밀문구를 첫 공백 문자 이전까지 입력해보세요. 이렇게 해서 성공적으로 입력되었다면, 차후 이런 문제가 발생하지 않도록 비밀문구를 새로이 설정해 주세요.</translation>
+        <translation type="unfinished">지갑 암호화 해제를 위해 입력된 비밀문구가 정확하지 않습니다. 비밀문구가 공백 문자 (0 바이트)를 포함하고 있습니다. 만약 비밀문구가 25.0 버전 이전의 ConnectCoin 코어 소프트웨어에 의해 설정되었다면, 비밀문구를 첫 공백 문자 이전까지 입력해보세요. 이렇게 해서 성공적으로 입력되었다면, 차후 이런 문제가 발생하지 않도록 비밀문구를 새로이 설정해 주세요.</translation>
     </message>
     <message>
         <source>Wallet passphrase was successfully changed.</source>
@@ -245,7 +245,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>The old passphrase entered for the wallet decryption is incorrect. It contains a null character (ie - a zero byte). If the passphrase was set with a version of this software prior to 25.0, please try again with only the characters up to — but not including — the first null character.</source>
-        <translation type="unfinished">지갑 암호화 해제를 위해 입력된 예전 비밀문구가 정확하지 않습니다. 비밀문구가 공백 문자 (0 바이트)를 포함하고 있습니다. 만약 비밀문구가 25.0 버전 이전의 비트코인 코어 소프트웨어에 의해 설정되었다면, 비밀문구를 첫 공백 문자 이전까지 입력해보세요.</translation>
+        <translation type="unfinished">지갑 암호화 해제를 위해 입력된 예전 비밀문구가 정확하지 않습니다. 비밀문구가 공백 문자 (0 바이트)를 포함하고 있습니다. 만약 비밀문구가 25.0 버전 이전의 ConnectCoin 코어 소프트웨어에 의해 설정되었다면, 비밀문구를 첫 공백 문자 이전까지 입력해보세요.</translation>
     </message>
     <message>
         <source>Warning: The Caps Lock key is on!</source>
@@ -296,7 +296,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>A fatal error occurred. Check that settings file is writable, or try running with -nosettings.</source>
         <extracomment>Explanatory text shown on startup when the settings file could not be written. Prompts user to check that we have the ability to write to the file. Explains that the user has the option of running without a settings file.</extracomment>
-        <translation type="unfinished">심각한 문제가 발생하였습니다. 세팅 파일이 작성가능한지 확인하거나 세팅없이 실행을 시도해보세요.</translation>
+        <translation>치명적인 오류가 발생했습니다. 설정 파일에 쓰기가 가능한지 확인하거나 -nosettings로 실행해 보십시오.</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -327,8 +327,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">금액</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">비트코인 주소를 입력하세요 (예: %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">ConnectCoin 주소를 입력하세요 (예: %1)</translation>
     </message>
     <message>
         <source>Unroutable</source>
@@ -445,6 +445,57 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>default wallet</source>
         <translation type="unfinished">기본 지갑</translation>
     </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>해당 없음</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>비공개 전파</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -514,8 +565,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">프록시가 &lt;b&gt;활성화&lt;/b&gt; 되었습니다: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">코인을 비트코인 주소로 전송합니다.</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">코인을 ConnectCoin 주소로 전송합니다.</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -558,7 +609,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">메시지 서명(&amp;M)</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
         <translation type="unfinished">지갑 주소가 본인 소유인지 증명하기 위해 메시지를 서명합니다.</translation>
     </message>
     <message>
@@ -566,8 +617,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">메시지 검증(&amp;V)</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">해당 비트코인 주소로 서명되었는지 확인하기 위해 메시지를 검증합니다.</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">해당 ConnectCoin 주소로 서명되었는지 확인하기 위해 메시지를 검증합니다.</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -626,7 +677,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">피어에 연결 중...</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
         <translation type="unfinished">지불 요청하기 (QR 코드와 bitcoin을 생성합니다: URIs)</translation>
     </message>
     <message>
@@ -684,16 +735,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Crtl + Q</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">부분적으로 서명된 비트코인 트랜잭션 불러오기</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">부분적으로 서명된 ConnectCoin 트랜잭션 불러오기</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">PSBT 혹은 클립보드에서 불러오기</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">클립보드로부터 부분적으로 서명된 비트코인 트랜잭션 불러오기</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">클립보드로부터 부분적으로 서명된 ConnectCoin 트랜잭션 불러오기</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -712,8 +763,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">받는 주소들(&amp;R)</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">bitcoin 열기: URI</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">ConnectCoin 열기: URI</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -750,8 +801,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">지갑 이동</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">사용할 수 있는 비트코인 명령줄 옵션 목록을 가져오기 위해 %1 도움말 메시지를 표시합니다.</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">사용할 수 있는 ConnectCoin 명령줄 옵션 목록을 가져오기 위해 %1 도움말 메시지를 표시합니다.</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -810,10 +861,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">보기(&amp;H)</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform>비트코인 네트워크에 활성화된 %n연결</numerusform>
+            <numerusform>ConnectCoin 네트워크에 활성화된 %n연결</numerusform>
         </translation>
     </message>
     <message>
@@ -923,6 +974,67 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>pay-to-connect 보상 생성</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>채굴(&amp;M)</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>CPU 채굴 제어</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>모든 파일</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>내보내기 오류</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>내보내기 완료</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>현재 지갑을 다른 노드에서 복원할 수 있는 관찰 전용 지갑으로 내보냅니다.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>관찰 전용 지갑 내보내기</translation>
+    </message>
+    <message>
+        <source>Invalid Wallet Name</source>
+        <translation>잘못된 지갑 이름</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>지갑 복원 및 마이그레이션</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>지갑 백업 복원 및 마이그레이션</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>지갑 파일 복원 및 마이그레이션…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>관찰 전용 지갑 내보내기 저장</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>지갑을 다음 위치로 내보냈습니다: </translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>지갑 이름은 비워 둘 수 없습니다</translation>
     </message>
 </context>
 <context>
@@ -1066,6 +1178,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(change)</source>
         <translation type="unfinished">(잔돈)</translation>
     </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>입력당 +/- %1 connect 차이가 날 수 있습니다.</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1166,6 +1282,42 @@ The migration process will create a backup of the wallet before migrating. This 
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">이전 성공</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>지갑 파일 &lt;i&gt;%1&lt;/i&gt;을(를) &lt;i&gt;%2&lt;/i&gt;(으)로 복원하고 마이그레이션하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>노드에서 가지치기를 사용하고 지갑이 가지치기된 블록 높이보다 이전에 생성되었다면, 마이그레이션된 지갑을 불러오는 과정에서 마이그레이션이 실패할 수 있습니다.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>마이그레이션 후 지갑 불러오기</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>지갑 복원 및 마이그레이션</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>지갑을 복원하면 백업 파일이 지갑 디렉터리로 복사되어 표준 지갑 디렉터리 구조에 배치됩니다. 원본 파일은 수정되지 않습니다.
+
+마이그레이션은 복원된 지갑을 하나 이상의 디스크립터 지갑으로 변환합니다. 이후 새로운 지갑 백업을 만들어야 합니다.
+이 지갑에 관찰 전용 스크립트가 있다면, 해당 스크립트가 포함된 새 지갑이 생성됩니다.
+풀이 가능하지만 관찰 대상으로 등록되지 않은 스크립트가 있다면, 해당 스크립트를 포함하는 별도의 새 지갑이 생성됩니다.
+
+마이그레이션 과정에서는 변환 전에 지갑 백업을 생성합니다. 백업 파일 이름은 &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak이며 이 지갑의 디렉터리에서 찾을 수 있습니다. 마이그레이션이 잘못된 경우 '지갑 복원' 기능으로 이 백업을 복원할 수 있습니다.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>마이그레이션 후 지갑을 불러오지 않았습니다. '파일 &gt; 지갑 열기' 메뉴에서 열 수 있습니다.</translation>
     </message>
 </context>
 <context>
@@ -1303,6 +1455,10 @@ The migration process will create a backup of the wallet before migrating. This 
         <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
         <translation type="unfinished">외부 서명 지원 없이 컴파일됨 (외부 서명에 필요) 개발자 참고 사항 [from:developer] "외부 서명"은 하드웨어 지갑과 같은 장치를 사용하는 것을 의미합니다.</translation>
     </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>빈 지갑을 만듭니다. 빈 지갑에는 처음에 개인 키나 스크립트가 없습니다. 나중에 디스크립터를 사용하여 개인 키와 주소를 가져올 수 있습니다.</translation>
+    </message>
 </context>
 <context>
     <name>EditAddressDialog</name>
@@ -1339,8 +1495,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">보내는 주소 편집</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">입력한 "%1" 주소는 올바른 비트코인 주소가 아닙니다.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">입력한 "%1" 주소는 올바른 ConnectCoin 주소가 아닙니다.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1455,8 +1611,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">커스텀 데이터 폴더 사용:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation type="unfinished">비트코인</translation>
+        <source>ConnectCoin</source>
+        <translation type="unfinished">ConnectCoin</translation>
     </message>
     <message numerus="yes">
         <source>%n GB of space available</source>
@@ -1511,6 +1667,10 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>Error</source>
         <translation type="unfinished">오류</translation>
     </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1이(가) ConnectCoin 블록체인의 사본을 다운로드하여 저장합니다.</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1519,8 +1679,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">유형</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">최근 거래는 아직 보이지 않을 수 있습니다. 따라서 당신의 지갑의 잔액이 틀릴 수도 있습니다. 이 정보는 당신의 지갑이 비트코인 네트워크와 완전한 동기화를 완료하면, 아래의 설명과 같이 정확해집니다.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">최근 거래는 아직 보이지 않을 수 있습니다. 따라서 당신의 지갑의 잔액이 틀릴 수도 있습니다. 이 정보는 당신의 지갑이 ConnectCoin 네트워크와 완전한 동기화를 완료하면, 아래의 설명과 같이 정확해집니다.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1570,17 +1730,29 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">알려지지 않음. 블록 헤더들을 사전 동기화 중 (%1, %2%)...</translation>
     </message>
+    <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>아직 표시되지 않은 거래의 영향을 받는 ConnectCoin 자금을 사용하려는 시도는 네트워크에서 승인되지 않습니다.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">비트코인 URI 열기</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">ConnectCoin URI 열기</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">클립보드로 부터 주소 붙여넣기</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1621,11 +1793,11 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message>
         <source>Full path to a %1 compatible script (e.g. C:\Downloads\hwi.exe or /Users/you/Downloads/hwi.py). Beware: malware can steal your coins!</source>
-        <translation type="unfinished">%1가 호환되는 스크립트가 있는 전체 경로 (예시 - C:\Downloads\hwi.exe or /Users/you/Downloads/hwi.py). 주의: 멀웨어가 당신의 코인들을 훔쳐갈 수도 있습니다!</translation>
+        <translation>%1 호환 스크립트의 전체 경로(예: C:\Downloads\hwi.exe 또는 /Users/you/Downloads/hwi.py). 주의: 악성 프로그램이 코인을 훔칠 수 있습니다!</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished">비트코인 클라이언트 포트를 라우터에서 자동으로 열기. 이 기능은 라우터가 PCP(Port Control Protocol) 또는 NAT-PMP(NAT Port Mapping Protocol) 를 지원하고 해당 기능이 활성화되어 있을 때만 작동합니다. 외부 포트는 임의(random)로 지정될 수 있습니다.</translation>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation type="unfinished">ConnectCoin 클라이언트 포트를 라우터에서 자동으로 열기. 이 기능은 라우터가 PCP(Port Control Protocol) 또는 NAT-PMP(NAT Port Mapping Protocol) 를 지원하고 해당 기능이 활성화되어 있을 때만 작동합니다. 외부 포트는 임의(random)로 지정될 수 있습니다.</translation>
     </message>
     <message>
         <source>Map port using PCP or NA&amp;T-PMP</source>
@@ -1756,8 +1928,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">연결 요청을 허용 (&amp;G)</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">SOCKS5 프록시를 통해 비트코인 네트워크에 연결합니다.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">SOCKS5 프록시를 통해 ConnectCoin 네트워크에 연결합니다.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1836,8 +2008,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">코인 상세 제어기능에 대한 표시 여부를 선택할 수 있습니다.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Tor onion 서비스를 위한 별도의 SOCKS5 프록시를 통해 Bitcoin 네트워크에 연결합니다.</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">Tor onion 서비스를 위한 별도의 SOCKS5 프록시를 통해 ConnectCoin 네트워크에 연결합니다.</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1918,6 +2090,42 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">지정한 프록시 주소가 잘못되었습니다.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>팝업 알림 활성화</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>수신 및 전송된 거래를 포함한 데스크톱 팝업 알림을 표시합니다. 기본적으로 비활성화되어 있습니다. 오류 및 확인 대화상자는 계속 활성화됩니다.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>가지치기를 활성화하면 거래를 저장하는 데 필요한 디스크 공간이 크게 줄어듭니다. 모든 블록은 계속 완전히 검증됩니다. 오래된 블록 데이터가 삭제되기 전에 동기화 상태를 유지하도록, 가지치기를 사용하는 동안에는 시작 시 지갑을 불러오고 활성 상태로 유지해야 합니다. 동기화가 가지치기된 데이터보다 뒤처진 지갑은 재색인이 필요할 수 있습니다. 이 설정을 되돌리려면 전체 블록체인을 다시 다운로드해야 합니다.</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>-popupnotifications 또는 connectcoin.conf의 popupnotifications로 설정되었습니다.</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1933,8 +2141,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">유형</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">표시된 정보가 오래된 것 같습니다. 당신의 지갑은 비트코인 네트워크에 연결된 뒤 자동으로 동기화 하지만, 아직 과정이 끝나지 않았습니다.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">표시된 정보가 오래된 것 같습니다. 당신의 지갑은 ConnectCoin 네트워크에 연결된 뒤 자동으로 동기화 하지만, 아직 과정이 끝나지 않았습니다.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -2025,8 +2233,8 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
+        <translation>
+            <numerusform>입력 %n개에 서명했지만 추가 서명이 필요합니다.</numerusform>
         </translation>
     </message>
     <message>
@@ -2088,8 +2296,8 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
+        <translation>
+            <numerusform>이 거래에는 서명되지 않은 입력이 %n개 있습니다.</numerusform>
         </translation>
     </message>
     <message>
@@ -2128,16 +2336,16 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">지불 요청 오류</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">비트코인을 시작할 수 없습니다: 지급을 위한 클릭 핸들러</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">ConnectCoin을 시작할 수 없습니다: 지급을 위한 클릭 핸들러</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">URI 핸들링</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin://"은 잘못된 URI입니다. 'bitcoin:'을 사용하십시오.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin://"은 잘못된 URI입니다. 'connectcoin:'을 사용하십시오.</translation>
     </message>
     <message>
         <source>Cannot process payment request because BIP70 is not supported.
@@ -2148,8 +2356,8 @@ BIP70의 광범위한 보안 결함으로 인해 모든 가맹점에서는 지�
 이 오류가 발생하면 판매자에게 BIP21 호환 URI를 제공하도록 요청해야 합니다.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">URI의 파싱에 문제가 발생했습니다. 잘못된 비트코인 주소나 URI 파라미터 구성에 오류가 존재할 수 있습니다.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">URI의 파싱에 문제가 발생했습니다. 잘못된 ConnectCoin 주소나 URI 파라미터 구성에 오류가 존재할 수 있습니다.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -2298,8 +2506,8 @@ BIP70의 광범위한 보안 결함으로 인해 모든 가맹점에서는 지�
         <translation type="unfinished">로컬 주소</translation>
     </message>
     <message>
-        <source>Network addresses that your Bitcoin node is currently using to communicate with other nodes.</source>
-        <translation type="unfinished">당신의 비트코인 노드가 현재 다른 노드들과 통신하기 위해 사용 중인 네트워크 주소입니다.</translation>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation type="unfinished">당신의 ConnectCoin 노드가 현재 다른 노드들과 통신하기 위해 사용 중인 네트워크 주소입니다.</translation>
     </message>
     <message>
         <source>Block chain</source>
@@ -2729,6 +2937,63 @@ For more information on using this console, type %6.
         <source>Unknown</source>
         <translation type="unfinished">알수없음</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Blocksdir</source>
+        <translation>블록 디렉터리</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>Direction/Type</source>
+        <translation>방향/유형</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>해당 없음</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>비공개 전파: 개인정보 보호가 중요한 거래를 전파하기 위한 단기 연결</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2745,8 +3010,8 @@ For more information on using this console, type %6.
         <translation type="unfinished">메시지(&amp;M):</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">지불 요청에 첨부되는 선택가능한 메시지 입니다. 이 메세지는 요청이 열릴 때 표시될 것 입니다. 메모: 이 메시지는 비트코인 네트워크로 전송되지 않습니다.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">지불 요청에 첨부되는 선택가능한 메시지 입니다. 이 메세지는 요청이 열릴 때 표시될 것 입니다. 메모: 이 메시지는 ConnectCoin 네트워크로 전송되지 않습니다.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -2987,7 +3252,7 @@ For more information on using this console, type %6.
     </message>
     <message>
         <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until you have validated the complete chain.</source>
-        <translation type="unfinished">고장 대체 수수료를 사용하게 될 경우 보낸 거래가 승인이 완료 될 때까지 몇 시간 혹은 몇 일 (혹은 영원히) 이 걸릴 수 있습니다. 수동으로 수수료를 선택하거나 전체 체인의 유효성이 검증될 때까지 기다리십시오.</translation>
+        <translation>대체 수수료(fallbackfee)를 사용하면 확인까지 몇 시간이나 며칠이 걸리는 거래를 보낼 수 있으며, 끝내 확인되지 않을 수도 있습니다. 수수료를 직접 선택하거나 전체 체인의 검증이 끝날 때까지 기다리는 것을 고려하세요.</translation>
     </message>
     <message>
         <source>Warning: Fee estimation is currently not possible.</source>
@@ -3042,8 +3307,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
 참고: 수수료는 바이트 단위로 계산되므로 500 가상 바이트(1kvB의 절반)의 트랜잭션 크기에 대해 "kvB당 100 사토시"의 수수료율은 궁극적으로 50사토시만 수수료를 산출합니다.</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
-        <translation type="unfinished">거래량이 블록에 남은 공간보다 적은 경우, 채굴자나 중계 노드들이 최소 수수료를 허용할 수 있습니다. 최소 수수료만 지불하는건 괜찮지만, 네트워크가 처리할 수 있는 용량을 넘는 비트코인 거래가 있을 경우에는 이 거래가 승인이 안될 수 있다는 점을 유의하세요.</translation>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation type="unfinished">거래량이 블록에 남은 공간보다 적은 경우, 채굴자나 중계 노드들이 최소 수수료를 허용할 수 있습니다. 최소 수수료만 지불하는건 괜찮지만, 네트워크가 처리할 수 있는 용량을 넘는 ConnectCoin 거래가 있을 경우에는 이 거래가 승인이 안될 수 있다는 점을 유의하세요.</translation>
     </message>
     <message>
         <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
@@ -3128,7 +3393,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">사인되지 않은 것을 생성(&amp;e)</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <translation type="unfinished">오프라인 %1 지갑 또는 PSBT가 호환되는 하드웨어 지갑과의 사용을 위한 '부분적으로 서명 된 비트 코인 트랜잭션(PSBT)'를 생성합니다.</translation>
     </message>
     <message>
@@ -3184,9 +3449,9 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">추후에 거래 수수료를 올릴 수 있습니다 ('수수료로-대체', BIP-125 지원)</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
-        <translation type="unfinished">거래 제안을 검토해 주십시오. 이것은 당신이 저장하거나 복사한 뒤 e.g. 오프라인 %1 지갑 또는 PSBT 호환 하드웨어 지갑으로 서명할 수 있는 PSBT (부분적으로 서명된 비트코인 트랜잭션)를 생성할 것입니다.</translation>
+        <translation type="unfinished">거래 제안을 검토해 주십시오. 이것은 당신이 저장하거나 복사한 뒤 e.g. 오프라인 %1 지갑 또는 PSBT 호환 하드웨어 지갑으로 서명할 수 있는 PSBT (부분적으로 서명된 ConnectCoin 트랜잭션)를 생성할 것입니다.</translation>
     </message>
     <message>
         <source>%1 from wallet '%2'</source>
@@ -3198,9 +3463,9 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">이 트랜잭션을 생성하겠습니까?</translation>
     </message>
     <message>
-        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
-        <translation type="unfinished">당신의 트랜잭션을 검토하세요. 당신은 트랜잭션을 생성하고 보낼 수 있습니다. 혹은 부분적으로 서명된 비트코인 트랜잭션 (PSBT, Partially Signed Bitcoin Transaction)을 생성하고, 저장하거나 복사하여 오프라인 %1지갑으로 서명할수도 있습니다. PSBT가 적용되는 하드월렛으로 서명할 수도 있습니다. </translation>
+        <translation type="unfinished">당신의 트랜잭션을 검토하세요. 당신은 트랜잭션을 생성하고 보낼 수 있습니다. 혹은 부분적으로 서명된 ConnectCoin 트랜잭션 (PSBT, Partially Signed ConnectCoin Transaction)을 생성하고, 저장하거나 복사하여 오프라인 %1지갑으로 서명할수도 있습니다. PSBT가 적용되는 하드월렛으로 서명할 수도 있습니다. </translation>
     </message>
     <message>
         <source>Please, review your transaction.</source>
@@ -3269,8 +3534,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">경고: 잘못된 비트코인 주소입니다</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">경고: 잘못된 ConnectCoin 주소입니다</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -3287,6 +3552,32 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(라벨 없음)</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>거래의 가상 크기 1 kB(1,000바이트)당 사용자 지정 수수료를 설정합니다.
+
+참고:  수수료는 바이트 단위로 계산되므로, 수수료율이 'kvB당 100 connects'이고 거래 크기가 500 가상 바이트(1 kvB의 절반)라면 최종 수수료는 50 connects입니다.</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>현재 최소 수수료를 사용합니다. 확인 시간은 추정되지 않습니다.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>나중에 수수료를 인상할 수 있습니다.</translation>
     </message>
 </context>
 <context>
@@ -3308,8 +3599,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">이전에 사용한 주소를 선택하기</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">이 비트코인 주소로 송금됩니다</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">이 ConnectCoin 주소로 송금됩니다</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -3344,8 +3635,20 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">이 주소에 라벨을 입력하면 사용된 주소 목록에 라벨이 표시됩니다</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">bitcoin: URI에 추가된 메시지는 참고를 위해 거래내역과 함께 저장될 것입니다. Note: 이 메시지는 비트코인 네트워크로 전송되지 않습니다.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">connectcoin: URI에 추가된 메시지는 참고를 위해 거래내역과 함께 저장될 것입니다. Note: 이 메시지는 ConnectCoin 네트워크로 전송되지 않습니다.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>수수료는 보내는 금액에서 차감됩니다. 수신자는 금액 필드에 입력한 것보다 적은 ConnectCoin을 받게 됩니다. 수신자를 여러 명 선택하면 수수료가 균등하게 나뉩니다.</translation>
     </message>
 </context>
 <context>
@@ -3374,8 +3677,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">레거시(P2PKH) 주소를 사용하여 메시지 혹은 동의서에 서명하면 해당 주소로 비트코인을 받을 수 있다는 사실을 증명할 수 있습니다. 다만, 모호하거나 무작위적인 내용에는 피싱 공격자가 사용자의 신원을 넘겨받도록 속이려 할 수 있기 때문에 서명을 하는것에 주의하세요. 반드시 당신이 동의하는 완전한 문구에만 서명하세요.</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">메세지를 서명할 비트코인 주소</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">메세지를 서명할 ConnectCoin 주소</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3398,8 +3701,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">현재 서명을 클립보드에 복사</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation type="unfinished">당신이 이 비트코인 주소를 소유한다는 증명을 위해 메시지를 서명합니다</translation>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation type="unfinished">당신이 이 ConnectCoin 주소를 소유한다는 증명을 위해 메시지를 서명합니다</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -3419,11 +3722,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     </message>
     <message>
         <source>Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation type="unfinished">메시지를 검증하기 위해 아래 칸에 각각 지갑 주소와 메시지, 서명을 입력하세요 (메시지 원본의 띄어쓰기, 들여쓰기, 행 나눔 등이 정확하게 입력되어야 하므로 원본을 복사해서 입력하세요). 네트워크 침입자의 속임수에 넘어가지 않도록 서명된 메시지 내용 이외의 내용은 참고하지 않도록 유의하세요. 이 기능은 단순히 서명한 쪽에서 해당 주소로 송금을 받을 수 있다는 것을 증명하는 것 뿐이며 그 이상은 어떤 것도 보증하지 않습니다.</translation>
+        <translation>메시지를 검증하려면 아래에 수신자의 주소, 메시지(줄바꿈, 공백, 탭 등을 원문 그대로 정확히 복사해야 합니다), 서명을 입력하세요. 중간자 공격에 속지 않도록 서명이 서명된 메시지 자체에 적힌 내용 이상의 것을 증명한다고 해석하지 마세요. 이는 서명자가 해당 주소로 자금을 받을 수 있다는 사실만 증명하며, 어떤 거래를 누가 보냈는지는 증명하지 못합니다!</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">메세지의 서명에 사용된 비트코인 주소</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">메세지의 서명에 사용된 ConnectCoin 주소</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -3434,8 +3737,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">메세지의 서명되었을 때의 시그니처</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">입력된 비트코인 주소로 메시지가 서명되었는지 검증합니다</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">입력된 ConnectCoin 주소로 메시지가 서명되었는지 검증합니다</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3500,6 +3803,18 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">메시지가 검증되었습니다.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>레거시(P2PKH) 주소로 메시지나 합의문에 서명하여 해당 주소로 전송된 ConnectCoin 자금을 받을 수 있음을 증명할 수 있습니다. 피싱 공격자가 다른 사람이 본인을 사칭할 수 있는 서명을 하도록 속일 수 있으므로, 모호하거나 무작위인 내용에 서명하지 않도록 주의하십시오. 내용이 충분히 상세하고 동의하는 문서에만 서명하십시오.</translation>
     </message>
 </context>
 <context>
@@ -3649,7 +3964,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     </message>
     <message>
         <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation type="unfinished">신규 채굴된 코인이 사용되기 위해서는 %1 개의 블록이 경과되어야 합니다. 블록을 생성할 때 블록체인에 추가되도록 네트워크에 전파되는 과정을 거치는데, 블록체인에 포함되지 못하고 실패한다면 해당 블록의 상태는 '미승인'으로 표현되고 비트코인 또한 사용될 수 없습니다. 이 현상은 다른 노드가 비슷한 시간대에 동시에 블록을 생성할 때 종종 발생할 수 있습니다.</translation>
+        <translation type="unfinished">신규 채굴된 코인이 사용되기 위해서는 %1 개의 블록이 경과되어야 합니다. 블록을 생성할 때 블록체인에 추가되도록 네트워크에 전파되는 과정을 거치는데, 블록체인에 포함되지 못하고 실패한다면 해당 블록의 상태는 '미승인'으로 표현되고 ConnectCoin 또한 사용될 수 없습니다. 이 현상은 다른 노드가 비슷한 시간대에 동시에 블록을 생성할 때 종종 발생할 수 있습니다.</translation>
     </message>
     <message>
         <source>Debug information</source>
@@ -3975,7 +4290,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Partially Signed Transaction (*.psbt)</source>
-        <translation type="unfinished">부분적으로 서명된 비트코인 트랜잭션 (* .psbt)</translation>
+        <translation type="unfinished">부분적으로 서명된 ConnectCoin 트랜잭션 (* .psbt)</translation>
     </message>
     <message>
         <source>PSBT file must be smaller than 100 MiB</source>
@@ -4137,8 +4452,8 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation type="unfinished">오류 : 덤프파일 식별자 기록이 잘못되었습니다. "%s"이 아닌 "%s"를 얻었습니다.</translation>
     </message>
     <message>
-        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
-        <translation type="unfinished">오류 : 덤프파일 버젼이 지원되지 않습니다. 이 비트코인 지갑 버젼은 오직 버젼1의 덤프파일을 지원합니다. %s버젼의 덤프파일을 얻었습니다.</translation>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">오류 : 덤프파일 버젼이 지원되지 않습니다. 이 ConnectCoin 지갑 버젼은 오직 버젼1의 덤프파일을 지원합니다. %s버젼의 덤프파일을 얻었습니다.</translation>
     </message>
     <message>
         <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
@@ -4182,7 +4497,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
-        <translation type="unfinished">디렉터리 이름 변경 '%s' -&gt; '%s' 에 실패했습니다. 잘못된 스냅샷 디렉터리 %s를 직접 이동하거나 삭제하여 문제를 해결해야 합니다. 그렇지 않으면 비트코인 코어를 시작할 때 동일한 오류가 다시 발생할 것입니다.</translation>
+        <translation type="unfinished">디렉터리 이름 변경 '%s' -&gt; '%s' 에 실패했습니다. 잘못된 스냅샷 디렉터리 %s를 직접 이동하거나 삭제하여 문제를 해결해야 합니다. 그렇지 않으면 ConnectCoin 코어를 시작할 때 동일한 오류가 다시 발생할 것입니다.</translation>
     </message>
     <message>
         <source>SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is supported</source>
@@ -4258,7 +4573,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
-        <translation type="unfinished">naravfbj. dufb jdncnlfs. jx dhcji djc d jcbc jdnbfbicb </translation>
+        <translation>-dnsseed를 false로 설정할 때 -forcednsseed를 true로 설정할 수 없습니다.</translation>
     </message>
     <message>
         <source>Cannot set -peerblockfilters without -blockfilterindex.</source>
@@ -4657,7 +4972,7 @@ Unable to restore backup of wallet.</source>
     </message>
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
-        <translation type="unfinished">포트 연결에 실패하였습니다. 필요하다면 -리슨=0 옵션을 사용하십시오.</translation>
+        <translation>어떤 포트에서도 수신 대기하지 못했습니다. 이를 원한다면 -listen=0 옵션을 사용하십시오.</translation>
     </message>
     <message>
         <source>Failed to read block.</source>
@@ -4689,7 +5004,7 @@ Unable to restore backup of wallet.</source>
     </message>
     <message>
         <source>Ignoring duplicate -wallet %s.</source>
-        <translation type="unfinished">중복 -지갑 %s를 무시합니다.</translation>
+        <translation>중복된 -wallet %s를 무시합니다.</translation>
     </message>
     <message>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
@@ -4985,7 +5300,7 @@ Unable to restore backup of wallet.</source>
     </message>
     <message>
         <source>Unknown -blockfilterindex value %s.</source>
-        <translation type="unfinished">알 수 없는 -blockfileterindex 값 %s.</translation>
+        <translation>알 수 없는 -blockfilterindex 값 %s.</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -5109,6 +5424,176 @@ Please try running the latest software version.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">설정파일이 쓰여지지 않았습니다.</translation>
+    </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>거스름돈 목적지는 유형 1 P2PK(bech32m) 목적지여야 합니다</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin은 유형 1 P2PK(bech32m) 주소만 지원합니다</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin은 유형 1 P2PK(bech32m) 거스름돈 주소만 지원합니다</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>ConnectCoin 거래에는 유효한 유형 1 목적지 또는 유형 2 PAY_TO_CONNECT 출력이 필요합니다</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>ConnectCoin의 유형 1 출력은 SIGHASH_DEFAULT만 지원합니다</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>입력이 SIGHASH_DEFAULT를 사용하는 완전한 유형 1 지출이 아닙니다</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>입력에는 완전한 P2C 증명의 위트니스 데이터가 필요합니다</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>메인넷은 아직 출시되지 않았습니다. 제네시스 블록이 정의되어 있지 않습니다. 공개 테스트에는 -testnet4를, 로컬 테스트에는 -regtest를 사용하세요.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>이 개발 빌드에는 프로젝트 소유의 공개 소스 코드 URL이 설정되어 있지 않습니다.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>사용 가능한 파일 디스크립터가 부족합니다. -rpcmaxconnections 값을 줄이거나 기본값 %d을 사용해 보세요</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>%s이 유용하다면 기여해 주세요.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+%s (%s) 또는 %s (%s)의 수정을 고려하십시오.</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf는 더 이상 권장되지 않으며 다음 릴리스에서 완전히 제거됩니다.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>%zu MiB의 dbcache는 시스템 메모리가 %zu MiB에 불과한 경우 너무 클 수 있습니다.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>치명적인 내부 오류가 발생했습니다. 자세한 내용은 %s을(를) 참조하십시오: %s</translation>
+    </message>
+    <message>
+        <source>Copyright (C) %i-%i</source>
+        <translation>저작권 (C) %i-%i</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>내장 asmap 데이터를 읽을 수 없습니다</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>지갑 생성 중…</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>주소 %s의 바인딩 설정이 중복되었습니다. -bind, -bind=...=onion 및 -whitebind 설정을 확인하십시오.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>내장 asmap 데이터를 사용할 수 없습니다</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>%s 생성 오류: 버전 메타데이터를 쓸 수 없습니다.</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>오류: 거래 %s을(를) 관찰 전용 지갑에 추가할 수 없습니다</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>오류: 파일 '%s'을(를) 만들 수 없습니다</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>오류: 내보내기 대상 '%s'이(가) 이미 존재합니다</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>오류: 내보내기 대상은 비워 둘 수 없습니다</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>오류: 새 관찰 전용 지갑을 만들지 못했습니다. %s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>오류: 내보낸 지갑을 쓸 수 없습니다</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>오류: 지갑에 내보낼 디스크립터가 없습니다</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>오류: 관찰 전용 지갑 내보내기를 위한 데이터베이스 트랜잭션을 커밋할 수 없습니다</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>오류: 새 관찰 전용 지갑 %s의 데이터베이스 트랜잭션을 실행할 수 없습니다</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>수수료율(%s)이 설정된 최소 수수료율(%s)보다 낮습니다.</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>'-limitancestorsize' 옵션이 지정되었지만 조상 크기 제한은 클러스터 크기 제한으로 대체되었습니다(-limitclustersize 참조). 이 옵션은 아무 효과가 없습니다.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>'-limitdescendantsize' 옵션이 지정되었지만 후손 크기 제한은 클러스터 크기 제한으로 대체되었습니다(-limitclustersize 참조). 이 옵션은 아무 효과가 없습니다.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>자체 거래의 비공개 전파(-privatebroadcast)가 요청되었으나 -proxyrandomize가 비활성화되어 있습니다. 비공개 전파 연결의 Tor 회로가 다른 Tor 연결과 연관될 수 있습니다. 개인정보를 최대한 보호하려면 -proxyrandomize=1로 설정하십시오.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>자체 거래의 비공개 전파(-privatebroadcast)가 요청되었지만 -connect도 설정되어 있습니다. 비공개 전파는 무작위로 선택한 Tor 또는 I2P 피어에 새 연결을 열어야 하므로 두 설정은 함께 사용할 수 없습니다. 대신 -maxconnections=0 -addnode=... 사용을 고려하십시오</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>자체 거래의 비공개 전파(-privatebroadcast)가 요청되었으나 Tor와 I2P 네트워크 모두에 연결할 수 없습니다</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>가지치기 모드는 -txospenderindex와 함께 사용할 수 없습니다.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>-testactivationheight 옵션은 메인넷에서 사용할 수 없습니다.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>-vbparams 옵션은 메인넷에서 사용할 수 없습니다.</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>거래 수수료 %s을(를) 포함하면 총액이 잔액을 초과합니다.</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>디스크립터 캐시를 쓸 수 없습니다</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>경고: 최적 체인보다 6블록을 넘게 긴 유효하지 않은 체인을 발견했습니다. 데이터베이스 손상이나 피어와의 합의 규칙 불일치가 원인일 수 있습니다.</translation>
     </message>
 </context>
 <context>
@@ -5457,7 +5942,92 @@ Root certificates version: %2</source>
     <name>MiningPage</name>
     <message>
         <source>Optional: empty uses this wallet</source>
-        <translation>선택 사항: 비워 두면 이 지갑을 사용합니다</translation>
+        <translation>선택 사항: 비워 두면 이 지갑 사용</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPU 스레드:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>보상 주소를 생성하지 못했습니다. 지갑이 수신 주소를 생성할 수 있는지 확인하세요.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>오류</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>FAST 모드는 약 2 GiB의 RandomX 메모리를 검증 작업과 공유합니다. 스레드가 많을수록 CPU 자원과 전력을 더 사용하므로 노드를 위한 여유 자원을 남겨 두세요. 데이터 세트 초기화에는 시간이 걸릴 수 있습니다.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>RandomX를 사용하여 CPU로 테스트넷 블록을 채굴합니다. 직접 시작하기 전까지 채굴은 꺼져 있습니다. 이 노드의 모든 지갑이 채굴기를 공유하며, 탭을 바꾸거나 지갑을 닫아도 채굴은 계속됩니다.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>채굴</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>채굴 중 / RandomX 준비 중</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>이 지갑의 새 주소</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>이 네트워크의 보상 주소</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>보상 주소:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>채굴 시작</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>시작 중</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>상태: %1
+해시레이트: %2 H/s
+해시: %3 | 승인된 블록: %4
+활성 보상 주소: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>채굴 중지</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>중지됨</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>중지 중 (현재 작업 대기)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>노드의 동기화 완료 대기 중</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>경고: 채굴 스레드 %1개가 감지된 논리 CPU %2개를 초과합니다. 해시레이트가 감소하고 노드가 느려질 수 있습니다.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
     </message>
 </context>
 </TS>

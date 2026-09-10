@@ -54,13 +54,13 @@
         <translation type="unfinished">A&amp;lege</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Acestea sunt adresele tale Bitcoin pentru efectuarea plăților. Întotdeauna verifică atent suma de plată și adresa beneficiarului înainte de a trimite monede.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">Acestea sunt adresele tale ConnectCoin pentru efectuarea plăților. Întotdeauna verifică atent suma de plată și adresa beneficiarului înainte de a trimite monede.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Acestea sunt adresele Bitcoin pentru primirea plăților. Folosiți butonul " Creați o nouă adresă de primire" din fila de primire pentru a crea noi adrese.
+        <translation type="unfinished">Acestea sunt adresele ConnectCoin pentru primirea plăților. Folosiți butonul " Creați o nouă adresă de primire" din fila de primire pentru a crea noi adrese.
 Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
     </message>
     <message>
@@ -100,6 +100,10 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">Export nereușit</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Exportă</translation>
     </message>
 </context>
 <context>
@@ -160,8 +164,8 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <translation type="unfinished">Confirmaţi criptarea portofelului</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">Atenţie: Dacă vă criptati portofelul și ulterior pierdeți parola, &lt;b&gt;VEŢI PIERDE TOȚI BITCOINII&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">Atenţie: Dacă vă criptati portofelul și ulterior pierdeți parola, &lt;b&gt;VEŢI PIERDE TOȚI CONNECTCOINII&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -189,8 +193,8 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <translation type="unfinished">Înapoi</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">Reţineti: criptarea portofelului dvs. nu vă poate proteja în totalitate bitcoin-urile împotriva furtului de malware care vă infectează computerul.</translation>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished">Reţineti: criptarea portofelului dvs. nu vă poate proteja în totalitate ConnectCoin-urile împotriva furtului de malware care vă infectează computerul.</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -254,6 +258,10 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
     <message>
         <source>Banned Until</source>
         <translation type="unfinished">Banat până la</translation>
+    </message>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/Mască de rețea</translation>
     </message>
 </context>
 <context>
@@ -320,8 +328,8 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <translation type="unfinished">Sumă</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Introduceţi o adresă Bitcoin (de exemplu %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">Introduceţi o adresă ConnectCoin (de exemplu %1)</translation>
     </message>
     <message>
         <source>Unroutable</source>
@@ -409,6 +417,98 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <source>default wallet</source>
         <translation type="unfinished">portofel implicit</translation>
     </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <extracomment>Short-lived peer connection type that solicits known addresses from a peer.</extracomment>
+        <translation>Obținere de adrese</translation>
+    </message>
+    <message>
+        <source>Block Relay</source>
+        <extracomment>Peer connection type that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>Retransmisie de blocuri</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <extracomment>Short-lived peer connection type that tests the aliveness of known addresses.</extracomment>
+        <translation>Sondă</translation>
+    </message>
+    <message>
+        <source>Full Relay</source>
+        <extracomment>Peer connection type that relays all network information.</extracomment>
+        <translation>Retransmisie completă</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <extracomment>Peer connection type established manually through one of several methods.</extracomment>
+        <translation>Manual</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>Difuzare privată</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -478,8 +578,8 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <translation type="unfinished">Proxy este&lt;b&gt;activat&lt;/b&gt;:%1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Trimite monede către o adresă Bitcoin</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">Trimite monede către o adresă ConnectCoin</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -522,16 +622,16 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <translation type="unfinished">Semnați și transmiteți un mesaj...</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Semnaţi mesaje cu adresa dvs. Bitcoin pentru a dovedi că vă aparţin</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">Semnaţi mesaje cu adresa dvs. ConnectCoin pentru a dovedi că vă aparţin</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">&amp;Verifică mesajul...</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">Verificaţi mesaje pentru a vă asigura că au fost semnate cu adresa Bitcoin specificată</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">Verificaţi mesaje pentru a vă asigura că au fost semnate cu adresa ConnectCoin specificată</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -590,8 +690,8 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <translation type="unfinished">Conectarea cu colaboratorii...</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Cereţi plăţi (generează coduri QR şi bitcoin-uri: URls)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">Cereţi plăţi (generează coduri QR şi ConnectCoin-uri: URls)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -650,16 +750,16 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <translation type="unfinished">Ctr+Q</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">Încărcați Tranzacția Bitcoin Parțial Semnată</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">Încărcați Tranzacția ConnectCoin Parțial Semnată</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">Incarca PSBT din &amp;notite</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">Încărcați Tranzacția Bitcoin Parțial Semnată din clipboard</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">Încărcați Tranzacția ConnectCoin Parțial Semnată din clipboard</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -678,8 +778,8 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <translation type="unfinished">&amp;Adresele de primire</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">Deschidere bitcoin: o adresa URI sau o cerere de plată</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">Deschidere connectcoin: o adresa URI sau o cerere de plată</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -716,8 +816,8 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <translation type="unfinished">Transfera un portofel</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Arată mesajul de ajutor %1 pentru a obţine o listă cu opţiunile posibile de linii de comandă Bitcoin</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">Arată mesajul de ajutor %1 pentru a obţine o listă cu opţiunile posibile de linii de comandă ConnectCoin</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -776,12 +876,12 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <translation type="unfinished">A&amp;rata</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform>%n conexiuni active la rețeaua Bitcoin</numerusform>
-            <numerusform>%n conexiuni active către reţeaua Bitcoin</numerusform>
-            <numerusform>%n de conexiuni active către reţeaua Bitcoin</numerusform>
+            <numerusform>%n conexiuni active la rețeaua ConnectCoin</numerusform>
+            <numerusform>%n conexiuni active către reţeaua ConnectCoin</numerusform>
+            <numerusform>%n de conexiuni active către reţeaua ConnectCoin</numerusform>
         </translation>
     </message>
     <message>
@@ -891,6 +991,67 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>Creează recompense pay-to-connect</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Minerit</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>Controlează mineritul CPU</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Toate fișierele</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Eroare la export</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>Export reușit</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>Exportați o versiune doar pentru monitorizare a portofelului curent, care poate fi restaurată pe alt nod.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>Exportă portofelul doar pentru monitorizare</translation>
+    </message>
+    <message>
+        <source>Invalid Wallet Name</source>
+        <translation>Nume de portofel nevalid</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>Restaurează și migrează portofelul</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>Restaurează și migrează copia de siguranță a portofelului</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>Restaurează și migrează fișierul portofelului…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>Salvează exportul portofelului doar pentru monitorizare</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>Portofelul a fost exportat în </translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>Numele portofelului nu poate fi gol</translation>
+    </message>
+    <message>
+        <source>Zoom</source>
+        <translation>Mărire</translation>
     </message>
 </context>
 <context>
@@ -1026,6 +1187,18 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <source>(change)</source>
         <translation type="unfinished">(rest)</translation>
     </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation>&amp;Deblochează ieșirile necheltuite</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>Poate varia cu +/- %1 connect pentru fiecare intrare.</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation>&amp;Blochează ieșirile necheltuite</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1104,6 +1277,66 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">Mutarea s-a efectuat cu succes</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>Sigur doriți să restaurați fișierul portofelului &lt;i&gt;%1&lt;/i&gt; în &lt;i&gt;%2&lt;/i&gt; și să îl migrați?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Dacă nodul este trunchiat și portofelul a fost creat înainte de înălțimea de trunchiere, procesul de migrare poate eșua la încărcarea portofelului migrat.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Încarcă portofelul după migrare</translation>
+    </message>
+    <message>
+        <source>Migrating Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <translation>Se migrează portofelul &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
+    <message>
+        <source>Migrating the wallet will convert this wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>Migrarea va converti acest portofel în unul sau mai multe portofele cu descriptori. Va trebui creată o nouă copie de siguranță a portofelului.
+Dacă portofelul conține scripturi doar pentru monitorizare, se va crea un portofel nou care le conține.
+Dacă portofelul conține scripturi rezolvabile, dar nemonitorizate, se va crea un alt portofel nou care le conține.
+
+Procesul de migrare va crea o copie de siguranță a portofelului înainte de migrare. Fișierul copiei va fi numit &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak și se va afla în directorul acestui portofel. În cazul unei migrări incorecte, copia poate fi restaurată folosind funcția „Restaurează portofelul”.</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>Restaurează și migrează portofelul</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>Restaurarea portofelului va copia fișierul de siguranță în directorul portofelelor, în structura standard de directoare a portofelului. Fișierul original nu va fi modificat.
+
+Migrarea va converti portofelul restaurat în unul sau mai multe portofele cu descriptori. Va trebui creată o nouă copie de siguranță a portofelului.
+Dacă portofelul conține scripturi doar pentru monitorizare, se va crea un portofel nou care le conține.
+Dacă portofelul conține scripturi rezolvabile, dar nemonitorizate, se va crea un alt portofel nou care le conține.
+
+Procesul de migrare va crea o copie de siguranță a portofelului înainte de migrare. Fișierul copiei va fi numit &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak și se va afla în directorul acestui portofel. În cazul unei migrări incorecte, copia poate fi restaurată folosind funcția „Restaurează portofelul”.</translation>
+    </message>
+    <message>
+        <source>Solvable but not watched scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>Scripturile rezolvabile, dar nemonitorizate, au fost migrate într-un portofel nou numit '%1'.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>Portofelul nu a fost încărcat după migrare. Îl puteți deschide din meniul „Fișier &gt; Deschide portofelul”.</translation>
+    </message>
+    <message>
+        <source>Watchonly scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>Scripturile doar pentru monitorizare au fost migrate într-un portofel nou numit '%1'.</translation>
     </message>
 </context>
 <context>
@@ -1232,7 +1465,20 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <source>Create</source>
         <translation type="unfinished">Creează</translation>
     </message>
-    </context>
+        <message>
+        <source>Compiled without external signing support (required for external signing)</source>
+        <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
+        <translation>Compilat fără suport pentru semnare externă (necesar pentru semnarea externă)</translation>
+    </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>Creați un portofel gol. Portofelele goale nu au inițial chei private sau scripturi. Cheile private și adresele pot fi importate ulterior folosind descriptori.</translation>
+    </message>
+    <message>
+        <source>Please provide a name and, if desired, enable any advanced options</source>
+        <translation>Furnizați un nume și, dacă doriți, activați opțiunile avansate</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1268,8 +1514,8 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <translation type="unfinished">Editează adresa de trimitere</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">Adresa introdusă "%1" nu este o adresă Bitcoin validă.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">Adresa introdusă "%1" nu este o adresă ConnectCoin validă.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1381,10 +1627,10 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
     </message>
     <message numerus="yes">
         <source>%n GB of space available</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n GB de spațiu disponibil</numerusform>
+            <numerusform>%n GB de spațiu disponibil</numerusform>
+            <numerusform>%n GB de spațiu disponibil</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -1397,10 +1643,10 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
     </message>
     <message numerus="yes">
         <source>(%n GB needed for full chain)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>(%n GB necesar pentru întregul lanț)</numerusform>
+            <numerusform>(%n GB necesari pentru întregul lanț)</numerusform>
+            <numerusform>(%n GB necesari pentru întregul lanț)</numerusform>
         </translation>
     </message>
     <message>
@@ -1418,10 +1664,10 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
     <message numerus="yes">
         <source>(sufficient to restore backups %n day(s) old)</source>
         <extracomment>Explanatory text on the capability of the current prune target.</extracomment>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>(suficient pentru restaurarea copiilor de siguranță vechi de %n zi)</numerusform>
+            <numerusform>(suficient pentru restaurarea copiilor de siguranță vechi de %n zile)</numerusform>
+            <numerusform>(suficient pentru restaurarea copiilor de siguranță vechi de %n de zile)</numerusform>
         </translation>
     </message>
     <message>
@@ -1440,12 +1686,24 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <source>Error</source>
         <translation type="unfinished">Eroare</translation>
     </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 va descărca și va stoca o copie a lanțului de blocuri ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2 GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation>Când apăsați OK, %1 va începe să descarce și să proceseze întregul lanț de blocuri %4 (%2 GB), începând cu primele tranzacții din %3, când a fost lansat inițial %4.</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">Tranzactiile recente pot sa nu fie inca vizibile, de aceea balanta portofelului poate fi incorecta. Aceasta informatie va fi corecta de indata ce portofelul va fi complet sincronizat cu reteaua Bitcoin, asa cum este detaliat mai jos.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">Tranzactiile recente pot sa nu fie inca vizibile, de aceea balanta portofelului poate fi incorecta. Aceasta informatie va fi corecta de indata ce portofelul va fi complet sincronizat cu reteaua ConnectCoin, asa cum este detaliat mai jos.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1487,17 +1745,41 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <source>Esc</source>
         <translation type="unfinished">Iesire</translation>
     </message>
-    </context>
+        <message>
+        <source>Form</source>
+        <translation>formular</translation>
+    </message>
+    <message>
+        <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
+        <translation>%1 se sincronizează.  Va descărca antete și blocuri de la nodurile partenere și le va valida până când ajunge la vârful lanțului de blocuri.</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Încercările de a cheltui fonduri ConnectCoin afectate de tranzacții care nu sunt încă afișate nu vor fi acceptate de rețea.</translation>
+    </message>
+    <message>
+        <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
+        <translation>Necunoscut. Se presincronizează antetele (%1, %2%)…</translation>
+    </message>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)…</source>
+        <translation>Necunoscut. Se sincronizează antetele (%1, %2%)…</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">DeschidețI Bitcoin URI</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">DeschidețI ConnectCoin URI</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">Lipeşte adresa din clipboard</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1613,8 +1895,8 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <translation type="unfinished">Permite conexiuni de intrar&amp;e</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Conectare la reţeaua Bitcoin printr-un proxy SOCKS5.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">Conectare la reţeaua ConnectCoin printr-un proxy SOCKS5.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1666,15 +1948,15 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
     </message>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
-        <translation type="unfinished">Alegeţi subdiviziunea folosită la afişarea interfeţei şi la trimiterea de bitcoin.</translation>
+        <translation type="unfinished">Alegeţi subdiviziunea folosită la afişarea interfeţei şi la trimiterea de ConnectCoin.</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
         <translation type="unfinished">Arată controlul caracteristicilor monedei sau nu.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Conectați-vă la rețeaua Bitcoin printr-un proxy SOCKS5 separat pentru serviciile Tor onion.</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">Conectați-vă la rețeaua ConnectCoin printr-un proxy SOCKS5 separat pentru serviciile Tor onion.</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
@@ -1735,7 +2017,139 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
     </message>
     <message>
         <source>The supplied proxy address is invalid.</source>
-        <translation type="unfinished">Adresa bitcoin pe care aţi specificat-o nu este validă.</translation>
+        <translation type="unfinished">Adresa ConnectCoin pe care aţi specificat-o nu este validă.</translation>
+    </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Activează notificările pop-up</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Afișează notificări pop-up pe desktop, inclusiv pentru tranzacțiile primite și trimise. Dezactivate implicit. Dialogurile de eroare și confirmare rămân activate.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
+        <source>&amp;External signer script path</source>
+        <translation>Calea scriptului de semnare &amp;externă</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation>&amp;OK</translation>
+    </message>
+    <message>
+        <source>&amp;Port:</source>
+        <translation>&amp;Port:</translation>
+    </message>
+    <message>
+        <source>&amp;Show tray icon</source>
+        <translation>&amp;Afișează pictograma în zona de notificare</translation>
+    </message>
+    <message>
+        <source>&amp;Third-party transaction URLs</source>
+        <translation>URL-uri de tranzacții de la &amp;terți</translation>
+    </message>
+    <message>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation>Deschide automat portul clientului ConnectCoin pe router. Funcționează numai dacă routerul acceptă PCP sau NAT-PMP și această funcție este activată. Portul extern poate fi aleatoriu.</translation>
+    </message>
+    <message>
+        <source>Compiled without external signing support (required for external signing)</source>
+        <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
+        <translation>Compilat fără suport pentru semnare externă (necesar pentru semnarea externă)</translation>
+    </message>
+    <message>
+        <source>Current settings will be backed up at "%1".</source>
+        <extracomment>Text explaining to the user that the client's current settings will be backed up at a specific location. %1 is a stand-in argument for the backup location's path.</extracomment>
+        <translation>Setările curente vor fi salvate într-o copie de siguranță la „%1”.</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Activarea trunchierii reduce semnificativ spațiul pe disc necesar pentru stocarea tranzacțiilor. Toate blocurile sunt în continuare validate integral. Portofelele trebuie încărcate la pornire și menținute active cât timp trunchierea este activată, pentru a rămâne sincronizate înainte de ștergerea datelor vechi ale blocurilor; portofelele rămase în urmă față de datele trunchiate pot necesita reindexare. Anularea acestei setări necesită redescărcarea întregului lanț de blocuri.</translation>
+    </message>
+    <message>
+        <source>Expert</source>
+        <translation>Expert</translation>
+    </message>
+    <message>
+        <source>External Signer (e.g. hardware wallet)</source>
+        <translation>Dispozitiv de semnare externă (de exemplu, portofel hardware)</translation>
+    </message>
+    <message>
+        <source>Full path to a %1 compatible script (e.g. C:\Downloads\hwi.exe or /Users/you/Downloads/hwi.py). Beware: malware can steal your coins!</source>
+        <translation>Calea completă către un script compatibil cu %1 (de exemplu, C:\Downloads\hwi.exe sau /Users/you/Downloads/hwi.py). Atenție: programele rău intenționate vă pot fura monedele!</translation>
+    </message>
+    <message>
+        <source>Map port using PCP or NA&amp;T-PMP</source>
+        <translation>Mapează portul folosind PCP sau NA&amp;T-PMP</translation>
+    </message>
+    <message>
+        <source>Maximum database cache size. Make sure you have enough RAM. A larger cache can contribute to faster sync, after which the benefit is less pronounced for most use cases. Lowering the cache size will reduce memory usage. Unused mempool memory is shared for this cache.</source>
+        <extracomment>Tooltip text for Options window setting that sets the size of the database cache. Explains the corresponding effects of increasing/decreasing this value.</extracomment>
+        <translation>Dimensiunea maximă a memoriei cache a bazei de date. Asigurați-vă că aveți suficient RAM. O memorie cache mai mare poate accelera sincronizarea, după care avantajul este mai puțin evident în majoritatea situațiilor. Reducerea dimensiunii cache-ului scade utilizarea memoriei. Memoria neutilizată a mempool-ului este partajată cu acest cache.</translation>
+    </message>
+    <message>
+        <source>Options set in this dialog are overridden by the command line:</source>
+        <translation>Opțiunile din acest dialog sunt suprascrise de linia de comandă:</translation>
+    </message>
+    <message>
+        <source>Proxy &amp;IP:</source>
+        <translation>&amp;IP proxy:</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>Stabilit prin -popupnotifications sau popupnotifications în connectcoin.conf.</translation>
+    </message>
+    <message>
+        <source>Set the number of script verification threads. Negative values correspond to the number of cores you want to leave free to the system.</source>
+        <extracomment>Tooltip text for Options window setting that sets the number of script verification threads. Explains that negative values mean to leave these many cores free to the system.</extracomment>
+        <translation>Stabilește numărul de fire de execuție pentru verificarea scripturilor. Valorile negative corespund numărului de nuclee pe care doriți să le lăsați libere pentru sistem.</translation>
+    </message>
+    <message>
+        <source>Subtract &amp;fee from amount by default</source>
+        <extracomment>An Options window setting to set subtracting the fee from a sending amount as default.</extracomment>
+        <translation>Scade implicit &amp;comisionul din sumă</translation>
+    </message>
+    <message>
+        <source>Third-party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
+        <translation>URL-uri de la terți (de exemplu, un explorator de blocuri) care apar ca elemente ale meniului contextual din fila tranzacțiilor. %s din URL este înlocuit cu hashul tranzacției. URL-urile multiple sunt separate prin bara verticală |.</translation>
+    </message>
+    <message>
+        <source>This allows you or a third party tool to communicate with the node through command-line and JSON-RPC commands.</source>
+        <extracomment>Tooltip text for Options window setting that enables the RPC server.</extracomment>
+        <translation>Vă permite dumneavoastră sau unui instrument terț să comunicați cu nodul prin linia de comandă și comenzi JSON-RPC.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Folosește un proxy SOCKS&amp;5 separat pentru a ajunge la noduri prin servicii onion Tor:</translation>
+    </message>
+    <message>
+        <source>Whether to set subtract fee from amount as default or not.</source>
+        <extracomment>Tooltip text for Options window setting that sets subtracting the fee from a sending amount as default.</extracomment>
+        <translation>Dacă scăderea comisionului din sumă trebuie activată implicit sau nu.</translation>
+    </message>
+    <message>
+        <source>Whether to show PSBT controls.</source>
+        <extracomment>Tooltip text for options window setting that enables PSBT controls.</extracomment>
+        <translation>Dacă se afișează controalele PSBT.</translation>
     </message>
 </context>
 <context>
@@ -1748,8 +2162,8 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
 <context>
     <name>OverviewPage</name>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">Informaţiile afişate pot fi neactualizate. Portofelul dvs. se sincronizează automat cu reţeaua Bitcoin după ce o conexiune este stabilită, dar acest proces nu a fost finalizat încă.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">Informaţiile afişate pot fi neactualizate. Portofelul dvs. se sincronizează automat cu reţeaua ConnectCoin după ce o conexiune este stabilită, dar acest proces nu a fost finalizat încă.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1787,7 +2201,19 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <source>Recent transactions</source>
         <translation type="unfinished">Tranzacţii recente</translation>
     </message>
-    </context>
+        <message>
+        <source>Form</source>
+        <translation>formular</translation>
+    </message>
+    <message>
+        <source>Privacy mode activated for the Overview tab. To unmask the values, uncheck Settings-&gt;Mask values.</source>
+        <translation>Modul de confidențialitate este activat pentru fila Prezentare generală. Pentru a afișa valorile, debifați Setări-&gt;Maschează valorile.</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Total:</translation>
+    </message>
+</context>
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
@@ -1816,10 +2242,10 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>S-a semnat %n intrare, dar mai sunt necesare semnături.</numerusform>
+            <numerusform>S-au semnat %n intrări, dar mai sunt necesare semnături.</numerusform>
+            <numerusform>S-au semnat %n de intrări, dar mai sunt necesare semnături.</numerusform>
         </translation>
     </message>
     <message>
@@ -1861,10 +2287,10 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Tranzacția are %n intrare nesemnată.</numerusform>
+            <numerusform>Tranzacția are %n intrări nesemnate.</numerusform>
+            <numerusform>Tranzacția are %n de intrări nesemnate.</numerusform>
         </translation>
     </message>
     <message>
@@ -1883,6 +2309,54 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <source>Transaction status is unknown.</source>
         <translation type="unfinished">Starea tranzacției este necunoscută.</translation>
     </message>
+    <message>
+        <source>(But this wallet does not have the right keys.)</source>
+        <translation>(Dar acest portofel nu deține cheile potrivite.)</translation>
+    </message>
+    <message>
+        <source>Broadcast Tx</source>
+        <translation>Difuzează tranzacția</translation>
+    </message>
+    <message>
+        <source>Cannot sign inputs while wallet is locked.</source>
+        <translation>Intrările nu pot fi semnate cât timp portofelul este blocat.</translation>
+    </message>
+    <message>
+        <source>PSBT Operations</source>
+        <translation>Operațiuni PSBT</translation>
+    </message>
+    <message>
+        <source>PSBT copied to clipboard.</source>
+        <translation>PSBT copiată în clipboard.</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk.</source>
+        <translation>PSBT salvată pe disc.</translation>
+    </message>
+    <message>
+        <source>Sign Tx</source>
+        <translation>Semnează tranzacția</translation>
+    </message>
+    <message>
+        <source>Signed transaction successfully. Transaction is ready to broadcast.</source>
+        <translation>Tranzacția a fost semnată cu succes. Este pregătită pentru difuzare.</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast failed: %1</source>
+        <translation>Difuzarea tranzacției a eșuat: %1</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast successfully! Transaction ID: %1</source>
+        <translation>Tranzacția a fost difuzată cu succes! ID-ul tranzacției: %1</translation>
+    </message>
+    <message>
+        <source>Transaction is fully signed and ready for broadcast.</source>
+        <translation>Tranzacția este semnată integral și pregătită pentru difuzare.</translation>
+    </message>
+    <message>
+        <source>Transaction is missing some information about inputs.</source>
+        <translation>Din tranzacție lipsesc anumite informații despre intrări.</translation>
+    </message>
 </context>
 <context>
     <name>PaymentServer</name>
@@ -1891,24 +2365,32 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <translation type="unfinished">Eroare la cererea de plată</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Bitcoin nu poate porni: click-to-pay handler</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">ConnectCoin nu poate porni: click-to-pay handler</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">Gestionare URI</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin://' nu este un URI valid. Folositi 'bitcoin:' in loc.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin://' nu este un URI valid. Folositi 'connectcoin:' in loc.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">URI nu poate fi analizat! Acest lucru poate fi cauzat de o adresă Bitcoin invalidă sau parametri URI deformaţi.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">URI nu poate fi analizat! Acest lucru poate fi cauzat de o adresă ConnectCoin invalidă sau parametri URI deformaţi.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
         <translation type="unfinished">Manipulare fişier cerere de plată</translation>
+    </message>
+    <message>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation>Cererea de plată nu poate fi procesată deoarece BIP70 nu este acceptat.
+Din cauza numeroaselor vulnerabilități de securitate din BIP70, vă recomandăm ferm să ignorați orice instrucțiuni ale comercianților de a schimba portofelul.
+Dacă primiți această eroare, solicitați comerciantului un URI compatibil cu BIP21.</translation>
     </message>
 </context>
 <context>
@@ -1967,6 +2449,11 @@ Semnarea este posibilă numai cu adrese de tip "legacy".</translation>
         <source>Outbound</source>
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">Ieşire</translation>
+    </message>
+    <message>
+        <source>Ping</source>
+        <extracomment>Title of Peers Table column which indicates the current latency of the connection with the peer.</extracomment>
+        <translation>Ping</translation>
     </message>
 </context>
 <context>
@@ -2320,6 +2807,222 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
         <source>Unknown</source>
         <translation type="unfinished">Necunoscut</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>&amp;Copy IP/Netmask</source>
+        <extracomment>Context menu action to copy the IP/Netmask of a banned peer. IP/Netmask is the combination of a peer's IP address and its Netmask. For IP address, see: https://en.wikipedia.org/wiki/IP_address.</extracomment>
+        <translation>&amp;Copiază IP/masca de rețea</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>&amp;Ridică interdicția</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation>1 &amp;zi</translation>
+    </message>
+    <message>
+        <source>Address Relay</source>
+        <extracomment>Text title for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>Retransmisie de adrese</translation>
+    </message>
+    <message>
+        <source>Addresses Processed</source>
+        <extracomment>Text title for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>Adrese procesate</translation>
+    </message>
+    <message>
+        <source>Addresses Rate-Limited</source>
+        <extracomment>Text title for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>Adrese limitate ca frecvență</translation>
+    </message>
+    <message>
+        <source>Blocksdir</source>
+        <translation>Director de blocuri</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation>Timpul scurs de la primirea de la acest nod a unui bloc nou care a trecut verificările inițiale de validitate.</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <extracomment>Tooltip text for the Last Transaction field in the peer details area.</extracomment>
+        <translation>Timpul scurs de la primirea de la acest nod a unei tranzacții noi acceptate în mempool-ul nostru.</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>General</translation>
+    </message>
+    <message>
+        <source>Hide Peers Detail</source>
+        <translation>Ascunde detaliile nodurilor</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation>Lățime de bandă mare</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation>Retransmisie de blocuri compacte BIP152 cu lățime de bandă mare: %1</translation>
+    </message>
+    <message>
+        <source>Mapped AS</source>
+        <translation>AS mapat</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Ping minim</translation>
+    </message>
+    <message>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation>Adresele de rețea folosite în prezent de nodul dumneavoastră ConnectCoin pentru a comunica cu alte noduri.</translation>
+    </message>
+    <message>
+        <source>Node window - [%1]</source>
+        <translation>Fereastra nodului - [%1]</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to request addresses from a peer.</extracomment>
+        <translation>Obținere de adrese la ieșire: de scurtă durată, pentru solicitarea adreselor</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>Retransmisie de blocuri la ieșire: nu retransmite tranzacții sau adrese</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to test the aliveness of known addresses.</extracomment>
+        <translation>Sondă la ieșire: de scurtă durată, pentru testarea adreselor</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays all network information. This is the default behavior for outbound connections.</extracomment>
+        <translation>Retransmisie completă la ieșire: implicită</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <extracomment>Explanatory text for an outbound peer connection that was established manually through one of several methods. The numbered arguments are stand-ins for the methods available to establish manual connections.</extracomment>
+        <translation>Conexiune manuală la ieșire: adăugată folosind RPC %1 sau opțiunile de configurare %2/%3</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>Difuzare privată: de scurtă durată, pentru difuzarea tranzacțiilor sensibile din punctul de vedere al confidențialității</translation>
+    </message>
+    <message>
+        <source>The BIP324 session ID string in hex.</source>
+        <translation>Șirul identificatorului de sesiune BIP324 în format hexazecimal.</translation>
+    </message>
+    <message>
+        <source>The direction and type of peer connection: %1</source>
+        <translation>Direcția și tipul conexiunii cu nodul partener: %1</translation>
+    </message>
+    <message>
+        <source>The mapped Autonomous System used for diversifying peer selection.</source>
+        <translation>Sistemul autonom mapat folosit pentru diversificarea selecției nodurilor partenere.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</source>
+        <extracomment>Tooltip text for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>Numărul total de adrese primite de la acest nod și eliminate (neprocesate) din cauza limitării frecvenței.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</source>
+        <extracomment>Tooltip text for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>Numărul total de adrese primite de la acest nod și procesate (exclude adresele eliminate din cauza limitării frecvenței).</translation>
+    </message>
+    <message>
+        <source>The transport layer version: %1</source>
+        <translation>Versiunea stratului de transport: %1</translation>
+    </message>
+    <message>
+        <source>To specify a non-default location of the blocks directory use the '%1' option.</source>
+        <translation>Pentru a specifica o locație diferită de cea implicită pentru directorul de blocuri, folosiți opțiunea '%1'.</translation>
+    </message>
+    <message>
+        <source>To specify a non-default location of the data directory use the '%1' option.</source>
+        <translation>Pentru a specifica o locație diferită de cea implicită pentru directorul de date, folosiți opțiunea '%1'.</translation>
+    </message>
+    <message>
+        <source>Transaction Relay</source>
+        <translation>Retransmisie de tranzacții</translation>
+    </message>
+    <message>
+        <source>Transport</source>
+        <translation>Transport</translation>
+    </message>
+    <message>
+        <source>Whether we relay addresses to this peer.</source>
+        <extracomment>Tooltip text for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>Dacă retransmitem adrese către acest nod.</translation>
+    </message>
+    <message>
+        <source>Whether we relay transactions to this peer.</source>
+        <translation>Dacă retransmitem tranzacții către acest nod.</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation>nu este selectată retransmisia cu lățime de bandă mare</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation>nodul partener ne-a selectat pentru retransmisie cu lățime de bandă mare</translation>
+    </message>
+    <message>
+        <source>v1: unencrypted, plaintext transport protocol</source>
+        <extracomment>Explanatory text for v1 transport type.</extracomment>
+        <translation>v1: protocol de transport necriptat, în text simplu</translation>
+    </message>
+    <message>
+        <source>v2: BIP324 encrypted transport protocol</source>
+        <extracomment>Explanatory text for v2 transport type.</extracomment>
+        <translation>v2: protocol de transport criptat BIP324</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>prin %1</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation>am selectat nodul partener pentru retransmisie cu lățime de bandă mare</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2336,8 +3039,8 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
         <translation type="unfinished">&amp;Mesaj:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">Un mesaj opţional de ataşat la cererea de plată, care va fi afişat cînd cererea este deschisă. Notă: Acest mesaj nu va fi trimis cu plata către reţeaua Bitcoin.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">Un mesaj opţional de ataşat la cererea de plată, care va fi afişat cînd cererea este deschisă. Notă: Acest mesaj nu va fi trimis cu plata către reţeaua ConnectCoin.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -2403,7 +3106,23 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
         <source>Could not unlock wallet.</source>
         <translation type="unfinished">Portofelul nu a putut fi deblocat.</translation>
     </message>
-    </context>
+        <message>
+        <source>&amp;Create new receiving address</source>
+        <translation>&amp;Creează o adresă de primire nouă</translation>
+    </message>
+    <message>
+        <source>An optional label to associate with the new receiving address (used by you to identify an invoice).  It is also attached to the payment request.</source>
+        <translation>O etichetă opțională de asociat noii adrese de primire (folosită de dumneavoastră pentru a identifica o factură).  Este atașată și cererii de plată.</translation>
+    </message>
+    <message>
+        <source>An optional message that is attached to the payment request and may be displayed to the sender.</source>
+        <translation>Un mesaj opțional atașat cererii de plată, care poate fi afișat expeditorului.</translation>
+    </message>
+    <message>
+        <source>Could not generate new %1 address</source>
+        <translation>Nu s-a putut genera o adresă %1 nouă</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
@@ -2453,6 +3172,10 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
     <message>
         <source>Request payment to %1</source>
         <translation type="unfinished">Cere plata pentru %1</translation>
+    </message>
+    <message>
+        <source>Verify this address on e.g. a hardware wallet screen</source>
+        <translation>Verificați această adresă, de exemplu, pe ecranul unui portofel hardware</translation>
     </message>
 </context>
 <context>
@@ -2754,15 +3477,15 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Se estimeaza inceperea confirmarii in %n bloc.</numerusform>
+            <numerusform>Se estimeaza inceperea confirmarii in %n blocuri.</numerusform>
+            <numerusform>Se estimeaza inceperea confirmarii in %n blocuri.</numerusform>
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">Atenţie: Adresa bitcoin nevalidă!</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">Atenţie: Adresa ConnectCoin nevalidă!</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -2779,6 +3502,88 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(fără etichetă)</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>%1 from wallet '%2'</source>
+        <translation>%1 din portofelul '%2'</translation>
+    </message>
+    <message>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks…)</source>
+        <translation>(Comisionul inteligent nu a fost încă inițializat. De obicei, acest lucru durează câteva blocuri…)</translation>
+    </message>
+    <message>
+        <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
+        <translation>Un comision prea mic poate produce o tranzacție care nu se confirmă niciodată (citiți indicația afișată)</translation>
+    </message>
+    <message>
+        <source>Cr&amp;eate Unsigned</source>
+        <translation>Cr&amp;eează fără semnătură</translation>
+    </message>
+    <message>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation>Creează o tranzacție ConnectCoin semnată parțial (PSBT) pentru utilizare, de exemplu, cu un portofel %1 deconectat sau cu un portofel hardware compatibil cu PSBT.</translation>
+    </message>
+    <message>
+        <source>PSBT saved</source>
+        <extracomment>Popup message when a PSBT has been saved to a file</extracomment>
+        <translation>PSBT salvată</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk</source>
+        <translation>PSBT salvată pe disc</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
+        <translation>Verificați propunerea de tranzacție. Aceasta va produce o tranzacție ConnectCoin semnată parțial (PSBT), pe care o puteți salva sau copia și apoi semna, de exemplu, cu un portofel %1 deconectat sau cu un portofel hardware compatibil cu PSBT.</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
+        <translation>Verificați tranzacția. Puteți crea și trimite această tranzacție sau crea o tranzacție ConnectCoin semnată parțial (PSBT), pe care o puteți salva sau copia și apoi semna, de exemplu, cu un portofel %1 deconectat sau cu un portofel hardware compatibil cu PSBT.</translation>
+    </message>
+    <message>
+        <source>Set external signer script path in Options -&gt; Wallet</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Stabiliți calea scriptului de semnare externă în Opțiuni -&gt; Portofel</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Specificați un comision personalizat per kB (1.000 de octeți) din dimensiunea virtuală a tranzacției.
+
+Notă:  Deoarece comisionul se calculează per octet, o rată de „100 connects per kvB” pentru o tranzacție de 500 de octeți virtuali (jumătate din 1 kvB) ar produce un comision final de numai 50 connects.</translation>
+    </message>
+    <message>
+        <source>The PSBT has been copied to the clipboard. You can also save it.</source>
+        <translation>PSBT a fost copiată în clipboard. O puteți și salva.</translation>
+    </message>
+    <message>
+        <source>To review recipient list click "Show Details…"</source>
+        <translation>Pentru a verifica lista destinatarilor, apăsați „Afișează detaliile…”</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>Se folosește comisionul minim curent. Timpul de confirmare nu este estimat.</translation>
+    </message>
+    <message>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation>Când volumul tranzacțiilor este mai mic decât spațiul din blocuri, atât minerii, cât și nodurile de retransmisie pot impune un comision minim. Plata acestui comision minim este în regulă, dar rețineți că poate produce o tranzacție care nu se confirmă niciodată, dacă cererea de tranzacții ConnectCoin depășește capacitatea de procesare a rețelei.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>Puteți mări comisionul ulterior.</translation>
     </message>
 </context>
 <context>
@@ -2800,8 +3605,8 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
         <translation type="unfinished">Alegeţi adrese folosite anterior</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">Adresa bitcoin către care se face plata</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">Adresa ConnectCoin către care se face plata</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -2836,8 +3641,20 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
         <translation type="unfinished">Introduceţi eticheta pentru ca această adresa să fie introdusă în lista de adrese folosite</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">un mesaj a fost ataşat la bitcoin: URI care va fi stocat cu tranzacţia pentru referinţa dvs. Notă: Acest mesaj nu va fi trimis către reţeaua bitcoin.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">un mesaj a fost ataşat la connectcoin: URI care va fi stocat cu tranzacţia pentru referinţa dvs. Notă: Acest mesaj nu va fi trimis către reţeaua ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Comisionul va fi scăzut din suma trimisă. Destinatarul va primi mai puțin ConnectCoin decât introduceți în câmpul sumei. Dacă sunt selectați mai mulți destinatari, comisionul se împarte egal.</translation>
     </message>
 </context>
 <context>
@@ -2846,7 +3663,11 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
         <source>Send</source>
         <translation type="unfinished">Trimis</translation>
     </message>
-    </context>
+        <message>
+        <source>Create Unsigned</source>
+        <translation>Creează fără semnătură</translation>
+    </message>
+</context>
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
@@ -2858,7 +3679,7 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
         <translation type="unfinished">&amp;Semnează mesaj</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
+        <source>The ConnectCoin address to sign the message with</source>
         <translation type="unfinished">Adresa cu care semnaţi mesajul</translation>
     </message>
     <message>
@@ -2878,8 +3699,8 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
         <translation type="unfinished">Semnătură</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation type="unfinished">Semnează mesajul pentru a dovedi ca deţineţi acestă adresă Bitcoin</translation>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation type="unfinished">Semnează mesajul pentru a dovedi ca deţineţi acestă adresă ConnectCoin</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -2902,8 +3723,8 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
         <translation type="unfinished">Introduceţi adresa de semnatură, mesajul (asiguraţi-vă că aţi copiat spaţiile, taburile etc. exact) şi semnatura dedesubt pentru a verifica mesajul. Aveţi grijă să nu citiţi mai mult în semnatură decît mesajul în sine, pentru a evita să fiţi păcăliţi de un atac de tip man-in-the-middle. De notat ca aceasta dovedeste doar ca semnatarul primeste odata cu adresa, nu dovedesta insa trimiterea vreunei tranzactii.</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">Introduceţi o adresă Bitcoin</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">Introduceţi o adresă ConnectCoin</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -2914,8 +3735,8 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
         <translation type="unfinished">Semnătura dată când mesajul a fost semnat</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">Verificaţi mesajul pentru a vă asigura că a fost semnat cu adresa Bitcoin specificată</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">Verificaţi mesajul pentru a vă asigura că a fost semnat cu adresa ConnectCoin specificată</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -2976,6 +3797,26 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">Mesaj verificat.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the clipboard</source>
+        <translation>Copiază semnătura curentă în clipboard</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>Adresa introdusă nu corespunde unei chei în format vechi (P2PKH). Această versiune de %1 nu acceptă semnarea mesajelor pentru SegWit sau pentru alte tipuri de adrese decât P2PKH. Verificați adresa și încercați din nou.</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Puteți semna mesaje/acorduri cu adresele dumneavoastră în format vechi (P2PKH), pentru a dovedi că puteți primi fonduri ConnectCoin trimise către ele. Aveți grijă să nu semnați nimic vag sau aleatoriu, deoarece atacurile de phishing pot încerca să vă păcălească să vă cedați identitatea prin semnătură. Semnați numai declarații complet detaliate cu care sunteți de acord.</translation>
     </message>
 </context>
 <context>
@@ -3049,10 +3890,10 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>se maturizează peste încă %n bloc</numerusform>
+            <numerusform>se maturizează peste încă %n blocuri</numerusform>
+            <numerusform>se maturizează peste încă %n de blocuri</numerusform>
         </translation>
     </message>
     <message>
@@ -3130,6 +3971,32 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
     <message>
         <source>P2C domain</source>
         <translation>Domeniu P2C</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>Credit total</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is in the memory pool.</extracomment>
+        <translation>0/neconfirmată, în mempool</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, not in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is not in the memory pool.</extracomment>
+        <translation>0/neconfirmată, în afara mempool-ului</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>Credit</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Debit</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>Debit total</translation>
     </message>
 </context>
 <context>
@@ -3374,6 +4241,30 @@ Pentru mai multe informații privind folosirea consolei, tastează %6.
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>Introdu adresa, domeniul P2C, identificatorul tranzacției sau eticheta de căutat</translation>
     </message>
+    <message>
+        <source>&amp;Edit address label</source>
+        <translation>&amp;Editează eticheta adresei</translation>
+    </message>
+    <message>
+        <source>&amp;Show transaction details</source>
+        <translation>&amp;Afișează detaliile tranzacției</translation>
+    </message>
+    <message>
+        <source>A&amp;bandon transaction</source>
+        <translation>A&amp;bandonează tranzacția</translation>
+    </message>
+    <message>
+        <source>Copy &amp;raw transaction</source>
+        <translation>Copiază tranzacția &amp;brută</translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <source>Increase transaction &amp;fee</source>
+        <translation>Mărește &amp;comisionul tranzacției</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -3397,7 +4288,23 @@ Mergi la Fisiere&gt;Deschide Portofel ca sa incarci un portofel.
         <source>Load Transaction Data</source>
         <translation type="unfinished">Incarca datele tranzactiei</translation>
     </message>
-    </context>
+        <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>Fișierul PSBT trebuie să fie mai mic de 100 MiB</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>Tranzacție semnată parțial (*.psbt)</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>Nu se poate decoda PSBT</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>Nu se poate decoda PSBT din clipboard (base64 nevalid)</translation>
+    </message>
+</context>
 <context>
     <name>WalletModel</name>
     <message>
@@ -3449,6 +4356,22 @@ Mergi la Fisiere&gt;Deschide Portofel ca sa incarci un portofel.
         <source>Can't display address</source>
         <translation type="unfinished">Nu se poate afisa adresa</translation>
     </message>
+    <message>
+        <source>Can't draft transaction.</source>
+        <translation>Nu se poate pregăti tranzacția.</translation>
+    </message>
+    <message>
+        <source>Fee-bump PSBT copied to clipboard</source>
+        <translation>PSBT pentru mărirea comisionului a fost copiată în clipboard</translation>
+    </message>
+    <message>
+        <source>PSBT copied</source>
+        <translation>PSBT copiată</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation>Atenție: Comisionul suplimentar poate fi plătit prin reducerea ieșirilor de rest sau adăugarea unor intrări, dacă este necesar. Poate fi adăugată o ieșire de rest nouă dacă nu există deja una. Aceste schimbări pot dezvălui informații confidențiale.</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -3484,6 +4407,10 @@ Mergi la Fisiere&gt;Deschide Portofel ca sa incarci un portofel.
     <message>
         <source>Cancel</source>
         <translation type="unfinished">Anulare</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Exportă</translation>
     </message>
 </context>
 <context>
@@ -3866,6 +4793,786 @@ Restaurarea copiei de rezervă a portofelului a eșuat.</translation>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Fișierul de setări nu a putut fi scris</translation>
     </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>Destinația restului trebuie să fie o destinație P2PK de tip 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin acceptă numai adrese P2PK de tip 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin acceptă numai adrese pentru rest P2PK de tip 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>Tranzacțiile ConnectCoin necesită destinații valide de tip 1 sau ieșiri PAY_TO_CONNECT de tip 2</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>Ieșirile ConnectCoin de tip 1 acceptă numai SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>Intrarea nu reprezintă o cheltuire completă de tip 1 cu SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>Intrarea necesită date martor complete pentru o dovadă P2C</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>Rețeaua principală nu a fost lansată: nu este definit niciun bloc geneză. Folosiți -testnet4 pentru testare publică sau -regtest pentru testare locală.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>Pentru această versiune de dezvoltare nu este configurat niciun URL public al codului sursă deținut de proiect.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Nu sunt disponibili suficienți descriptori de fișiere. Încercați să reduceți -rpcmaxconnections sau să folosiți valoarea implicită %d</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>Vă rugăm să contribuiți dacă vi se pare util %s.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Luați în considerare modificarea %s (%s) sau %s (%s).</translation>
+    </message>
+    <message>
+        <source>
+Unable to cleanup failed migration</source>
+        <translation>
+Nu se pot elimina urmele migrării eșuate</translation>
+    </message>
+    <message>
+        <source>%s failed to validate the -assumeutxo snapshot state. This indicates a hardware problem, or a bug in the software, or a bad software modification that allowed an invalid snapshot to be loaded. As a result of this, the node will shut down and stop using any state that was built on the snapshot, resetting the chain height from %d to %d. On the next restart, the node will resume syncing from %d without using any snapshot data. Please report this incident to %s, including how you obtained the snapshot. The invalid snapshot chainstate will be left on disk in case it is helpful in diagnosing the issue that caused this error.</source>
+        <translation>%s nu a putut valida starea instantaneului -assumeutxo. Acest lucru indică o problemă hardware, o eroare în program sau o modificare incorectă a programului care a permis încărcarea unui instantaneu nevalid. Prin urmare, nodul se va opri și nu va mai folosi nicio stare construită pe baza instantaneului, resetând înălțimea lanțului de la %d la %d. La următoarea pornire, nodul va relua sincronizarea de la %d fără a folosi date din instantaneu. Raportați acest incident către %s, inclusiv modul în care ați obținut instantaneul. Starea lanțului din instantaneul nevalid va rămâne pe disc, în cazul în care ajută la diagnosticarea problemei care a cauzat eroarea.</translation>
+    </message>
+    <message>
+        <source>%s is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation>%s este setat foarte sus! Comisioane atât de mari ar putea fi plătite pentru o singură tranzacție.</translation>
+    </message>
+    <message>
+        <source>%s request to listen on port %u. This port is considered "bad" and thus it is unlikely that any peer will connect to it. See doc/p2p-bad-ports.md for details and a full list.</source>
+        <translation>%s solicită ascultarea pe portul %u. Acest port este considerat „nepotrivit”, astfel că este puțin probabil ca vreun nod partener să se conecteze la el. Consultați doc/p2p-bad-ports.md pentru detalii și lista completă.</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf este învechit și va fi eliminat complet în versiunea următoare.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>Un dbcache de %zu MiB poate fi prea mare pentru o memorie de sistem de numai %zu MiB.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>A apărut o eroare internă fatală; consultați %s pentru detalii: %s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>Nu s-au găsit date Assumeutxo pentru hashul de bloc '%s'.</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version %d pre-selected input with a version 3 tx</source>
+        <translation>Nu se poate cheltui o intrare preselectată neconfirmată de versiunea %d cu o tranzacție de versiunea 3</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version 3 pre-selected input with a version %d tx</source>
+        <translation>Nu se poate cheltui o intrare preselectată neconfirmată de versiunea 3 cu o tranzacție de versiunea %d</translation>
+    </message>
+    <message>
+        <source>Cannot obtain a lock on directory %s. %s is probably already running.</source>
+        <translation>Nu se poate obține blocarea directorului %s. Probabil %s rulează deja.</translation>
+    </message>
+    <message>
+        <source>Cannot provide specific connections and have addrman find outgoing connections at the same time.</source>
+        <translation>Nu puteți specifica conexiuni explicite și permite simultan ca addrman să găsească conexiuni de ieșire.</translation>
+    </message>
+    <message>
+        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
+        <translation>Nu se poate seta -forcednsseed la true când -dnsseed este setat la false.</translation>
+    </message>
+    <message>
+        <source>Cannot set -peerblockfilters without -blockfilterindex.</source>
+        <translation>Nu se poate seta -peerblockfilters fără -blockfilterindex.</translation>
+    </message>
+    <message>
+        <source>Cannot write to directory '%s'; check permissions.</source>
+        <translation>Nu se poate scrie în directorul '%s'; verificați permisiunile.</translation>
+    </message>
+    <message>
+        <source>Config setting for %s only applied on %s network when in [%s] section.</source>
+        <translation>Setarea de configurare pentru %s se aplică doar în rețeaua %s când se află în secțiunea [%s].</translation>
+    </message>
+    <message>
+        <source>Copyright (C) %i-%i</source>
+        <translation>Drepturi de autor (C) %i-%i</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>S-a găsit un bloc corupt, indicând o posibilă defecțiune hardware.</translation>
+    </message>
+    <message>
+        <source>Could not find asmap file %s</source>
+        <translation>Nu s-a găsit fișierul asmap %s</translation>
+    </message>
+    <message>
+        <source>Could not generate scriptPubKeys (cache is empty)</source>
+        <translation>Nu s-au putut genera scriptPubKeys (cache-ul este gol)</translation>
+    </message>
+    <message>
+        <source>Could not parse asmap file %s</source>
+        <translation>Nu s-a putut analiza fișierul asmap %s</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>Nu s-au putut citi datele asmap încorporate</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>Se creează portofelul…</translation>
+    </message>
+    <message>
+        <source>Disk space for %s may not accommodate the block files. Approximately %u GB of data will be stored in this directory.</source>
+        <translation>Spațiul pe disc pentru %s poate fi insuficient pentru fișierele de blocuri. În acest director vor fi stocate aproximativ %u GB de date.</translation>
+    </message>
+    <message>
+        <source>Dump file %s does not exist.</source>
+        <translation>Fișierul de export integral %s nu există.</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>Configurație de asociere duplicată pentru adresa %s. Verificați setările -bind, -bind=...=onion și -whitebind.</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>Verificarea de consistență a criptografiei cu curbe eliptice a eșuat. %s se oprește.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>Datele asmap încorporate nu sunt disponibile</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>Eroare la crearea %s: Nu s-au putut scrie metadatele versiunii.</translation>
+    </message>
+    <message>
+        <source>Error loading %s: External signer wallet being loaded without external signer support compiled</source>
+        <translation>Eroare la încărcarea %s: Se încarcă un portofel cu semnare externă fără ca suportul pentru semnare externă să fi fost compilat</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>Eroare la încărcarea %s: Portofelul este în format vechi. Migrați-l la un portofel cu descriptori folosind instrumentul de migrare (RPC migratewallet).</translation>
+    </message>
+    <message>
+        <source>Error loading databases</source>
+        <translation>Eroare la încărcarea bazelor de date</translation>
+    </message>
+    <message>
+        <source>Error opening coins database</source>
+        <translation>Eroare la deschiderea bazei de date a monedelor</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address metadata may be missing or incorrect.</source>
+        <translation>Eroare la citirea %s! Toate cheile au fost citite corect, dar datele tranzacțiilor sau metadatele adreselor pot lipsi ori pot fi incorecte.</translation>
+    </message>
+    <message>
+        <source>Error starting/committing db txn for wallet transactions removal process</source>
+        <translation>Eroare la începerea/confirmarea tranzacției bazei de date pentru procesul de eliminare a tranzacțiilor portofelului</translation>
+    </message>
+    <message>
+        <source>Error: Address book data in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>Eroare: Nu se poate determina căror portofele migrate aparțin datele din agenda de adrese a portofelului</translation>
+    </message>
+    <message>
+        <source>Error: Cannot extract destination from the generated scriptpubkey</source>
+        <translation>Eroare: Nu se poate extrage destinația din scriptpubkey generat</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Eroare: Nu s-a putut adăuga tranzacția %s la portofelul doar pentru monitorizare</translation>
+    </message>
+    <message>
+        <source>Error: Could not add watchonly tx %s to watchonly wallet</source>
+        <translation>Eroare: Nu s-a putut adăuga tranzacția doar pentru monitorizare %s la portofelul doar pentru monitorizare</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Eroare: Nu s-a putut crea fișierul '%s'</translation>
+    </message>
+    <message>
+        <source>Error: Could not delete watchonly transactions. </source>
+        <translation>Eroare: Nu s-au putut șterge tranzacțiile doar pentru monitorizare. </translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation>Eroare: Nu s-a putut crea un cursor în baza de date</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation>Eroare: Suma de control a fișierului de export integral nu corespunde. Calculată %s, așteptată %s</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation>Eroare: Înregistrarea formatului din fișierul de export integral este incorectă. S-a primit „%s”, se aștepta „format”.</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation>Eroare: Înregistrarea identificatorului din fișierul de export integral este incorectă. S-a primit „%s”, se aștepta „%s”.</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>Eroare: Fișierul de export integral specifică un format de bază de date neacceptat (%s). Sunt acceptate numai exporturile integrale ale bazelor de date sqlite</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation>Eroare: Versiunea fișierului de export integral nu este acceptată. Această versiune de connectcoin-wallet acceptă numai fișiere de export integral de versiunea 1. S-a primit un fișier de versiunea %s</translation>
+    </message>
+    <message>
+        <source>Error: Duplicate descriptors created during migration. Your wallet may be corrupted.</source>
+        <translation>Eroare: În timpul migrării s-au creat descriptori duplicați. Portofelul poate fi corupt.</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Eroare: Destinația de export '%s' există deja</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Eroare: Destinația de export nu poate fi goală</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet</source>
+        <translation>Eroare: Nu s-a putut crea un portofel nou doar pentru monitorizare</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Eroare: Nu s-a putut crea un portofel nou doar pentru monitorizare. %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation>Eroare: S-a primit o cheie care nu este hexazecimală: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation>Eroare: S-a primit o valoare care nu este hexazecimală: %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>Eroare: Rezerva de chei s-a epuizat; apelați mai întâi keypoolrefill</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation>Eroare: Lipsește suma de control</translation>
+    </message>
+    <message>
+        <source>Error: No %s addresses available.</source>
+        <translation>Eroare: Nu sunt disponibile adrese %s.</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>Eroare: Nu au fost migrate toate înregistrările agendei de adrese</translation>
+    </message>
+    <message>
+        <source>Error: Not all transaction records were migrated</source>
+        <translation>Eroare: Nu au fost migrate toate înregistrările tranzacțiilor</translation>
+    </message>
+    <message>
+        <source>Error: This wallet already uses SQLite</source>
+        <translation>Eroare: Acest portofel folosește deja SQLite</translation>
+    </message>
+    <message>
+        <source>Error: This wallet is already a descriptor wallet</source>
+        <translation>Eroare: Acest portofel este deja un portofel cu descriptori</translation>
+    </message>
+    <message>
+        <source>Error: Transaction %s in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>Eroare: Nu se poate determina căror portofele migrate aparține tranzacția %s din portofel</translation>
+    </message>
+    <message>
+        <source>Error: Unable to begin reading all records in the database</source>
+        <translation>Eroare: Nu se poate începe citirea tuturor înregistrărilor din baza de date</translation>
+    </message>
+    <message>
+        <source>Error: Unable to make a backup of your wallet</source>
+        <translation>Eroare: Nu se poate crea o copie de siguranță a portofelului</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation>Eroare: Versiunea %u nu poate fi interpretată ca uint32_t</translation>
+    </message>
+    <message>
+        <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
+        <translation>Eroare: Nu se pot produce descriptori pentru acest portofel în format vechi. Asigurați-vă că furnizați fraza de acces a portofelului dacă acesta este criptat.</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read all records in the database</source>
+        <translation>Eroare: Nu se pot citi toate înregistrările din baza de date</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read wallet's best block locator record</source>
+        <translation>Eroare: Nu se poate citi înregistrarea localizatorului celui mai bun bloc al portofelului</translation>
+    </message>
+    <message>
+        <source>Error: Unable to remove watchonly address book data</source>
+        <translation>Eroare: Nu se pot elimina datele doar pentru monitorizare din agenda de adrese</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write data to disk for wallet %s</source>
+        <translation>Eroare: Nu se pot scrie pe disc datele portofelului %s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation>Eroare: Nu se poate scrie înregistrarea în portofelul nou</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write solvable wallet best block locator record</source>
+        <translation>Eroare: Nu se poate scrie înregistrarea localizatorului celui mai bun bloc al portofelului rezolvabil</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Eroare: Nu se poate scrie portofelul exportat</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write watchonly wallet best block locator record</source>
+        <translation>Eroare: Nu se poate scrie înregistrarea localizatorului celui mai bun bloc al portofelului doar pentru monitorizare</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Eroare: Portofelul nu are descriptori de exportat</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Eroare: Nu se poate confirma tranzacția bazei de date pentru exportarea portofelului doar pentru monitorizare</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Eroare: Tranzacția bazei de date nu poate fi executată pentru noul portofel doar pentru monitorizare %s</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for wallet %s</source>
+        <translation>Eroare: Tranzacția bazei de date nu poate fi executată pentru portofelul %s</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>Nu s-a putut obține rezervarea pentru rescanare în timpul inițializării portofelului</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>Nu s-au putut calcula comisioanele de majorare, deoarece UTXO-urile neconfirmate depind de un grup enorm de tranzacții neconfirmate.</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>Nu s-a putut închide fișierul de anulare a blocurilor.</translation>
+    </message>
+    <message>
+        <source>Failed to close file when writing block.</source>
+        <translation>Nu s-a putut închide fișierul la scrierea blocului.</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>Nu s-a putut elimina directorul stării lanțului din instantaneu (%s). Eliminați-l manual înainte de repornire.
+</translation>
+    </message>
+    <message>
+        <source>Failed to rename invalid peers.dat file. Please move or delete it and try again.</source>
+        <translation>Nu s-a putut redenumi fișierul peers.dat nevalid. Mutați-l sau ștergeți-l și încercați din nou.</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>Nu s-au putut porni indexurile; se oprește…</translation>
+    </message>
+    <message>
+        <source>Failure removing transaction: %s</source>
+        <translation>Eliminarea tranzacției a eșuat: %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>Rata comisionului (%s) este mai mică decât rata minimă configurată (%s).</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation>Fișierul %s există deja. Dacă sunteți sigur că asta doriți, mutați-l mai întâi în altă parte.</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Scrierea pe disc a datelor tampon ale fișierului de blocuri a eșuat. Cauza probabilă este o eroare de intrare/ieșire.</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Scrierea pe disc a datelor tampon ale fișierului de anulare a eșuat. Cauza probabilă este o eroare de intrare/ieșire.</translation>
+    </message>
+    <message>
+        <source>Ignoring duplicate -wallet %s.</source>
+        <translation>Se ignoră -wallet %s duplicat.</translation>
+    </message>
+    <message>
+        <source>Incompatible options: -dnsseed=1 was explicitly specified, but -onlynet forbids connections to IPv4/IPv6</source>
+        <translation>Opțiuni incompatibile: -dnsseed=1 a fost specificat explicit, dar -onlynet interzice conexiunile către IPv4/IPv6</translation>
+    </message>
+    <message>
+        <source>Input not found or already spent</source>
+        <translation>Intrarea nu a fost găsită sau a fost deja cheltuită</translation>
+    </message>
+    <message>
+        <source>Insufficient dbcache for block verification</source>
+        <translation>dbcache insuficient pentru verificarea blocurilor</translation>
+    </message>
+    <message>
+        <source>Invalid -i2psam address or hostname: '%s'</source>
+        <translation>Adresă sau nume de gazdă -i2psam nevalid: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>Adresă sau nume de gazdă -proxy nevalid, se termină cu '=': '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s'</source>
+        <translation>Sumă nevalidă pentru %s=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation>Sumă nevalidă pentru %s=&lt;amount&gt;: '%s' (trebuie să fie cel puțin comisionul minrelay de %s, pentru a preveni blocarea tranzacțiilor)</translation>
+    </message>
+    <message>
+        <source>Invalid or corrupt peers.dat (%s). If you believe this is a bug, please report it to %s. As a workaround, you can move the file (%s) out of the way (rename, move, or delete) to have a new one created on the next start.</source>
+        <translation>peers.dat nevalid sau corupt (%s). Dacă credeți că este o eroare a programului, raportați-o către %s. Ca soluție temporară, puteți muta din loc fișierul (%s) (prin redenumire, mutare sau ștergere), pentru a se crea unul nou la următoarea pornire.</translation>
+    </message>
+    <message>
+        <source>Invalid port specified in %s: '%s'</source>
+        <translation>Port nevalid specificat în %s: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid value detected for '-wallet' or '-nowallet'. '-wallet' requires a string value, while '-nowallet' accepts only '1' to disable all wallets</source>
+        <translation>S-a detectat o valoare nevalidă pentru '-wallet' sau '-nowallet'. '-wallet' necesită un șir de caractere, iar '-nowallet' acceptă numai '1' pentru a dezactiva toate portofelele</translation>
+    </message>
+    <message>
+        <source>Listening for incoming connections failed (listen returned error %s)</source>
+        <translation>Ascultarea conexiunilor de intrare a eșuat (listen a returnat eroarea %s)</translation>
+    </message>
+    <message>
+        <source>Loading banlist…</source>
+        <translation>Se încarcă lista de interdicții…</translation>
+    </message>
+    <message>
+        <source>Loading block index…</source>
+        <translation>Se încarcă indexul blocurilor…</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is less than transaction weight without inputs</source>
+        <translation>Greutatea maximă a tranzacției este mai mică decât greutatea tranzacției fără intrări</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is too low, can not accommodate change output</source>
+        <translation>Greutatea maximă a tranzacției este prea mică; nu poate include ieșirea de rest</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>Greutatea maximă a tranzacției trebuie să fie între %d și %d</translation>
+    </message>
+    <message>
+        <source>Missing solving data for estimating transaction size</source>
+        <translation>Lipsesc datele de rezolvare pentru estimarea dimensiunii tranzacției</translation>
+    </message>
+    <message>
+        <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
+        <translation>S-a furnizat mai mult de o adresă de asociere onion. Se folosește %s pentru serviciul onion Tor creat automat.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Nu a fost furnizat un fișier de export integral. Pentru a folosi createfromdump, trebuie specificat -dumpfile=&lt;filename&gt;.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use dump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Nu a fost furnizat un fișier de export integral. Pentru a folosi dump, trebuie specificat -dumpfile=&lt;filename&gt;.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. %d available, %d required.</source>
+        <translation>Nu sunt disponibili suficienți descriptori de fișiere. %d disponibili, %d necesari.</translation>
+    </message>
+    <message>
+        <source>Not found pre-selected input %s</source>
+        <translation>Intrarea preselectată %s nu a fost găsită</translation>
+    </message>
+    <message>
+        <source>Not solvable pre-selected input %s</source>
+        <translation>Intrarea preselectată %s nu este rezolvabilă</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>A fost setată doar direcția, fără permisiuni: '%s'</translation>
+    </message>
+    <message>
+        <source>Option '-checkpoints' is set but checkpoints were removed. This option has no effect.</source>
+        <translation>Opțiunea '-checkpoints' este setată, dar punctele de control au fost eliminate. Această opțiune nu are efect.</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Opțiunea '-limitancestorsize' este specificată, dar limitele dimensiunii strămoșilor au fost înlocuite cu limitele dimensiunii grupurilor (vedeți -limitclustersize). Această opțiune nu are efect.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Opțiunea '-limitdescendantsize' este specificată, dar limitele dimensiunii descendenților au fost înlocuite cu limitele dimensiunii grupurilor (vedeți -limitclustersize). Această opțiune nu are efect.</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to CJDNS (-onlynet=cjdns) but -cjdnsreachable is not provided</source>
+        <translation>Conexiunile de ieșire sunt limitate la CJDNS (-onlynet=cjdns), dar nu s-a furnizat -cjdnsreachable</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is explicitly forbidden: -onion=0</source>
+        <translation>Conexiunile de ieșire sunt limitate la Tor (-onlynet=onion), dar proxy-ul pentru accesul la rețeaua Tor este interzis explicit: -onion=0</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
+        <translation>Conexiunile de ieșire sunt limitate la Tor (-onlynet=onion), dar nu s-a furnizat proxy-ul pentru accesul la rețeaua Tor: nu este specificată niciuna dintre opțiunile -proxy, -onion sau -listenonion</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to i2p (-onlynet=i2p) but -i2psam is not provided</source>
+        <translation>Conexiunile de ieșire sunt limitate la i2p (-onlynet=i2p), dar nu s-a furnizat -i2psam</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>S-a solicitat difuzarea privată a tranzacțiilor proprii (-privatebroadcast), iar -proxyrandomize este dezactivat. Circuitele Tor pentru conexiunile de difuzare privată pot fi corelate cu alte conexiuni prin Tor. Pentru confidențialitate maximă, setați -proxyrandomize=1.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>S-a solicitat difuzarea privată a tranzacțiilor proprii (-privatebroadcast), dar este configurat și -connect. Sunt incompatibile, deoarece difuzarea privată necesită conexiuni noi către noduri Tor sau I2P alese aleatoriu. Luați în considerare folosirea -maxconnections=0 -addnode=... în schimb</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>S-a solicitat difuzarea privată a tranzacțiilor proprii (-privatebroadcast), dar nici rețeaua Tor, nici I2P nu este accesibilă</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -reindex-chainstate. Use full -reindex instead.</source>
+        <translation>Modul trunchiat este incompatibil cu -reindex-chainstate. Folosiți în schimb o reindexare completă cu -reindex.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>Modul trunchiat este incompatibil cu -txospenderindex.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
+        <translation>Trunchiere: Ultima sincronizare a portofelului este anterioară datelor trunchiate. Aveți nevoie de -reindex (redescărcarea întregului lanț de blocuri în cazul unui nod trunchiat)</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore…</source>
+        <translation>Se trunchiază depozitul de blocuri…</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>Redenumirea '%s' -&gt; '%s' a eșuat. Nu se poate curăța directorul leveldb al stării lanțului din fundal.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
+        <translation>Redenumirea '%s' -&gt; '%s' a eșuat. Rezolvați problema mutând sau ștergând manual directorul instantaneului nevalid %s; altfel, veți întâlni aceeași eroare la următoarea pornire.</translation>
+    </message>
+    <message>
+        <source>Replaying blocks…</source>
+        <translation>Se reaplică blocurile…</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to execute statement to verify database: %s</source>
+        <translation>SQLiteDatabase: Nu s-a putut executa instrucțiunea de verificare a bazei de date: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to prepare statement to verify database: %s</source>
+        <translation>SQLiteDatabase: Nu s-a putut pregăti instrucțiunea de verificare a bazei de date: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to read database verification error: %s</source>
+        <translation>SQLiteDatabase: Nu s-a putut citi eroarea de verificare a bazei de date: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unexpected application id. Expected %u, got %u</source>
+        <translation>SQLiteDatabase: Identificator de aplicație neașteptat. Se aștepta %u, s-a primit %u</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is supported</source>
+        <translation>SQLiteDatabase: Versiune necunoscută %d a schemei portofelului sqlite. Este acceptată numai versiunea %d</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>Dispozitivul de semnare nu a returnat adresa</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>Dispozitivul de semnare a returnat o adresă neașteptată %s</translation>
+    </message>
+    <message>
+        <source>Specified data directory "%s" does not exist.</source>
+        <translation>Directorul de date specificat „%s” nu există.</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>Eroare de sistem la scrierea datelor tampon: %s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>Eroare de sistem la încărcarea fișierului extern de blocuri: %s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>Eroare de sistem la salvarea blocului pe disc: %s</translation>
+    </message>
+    <message>
+        <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
+        <translation>Calea %s folosește exFAT, despre care se știe că are probleme intermitente de corupere a datelor pe macOS. Mutați acest director pe un alt sistem de fișiere pentru a evita pierderea datelor.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>Opțiunea -testactivationheight nu poate fi folosită în rețeaua principală.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>Opțiunea -vbparams nu poate fi folosită în rețeaua principală.</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>Combinația dintre intrările preselectate și intrările alese automat de portofel depășește greutatea maximă a tranzacției. Încercați să trimiteți o sumă mai mică sau să consolidați manual UTXO-urile portofelului</translation>
+    </message>
+    <message>
+        <source>The inputs size exceeds the maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>Dimensiunea intrărilor depășește greutatea maximă. Încercați să trimiteți o sumă mai mică sau să consolidați manual UTXO-urile portofelului</translation>
+    </message>
+    <message>
+        <source>The preselected coins total amount does not cover the transaction target. Please allow other inputs to be automatically selected or include more coins manually</source>
+        <translation>Suma totală a monedelor preselectate nu acoperă ținta tranzacției. Permiteți selectarea automată a altor intrări sau includeți manual mai multe monede</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist</source>
+        <translation>Fișierul de configurare specificat %s nu există</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>Totalul depășește soldul când este inclus comisionul de tranzacție de %s.</translation>
+    </message>
+    <message>
+        <source>The transactions removal process can only be executed within a db txn</source>
+        <translation>Procesul de eliminare a tranzacțiilor poate fi executat numai în cadrul unei tranzacții a bazei de date</translation>
+    </message>
+    <message>
+        <source>This is the maximum transaction fee you pay (in addition to the normal fee) to prioritize partial spend avoidance over regular coin selection.</source>
+        <translation>Acesta este comisionul maxim de tranzacție pe care îl plătiți (în plus față de comisionul normal) pentru a prioritiza evitarea cheltuirii parțiale în locul selectării obișnuite a monedelor.</translation>
+    </message>
+    <message>
+        <source>Transaction change output index out of range</source>
+        <translation>Indexul ieșirii de rest a tranzacției este în afara intervalului</translation>
+    </message>
+    <message>
+        <source>Transaction needs a change address, but we can't generate it.</source>
+        <translation>Tranzacția necesită o adresă de rest, dar nu o putem genera.</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>Tranzacția necesită o destinație cu valoare diferită de zero, o rată a comisionului diferită de zero sau o intrare preselectată</translation>
+    </message>
+    <message>
+        <source>UTXO snapshot failed to validate. Restart to resume normal initial block download, or try loading a different snapshot.</source>
+        <translation>Validarea instantaneului UTXO a eșuat. Reporniți pentru a relua descărcarea inițială normală a blocurilor sau încercați să încărcați un alt instantaneu.</translation>
+    </message>
+    <message>
+        <source>Unable to find UTXO for external input</source>
+        <translation>Nu se poate găsi UTXO pentru intrarea externă</translation>
+    </message>
+    <message>
+        <source>Unable to parse -maxuploadtarget: '%s'</source>
+        <translation>Nu se poate interpreta -maxuploadtarget: '%s'</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Nu se poate scrie cache-ul descriptorilor</translation>
+    </message>
+    <message>
+        <source>Unconfirmed UTXOs are available, but spending them creates a chain of transactions that will be rejected by the mempool</source>
+        <translation>Sunt disponibile UTXO-uri neconfirmate, dar cheltuirea lor creează un lanț de tranzacții care va fi respins de mempool</translation>
+    </message>
+    <message>
+        <source>Unexpected legacy entry in descriptor wallet found. Loading wallet %s
+
+The wallet might have been tampered with or created with malicious intent.
+</source>
+        <translation>S-a găsit o înregistrare neașteptată în format vechi într-un portofel cu descriptori. Se încarcă portofelul %s
+
+Este posibil ca portofelul să fi fost modificat abuziv sau creat cu intenții rău-voitoare.
+</translation>
+    </message>
+    <message>
+        <source>Unknown -blockfilterindex value %s.</source>
+        <translation>Valoare -blockfilterindex necunoscută %s.</translation>
+    </message>
+    <message>
+        <source>Unknown address type '%s'</source>
+        <translation>Tip de adresă necunoscut '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown change type '%s'</source>
+        <translation>Tip de rest necunoscut '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown new rules activated (versionbit %i)</source>
+        <translation>S-au activat reguli noi necunoscute (versionbit %i)</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>Opțiune nerecunoscută „%s” furnizată în -test=&lt;option&gt;.</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>S-a găsit un descriptor nerecunoscut. Se încarcă portofelul %s
+
+Portofelul poate fi creat cu o versiune mai nouă.
+Încercați să rulați cea mai recentă versiune a programului.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>Rețea nerecunoscută în -proxy='%s': '%s'</translation>
+    </message>
+    <message>
+        <source>Unsupported category-specific logging level %1$s=%2$s. Expected %1$s=&lt;category&gt;:&lt;loglevel&gt;. Valid categories: %3$s. Valid loglevels: %4$s.</source>
+        <translation>Nivel de jurnalizare specific categoriei neacceptat %1$s=%2$s. Se aștepta %1$s=&lt;category&gt;:&lt;loglevel&gt;. Categorii valide: %3$s. Niveluri de jurnalizare valide: %4$s.</translation>
+    </message>
+    <message>
+        <source>Unsupported chainstate database format found. Please restart with -reindex-chainstate. This will rebuild the chainstate database.</source>
+        <translation>S-a găsit un format neacceptat al bazei de date a stării lanțului. Reporniți cu -reindex-chainstate. Aceasta va reconstrui baza de date a stării lanțului.</translation>
+    </message>
+    <message>
+        <source>Unsupported global logging level %s=%s. Valid values: %s.</source>
+        <translation>Nivel global de jurnalizare neacceptat %s=%s. Valori valide: %s.</translation>
+    </message>
+    <message>
+        <source>Wallet file creation failed: %s</source>
+        <translation>Crearea fișierului portofelului a eșuat: %s</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>Atenție: S-a găsit un lanț nevalid cu peste 6 blocuri mai lung decât cel mai bun lanț al nostru. Cauza poate fi coruperea bazei de date sau incompatibilitatea de consens cu nodurile partenere.</translation>
+    </message>
+    <message>
+        <source>Witness data for blocks after height %d requires validation. Please restart with -reindex.</source>
+        <translation>Datele martor ale blocurilor de după înălțimea %d necesită validare. Reporniți cu -reindex.</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>Data și ora calculatorului par să fie decalate cu peste %d minute față de rețea, ceea ce poate duce la o eroare de consens. După verificarea ceasului calculatorului, mesajul ar trebui să dispară la repornirea nodului. Fără repornire, ar trebui să dispară automat după conectarea la suficiente noduri partenere noi prin conexiuni de ieșire, ceea ce poate dura. Puteți inspecta câmpul `timeoffset` al metodelor RPC `getpeerinfo` și `getnetworkinfo` pentru mai multe informații.</translation>
+    </message>
+    <message>
+        <source>acceptstalefeeestimates is not supported on %s chain.</source>
+        <translation>acceptstalefeeestimates nu este acceptat în lanțul %s.</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>whitebind poate fi folosit numai pentru conexiuni de intrare (s-a transmis „out”)</translation>
+    </message>
 </context>
 <context>
     <name>P2CClaimDialog</name>
@@ -4214,6 +5921,91 @@ Versiunea certificatelor rădăcină: %2</translation>
     <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opțional: dacă este gol, se folosește acest portofel</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>Fire CPU:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Nu s-a putut genera o adresă pentru recompensă. Verificați dacă portofelul poate genera adrese de primire.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Eroare</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>Modul FAST partajează aproximativ 2 GiB de memorie RandomX cu validarea. Mai multe fire consumă mai multe resurse CPU și energie; păstrați capacitate disponibilă pentru nod. Inițializarea setului de date poate dura un timp.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Minați blocuri în rețeaua de test cu CPU-ul folosind RandomX. Mineritul este oprit până când îl porniți. Minerul este partajat de toate portofelele din acest nod și continuă când schimbați filele sau închideți un portofel.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Minerit</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Minerit / pregătire RandomX</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Adresă nouă din acest portofel</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Adresă de recompensă pentru această rețea</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Adresă de recompensă:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Pornește mineritul</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Se pornește</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Stare: %1
+Rată de hash: %2 H/s
+Hashuri: %3 | Blocuri acceptate: %4
+Adresă de recompensă activă: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Oprește mineritul</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Oprit</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Se oprește (se așteaptă finalizarea lucrului curent)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Se așteaptă sincronizarea nodului</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Avertisment: cele %1 fire de minerit depășesc cele %2 CPU-uri logice detectate. Aceasta poate reduce rata de hash și încetini nodul.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
     </message>
 </context>
 </TS>

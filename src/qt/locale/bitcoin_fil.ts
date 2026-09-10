@@ -54,13 +54,13 @@
         <translation type="unfinished">Pumili</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Ito ang iyong mga Bitcoin address para sa pagpapadala ng bayad. Laging suriin ang halaga at ang address na tatanggap bago magpadala ng coins.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">Ito ang iyong mga ConnectCoin address para sa pagpapadala ng bayad. Laging suriin ang halaga at ang address na tatanggap bago magpadala ng coins.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Ito ang iyong mga Bitcoin address upang makatanggap ng mga salapi. Gamitin niyo ang 'Gumawa ng bagong address' na pindutan sa 'Tumanggap' na tab upang makagawa ng bagong address. Ang pagpirma ay posible lamang sa mga address na may uring 'legacy'.</translation>
+        <translation type="unfinished">Ito ang iyong mga ConnectCoin address upang makatanggap ng mga salapi. Gamitin niyo ang 'Gumawa ng bagong address' na pindutan sa 'Tumanggap' na tab upang makagawa ng bagong address. Ang pagpirma ay posible lamang sa mga address na may uring 'legacy'.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -87,12 +87,37 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Exporting Failed</source>
         <translation type="unfinished">Nabigo ang pag-exporte</translation>
     </message>
+    <message>
+        <source>Comma separated file</source>
+        <extracomment>Expanded name of the CSV file format. See: https://en.wikipedia.org/wiki/Comma-separated_values.</extracomment>
+        <translation>Talaksang pinaghihiwalay ng kuwit ang mga halaga</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the clipboard</source>
+        <translation>Kopyahin ang kasalukuyang napiling address sa clipboard</translation>
+    </message>
+    <message>
+        <source>Receiving addresses - %1</source>
+        <translation>Mga address sa pagtanggap - %1</translation>
+    </message>
+    <message>
+        <source>Sending addresses - %1</source>
+        <translation>Mga address sa pagpapadala - %1</translation>
+    </message>
 </context>
 <context>
     <name>AddressTableModel</name>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(walang label)</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Address</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Tatak</translation>
     </message>
 </context>
 <context>
@@ -138,8 +163,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Kumpirmahin ang pag-enkripto ng pitaka</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">Babala: Kung na-encrypt mo ang iyong walet at nawala ang iyong passphrase, &lt;b&gt;MAWAWALA MO ANG LAHAT NG IYONG MGA BITCOIN!&lt;/b&gt;</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">Babala: Kung na-encrypt mo ang iyong walet at nawala ang iyong passphrase, &lt;b&gt;MAWAWALA MO ANG LAHAT NG IYONG MGA CONNECTCOIN!&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -151,15 +176,15 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation type="unfinished">Ipasok ang bagong passphrase para sa wallet. &lt;br/&gt;Mangyaring gumamit ng isang passphrase na may &lt;b&gt;sampu o higit pang mga random na karakter, o &lt;b&gt;walo o higit pang mga salita&lt;/b&gt;.</translation>
+        <translation>Ilagay ang bagong passphrase para sa wallet.&lt;br/&gt;Gumamit ng passphrase na may &lt;b&gt;sampu o higit pang random na karakter&lt;/b&gt;, o &lt;b&gt;walo o higit pang salita&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase for the wallet.</source>
         <translation type="unfinished">Ipasok ang lumang passphrase at bagong passphrase para sa pitaka.</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">Tandaan na ang pag-eenkripto ng iyong pitaka ay hindi buong makakaprotekta sa inyong mga bitcoin mula sa pagnanakaw ng mga nag-iimpektong malware.</translation>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished">Tandaan na ang pag-eenkripto ng iyong pitaka ay hindi buong makakaprotekta sa inyong mga ConnectCoin mula sa pagnanakaw ng mga nag-iimpektong malware.</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -209,12 +234,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Warning: The Caps Lock key is on!</source>
         <translation type="unfinished">Babala: Ang Caps Lock key ay naka-on!</translation>
     </message>
+    <message>
+        <source>Back</source>
+        <translation>Bumalik</translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation>Magpatuloy</translation>
+    </message>
+    <message>
+        <source>Passphrase change failed</source>
+        <translation>Hindi nabago ang pariralang panseguridad</translation>
+    </message>
+    <message>
+        <source>The old passphrase entered for the wallet decryption is incorrect. It contains a null character (ie - a zero byte). If the passphrase was set with a version of this software prior to 25.0, please try again with only the characters up to — but not including — the first null character.</source>
+        <translation>Mali ang lumang pariralang panseguridad na ipinasok para i-decrypt ang pitaka. Mayroon itong null na karakter (ibig sabihin, isang zero byte). Kung itinakda ang parirala gamit ang bersiyon ng software na mas luma sa 25.0, subukang muli gamit lamang ang mga karakter bago ang unang null na karakter — huwag isama ang null na karakter.</translation>
+    </message>
 </context>
 <context>
     <name>BanTableModel</name>
     <message>
         <source>Banned Until</source>
         <translation type="unfinished">Bawal Hanggang</translation>
+    </message>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/Mask ng network</translation>
     </message>
 </context>
 <context>
@@ -223,7 +268,23 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
         <translation type="unfinished">Isang fatal error ang naganap.  %1 ay hindi na maaaring magpatuloy nang ligtas at magtitigil.</translation>
     </message>
-    </context>
+        <message>
+        <source>An internal error occurred. %1 will attempt to continue safely. This is an unexpected bug which can be reported as described below.</source>
+        <translation>Nagkaroon ng panloob na pagkakamali. Susubukan ng %1 na ligtas na magpatuloy. Isa itong hindi inaasahang depekto na maaaring iulat ayon sa paglalarawan sa ibaba.</translation>
+    </message>
+    <message>
+        <source>Internal error</source>
+        <translation>Panloob na pagkakamali</translation>
+    </message>
+    <message>
+        <source>Runaway exception</source>
+        <translation>Hindi makontrol na eksepsiyon</translation>
+    </message>
+    <message>
+        <source>Settings file %1 might be corrupt or invalid.</source>
+        <translation>Maaaring sira o hindi wasto ang talaksang %1 ng mga setting.</translation>
+    </message>
+</context>
 <context>
     <name>QObject</name>
     <message>
@@ -239,8 +300,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Halaga</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">I-enter ang Bitcoin address (e.g. %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">I-enter ang ConnectCoin address (e.g. %1)</translation>
     </message>
     <message>
         <source>Inbound</source>
@@ -258,37 +319,37 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n segundo</numerusform>
+            <numerusform>%n segundo</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n minuto</numerusform>
+            <numerusform>%n minuto</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n oras</numerusform>
+            <numerusform>%n oras</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n araw</numerusform>
+            <numerusform>%n araw</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n linggo</numerusform>
+            <numerusform>%n linggo</numerusform>
         </translation>
     </message>
     <message>
@@ -297,14 +358,148 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n taon</numerusform>
+            <numerusform>%n taon</numerusform>
         </translation>
     </message>
     <message>
         <source>default wallet</source>
         <translation type="unfinished">walet na default</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 didn't yet exit safely…</source>
+        <translation>Hindi pa ligtas na nakalalabas ang %1…</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>A fatal error occurred. Check that settings file is writable, or try running with -nosettings.</source>
+        <extracomment>Explanatory text shown on startup when the settings file could not be written. Prompts user to check that we have the ability to write to the file. Explains that the user has the option of running without a settings file.</extracomment>
+        <translation>Nagkaroon ng malubhang pagkakamali. Tiyaking maaaring sulatan ang talaksan ng mga setting, o subukang patakbuhin gamit ang -nosettings.</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <extracomment>Short-lived peer connection type that solicits known addresses from a peer.</extracomment>
+        <translation>Pagkuha ng mga address</translation>
+    </message>
+    <message>
+        <source>Block Relay</source>
+        <extracomment>Peer connection type that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>Pagpapasa ng mga bloke</translation>
+    </message>
+    <message>
+        <source>Custom…</source>
+        <translation>Pasadya…</translation>
+    </message>
+    <message>
+        <source>Default system font "%1"</source>
+        <translation>Paunang font ng sistema na "%1"</translation>
+    </message>
+    <message>
+        <source>Do you want to reset settings to default values, or to abort without making changes?</source>
+        <extracomment>Explanatory text shown on startup when the settings file cannot be read. Prompts user to make a choice between resetting or aborting.</extracomment>
+        <translation>Nais mo bang ibalik ang mga setting sa kanilang paunang halaga o ihinto nang walang binabago?</translation>
+    </message>
+    <message>
+        <source>Embedded "%1"</source>
+        <translation>Naka-embed na "%1"</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <extracomment>Short-lived peer connection type that tests the aliveness of known addresses.</extracomment>
+        <translation>Pansubok na koneksiyon</translation>
+    </message>
+    <message>
+        <source>Full Relay</source>
+        <extracomment>Peer connection type that relays all network information.</extracomment>
+        <translation>Buong pagpapasa</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <extracomment>Peer connection type established manually through one of several methods.</extracomment>
+        <translation>Manwal</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Hindi naaangkop</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>Pribadong Pagpapalaganap</translation>
+    </message>
+    <message>
+        <source>Unroutable</source>
+        <translation>Hindi mairuta</translation>
     </message>
 </context>
 <context>
@@ -375,8 +570,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Ang proxy ay &lt;b&gt;in-inable&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Magpadala ng coins sa isang Bitcoin address</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">Magpadala ng coins sa isang ConnectCoin address</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -403,12 +598,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">I-encrypt ang private keys na kabilang sa iyong walet</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Pumirma ng mga mensahe gamit ang iyong mga Bitcoin address upang mapatunayan na pagmamay-ari mo ang mga ito</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">Pumirma ng mga mensahe gamit ang iyong mga ConnectCoin address upang mapatunayan na pagmamay-ari mo ang mga ito</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">I-verify ang mga mensahe upang matiyak na sila ay napirmahan ng tinukoy na mga Bitcoin address.</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">I-verify ang mga mensahe upang matiyak na sila ay napirmahan ng tinukoy na mga ConnectCoin address.</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -423,8 +618,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Tulong</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Humiling ng bayad (lumilikha ng QR codes at bitcoin: URIs)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">Humiling ng bayad (lumilikha ng QR codes at connectcoin: URIs)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -440,9 +635,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Bilang ng naprosesong bloke ng kasaysayan ng transaksiyon: %n.</numerusform>
+            <numerusform>Bilang ng naprosesong bloke ng kasaysayan ng transaksiyon: %n.</numerusform>
         </translation>
     </message>
     <message>
@@ -502,8 +697,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Isarado ang lahat ng wallets</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Ipakita sa %1 ang tulong na mensahe upang makuha ang talaan ng mga posibleng opsyon ng Bitcoin command-line</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">Ipakita sa %1 ang tulong na mensahe upang makuha ang talaan ng mga posibleng opsyon ng ConnectCoin command-line</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -531,11 +726,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">%1 kliyente</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform>%n aktibong konekyson sa network ng Bitcoin</numerusform>
-            <numerusform>%n mga aktibong koneksyon sa network ng Bitcoin</numerusform>
+            <numerusform>%n aktibong konekyson sa network ng ConnectCoin</numerusform>
+            <numerusform>%n mga aktibong koneksyon sa network ng ConnectCoin</numerusform>
         </translation>
     </message>
     <message>
@@ -609,6 +804,244 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>Gumawa ng mga gantimpalang pay-to-connect</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Pagmimina</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>Kontrolin ang pagmimina gamit ang CPU</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>&amp;Backup Wallet…</source>
+        <translation>&amp;Gumawa ng reserbang kopya ng pitaka…</translation>
+    </message>
+    <message>
+        <source>&amp;Change Passphrase…</source>
+        <translation>&amp;Baguhin ang pariralang panseguridad…</translation>
+    </message>
+    <message>
+        <source>&amp;Encrypt Wallet…</source>
+        <translation>&amp;I-encrypt ang pitaka…</translation>
+    </message>
+    <message>
+        <source>&amp;Hide</source>
+        <translation>&amp;Itago</translation>
+    </message>
+    <message>
+        <source>&amp;Load PSBT from file…</source>
+        <translation>&amp;Magbukas ng PSBT mula sa talaksan…</translation>
+    </message>
+    <message>
+        <source>&amp;Mask values</source>
+        <translation>&amp;Itago ang mga halaga</translation>
+    </message>
+    <message>
+        <source>&amp;Verify message…</source>
+        <translation>&amp;Patunayan ang mensahe…</translation>
+    </message>
+    <message>
+        <source>Address: %1
+</source>
+        <translation>Address: %1
+</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Lahat ng Talaksan</translation>
+    </message>
+    <message>
+        <source>Catching up…</source>
+        <translation>Hinahabol ang pinakabagong kalagayan…</translation>
+    </message>
+    <message>
+        <source>Click for more actions.</source>
+        <extracomment>A substring of the tooltip. "More actions" are available via the context menu.</extracomment>
+        <translation>I-click para sa iba pang aksiyon.</translation>
+    </message>
+    <message>
+        <source>Close All Wallets…</source>
+        <translation>Isara ang Lahat ng Pitaka…</translation>
+    </message>
+    <message>
+        <source>Close Wallet…</source>
+        <translation>Isara ang Pitaka…</translation>
+    </message>
+    <message>
+        <source>Connecting to peers…</source>
+        <translation>Kumokonekta sa mga katuwang na node…</translation>
+    </message>
+    <message>
+        <source>Create Wallet…</source>
+        <translation>Gumawa ng Pitaka…</translation>
+    </message>
+    <message>
+        <source>Disable network activity</source>
+        <extracomment>A context menu item.</extracomment>
+        <translation>Ihinto ang aktibidad sa network</translation>
+    </message>
+    <message>
+        <source>Enable network activity</source>
+        <extracomment>A context menu item. The network activity was disabled previously.</extracomment>
+        <translation>Paganahin ang aktibidad sa network</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Pagkakamali sa Pag-export</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>Matagumpay ang Pag-export</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>I-export ang bersiyon ng kasalukuyang pitaka na para lamang sa pagmamasid at maaaring ibalik sa ibang node.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>I-export ang pitakang para lamang sa pagmamasid</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk…</source>
+        <translation>Iniindeks ang mga bloke sa disk…</translation>
+    </message>
+    <message>
+        <source>Invalid Wallet Name</source>
+        <translation>Hindi Wastong Pangalan ng Pitaka</translation>
+    </message>
+    <message>
+        <source>Label: %1
+</source>
+        <translation>Tatak: %1
+</translation>
+    </message>
+    <message>
+        <source>Load PSBT from &amp;clipboard…</source>
+        <translation>Magbukas ng PSBT mula sa &amp;clipboard…</translation>
+    </message>
+    <message>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation>Magbukas ng Transaksiyong ConnectCoin na Bahagyang Nalagdaan</translation>
+    </message>
+    <message>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation>Magbukas ng Transaksiyong ConnectCoin na Bahagyang Nalagdaan mula sa clipboard</translation>
+    </message>
+    <message>
+        <source>Load Wallet Backup</source>
+        <extracomment>The title for Restore Wallet File Windows</extracomment>
+        <translation>Magbukas ng Reserbang Kopya ng Pitaka</translation>
+    </message>
+    <message>
+        <source>Mask the values in the Overview tab</source>
+        <translation>Itago ang mga halaga sa tab na Pangkalahatang-ideya</translation>
+    </message>
+    <message>
+        <source>Migrate Wallet</source>
+        <translation>Ilipat ang Pitaka sa Bagong Anyo</translation>
+    </message>
+    <message>
+        <source>Migrate a wallet</source>
+        <translation>Ilipat ang isang pitaka sa bagong anyo</translation>
+    </message>
+    <message>
+        <source>Open &amp;URI…</source>
+        <translation>Magbukas ng &amp;URI…</translation>
+    </message>
+    <message>
+        <source>Open a connectcoin: URI</source>
+        <translation>Magbukas ng connectcoin: URI</translation>
+    </message>
+    <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Buksan ang console para sa pag-aalis at pagsusuri ng mga depekto ng node</translation>
+    </message>
+    <message>
+        <source>Pre-syncing Headers (%1%)…</source>
+        <translation>Paunang pagsasabay ng mga header (%1%)…</translation>
+    </message>
+    <message>
+        <source>Processing blocks on disk…</source>
+        <translation>Pinoproseso ang mga bloke sa disk…</translation>
+    </message>
+    <message>
+        <source>Restore Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>Ibalik ang Pitaka</translation>
+    </message>
+    <message>
+        <source>Restore Wallet…</source>
+        <extracomment>Name of the menu item that restores wallet from a backup file.</extracomment>
+        <translation>Ibalik ang Pitaka…</translation>
+    </message>
+    <message>
+        <source>Restore a wallet from a backup file</source>
+        <extracomment>Status tip for Restore Wallet menu item</extracomment>
+        <translation>Ibalik ang pitaka mula sa talaksan ng reserbang kopya</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>Ibalik at Ilipat ang Pitaka sa Bagong Anyo</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>Ibalik at Ilipat sa Bagong Anyo ang Reserbang Kopya ng Pitaka</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>Ibalik at Ilipat sa Bagong Anyo ang Talaksan ng Pitaka…</translation>
+    </message>
+    <message>
+        <source>S&amp;how</source>
+        <translation>&amp;Ipakita</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>I-save ang Na-export na Pitakang Para Lamang sa Pagmamasid</translation>
+    </message>
+    <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation>Ipakita ang tab ng mga Katuwang na Node</translation>
+    </message>
+    <message>
+        <source>Sign &amp;message…</source>
+        <translation>Lagdaan ang &amp;mensahe…</translation>
+    </message>
+    <message>
+        <source>Synchronizing with network…</source>
+        <translation>Isinasabay sa network…</translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)…</source>
+        <translation>Isinasabay ang mga header (%1%)…</translation>
+    </message>
+    <message>
+        <source>Tabs toolbar</source>
+        <translation>Toolbar ng mga tab</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>Na-export ang pitaka sa </translation>
+    </message>
+    <message>
+        <source>Wallet Data</source>
+        <extracomment>Name of the wallet data file format.</extracomment>
+        <translation>Datos ng Pitaka</translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>Hindi maaaring walang laman ang pangalan ng pitaka</translation>
     </message>
 </context>
 <context>
@@ -732,6 +1165,30 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(change)</source>
         <translation type="unfinished">(sukli)</translation>
     </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bytes: </translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation>&amp;I-unlock ang mga hindi nagastos na output</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>Maaaring mag-iba nang +/- %1 connect bawat input.</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation>&amp;I-lock ang mga hindi nagastos na output</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Anyo ng listahan</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Anyo ng puno</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -748,7 +1205,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Create wallet warning</source>
         <translation type="unfinished">Gumawa ng Babala ng Pitaka</translation>
     </message>
-    </context>
+        <message>
+        <source>Can't list signers</source>
+        <translation>Hindi mailista ang mga tagapirma</translation>
+    </message>
+    <message>
+        <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
+        <translation>Ginagawa ang Pitakang &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
+    <message>
+        <source>Too many external signers found</source>
+        <translation>Napakaraming natagpuang panlabas na tagapirma</translation>
+    </message>
+</context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -764,7 +1234,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
         <translation type="unfinished">Buksan ang Walet</translation>
     </message>
-    </context>
+        <message>
+        <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
+        <translation>Binubuksan ang Pitakang &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
+</context>
 <context>
     <name>WalletController</name>
     <message>
@@ -782,6 +1257,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Are you sure you wish to close all wallets?</source>
         <translation type="unfinished">Sigurado ka bang nais mong isara ang lahat ng mga wallets?</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>Sigurado ka bang nais mong isara ang pitakang &lt;i&gt;%1&lt;/i&gt;?</translation>
     </message>
 </context>
 <context>
@@ -810,7 +1289,48 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Create</source>
         <translation type="unfinished">Gumawa</translation>
     </message>
-    </context>
+        <message>
+        <source>Advanced Options</source>
+        <translation>Mga Mas Masulong na Opsiyon</translation>
+    </message>
+    <message>
+        <source>Compiled without external signing support (required for external signing)</source>
+        <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
+        <translation>Binuo nang walang suporta sa panlabas na paglagda (kailangan para sa panlabas na paglagda)</translation>
+    </message>
+    <message>
+        <source>Disable private keys for this wallet. Wallets with private keys disabled will have no private keys and cannot have an HD seed or imported private keys. This is ideal for watch-only wallets.</source>
+        <translation>Huwag paganahin ang mga pribadong susi para sa pitakang ito. Ang mga pitakang walang pinaganang pribadong susi ay hindi magkakaroon ng pribadong susi, HD seed, o inangkat na pribadong susi. Angkop ito sa mga pitakang para lamang sa pagmamasid.</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>I-encrypt ang Pitaka</translation>
+    </message>
+    <message>
+        <source>Encrypt the wallet. The wallet will be encrypted with a passphrase of your choice.</source>
+        <translation>I-encrypt ang pitaka. Ie-encrypt ito gamit ang pariralang panseguridad na pipiliin mo.</translation>
+    </message>
+    <message>
+        <source>External signer</source>
+        <translation>Panlabas na tagapirma</translation>
+    </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>Gumawa ng blangkong pitaka. Sa simula, walang pribadong susi o script ang mga blangkong pitaka. Maaaring mag-angkat ng mga pribadong susi at address gamit ang mga descriptor sa ibang pagkakataon.</translation>
+    </message>
+    <message>
+        <source>Please provide a name and, if desired, enable any advanced options</source>
+        <translation>Magbigay ng pangalan at, kung nais, paganahin ang alinman sa mga mas masulong na opsiyon</translation>
+    </message>
+    <message>
+        <source>Use an external signing device such as a hardware wallet. Configure the external signer script in wallet preferences first.</source>
+        <translation>Gumamit ng panlabas na aparatong panlagda, gaya ng hardware na pitaka. Itakda muna ang script ng panlabas na tagapirma sa mga kagustuhan ng pitaka.</translation>
+    </message>
+    <message>
+        <source>You are one step away from creating your new wallet!</source>
+        <translation>Isang hakbang na lang at magagawa na ang bago mong pitaka!</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -846,8 +1366,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Baguhin ang address para sa pagpapadala</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">Ang address na in-enter "%1" ay hindi isang wastong Bitcoin address.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">Ang address na in-enter "%1" ay hindi isang wastong ConnectCoin address.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -910,6 +1430,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation type="unfinished">Huwag i-shut down ang computer hanggang mawala ang window na ito.</translation>
     </message>
+    <message>
+        <source>%1 is shutting down…</source>
+        <translation>Nagsasara ang %1…</translation>
+    </message>
 </context>
 <context>
     <name>Intro</name>
@@ -943,23 +1467,23 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n GB of space available</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Bakanteng espasyo: %n GB</numerusform>
+            <numerusform>Bakanteng espasyo: %n GB</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
-        <translation type="unfinished">
-            <numerusform>(of %n GB needed)</numerusform>
-            <numerusform>(of %n GB needed)</numerusform>
+        <translation>
+            <numerusform>(sa %n GB na kailangan)</numerusform>
+            <numerusform>(sa %n GB na kailangan)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>(%n GB needed for full chain)</source>
-        <translation type="unfinished">
-            <numerusform>(%n GB needed for full chain)</numerusform>
-            <numerusform>(%n GB needed for full chain)</numerusform>
+        <translation>
+            <numerusform>(%n GB ang kailangan para sa buong chain)</numerusform>
+            <numerusform>(%n GB ang kailangan para sa buong chain)</numerusform>
         </translation>
     </message>
     <message>
@@ -973,9 +1497,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message numerus="yes">
         <source>(sufficient to restore backups %n day(s) old)</source>
         <extracomment>Explanatory text on the capability of the current prune target.</extracomment>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>(sapat para ibalik ang mga reserbang kopya na ang edad sa araw ay %n)</numerusform>
+            <numerusform>(sapat para ibalik ang mga reserbang kopya na ang edad sa araw ay %n)</numerusform>
         </translation>
     </message>
     <message>
@@ -994,6 +1518,34 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Error</source>
         <translation type="unfinished">Kamalian</translation>
     </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
+    <message>
+        <source> GB</source>
+        <translation> GB</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>Magda-download at mag-iimbak ang %1 ng kopya ng blockchain ng ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>Choose data directory</source>
+        <translation>Piliin ang direktoryo ng datos</translation>
+    </message>
+    <message>
+        <source>Limit block chain storage to</source>
+        <translation>Limitahan ang imbakan ng kadena ng mga bloke sa</translation>
+    </message>
+    <message>
+        <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
+        <translation>Kailangang i-download muli ang buong blockchain upang bawiin ang setting na ito. Mas mabilis kung ida-download muna ang buong kadena bago bawasan ang mga lumang bloke. Hindi nito pinapagana ang ilang mas masulong na tampok.</translation>
+    </message>
+    <message>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2 GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation>Kapag na-click mo ang OK, sisimulan ng %1 na i-download at iproseso ang buong kadena ng mga bloke ng %4 (%2 GB), mula sa pinakaunang mga transaksiyon noong %3 nang unang inilunsad ang %4.</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1002,8 +1554,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Anyo</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">Ang mga bagong transaksyon ay hindi pa makikita kaya ang balanse ng iyong walet ay maaaring hindi tama. Ang impormasyong ito ay maiitama pagkatapos ma-synchronize ng iyong walet sa bitcoin network, ayon sa ibaba.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">Ang mga bagong transaksyon ay hindi pa makikita kaya ang balanse ng iyong walet ay maaaring hindi tama. Ang impormasyong ito ay maiitama pagkatapos ma-synchronize ng iyong walet sa ConnectCoin network, ayon sa ibaba.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1033,13 +1585,49 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Hide</source>
         <translation type="unfinished">Itago</translation>
     </message>
-    </context>
+        <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
+        <translation>Kasalukuyang nagsasabay ang %1.  Magda-download ito ng mga header at bloke mula sa mga katuwang na node at susuriin ang mga ito hanggang maabot ang dulo ng kadena ng mga bloke.</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Hindi tatanggapin ng network ang pagsubok na gastusin ang pondong ConnectCoin na apektado ng mga transaksiyong hindi pa naipapakita.</translation>
+    </message>
+    <message>
+        <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
+        <translation>Hindi alam. Paunang pagsasabay ng mga header (%1, %2%)…</translation>
+    </message>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)…</source>
+        <translation>Hindi alam. Isinasabay ang mga header (%1, %2%)…</translation>
+    </message>
+    <message>
+        <source>Unknown…</source>
+        <translation>Hindi alam…</translation>
+    </message>
+    <message>
+        <source>calculating…</source>
+        <translation>kinakalkula…</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">I-paste ang address mula sa clipboard</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Open ConnectCoin URI</source>
+        <translation>Magbukas ng ConnectCoin URI</translation>
     </message>
 </context>
 <context>
@@ -1137,8 +1725,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Ipahintulot ang mga papasok na koneksyon</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Kumunekta sa Bitcoin network sa pamamagitan ng SOCKS5 proxy.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">Kumunekta sa ConnectCoin network sa pamamagitan ng SOCKS5 proxy.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1257,6 +1845,156 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">Ang binigay na proxy address ay hindi wasto.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Paganahin ang mga pop-up na abiso</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Ipakita ang mga pop-up na abiso sa desktop, kabilang ang mga papasok at ipinadalang transaksyon. Naka-off bilang default. Mananatiling aktibo ang mga dialog ng error at kumpirmasyon.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
+        <source>&amp;External signer script path</source>
+        <translation>&amp;Lokasyon ng script ng panlabas na tagapirma</translation>
+    </message>
+    <message>
+        <source>&amp;Show tray icon</source>
+        <translation>&amp;Ipakita ang icon sa tray</translation>
+    </message>
+    <message>
+        <source>&amp;Third-party transaction URLs</source>
+        <translation>Mga URL ng transaksiyon mula sa &amp;ikatlong partido</translation>
+    </message>
+    <message>
+        <source>(0 = auto, &lt;0 = leave that many cores free)</source>
+        <translation>(0 = awtomatiko, &lt;0 = iwang bakante ang ganoong dami ng mga core)</translation>
+    </message>
+    <message>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation>Awtomatikong buksan ang port ng kliyenteng ConnectCoin sa router. Gagana lamang ito kung sinusuportahan at pinapagana ng iyong router ang PCP o NAT-PMP. Maaaring sapalaran ang panlabas na port.</translation>
+    </message>
+    <message>
+        <source>Compiled without external signing support (required for external signing)</source>
+        <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
+        <translation>Binuo nang walang suporta sa panlabas na paglagda (kailangan para sa panlabas na paglagda)</translation>
+    </message>
+    <message>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Kumonekta sa network ng ConnectCoin sa pamamagitan ng hiwalay na SOCKS5 proxy para sa mga serbisyong Tor onion.</translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation>Magpatuloy</translation>
+    </message>
+    <message>
+        <source>Current settings will be backed up at "%1".</source>
+        <extracomment>Text explaining to the user that the client's current settings will be backed up at a specific location. %1 is a stand-in argument for the backup location's path.</extracomment>
+        <translation>Gagawa ng reserbang kopya ng kasalukuyang mga setting sa "%1".</translation>
+    </message>
+    <message>
+        <source>Enable &amp;PSBT controls</source>
+        <extracomment>An options window setting to enable PSBT controls.</extracomment>
+        <translation>Paganahin ang mga kontrol ng &amp;PSBT</translation>
+    </message>
+    <message>
+        <source>Enable R&amp;PC server</source>
+        <extracomment>An Options window setting to enable the RPC server.</extracomment>
+        <translation>Paganahin ang R&amp;PC server</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Malaki ang nababawas sa espasyo sa disk na kailangan sa pag-iimbak ng mga transaksiyon kapag pinagana ang pagbabawas ng mga lumang bloke. Patuloy na lubusang sinusuri ang lahat ng bloke. Dapat buksan ang mga pitaka sa pagsisimula at panatilihing aktibo habang pinagana ang pagbabawas upang manatiling kasabay bago burahin ang lumang datos ng bloke; maaaring kailangang muling iindeks ang mga pitakang nahuli sa nabawasang datos. Kailangang i-download muli ang buong blockchain upang bawiin ang setting na ito.</translation>
+    </message>
+    <message>
+        <source>External Signer (e.g. hardware wallet)</source>
+        <translation>Panlabas na Tagapirma (hal. hardware na pitaka)</translation>
+    </message>
+    <message>
+        <source>Font in the Overview tab: </source>
+        <translation>Font sa tab na Pangkalahatang-ideya: </translation>
+    </message>
+    <message>
+        <source>Full path to a %1 compatible script (e.g. C:\Downloads\hwi.exe or /Users/you/Downloads/hwi.py). Beware: malware can steal your coins!</source>
+        <translation>Buong lokasyon ng script na katugma ng %1 (hal. C:\Downloads\hwi.exe o /Users/you/Downloads/hwi.py). Mag-ingat: maaaring nakawin ng mapaminsalang software ang iyong mga barya!</translation>
+    </message>
+    <message>
+        <source>Map port using PCP or NA&amp;T-PMP</source>
+        <translation>Imapa ang port gamit ang PCP o NA&amp;T-PMP</translation>
+    </message>
+    <message>
+        <source>Maximum database cache size. Make sure you have enough RAM. A larger cache can contribute to faster sync, after which the benefit is less pronounced for most use cases. Lowering the cache size will reduce memory usage. Unused mempool memory is shared for this cache.</source>
+        <extracomment>Tooltip text for Options window setting that sets the size of the database cache. Explains the corresponding effects of increasing/decreasing this value.</extracomment>
+        <translation>Pinakamalaking laki ng cache ng database. Tiyaking may sapat kang RAM. Maaaring pabilisin ng mas malaking cache ang pagsasabay; pagkatapos nito, mas maliit na ang pakinabang sa karamihan ng paggamit. Mababawasan ang paggamit ng memorya kapag pinaliit ang cache. Ibinabahagi sa cache na ito ang hindi nagamit na memorya ng mempool.</translation>
+    </message>
+    <message>
+        <source>Options set in this dialog are overridden by the command line:</source>
+        <translation>Pinangingibabawan ng command line ang mga opsiyong itinakda sa dialogong ito:</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>Itinatakda ng -popupnotifications o popupnotifications sa connectcoin.conf.</translation>
+    </message>
+    <message>
+        <source>Set the number of script verification threads. Negative values correspond to the number of cores you want to leave free to the system.</source>
+        <extracomment>Tooltip text for Options window setting that sets the number of script verification threads. Explains that negative values mean to leave these many cores free to the system.</extracomment>
+        <translation>Itakda ang bilang ng mga thread sa pagpapatunay ng script. Ang mga negatibong halaga ay tumutukoy sa bilang ng mga core na nais mong iwang bakante para sa sistema.</translation>
+    </message>
+    <message>
+        <source>Show the icon in the system tray.</source>
+        <translation>Ipakita ang icon sa tray ng sistema.</translation>
+    </message>
+    <message>
+        <source>Subtract &amp;fee from amount by default</source>
+        <extracomment>An Options window setting to set subtracting the fee from a sending amount as default.</extracomment>
+        <translation>Karaniwang ibawas ang &amp;bayad mula sa halaga</translation>
+    </message>
+    <message>
+        <source>Third-party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
+        <translation>Mga URL ng ikatlong partido (hal. tagasiyasat ng mga bloke) na lumalabas sa tab ng mga transaksiyon bilang mga item sa menu ng konteksto. Pinapalitan ng hash ng transaksiyon ang %s sa URL. Pinaghihiwalay ang maraming URL ng patayong guhit |.</translation>
+    </message>
+    <message>
+        <source>This allows you or a third party tool to communicate with the node through command-line and JSON-RPC commands.</source>
+        <extracomment>Tooltip text for Options window setting that enables the RPC server.</extracomment>
+        <translation>Pinapayagan ka nito, o ang kasangkapan ng ikatlong partido, na makipag-ugnayan sa node sa pamamagitan ng command line at mga utos na JSON-RPC.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Gumamit ng hiwalay na SOCKS&amp;5 proxy upang maabot ang mga katuwang na node sa pamamagitan ng mga serbisyong Tor onion:</translation>
+    </message>
+    <message>
+        <source>Whether to set subtract fee from amount as default or not.</source>
+        <extracomment>Tooltip text for Options window setting that sets subtracting the fee from a sending amount as default.</extracomment>
+        <translation>Kung karaniwang itatakda na ibawas ang bayad mula sa halaga o hindi.</translation>
+    </message>
+    <message>
+        <source>Whether to show PSBT controls.</source>
+        <extracomment>Tooltip text for options window setting that enables PSBT controls.</extracomment>
+        <translation>Kung ipapakita ang mga kontrol ng PSBT.</translation>
+    </message>
+    <message>
+        <source>default</source>
+        <translation>karaniwan</translation>
+    </message>
 </context>
 <context>
     <name>OverviewPage</name>
@@ -1265,8 +2003,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Anyo</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">Ang ipinapakitang impormasyon ay maaaring luma na. Kusang mag-sy-synchronize ang iyong walet sa Bitcoin network pagkatapos maitatag ang koneksyon, ngunit hindi pa nakukumpleto ang prosesong ito.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">Ang ipinapakitang impormasyon ay maaaring luma na. Kusang mag-sy-synchronize ang iyong walet sa ConnectCoin network pagkatapos maitatag ang koneksyon, ngunit hindi pa nakukumpleto ang prosesong ito.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1308,6 +2046,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Privacy mode activated for the Overview tab. To unmask the values, uncheck Settings-&gt;Mask values.</source>
         <translation type="unfinished">Na-activate ang mode ng privacy para sa tab na Pangkalahatang-ideya.  Upang ma-unkkan ang mga halaga, alisan ng check ang Mga Setting-&gt; Mga halaga ng mask.</translation>
     </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Nakabinbin:</translation>
+    </message>
 </context>
 <context>
     <name>PSBTOperationsDialog</name>
@@ -1341,9 +2083,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Bilang ng nalagdaang input: %n. Kailangan pa ng karagdagang mga lagda.</numerusform>
+            <numerusform>Bilang ng nalagdaang input: %n. Kailangan pa ng karagdagang mga lagda.</numerusform>
         </translation>
     </message>
     <message>
@@ -1376,12 +2118,81 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Bilang ng mga input ng transaksiyon na hindi pa nalalagdaan: %n.</numerusform>
+            <numerusform>Bilang ng mga input ng transaksiyon na hindi pa nalalagdaan: %n.</numerusform>
         </translation>
     </message>
-    </context>
+        <message>
+        <source>(But no wallet is loaded.)</source>
+        <translation>(Ngunit walang nakabukas na pitaka.)</translation>
+    </message>
+    <message>
+        <source>(But this wallet cannot sign transactions.)</source>
+        <translation>(Ngunit hindi makalagda ng mga transaksiyon ang pitakang ito.)</translation>
+    </message>
+    <message>
+        <source>(But this wallet does not have the right keys.)</source>
+        <translation>(Ngunit wala ang tamang mga susi sa pitakang ito.)</translation>
+    </message>
+    <message>
+        <source>Cannot sign inputs while wallet is locked.</source>
+        <translation>Hindi malagdaan ang mga input habang naka-lock ang pitaka.</translation>
+    </message>
+    <message>
+        <source>PSBT Operations</source>
+        <translation>Mga Operasyon ng PSBT</translation>
+    </message>
+    <message>
+        <source>PSBT copied to clipboard.</source>
+        <translation>Nakopya ang PSBT sa clipboard.</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk.</source>
+        <translation>Nai-save ang PSBT sa disk.</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation>Bahagyang Nalagdaang Transaksiyon (Binary)</translation>
+    </message>
+    <message>
+        <source>Save Transaction Data</source>
+        <translation>I-save ang Datos ng Transaksiyon</translation>
+    </message>
+    <message>
+        <source>Save…</source>
+        <translation>I-save…</translation>
+    </message>
+    <message>
+        <source>Sends %1 to %2</source>
+        <translation>Nagpapadala ng %1 sa %2</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast failed: %1</source>
+        <translation>Nabigo ang pagpapalaganap ng transaksiyon: %1</translation>
+    </message>
+    <message>
+        <source>Transaction is fully signed and ready for broadcast.</source>
+        <translation>Lubusang nalagdaan ang transaksiyon at handa nang ipalaganap.</translation>
+    </message>
+    <message>
+        <source>Transaction is missing some information about inputs.</source>
+        <translation>May kulang na impormasyon tungkol sa mga input ng transaksiyon.</translation>
+    </message>
+    <message>
+        <source>Transaction status is unknown.</source>
+        <translation>Hindi alam ang kalagayan ng transaksiyon.</translation>
+    </message>
+    <message>
+        <source>Transaction still needs signature(s).</source>
+        <translation>Kailangan pa ng lagda ang transaksiyon.</translation>
+    </message>
+    <message>
+        <source>Unable to calculate transaction fee or total transaction amount.</source>
+        <translation>Hindi makalkula ang bayad o kabuuang halaga ng transaksiyon.</translation>
+    </message>
+</context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1389,20 +2200,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Kamalian sa paghiling ng bayad</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Hindi masimulan ang bitcoin: click-to-pay handler</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">Hindi masimulan ang connectcoin: click-to-pay handler</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">Ang 'bitcoin://' ay hindi wastong URI. Sa halip, gamitin ang 'bitcoin:'.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">Ang 'connectcoin://' ay hindi wastong URI. Sa halip, gamitin ang 'connectcoin:'.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">Hindi ma-parse ang URI! Marahil ito ay dahil sa hindi wastong Bitcoin address o maling URI parameters</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">Hindi ma-parse ang URI! Marahil ito ay dahil sa hindi wastong ConnectCoin address o maling URI parameters</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
         <translation type="unfinished">File handling ng hiling ng bayad</translation>
+    </message>
+    <message>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation>Hindi maproseso ang kahilingan sa pagbabayad dahil hindi sinusuportahan ang BIP70.
+Dahil sa laganap na mga kahinaan sa seguridad ng BIP70, mariing ipinapayo na balewalain ang anumang tagubilin ng mangangalakal na lumipat ng pitaka.
+Kung natatanggap mo ang pagkakamaling ito, hilingin sa mangangalakal na magbigay ng URI na katugma ng BIP21.</translation>
+    </message>
+    <message>
+        <source>URI handling</source>
+        <translation>Paghawak sa URI</translation>
     </message>
 </context>
 <context>
@@ -1442,6 +2265,31 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">Papalabas</translation>
     </message>
+    <message>
+        <source>Address</source>
+        <extracomment>Title of Peers Table column which contains the IP/Onion/I2P address of the connected peer.</extracomment>
+        <translation>Address</translation>
+    </message>
+    <message>
+        <source>Age</source>
+        <extracomment>Title of Peers Table column which indicates the duration (length of time) since the peer connection started.</extracomment>
+        <translation>Edad</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <extracomment>Title of Peers Table column which states the network the peer connected through.</extracomment>
+        <translation>Network</translation>
+    </message>
+    <message>
+        <source>Peer</source>
+        <extracomment>Title of Peers Table column which contains a unique number used to identify a connection.</extracomment>
+        <translation>Katuwang na node</translation>
+    </message>
+    <message>
+        <source>Ping</source>
+        <extracomment>Title of Peers Table column which indicates the current latency of the connection with the peer.</extracomment>
+        <translation>Ping</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1465,7 +2313,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Save QR Code</source>
         <translation type="unfinished">I-save ang QR Code</translation>
     </message>
-    </context>
+        <message>
+        <source>PNG Image</source>
+        <extracomment>Expanded name of the PNG file format. See: https://en.wikipedia.org/wiki/Portable_Network_Graphics.</extracomment>
+        <translation>Larawang PNG</translation>
+    </message>
+    <message>
+        <source>&amp;Save Image…</source>
+        <translation>&amp;I-save ang Larawan…</translation>
+    </message>
+</context>
 <context>
     <name>RPCConsole</name>
     <message>
@@ -1713,6 +2570,294 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Unknown</source>
         <translation type="unfinished">Hindi alam</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>&amp;Copy IP/Netmask</source>
+        <extracomment>Context menu action to copy the IP/Netmask of a banned peer. IP/Netmask is the combination of a peer's IP address and its Netmask. For IP address, see: https://en.wikipedia.org/wiki/IP_address.</extracomment>
+        <translation>&amp;Kopyahin ang IP/Netmask</translation>
+    </message>
+    <message>
+        <source>(peer: %1)</source>
+        <translation>(katuwang na node: %1)</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation>1 &amp;araw</translation>
+    </message>
+    <message>
+        <source>Address Relay</source>
+        <extracomment>Text title for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>Pagpapasa ng mga Address</translation>
+    </message>
+    <message>
+        <source>Addresses Processed</source>
+        <extracomment>Text title for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>Mga Naprosesong Address</translation>
+    </message>
+    <message>
+        <source>Addresses Rate-Limited</source>
+        <extracomment>Text title for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>Mga Address na Nalimitahan ang Dalas</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Kadena ng mga bloke</translation>
+    </message>
+    <message>
+        <source>Blocksdir</source>
+        <translation>Direktoryo ng mga bloke</translation>
+    </message>
+    <message>
+        <source>Current block height</source>
+        <translation>Kasalukuyang taas ng bloke</translation>
+    </message>
+    <message>
+        <source>Datadir</source>
+        <translation>Direktoryo ng datos</translation>
+    </message>
+    <message>
+        <source>Direction/Type</source>
+        <translation>Direksiyon/Uri</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation>Oras na lumipas mula nang matanggap sa katuwang na node na ito ang isang bagong bloke na nakapasa sa paunang pagsusuri ng pagiging wasto.</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <extracomment>Tooltip text for the Last Transaction field in the peer details area.</extracomment>
+        <translation>Oras na lumipas mula nang matanggap sa katuwang na node na ito ang isang bagong transaksiyong tinanggap sa ating mempool.</translation>
+    </message>
+    <message>
+        <source>Executing…</source>
+        <extracomment>A console message indicating an entered command is currently being executed.</extracomment>
+        <translation>Isinasagawa…</translation>
+    </message>
+    <message>
+        <source>Hide Peers Detail</source>
+        <translation>Itago ang Detalye ng mga Katuwang na Node</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation>Mataas na Bandwidth</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation>Pagpapasa ng mga siksik na bloke ng BIP152 na may mataas na bandwidth: %1</translation>
+    </message>
+    <message>
+        <source>Inbound: initiated by peer</source>
+        <extracomment>Explanatory text for an inbound peer connection.</extracomment>
+        <translation>Papasok: sinimulan ng katuwang na node</translation>
+    </message>
+    <message>
+        <source>Last Block</source>
+        <translation>Huling Bloke</translation>
+    </message>
+    <message>
+        <source>Last Transaction</source>
+        <translation>Huling Transaksiyon</translation>
+    </message>
+    <message>
+        <source>Local Addresses</source>
+        <translation>Mga Lokal na Address</translation>
+    </message>
+    <message>
+        <source>Memory Pool</source>
+        <translation>Imbakan sa Memorya</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Pinakamababang Ping</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>Hindi naaangkop</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Network</translation>
+    </message>
+    <message>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation>Mga address sa network na kasalukuyang ginagamit ng iyong ConnectCoin node upang makipag-ugnayan sa ibang mga node.</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>Hindi kailanman</translation>
+    </message>
+    <message>
+        <source>Node window - [%1]</source>
+        <translation>Bintana ng node - [%1]</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to request addresses from a peer.</extracomment>
+        <translation>Palabas na pagkuha ng address: panandalian, para sa paghingi ng mga address</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>Palabas na pagpapasa ng bloke: hindi nagpapasa ng mga transaksiyon o address</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to test the aliveness of known addresses.</extracomment>
+        <translation>Palabas na pansubok na koneksiyon: panandalian, para subukan ang mga address</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays all network information. This is the default behavior for outbound connections.</extracomment>
+        <translation>Palabas na buong pagpapasa: paunang takda</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <extracomment>Explanatory text for an outbound peer connection that was established manually through one of several methods. The numbered arguments are stand-ins for the methods available to establish manual connections.</extracomment>
+        <translation>Palabas na manwal na koneksiyon: idinagdag gamit ang RPC %1 o mga opsiyong pang-ayos na %2/%3</translation>
+    </message>
+    <message>
+        <source>Permissions</source>
+        <translation>Mga Pahintulot</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Paghihintay sa Ping</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>Pribadong pagpapalaganap: panandalian, para sa pagpapalaganap ng mga transaksiyong sensitibo sa pagkapribado</translation>
+    </message>
+    <message>
+        <source>Session ID</source>
+        <translation>ID ng Sesyon</translation>
+    </message>
+    <message>
+        <source>The BIP324 session ID string in hex.</source>
+        <translation>Ang ID ng sesyon ng BIP324 bilang string na hexadecimal.</translation>
+    </message>
+    <message>
+        <source>The direction and type of peer connection: %1</source>
+        <translation>Ang direksiyon at uri ng koneksiyon sa katuwang na node: %1</translation>
+    </message>
+    <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation>Ang protokol ng network na ginamit sa pagkonekta ng katuwang na node na ito: IPv4, IPv6, Onion, I2P, o CJDNS.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</source>
+        <extracomment>Tooltip text for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>Kabuuang bilang ng mga address na natanggap mula sa katuwang na node na ito ngunit itinapon (hindi pinroseso) dahil sa paglimita ng dalas.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</source>
+        <extracomment>Tooltip text for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>Kabuuang bilang ng mga address na natanggap mula sa katuwang na node na ito at naproseso (hindi kasama ang mga itinapon dahil sa paglimita ng dalas).</translation>
+    </message>
+    <message>
+        <source>The transport layer version: %1</source>
+        <translation>Ang bersiyon ng sapin ng transportasyon: %1</translation>
+    </message>
+    <message>
+        <source>Transaction Relay</source>
+        <translation>Pagpapasa ng mga Transaksiyon</translation>
+    </message>
+    <message>
+        <source>Transport</source>
+        <translation>Transportasyon</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.
+Use up and down arrows to navigate history, and %2 to clear screen.
+Use %3 and %4 to increase or decrease the font size.
+Type %5 for an overview of available commands.
+For more information on using this console, type %6.
+
+%7WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.%8</source>
+        <extracomment>RPC console welcome message. Placeholders %7 and %8 are style tags for the warning content, and they are not space separated from the rest of the text intentionally.</extracomment>
+        <translation>Maligayang pagdating sa RPC console ng %1.
+Gamitin ang mga palasong pataas at pababa upang tingnan ang kasaysayan, at ang %2 upang linisin ang screen.
+Gamitin ang %3 at %4 upang lakihan o liitan ang font.
+I-type ang %5 para sa pangkalahatang-ideya ng mga magagamit na utos.
+Para sa karagdagang impormasyon sa paggamit ng console na ito, i-type ang %6.
+
+%7BABALA: May mga manlolokong nag-uutos sa mga gumagamit na mag-type ng mga utos dito upang nakawin ang laman ng kanilang pitaka. Huwag gamitin ang console na ito kung hindi mo lubusang nauunawaan ang mga kahihinatnan ng isang utos.%8</translation>
+    </message>
+    <message>
+        <source>Whether we relay addresses to this peer.</source>
+        <extracomment>Tooltip text for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>Kung nagpapasa tayo ng mga address sa katuwang na node na ito.</translation>
+    </message>
+    <message>
+        <source>Whether we relay transactions to this peer.</source>
+        <translation>Kung nagpapasa tayo ng mga transaksiyon sa katuwang na node na ito.</translation>
+    </message>
+    <message>
+        <source>detecting: peer could be v1 or v2</source>
+        <extracomment>Explanatory text for "detecting" transport type.</extracomment>
+        <translation>tinutukoy: maaaring v1 o v2 ang katuwang na node</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation>walang napiling pagpapasa na may mataas na bandwidth</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation>pinili tayo ng katuwang na node para sa pagpapasang may mataas na bandwidth</translation>
+    </message>
+    <message>
+        <source>v1: unencrypted, plaintext transport protocol</source>
+        <extracomment>Explanatory text for v1 transport type.</extracomment>
+        <translation>v1: hindi naka-encrypt na protokol sa transportasyon na gumagamit ng payak na teksto</translation>
+    </message>
+    <message>
+        <source>v2: BIP324 encrypted transport protocol</source>
+        <extracomment>Explanatory text for v2 transport type.</extracomment>
+        <translation>v2: naka-encrypt na protokol sa transportasyon ng BIP324</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation>pinili natin ang katuwang na node para sa pagpapasang may mataas na bandwidth</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -1729,8 +2874,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Mensahe:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">Opsyonal na mensahe na ilakip sa hiling ng bayad, na ipapakita pagbukas ng hiling. Tandaan: Ang mensahe ay hindi ipapadala kasama ng bayad sa Bitcoin network.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">Opsyonal na mensahe na ilakip sa hiling ng bayad, na ipapakita pagbukas ng hiling. Tandaan: Ang mensahe ay hindi ipapadala kasama ng bayad sa ConnectCoin network.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -1804,7 +2949,15 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Could not unlock wallet.</source>
         <translation type="unfinished">Hindi magawang ma-unlock ang walet.</translation>
     </message>
-    </context>
+        <message>
+        <source>Copy &amp;message</source>
+        <translation>Kopyahin ang &amp;mensahe</translation>
+    </message>
+    <message>
+        <source>Could not generate new %1 address</source>
+        <translation>Hindi makagawa ng bagong address na %1</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
@@ -1835,6 +2988,30 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Request payment to %1</source>
         <translation type="unfinished">Humiling ng bayad sa %1</translation>
     </message>
+    <message>
+        <source>&amp;Save Image…</source>
+        <translation>&amp;I-save ang Larawan…</translation>
+    </message>
+    <message>
+        <source>&amp;Verify</source>
+        <translation>&amp;Patunayan</translation>
+    </message>
+    <message>
+        <source>Address:</source>
+        <translation>Address:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation>Tatak:</translation>
+    </message>
+    <message>
+        <source>Request payment to …</source>
+        <translation>Humiling ng bayad sa …</translation>
+    </message>
+    <message>
+        <source>Verify this address on e.g. a hardware wallet screen</source>
+        <translation>Patunayan ang address na ito, halimbawa, sa screen ng hardware na pitaka</translation>
+    </message>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -1861,6 +3038,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Requested</source>
         <translation type="unfinished">Hiniling</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Tatak</translation>
     </message>
 </context>
 <context>
@@ -1950,8 +3131,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Itago ang mga Setting ng bayad sa Transaksyon</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
-        <translation type="unfinished">Kapag mas kaunti ang dami ng transaksyon kaysa sa puwang sa mga blocks, ang mga minero pati na rin ang mga relaying node ay maaaring magpatupad ng minimum na bayad. Ang pagbabayad lamang ng minimum na bayad na ito ay maayos, ngunit malaman na maaari itong magresulta sa hindi kailanmang nagkukumpirmang transaksyon sa sandaling magkaroon ng higit na pangangailangan para sa mga transaksyon ng bitcoin kaysa sa kayang i-proseso ng network.</translation>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation type="unfinished">Kapag mas kaunti ang dami ng transaksyon kaysa sa puwang sa mga blocks, ang mga minero pati na rin ang mga relaying node ay maaaring magpatupad ng minimum na bayad. Ang pagbabayad lamang ng minimum na bayad na ito ay maayos, ngunit malaman na maaari itong magresulta sa hindi kailanmang nagkukumpirmang transaksyon sa sandaling magkaroon ng higit na pangangailangan para sa mga transaksyon ng ConnectCoin kaysa sa kayang i-proseso ng network.</translation>
     </message>
     <message>
         <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
@@ -2018,8 +3199,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Lumikha ng Unsigned</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation type="unfinished">Lumilikha ng isang Bahagyang Signed Bitcoin Transaction (PSBT) para magamit sa hal. isang offline na%1 wallet, o isang wallet na hardware na katugma sa PSBT.</translation>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation type="unfinished">Lumilikha ng isang Bahagyang Signed ConnectCoin Transaction (PSBT) para magamit sa hal. isang offline na%1 wallet, o isang wallet na hardware na katugma sa PSBT.</translation>
     </message>
     <message>
         <source>%1 to '%2'</source>
@@ -2084,14 +3265,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Tinatayang magsimula ng kumpirmasyon sa loob ng %n na mga block.</numerusform>
+            <numerusform>Tinatayang magsimula ng kumpirmasyon sa loob ng %n na mga block.</numerusform>
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">Babala: Hindi wastong Bitcoin address</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">Babala: Hindi wastong ConnectCoin address</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -2108,6 +3289,135 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(walang label)</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Bytes: </translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>%1 from wallet '%2'</source>
+        <translation>%1 mula sa pitakang '%2'</translation>
+    </message>
+    <message>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks…)</source>
+        <translation>(Hindi pa nasisimulan ang matalinong pagtatantiya ng bayad. Karaniwang tumatagal ito ng ilang bloke…)</translation>
+    </message>
+    <message>
+        <source>Choose…</source>
+        <translation>Pumili…</translation>
+    </message>
+    <message>
+        <source>Connect your hardware wallet first.</source>
+        <translation>Ikonekta muna ang iyong hardware na pitaka.</translation>
+    </message>
+    <message>
+        <source>Custom:</source>
+        <translation>Pasadya:</translation>
+    </message>
+    <message>
+        <source>Do you want to create this transaction?</source>
+        <extracomment>Message displayed when attempting to create a transaction. Cautionary text to prompt the user to verify that the displayed transaction details represent the transaction the user intends to create.</extracomment>
+        <translation>Nais mo bang gawin ang transaksiyong ito?</translation>
+    </message>
+    <message>
+        <source>External balance:</source>
+        <translation>Panlabas na balanse:</translation>
+    </message>
+    <message>
+        <source>External signer failure</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Nabigo ang panlabas na tagapirma</translation>
+    </message>
+    <message>
+        <source>External signer not found</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Hindi natagpuan ang panlabas na tagapirma</translation>
+    </message>
+    <message>
+        <source>Inputs…</source>
+        <translation>Mga Input…</translation>
+    </message>
+    <message>
+        <source>PSBT saved</source>
+        <extracomment>Popup message when a PSBT has been saved to a file</extracomment>
+        <translation>Nai-save ang PSBT</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk</source>
+        <translation>Nai-save ang PSBT sa disk</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation>Bahagyang Nalagdaang Transaksiyon (Binary)</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
+        <translation>Suriin ang iyong panukalang transaksiyon. Gagawa ito ng Bahagyang Nalagdaang Transaksiyong ConnectCoin (PSBT) na maaari mong i-save o kopyahin, at saka lagdaan gamit, halimbawa, ang pitakang %1 na hindi nakakonekta sa network o isang hardware na pitakang katugma ng PSBT.</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
+        <translation>Suriin ang iyong transaksiyon. Maaari mong gawin at ipadala ang transaksiyong ito o gumawa ng Bahagyang Nalagdaang Transaksiyong ConnectCoin (PSBT), na maaari mong i-save o kopyahin, at saka lagdaan gamit, halimbawa, ang pitakang %1 na hindi nakakonekta sa network o isang hardware na pitakang katugma ng PSBT.</translation>
+    </message>
+    <message>
+        <source>Save Transaction Data</source>
+        <translation>I-save ang Datos ng Transaksiyon</translation>
+    </message>
+    <message>
+        <source>Set external signer script path in Options -&gt; Wallet</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Itakda ang lokasyon ng script ng panlabas na tagapirma sa Mga Opsiyon -&gt; Pitaka</translation>
+    </message>
+    <message>
+        <source>Sign failed</source>
+        <translation>Nabigo ang paglagda</translation>
+    </message>
+    <message>
+        <source>Sign on device</source>
+        <extracomment>"device" usually means a hardware wallet.</extracomment>
+        <translation>Lumagda sa aparato</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Magtakda ng pasadyang bayad bawat kB (1,000 byte) ng birtuwal na laki ng transaksiyon.
+
+Tandaan:  Dahil kinakalkula ang bayad bawat byte, ang singil na "100 connects bawat kvB" para sa transaksiyong may 500 birtuwal na byte (kalahati ng 1 kvB) ay magreresulta sa bayad na 50 connects lamang.</translation>
+    </message>
+    <message>
+        <source>The PSBT has been copied to the clipboard. You can also save it.</source>
+        <translation>Nakopya na ang PSBT sa clipboard. Maaari mo rin itong i-save.</translation>
+    </message>
+    <message>
+        <source>To review recipient list click "Show Details…"</source>
+        <translation>Upang suriin ang listahan ng tatanggap, i-click ang "Ipakita ang mga Detalye…"</translation>
+    </message>
+    <message>
+        <source>Unsigned Transaction</source>
+        <comment>PSBT copied</comment>
+        <extracomment>Caption of "PSBT has been copied" messagebox</extracomment>
+        <translation>Hindi Nalagdaang Transaksiyon</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>Ginagamit ang kasalukuyang pinakamababang bayad. Hindi tinantiya ang oras ng pagkumpirma.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>Maaari mong dagdagan ang bayad sa ibang pagkakataon.</translation>
     </message>
 </context>
 <context>
@@ -2129,8 +3439,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Piliin ang dating ginamit na address</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">Ang Bitcoin address kung saan ipapadala and bayad</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">Ang ConnectCoin address kung saan ipapadala and bayad</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -2161,8 +3471,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Mag-enter ng label para sa address na ito upang idagdag ito sa listahan ng mga gamit na address.</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">Mensahe na nakalakip sa bitcoin: URI na kung saan maiimbak kasama ang transaksyon para sa iyong sanggunian. Tandaan: Ang mensaheng ito ay hindi ipapadala sa network ng Bitcoin.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">Mensahe na nakalakip sa connectcoin: URI na kung saan maiimbak kasama ang transaksyon para sa iyong sanggunian. Tandaan: Ang mensaheng ito ay hindi ipapadala sa network ng ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The amount to send in the selected unit</source>
+        <translation>Ang halagang ipapadala sa napiling yunit</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Ibabawas ang bayad mula sa halagang ipinapadala. Mas kaunting ConnectCoin ang matatanggap ng tatanggap kaysa sa ipinasok mo sa patlang ng halaga. Kung maraming tatanggap ang napili, paghahati-hatian nang pantay ang bayad.</translation>
     </message>
 </context>
 <context>
@@ -2171,7 +3497,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Send</source>
         <translation type="unfinished">Ipadala</translation>
     </message>
-    </context>
+        <message>
+        <source>Create Unsigned</source>
+        <translation>Gumawa ng Hindi Nalagdaan</translation>
+    </message>
+</context>
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
@@ -2183,8 +3513,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Pirmahan ang Mensahe</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">Ang Bitcoin address kung anong ipipirma sa mensahe</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">Ang ConnectCoin address kung anong ipipirma sa mensahe</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -2203,8 +3533,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Pirma</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation type="unfinished">Pirmahan ang mensahe upang mapatunayan na pagmamay-ari mo ang Bitcoin address na ito</translation>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation type="unfinished">Pirmahan ang mensahe upang mapatunayan na pagmamay-ari mo ang ConnectCoin address na ito</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -2224,15 +3554,15 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation type="unfinished">Ipasok ang address ng tatanggap, mensahe (tiyakin na kopyahin mo ang mga break ng linya, puwang, mga tab, atbp.) at pirma sa ibaba upang i-verify ang mensahe. Mag-ingat na huwag magbasa ng higit pa sa pirma kaysa sa kung ano ang nasa nakapirmang mensahe mismo, upang maiwasan na maloko ng man-in-the-middle attack. Tandaan na pinapatunayan lamang nito na nakakatanggap sa address na ito ang partido na pumirma, hindi nito napapatunayan ang pagpapadala ng anumang transaksyon!</translation>
+        <translation>Ilagay sa ibaba ang adres ng tatanggap, mensahe (tiyaking eksaktong makokopya ang mga paglipat ng linya, puwang, tab, at iba pa), at pirma upang mapatunayan ang mensahe. Huwag ipakahulugang may pinatutunayan ang pirma na higit pa sa nakasaad sa mismong napirmahang mensahe, upang hindi malinlang ng isang umaatakeng pumapagitna sa komunikasyon. Tandaan na pinatutunayan lamang nito na nakatatanggap ang pumirma gamit ang adres; hindi nito mapatutunayan kung sino ang nagpadala ng anumang transaksyon!</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">Ang Bitcoin address na pumirma sa mensahe</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">Ang ConnectCoin address na pumirma sa mensahe</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">Tiyakin ang katotohanan ng mensahe upang siguruhin na ito'y napirmahan ng tinukoy na Bitcoin address</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">Tiyakin ang katotohanan ng mensahe upang siguruhin na ito'y napirmahan ng tinukoy na ConnectCoin address</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -2293,6 +3623,34 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">Napatunayan ang mensahe.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the clipboard</source>
+        <translation>Kopyahin ang kasalukuyang lagda sa clipboard</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>Hindi tumutukoy sa susi ng lumang uri (P2PKH) ang ipinasok na address. Hindi sinusuportahan sa bersiyong ito ng %1 ang paglagda ng mensahe para sa SegWit at iba pang uri ng address na hindi P2PKH. Suriin ang address at subukang muli.</translation>
+    </message>
+    <message>
+        <source>The signature given when the message was signed</source>
+        <translation>Ang lagdang ibinigay noong nilagdaan ang mensahe</translation>
+    </message>
+    <message>
+        <source>The signed message to verify</source>
+        <translation>Ang nalagdaang mensaheng patutunayan</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Maaari kang lumagda ng mga mensahe o kasunduan gamit ang iyong mga address ng lumang uri (P2PKH) upang patunayang maaari kang tumanggap ng pondong ConnectCoin na ipinadala sa mga iyon. Mag-ingat na huwag lumagda ng malabo o sapalarang bagay, dahil maaaring linlangin ka ng mga pag-atakeng phishing upang maipasa sa kanila ang iyong pagkakakilanlan sa pamamagitan ng lagda. Lagdaan lamang ang mga pahayag na kumpleto ang detalye at sinasang-ayunan mo.</translation>
     </message>
 </context>
 <context>
@@ -2355,9 +3713,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>siguradong maaaring gastusin pagkalikha ng %n pang mga block</numerusform>
+            <numerusform>siguradong maaaring gastusin pagkalikha ng %n pang mga blocks</numerusform>
         </translation>
     </message>
     <message>
@@ -2435,6 +3793,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>P2C domain</source>
         <translation>Domain ng P2C</translation>
+    </message>
+    <message>
+        <source>%1 (Certificate was not verified)</source>
+        <translation>%1 (Hindi napatunayan ang sertipiko)</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is in the memory pool.</extracomment>
+        <translation>0/hindi nakumpirma, nasa imbakan sa memorya</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, not in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is not in the memory pool.</extracomment>
+        <translation>0/hindi nakumpirma, wala sa imbakan sa memorya</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Pagbawas</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>Indeks ng output</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>tatak</translation>
     </message>
 </context>
 <context>
@@ -2533,6 +3917,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
         <translation>Layunin ng transaksyon na itinakda ng gumagamit, o ang domain ng P2C.</translation>
+    </message>
+    <message>
+        <source>(n/a)</source>
+        <translation>(hindi naaangkop)</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Tatak</translation>
     </message>
 </context>
 <context>
@@ -2641,6 +4033,60 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>Maglagay ng address, domain ng P2C, ID ng transaksyon, o label na hahanapin</translation>
     </message>
+    <message>
+        <source>&amp;Edit address label</source>
+        <translation>&amp;Baguhin ang tatak ng address</translation>
+    </message>
+    <message>
+        <source>&amp;Show transaction details</source>
+        <translation>&amp;Ipakita ang mga detalye ng transaksiyon</translation>
+    </message>
+    <message>
+        <source>A&amp;bandon transaction</source>
+        <translation>&amp;Abandonahin ang transaksiyon</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Address</translation>
+    </message>
+    <message>
+        <source>Comma separated file</source>
+        <extracomment>Expanded name of the CSV file format. See: https://en.wikipedia.org/wiki/Comma-separated_values.</extracomment>
+        <translation>Talaksang pinaghihiwalay ng kuwit ang mga halaga</translation>
+    </message>
+    <message>
+        <source>Copy &amp;raw transaction</source>
+        <translation>Kopyahin ang &amp;hilaw na transaksiyon</translation>
+    </message>
+    <message>
+        <source>Copy full transaction &amp;details</source>
+        <translation>Kopyahin ang lahat ng &amp;detalye ng transaksiyon</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Kopyahin ang &amp;ID ng transaksiyon</translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <source>Increase transaction &amp;fee</source>
+        <translation>Dagdagan ang &amp;bayad sa transaksiyon</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Tatak</translation>
+    </message>
+    <message>
+        <source>Range…</source>
+        <translation>Saklaw…</translation>
+    </message>
+    <message>
+        <source>Show in %1</source>
+        <extracomment>Transactions table context menu action to show the selected transaction in a third-party block explorer. %1 is a stand-in argument for the URL of the explorer.</extracomment>
+        <translation>Ipakita sa %1</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -2652,7 +4098,35 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Error</source>
         <translation type="unfinished">Kamalian</translation>
     </message>
-    </context>
+        <message>
+        <source>Load Transaction Data</source>
+        <translation>Magbukas ng Datos ng Transaksiyon</translation>
+    </message>
+    <message>
+        <source>No wallet has been loaded.
+Go to File &gt; Open Wallet to load a wallet.
+- OR -</source>
+        <translation>Walang nakabukas na pitaka.
+Pumunta sa Talaksan &gt; Buksan ang Pitaka upang magbukas ng pitaka.
+- O -</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>Dapat mas maliit sa 100 MiB ang talaksang PSBT</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>Bahagyang Nalagdaang Transaksiyon (*.psbt)</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>Hindi ma-decode ang PSBT</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>Hindi ma-decode ang PSBT mula sa clipboard (hindi wastong base64)</translation>
+    </message>
+</context>
 <context>
     <name>WalletModel</name>
     <message>
@@ -2704,7 +4178,23 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Could not commit transaction</source>
         <translation type="unfinished">Hindi makagawa ng transaksyon</translation>
     </message>
-    </context>
+        <message>
+        <source>Can't display address</source>
+        <translation>Hindi maipakita ang address</translation>
+    </message>
+    <message>
+        <source>Fee-bump PSBT copied to clipboard</source>
+        <translation>Nakopya sa clipboard ang PSBT para sa pagdagdag ng bayad</translation>
+    </message>
+    <message>
+        <source>Signer error</source>
+        <translation>Pagkakamali ng tagapirma</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation>Babala: Maaaring bayaran nito ang dagdag na bayad sa pamamagitan ng pagbawas ng mga output ng sukli o pagdagdag ng mga input kung kailangan. Maaari itong magdagdag ng bagong output ng sukli kung wala pa nito. Maaaring maglantad ng pribadong impormasyon ang mga pagbabagong ito.</translation>
+    </message>
+</context>
 <context>
     <name>WalletView</name>
     <message>
@@ -2739,6 +4229,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Cancel</source>
         <translation type="unfinished">Kanselahin</translation>
     </message>
+    <message>
+        <source>Wallet Data</source>
+        <extracomment>Name of the wallet data file format.</extracomment>
+        <translation>Datos ng Pitaka</translation>
+    </message>
 </context>
 <context>
     <name>bitcoin-core</name>
@@ -2768,7 +4263,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
-        <translation type="unfinished">Ito ay isang pre-release test build - gamitin sa iyong sariling peligro - huwag gumamit para sa mga aplikasyon ng pagmimina o pangangalakal</translation>
+        <translation>Isa itong bersyong pansubok bago ang opisyal na paglabas - gamitin sa sarili mong pananagutan - huwag gamitin sa pagmimina o mga programang pangkalakalan</translation>
     </message>
     <message>
         <source>This is the transaction fee you may discard if change is smaller than dust at this level</source>
@@ -2994,7 +4489,909 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Wallet needed to be rewritten: restart %s to complete</source>
         <translation type="unfinished">Kinakailangan na muling maisulat ang walet: i-restart ang %s upang makumpleto</translation>
     </message>
-    </context>
+        <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>Dapat na destinasyong P2PK na uri 1 (bech32m) ang destinasyon ng sukli</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>Mga address na P2PK na uri 1 (bech32m) lamang ang sinusuportahan ng ConnectCoin</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>Mga address ng sukli na P2PK na uri 1 (bech32m) lamang ang sinusuportahan ng ConnectCoin</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>Nangangailangan ang mga transaksyon sa ConnectCoin ng mga wastong destinasyong uri 1 o mga output na PAY_TO_CONNECT na uri 2</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>SIGHASH_DEFAULT lamang ang sinusuportahan ng mga output ng ConnectCoin na uri 1</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>Ang input ay hindi isang kumpletong paggastos na uri 1 na may SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>Nangangailangan ang input ng kumpletong witness data para sa patunay na P2C</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>Hindi pa inilulunsad ang pangunahing network: walang itinakdang genesis block. Gamitin ang -testnet4 para sa pampublikong pagsubok o -regtest para sa lokal na pagsubok.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>Walang nakatakdang pampublikong URL ng source code na pag-aari ng proyekto para sa development build na ito.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Hindi sapat ang mga magagamit na file descriptor. Subukang bawasan ang -rpcmaxconnections o gamitin ang default na halagang %d</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>Mangyaring mag-ambag kung nakatutulong sa iyo ang %s.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Pag-isipang baguhin ang %s (%s) o %s (%s).</translation>
+    </message>
+    <message>
+        <source>
+Unable to cleanup failed migration</source>
+        <translation>
+Hindi malinis ang nabigong paglilipat</translation>
+    </message>
+    <message>
+        <source>
+Unable to restore backup of wallet.</source>
+        <translation>
+Hindi maibalik ang reserbang kopya ng pitaka.</translation>
+    </message>
+    <message>
+        <source>%s failed to validate the -assumeutxo snapshot state. This indicates a hardware problem, or a bug in the software, or a bad software modification that allowed an invalid snapshot to be loaded. As a result of this, the node will shut down and stop using any state that was built on the snapshot, resetting the chain height from %d to %d. On the next restart, the node will resume syncing from %d without using any snapshot data. Please report this incident to %s, including how you obtained the snapshot. The invalid snapshot chainstate will be left on disk in case it is helpful in diagnosing the issue that caused this error.</source>
+        <translation>Nabigo ang %s na patunayan ang kalagayan ng snapshot na -assumeutxo. Ipinahihiwatig nito ang problema sa hardware, depekto sa software, o maling pagbabago sa software na nagpahintulot na mabuksan ang hindi wastong snapshot. Dahil dito, magsasara ang node at titigil sa paggamit ng anumang kalagayang nabuo mula sa snapshot, at ibabalik ang taas ng kadena mula %d patungong %d. Sa susunod na pagsisimula, itutuloy ng node ang pagsasabay mula %d nang hindi gumagamit ng datos ng snapshot. Iulat ang pangyayaring ito sa %s, kasama ang paraan ng pagkuha mo ng snapshot. Iiwan sa disk ang hindi wastong kalagayan ng kadena ng snapshot sakaling makatulong ito sa pagsusuri ng sanhi ng pagkakamaling ito.</translation>
+    </message>
+    <message>
+        <source>%s is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation>Napakataas ng itinakdang %s! Maaaring mabayaran ang ganito kalaking bayad sa isang transaksiyon lamang.</translation>
+    </message>
+    <message>
+        <source>%s request to listen on port %u. This port is considered "bad" and thus it is unlikely that any peer will connect to it. See doc/p2p-bad-ports.md for details and a full list.</source>
+        <translation>Humiling ang %s na makinig sa port %u. Itinuturing na "masama" ang port na ito kaya malamang na walang katuwang na node na kokonekta rito. Tingnan ang doc/p2p-bad-ports.md para sa mga detalye at buong listahan.</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>Luma na ang -walletrbf at tuluyang aalisin sa susunod na paglalabas.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>Maaaring masyadong malaki ang %zu MiB na dbcache para sa memorya ng sistemang %zu MiB lamang.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>Nagkaroon ng malubhang panloob na pagkakamali; tingnan ang %s para sa mga detalye: %s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>Hindi natagpuan ang datos ng Assumeutxo para sa ibinigay na hash ng bloke na '%s'.</translation>
+    </message>
+    <message>
+        <source>Block verification was interrupted</source>
+        <translation>Naputol ang pagpapatunay ng mga bloke</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version %d pre-selected input with a version 3 tx</source>
+        <translation>Hindi magagastos ang paunang napiling input ng bersiyong %d na hindi pa nakumpirma gamit ang transaksiyong bersiyon 3</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version 3 pre-selected input with a version %d tx</source>
+        <translation>Hindi magagastos ang paunang napiling input ng bersiyong 3 na hindi pa nakumpirma gamit ang transaksiyong bersiyon %d</translation>
+    </message>
+    <message>
+        <source>Cannot obtain a lock on directory %s. %s is probably already running.</source>
+        <translation>Hindi makakuha ng kandado sa direktoryong %s. Malamang na tumatakbo na ang %s.</translation>
+    </message>
+    <message>
+        <source>Cannot provide specific connections and have addrman find outgoing connections at the same time.</source>
+        <translation>Hindi maaaring magtakda ng mga partikular na koneksiyon habang pinapahanap din ang addrman ng mga palabas na koneksiyon.</translation>
+    </message>
+    <message>
+        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
+        <translation>Hindi maitakda ang -forcednsseed sa true kapag itinakda ang -dnsseed sa false.</translation>
+    </message>
+    <message>
+        <source>Cannot set -peerblockfilters without -blockfilterindex.</source>
+        <translation>Hindi maitakda ang -peerblockfilters nang walang -blockfilterindex.</translation>
+    </message>
+    <message>
+        <source>Cannot write to directory '%s'; check permissions.</source>
+        <translation>Hindi makasulat sa direktoryong '%s'; suriin ang mga pahintulot.</translation>
+    </message>
+    <message>
+        <source>Copyright (C) %i-%i</source>
+        <translation>Karapatang-ari (C) %i-%i</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>May natagpuang sirang bloke na nagpapahiwatig ng posibleng pagkasira ng hardware.</translation>
+    </message>
+    <message>
+        <source>Could not find asmap file %s</source>
+        <translation>Hindi natagpuan ang talaksang asmap na %s</translation>
+    </message>
+    <message>
+        <source>Could not generate scriptPubKeys (cache is empty)</source>
+        <translation>Hindi makagawa ng scriptPubKeys (walang laman ang cache)</translation>
+    </message>
+    <message>
+        <source>Could not parse asmap file %s</source>
+        <translation>Hindi masuri ang anyo ng talaksang asmap na %s</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>Hindi mabasa ang naka-embed na datos ng asmap</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>Ginagawa ang pitaka…</translation>
+    </message>
+    <message>
+        <source>Disk space for %s may not accommodate the block files. Approximately %u GB of data will be stored in this directory.</source>
+        <translation>Maaaring hindi magkasya ang mga talaksan ng bloke sa espasyo sa disk para sa %s. Tinatayang %u GB ng datos ang iimbak sa direktoryong ito.</translation>
+    </message>
+    <message>
+        <source>Disk space is too low!</source>
+        <translation>Napakaliit ng bakanteng espasyo sa disk!</translation>
+    </message>
+    <message>
+        <source>Do you want to rebuild the databases now?</source>
+        <translation>Nais mo bang buuing muli ngayon ang mga database?</translation>
+    </message>
+    <message>
+        <source>Dump file %s does not exist.</source>
+        <translation>Wala ang talaksan ng dump na %s.</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>Nadoble ang pagtatakda ng pagkakabit para sa address na %s. Suriin ang mga setting mong -bind, -bind=...=onion at -whitebind.</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>Nabigo ang paunang pagsusuri sa kriptograpiya ng kurbang eliptiko. Nagsasara ang %s.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>Hindi magagamit ang naka-embed na datos ng asmap</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>Pagkakamali sa paggawa ng %s: Hindi maisulat ang metadata ng bersiyon.</translation>
+    </message>
+    <message>
+        <source>Error loading %s: External signer wallet being loaded without external signer support compiled</source>
+        <translation>Pagkakamali sa pagbubukas ng %s: Binubuksan ang pitakang may panlabas na tagapirma ngunit hindi isinama sa pagbuo ang suporta sa panlabas na tagapirma</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>Pagkakamali sa pagbubukas ng %s: Lumang uri ng pitaka ito. Ilipat ito sa pitakang gumagamit ng descriptor sa pamamagitan ng kasangkapan sa paglilipat (migratewallet RPC).</translation>
+    </message>
+    <message>
+        <source>Error loading databases</source>
+        <translation>Pagkakamali sa pagbubukas ng mga database</translation>
+    </message>
+    <message>
+        <source>Error loading wallet. Wallet requires blocks to be downloaded, and software does not currently support loading wallets while blocks are being downloaded out of order when using assumeutxo snapshots. Wallet should be able to load successfully after node sync reaches height %s</source>
+        <translation>Pagkakamali sa pagbubukas ng pitaka. Kailangang ma-download ang mga bloke para sa pitaka, at hindi pa sinusuportahan ng software ang pagbubukas ng mga pitaka habang hindi sunod-sunod ang pag-download ng mga bloke kapag gumagamit ng mga snapshot ng assumeutxo. Dapat nang mabuksan nang maayos ang pitaka kapag umabot sa taas na %s ang pagsasabay ng node</translation>
+    </message>
+    <message>
+        <source>Error opening coins database</source>
+        <translation>Pagkakamali sa pagbubukas ng database ng mga barya</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address metadata may be missing or incorrect.</source>
+        <translation>Pagkakamali sa pagbasa ng %s! Nabasa nang wasto ang lahat ng susi, ngunit maaaring kulang o mali ang datos ng transaksiyon o metadata ng address.</translation>
+    </message>
+    <message>
+        <source>Error reading %s! Transaction data may be missing or incorrect. Rescanning wallet.</source>
+        <translation>Pagkakamali sa pagbasa ng %s! Maaaring kulang o mali ang datos ng transaksiyon. Muling ini-scan ang pitaka.</translation>
+    </message>
+    <message>
+        <source>Error reading configuration file: %s</source>
+        <translation>Pagkakamali sa pagbasa ng talaksan ng pagsasaayos: %s</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation>Pagkakamali sa pagbasa ng susunod na tala mula sa database ng pitaka</translation>
+    </message>
+    <message>
+        <source>Error starting/committing db txn for wallet transactions removal process</source>
+        <translation>Pagkakamali sa pagsisimula o pagpapatibay ng transaksiyon sa database para sa proseso ng pag-aalis ng mga transaksiyon ng pitaka</translation>
+    </message>
+    <message>
+        <source>Error: Address book data in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>Pagkakamali: Hindi matukoy kung sa aling mga nailipat na pitaka nabibilang ang datos ng talaan ng mga address sa pitaka</translation>
+    </message>
+    <message>
+        <source>Error: Cannot extract destination from the generated scriptpubkey</source>
+        <translation>Pagkakamali: Hindi makuha ang patutunguhan mula sa nabuong scriptpubkey</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Pagkakamali: Hindi maidagdag ang transaksiyong %s sa pitakang para lamang sa pagmamasid</translation>
+    </message>
+    <message>
+        <source>Error: Could not add watchonly tx %s to watchonly wallet</source>
+        <translation>Pagkakamali: Hindi maidagdag ang transaksiyong %s na para lamang sa pagmamasid sa pitakang para lamang sa pagmamasid</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Pagkakamali: Hindi magawa ang talaksang '%s'</translation>
+    </message>
+    <message>
+        <source>Error: Could not delete watchonly transactions. </source>
+        <translation>Pagkakamali: Hindi mabura ang mga transaksiyong para lamang sa pagmamasid. </translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation>Pagkakamali: Hindi makagawa ng cursor sa database</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation>Pagkakamali: Hindi tugma ang checksum ng talaksan ng dump. Nakalkula: %s, inaasahan: %s</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation>Pagkakamali: Mali ang tala ng anyo sa talaksan ng dump. Nakuha ang "%s", inaasahan ang "format".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation>Pagkakamali: Mali ang tala ng pantukoy sa talaksan ng dump. Nakuha ang "%s", inaasahan ang "%s".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>Pagkakamali: Nagsasaad ang talaksan ng dump ng hindi suportadong anyo ng database (%s). Tanging mga dump ng database na sqlite ang sinusuportahan</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation>Pagkakamali: Hindi sinusuportahan ang bersiyon ng talaksan ng dump. Bersiyon 1 lamang ng mga talaksan ng dump ang sinusuportahan ng bersiyong ito ng connectcoin-wallet. Nakakuha ng talaksan ng dump na bersiyon %s</translation>
+    </message>
+    <message>
+        <source>Error: Duplicate descriptors created during migration. Your wallet may be corrupted.</source>
+        <translation>Pagkakamali: Nakagawa ng mga dobleng descriptor habang naglilipat. Maaaring sira ang iyong pitaka.</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Pagkakamali: Mayroon nang patutunguhan ng pag-export na '%s'</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Pagkakamali: Hindi maaaring walang laman ang patutunguhan ng pag-export</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet</source>
+        <translation>Pagkakamali: Nabigong gumawa ng bagong pitakang para lamang sa pagmamasid</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Pagkakamali: Nabigong gumawa ng bagong pitakang para lamang sa pagmamasid. %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation>Pagkakamali: Nakakuha ng susing hindi hexadecimal: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation>Pagkakamali: Nakakuha ng halagang hindi hexadecimal: %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>Pagkakamali: Naubos ang imbakan ng mga susi; tawagin muna ang keypoolrefill</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation>Pagkakamali: Nawawala ang checksum</translation>
+    </message>
+    <message>
+        <source>Error: No %s addresses available.</source>
+        <translation>Pagkakamali: Walang magagamit na mga address na %s.</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>Pagkakamali: Hindi nailipat ang lahat ng tala ng mga address</translation>
+    </message>
+    <message>
+        <source>Error: Not all transaction records were migrated</source>
+        <translation>Pagkakamali: Hindi nailipat ang lahat ng tala ng transaksiyon</translation>
+    </message>
+    <message>
+        <source>Error: This wallet already uses SQLite</source>
+        <translation>Pagkakamali: Gumagamit na ng SQLite ang pitakang ito</translation>
+    </message>
+    <message>
+        <source>Error: This wallet is already a descriptor wallet</source>
+        <translation>Pagkakamali: Gumagamit na ng descriptor ang pitakang ito</translation>
+    </message>
+    <message>
+        <source>Error: Transaction %s in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>Pagkakamali: Hindi matukoy kung sa aling nailipat na pitaka nabibilang ang transaksiyong %s sa pitaka</translation>
+    </message>
+    <message>
+        <source>Error: Unable to begin reading all records in the database</source>
+        <translation>Pagkakamali: Hindi masimulan ang pagbasa ng lahat ng tala sa database</translation>
+    </message>
+    <message>
+        <source>Error: Unable to make a backup of your wallet</source>
+        <translation>Pagkakamali: Hindi makagawa ng reserbang kopya ng iyong pitaka</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation>Pagkakamali: Hindi masuri ang bersiyong %u bilang uint32_t</translation>
+    </message>
+    <message>
+        <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
+        <translation>Pagkakamali: Hindi makagawa ng mga descriptor para sa pitakang ito ng lumang uri. Tiyaking ibigay ang pariralang panseguridad ng pitaka kung naka-encrypt ito.</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read all records in the database</source>
+        <translation>Pagkakamali: Hindi mabasa ang lahat ng tala sa database</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read wallet's best block locator record</source>
+        <translation>Pagkakamali: Hindi mabasa ang tala ng tagahanap ng pinakamainam na bloke ng pitaka</translation>
+    </message>
+    <message>
+        <source>Error: Unable to remove watchonly address book data</source>
+        <translation>Pagkakamali: Hindi maalis ang datos ng talaan ng address na para lamang sa pagmamasid</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write data to disk for wallet %s</source>
+        <translation>Pagkakamali: Hindi maisulat sa disk ang datos para sa pitakang %s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation>Pagkakamali: Hindi maisulat ang tala sa bagong pitaka</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write solvable wallet best block locator record</source>
+        <translation>Pagkakamali: Hindi maisulat ang tala ng tagahanap ng pinakamainam na bloke ng pitakang may mga script na maaaring lutasin</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Pagkakamali: Hindi maisulat ang na-export na pitaka</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write watchonly wallet best block locator record</source>
+        <translation>Pagkakamali: Hindi maisulat ang tala ng tagahanap ng pinakamainam na bloke ng pitakang para lamang sa pagmamasid</translation>
+    </message>
+    <message>
+        <source>Error: Wallet does not exist</source>
+        <translation>Pagkakamali: Wala ang pitaka</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Pagkakamali: Walang mga descriptor na mae-export sa pitaka</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Pagkakamali: Hindi mapagtibay ang transaksiyon sa database para sa pag-export ng pitakang para lamang sa pagmamasid</translation>
+    </message>
+    <message>
+        <source>Error: cannot remove legacy wallet records</source>
+        <translation>Pagkakamali: Hindi maalis ang mga tala ng pitaka ng lumang uri</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Pagkakamali: Hindi maisagawa ang transaksiyon sa database para sa bagong pitakang %s na para lamang sa pagmamasid</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for wallet %s</source>
+        <translation>Pagkakamali: Hindi maisagawa ang transaksiyon sa database para sa pitakang %s</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>Hindi makuha ang reserbasyon para sa muling pag-scan habang sinisimulan ang pitaka</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>Hindi makalkula ang dagdag na bayad dahil umaasa ang mga UTXO na hindi pa nakumpirma sa napakalaking pangkat ng mga transaksiyong hindi pa nakumpirma.</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>Hindi maisara ang talaksan ng datos sa pagbawi ng bloke.</translation>
+    </message>
+    <message>
+        <source>Failed to close file when writing block.</source>
+        <translation>Hindi maisara ang talaksan habang isinusulat ang bloke.</translation>
+    </message>
+    <message>
+        <source>Failed to disconnect block.</source>
+        <translation>Hindi maihiwalay ang bloke.</translation>
+    </message>
+    <message>
+        <source>Failed to read block.</source>
+        <translation>Hindi mabasa ang bloke.</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>Hindi maalis ang direktoryo ng kalagayan ng kadena ng snapshot (%s). Alisin ito nang manwal bago muling simulan.
+</translation>
+    </message>
+    <message>
+        <source>Failed to rename invalid peers.dat file. Please move or delete it and try again.</source>
+        <translation>Hindi mapalitan ang pangalan ng hindi wastong talaksang peers.dat. Ilipat o burahin ito at subukang muli.</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>Hindi masimulan ang mga indeks; nagsasara…</translation>
+    </message>
+    <message>
+        <source>Failed to verify database</source>
+        <translation>Hindi mapatunayan ang database</translation>
+    </message>
+    <message>
+        <source>Failed to write block.</source>
+        <translation>Hindi maisulat ang bloke.</translation>
+    </message>
+    <message>
+        <source>Failed to write undo data.</source>
+        <translation>Hindi maisulat ang datos sa pagbawi.</translation>
+    </message>
+    <message>
+        <source>Failure removing transaction: %s</source>
+        <translation>Nabigo ang pag-aalis ng transaksiyon: %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>Mas mababa ang singil (%s) kaysa sa itinakdang pinakamababang singil (%s).</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation>Mayroon nang talaksang %s. Kung sigurado kang ito ang nais mo, ilipat muna ito sa ibang lugar.</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Nabigo ang pagsusulat ng talaksan ng bloke mula sa buffer papunta sa disk. Malamang na dulot ito ng pagkakamali sa I/O.</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Nabigo ang pagsusulat ng talaksan ng datos sa pagbawi mula sa buffer papunta sa disk. Malamang na dulot ito ng pagkakamali sa I/O.</translation>
+    </message>
+    <message>
+        <source>Ignoring duplicate -wallet %s.</source>
+        <translation>Binabalewala ang dobleng -wallet %s.</translation>
+    </message>
+    <message>
+        <source>Incompatible options: -dnsseed=1 was explicitly specified, but -onlynet forbids connections to IPv4/IPv6</source>
+        <translation>Hindi magkatugmang mga opsiyon: tahasang tinukoy ang -dnsseed=1, ngunit ipinagbabawal ng -onlynet ang mga koneksiyon sa IPv4/IPv6</translation>
+    </message>
+    <message>
+        <source>Initialization sanity check failed. %s is shutting down.</source>
+        <translation>Nabigo ang paunang pagsusuri sa pagsisimula. Nagsasara ang %s.</translation>
+    </message>
+    <message>
+        <source>Input not found or already spent</source>
+        <translation>Hindi natagpuan o nagastos na ang input</translation>
+    </message>
+    <message>
+        <source>Insufficient dbcache for block verification</source>
+        <translation>Hindi sapat ang dbcache para sa pagpapatunay ng mga bloke</translation>
+    </message>
+    <message>
+        <source>Invalid -i2psam address or hostname: '%s'</source>
+        <translation>Hindi wastong address o pangalan ng host para sa -i2psam: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>Hindi wastong address o pangalan ng host para sa -proxy, nagtatapos sa '=': '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid P2P permission: '%s'</source>
+        <translation>Hindi wastong pahintulot sa P2P: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s'</source>
+        <translation>Hindi wastong halaga para sa %s=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation>Hindi wastong halaga para sa %s=&lt;amount&gt;: '%s' (dapat hindi bababa sa minrelay na bayad na %s upang hindi maipit ang mga transaksiyon)</translation>
+    </message>
+    <message>
+        <source>Invalid or corrupt peers.dat (%s). If you believe this is a bug, please report it to %s. As a workaround, you can move the file (%s) out of the way (rename, move, or delete) to have a new one created on the next start.</source>
+        <translation>Hindi wasto o sira ang peers.dat (%s). Kung naniniwala kang depekto ito sa programa, iulat ito sa %s. Bilang pansamantalang lunas, maaari mong alisin ang talaksan (%s) sa kasalukuyang lugar nito (palitan ang pangalan, ilipat, o burahin) upang makagawa ng bago sa susunod na pagsisimula.</translation>
+    </message>
+    <message>
+        <source>Invalid port specified in %s: '%s'</source>
+        <translation>Hindi wastong port na tinukoy sa %s: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid value detected for '-wallet' or '-nowallet'. '-wallet' requires a string value, while '-nowallet' accepts only '1' to disable all wallets</source>
+        <translation>May natukoy na hindi wastong halaga para sa '-wallet' o '-nowallet'. Kailangan ng '-wallet' ang halagang string, samantalang '1' lamang ang tinatanggap ng '-nowallet' upang hindi paganahin ang lahat ng pitaka</translation>
+    </message>
+    <message>
+        <source>Listening for incoming connections failed (listen returned error %s)</source>
+        <translation>Nabigo ang pakikinig sa mga papasok na koneksiyon (ibinalik ng listen ang pagkakamaling %s)</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses…</source>
+        <translation>Binabasa ang mga P2P address…</translation>
+    </message>
+    <message>
+        <source>Loading banlist…</source>
+        <translation>Binabasa ang listahan ng mga ipinagbawal…</translation>
+    </message>
+    <message>
+        <source>Loading block index…</source>
+        <translation>Binabasa ang indeks ng mga bloke…</translation>
+    </message>
+    <message>
+        <source>Loading wallet…</source>
+        <translation>Binubuksan ang pitaka…</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is less than transaction weight without inputs</source>
+        <translation>Mas mababa ang pinakamataas na timbang ng transaksiyon kaysa sa timbang ng transaksiyong walang mga input</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is too low, can not accommodate change output</source>
+        <translation>Masyadong mababa ang pinakamataas na timbang ng transaksiyon; hindi magkasya ang output ng sukli</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>Dapat nasa pagitan ng %d at %d ang pinakamataas na timbang ng transaksiyon</translation>
+    </message>
+    <message>
+        <source>Missing amount</source>
+        <translation>Nawawala ang halaga</translation>
+    </message>
+    <message>
+        <source>Missing solving data for estimating transaction size</source>
+        <translation>Kulang ang datos sa paglutas para sa pagtatantiya ng laki ng transaksiyon</translation>
+    </message>
+    <message>
+        <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
+        <translation>Mahigit sa isang onion address na pagkakabitan ang ibinigay. Gagamitin ang %s para sa awtomatikong ginawang serbisyong Tor onion.</translation>
+    </message>
+    <message>
+        <source>No addresses available</source>
+        <translation>Walang magagamit na mga address</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Walang ibinigay na talaksan ng dump. Kailangang magbigay ng -dumpfile=&lt;filename&gt; upang magamit ang createfromdump.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use dump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Walang ibinigay na talaksan ng dump. Kailangang magbigay ng -dumpfile=&lt;filename&gt; upang magamit ang dump.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. %d available, %d required.</source>
+        <translation>Kulang ang mga magagamit na descriptor ng talaksan. Magagamit: %d, kailangan: %d.</translation>
+    </message>
+    <message>
+        <source>Not found pre-selected input %s</source>
+        <translation>Hindi natagpuan ang paunang napiling input na %s</translation>
+    </message>
+    <message>
+        <source>Not solvable pre-selected input %s</source>
+        <translation>Hindi malutas ang paunang napiling input na %s</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>Direksiyon lamang ang itinakda, walang pahintulot: '%s'</translation>
+    </message>
+    <message>
+        <source>Option '-checkpoints' is set but checkpoints were removed. This option has no effect.</source>
+        <translation>Itinakda ang opsiyong '-checkpoints' ngunit inalis na ang mga checkpoint. Walang epekto ang opsiyong ito.</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Ibinigay ang opsiyong '-limitancestorsize' ngunit ang mga limitasyon sa laki ng mga naunang transaksiyon ay pinalitan ng limitasyon sa laki ng pangkat (tingnan ang -limitclustersize). Walang epekto ang opsiyong ito.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Ibinigay ang opsiyong '-limitdescendantsize' ngunit ang mga limitasyon sa laki ng mga sumunod na transaksiyon ay pinalitan ng limitasyon sa laki ng pangkat (tingnan ang -limitclustersize). Walang epekto ang opsiyong ito.</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to CJDNS (-onlynet=cjdns) but -cjdnsreachable is not provided</source>
+        <translation>Nilimitahan sa CJDNS (-onlynet=cjdns) ang mga palabas na koneksiyon ngunit hindi ibinigay ang -cjdnsreachable</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is explicitly forbidden: -onion=0</source>
+        <translation>Nilimitahan sa Tor (-onlynet=onion) ang mga palabas na koneksiyon ngunit tahasang ipinagbabawal ang proxy para maabot ang network ng Tor: -onion=0</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
+        <translation>Nilimitahan sa Tor (-onlynet=onion) ang mga palabas na koneksiyon ngunit walang ibinigay na proxy para maabot ang network ng Tor: wala sa -proxy, -onion o -listenonion ang ibinigay</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to i2p (-onlynet=i2p) but -i2psam is not provided</source>
+        <translation>Nilimitahan sa i2p (-onlynet=i2p) ang mga palabas na koneksiyon ngunit hindi ibinigay ang -i2psam</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>Hiniling ang pribadong pagpapalaganap ng sariling mga transaksiyon (-privatebroadcast) at hindi pinagana ang -proxyrandomize. Maaaring maiugnay sa ibang koneksiyon sa Tor ang mga sirkito ng Tor para sa pribadong pagpapalaganap. Para sa pinakamataas na pagkapribado, itakda ang -proxyrandomize=1.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>Hiniling ang pribadong pagpapalaganap ng sariling mga transaksiyon (-privatebroadcast), ngunit itinakda rin ang -connect. Hindi sila magkatugma dahil kailangang magbukas ng mga bagong koneksiyon sa mga sapalarang piniling katuwang na node ng Tor o I2P para sa pribadong pagpapalaganap. Pag-isipang gamitin sa halip ang -maxconnections=0 -addnode=...</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>Hiniling ang pribadong pagpapalaganap ng sariling mga transaksiyon (-privatebroadcast), ngunit hindi maabot ang alinman sa mga network ng Tor o I2P</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -reindex-chainstate. Use full -reindex instead.</source>
+        <translation>Hindi katugma ng -reindex-chainstate ang paraan ng pagbabawas ng mga lumang bloke. Gamitin sa halip ang buong -reindex.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>Hindi katugma ng -txospenderindex ang paraan ng pagbabawas ng mga lumang bloke.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
+        <translation>Pagbabawas ng mga bloke: mas luma ang huling pagsasabay ng pitaka kaysa sa nabawasang datos. Kailangan mong gamitin ang -reindex (i-download muli ang buong blockchain kung nabawasan ang mga lumang bloke ng node)</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore…</source>
+        <translation>Binabawasan ang mga lumang bloke sa imbakan…</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>Nabigo ang pagpapalit ng pangalan na '%s' -&gt; '%s'. Hindi malinis ang direktoryong leveldb ng kalagayan ng kadena sa likuran.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
+        <translation>Nabigo ang pagpapalit ng pangalan na '%s' -&gt; '%s'. Lutasin ito sa pamamagitan ng manwal na paglilipat o pagbura ng direktoryo ng hindi wastong snapshot na %s; kung hindi, makakaharap mong muli ang parehong pagkakamali sa susunod na pagsisimula.</translation>
+    </message>
+    <message>
+        <source>Replaying blocks…</source>
+        <translation>Muling inilalapat ang mga bloke…</translation>
+    </message>
+    <message>
+        <source>Rescanning…</source>
+        <translation>Muling ini-scan…</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to execute statement to verify database: %s</source>
+        <translation>SQLiteDatabase: Hindi maisagawa ang pahayag para sa pagpapatunay ng database: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to prepare statement to verify database: %s</source>
+        <translation>SQLiteDatabase: Hindi maihanda ang pahayag para sa pagpapatunay ng database: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to read database verification error: %s</source>
+        <translation>SQLiteDatabase: Hindi mabasa ang pagkakamali sa pagpapatunay ng database: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unexpected application id. Expected %u, got %u</source>
+        <translation>SQLiteDatabase: Hindi inaasahang ID ng aplikasyon. Inaasahan ang %u, nakuha ang %u</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is supported</source>
+        <translation>SQLiteDatabase: Hindi alam ang bersiyong %d ng schema ng pitakang sqlite. Bersiyon %d lamang ang sinusuportahan</translation>
+    </message>
+    <message>
+        <source>Settings file could not be read</source>
+        <translation>Hindi mabasa ang talaksan ng mga setting</translation>
+    </message>
+    <message>
+        <source>Settings file could not be written</source>
+        <translation>Hindi maisulat ang talaksan ng mga setting</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>Hindi ibinalik ng tagapirma ang address</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>Nagbalik ang tagapirma ng hindi inaasahang address na %s</translation>
+    </message>
+    <message>
+        <source>Signer returned error: %s</source>
+        <translation>Nagbalik ang tagapirma ng pagkakamali: %s</translation>
+    </message>
+    <message>
+        <source>Specified data directory "%s" does not exist.</source>
+        <translation>Wala ang tinukoy na direktoryo ng datos na "%s".</translation>
+    </message>
+    <message>
+        <source>Starting network threads…</source>
+        <translation>Sinisimulan ang mga thread ng network…</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>Pagkakamali ng sistema habang nagsusulat mula sa buffer: %s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>Pagkakamali ng sistema habang nagbabasa ng panlabas na talaksan ng bloke: %s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>Pagkakamali ng sistema habang nag-iimbak ng bloke sa disk: %s</translation>
+    </message>
+    <message>
+        <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
+        <translation>Gumagamit ng exFAT ang lokasyong %s; kilala itong may paminsan-minsang problema ng pagkasira ng datos sa macOS. Ilipat ang direktoryong ito sa ibang sistema ng mga talaksan upang maiwasan ang pagkawala ng datos.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>Hindi maaaring gamitin ang opsiyong -testactivationheight sa mainnet.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>Hindi maaaring gamitin ang opsiyong -vbparams sa mainnet.</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>Lumalampas sa pinakamataas na timbang ng transaksiyon ang pagsasama ng mga paunang napiling input at mga input na awtomatikong pinili ng pitaka. Subukang magpadala ng mas maliit na halaga o manwal na pagsama-samahin ang mga UTXO ng iyong pitaka</translation>
+    </message>
+    <message>
+        <source>The inputs size exceeds the maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>Lumalampas sa pinakamataas na timbang ang laki ng mga input. Subukang magpadala ng mas maliit na halaga o manwal na pagsama-samahin ang mga UTXO ng iyong pitaka</translation>
+    </message>
+    <message>
+        <source>The preselected coins total amount does not cover the transaction target. Please allow other inputs to be automatically selected or include more coins manually</source>
+        <translation>Hindi sapat ang kabuuang halaga ng paunang napiling mga barya para sa layunin ng transaksiyon. Pahintulutang awtomatikong pumili ng iba pang mga input o manwal na magdagdag ng mga barya</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist</source>
+        <translation>Wala ang tinukoy na talaksan ng pagsasaayos na %s</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>Lumalampas sa iyong balanse ang kabuuan kapag isinama ang bayad sa transaksiyon na %s.</translation>
+    </message>
+    <message>
+        <source>The transactions removal process can only be executed within a db txn</source>
+        <translation>Maaari lamang isagawa ang proseso ng pag-aalis ng mga transaksiyon sa loob ng transaksiyon sa database</translation>
+    </message>
+    <message>
+        <source>There is no ScriptPubKeyManager for this address</source>
+        <translation>Walang ScriptPubKeyManager para sa address na ito</translation>
+    </message>
+    <message>
+        <source>This is the maximum transaction fee you pay (in addition to the normal fee) to prioritize partial spend avoidance over regular coin selection.</source>
+        <translation>Ito ang pinakamataas na bayad sa transaksiyon na ibabayad mo (bukod sa karaniwang bayad) upang unahin ang pag-iwas sa bahagyang paggastos kaysa sa karaniwang pagpili ng mga barya.</translation>
+    </message>
+    <message>
+        <source>Transaction %s does not belong to this wallet</source>
+        <translation>Hindi kabilang sa pitakang ito ang transaksiyong %s</translation>
+    </message>
+    <message>
+        <source>Transaction change output index out of range</source>
+        <translation>Lampas sa saklaw ang indeks ng output ng sukli ng transaksiyon</translation>
+    </message>
+    <message>
+        <source>Transaction needs a change address, but we can't generate it.</source>
+        <translation>Kailangan ng transaksiyon ng address ng sukli, ngunit hindi tayo makagawa nito.</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>Kailangan ng transaksiyon ang isang patutunguhang may halagang hindi sero, singil na hindi sero, o paunang napiling input</translation>
+    </message>
+    <message>
+        <source>UTXO snapshot failed to validate. Restart to resume normal initial block download, or try loading a different snapshot.</source>
+        <translation>Nabigo ang pagpapatunay ng snapshot ng UTXO. Muling simulan upang ipagpatuloy ang karaniwang paunang pag-download ng mga bloke, o subukang magbukas ng ibang snapshot.</translation>
+    </message>
+    <message>
+        <source>Unable to find UTXO for external input</source>
+        <translation>Hindi mahanap ang UTXO para sa panlabas na input</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation>Hindi mabuksan ang %s para sa pagsusulat</translation>
+    </message>
+    <message>
+        <source>Unable to parse -maxuploadtarget: '%s'</source>
+        <translation>Hindi masuri ang anyo ng -maxuploadtarget: '%s'</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Hindi maisulat ang cache ng mga descriptor</translation>
+    </message>
+    <message>
+        <source>Unconfirmed UTXOs are available, but spending them creates a chain of transactions that will be rejected by the mempool</source>
+        <translation>May magagamit na mga UTXO na hindi pa nakumpirma, ngunit ang paggastos sa mga ito ay lilikha ng kadena ng mga transaksiyong tatanggihan ng mempool</translation>
+    </message>
+    <message>
+        <source>Unexpected legacy entry in descriptor wallet found. Loading wallet %s
+
+The wallet might have been tampered with or created with malicious intent.
+</source>
+        <translation>May natagpuang hindi inaasahang tala ng lumang uri sa pitakang gumagamit ng descriptor. Binubuksan ang pitakang %s
+
+Maaaring pinakialaman ang pitaka o ginawa nang may masamang layunin.
+</translation>
+    </message>
+    <message>
+        <source>Unknown -blockfilterindex value %s.</source>
+        <translation>Hindi alam na halaga ng -blockfilterindex: %s.</translation>
+    </message>
+    <message>
+        <source>Unknown address type '%s'</source>
+        <translation>Hindi alam na uri ng address na '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown change type '%s'</source>
+        <translation>Hindi alam na uri ng sukli na '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown new rules activated (versionbit %i)</source>
+        <translation>May pinaganang mga bagong patakarang hindi alam (versionbit %i)</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>May ibinigay na hindi kilalang opsiyong "%s" sa -test=&lt;option&gt;.</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>May natagpuang hindi kilalang descriptor. Binubuksan ang pitakang %s
+
+Maaaring ginawa ang pitaka sa mas bagong bersiyon.
+Subukang patakbuhin ang pinakabagong bersiyon ng software.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>Hindi kilalang network sa -proxy='%s': '%s'</translation>
+    </message>
+    <message>
+        <source>Unsupported category-specific logging level %1$s=%2$s. Expected %1$s=&lt;category&gt;:&lt;loglevel&gt;. Valid categories: %3$s. Valid loglevels: %4$s.</source>
+        <translation>Hindi suportadong antas ng pagtatala para sa partikular na kategorya na %1$s=%2$s. Inaasahan ang %1$s=&lt;category&gt;:&lt;loglevel&gt;. Mga wastong kategorya: %3$s. Mga wastong antas ng pagtatala: %4$s.</translation>
+    </message>
+    <message>
+        <source>Unsupported chainstate database format found. Please restart with -reindex-chainstate. This will rebuild the chainstate database.</source>
+        <translation>May natagpuang hindi suportadong anyo ng database ng kalagayan ng kadena. Muling simulan gamit ang -reindex-chainstate. Bubuoin nitong muli ang database ng kalagayan ng kadena.</translation>
+    </message>
+    <message>
+        <source>Unsupported global logging level %s=%s. Valid values: %s.</source>
+        <translation>Hindi suportadong pangkalahatang antas ng pagtatala na %s=%s. Mga wastong halaga: %s.</translation>
+    </message>
+    <message>
+        <source>Verifying blocks…</source>
+        <translation>Pinatutunayan ang mga bloke…</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)…</source>
+        <translation>Pinatutunayan ang mga pitaka…</translation>
+    </message>
+    <message>
+        <source>Wallet file creation failed: %s</source>
+        <translation>Nabigo ang paggawa ng talaksan ng pitaka: %s</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>Babala: May natagpuang hindi wastong kadena na mahigit 6 na bloke ang lamang sa haba kumpara sa ating pinakamainam na kadena. Maaaring dulot ito ng pagkasira ng database o hindi pagkakatugma ng pinagkasunduang mga patakaran sa mga katuwang na node.</translation>
+    </message>
+    <message>
+        <source>Witness data for blocks after height %d requires validation. Please restart with -reindex.</source>
+        <translation>Kailangang patunayan ang datos ng witness para sa mga bloke lampas sa taas na %d. Muling simulan gamit ang -reindex.</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>Mukhang hindi kasabay ng network ang petsa at oras ng iyong computer nang mahigit %d minuto; maaari itong humantong sa pagkabigo ng pinagkasunduan. Pagkatapos mong tiyakin ang orasan ng computer, hindi na dapat lumabas ang mensaheng ito kapag muling sinimulan mo ang node. Kung walang muling pagsisimula, dapat itong awtomatikong mawala matapos kumonekta sa sapat na bilang ng mga bagong palabas na katuwang na node, na maaaring magtagal. Maaari mong siyasatin ang patlang na `timeoffset` ng mga pamamaraang RPC na `getpeerinfo` at `getnetworkinfo` para sa karagdagang impormasyon.</translation>
+    </message>
+    <message>
+        <source>acceptstalefeeestimates is not supported on %s chain.</source>
+        <translation>Hindi sinusuportahan ang acceptstalefeeestimates sa kadenang %s.</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>Maaari lamang gamitin ang whitebind para sa mga papasok na koneksiyon (ipinasa ang "out")</translation>
+    </message>
+</context>
 <context>
     <name>P2CClaimDialog</name>
     <message>
@@ -3341,7 +5738,248 @@ Bersyon ng mga root certificate: %2</translation>
     <name>MiningPage</name>
     <message>
         <source>Optional: empty uses this wallet</source>
-        <translation>Opsyonal: ginagamit ang wallet na ito kapag walang laman</translation>
+        <translation>Opsyonal: kapag blangko, gagamitin ang wallet na ito</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>Mga thread ng CPU:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Hindi makabuo ng address para sa gantimpala. Tiyaking nakakabuo ang wallet ng mga address para sa pagtanggap.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>Ang FAST mode ay nagbabahagi ng humigit-kumulang 2 GiB ng RandomX memory sa pagpapatunay. Mas maraming thread ang gumagamit ng mas maraming CPU at kuryente; maglaan ng kapasidad para sa node. Maaaring magtagal ang paghahanda ng dataset.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Magmina ng mga bloke ng testnet gamit ang iyong CPU at RandomX. Naka-off ang pagmimina hanggang simulan mo ito. Iisa ang miner na ginagamit ng lahat ng wallet sa node na ito, at nagpapatuloy ito kapag lumipat ka ng tab o nagsara ng wallet.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Pagmimina</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Nagmimina / inihahanda ang RandomX</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Bagong address mula sa wallet na ito</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Address ng gantimpala para sa network na ito</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Address ng gantimpala:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Simulan ang pagmimina</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Sinisimulan</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Katayuan: %1
+Bilis ng hash: %2 H/s
+Mga hash: %3 | Tinanggap na mga bloke: %4
+Aktibong address ng gantimpala: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Ihinto ang pagmimina</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Nakahinto</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Inihihinto (hinihintay ang kasalukuyang gawain)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Hinihintay ang pagsabay ng node sa network</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Babala: ang %1 thread ng pagmimina ay higit sa %2 natukoy na lohikal na CPU. Maaari nitong bawasan ang bilis ng hash at pabagalin ang node.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
+    </message>
+</context>
+<context>
+    <name>LoadWalletsActivity</name>
+    <message>
+        <source>Load Wallets</source>
+        <extracomment>Title of progress window which is displayed when wallets are being loaded.</extracomment>
+        <translation>Magbukas ng mga Pitaka</translation>
+    </message>
+    <message>
+        <source>Loading wallets…</source>
+        <extracomment>Descriptive text of the load wallets progress window which indicates to the user that wallets are currently being loaded.</extracomment>
+        <translation>Binubuksan ang mga pitaka…</translation>
+    </message>
+</context>
+<context>
+    <name>MigrateWalletActivity</name>
+    <message>
+        <source>Are you sure you wish to migrate the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>Sigurado ka bang nais mong ilipat ang pitakang &lt;i&gt;%1&lt;/i&gt; sa bagong anyo?</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>Sigurado ka bang nais mong ibalik ang talaksan ng pitakang &lt;i&gt;%1&lt;/i&gt; sa &lt;i&gt;%2&lt;/i&gt; at ilipat ito sa bagong anyo?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Kung binawasan ang mga lumang bloke ng node at ginawa ang pitaka bago ang taas ng pagbabawas, maaaring mabigo ang paglilipat habang sinusubukang buksan ang nailipat na pitaka.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Buksan ang pitaka pagkatapos ng paglilipat</translation>
+    </message>
+    <message>
+        <source>Migrate Wallet</source>
+        <translation>Ilipat ang Pitaka sa Bagong Anyo</translation>
+    </message>
+    <message>
+        <source>Migrate wallet</source>
+        <translation>Ilipat ang pitaka sa bagong anyo</translation>
+    </message>
+    <message>
+        <source>Migrating Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <translation>Inililipat ang Pitakang &lt;b&gt;%1&lt;/b&gt; sa Bagong Anyo…</translation>
+    </message>
+    <message>
+        <source>Migrating the wallet will convert this wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>Ang paglilipat ay magpapalit sa pitakang ito bilang isa o higit pang pitakang gumagamit ng descriptor. Kailangang gumawa ng bagong reserbang kopya ng pitaka.
+Kung may mga script na para lamang sa pagmamasid ang pitakang ito, gagawa ng bagong pitakang naglalaman ng mga script na iyon.
+Kung may mga script na maaaring lutasin ngunit hindi minamasdan ang pitakang ito, gagawa ng ibang bagong pitakang naglalaman ng mga script na iyon.
+
+Gagawa ng reserbang kopya ng pitaka bago ito ilipat. Ang talaksan ng reserbang kopya ay papangalanang &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak at makikita sa direktoryo ng pitakang ito. Kung mali ang paglilipat, maaaring ibalik ang reserbang kopya gamit ang tungkuling "Ibalik ang Pitaka".</translation>
+    </message>
+    <message>
+        <source>Migration Successful</source>
+        <translation>Matagumpay ang Paglilipat</translation>
+    </message>
+    <message>
+        <source>Migration failed</source>
+        <translation>Nabigo ang paglilipat</translation>
+    </message>
+    <message>
+        <source>Restore Wallet</source>
+        <extracomment>Title of progress window which is displayed when wallets are being restored.</extracomment>
+        <translation>Ibalik ang Pitaka</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>Ibalik at ilipat ang pitaka sa bagong anyo</translation>
+    </message>
+    <message>
+        <source>Restoring Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the restore wallets progress window which indicates to the user that wallets are currently being restored.</extracomment>
+        <translation>Ibinabalik ang Pitakang &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>Sa pagbabalik ng pitaka, kokopyahin ang talaksan ng reserbang kopya sa direktoryo ng mga pitaka at ilalagay ito ayon sa karaniwang ayos ng direktoryo ng pitaka. Hindi babaguhin ang orihinal na talaksan.
+
+Ang paglilipat ay magpapalit sa naibalik na pitaka bilang isa o higit pang pitakang gumagamit ng descriptor. Kailangang gumawa ng bagong reserbang kopya ng pitaka.
+Kung may mga script na para lamang sa pagmamasid ang pitakang ito, gagawa ng bagong pitakang naglalaman ng mga script na iyon.
+Kung may mga script na maaaring lutasin ngunit hindi minamasdan ang pitakang ito, gagawa ng ibang bagong pitakang naglalaman ng mga script na iyon.
+
+Gagawa ng reserbang kopya ng pitaka bago ito ilipat. Ang talaksan ng reserbang kopya ay papangalanang &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak at makikita sa direktoryo ng pitakang ito. Kung mali ang paglilipat, maaaring ibalik ang reserbang kopya gamit ang tungkuling "Ibalik ang Pitaka".</translation>
+    </message>
+    <message>
+        <source>Solvable but not watched scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>Nailipat sa bagong pitakang '%1' ang mga script na maaaring lutasin ngunit hindi minamasdan.</translation>
+    </message>
+    <message>
+        <source>The wallet '%1' was migrated successfully.</source>
+        <translation>Matagumpay na nailipat sa bagong anyo ang pitakang '%1'.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>Hindi binuksan ang pitaka pagkatapos ng paglilipat. Maaari mo itong buksan sa menu na "Talaksan &gt; Buksan ang pitaka".</translation>
+    </message>
+    <message>
+        <source>Watchonly scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>Nailipat sa bagong pitakang '%1' ang mga script na para lamang sa pagmamasid.</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsModel</name>
+    <message>
+        <source>Could not read setting "%1", %2.</source>
+        <translation>Hindi mabasa ang setting na "%1", %2.</translation>
+    </message>
+</context>
+<context>
+    <name>RestoreWalletActivity</name>
+    <message>
+        <source>Restore Wallet</source>
+        <extracomment>Title of progress window which is displayed when wallets are being restored.</extracomment>
+        <translation>Ibalik ang Pitaka</translation>
+    </message>
+    <message>
+        <source>Restore wallet failed</source>
+        <extracomment>Title of message box which is displayed when the wallet could not be restored.</extracomment>
+        <translation>Nabigo ang pagbabalik ng pitaka</translation>
+    </message>
+    <message>
+        <source>Restore wallet message</source>
+        <extracomment>Title of message box which is displayed when the wallet is successfully restored.</extracomment>
+        <translation>Mensahe sa pagbabalik ng pitaka</translation>
+    </message>
+    <message>
+        <source>Restore wallet warning</source>
+        <extracomment>Title of message box which is displayed when the wallet is restored with some warning.</extracomment>
+        <translation>Babala sa pagbabalik ng pitaka</translation>
+    </message>
+    <message>
+        <source>Restoring Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the restore wallets progress window which indicates to the user that wallets are currently being restored.</extracomment>
+        <translation>Ibinabalik ang Pitakang &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
+</context>
+<context>
+    <name>SplashScreen</name>
+    <message>
+        <source>(press q to shutdown and continue later)</source>
+        <translation>(pindutin ang q upang isara at magpatuloy sa ibang pagkakataon)</translation>
+    </message>
+    <message>
+        <source>press q to shutdown</source>
+        <translation>pindutin ang q upang isara</translation>
     </message>
 </context>
 </TS>

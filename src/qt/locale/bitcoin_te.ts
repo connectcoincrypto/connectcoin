@@ -54,11 +54,11 @@
         <translation type="unfinished">ఎం&amp;చుకోండి</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation type="unfinished">ఇవి మీరు పంపే చెల్లింపుల బిట్‌కాయిన్ చిరునామాలు. నాణేలు పంపే ముందు ప్రతిసారి అందుకునే చిరునామా మరియు చెల్లింపు మొత్తం సరిచూసుకోండి.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">చెల్లింపులను స్వీకరించడానికి ఇవి మీ బిట్‌కాయిన్ చిరునామాలు. కొత్త చిరునామాలను సృష్టించడానికి స్వీకరించే ట్యాబ్‌లోని 'కొత్త స్వీకరించే చిరునామాను సృష్టించు' బటన్‌ను ఉపయోగించండి. 
 'లెగసీ' రకం చిరునామాలతో మాత్రమే సంతకం చేయడం సాధ్యమవుతుంది.</translation>
@@ -92,6 +92,18 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">ఎగుమతి విఫలమయ్యింది</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the clipboard</source>
+        <translation>ప్రస్తుతం ఎంచుకున్న చిరునామాను క్లిప్‌బోర్డ్‌కు కాపీ చేయండి</translation>
+    </message>
+    <message>
+        <source>Receiving addresses - %1</source>
+        <translation>స్వీకరణ చిరునామాలు - %1</translation>
+    </message>
+    <message>
+        <source>Sending addresses - %1</source>
+        <translation>పంపే చిరునామాలు - %1</translation>
     </message>
 </context>
 <context>
@@ -152,7 +164,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">వాలెట్ గుప్తీకరణను నిర్ధారించండి</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
         <translation type="unfinished">హెచ్చరిక: మీ జోలెని సంకేతపరిచి మీ సంకేతపదము కోల్పోతే, &lt;b&gt;మీ బిట్‌కాయిన్లు అన్నీ కోల్పోతారు&lt;/b&gt;</translation>
     </message>
     <message>
@@ -172,7 +184,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">కొనసాగించు</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
         <translation type="unfinished">మీ వాలెట్‌ను గుప్తీకరించడం వల్ల మీ కంప్యూటర్‌కు హాని కలిగించే మాల్వేర్ దొంగిలించకుండా మీ బిట్‌కాయిన్‌లను పూర్తిగా రక్షించలేమని గుర్తుంచుకోండి.</translation>
     </message>
     <message>
@@ -219,6 +231,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Warning: The Caps Lock key is on!</source>
         <translation type="unfinished">హెచ్చరిక: క్యాప్స్ లాక్ కీ ఆన్‌లో ఉంది!</translation>
     </message>
+    <message>
+        <source>Back</source>
+        <translation>వెనుకకు</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>వాలెట్ కోసం పాత పాస్‌ఫ్రేజ్ మరియు కొత్త పాస్‌ఫ్రేజ్‌ను నమోదు చేయండి.</translation>
+    </message>
+    <message>
+        <source>Passphrase change failed</source>
+        <translation>పాస్‌ఫ్రేజ్ మార్పు విఫలమైంది</translation>
+    </message>
+    <message>
+        <source>The old passphrase entered for the wallet decryption is incorrect. It contains a null character (ie - a zero byte). If the passphrase was set with a version of this software prior to 25.0, please try again with only the characters up to — but not including — the first null character.</source>
+        <translation>వాలెట్ డిక్రిప్షన్ కోసం నమోదు చేసిన పాత పాస్‌ఫ్రేజ్ తప్పు. అందులో నల్ అక్షరం (అంటే సున్నా బైట్) ఉంది. ఈ సాఫ్ట్‌వేర్ 25.0 కంటే పాత వెర్షన్‌తో పాస్‌ఫ్రేజ్‌ను సెట్ చేసి ఉంటే, మొదటి నల్ అక్షరానికి ముందున్న అక్షరాలతో మాత్రమే మళ్లీ ప్రయత్నించండి; ఆ నల్ అక్షరాన్ని చేర్చవద్దు.</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption is incorrect. It contains a null character (ie - a zero byte). If the passphrase was set with a version of this software prior to 25.0, please try again with only the characters up to — but not including — the first null character. If this is successful, please set a new passphrase to avoid this issue in the future.</source>
+        <translation>వాలెట్ డిక్రిప్షన్ కోసం నమోదు చేసిన పాస్‌ఫ్రేజ్ తప్పు. అందులో నల్ అక్షరం (అంటే సున్నా బైట్) ఉంది. ఈ సాఫ్ట్‌వేర్ 25.0 కంటే పాత వెర్షన్‌తో పాస్‌ఫ్రేజ్‌ను సెట్ చేసి ఉంటే, మొదటి నల్ అక్షరానికి ముందున్న అక్షరాలతో మాత్రమే మళ్లీ ప్రయత్నించండి; ఆ నల్ అక్షరాన్ని చేర్చవద్దు. ఇది విజయవంతమైతే, భవిష్యత్తులో ఈ సమస్య రాకుండా కొత్త పాస్‌ఫ్రేజ్‌ను సెట్ చేయండి.</translation>
+    </message>
 </context>
 <context>
     <name>BanTableModel</name>
@@ -264,7 +296,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>A fatal error occurred. Check that settings file is writable, or try running with -nosettings.</source>
         <extracomment>Explanatory text shown on startup when the settings file could not be written. Prompts user to check that we have the ability to write to the file. Explains that the user has the option of running without a settings file.</extracomment>
-        <translation type="unfinished">ఘోరమైన లోపం సంభవించింది. సెట్టింగుల ఫైల్ వ్రాయదగినదో లేదో తనిఖీ చేయండి లేదా - నోసెట్టింగ్స్ తో అమలు చేయడానికి ప్రయత్నించండి.</translation>
+        <translation>ఘోరమైన లోపం సంభవించింది. సెట్టింగుల ఫైల్ వ్రాయదగినదో లేదో తనిఖీ చేయండి లేదా -nosettings తో అమలు చేయడానికి ప్రయత్నించండి.</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -283,7 +315,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">మొత్తం</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
         <translation type="unfinished">బిట్‌కాయిన్ చిరునామాను నమోదు చేయండి (ఉదా. %1)</translation>
     </message>
     <message>
@@ -383,6 +415,93 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>default wallet</source>
         <translation type="unfinished">డిఫాల్ట్ వాలెట్</translation>
     </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 రోజులు</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 గంటలు</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 నిమి</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 మి.సె</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 సె</translation>
+    </message>
+    <message>
+        <source>Custom…</source>
+        <translation>అనుకూలం…</translation>
+    </message>
+    <message>
+        <source>Default system font "%1"</source>
+        <translation>సిస్టమ్ డిఫాల్ట్ ఫాంట్ “%1”</translation>
+    </message>
+    <message>
+        <source>Embedded "%1"</source>
+        <translation>పొందుపరిచిన “%1”</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>ప్రైవేట్ ప్రసారం</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -432,7 +551,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Create a new wallet</source>
-        <translation type="unfinished">&lt;div&gt;&lt;/div&gt;</translation>
+        <translation>కొత్త వాలెట్‌ను సృష్టించండి</translation>
     </message>
     <message>
         <source>&amp;Minimize</source>
@@ -452,7 +571,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ప్రాక్సీ &lt;b&gt;ప్రారంభించబడింది&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
+        <source>Send coins to a ConnectCoin address</source>
         <translation type="unfinished">బిట్‌కాయిన్ చిరునామాకు నాణేలను పంపండి</translation>
     </message>
     <message>
@@ -496,7 +615,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">సంతకం &amp;సందేశం...</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
         <translation type="unfinished">మీ బిట్‌కాయిన్ చిరునామాలు మీ స్వంతమని నిరూపించుకోవడానికి వాటితో సందేశాలను సంతకం చేయండి</translation>
     </message>
     <message>
@@ -504,7 +623,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;సందేశాన్ని ధృవీకరించండి...</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
         <translation type="unfinished">సందేశాలు పేర్కొన్న బిట్‌కాయిన్ చిరునామాలతో సంతకం చేసినట్లు నిర్ధారించుకోవడానికి వాటిని ధృవీకరించండి</translation>
     </message>
     <message>
@@ -564,7 +683,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">తోటివారితో కలుస్తుంది…</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
         <translation type="unfinished">చెల్లింపులను అభ్యర్థించండి (QR కోడ్‌లు మరియు బిట్‌కాయిన్‌లను ఉత్పత్తి చేస్తుంది: URIలు)</translation>
     </message>
     <message>
@@ -619,7 +738,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">తాజాగా ఉంది</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
         <translation type="unfinished">పాక్షికంగా సంతకం చేసిన బిట్‌కాయిన్ లావాదేవీని లోడ్ చేయండి</translation>
     </message>
     <message>
@@ -627,7 +746,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;క్లిప్‌బోర్డ్ నుండి PSBTని లోడ్ చేయండి...</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
         <translation type="unfinished">క్లిప్‌బోర్డ్ నుండి పాక్షికంగా సంతకం చేసిన బిట్‌కాయిన్ లావాదేవీని లోడ్ చేయండి</translation>
     </message>
     <message>
@@ -647,7 +766,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;చిరునామాలను స్వీకరిస్తోంది</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
+        <source>Open a connectcoin: URI</source>
         <translation type="unfinished">బిట్‌కాయిన్‌ను తెరవండి: URI</translation>
     </message>
     <message>
@@ -677,7 +796,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">అన్ని వాలెట్లను మూసివేయండి</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
         <translation type="unfinished">%1 సాధ్యమయ్యే బిట్‌కాయిన్ కమాండ్-లైన్ ఎంపికలతో జాబితాను పొందడానికి సహాయ సందేశాన్ని చూపండి</translation>
     </message>
     <message>
@@ -737,7 +856,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;చూపించు</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
             <numerusform>%n బిట్‌కాయిన్ నెట్‌వర్క్‌కు క్రియాశీల కనెక్షన్(లు).</numerusform>
@@ -851,6 +970,79 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>pay-to-connect బహుమతులు సృష్టించు</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;మైనింగ్</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>CPU మైనింగ్‌ను నియంత్రించు</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>అన్ని ఫైళ్లు</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>ఎగుమతి లోపం</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>ఎగుమతి విజయవంతమైంది</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>మరొక నోడ్‌లో పునరుద్ధరించగల ప్రస్తుత వాలెట్ యొక్క పరిశీలన-మాత్రమే వెర్షన్‌ను ఎగుమతి చేయండి.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>పరిశీలన-మాత్రమే వాలెట్‌ను ఎగుమతి చేయండి</translation>
+    </message>
+    <message>
+        <source>Invalid Wallet Name</source>
+        <translation>చెల్లని వాలెట్ పేరు</translation>
+    </message>
+    <message>
+        <source>Migrate Wallet</source>
+        <translation>వాలెట్‌ను మైగ్రేట్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Migrate a wallet</source>
+        <translation>ఒక వాలెట్‌ను మైగ్రేట్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>వాలెట్‌ను పునరుద్ధరించి మైగ్రేట్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>వాలెట్ బ్యాకప్‌ను పునరుద్ధరించి మైగ్రేట్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>వాలెట్ ఫైల్‌ను పునరుద్ధరించి మైగ్రేట్ చేయండి…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>పరిశీలన-మాత్రమే వాలెట్ ఎగుమతిని సేవ్ చేయండి</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>వాలెట్ ఎగుమతి చేయబడిన స్థానం: </translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>వాలెట్ పేరు ఖాళీగా ఉండకూడదు</translation>
     </message>
 </context>
 <context>
@@ -994,6 +1186,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(change)</source>
         <translation type="unfinished">(మార్పు)</translation>
     </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>ఒక్కో ఇన్‌పుట్‌కు +/- %1 connect(s) మారవచ్చు.</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1049,7 +1245,91 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>Descriptive text of the restore wallets progress window which indicates to the user that wallets are currently being restored.</extracomment>
         <translation type="unfinished">వాలెట్‌ని పునరుద్ధరిస్తోంది &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
-    </context>
+        <message>
+        <source>Are you sure you wish to migrate the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>మీరు నిజంగా &lt;i&gt;%1&lt;/i&gt; వాలెట్‌ను మైగ్రేట్ చేయాలనుకుంటున్నారా?</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>మీరు నిజంగా &lt;i&gt;%1&lt;/i&gt; వాలెట్ ఫైల్‌ను &lt;i&gt;%2&lt;/i&gt;కు పునరుద్ధరించి మైగ్రేట్ చేయాలనుకుంటున్నారా?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>నోడ్ ప్రూన్ చేయబడి, వాలెట్ ప్రూన్ చేసిన బ్లాక్‌ల ఎత్తుకు ముందే సృష్టించబడితే, మైగ్రేట్ చేసిన వాలెట్‌ను లోడ్ చేసేటప్పుడు మైగ్రేషన్ విఫలం కావచ్చు.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>మైగ్రేషన్ తర్వాత వాలెట్‌ను లోడ్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Migrate Wallet</source>
+        <translation>వాలెట్‌ను మైగ్రేట్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Migrate wallet</source>
+        <translation>వాలెట్‌ను మైగ్రేట్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Migrating Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <translation>&lt;b&gt;%1&lt;/b&gt; వాలెట్‌ను మైగ్రేట్ చేస్తోంది…</translation>
+    </message>
+    <message>
+        <source>Migrating the wallet will convert this wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>వాలెట్ మైగ్రేషన్ ఈ వాలెట్‌ను ఒకటి లేదా అంతకంటే ఎక్కువ డిస్క్రిప్టర్ వాలెట్‌లుగా మారుస్తుంది. కొత్త వాలెట్ బ్యాకప్ చేయాల్సి ఉంటుంది.
+ఈ వాలెట్‌లో పరిశీలన-మాత్రమే స్క్రిప్ట్‌లు ఉంటే, వాటిని కలిగిన కొత్త వాలెట్ సృష్టించబడుతుంది.
+ఈ వాలెట్‌లో పరిష్కరించగలిగే కానీ పరిశీలించని స్క్రిప్ట్‌లు ఉంటే, వాటిని కలిగిన మరో కొత్త వాలెట్ సృష్టించబడుతుంది.
+
+మైగ్రేషన్‌కు ముందు ఈ ప్రక్రియ వాలెట్ బ్యాకప్‌ను సృష్టిస్తుంది. ఈ బ్యాకప్ ఫైల్ పేరు &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak అవుతుంది; ఇది ఈ వాలెట్ డైరెక్టరీలో ఉంటుంది. మైగ్రేషన్ తప్పుగా జరిగితే, “వాలెట్‌ను పునరుద్ధరించండి” ఫంక్షన్‌తో బ్యాకప్‌ను పునరుద్ధరించవచ్చు.</translation>
+    </message>
+    <message>
+        <source>Migration Successful</source>
+        <translation>మైగ్రేషన్ విజయవంతమైంది</translation>
+    </message>
+    <message>
+        <source>Migration failed</source>
+        <translation>మైగ్రేషన్ విఫలమైంది</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>వాలెట్‌ను పునరుద్ధరించి మైగ్రేట్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>వాలెట్‌ను పునరుద్ధరించడం బ్యాకప్ ఫైల్‌ను వాలెట్‌ల డైరెక్టరీకి కాపీ చేసి, ప్రామాణిక వాలెట్ డైరెక్టరీ అమరికలో ఉంచుతుంది. అసలు ఫైల్ మార్చబడదు.
+
+మైగ్రేషన్ పునరుద్ధరించిన వాలెట్‌ను ఒకటి లేదా అంతకంటే ఎక్కువ డిస్క్రిప్టర్ వాలెట్‌లుగా మారుస్తుంది. కొత్త వాలెట్ బ్యాకప్ చేయాల్సి ఉంటుంది.
+ఈ వాలెట్‌లో పరిశీలన-మాత్రమే స్క్రిప్ట్‌లు ఉంటే, వాటిని కలిగిన కొత్త వాలెట్ సృష్టించబడుతుంది.
+ఈ వాలెట్‌లో పరిష్కరించగలిగే కానీ పరిశీలించని స్క్రిప్ట్‌లు ఉంటే, వాటిని కలిగిన మరో కొత్త వాలెట్ సృష్టించబడుతుంది.
+
+మైగ్రేషన్‌కు ముందు ఈ ప్రక్రియ వాలెట్ బ్యాకప్‌ను సృష్టిస్తుంది. ఈ బ్యాకప్ ఫైల్ పేరు &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak అవుతుంది; ఇది ఈ వాలెట్ డైరెక్టరీలో ఉంటుంది. మైగ్రేషన్ తప్పుగా జరిగితే, “వాలెట్‌ను పునరుద్ధరించండి” ఫంక్షన్‌తో బ్యాకప్‌ను పునరుద్ధరించవచ్చు.</translation>
+    </message>
+    <message>
+        <source>Solvable but not watched scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>పరిష్కరించగలిగే కానీ పరిశీలించని స్క్రిప్ట్‌లు '%1' అనే కొత్త వాలెట్‌కు మైగ్రేట్ చేయబడ్డాయి.</translation>
+    </message>
+    <message>
+        <source>The wallet '%1' was migrated successfully.</source>
+        <translation>'%1' వాలెట్ విజయవంతంగా మైగ్రేట్ చేయబడింది.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>మైగ్రేషన్ తర్వాత వాలెట్ లోడ్ కాలేదు. “ఫైల్ &gt; వాలెట్ తెరవండి” మెను నుంచి దాన్ని తెరవవచ్చు.</translation>
+    </message>
+    <message>
+        <source>Watchonly scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>పరిశీలన-మాత్రమే స్క్రిప్ట్‌లు '%1' అనే కొత్త వాలెట్‌కు మైగ్రేట్ చేయబడ్డాయి.</translation>
+    </message>
+</context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1169,6 +1449,26 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
         <translation type="unfinished">బాహ్య సంతకం మద్దతు లేకుండా సంకలనం చేయబడింది (బాహ్య సంతకం కోసం అవసరం)</translation>
     </message>
+    <message>
+        <source>Disable private keys for this wallet. Wallets with private keys disabled will have no private keys and cannot have an HD seed or imported private keys. This is ideal for watch-only wallets.</source>
+        <translation>ఈ వాలెట్‌కు ప్రైవేట్ కీలను నిలిపివేయండి. ప్రైవేట్ కీలు నిలిపివేసిన వాలెట్‌లలో ప్రైవేట్ కీలు ఉండవు; వాటిలో HD సీడ్ లేదా దిగుమతి చేసిన ప్రైవేట్ కీలు ఉండకూడదు. ఇది పరిశీలన-మాత్రమే వాలెట్‌లకు అనుకూలం.</translation>
+    </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>ఖాళీ వాలెట్‌ను సృష్టించండి. ఖాళీ వాలెట్‌లలో మొదట ప్రైవేట్ కీలు లేదా స్క్రిప్ట్‌లు ఉండవు. తర్వాత డిస్క్రిప్టర్లను ఉపయోగించి ప్రైవేట్ కీలు మరియు చిరునామాలను దిగుమతి చేయవచ్చు.</translation>
+    </message>
+    <message>
+        <source>Please provide a name and, if desired, enable any advanced options</source>
+        <translation>దయచేసి పేరు ఇవ్వండి; కావాలంటే అధునాతన ఎంపికలను ప్రారంభించండి</translation>
+    </message>
+    <message>
+        <source>Use an external signing device such as a hardware wallet. Configure the external signer script in wallet preferences first.</source>
+        <translation>హార్డ్‌వేర్ వాలెట్ వంటి బాహ్య సంతకం పరికరాన్ని ఉపయోగించండి. ముందుగా వాలెట్ ప్రాధాన్యతల్లో బాహ్య సంతకదారు స్క్రిప్ట్‌ను కాన్ఫిగర్ చేయండి.</translation>
+    </message>
+    <message>
+        <source>You are one step away from creating your new wallet!</source>
+        <translation>మీ కొత్త వాలెట్‌ను సృష్టించడానికి మరో అడుగు మాత్రమే మిగిలింది!</translation>
+    </message>
 </context>
 <context>
     <name>EditAddressDialog</name>
@@ -1201,7 +1501,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">పంపే చిరునామాను సవరించండి</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
         <translation type="unfinished">నమోదు చేసిన చిరునామా "%1" చెల్లుబాటు అయ్యే బిట్‌కాయిన్ చిరునామా కాదు.</translation>
     </message>
     <message>
@@ -1219,6 +1519,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>New key generation failed.</source>
         <translation type="unfinished">కొత్త కీ జనరేషన్ విఫలమైంది.</translation>
+    </message>
+    <message>
+        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
+        <translation>ఈ చిరునామా జాబితా నమోదుకు సంబంధించిన చిరునామా. పంపే చిరునామాల కోసం మాత్రమే దీన్ని మార్చవచ్చు.</translation>
     </message>
 </context>
 <context>
@@ -1301,7 +1605,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">అనుకూల డేటా డైరెక్టరీని ఉపయోగించండి:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
+        <source>ConnectCoin</source>
         <translation type="unfinished">బిట్కోయిన్</translation>
     </message>
     <message numerus="yes">
@@ -1357,6 +1661,30 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Error</source>
         <translation type="unfinished">లోపం</translation>
     </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 ConnectCoin బ్లాక్‌చెయిన్ కాపీని డౌన్‌లోడ్ చేసి నిల్వ చేస్తుంది.</translation>
+    </message>
+    <message>
+        <source>Choose data directory</source>
+        <translation>డేటా డైరెక్టరీని ఎంచుకోండి</translation>
+    </message>
+    <message>
+        <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
+        <translation>బ్లాక్‌చెయిన్ నిల్వను పరిమితం చేయాలని (ప్రూనింగ్) ఎంచుకుంటే, చారిత్రక డేటాను ఇంకా డౌన్‌లోడ్ చేసి ప్రాసెస్ చేయాలి; అయితే డిస్క్ వినియోగాన్ని తగ్గించడానికి ఆ తర్వాత అది తొలగించబడుతుంది.</translation>
+    </message>
+    <message>
+        <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
+        <translation>ఈ సెట్టింగ్‌ను వెనక్కి మార్చడానికి మొత్తం బ్లాక్‌చెయిన్‌ను మళ్లీ డౌన్‌లోడ్ చేయాలి. ముందుగా పూర్తి చెయిన్‌ను డౌన్‌లోడ్ చేసి తర్వాత ప్రూన్ చేయడం వేగంగా ఉంటుంది. కొన్ని అధునాతన ఫీచర్‌లను నిలిపివేస్తుంది.</translation>
+    </message>
+    <message>
+        <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
+        <translation>ఈ ప్రారంభ సమకాలీకరణకు ఎక్కువ వనరులు అవసరం; ఇంతకుముందు గుర్తించని కంప్యూటర్ హార్డ్‌వేర్ సమస్యలను ఇది బయటపెట్టవచ్చు. మీరు %1ను నడిపిన ప్రతిసారీ, డౌన్‌లోడ్ ఆగిన చోటు నుంచి కొనసాగుతుంది.</translation>
+    </message>
+    <message>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2 GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation>మీరు OK క్లిక్ చేసినప్పుడు, %4 మొదట ప్రారంభమైన %3 నాటి తొలి లావాదేవీల నుంచి పూర్తి %4 బ్లాక్‌చెయిన్‌ను (%2 GB) %1 డౌన్‌లోడ్ చేసి ప్రాసెస్ చేయడం ప్రారంభిస్తుంది.</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1404,17 +1732,37 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">తెలియదు. ముందస్తు సమకాలీకరణ శీర్షికలు (%1, %2%)...</translation>
     </message>
+    <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
+        <translation>%1 ప్రస్తుతం సమకాలీకరిస్తోంది.  ఇది పీర్‌ల నుంచి హెడర్‌లు, బ్లాక్‌లను డౌన్‌లోడ్ చేసి, బ్లాక్‌చెయిన్ చివరను చేరే వరకు వాటిని ధృవీకరిస్తుంది.</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>ఇంకా ప్రదర్శించని లావాదేవీల ప్రభావంలో ఉన్న ConnectCoin నిధులను ఖర్చు చేయడానికి చేసే ప్రయత్నాలను నెట్‌వర్క్ అంగీకరించదు.</translation>
+    </message>
+    <message>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation>ఇటీవలి లావాదేవీలు ఇంకా కనిపించకపోవచ్చు; అందువల్ల వాలెట్ బ్యాలెన్స్ తప్పుగా ఉండవచ్చు. క్రింద వివరించినట్లుగా వాలెట్ ConnectCoin నెట్‌వర్క్‌తో సమకాలీకరణను పూర్తి చేసిన తర్వాత ఈ సమాచారం సరైనదిగా ఉంటుంది.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
+        <source>Open ConnectCoin URI</source>
         <translation type="unfinished">బిట్‌కాయిన్ URIని తెరవండి</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">క్లిప్‌బోర్డ్ నుండి చిరునామాను అతికించండి</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1538,7 +1886,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">&amp;ఇన్‌కమింగ్ కనెక్షన్‌లను అనుమతించండి</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
         <translation type="unfinished">SOCKS5 ప్రాక్సీ ద్వారా బిట్‌కాయిన్ నెట్‌వర్క్‌కు కనెక్ట్ చేయండి.</translation>
     </message>
     <message>
@@ -1614,7 +1962,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">కాయిన్ కంట్రోల్ ఫీచర్‌లను చూపించాలా వద్దా.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
         <translation type="unfinished">Tor onion సేవల కోసం ప్రత్యేక SOCKS5 ప్రాక్సీ ద్వారా బిట్‌కాయిన్ నెట్‌వర్క్‌కు కనెక్ట్ చేయండి.</translation>
     </message>
     <message>
@@ -1696,6 +2044,92 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">సరఫరా చేయబడిన ప్రాక్సీ చిరునామా చెల్లదు.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>పాప్-అప్ నోటిఫికేషన్‌లను ప్రారంభించు</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>అందుకున్న, పంపిన లావాదేవీలతో సహా డెస్క్‌టాప్ పాప్-అప్ నోటిఫికేషన్‌లను చూపించు. అప్రమేయంగా నిలిపివేయబడి ఉంటాయి. లోపం, నిర్ధారణ డైలాగ్‌లు ప్రారంభించబడే ఉంటాయి.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation>రూటర్‌లో ConnectCoin క్లయింట్ పోర్ట్‌ను స్వయంచాలకంగా తెరవండి. రూటర్ PCP లేదా NAT-PMPకు మద్దతు ఇచ్చి, అది ప్రారంభించబడినప్పుడు మాత్రమే ఇది పనిచేస్తుంది. బాహ్య పోర్ట్ యాదృచ్ఛికంగా ఉండవచ్చు.</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>ప్రూనింగ్ ప్రారంభించడం లావాదేవీల నిల్వకు అవసరమైన డిస్క్ స్థలాన్ని గణనీయంగా తగ్గిస్తుంది. అన్ని బ్లాక్‌లు ఇంకా పూర్తిగా ధృవీకరించబడతాయి. పాత బ్లాక్ డేటా తొలగించే ముందు సమకాలీకరించబడేలా వాలెట్‌లను ప్రారంభంలో లోడ్ చేసి, ప్రూనింగ్ ప్రారంభమై ఉన్నంతసేపు క్రియాశీలంగా ఉంచాలి; ప్రూన్ చేసిన డేటాకు వెనుకబడిన వాలెట్‌లకు రీఇండెక్సింగ్ అవసరం కావచ్చు. ఈ సెట్టింగ్‌ను వెనక్కి మార్చడానికి మొత్తం బ్లాక్‌చెయిన్‌ను మళ్లీ డౌన్‌లోడ్ చేయాలి.</translation>
+    </message>
+    <message>
+        <source>Font in the Overview tab: </source>
+        <translation>అవలోకనం ట్యాబ్‌లో ఫాంట్: </translation>
+    </message>
+    <message>
+        <source>Full path to a %1 compatible script (e.g. C:\Downloads\hwi.exe or /Users/you/Downloads/hwi.py). Beware: malware can steal your coins!</source>
+        <translation>%1కు అనుకూలమైన స్క్రిప్ట్ పూర్తి పాత్ (ఉదా. C:\Downloads\hwi.exe లేదా /Users/you/Downloads/hwi.py). జాగ్రత్త: మాల్‌వేర్ మీ నాణేలను దొంగిలించవచ్చు!</translation>
+    </message>
+    <message>
+        <source>If you disable the spending of unconfirmed change, the change from a transaction cannot be used until that transaction has at least one confirmation. This also affects how your balance is computed.</source>
+        <translation>ధృవీకరించని మిగులు మొత్తాన్ని ఖర్చు చేయడాన్ని నిలిపివేస్తే, లావాదేవీకి కనీసం ఒక ధృవీకరణ వచ్చే వరకు దాని మిగులు మొత్తాన్ని ఉపయోగించలేరు. మీ బ్యాలెన్స్ లెక్కింపుపై కూడా ఇది ప్రభావం చూపుతుంది.</translation>
+    </message>
+    <message>
+        <source>Map port using PCP or NA&amp;T-PMP</source>
+        <translation>PCP లేదా NA&amp;T-PMP ఉపయోగించి పోర్ట్‌ను మ్యాప్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Maximum database cache size. Make sure you have enough RAM. A larger cache can contribute to faster sync, after which the benefit is less pronounced for most use cases. Lowering the cache size will reduce memory usage. Unused mempool memory is shared for this cache.</source>
+        <extracomment>Tooltip text for Options window setting that sets the size of the database cache. Explains the corresponding effects of increasing/decreasing this value.</extracomment>
+        <translation>డేటాబేస్ కాష్ గరిష్ఠ పరిమాణం. తగినంత RAM ఉండేలా చూసుకోండి. పెద్ద కాష్ సమకాలీకరణను వేగవంతం చేయవచ్చు; ఆ తర్వాత ఎక్కువ సందర్భాల్లో దాని ప్రయోజనం తక్కువగా ఉంటుంది. కాష్ పరిమాణాన్ని తగ్గించడం మెమరీ వినియోగాన్ని తగ్గిస్తుంది. ఉపయోగించని mempool మెమరీ ఈ కాష్‌తో పంచుకోబడుతుంది.</translation>
+    </message>
+    <message>
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
+        <translation>విండోను మూసినప్పుడు అప్లికేషన్ నుంచి నిష్క్రమించకుండా కనిష్ఠీకరించండి. ఈ ఎంపిక ప్రారంభించబడితే, మెనులో నిష్క్రమించు ఎంచుకున్నప్పుడు మాత్రమే అప్లికేషన్ మూసివేయబడుతుంది.</translation>
+    </message>
+    <message>
+        <source>Open the %1 configuration file from the working directory.</source>
+        <translation>వర్కింగ్ డైరెక్టరీ నుంచి %1 కాన్ఫిగరేషన్ ఫైల్‌ను తెరవండి.</translation>
+    </message>
+    <message>
+        <source>Options set in this dialog are overridden by the command line:</source>
+        <translation>ఈ డైలాగ్‌లో సెట్ చేసిన ఎంపికలను కమాండ్ లైన్ భర్తీ చేస్తుంది:</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>-popupnotifications లేదా connectcoin.confలోని popupnotifications ద్వారా సెట్ చేయబడుతుంది.</translation>
+    </message>
+    <message>
+        <source>Set the number of script verification threads. Negative values correspond to the number of cores you want to leave free to the system.</source>
+        <extracomment>Tooltip text for Options window setting that sets the number of script verification threads. Explains that negative values mean to leave these many cores free to the system.</extracomment>
+        <translation>స్క్రిప్ట్ ధృవీకరణ థ్రెడ్‌ల సంఖ్యను సెట్ చేయండి. ప్రతికూల విలువలు సిస్టమ్ కోసం ఖాళీగా ఉంచాలనుకునే కోర్‌ల సంఖ్యను సూచిస్తాయి.</translation>
+    </message>
+    <message>
+        <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
+        <translation>ఈ నెట్‌వర్క్ రకం ద్వారా పీర్‌లను చేరుకోవడానికి ఇచ్చిన డిఫాల్ట్ SOCKS5 ప్రాక్సీ ఉపయోగించబడుతుందో చూపిస్తుంది.</translation>
+    </message>
+    <message>
+        <source>Third-party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
+        <translation>లావాదేవీల ట్యాబ్‌లో సందర్భ మెను అంశాలుగా కనిపించే మూడవ పక్ష URLలు (ఉదా. బ్లాక్ ఎక్స్‌ప్లోరర్). URLలోని %s స్థానంలో లావాదేవీ హాష్ ఉంచబడుతుంది. అనేక URLలను నిలువు గీత |తో వేరు చేయాలి.</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1711,7 +2145,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">రూపం</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
         <translation type="unfinished">ప్రదర్శించబడిన సమాచారం పాతది కావచ్చు. కనెక్షన్ స్థాపించబడిన తర్వాత మీ వాలెట్ స్వయంచాలకంగా బిట్‌కాయిన్ నెట్‌వర్క్‌తో సమకాలీకరించబడుతుంది, కానీ ఈ ప్రక్రియ ఇంకా పూర్తి కాలేదు.</translation>
     </message>
     <message>
@@ -1799,9 +2233,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>%n ఇన్‌పుట్‌పై సంతకం చేయబడింది, కానీ మరిన్ని సంతకాలు ఇంకా అవసరం.</numerusform>
+            <numerusform>%n ఇన్‌పుట్‌లపై సంతకం చేయబడింది, కానీ మరిన్ని సంతకాలు ఇంకా అవసరం.</numerusform>
         </translation>
     </message>
     <message>
@@ -1855,9 +2289,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>లావాదేవీలో సంతకం చేయని %n ఇన్‌పుట్ ఉంది.</numerusform>
+            <numerusform>లావాదేవీలో సంతకం చేయని %n ఇన్‌పుట్‌లు ఉన్నాయి.</numerusform>
         </translation>
     </message>
     <message>
@@ -1888,6 +2322,18 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Transaction status is unknown.</source>
         <translation type="unfinished">లావాదేవీ స్థితి తెలియదు.</translation>
     </message>
+    <message>
+        <source>PSBT Operations</source>
+        <translation>PSBT కార్యకలాపాలు</translation>
+    </message>
+    <message>
+        <source>Sends %1 to %2</source>
+        <translation>%1ను %2కు పంపుతుంది</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>సొంత చిరునామా</translation>
+    </message>
 </context>
 <context>
     <name>PaymentServer</name>
@@ -1896,7 +2342,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">చెల్లింపు అభ్యర్ధన లోపం</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
         <translation type="unfinished">బిట్‌కాయిన్‌ను ప్రారంభించడం సాధ్యం కాదు: క్లిక్-టు-పే హ్యాండ్లర్</translation>
     </message>
     <message>
@@ -1904,16 +2350,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">URI నిర్వహణ</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin://' చెల్లుబాటు అయ్యే URI కాదు. బదులుగా 'bitcoin:' ఉపయోగించండి.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin://' చెల్లుబాటు అయ్యే URI కాదు. బదులుగా 'connectcoin:' ఉపయోగించండి.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
         <translation type="unfinished">URI అన్వయించబడదు! ఇది చెల్లని బిట్‌కాయిన్ చిరునామా లేదా తప్పుగా రూపొందించబడిన URI పారామీటర్‌ల వల్ల సంభవించవచ్చు.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
         <translation type="unfinished">చెల్లింపు అభ్యర్థన ఫైల్ నిర్వహణ</translation>
+    </message>
+    <message>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation>BIP70కు మద్దతు లేనందున చెల్లింపు అభ్యర్థనను ప్రాసెస్ చేయలేము.
+BIP70లో విస్తృతమైన భద్రతా లోపాల కారణంగా, వాలెట్‌లను మార్చమనే వ్యాపారి సూచనలను విస్మరించాలని బలంగా సిఫార్సు చేస్తున్నాము.
+ఈ లోపం వస్తే, BIP21కు అనుకూలమైన URIని ఇవ్వమని వ్యాపారిని అడగండి.</translation>
     </message>
 </context>
 <context>
@@ -2008,7 +2462,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>PNG Image</source>
         <extracomment>Expanded name of the PNG file format. See: https://en.wikipedia.org/wiki/Portable_Network_Graphics.</extracomment>
-        <translation type="unfinished">PNG చిత్రం</translation>
+        <translation>PNG చిత్రం</translation>
     </message>
 </context>
 <context>
@@ -2134,7 +2588,419 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>From</source>
         <translation type="unfinished">నుండి</translation>
     </message>
-    </context>
+        <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>&amp;Console</source>
+        <translation>&amp;కన్సోల్</translation>
+    </message>
+    <message>
+        <source>&amp;Copy IP/Netmask</source>
+        <extracomment>Context menu action to copy the IP/Netmask of a banned peer. IP/Netmask is the combination of a peer's IP address and its Netmask. For IP address, see: https://en.wikipedia.org/wiki/IP_address.</extracomment>
+        <translation>IP/నెట్‌మాస్క్‌ను &amp;కాపీ చేయండి</translation>
+    </message>
+    <message>
+        <source>&amp;Disconnect</source>
+        <translation>&amp;డిస్‌కనెక్ట్ చేయండి</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;నెట్‌వర్క్ ట్రాఫిక్</translation>
+    </message>
+    <message>
+        <source>&amp;Open</source>
+        <translation>&amp;తెరవండి</translation>
+    </message>
+    <message>
+        <source>&amp;Unban</source>
+        <translation>&amp;నిషేధం తొలగించండి</translation>
+    </message>
+    <message>
+        <source>(peer: %1)</source>
+        <translation>(పీర్: %1)</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;గంట</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;వారం</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;సంవత్సరం</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation>1 &amp;రోజు</translation>
+    </message>
+    <message>
+        <source>Address Relay</source>
+        <extracomment>Text title for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>చిరునామాల రిలే</translation>
+    </message>
+    <message>
+        <source>Addresses Processed</source>
+        <extracomment>Text title for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>ప్రాసెస్ చేసిన చిరునామాలు</translation>
+    </message>
+    <message>
+        <source>Addresses Rate-Limited</source>
+        <extracomment>Text title for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>రేటు పరిమితి విధించిన చిరునామాలు</translation>
+    </message>
+    <message>
+        <source>Ban for</source>
+        <translation>నిషేధ కాలం</translation>
+    </message>
+    <message>
+        <source>Clear console</source>
+        <translation>కన్సోల్‌ను క్లియర్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>కనెక్షన్ వ్యవధి</translation>
+    </message>
+    <message>
+        <source>Current block height</source>
+        <translation>ప్రస్తుత బ్లాక్ ఎత్తు</translation>
+    </message>
+    <message>
+        <source>Debug log file</source>
+        <translation>డీబగ్ లాగ్ ఫైల్</translation>
+    </message>
+    <message>
+        <source>Decrease font size</source>
+        <translation>ఫాంట్ పరిమాణాన్ని తగ్గించండి</translation>
+    </message>
+    <message>
+        <source>Direction/Type</source>
+        <translation>దిశ/రకం</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation>ప్రాథమిక చెల్లుబాటు తనిఖీలను దాటిన కొత్త బ్లాక్ ఈ పీర్ నుంచి అందినప్పటి నుంచి గడిచిన సమయం.</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <extracomment>Tooltip text for the Last Transaction field in the peer details area.</extracomment>
+        <translation>మా mempoolలో అంగీకరించిన కొత్త లావాదేవీ ఈ పీర్ నుంచి అందినప్పటి నుంచి గడిచిన సమయం.</translation>
+    </message>
+    <message>
+        <source>Executing command using "%1" wallet</source>
+        <translation>“%1” వాలెట్‌తో కమాండ్‌ను అమలు చేస్తోంది</translation>
+    </message>
+    <message>
+        <source>Executing command without any wallet</source>
+        <translation>వాలెట్ లేకుండా కమాండ్‌ను అమలు చేస్తోంది</translation>
+    </message>
+    <message>
+        <source>Executing…</source>
+        <extracomment>A console message indicating an entered command is currently being executed.</extracomment>
+        <translation>అమలు చేస్తోంది…</translation>
+    </message>
+    <message>
+        <source>Hide Peers Detail</source>
+        <translation>పీర్ వివరాలను దాచండి</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation>అధిక బ్యాండ్‌విడ్త్</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation>అధిక బ్యాండ్‌విడ్త్ BIP152 కాంపాక్ట్ బ్లాక్ రిలే: %1</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>లోపలికి:</translation>
+    </message>
+    <message>
+        <source>Inbound: initiated by peer</source>
+        <extracomment>Explanatory text for an inbound peer connection.</extracomment>
+        <translation>ఇన్‌బౌండ్: పీర్ ప్రారంభించినది</translation>
+    </message>
+    <message>
+        <source>Increase font size</source>
+        <translation>ఫాంట్ పరిమాణాన్ని పెంచండి</translation>
+    </message>
+    <message>
+        <source>Last Block</source>
+        <translation>చివరి బ్లాక్</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>చివరిగా అందినది</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>చివరిగా పంపినది</translation>
+    </message>
+    <message>
+        <source>Last Transaction</source>
+        <translation>చివరి లావాదేవీ</translation>
+    </message>
+    <message>
+        <source>Local Addresses</source>
+        <translation>స్థానిక చిరునామాలు</translation>
+    </message>
+    <message>
+        <source>Mapped AS</source>
+        <translation>మ్యాప్ చేసిన AS</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>కనిష్ఠ పింగ్</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>నెట్‌వర్క్ కార్యకలాపం నిలిపివేయబడింది</translation>
+    </message>
+    <message>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation>ఇతర నోడ్‌లతో కమ్యూనికేట్ చేయడానికి మీ ConnectCoin నోడ్ ప్రస్తుతం ఉపయోగిస్తున్న నెట్‌వర్క్ చిరునామాలు.</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation>ఎప్పుడూ లేదు</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>కాదు</translation>
+    </message>
+    <message>
+        <source>Node window - [%1]</source>
+        <translation>నోడ్ విండో - [%1]</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>ప్రస్తుత డేటా డైరెక్టరీ నుంచి %1 డీబగ్ లాగ్ ఫైల్‌ను తెరవండి. పెద్ద లాగ్ ఫైల్‌లకు కొన్ని సెకన్లు పట్టవచ్చు.</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>బయటకు:</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to request addresses from a peer.</extracomment>
+        <translation>అవుట్‌బౌండ్ చిరునామా సేకరణ: చిరునామాలను అభ్యర్థించడానికి స్వల్పకాలిక కనెక్షన్</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>అవుట్‌బౌండ్ బ్లాక్ రిలే: లావాదేవీలు లేదా చిరునామాలను పంపదు</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to test the aliveness of known addresses.</extracomment>
+        <translation>అవుట్‌బౌండ్ ఫీలర్: చిరునామాలను పరీక్షించడానికి స్వల్పకాలిక కనెక్షన్</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays all network information. This is the default behavior for outbound connections.</extracomment>
+        <translation>అవుట్‌బౌండ్ పూర్తి రిలే: డిఫాల్ట్</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <extracomment>Explanatory text for an outbound peer connection that was established manually through one of several methods. The numbered arguments are stand-ins for the methods available to establish manual connections.</extracomment>
+        <translation>మాన్యువల్ అవుట్‌బౌండ్: RPC %1 లేదా %2/%3 కాన్ఫిగరేషన్ ఎంపికలతో జోడించబడింది</translation>
+    </message>
+    <message>
+        <source>Permissions</source>
+        <translation>అనుమతులు</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>పింగ్ సమయం</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>పింగ్ నిరీక్షణ</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>ప్రైవేట్ ప్రసారం: గోప్యతకు సున్నితమైన లావాదేవీలను ప్రసారం చేయడానికి స్వల్పకాలిక కనెక్షన్</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>సేవలు</translation>
+    </message>
+    <message>
+        <source>Session ID</source>
+        <translation>సెషన్ ID</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>సమకాలీకరించిన బ్లాక్‌లు</translation>
+    </message>
+    <message>
+        <source>Synced Headers</source>
+        <translation>సమకాలీకరించిన హెడర్‌లు</translation>
+    </message>
+    <message>
+        <source>The BIP324 session ID string in hex.</source>
+        <translation>హెక్సాడెసిమల్‌లో BIP324 సెషన్ ID స్ట్రింగ్.</translation>
+    </message>
+    <message>
+        <source>The direction and type of peer connection: %1</source>
+        <translation>పీర్ కనెక్షన్ దిశ మరియు రకం: %1</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>ప్రస్తుతం సమాధానం కోసం వేచి ఉన్న పింగ్ వ్యవధి.</translation>
+    </message>
+    <message>
+        <source>The mapped Autonomous System used for diversifying peer selection.</source>
+        <translation>పీర్ ఎంపికను వైవిధ్యపరచడానికి ఉపయోగించే మ్యాప్ చేసిన స్వయంప్రతిపత్తి వ్యవస్థ.</translation>
+    </message>
+    <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation>ఈ పీర్ కనెక్ట్ అయిన నెట్‌వర్క్ ప్రోటోకాల్: IPv4, IPv6, Onion, I2P లేదా CJDNS.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</source>
+        <extracomment>Tooltip text for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>రేటు పరిమితి కారణంగా విస్మరించిన (ప్రాసెస్ చేయని) ఈ పీర్ నుంచి అందిన మొత్తం చిరునామాల సంఖ్య.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</source>
+        <extracomment>Tooltip text for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>ఈ పీర్ నుంచి అందుకుని ప్రాసెస్ చేసిన మొత్తం చిరునామాల సంఖ్య (రేటు పరిమితి కారణంగా విస్మరించినవి మినహా).</translation>
+    </message>
+    <message>
+        <source>The transport layer version: %1</source>
+        <translation>రవాణా పొర వెర్షన్: %1</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>సమయ వ్యత్యాసం</translation>
+    </message>
+    <message>
+        <source>Totals</source>
+        <translation>మొత్తాలు</translation>
+    </message>
+    <message>
+        <source>Transaction Relay</source>
+        <translation>లావాదేవీల రిలే</translation>
+    </message>
+    <message>
+        <source>Transport</source>
+        <translation>రవాణా</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>తెలియదు</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>వెర్షన్</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation>వాలెట్: </translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.
+Use up and down arrows to navigate history, and %2 to clear screen.
+Use %3 and %4 to increase or decrease the font size.
+Type %5 for an overview of available commands.
+For more information on using this console, type %6.
+
+%7WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.%8</source>
+        <extracomment>RPC console welcome message. Placeholders %7 and %8 are style tags for the warning content, and they are not space separated from the rest of the text intentionally.</extracomment>
+        <translation>%1 RPC కన్సోల్‌కు స్వాగతం.
+చరిత్రలో కదలడానికి పైకి, క్రిందికి బాణాలను, స్క్రీన్‌ను క్లియర్ చేయడానికి %2ను ఉపయోగించండి.
+ఫాంట్ పరిమాణాన్ని పెంచడానికి లేదా తగ్గించడానికి %3 మరియు %4ను ఉపయోగించండి.
+అందుబాటులో ఉన్న కమాండ్‌ల అవలోకనం కోసం %5 టైప్ చేయండి.
+ఈ కన్సోల్ వినియోగంపై మరింత సమాచారం కోసం %6 టైప్ చేయండి.
+
+%7హెచ్చరిక: మోసగాళ్లు ఇక్కడ కమాండ్‌లు టైప్ చేయమని వినియోగదారులను కోరుతూ, వారి వాలెట్ నిధులను దొంగిలిస్తున్నారు. కమాండ్ ప్రభావాలను పూర్తిగా అర్థం చేసుకోకుండా ఈ కన్సోల్‌ను ఉపయోగించవద్దు.%8</translation>
+    </message>
+    <message>
+        <source>Whether we relay addresses to this peer.</source>
+        <extracomment>Tooltip text for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>మనం ఈ పీర్‌కు చిరునామాలను రిలే చేస్తున్నామా.</translation>
+    </message>
+    <message>
+        <source>Whether we relay transactions to this peer.</source>
+        <translation>మనం ఈ పీర్‌కు లావాదేవీలను రిలే చేస్తున్నామా.</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation>అవును</translation>
+    </message>
+    <message>
+        <source>detecting: peer could be v1 or v2</source>
+        <extracomment>Explanatory text for "detecting" transport type.</extracomment>
+        <translation>గుర్తిస్తోంది: పీర్ v1 లేదా v2 కావచ్చు</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation>అధిక బ్యాండ్‌విడ్త్ రిలే ఎంచుకోబడలేదు</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation>పీర్ మనల్ని అధిక బ్యాండ్‌విడ్త్ రిలే కోసం ఎంచుకుంది</translation>
+    </message>
+    <message>
+        <source>v1: unencrypted, plaintext transport protocol</source>
+        <extracomment>Explanatory text for v1 transport type.</extracomment>
+        <translation>v1: ఎన్‌క్రిప్షన్ లేని సాధారణ పాఠ్య రవాణా ప్రోటోకాల్</translation>
+    </message>
+    <message>
+        <source>v2: BIP324 encrypted transport protocol</source>
+        <extracomment>Explanatory text for v2 transport type.</extracomment>
+        <translation>v2: BIP324 ఎన్‌క్రిప్ట్ చేసిన రవాణా ప్రోటోకాల్</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>%1 ద్వారా</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation>మనం పీర్‌ను అధిక బ్యాండ్‌విడ్త్ రిలే కోసం ఎంచుకున్నాము</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -2172,6 +3038,66 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Could not generate new %1 address</source>
         <translation type="unfinished">కొత్త %1 చిరునామాను రూపొందించడం సాధ్యం కాలేదు</translation>
+    </message>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation>&amp;మొత్తం:</translation>
+    </message>
+    <message>
+        <source>&amp;Create new receiving address</source>
+        <translation>కొత్త స్వీకరణ చిరునామాను &amp;సృష్టించండి</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;లేబుల్:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation>&amp;సందేశం:</translation>
+    </message>
+    <message>
+        <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
+        <translation>అభ్యర్థించాల్సిన ఐచ్ఛిక మొత్తం. నిర్దిష్ట మొత్తం అవసరం లేకపోతే దీన్ని ఖాళీగా లేదా సున్నాగా ఉంచండి.</translation>
+    </message>
+    <message>
+        <source>An optional label to associate with the new receiving address (used by you to identify an invoice).  It is also attached to the payment request.</source>
+        <translation>కొత్త స్వీకరణ చిరునామాకు జతచేయాల్సిన ఐచ్ఛిక లేబుల్ (ఇన్వాయిస్‌ను గుర్తించడానికి మీరు ఉపయోగిస్తారు).  ఇది చెల్లింపు అభ్యర్థనకు కూడా జోడించబడుతుంది.</translation>
+    </message>
+    <message>
+        <source>An optional label to associate with the new receiving address.</source>
+        <translation>కొత్త స్వీకరణ చిరునామాకు జతచేయాల్సిన ఐచ్ఛిక లేబుల్.</translation>
+    </message>
+    <message>
+        <source>An optional message that is attached to the payment request and may be displayed to the sender.</source>
+        <translation>చెల్లింపు అభ్యర్థనకు జోడించబడే, పంపేవారికి చూపించగల ఐచ్ఛిక సందేశం.</translation>
+    </message>
+    <message>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation>చెల్లింపు అభ్యర్థనకు జోడించాల్సిన ఐచ్ఛిక సందేశం; అభ్యర్థన తెరిచినప్పుడు ఇది కనిపిస్తుంది. గమనిక: ఈ సందేశం చెల్లింపుతో పాటు ConnectCoin నెట్‌వర్క్ ద్వారా పంపబడదు.</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>క్లియర్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Clear all fields of the form.</source>
+        <translation>ఫారమ్‌లోని అన్ని ఫీల్డ్‌లను క్లియర్ చేయండి.</translation>
+    </message>
+    <message>
+        <source>Requested payments history</source>
+        <translation>అభ్యర్థించిన చెల్లింపుల చరిత్ర</translation>
+    </message>
+    <message>
+        <source>Show</source>
+        <translation>చూపించండి</translation>
+    </message>
+    <message>
+        <source>Show the selected request (does the same as double clicking an entry)</source>
+        <translation>ఎంచుకున్న అభ్యర్థనను చూపించండి (నమోదుపై డబుల్ క్లిక్ చేయడంతో సమానం)</translation>
+    </message>
+    <message>
+        <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
+        <translation>చెల్లింపులను అభ్యర్థించడానికి ఈ ఫారమ్‌ను ఉపయోగించండి. అన్ని ఫీల్డ్‌లు &lt;b&gt;ఐచ్ఛికం&lt;/b&gt;.</translation>
     </message>
 </context>
 <context>
@@ -2212,7 +3138,23 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>&amp;Save Image…</source>
         <translation type="unfinished">&amp;చిత్రాన్ని సేవ్ చేయి...</translation>
     </message>
-    </context>
+        <message>
+        <source>&amp;Verify</source>
+        <translation>&amp;ధృవీకరించండి</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>చెల్లింపు సమాచారం</translation>
+    </message>
+    <message>
+        <source>Request payment to %1</source>
+        <translation>%1కు చెల్లింపును అభ్యర్థించండి</translation>
+    </message>
+    <message>
+        <source>Verify this address on e.g. a hardware wallet screen</source>
+        <translation>ఈ చిరునామాను, ఉదాహరణకు, హార్డ్‌వేర్ వాలెట్ స్క్రీన్‌పై ధృవీకరించండి</translation>
+    </message>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -2231,7 +3173,19 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(no label)</source>
         <translation type="unfinished">( ఉల్లాకు లేదు )</translation>
     </message>
-    </context>
+        <message>
+        <source>(no amount requested)</source>
+        <translation>(మొత్తం అభ్యర్థించలేదు)</translation>
+    </message>
+    <message>
+        <source>(no message)</source>
+        <translation>(సందేశం లేదు)</translation>
+    </message>
+    <message>
+        <source>Requested</source>
+        <translation>అభ్యర్థించినది</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsDialog</name>
     <message>
@@ -2330,6 +3284,267 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(no label)</source>
         <translation type="unfinished">( ఉల్లాకు లేదు )</translation>
     </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>%1 from wallet '%2'</source>
+        <translation>'%2' వాలెట్ నుంచి %1</translation>
+    </message>
+    <message>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks…)</source>
+        <translation>(స్మార్ట్ ఫీజు ఇంకా ప్రారంభం కాలేదు. సాధారణంగా దీనికి కొన్ని బ్లాక్‌లు పడతాయి…)</translation>
+    </message>
+    <message>
+        <source>A fee higher than %1 is considered an absurdly high fee.</source>
+        <translation>%1 కంటే ఎక్కువ ఫీజును అసంబద్ధంగా అధికమైన ఫీజుగా పరిగణిస్తారు.</translation>
+    </message>
+    <message>
+        <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
+        <translation>చాలా తక్కువ ఫీజు వల్ల లావాదేవీ ఎప్పటికీ ధృవీకరించబడకపోవచ్చు (టూల్‌టిప్ చదవండి)</translation>
+    </message>
+    <message>
+        <source>Add &amp;Recipient</source>
+        <translation>&amp;గ్రహీతను జోడించండి</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>బ్యాలెన్స్:</translation>
+    </message>
+    <message>
+        <source>Choose…</source>
+        <translation>ఎంచుకోండి…</translation>
+    </message>
+    <message>
+        <source>Clear &amp;All</source>
+        <translation>&amp;అన్నీ క్లియర్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Clear all fields of the form.</source>
+        <translation>ఫారమ్‌లోని అన్ని ఫీల్డ్‌లను క్లియర్ చేయండి.</translation>
+    </message>
+    <message>
+        <source>Coin Control Features</source>
+        <translation>కాయిన్ నియంత్రణ ఫీచర్‌లు</translation>
+    </message>
+    <message>
+        <source>Confirm custom change address</source>
+        <translation>అనుకూల మిగులు చిరునామాను నిర్ధారించండి</translation>
+    </message>
+    <message>
+        <source>Confirm send coins</source>
+        <translation>నాణేల పంపకాన్ని నిర్ధారించండి</translation>
+    </message>
+    <message>
+        <source>Confirm the send action</source>
+        <translation>పంపే చర్యను నిర్ధారించండి</translation>
+    </message>
+    <message>
+        <source>Confirmation time target:</source>
+        <translation>లక్ష్య ధృవీకరణ సమయం:</translation>
+    </message>
+    <message>
+        <source>Connect your hardware wallet first.</source>
+        <translation>ముందుగా హార్డ్‌వేర్ వాలెట్‌ను కనెక్ట్ చేయండి.</translation>
+    </message>
+    <message>
+        <source>Cr&amp;eate Unsigned</source>
+        <translation>సంతకం లేకుండా &amp;సృష్టించండి</translation>
+    </message>
+    <message>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation>ఆఫ్‌లైన్ %1 వాలెట్ లేదా PSBTకు అనుకూలమైన హార్డ్‌వేర్ వాలెట్ వంటి వాటితో ఉపయోగించడానికి పాక్షికంగా సంతకం చేసిన ConnectCoin లావాదేవీని (PSBT) సృష్టిస్తుంది.</translation>
+    </message>
+    <message>
+        <source>Custom change address</source>
+        <translation>అనుకూల మిగులు చిరునామా</translation>
+    </message>
+    <message>
+        <source>Custom:</source>
+        <translation>అనుకూలం:</translation>
+    </message>
+    <message>
+        <source>Do you want to create this transaction?</source>
+        <extracomment>Message displayed when attempting to create a transaction. Cautionary text to prompt the user to verify that the displayed transaction details represent the transaction the user intends to create.</extracomment>
+        <translation>మీరు ఈ లావాదేవీని సృష్టించాలనుకుంటున్నారా?</translation>
+    </message>
+    <message>
+        <source>Duplicate address found: addresses should only be used once each.</source>
+        <translation>పునరావృత చిరునామా కనుగొనబడింది: ప్రతి చిరునామాను ఒక్కసారి మాత్రమే ఉపయోగించాలి.</translation>
+    </message>
+    <message>
+        <source>External balance:</source>
+        <translation>బాహ్య బ్యాలెన్స్:</translation>
+    </message>
+    <message>
+        <source>External signer failure</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>బాహ్య సంతకదారు వైఫల్యం</translation>
+    </message>
+    <message>
+        <source>External signer not found</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>బాహ్య సంతకదారు కనుగొనబడలేదు</translation>
+    </message>
+    <message>
+        <source>Hide transaction fee settings</source>
+        <translation>లావాదేవీ ఫీజు సెట్టింగ్‌లను దాచండి</translation>
+    </message>
+    <message>
+        <source>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</source>
+        <translation>ఇది ప్రారంభించబడి, మిగులు చిరునామా ఖాళీగా లేదా చెల్లనిదిగా ఉంటే, కొత్తగా రూపొందించిన చిరునామాకు మిగులు మొత్తం పంపబడుతుంది.</translation>
+    </message>
+    <message>
+        <source>Inputs…</source>
+        <translation>ఇన్‌పుట్‌లు…</translation>
+    </message>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>తగినన్ని నిధులు లేవు!</translation>
+    </message>
+    <message>
+        <source>PSBT saved</source>
+        <extracomment>Popup message when a PSBT has been saved to a file</extracomment>
+        <translation>PSBT సేవ్ చేయబడింది</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk</source>
+        <translation>PSBT డిస్క్‌లో సేవ్ చేయబడింది</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
+        <translation>దయచేసి ప్రతిపాదిత లావాదేవీని సమీక్షించండి. ఇది పాక్షికంగా సంతకం చేసిన ConnectCoin లావాదేవీని (PSBT) రూపొందిస్తుంది. దాన్ని సేవ్ లేదా కాపీ చేసి, తర్వాత ఆఫ్‌లైన్ %1 వాలెట్ లేదా PSBTకు అనుకూలమైన హార్డ్‌వేర్ వాలెట్‌తో సంతకం చేయవచ్చు.</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction.</source>
+        <extracomment>Text to prompt a user to review the details of the transaction they are attempting to send.</extracomment>
+        <translation>దయచేసి మీ లావాదేవీని సమీక్షించండి.</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
+        <translation>దయచేసి మీ లావాదేవీని సమీక్షించండి. ఈ లావాదేవీని సృష్టించి పంపవచ్చు లేదా పాక్షికంగా సంతకం చేసిన ConnectCoin లావాదేవీని (PSBT) సృష్టించవచ్చు. దాన్ని సేవ్ లేదా కాపీ చేసి, తర్వాత ఆఫ్‌లైన్ %1 వాలెట్ లేదా PSBTకు అనుకూలమైన హార్డ్‌వేర్ వాలెట్‌తో సంతకం చేయవచ్చు.</translation>
+    </message>
+    <message>
+        <source>Recommended:</source>
+        <translation>సిఫార్సు:</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation>&amp;పంపండి</translation>
+    </message>
+    <message>
+        <source>Send Coins</source>
+        <translation>నాణేలను పంపండి</translation>
+    </message>
+    <message>
+        <source>Send to multiple recipients at once</source>
+        <translation>ఒకేసారి అనేక గ్రహీతలకు పంపండి</translation>
+    </message>
+    <message>
+        <source>Set external signer script path in Options -&gt; Wallet</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>ఎంపికలు -&gt; వాలెట్‌లో బాహ్య సంతకదారు స్క్రిప్ట్ పాత్‌ను సెట్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Sign failed</source>
+        <translation>సంతకం విఫలమైంది</translation>
+    </message>
+    <message>
+        <source>Sign on device</source>
+        <extracomment>"device" usually means a hardware wallet.</extracomment>
+        <translation>పరికరంలో సంతకం చేయండి</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>లావాదేవీ వర్చువల్ పరిమాణంలోని ప్రతి kB (1,000 బైట్లు)కు అనుకూల ఫీజును పేర్కొనండి.
+
+గమనిక:  ఫీజు బైట్‌కు లెక్కించబడుతుంది కాబట్టి, 500 వర్చువల్ బైట్ల (1 kvBలో సగం) లావాదేవీకి “kvBకు 100 connects” రేటు ఉంటే, ఫీజు కేవలం 50 connects అవుతుంది.</translation>
+    </message>
+    <message>
+        <source>The PSBT has been copied to the clipboard. You can also save it.</source>
+        <translation>PSBT క్లిప్‌బోర్డ్‌కు కాపీ చేయబడింది. దాన్ని సేవ్ కూడా చేయవచ్చు.</translation>
+    </message>
+    <message>
+        <source>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</source>
+        <translation>మిగులు కోసం ఎంచుకున్న చిరునామా ఈ వాలెట్‌లోనిది కాదు. వాలెట్‌లోని కొంత లేదా మొత్తం నిధులు ఈ చిరునామాకు పంపబడవచ్చు. మీకు ఖచ్చితమేనా?</translation>
+    </message>
+    <message>
+        <source>The amount exceeds your balance.</source>
+        <translation>మొత్తం మీ బ్యాలెన్స్‌ను మించిపోయింది.</translation>
+    </message>
+    <message>
+        <source>The amount to pay must be larger than 0.</source>
+        <translation>చెల్లించాల్సిన మొత్తం 0 కంటే ఎక్కువగా ఉండాలి.</translation>
+    </message>
+    <message>
+        <source>The recipient address is not valid. Please recheck.</source>
+        <translation>గ్రహీత చిరునామా చెల్లదు. మళ్లీ తనిఖీ చేయండి.</translation>
+    </message>
+    <message>
+        <source>To review recipient list click "Show Details…"</source>
+        <translation>గ్రహీతల జాబితాను సమీక్షించడానికి “వివరాలను చూపించండి…” క్లిక్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Transaction Fee:</source>
+        <translation>లావాదేవీ ఫీజు:</translation>
+    </message>
+    <message>
+        <source>Transaction creation failed!</source>
+        <translation>లావాదేవీ సృష్టి విఫలమైంది!</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>లావాదేవీ ఫీజు</translation>
+    </message>
+    <message>
+        <source>Unsigned Transaction</source>
+        <comment>PSBT copied</comment>
+        <extracomment>Caption of "PSBT has been copied" messagebox</extracomment>
+        <translation>సంతకం చేయని లావాదేవీ</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>ప్రస్తుత కనిష్ఠ ఫీజు ఉపయోగించబడుతోంది. ధృవీకరణ సమయం అంచనా వేయబడలేదు.</translation>
+    </message>
+    <message>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation>హెచ్చరిక: ప్రస్తుతం ఫీజు అంచనా సాధ్యం కాదు.</translation>
+    </message>
+    <message>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation>హెచ్చరిక: చెల్లని ConnectCoin చిరునామా</translation>
+    </message>
+    <message>
+        <source>Warning: Unknown change address</source>
+        <translation>హెచ్చరిక: తెలియని మిగులు చిరునామా</translation>
+    </message>
+    <message>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation>బ్లాకుల్లోని స్థలం కంటే లావాదేవీల పరిమాణం తక్కువగా ఉన్నప్పుడు, మైనర్లు మరియు ప్రసారం చేసే నోడ్లు కనిష్ఠ ఫీజును అమలు చేయవచ్చు. ఆ కనిష్ఠ ఫీజు మాత్రమే చెల్లించడం సరిపోతుంది, కానీ నెట్‌వర్క్ నిర్వహించగల దానికంటే ConnectCoin లావాదేవీలకు డిమాండ్ పెరిగినప్పుడు మీ లావాదేవీ ఎప్పటికీ ధృవీకరించబడకపోవచ్చని గుర్తుంచుకోండి.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>మీరు తర్వాత ఫీజును పెంచవచ్చు.</translation>
+    </message>
+    <message>
+        <source>automatically selected</source>
+        <translation>స్వయంచాలకంగా ఎంచుకోబడింది</translation>
+    </message>
+    <message>
+        <source>per kilobyte</source>
+        <translation>కిలోబైట్‌కు</translation>
+    </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
@@ -2341,7 +3556,63 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Message:</source>
         <translation type="unfinished">సందేశం:</translation>
     </message>
-    </context>
+        <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;లేబుల్:</translation>
+    </message>
+    <message>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation>connectcoin: URIకి జోడించిన సందేశం మీ సూచన కోసం లావాదేవీతో పాటు నిల్వ చేయబడుతుంది. గమనిక: ఈ సందేశం ConnectCoin నెట్‌వర్క్ ద్వారా పంపబడదు.</translation>
+    </message>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation>మొ&amp;త్తం:</translation>
+    </message>
+    <message>
+        <source>Choose previously used address</source>
+        <translation>గతంలో ఉపయోగించిన చిరునామాను ఎంచుకోండి</translation>
+    </message>
+    <message>
+        <source>Enter a label for this address to add it to the list of used addresses</source>
+        <translation>ఈ చిరునామాను ఉపయోగించిన చిరునామాల జాబితాకు జోడించడానికి దానికి ఒక లేబుల్ నమోదు చేయండి</translation>
+    </message>
+    <message>
+        <source>Pay &amp;To:</source>
+        <translation>చెల్లించాల్సిన &amp;చిరునామా:</translation>
+    </message>
+    <message>
+        <source>Remove this entry</source>
+        <translation>ఈ నమోదును తీసివేయండి</translation>
+    </message>
+    <message>
+        <source>S&amp;ubtract fee from amount</source>
+        <translation>మొత్తం నుండి ఫీజును &amp;తీసివేయండి</translation>
+    </message>
+    <message>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation>చెల్లింపు పంపాల్సిన ConnectCoin చిరునామా</translation>
+    </message>
+    <message>
+        <source>The amount to send in the selected unit</source>
+        <translation>ఎంచుకున్న ప్రమాణంలో పంపాల్సిన మొత్తం</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>పంపుతున్న మొత్తం నుండి ఫీజు తీసివేయబడుతుంది. మీరు మొత్తం ఫీల్డ్‌లో నమోదు చేసిన దానికంటే స్వీకర్తకు తక్కువ ConnectCoin అందుతుంది. పలువురు స్వీకర్తలను ఎంచుకుంటే, ఫీజు సమానంగా పంచబడుతుంది.</translation>
+    </message>
+    <message>
+        <source>Use available balance</source>
+        <translation>అందుబాటులో ఉన్న నిల్వను ఉపయోగించండి</translation>
+    </message>
+</context>
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
@@ -2356,12 +3627,152 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Signature</source>
         <translation type="unfinished">సంతకం</translation>
     </message>
-    </context>
+        <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>&amp;Sign Message</source>
+        <translation>సందేశంపై &amp;సంతకం చేయండి</translation>
+    </message>
+    <message>
+        <source>&amp;Verify Message</source>
+        <translation>సందేశాన్ని &amp;ధృవీకరించండి</translation>
+    </message>
+    <message>
+        <source>Choose previously used address</source>
+        <translation>గతంలో ఉపయోగించిన చిరునామాను ఎంచుకోండి</translation>
+    </message>
+    <message>
+        <source>Clear &amp;All</source>
+        <translation>&amp;అన్నీ క్లియర్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Click "Sign Message" to generate signature</source>
+        <translation>సంతకాన్ని రూపొందించడానికి "సందేశంపై సంతకం చేయండి" క్లిక్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the clipboard</source>
+        <translation>ప్రస్తుత సంతకాన్ని క్లిప్‌బోర్డ్‌కు కాపీ చేయండి</translation>
+    </message>
+    <message>
+        <source>Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
+        <translation>సందేశాన్ని ధృవీకరించడానికి క్రింద స్వీకర్త చిరునామా, సందేశం (పంక్తి విరామాలు, ఖాళీలు, ట్యాబ్‌లు మొదలైనవి యథాతథంగా కాపీ చేయండి), సంతకం నమోదు చేయండి. మధ్యవర్తి దాడితో మోసపోకుండా ఉండేందుకు, సంతకం చేసిన సందేశంలో ఉన్నదానికంటే ఎక్కువ అర్థాన్ని సంతకానికి ఆపాదించవద్దు. ఇది సంతకం చేసిన వ్యక్తి ఆ చిరునామాతో స్వీకరిస్తారని మాత్రమే రుజువు చేస్తుంది; ఏ లావాదేవీని ఎవరు పంపారో రుజువు చేయదు!</translation>
+    </message>
+    <message>
+        <source>Message signed.</source>
+        <translation>సందేశంపై సంతకం చేయబడింది.</translation>
+    </message>
+    <message>
+        <source>Message signing failed.</source>
+        <translation>సందేశంపై సంతకం చేయడం విఫలమైంది.</translation>
+    </message>
+    <message>
+        <source>Message verification failed.</source>
+        <translation>సందేశ ధృవీకరణ విఫలమైంది.</translation>
+    </message>
+    <message>
+        <source>Message verified.</source>
+        <translation>సందేశం ధృవీకరించబడింది.</translation>
+    </message>
+    <message>
+        <source>No error</source>
+        <translation>లోపం లేదు</translation>
+    </message>
+    <message>
+        <source>Please check the address and try again.</source>
+        <translation>దయచేసి చిరునామాను తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.</translation>
+    </message>
+    <message>
+        <source>Please check the signature and try again.</source>
+        <translation>దయచేసి సంతకాన్ని తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.</translation>
+    </message>
+    <message>
+        <source>Private key for the entered address is not available.</source>
+        <translation>నమోదు చేసిన చిరునామాకు ప్రైవేట్ కీ అందుబాటులో లేదు.</translation>
+    </message>
+    <message>
+        <source>Reset all sign message fields</source>
+        <translation>సందేశంపై సంతకం చేసే అన్ని ఫీల్డ్‌లను రీసెట్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Reset all verify message fields</source>
+        <translation>సందేశాన్ని ధృవీకరించే అన్ని ఫీల్డ్‌లను రీసెట్ చేయండి</translation>
+    </message>
+    <message>
+        <source>Sign &amp;Message</source>
+        <translation>&amp;సందేశంపై సంతకం చేయండి</translation>
+    </message>
+    <message>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation>ఈ ConnectCoin చిరునామా మీదేనని రుజువు చేయడానికి సందేశంపై సంతకం చేయండి</translation>
+    </message>
+    <message>
+        <source>Signatures - Sign / Verify a Message</source>
+        <translation>సంతకాలు - సందేశంపై సంతకం / ధృవీకరణ</translation>
+    </message>
+    <message>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation>సందేశంపై సంతకం చేయడానికి ఉపయోగించిన ConnectCoin చిరునామా</translation>
+    </message>
+    <message>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation>సందేశంపై సంతకం చేయడానికి ఉపయోగించాల్సిన ConnectCoin చిరునామా</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>నమోదు చేసిన చిరునామా లెగసీ (P2PKH) కీని సూచించదు. %1 యొక్క ఈ సంచికలో SegWit మరియు ఇతర P2PKH కాని చిరునామా రకాలతో సందేశాలపై సంతకం చేయడానికి మద్దతు లేదు. దయచేసి చిరునామాను తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.</translation>
+    </message>
+    <message>
+        <source>The entered address is invalid.</source>
+        <translation>నమోదు చేసిన చిరునామా చెల్లదు.</translation>
+    </message>
+    <message>
+        <source>The signature could not be decoded.</source>
+        <translation>సంతకాన్ని డీకోడ్ చేయలేకపోయాం.</translation>
+    </message>
+    <message>
+        <source>The signature did not match the message digest.</source>
+        <translation>సంతకం సందేశ డైజెస్ట్‌తో సరిపోలలేదు.</translation>
+    </message>
+    <message>
+        <source>The signature given when the message was signed</source>
+        <translation>సందేశంపై సంతకం చేసినప్పుడు ఇచ్చిన సంతకం</translation>
+    </message>
+    <message>
+        <source>The signed message to verify</source>
+        <translation>ధృవీకరించాల్సిన సంతకం చేసిన సందేశం</translation>
+    </message>
+    <message>
+        <source>Verify &amp;Message</source>
+        <translation>&amp;సందేశాన్ని ధృవీకరించండి</translation>
+    </message>
+    <message>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation>పేర్కొన్న ConnectCoin చిరునామాతో సంతకం చేయబడిందని నిర్ధారించడానికి సందేశాన్ని ధృవీకరించండి</translation>
+    </message>
+    <message>
+        <source>Wallet unlock was cancelled.</source>
+        <translation>వాలెట్ అన్‌లాక్ రద్దు చేయబడింది.</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>మీ లెగసీ (P2PKH) చిరునామాలకు పంపిన ConnectCoin నిధులను మీరు స్వీకరించగలరని రుజువు చేయడానికి ఆ చిరునామాలతో సందేశాలు/ఒప్పందాలపై సంతకం చేయవచ్చు. అస్పష్టమైన లేదా యాదృచ్ఛికమైన విషయాలపై సంతకం చేయవద్దు; ఫిషింగ్ దాడులు మీ గుర్తింపును వారికి అప్పగించేలా మిమ్మల్ని మోసగించవచ్చు. మీరు అంగీకరించే పూర్తి వివరాలున్న ప్రకటనలపై మాత్రమే సంతకం చేయండి.</translation>
+    </message>
+</context>
 <context>
     <name>SplashScreen</name>
     <message>
         <source>press q to shutdown</source>
         <translation type="unfinished">షట్‌డౌన్ చేయడానికి q నొక్కండి</translation>
+    </message>
+    <message>
+        <source>(press q to shutdown and continue later)</source>
+        <translation>(ఆపివేసి తర్వాత కొనసాగించడానికి q నొక్కండి)</translation>
     </message>
 </context>
 <context>
@@ -2409,7 +3820,129 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>P2C domain</source>
         <translation>P2C డొమైన్</translation>
     </message>
-    </context>
+        <message>
+        <source>%1 (Certificate was not verified)</source>
+        <translation>%1 (ప్రమాణపత్రం ధృవీకరించబడలేదు)</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents a transaction confirmed in 6 or more blocks.</extracomment>
+        <translation>%1 ధృవీకరణలు</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents a transaction confirmed in at least one block, but less than 6 blocks.</extracomment>
+        <translation>%1/ధృవీకరించబడలేదు</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is in the memory pool.</extracomment>
+        <translation>0/ధృవీకరించబడలేదు, మెమరీ పూల్‌లో ఉంది</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, not in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is not in the memory pool.</extracomment>
+        <translation>0/ధృవీకరించబడలేదు, మెమరీ పూల్‌లో లేదు</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>వ్యాఖ్య</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>జమ</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>డెబిట్</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>డీబగ్ సమాచారం</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>ఉత్పత్తి చేయబడింది</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>ఉత్పత్తి చేసిన నాణేలను ఖర్చు చేయడానికి ముందు అవి %1 బ్లాకులు పరిపక్వం చెందాలి. మీరు ఈ బ్లాక్‌ను ఉత్పత్తి చేసినప్పుడు, బ్లాక్‌చెయిన్‌కు జోడించేందుకు అది నెట్‌వర్క్‌కు ప్రసారం చేయబడింది. అది చెయిన్‌లో చేరకపోతే, దాని స్థితి "అంగీకరించబడలేదు"గా మారుతుంది, దానిని ఖర్చు చేయలేరు. మీ బ్లాక్ తరువాత కొన్ని సెకన్లలో మరో నోడ్ బ్లాక్‌ను ఉత్పత్తి చేస్తే ఇది అప్పుడప్పుడు జరగవచ్చు.</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>ఇన్‌పుట్‌లు</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>నికర మొత్తం</translation>
+    </message>
+    <message>
+        <source>Output index</source>
+        <translation>అవుట్‌పుట్ సూచిక</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>మూలం</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>మొత్తం జమ</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>మొత్తం డెబిట్</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>లావాదేవీ</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>లావాదేవీ ID</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>లావాదేవీ ఫీజు</translation>
+    </message>
+    <message>
+        <source>Transaction total size</source>
+        <translation>లావాదేవీ మొత్తం పరిమాణం</translation>
+    </message>
+    <message>
+        <source>Transaction virtual size</source>
+        <translation>లావాదేవీ వర్చువల్ పరిమాణం</translation>
+    </message>
+    <message>
+        <source>abandoned</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an abandoned transaction.</extracomment>
+        <translation>వదిలివేయబడింది</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that conflicts with a confirmed transaction.</extracomment>
+        <translation>%1 ధృవీకరణలున్న లావాదేవీతో విరుద్ధంగా ఉంది</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>అసత్యం</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>లేబుల్</translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>అంగీకరించబడలేదు</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>సొంత చిరునామా</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>సత్యం</translation>
+    </message>
+</context>
 <context>
     <name>TransactionTableModel</name>
     <message>
@@ -2436,7 +3969,71 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
         <translation>వినియోగదారు పేర్కొన్న లావాదేవీ ఉద్దేశం/ప్రయోజనం లేదా P2C డొమైన్.</translation>
     </message>
-    </context>
+        <message>
+        <source>(n/a)</source>
+        <translation>(వర్తించదు)</translation>
+    </message>
+    <message>
+        <source>Abandoned</source>
+        <translation>వదిలివేయబడింది</translation>
+    </message>
+    <message>
+        <source>Amount removed from or added to balance.</source>
+        <translation>నిల్వ నుండి తీసివేసిన లేదా దానికి జోడించిన మొత్తం.</translation>
+    </message>
+    <message>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>ధృవీకరించబడింది (%1 ధృవీకరణలు)</translation>
+    </message>
+    <message>
+        <source>Confirming (%1 of %2 recommended confirmations)</source>
+        <translation>ధృవీకరణ జరుగుతోంది (సిఫార్సు చేసిన %2 ధృవీకరణల్లో %1)</translation>
+    </message>
+    <message>
+        <source>Conflicted</source>
+        <translation>విరుద్ధంగా ఉంది</translation>
+    </message>
+    <message>
+        <source>Date and time that the transaction was received.</source>
+        <translation>లావాదేవీ అందుకున్న తేదీ మరియు సమయం.</translation>
+    </message>
+    <message>
+        <source>Generated but not accepted</source>
+        <translation>ఉత్పత్తి చేయబడింది కానీ అంగీకరించబడలేదు</translation>
+    </message>
+    <message>
+        <source>Immature (%1 confirmations, will be available after %2)</source>
+        <translation>పరిపక్వం చెందలేదు (%1 ధృవీకరణలు, %2 తర్వాత అందుబాటులో ఉంటుంది)</translation>
+    </message>
+    <message>
+        <source>Mined</source>
+        <translation>మైనింగ్ చేయబడింది</translation>
+    </message>
+    <message>
+        <source>Received from</source>
+        <translation>వీరి నుండి అందింది</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>దీనితో అందింది</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>వీరికి పంపబడింది</translation>
+    </message>
+    <message>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>లావాదేవీ స్థితి. ధృవీకరణల సంఖ్యను చూడడానికి ఈ ఫీల్డ్‌పై కర్సర్ ఉంచండి.</translation>
+    </message>
+    <message>
+        <source>Type of transaction.</source>
+        <translation>లావాదేవీ రకం.</translation>
+    </message>
+    <message>
+        <source>Unconfirmed</source>
+        <translation>ధృవీకరించబడలేదు</translation>
+    </message>
+</context>
 <context>
     <name>TransactionView</name>
     <message>
@@ -2488,18 +4085,151 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>వెతకడానికి చిరునామా, P2C డొమైన్, లావాదేవీ ఐడీ లేదా లేబుల్ నమోదు చేయండి</translation>
     </message>
-    </context>
+        <message>
+        <source>&amp;Edit address label</source>
+        <translation>చిరునామా లేబుల్‌ను &amp;సవరించండి</translation>
+    </message>
+    <message>
+        <source>&amp;Show transaction details</source>
+        <translation>లావాదేవీ వివరాలను &amp;చూపించండి</translation>
+    </message>
+    <message>
+        <source>A&amp;bandon transaction</source>
+        <translation>లావాదేవీని &amp;వదిలివేయండి</translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation>అన్నీ</translation>
+    </message>
+    <message>
+        <source>Copy &amp;raw transaction</source>
+        <translation>&amp;ముడి లావాదేవీని కాపీ చేయండి</translation>
+    </message>
+    <message>
+        <source>Copy full transaction &amp;details</source>
+        <translation>లావాదేవీ పూర్తి &amp;వివరాలను కాపీ చేయండి</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>లావాదేవీ &amp;IDని కాపీ చేయండి</translation>
+    </message>
+    <message>
+        <source>Export Transaction History</source>
+        <translation>లావాదేవీల చరిత్రను ఎగుమతి చేయండి</translation>
+    </message>
+    <message>
+        <source>Exporting Successful</source>
+        <translation>ఎగుమతి విజయవంతమైంది</translation>
+    </message>
+    <message>
+        <source>Increase transaction &amp;fee</source>
+        <translation>లావాదేవీ &amp;ఫీజును పెంచండి</translation>
+    </message>
+    <message>
+        <source>Last month</source>
+        <translation>గత నెల</translation>
+    </message>
+    <message>
+        <source>Min amount</source>
+        <translation>కనిష్ఠ మొత్తం</translation>
+    </message>
+    <message>
+        <source>Mined</source>
+        <translation>మైనింగ్ చేయబడింది</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>ఇతర</translation>
+    </message>
+    <message>
+        <source>Range:</source>
+        <translation>పరిధి:</translation>
+    </message>
+    <message>
+        <source>Range…</source>
+        <translation>పరిధి…</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>దీనితో అందింది</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>వీరికి పంపబడింది</translation>
+    </message>
+    <message>
+        <source>Show in %1</source>
+        <extracomment>Transactions table context menu action to show the selected transaction in a third-party block explorer. %1 is a stand-in argument for the URL of the explorer.</extracomment>
+        <translation>%1లో చూపించండి</translation>
+    </message>
+    <message>
+        <source>The transaction history was successfully saved to %1.</source>
+        <translation>లావాదేవీల చరిత్ర %1కు విజయవంతంగా సేవ్ చేయబడింది.</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the transaction history to %1.</source>
+        <translation>లావాదేవీల చరిత్రను %1కు సేవ్ చేయడానికి ప్రయత్నిస్తున్నప్పుడు లోపం వచ్చింది.</translation>
+    </message>
+    <message>
+        <source>This month</source>
+        <translation>ఈ నెల</translation>
+    </message>
+    <message>
+        <source>This week</source>
+        <translation>ఈ వారం</translation>
+    </message>
+    <message>
+        <source>This year</source>
+        <translation>ఈ సంవత్సరం</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>ఈ రోజు</translation>
+    </message>
+    <message>
+        <source>to</source>
+        <translation>నుండి</translation>
+    </message>
+</context>
 <context>
     <name>WalletFrame</name>
     <message>
         <source>Create a new wallet</source>
-        <translation type="unfinished">&lt;div&gt;&lt;/div&gt;</translation>
+        <translation>కొత్త వాలెట్‌ను సృష్టించండి</translation>
     </message>
     <message>
         <source>Error</source>
         <translation type="unfinished">లోపం</translation>
     </message>
-    </context>
+        <message>
+        <source>Load Transaction Data</source>
+        <translation>లావాదేవీ డేటాను లోడ్ చేయండి</translation>
+    </message>
+    <message>
+        <source>No wallet has been loaded.
+Go to File &gt; Open Wallet to load a wallet.
+- OR -</source>
+        <translation>ఏ వాలెట్ లోడ్ కాలేదు.
+వాలెట్‌ను లోడ్ చేయడానికి ఫైల్ &gt; వాలెట్ తెరవండి ఎంచుకోండి.
+- లేదా -</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>PSBT ఫైల్ 100 MiB కంటే చిన్నదిగా ఉండాలి</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>పాక్షికంగా సంతకం చేసిన లావాదేవీ (*.psbt)</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>PSBTని డీకోడ్ చేయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>క్లిప్‌బోర్డ్ నుండి PSBTని డీకోడ్ చేయలేకపోయాం (చెల్లని base64)</translation>
+    </message>
+</context>
 <context>
     <name>WalletView</name>
     <message>
@@ -2522,6 +4252,22 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Cancel</source>
         <translation type="unfinished">రద్దు చేయండి</translation>
+    </message>
+    <message>
+        <source>Backup Failed</source>
+        <translation>బ్యాకప్ విఫలమైంది</translation>
+    </message>
+    <message>
+        <source>Backup Successful</source>
+        <translation>బ్యాకప్ విజయవంతమైంది</translation>
+    </message>
+    <message>
+        <source>The wallet data was successfully saved to %1.</source>
+        <translation>వాలెట్ డేటా %1కు విజయవంతంగా సేవ్ చేయబడింది.</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1.</source>
+        <translation>వాలెట్ డేటాను %1కు సేవ్ చేయడానికి ప్రయత్నిస్తున్నప్పుడు లోపం వచ్చింది.</translation>
     </message>
 </context>
 <context>
@@ -2685,6 +4431,1000 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">సెట్టింగుల ఫైల్ వ్రాయబడదు</translation>
+    </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>మిగులు మొత్తం గమ్యస్థానం రకం-1 P2PK (bech32m) గమ్యస్థానంగా ఉండాలి</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin రకం-1 P2PK (bech32m) చిరునామాలకు మాత్రమే మద్దతు ఇస్తుంది</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin రకం-1 P2PK (bech32m) మిగులు మొత్తం చిరునామాలకు మాత్రమే మద్దతు ఇస్తుంది</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>ConnectCoin లావాదేవీలకు చెల్లుబాటు అయ్యే రకం-1 గమ్యస్థానాలు లేదా రకం-2 PAY_TO_CONNECT అవుట్‌పుట్‌లు అవసరం</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>ConnectCoin రకం-1 అవుట్‌పుట్‌లు SIGHASH_DEFAULTకు మాత్రమే మద్దతు ఇస్తాయి</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>ఇన్‌పుట్ SIGHASH_DEFAULT ఉపయోగించే పూర్తి రకం-1 ఖర్చు కాదు</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>ఇన్‌పుట్‌కు P2C రుజువు యొక్క పూర్తి సాక్షి డేటా అవసరం</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>ప్రధాన నెట్‌వర్క్ ఇంకా ప్రారంభం కాలేదు: జెనెసిస్ బ్లాక్ నిర్వచించబడలేదు. బహిరంగ పరీక్ష కోసం -testnet4 లేదా స్థానిక పరీక్ష కోసం -regtest ఉపయోగించండి.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>ఈ అభివృద్ధి బిల్డ్ కోసం ప్రాజెక్ట్‌కు చెందిన బహిరంగ సోర్స్ కోడ్ URL కాన్ఫిగర్ చేయబడలేదు.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>తగినన్ని ఫైల్ డిస్క్రిప్టర్‌లు అందుబాటులో లేవు. -rpcmaxconnections తగ్గించండి లేదా డిఫాల్ట్ విలువ %d ఉపయోగించండి</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>%s ఉపయోగకరంగా అనిపిస్తే దయచేసి సహకరించండి.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+%s (%s) లేదా %s (%s)ను మార్చడాన్ని పరిగణించండి.</translation>
+    </message>
+    <message>
+        <source>
+Unable to cleanup failed migration</source>
+        <translation>
+విఫలమైన మైగ్రేషన్ అవశేషాలను తొలగించలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>
+Unable to restore backup of wallet.</source>
+        <translation>
+వాలెట్ బ్యాకప్‌ను పునరుద్ధరించలేకపోయాం.</translation>
+    </message>
+    <message>
+        <source>%s failed to validate the -assumeutxo snapshot state. This indicates a hardware problem, or a bug in the software, or a bad software modification that allowed an invalid snapshot to be loaded. As a result of this, the node will shut down and stop using any state that was built on the snapshot, resetting the chain height from %d to %d. On the next restart, the node will resume syncing from %d without using any snapshot data. Please report this incident to %s, including how you obtained the snapshot. The invalid snapshot chainstate will be left on disk in case it is helpful in diagnosing the issue that caused this error.</source>
+        <translation>%s -assumeutxo స్నాప్‌షాట్ స్థితిని ధృవీకరించడంలో విఫలమైంది. ఇది హార్డ్‌వేర్ సమస్యను, సాఫ్ట్‌వేర్ లోపాన్ని లేదా చెల్లని స్నాప్‌షాట్ లోడ్ కావడానికి అనుమతించిన తప్పు సాఫ్ట్‌వేర్ మార్పును సూచిస్తుంది. ఫలితంగా, నోడ్ మూసివేయబడుతుంది, స్నాప్‌షాట్ ఆధారంగా నిర్మించిన ఏ స్థితినీ ఉపయోగించదు, చెయిన్ ఎత్తు %d నుండి %dకు రీసెట్ చేయబడుతుంది. తదుపరి పునఃప్రారంభంలో, స్నాప్‌షాట్ డేటా ఉపయోగించకుండా నోడ్ %d నుండి సమకాలీకరణను కొనసాగిస్తుంది. స్నాప్‌షాట్‌ను ఎలా పొందారో వివరాలతో సహా ఈ ఘటనను %sకు నివేదించండి. ఈ లోపానికి కారణాన్ని గుర్తించడంలో ఉపయోగపడవచ్చని చెల్లని స్నాప్‌షాట్ చెయిన్‌స్టేట్ డిస్క్‌లో ఉంచబడుతుంది.</translation>
+    </message>
+    <message>
+        <source>%s is set very high!</source>
+        <translation>%s చాలా ఎక్కువగా సెట్ చేయబడింది!</translation>
+    </message>
+    <message>
+        <source>%s is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation>%s చాలా ఎక్కువగా సెట్ చేయబడింది! ఇంత పెద్ద ఫీజును ఒకే లావాదేవీకి చెల్లించే అవకాశం ఉంది.</translation>
+    </message>
+    <message>
+        <source>%s request to listen on port %u. This port is considered "bad" and thus it is unlikely that any peer will connect to it. See doc/p2p-bad-ports.md for details and a full list.</source>
+        <translation>%s పోర్ట్ %uలో వినడానికి అభ్యర్థిస్తోంది. ఈ పోర్ట్ "చెడ్డది"గా పరిగణించబడుతుంది, అందువల్ల ఏ పీర్ అయినా దీనికి కనెక్ట్ అయ్యే అవకాశం తక్కువ. వివరాలు మరియు పూర్తి జాబితా కోసం doc/p2p-bad-ports.md చూడండి.</translation>
+    </message>
+    <message>
+        <source>-maxmempool must be at least %d MB</source>
+        <translation>-maxmempool కనీసం %d MB ఉండాలి</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf పాతబడింది, తదుపరి విడుదలలో పూర్తిగా తీసివేయబడుతుంది.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>%zu MiB dbcache చాలా పెద్దదై ఉండవచ్చు, సిస్టమ్ మెమరీ కేవలం %zu MiB మాత్రమే ఉన్నప్పుడు.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>తీవ్రమైన అంతర్గత లోపం సంభవించింది, వివరాల కోసం %s చూడండి: %s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>ఇచ్చిన బ్లాక్‌హాష్ '%s'కు Assumeutxo డేటా కనుగొనబడలేదు.</translation>
+    </message>
+    <message>
+        <source>Block verification was interrupted</source>
+        <translation>బ్లాక్ ధృవీకరణకు అంతరాయం కలిగింది</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version %d pre-selected input with a version 3 tx</source>
+        <translation>ధృవీకరించని సంచిక %d యొక్క ముందుగా ఎంచుకున్న ఇన్‌పుట్‌ను సంచిక 3 లావాదేవీతో ఖర్చు చేయలేరు</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version 3 pre-selected input with a version %d tx</source>
+        <translation>ధృవీకరించని సంచిక 3 యొక్క ముందుగా ఎంచుకున్న ఇన్‌పుట్‌ను సంచిక %d లావాదేవీతో ఖర్చు చేయలేరు</translation>
+    </message>
+    <message>
+        <source>Cannot obtain a lock on directory %s. %s is probably already running.</source>
+        <translation>%s డైరెక్టరీపై లాక్ పొందలేకపోయాం. %s ఇప్పటికే నడుస్తూ ఉండవచ్చు.</translation>
+    </message>
+    <message>
+        <source>Cannot provide specific connections and have addrman find outgoing connections at the same time.</source>
+        <translation>నిర్దిష్ట కనెక్షన్‌లను అందిస్తూనే అదే సమయంలో బయటకు వెళ్లే కనెక్షన్‌లను addrmanతో వెతికించలేరు.</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>-%s చిరునామాను పరిష్కరించలేకపోయాం: '%s'</translation>
+    </message>
+    <message>
+        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
+        <translation>-dnsseedను falseగా సెట్ చేసినప్పుడు -forcednsseedను trueగా సెట్ చేయలేరు.</translation>
+    </message>
+    <message>
+        <source>Cannot write to directory '%s'; check permissions.</source>
+        <translation>'%s' డైరెక్టరీకి రాయలేకపోయాం; అనుమతులను తనిఖీ చేయండి.</translation>
+    </message>
+    <message>
+        <source>Config setting for %s only applied on %s network when in [%s] section.</source>
+        <translation>%s కోసం కాన్ఫిగరేషన్ సెట్టింగ్ %s నెట్‌వర్క్‌లో [%s] విభాగంలో ఉన్నప్పుడు మాత్రమే వర్తిస్తుంది.</translation>
+    </message>
+    <message>
+        <source>Copyright (C) %i-%i</source>
+        <translation>కాపీరైట్ (C) %i-%i</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>హార్డ్‌వేర్ వైఫల్యం ఉండవచ్చని సూచించే పాడైన బ్లాక్ కనుగొనబడింది.</translation>
+    </message>
+    <message>
+        <source>Corrupted block database detected</source>
+        <translation>పాడైన బ్లాక్ డేటాబేస్ గుర్తించబడింది</translation>
+    </message>
+    <message>
+        <source>Could not find asmap file %s</source>
+        <translation>asmap ఫైల్ %s కనుగొనబడలేదు</translation>
+    </message>
+    <message>
+        <source>Could not generate scriptPubKeys (cache is empty)</source>
+        <translation>scriptPubKeys రూపొందించలేకపోయాం (క్యాష్ ఖాళీగా ఉంది)</translation>
+    </message>
+    <message>
+        <source>Could not parse asmap file %s</source>
+        <translation>asmap ఫైల్ %sను పార్స్ చేయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>అంతర్నిర్మిత asmap డేటాను చదవలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>వాలెట్ సృష్టించబడుతోంది…</translation>
+    </message>
+    <message>
+        <source>Disk space for %s may not accommodate the block files. Approximately %u GB of data will be stored in this directory.</source>
+        <translation>%s కోసం డిస్క్ స్థలం బ్లాక్ ఫైళ్లకు సరిపోకపోవచ్చు. ఈ డైరెక్టరీలో సుమారు %u GB డేటా నిల్వ చేయబడుతుంది.</translation>
+    </message>
+    <message>
+        <source>Disk space is too low!</source>
+        <translation>డిస్క్ స్థలం చాలా తక్కువగా ఉంది!</translation>
+    </message>
+    <message>
+        <source>Distributed under the MIT software license, see the accompanying file %s or %s</source>
+        <translation>MIT సాఫ్ట్‌వేర్ లైసెన్స్ కింద పంపిణీ చేయబడుతోంది, జతచేసిన %s ఫైల్ లేదా %s చూడండి</translation>
+    </message>
+    <message>
+        <source>Do you want to rebuild the databases now?</source>
+        <translation>ఇప్పుడు డేటాబేస్‌లను పునర్నిర్మించాలనుకుంటున్నారా?</translation>
+    </message>
+    <message>
+        <source>Done loading</source>
+        <translation>లోడ్ చేయడం పూర్తయింది</translation>
+    </message>
+    <message>
+        <source>Dump file %s does not exist.</source>
+        <translation>డంప్ ఫైల్ %s లేదు.</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>%s చిరునామాకు పునరావృత బైండింగ్ కాన్ఫిగరేషన్ ఉంది. మీ -bind, -bind=...=onion మరియు -whitebind సెట్టింగ్‌లను తనిఖీ చేయండి.</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>ఎలిప్టిక్ కర్వ్ క్రిప్టోగ్రఫీ ప్రాథమిక తనిఖీ విఫలమైంది. %s మూసివేయబడుతోంది.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>అంతర్నిర్మిత asmap డేటా అందుబాటులో లేదు</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>%s సృష్టించడంలో లోపం: సంచిక మెటాడేటాను రాయలేకపోయాం.</translation>
+    </message>
+    <message>
+        <source>Error initializing block database</source>
+        <translation>బ్లాక్ డేటాబేస్ ప్రారంభించడంలో లోపం</translation>
+    </message>
+    <message>
+        <source>Error loading %s</source>
+        <translation>%s లోడ్ చేయడంలో లోపం</translation>
+    </message>
+    <message>
+        <source>Error loading %s: External signer wallet being loaded without external signer support compiled</source>
+        <translation>%s లోడ్ చేయడంలో లోపం: బాహ్య సంతకం సాధనానికి మద్దతు కంపైల్ చేయకుండానే ఆ సాధనం వాలెట్ లోడ్ చేయబడుతోంది</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet corrupted</source>
+        <translation>%s లోడ్ చేయడంలో లోపం: వాలెట్ పాడైంది</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>%s లోడ్ చేయడంలో లోపం: ఇది లెగసీ వాలెట్. దయచేసి మైగ్రేషన్ సాధనం (migratewallet RPC) ఉపయోగించి డిస్క్రిప్టర్ వాలెట్‌కు మైగ్రేట్ చేయండి.</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet requires newer version of %s</source>
+        <translation>%s లోడ్ చేయడంలో లోపం: వాలెట్‌కు %s యొక్క కొత్త సంచిక అవసరం</translation>
+    </message>
+    <message>
+        <source>Error loading block database</source>
+        <translation>బ్లాక్ డేటాబేస్ లోడ్ చేయడంలో లోపం</translation>
+    </message>
+    <message>
+        <source>Error loading databases</source>
+        <translation>డేటాబేస్‌లను లోడ్ చేయడంలో లోపం</translation>
+    </message>
+    <message>
+        <source>Error loading wallet. Wallet requires blocks to be downloaded, and software does not currently support loading wallets while blocks are being downloaded out of order when using assumeutxo snapshots. Wallet should be able to load successfully after node sync reaches height %s</source>
+        <translation>వాలెట్ లోడ్ చేయడంలో లోపం. వాలెట్‌కు బ్లాకులను డౌన్‌లోడ్ చేయాలి; assumeutxo స్నాప్‌షాట్‌లతో బ్లాకులను క్రమం తప్పి డౌన్‌లోడ్ చేస్తున్నప్పుడు వాలెట్‌లను లోడ్ చేయడానికి ప్రస్తుత సాఫ్ట్‌వేర్ మద్దతు ఇవ్వదు. నోడ్ సమకాలీకరణ %s ఎత్తుకు చేరిన తర్వాత వాలెట్ విజయవంతంగా లోడ్ కావాలి</translation>
+    </message>
+    <message>
+        <source>Error opening block database</source>
+        <translation>బ్లాక్ డేటాబేస్ తెరవడంలో లోపం</translation>
+    </message>
+    <message>
+        <source>Error opening coins database</source>
+        <translation>నాణేల డేటాబేస్ తెరవడంలో లోపం</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address metadata may be missing or incorrect.</source>
+        <translation>%s చదవడంలో లోపం! అన్ని కీలు సరిగ్గా చదవబడ్డాయి, కానీ లావాదేవీ డేటా లేదా చిరునామా మెటాడేటా లేకపోవచ్చు లేదా తప్పుగా ఉండవచ్చు.</translation>
+    </message>
+    <message>
+        <source>Error reading %s! Transaction data may be missing or incorrect. Rescanning wallet.</source>
+        <translation>%s చదవడంలో లోపం! లావాదేవీ డేటా లేకపోవచ్చు లేదా తప్పుగా ఉండవచ్చు. వాలెట్ మళ్లీ స్కాన్ చేయబడుతోంది.</translation>
+    </message>
+    <message>
+        <source>Error reading configuration file: %s</source>
+        <translation>కాన్ఫిగరేషన్ ఫైల్ చదవడంలో లోపం: %s</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation>వాలెట్ డేటాబేస్ నుండి తదుపరి రికార్డు చదవడంలో లోపం</translation>
+    </message>
+    <message>
+        <source>Error starting/committing db txn for wallet transactions removal process</source>
+        <translation>వాలెట్ లావాదేవీల తొలగింపు ప్రక్రియ కోసం డేటాబేస్ లావాదేవీ ప్రారంభించడం/ఖరారు చేయడంలో లోపం</translation>
+    </message>
+    <message>
+        <source>Error: Address book data in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>లోపం: వాలెట్‌లోని చిరునామా పుస్తక డేటా మైగ్రేట్ చేసిన వాలెట్‌లలో దేనికి చెందినదో గుర్తించలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Cannot extract destination from the generated scriptpubkey</source>
+        <translation>లోపం: రూపొందించిన scriptpubkey నుండి గమ్యాన్ని పొందలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>లోపం: లావాదేవీ %sను వీక్షణ-మాత్రపు వాలెట్‌కు జోడించలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Could not add watchonly tx %s to watchonly wallet</source>
+        <translation>లోపం: వీక్షణ-మాత్రపు లావాదేవీ %sను వీక్షణ-మాత్రపు వాలెట్‌కు జోడించలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>లోపం: '%s' ఫైల్ సృష్టించలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Could not delete watchonly transactions. </source>
+        <translation>లోపం: వీక్షణ-మాత్రపు లావాదేవీలను తొలగించలేకపోయాం. </translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation>లోపం: డేటాబేస్‌లో కర్సర్ సృష్టించలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is low for %s</source>
+        <translation>లోపం: %s కోసం డిస్క్ స్థలం తక్కువగా ఉంది</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation>లోపం: డంప్ ఫైల్ చెక్‌సమ్ సరిపోలలేదు. లెక్కించినది %s, ఆశించినది %s</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation>లోపం: డంప్ ఫైల్ ఫార్మాట్ రికార్డు తప్పుగా ఉంది. అందినది "%s", ఆశించినది "format".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation>లోపం: డంప్ ఫైల్ గుర్తింపు రికార్డు తప్పుగా ఉంది. అందినది "%s", ఆశించినది "%s".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>లోపం: డంప్ ఫైల్ మద్దతు లేని డేటాబేస్ ఫార్మాట్ (%s)ను పేర్కొంటుంది. sqlite డేటాబేస్ డంప్‌లకు మాత్రమే మద్దతు ఉంది</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation>లోపం: డంప్ ఫైల్ సంచికకు మద్దతు లేదు. connectcoin-wallet యొక్క ఈ సంచిక సంచిక 1 డంప్ ఫైళ్లకు మాత్రమే మద్దతిస్తుంది. అందిన డంప్ ఫైల్ సంచిక %s</translation>
+    </message>
+    <message>
+        <source>Error: Duplicate descriptors created during migration. Your wallet may be corrupted.</source>
+        <translation>లోపం: మైగ్రేషన్ సమయంలో పునరావృత డిస్క్రిప్టర్‌లు సృష్టించబడ్డాయి. మీ వాలెట్ పాడై ఉండవచ్చు.</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>లోపం: ఎగుమతి గమ్యం '%s' ఇప్పటికే ఉంది</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>లోపం: ఎగుమతి గమ్యం ఖాళీగా ఉండకూడదు</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet</source>
+        <translation>లోపం: కొత్త వీక్షణ-మాత్రపు వాలెట్ సృష్టించడం విఫలమైంది</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>లోపం: కొత్త వీక్షణ-మాత్రపు వాలెట్ సృష్టించడం విఫలమైంది. %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation>లోపం: హెక్స్ కాని కీ అందింది: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation>లోపం: హెక్స్ కాని విలువ అందింది: %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>లోపం: కీ పూల్ అయిపోయింది, ముందుగా keypoolrefillను పిలవండి</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation>లోపం: చెక్‌సమ్ లేదు</translation>
+    </message>
+    <message>
+        <source>Error: No %s addresses available.</source>
+        <translation>లోపం: %s చిరునామాలు అందుబాటులో లేవు.</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>లోపం: అన్ని చిరునామా పుస్తక రికార్డులు మైగ్రేట్ కాలేదు</translation>
+    </message>
+    <message>
+        <source>Error: Not all transaction records were migrated</source>
+        <translation>లోపం: అన్ని లావాదేవీ రికార్డులు మైగ్రేట్ కాలేదు</translation>
+    </message>
+    <message>
+        <source>Error: This wallet already uses SQLite</source>
+        <translation>లోపం: ఈ వాలెట్ ఇప్పటికే SQLite ఉపయోగిస్తోంది</translation>
+    </message>
+    <message>
+        <source>Error: This wallet is already a descriptor wallet</source>
+        <translation>లోపం: ఈ వాలెట్ ఇప్పటికే డిస్క్రిప్టర్ వాలెట్</translation>
+    </message>
+    <message>
+        <source>Error: Transaction %s in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>లోపం: వాలెట్‌లోని లావాదేవీ %s మైగ్రేట్ చేసిన వాలెట్‌లలో దేనికి చెందినదో గుర్తించలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Unable to begin reading all records in the database</source>
+        <translation>లోపం: డేటాబేస్‌లోని అన్ని రికార్డులను చదవడం ప్రారంభించలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Unable to make a backup of your wallet</source>
+        <translation>లోపం: మీ వాలెట్ బ్యాకప్ తయారు చేయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation>లోపం: సంచిక %uను uint32_tగా పార్స్ చేయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
+        <translation>లోపం: ఈ లెగసీ వాలెట్‌కు డిస్క్రిప్టర్‌లు రూపొందించలేకపోయాం. వాలెట్ గుప్తీకరించబడితే దాని పాస్‌ఫ్రేజ్ అందించండి.</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read all records in the database</source>
+        <translation>లోపం: డేటాబేస్‌లోని అన్ని రికార్డులను చదవలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read wallet's best block locator record</source>
+        <translation>లోపం: వాలెట్ యొక్క ఉత్తమ బ్లాక్ లొకేటర్ రికార్డును చదవలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Unable to remove watchonly address book data</source>
+        <translation>లోపం: వీక్షణ-మాత్రపు చిరునామా పుస్తక డేటాను తీసివేయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write data to disk for wallet %s</source>
+        <translation>లోపం: వాలెట్ %s కోసం డేటాను డిస్క్‌కు రాయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation>లోపం: కొత్త వాలెట్‌కు రికార్డు రాయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write solvable wallet best block locator record</source>
+        <translation>లోపం: పరిష్కరించగల వాలెట్ యొక్క ఉత్తమ బ్లాక్ లొకేటర్ రికార్డును రాయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>లోపం: ఎగుమతి చేసిన వాలెట్‌ను రాయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write watchonly wallet best block locator record</source>
+        <translation>లోపం: వీక్షణ-మాత్రపు వాలెట్ యొక్క ఉత్తమ బ్లాక్ లొకేటర్ రికార్డును రాయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: Wallet does not exist</source>
+        <translation>లోపం: వాలెట్ లేదు</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>లోపం: వాలెట్‌లో ఎగుమతి చేయడానికి డిస్క్రిప్టర్‌లు లేవు</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>లోపం: వీక్షణ-మాత్రపు వాలెట్ ఎగుమతి కోసం డేటాబేస్ లావాదేవీని ఖరారు చేయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: cannot remove legacy wallet records</source>
+        <translation>లోపం: లెగసీ వాలెట్ రికార్డులను తీసివేయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>లోపం: కొత్త వీక్షణ-మాత్రపు వాలెట్ %s కోసం డేటాబేస్ లావాదేవీ అమలు చేయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for wallet %s</source>
+        <translation>లోపం: వాలెట్ %s కోసం డేటాబేస్ లావాదేవీ అమలు చేయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>వాలెట్ ప్రారంభ సమయంలో మళ్లీ స్కాన్ చేయడానికి రిజర్వేషన్ పొందడం విఫలమైంది</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>ధృవీకరించని UTXOలు భారీ సంఖ్యలో ధృవీకరించని లావాదేవీల సమూహంపై ఆధారపడినందున ఫీజు పెంపును లెక్కించడం విఫలమైంది.</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>బ్లాక్ అన్‌డూ ఫైల్ మూసివేయడం విఫలమైంది.</translation>
+    </message>
+    <message>
+        <source>Failed to close file when writing block.</source>
+        <translation>బ్లాక్ రాస్తున్నప్పుడు ఫైల్ మూసివేయడం విఫలమైంది.</translation>
+    </message>
+    <message>
+        <source>Failed to disconnect block.</source>
+        <translation>బ్లాక్‌ను వేరుచేయడం విఫలమైంది.</translation>
+    </message>
+    <message>
+        <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
+        <translation>ఏ పోర్ట్‌లోనూ వినడం సాధ్యం కాలేదు. మీకు ఇదే కావాలంటే -listen=0 ఉపయోగించండి.</translation>
+    </message>
+    <message>
+        <source>Failed to read block.</source>
+        <translation>బ్లాక్ చదవడం విఫలమైంది.</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>స్నాప్‌షాట్ చెయిన్‌స్టేట్ డైరెక్టరీ (%s)ను తీసివేయడం విఫలమైంది. పునఃప్రారంభించే ముందు దాన్ని చేతితో తీసివేయండి.
+</translation>
+    </message>
+    <message>
+        <source>Failed to rename invalid peers.dat file. Please move or delete it and try again.</source>
+        <translation>చెల్లని peers.dat ఫైల్ పేరు మార్చడం విఫలమైంది. దయచేసి దాన్ని తరలించండి లేదా తొలగించి మళ్లీ ప్రయత్నించండి.</translation>
+    </message>
+    <message>
+        <source>Failed to rescan the wallet during initialization</source>
+        <translation>ప్రారంభ సమయంలో వాలెట్‌ను మళ్లీ స్కాన్ చేయడం విఫలమైంది</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>సూచికలను ప్రారంభించడం విఫలమైంది, మూసివేయబడుతోంది…</translation>
+    </message>
+    <message>
+        <source>Failed to verify database</source>
+        <translation>డేటాబేస్ ధృవీకరణ విఫలమైంది</translation>
+    </message>
+    <message>
+        <source>Failed to write block.</source>
+        <translation>బ్లాక్ రాయడం విఫలమైంది.</translation>
+    </message>
+    <message>
+        <source>Failed to write undo data.</source>
+        <translation>అన్‌డూ డేటా రాయడం విఫలమైంది.</translation>
+    </message>
+    <message>
+        <source>Failure removing transaction: %s</source>
+        <translation>లావాదేవీని తీసివేయడం విఫలమైంది: %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>ఫీజు రేటు (%s) కనిష్ఠ ఫీజు రేటు సెట్టింగ్ (%s) కంటే తక్కువగా ఉంది.</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation>%s ఫైల్ ఇప్పటికే ఉంది. మీకు ఇదే కావాలని ఖచ్చితంగా తెలిస్తే, ముందుగా దాన్ని వేరే చోటికి తరలించండి.</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>బ్లాక్ ఫైల్‌ను డిస్క్‌కు ఫ్లష్ చేయడం విఫలమైంది. దీనికి I/O లోపం కారణం కావచ్చు.</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>అన్‌డూ ఫైల్‌ను డిస్క్‌కు ఫ్లష్ చేయడం విఫలమైంది. దీనికి I/O లోపం కారణం కావచ్చు.</translation>
+    </message>
+    <message>
+        <source>Ignoring duplicate -wallet %s.</source>
+        <translation>పునరావృత -wallet %s విస్మరించబడుతోంది.</translation>
+    </message>
+    <message>
+        <source>Incompatible options: -dnsseed=1 was explicitly specified, but -onlynet forbids connections to IPv4/IPv6</source>
+        <translation>అనుకూలం కాని ఎంపికలు: -dnsseed=1 స్పష్టంగా పేర్కొనబడింది, కానీ -onlynet IPv4/IPv6 కనెక్షన్‌లను నిషేధిస్తుంది</translation>
+    </message>
+    <message>
+        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
+        <translation>తప్పు జెనెసిస్ బ్లాక్ కనుగొనబడింది లేదా ఏదీ కనుగొనబడలేదు. నెట్‌వర్క్‌కు తప్పు డేటా డైరెక్టరీనా?</translation>
+    </message>
+    <message>
+        <source>Initialization sanity check failed. %s is shutting down.</source>
+        <translation>ప్రారంభ ప్రాథమిక తనిఖీ విఫలమైంది. %s మూసివేయబడుతోంది.</translation>
+    </message>
+    <message>
+        <source>Input not found or already spent</source>
+        <translation>ఇన్‌పుట్ కనుగొనబడలేదు లేదా ఇప్పటికే ఖర్చు చేయబడింది</translation>
+    </message>
+    <message>
+        <source>Insufficient dbcache for block verification</source>
+        <translation>బ్లాక్ ధృవీకరణకు dbcache సరిపోదు</translation>
+    </message>
+    <message>
+        <source>Insufficient funds</source>
+        <translation>తగినన్ని నిధులు లేవు</translation>
+    </message>
+    <message>
+        <source>Invalid -i2psam address or hostname: '%s'</source>
+        <translation>చెల్లని -i2psam చిరునామా లేదా హోస్ట్ పేరు: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -onion address or hostname: '%s'</source>
+        <translation>చెల్లని -onion చిరునామా లేదా హోస్ట్ పేరు: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>చెల్లని -proxy చిరునామా లేదా హోస్ట్ పేరు, '='తో ముగుస్తోంది: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname: '%s'</source>
+        <translation>చెల్లని -proxy చిరునామా లేదా హోస్ట్ పేరు: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid P2P permission: '%s'</source>
+        <translation>చెల్లని P2P అనుమతి: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s'</source>
+        <translation>%s=&lt;amount&gt; కోసం చెల్లని మొత్తం: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation>%s=&lt;amount&gt; కోసం చెల్లని మొత్తం: '%s' (లావాదేవీలు నిలిచిపోకుండా ఉండడానికి కనీసం %s minrelay ఫీజు ఉండాలి)</translation>
+    </message>
+    <message>
+        <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
+        <translation>-%s=&lt;amount&gt; కోసం చెల్లని మొత్తం: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid netmask specified in -whitelist: '%s'</source>
+        <translation>-whitelistలో చెల్లని నెట్‌మాస్క్ పేర్కొనబడింది: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid or corrupt peers.dat (%s). If you believe this is a bug, please report it to %s. As a workaround, you can move the file (%s) out of the way (rename, move, or delete) to have a new one created on the next start.</source>
+        <translation>చెల్లని లేదా పాడైన peers.dat (%s). ఇది బగ్ అని మీరు భావిస్తే, దయచేసి %sకు నివేదించండి. తాత్కాలిక పరిష్కారంగా, ఫైల్ (%s)ను పక్కకు తరలించవచ్చు (పేరు మార్చడం, తరలించడం లేదా తొలగించడం), తదుపరి ప్రారంభంలో కొత్తది సృష్టించబడుతుంది.</translation>
+    </message>
+    <message>
+        <source>Invalid port specified in %s: '%s'</source>
+        <translation>%sలో చెల్లని పోర్ట్ పేర్కొనబడింది: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid value detected for '-wallet' or '-nowallet'. '-wallet' requires a string value, while '-nowallet' accepts only '1' to disable all wallets</source>
+        <translation>'-wallet' లేదా '-nowallet' కోసం చెల్లని విలువ గుర్తించబడింది. '-wallet'కు స్ట్రింగ్ విలువ అవసరం; '-nowallet' అన్ని వాలెట్‌లను నిలిపివేయడానికి '1'ను మాత్రమే అంగీకరిస్తుంది</translation>
+    </message>
+    <message>
+        <source>Listening for incoming connections failed (listen returned error %s)</source>
+        <translation>లోపలికి వచ్చే కనెక్షన్‌ల కోసం వినడం విఫలమైంది (listen లోపం %sను ఇచ్చింది)</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses…</source>
+        <translation>P2P చిరునామాలు లోడ్ చేయబడుతున్నాయి…</translation>
+    </message>
+    <message>
+        <source>Loading banlist…</source>
+        <translation>నిషేధ జాబితా లోడ్ చేయబడుతోంది…</translation>
+    </message>
+    <message>
+        <source>Loading block index…</source>
+        <translation>బ్లాక్ సూచిక లోడ్ చేయబడుతోంది…</translation>
+    </message>
+    <message>
+        <source>Loading wallet…</source>
+        <translation>వాలెట్ లోడ్ చేయబడుతోంది…</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is less than transaction weight without inputs</source>
+        <translation>గరిష్ఠ లావాదేవీ బరువు ఇన్‌పుట్‌లు లేని లావాదేవీ బరువు కంటే తక్కువగా ఉంది</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is too low, can not accommodate change output</source>
+        <translation>గరిష్ఠ లావాదేవీ బరువు చాలా తక్కువగా ఉంది, మిగులు అవుట్‌పుట్‌కు చోటు సరిపోదు</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>గరిష్ఠ లావాదేవీ బరువు %d మరియు %d మధ్య ఉండాలి</translation>
+    </message>
+    <message>
+        <source>Missing amount</source>
+        <translation>మొత్తం లేదు</translation>
+    </message>
+    <message>
+        <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
+        <translation>ఒకటి కంటే ఎక్కువ onion బైండ్ చిరునామాలు ఇవ్వబడ్డాయి. స్వయంచాలకంగా సృష్టించిన Tor onion సేవ కోసం %s ఉపయోగించబడుతోంది.</translation>
+    </message>
+    <message>
+        <source>Need to specify a port with -whitebind: '%s'</source>
+        <translation>-whitebindతో పోర్ట్ పేర్కొనాలి: '%s'</translation>
+    </message>
+    <message>
+        <source>No addresses available</source>
+        <translation>చిరునామాలు అందుబాటులో లేవు</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>డంప్ ఫైల్ ఇవ్వబడలేదు. createfromdump ఉపయోగించడానికి -dumpfile=&lt;filename&gt; ఇవ్వాలి.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use dump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>డంప్ ఫైల్ ఇవ్వబడలేదు. dump ఉపయోగించడానికి -dumpfile=&lt;filename&gt; ఇవ్వాలి.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. %d available, %d required.</source>
+        <translation>తగినన్ని ఫైల్ డిస్క్రిప్టర్‌లు అందుబాటులో లేవు. %d అందుబాటులో ఉన్నాయి, %d అవసరం.</translation>
+    </message>
+    <message>
+        <source>Not found pre-selected input %s</source>
+        <translation>ముందుగా ఎంచుకున్న ఇన్‌పుట్ %s కనుగొనబడలేదు</translation>
+    </message>
+    <message>
+        <source>Not solvable pre-selected input %s</source>
+        <translation>ముందుగా ఎంచుకున్న ఇన్‌పుట్ %s పరిష్కరించలేనిది</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>దిశ మాత్రమే సెట్ చేయబడింది, అనుమతులు లేవు: '%s'</translation>
+    </message>
+    <message>
+        <source>Option '-checkpoints' is set but checkpoints were removed. This option has no effect.</source>
+        <translation>'-checkpoints' ఎంపిక సెట్ చేయబడింది, కానీ చెక్‌పాయింట్‌లు తీసివేయబడ్డాయి. ఈ ఎంపిక ప్రభావం చూపదు.</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>'-limitancestorsize' ఎంపిక ఇవ్వబడింది, కానీ పూర్వీకుల పరిమాణ పరిమితుల స్థానంలో సమూహ పరిమాణ పరిమితులు వచ్చాయి (-limitclustersize చూడండి). ఈ ఎంపిక ప్రభావం చూపదు.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>'-limitdescendantsize' ఎంపిక ఇవ్వబడింది, కానీ వారసుల పరిమాణ పరిమితుల స్థానంలో సమూహ పరిమాణ పరిమితులు వచ్చాయి (-limitclustersize చూడండి). ఈ ఎంపిక ప్రభావం చూపదు.</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to CJDNS (-onlynet=cjdns) but -cjdnsreachable is not provided</source>
+        <translation>బయటకు వెళ్లే కనెక్షన్‌లు CJDNSకు (-onlynet=cjdns) పరిమితం చేయబడ్డాయి, కానీ -cjdnsreachable ఇవ్వబడలేదు</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is explicitly forbidden: -onion=0</source>
+        <translation>బయటకు వెళ్లే కనెక్షన్‌లు Torకు (-onlynet=onion) పరిమితం చేయబడ్డాయి, కానీ Tor నెట్‌వర్క్‌ను చేరడానికి ప్రాక్సీ స్పష్టంగా నిషేధించబడింది: -onion=0</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
+        <translation>బయటకు వెళ్లే కనెక్షన్‌లు Torకు (-onlynet=onion) పరిమితం చేయబడ్డాయి, కానీ Tor నెట్‌వర్క్‌ను చేరడానికి ప్రాక్సీ ఇవ్వబడలేదు: -proxy, -onion లేదా -listenonion ఏదీ ఇవ్వబడలేదు</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to i2p (-onlynet=i2p) but -i2psam is not provided</source>
+        <translation>బయటకు వెళ్లే కనెక్షన్‌లు i2pకు (-onlynet=i2p) పరిమితం చేయబడ్డాయి, కానీ -i2psam ఇవ్వబడలేదు</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful. Visit %s for further information about the software.</source>
+        <translation>%s ఉపయోగకరంగా అనిపిస్తే దయచేసి సహకరించండి. సాఫ్ట్‌వేర్ గురించి మరింత సమాచారం కోసం %s సందర్శించండి.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>స్వంత లావాదేవీల ప్రైవేట్ ప్రసారం అభ్యర్థించబడింది (-privatebroadcast), కానీ -proxyrandomize నిలిపివేయబడింది. ప్రైవేట్ ప్రసార కనెక్షన్‌ల Tor సర్క్యూట్‌లను ఇతర Tor కనెక్షన్‌లతో అనుసంధానించే అవకాశం ఉంది. గరిష్ఠ గోప్యత కోసం -proxyrandomize=1 సెట్ చేయండి.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>స్వంత లావాదేవీల ప్రైవేట్ ప్రసారం అభ్యర్థించబడింది (-privatebroadcast), కానీ -connect కూడా కాన్ఫిగర్ చేయబడింది. ప్రైవేట్ ప్రసారం యాదృచ్ఛికంగా ఎంచుకున్న Tor లేదా I2P పీర్‌లకు కొత్త కనెక్షన్‌లు తెరవాలి కాబట్టి ఇవి అనుకూలం కావు. బదులుగా -maxconnections=0 -addnode=... ఉపయోగించడాన్ని పరిగణించండి</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>స్వంత లావాదేవీల ప్రైవేట్ ప్రసారం అభ్యర్థించబడింది (-privatebroadcast), కానీ Tor లేదా I2P నెట్‌వర్క్‌లలో ఏదీ చేరుకోలేనిది</translation>
+    </message>
+    <message>
+        <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
+        <translation>ప్రూన్ కనిష్ఠ %d MiB కంటే తక్కువగా కాన్ఫిగర్ చేయబడింది.  దయచేసి ఎక్కువ సంఖ్యను ఉపయోగించండి.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -reindex-chainstate. Use full -reindex instead.</source>
+        <translation>ప్రూన్ మోడ్ -reindex-chainstateతో అనుకూలం కాదు. బదులుగా పూర్తి -reindex ఉపయోగించండి.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>ప్రూన్ మోడ్ -txospenderindexతో అనుకూలం కాదు.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
+        <translation>ప్రూన్: వాలెట్ చివరి సమకాలీకరణ తొలగించిన డేటా కంటే పాతది. మీరు -reindex చేయాలి (ప్రూన్ చేసిన నోడ్ అయితే మొత్తం బ్లాక్‌చెయిన్‌ను మళ్లీ డౌన్‌లోడ్ చేయాలి)</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore…</source>
+        <translation>బ్లాక్ నిల్వ ప్రూన్ చేయబడుతోంది…</translation>
+    </message>
+    <message>
+        <source>Reducing -maxconnections from %d to %d, because of system limitations.</source>
+        <translation>సిస్టమ్ పరిమితుల కారణంగా -maxconnections %d నుండి %dకు తగ్గించబడుతోంది.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>'%s' -&gt; '%s' పేరు మార్చడం విఫలమైంది. నేపథ్యంలో ఉన్న చెయిన్‌స్టేట్ leveldb డైరెక్టరీని తొలగించలేకపోయాం.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
+        <translation>'%s' -&gt; '%s' పేరు మార్చడం విఫలమైంది. చెల్లని స్నాప్‌షాట్ డైరెక్టరీ %sను చేతితో తరలించడం లేదా తొలగించడం ద్వారా దీనిని పరిష్కరించాలి; లేకపోతే తదుపరి ప్రారంభంలో అదే లోపం మళ్లీ వస్తుంది.</translation>
+    </message>
+    <message>
+        <source>Replaying blocks…</source>
+        <translation>బ్లాక్‌లు మళ్లీ అమలు చేయబడుతున్నాయి…</translation>
+    </message>
+    <message>
+        <source>Rescanning…</source>
+        <translation>మళ్లీ స్కాన్ చేయబడుతోంది…</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to execute statement to verify database: %s</source>
+        <translation>SQLiteDatabase: డేటాబేస్‌ను ధృవీకరించే స్టేట్‌మెంట్ అమలు చేయడం విఫలమైంది: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to prepare statement to verify database: %s</source>
+        <translation>SQLiteDatabase: డేటాబేస్‌ను ధృవీకరించే స్టేట్‌మెంట్ సిద్ధం చేయడం విఫలమైంది: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to read database verification error: %s</source>
+        <translation>SQLiteDatabase: డేటాబేస్ ధృవీకరణ లోపం చదవడం విఫలమైంది: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unexpected application id. Expected %u, got %u</source>
+        <translation>SQLiteDatabase: ఊహించని అప్లికేషన్ id. ఆశించినది %u, అందినది %u</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is supported</source>
+        <translation>SQLiteDatabase: తెలియని sqlite వాలెట్ స్కీమా సంచిక %d. సంచిక %dకు మాత్రమే మద్దతు ఉంది</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>సంతకం సాధనం చిరునామాను తిరిగి ఇవ్వలేదు</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>సంతకం సాధనం ఊహించని చిరునామా %sను తిరిగి ఇచ్చింది</translation>
+    </message>
+    <message>
+        <source>Signer returned error: %s</source>
+        <translation>సంతకం సాధనం లోపాన్ని ఇచ్చింది: %s</translation>
+    </message>
+    <message>
+        <source>Signing transaction failed</source>
+        <translation>లావాదేవీపై సంతకం చేయడం విఫలమైంది</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" does not exist</source>
+        <translation>పేర్కొన్న -walletdir "%s" లేదు</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is a relative path</source>
+        <translation>పేర్కొన్న -walletdir "%s" సాపేక్ష మార్గం</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is not a directory</source>
+        <translation>పేర్కొన్న -walletdir "%s" డైరెక్టరీ కాదు</translation>
+    </message>
+    <message>
+        <source>Specified data directory "%s" does not exist.</source>
+        <translation>పేర్కొన్న డేటా డైరెక్టరీ "%s" లేదు.</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>ఫ్లష్ చేస్తున్నప్పుడు సిస్టమ్ లోపం: %s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>బాహ్య బ్లాక్ ఫైల్ లోడ్ చేస్తున్నప్పుడు సిస్టమ్ లోపం: %s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>బ్లాక్‌ను డిస్క్‌కు సేవ్ చేస్తున్నప్పుడు సిస్టమ్ లోపం: %s</translation>
+    </message>
+    <message>
+        <source>The %s developers</source>
+        <translation>%s డెవలపర్లు</translation>
+    </message>
+    <message>
+        <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
+        <translation>%s మార్గం exFAT ఉపయోగిస్తుంది, దీనికి macOSలో అప్పుడప్పుడు డేటా పాడయ్యే సమస్యలు ఉన్నట్లు తెలిసింది. డేటా నష్టాన్ని నివారించడానికి ఈ డైరెక్టరీని వేరే ఫైల్‌సిస్టమ్‌కు తరలించండి.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>-testactivationheight ఎంపికను mainnetలో ఉపయోగించకూడదు.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>-vbparams ఎంపికను mainnetలో ఉపయోగించకూడదు.</translation>
+    </message>
+    <message>
+        <source>The block database contains a block which appears to be from the future. This may be due to your computer's date and time being set incorrectly. Only rebuild the block database if you are sure that your computer's date and time are correct</source>
+        <translation>బ్లాక్ డేటాబేస్‌లో భవిష్యత్తుకు చెందినట్లు కనిపించే బ్లాక్ ఉంది. మీ కంప్యూటర్ తేదీ మరియు సమయం తప్పుగా సెట్ కావడం వల్ల ఇది జరిగి ఉండవచ్చు. మీ కంప్యూటర్ తేదీ మరియు సమయం సరైనవని ఖచ్చితంగా తెలిస్తే మాత్రమే బ్లాక్ డేటాబేస్‌ను పునర్నిర్మించండి</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>ముందుగా ఎంచుకున్న ఇన్‌పుట్‌లు మరియు వాలెట్ స్వయంచాలకంగా ఎంచుకున్న ఇన్‌పుట్‌ల కలయిక గరిష్ఠ లావాదేవీ బరువును మించిపోయింది. దయచేసి తక్కువ మొత్తం పంపడానికి ప్రయత్నించండి లేదా మీ వాలెట్ UTXOలను చేతితో ఏకీకరించండి</translation>
+    </message>
+    <message>
+        <source>The inputs size exceeds the maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>ఇన్‌పుట్‌ల పరిమాణం గరిష్ఠ బరువును మించిపోయింది. దయచేసి తక్కువ మొత్తం పంపడానికి ప్రయత్నించండి లేదా మీ వాలెట్ UTXOలను చేతితో ఏకీకరించండి</translation>
+    </message>
+    <message>
+        <source>The preselected coins total amount does not cover the transaction target. Please allow other inputs to be automatically selected or include more coins manually</source>
+        <translation>ముందుగా ఎంచుకున్న నాణేల మొత్తం లావాదేవీ లక్ష్యానికి సరిపోదు. దయచేసి ఇతర ఇన్‌పుట్‌లను స్వయంచాలకంగా ఎంచుకోవడానికి అనుమతించండి లేదా మరిన్ని నాణేలను చేతితో చేర్చండి</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>%s లావాదేవీ ఫీజును కలిపితే మొత్తం మీ నిల్వను మించిపోతుంది.</translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to send after the fee has been deducted</source>
+        <translation>ఫీజు తీసివేసిన తర్వాత లావాదేవీ మొత్తం పంపడానికి చాలా చిన్నదిగా ఉంది</translation>
+    </message>
+    <message>
+        <source>The transactions removal process can only be executed within a db txn</source>
+        <translation>లావాదేవీల తొలగింపు ప్రక్రియను డేటాబేస్ లావాదేవీలో మాత్రమే అమలు చేయవచ్చు</translation>
+    </message>
+    <message>
+        <source>There is no ScriptPubKeyManager for this address</source>
+        <translation>ఈ చిరునామాకు ScriptPubKeyManager లేదు</translation>
+    </message>
+    <message>
+        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
+        <translation>ఇది విడుదలకు ముందు పరీక్ష బిల్డ్ - మీ స్వంత పూచీతో ఉపయోగించండి - మైనింగ్ లేదా వ్యాపార అనువర్తనాలకు ఉపయోగించవద్దు</translation>
+    </message>
+    <message>
+        <source>This is the maximum transaction fee you pay (in addition to the normal fee) to prioritize partial spend avoidance over regular coin selection.</source>
+        <translation>సాధారణ నాణేల ఎంపిక కంటే పాక్షిక ఖర్చు నివారణకు ప్రాధాన్యం ఇవ్వడానికి మీరు (సాధారణ ఫీజుకు అదనంగా) చెల్లించే గరిష్ఠ లావాదేవీ ఫీజు ఇది.</translation>
+    </message>
+    <message>
+        <source>This is the transaction fee you may discard if change is smaller than dust at this level</source>
+        <translation>ఈ స్థాయిలో మిగులు డస్ట్ కంటే చిన్నదైతే దానిని వదిలివేయడానికి ఉపయోగించే లావాదేవీ ఫీజు రేటు ఇది</translation>
+    </message>
+    <message>
+        <source>This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>ఫీజు అంచనాలు అందుబాటులో లేనప్పుడు మీరు చెల్లించగల లావాదేవీ ఫీజు ఇది.</translation>
+    </message>
+    <message>
+        <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>
+        <translation>నెట్‌వర్క్ సంచిక స్ట్రింగ్ మొత్తం పొడవు (%i) గరిష్ఠ పొడవును (%i) మించిపోయింది. uacomments సంఖ్య లేదా పరిమాణాన్ని తగ్గించండి.</translation>
+    </message>
+    <message>
+        <source>Transaction %s does not belong to this wallet</source>
+        <translation>లావాదేవీ %s ఈ వాలెట్‌కు చెందినది కాదు</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>లావాదేవీకి శూన్యం కాని విలువగల ఒక గమ్యం, శూన్యం కాని ఫీజు రేటు లేదా ముందుగా ఎంచుకున్న ఇన్‌పుట్ అవసరం</translation>
+    </message>
+    <message>
+        <source>UTXO snapshot failed to validate. Restart to resume normal initial block download, or try loading a different snapshot.</source>
+        <translation>UTXO స్నాప్‌షాట్ ధృవీకరణ విఫలమైంది. సాధారణ ప్రారంభ బ్లాక్ డౌన్‌లోడ్ కొనసాగించడానికి పునఃప్రారంభించండి లేదా వేరే స్నాప్‌షాట్ లోడ్ చేయడానికి ప్రయత్నించండి.</translation>
+    </message>
+    <message>
+        <source>Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.</source>
+        <translation>బ్లాక్‌లను మళ్లీ అమలు చేయలేకపోయాం. మీరు -reindex-chainstate ఉపయోగించి డేటాబేస్‌ను పునర్నిర్మించాలి.</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>డిస్క్రిప్టర్ క్యాష్ రాయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Unconfirmed UTXOs are available, but spending them creates a chain of transactions that will be rejected by the mempool</source>
+        <translation>ధృవీకరించని UTXOలు అందుబాటులో ఉన్నాయి, కానీ వాటిని ఖర్చు చేస్తే మెమ్‌పూల్ తిరస్కరించే లావాదేవీల శ్రేణి ఏర్పడుతుంది</translation>
+    </message>
+    <message>
+        <source>Unexpected legacy entry in descriptor wallet found. Loading wallet %s
+
+The wallet might have been tampered with or created with malicious intent.
+</source>
+        <translation>డిస్క్రిప్టర్ వాలెట్‌లో ఊహించని లెగసీ నమోదు కనుగొనబడింది. వాలెట్ %s లోడ్ చేయబడుతోంది
+
+వాలెట్ అనధికారంగా మార్చబడి ఉండవచ్చు లేదా దురుద్దేశంతో సృష్టించబడి ఉండవచ్చు.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>-test=&lt;option&gt;లో గుర్తించని ఎంపిక "%s" ఇవ్వబడింది.</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>గుర్తించని డిస్క్రిప్టర్ కనుగొనబడింది. వాలెట్ %s లోడ్ చేయబడుతోంది
+
+వాలెట్ కొత్త సంచికలో సృష్టించబడి ఉండవచ్చు.
+దయచేసి తాజా సాఫ్ట్‌వేర్ సంచికను అమలు చేయడానికి ప్రయత్నించండి.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>-proxy='%s'లో గుర్తించని నెట్‌వర్క్: '%s'</translation>
+    </message>
+    <message>
+        <source>Unsupported category-specific logging level %1$s=%2$s. Expected %1$s=&lt;category&gt;:&lt;loglevel&gt;. Valid categories: %3$s. Valid loglevels: %4$s.</source>
+        <translation>వర్గానికి ప్రత్యేకమైన లాగింగ్ స్థాయి %1$s=%2$sకు మద్దతు లేదు. ఆశించినది %1$s=&lt;category&gt;:&lt;loglevel&gt;. చెల్లుబాటు అయ్యే వర్గాలు: %3$s. చెల్లుబాటు అయ్యే లాగ్ స్థాయిలు: %4$s.</translation>
+    </message>
+    <message>
+        <source>Unsupported chainstate database format found. Please restart with -reindex-chainstate. This will rebuild the chainstate database.</source>
+        <translation>మద్దతు లేని చెయిన్‌స్టేట్ డేటాబేస్ ఫార్మాట్ కనుగొనబడింది. దయచేసి -reindex-chainstateతో పునఃప్రారంభించండి. ఇది చెయిన్‌స్టేట్ డేటాబేస్‌ను పునర్నిర్మిస్తుంది.</translation>
+    </message>
+    <message>
+        <source>Unsupported global logging level %s=%s. Valid values: %s.</source>
+        <translation>గ్లోబల్ లాగింగ్ స్థాయి %s=%sకు మద్దతు లేదు. చెల్లుబాటు అయ్యే విలువలు: %s.</translation>
+    </message>
+    <message>
+        <source>Wallet file creation failed: %s</source>
+        <translation>వాలెట్ ఫైల్ సృష్టించడం విఫలమైంది: %s</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>హెచ్చరిక: మా ఉత్తమ చెయిన్ కంటే 6 బ్లాకులకు పైగా పొడవున్న చెల్లని చెయిన్ కనుగొనబడింది. దీనికి డేటాబేస్ పాడవడం లేదా పీర్‌లతో ఏకాభిప్రాయ నియమాల అసమానత కారణం కావచ్చు.</translation>
+    </message>
+    <message>
+        <source>Warning: Private keys detected in wallet {%s} with disabled private keys</source>
+        <translation>హెచ్చరిక: ప్రైవేట్ కీలు నిలిపివేసిన వాలెట్ {%s}లో ప్రైవేట్ కీలు గుర్తించబడ్డాయి</translation>
+    </message>
+    <message>
+        <source>Witness data for blocks after height %d requires validation. Please restart with -reindex.</source>
+        <translation>ఎత్తు %d తర్వాతి బ్లాక్‌ల సాక్షి డేటాకు ధృవీకరణ అవసరం. దయచేసి -reindexతో పునఃప్రారంభించండి.</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
+        <translation>ప్రూన్ చేయని మోడ్‌కు తిరిగి వెళ్లడానికి -reindex ఉపయోగించి డేటాబేస్‌ను పునర్నిర్మించాలి.  ఇది మొత్తం బ్లాక్‌చెయిన్‌ను మళ్లీ డౌన్‌లోడ్ చేస్తుంది</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>మీ కంప్యూటర్ తేదీ మరియు సమయం నెట్‌వర్క్‌తో పోలిస్తే %d నిమిషాలకు పైగా తేడా ఉన్నట్లు కనిపిస్తోంది, ఇది ఏకాభిప్రాయ వైఫల్యానికి దారితీయవచ్చు. మీ కంప్యూటర్ గడియారాన్ని నిర్ధారించిన తర్వాత, నోడ్‌ను పునఃప్రారంభిస్తే ఈ సందేశం కనిపించకూడదు. పునఃప్రారంభించకపోయినా, తగినంత మంది కొత్త అవుట్‌బౌండ్ పీర్‌లకు కనెక్ట్ అయిన తర్వాత ఇది స్వయంచాలకంగా కనిపించడం ఆగిపోవాలి; దీనికి కొంత సమయం పట్టవచ్చు. మరింత సమాచారం కోసం `getpeerinfo` మరియు `getnetworkinfo` RPC పద్ధతుల `timeoffset` ఫీల్డ్‌ను పరిశీలించవచ్చు.</translation>
+    </message>
+    <message>
+        <source>acceptstalefeeestimates is not supported on %s chain.</source>
+        <translation>%s చెయిన్‌లో acceptstalefeeestimatesకు మద్దతు లేదు.</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>whitebindను లోపలికి వచ్చే కనెక్షన్‌లకు మాత్రమే ఉపయోగించవచ్చు ("out" ఇవ్వబడింది)</translation>
     </message>
 </context>
 <context>
@@ -3034,6 +5774,181 @@ Root certificates version: %2</source>
     <message>
         <source>Optional: empty uses this wallet</source>
         <translation>ఐచ్ఛికం: ఖాళీగా వదిలితే ఈ వాలెట్ ఉపయోగించబడుతుంది</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPU థ్రెడ్‌లు:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>రివార్డ్ చిరునామాను సృష్టించలేకపోయాము. స్వీకరించే చిరునామాలను వాలెట్ సృష్టించగలదో లేదో తనిఖీ చేయండి.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>లోపం</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>FAST మోడ్ సుమారు 2 GiB RandomX మెమరీని ధృవీకరణతో పంచుకుంటుంది. ఎక్కువ థ్రెడ్‌లు ఎక్కువ CPU సామర్థ్యాన్ని, విద్యుత్తును ఉపయోగిస్తాయి; నోడ్ కోసం కొంత సామర్థ్యాన్ని మిగల్చండి. డేటాసెట్‌ను సిద్ధం చేయడానికి కొంత సమయం పట్టవచ్చు.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>RandomX ఉపయోగించి మీ CPUతో టెస్ట్‌నెట్ బ్లాక్‌లను మైన్ చేయండి. మీరు ప్రారంభించే వరకు మైనింగ్ ఆఫ్‌లో ఉంటుంది. ఈ నోడ్‌లోని అన్ని వాలెట్లు మైనర్‌ను పంచుకుంటాయి; ట్యాబ్‌లు మార్చినా లేదా వాలెట్‌ను మూసినా అది కొనసాగుతుంది.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>మైనింగ్</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>మైనింగ్ / RandomX సిద్ధం అవుతోంది</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>ఈ వాలెట్ నుండి కొత్త చిరునామా</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>ఈ నెట్‌వర్క్ కోసం రివార్డ్ చిరునామా</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>రివార్డ్ చిరునామా:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>మైనింగ్ ప్రారంభించు</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>ప్రారంభమవుతోంది</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>స్థితి: %1
+హాష్ రేటు: %2 H/s
+హాష్‌లు: %3 | ఆమోదించిన బ్లాక్‌లు: %4
+సక్రియ రివార్డ్ చిరునామా: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>మైనింగ్ ఆపు</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>ఆపివేయబడింది</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>ఆపివేస్తోంది (ప్రస్తుత పని కోసం వేచి ఉంది)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>నోడ్ సమకాలీకరించబడే వరకు వేచి ఉంది</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>హెచ్చరిక: %1 మైనింగ్ థ్రెడ్‌లు గుర్తించిన %2 లాజికల్ CPUల కంటే ఎక్కువగా ఉన్నాయి. ఇది హాష్ రేటును తగ్గించి, నోడ్‌ను నెమ్మదించవచ్చు.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Create Unsigned</source>
+        <translation>సంతకం చేయనిది సృష్టించండి</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>పంపండి</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionDescDialog</name>
+    <message>
+        <source>Details for %1</source>
+        <translation>%1 వివరాలు</translation>
+    </message>
+    <message>
+        <source>This pane shows a detailed description of the transaction</source>
+        <translation>ఈ ప్యానెల్ లావాదేవీ యొక్క వివరణాత్మక వివరాలను చూపిస్తుంది</translation>
+    </message>
+</context>
+<context>
+    <name>WalletModel</name>
+    <message>
+        <source>Can't display address</source>
+        <translation>చిరునామాను చూపించలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Can't draft transaction.</source>
+        <translation>లావాదేవీ ముసాయిదాను రూపొందించలేకపోయాం.</translation>
+    </message>
+    <message>
+        <source>Can't sign transaction.</source>
+        <translation>లావాదేవీపై సంతకం చేయలేకపోయాం.</translation>
+    </message>
+    <message>
+        <source>Confirm fee bump</source>
+        <translation>ఫీజు పెంపును నిర్ధారించండి</translation>
+    </message>
+    <message>
+        <source>Could not commit transaction</source>
+        <translation>లావాదేవీని ఖరారు చేయలేకపోయాం</translation>
+    </message>
+    <message>
+        <source>Current fee:</source>
+        <translation>ప్రస్తుత ఫీజు:</translation>
+    </message>
+    <message>
+        <source>Do you want to increase the fee?</source>
+        <extracomment>Asks a user if they would like to manually increase the fee of a transaction that has already been created.</extracomment>
+        <translation>మీరు ఫీజును పెంచాలనుకుంటున్నారా?</translation>
+    </message>
+    <message>
+        <source>Fee bump error</source>
+        <translation>ఫీజు పెంపు లోపం</translation>
+    </message>
+    <message>
+        <source>Fee-bump PSBT copied to clipboard</source>
+        <translation>ఫీజు పెంపు PSBT క్లిప్‌బోర్డ్‌కు కాపీ చేయబడింది</translation>
+    </message>
+    <message>
+        <source>Increase:</source>
+        <translation>పెంపు:</translation>
+    </message>
+    <message>
+        <source>Increasing transaction fee failed</source>
+        <translation>లావాదేవీ ఫీజు పెంపు విఫలమైంది</translation>
+    </message>
+    <message>
+        <source>New fee:</source>
+        <translation>కొత్త ఫీజు:</translation>
+    </message>
+    <message>
+        <source>PSBT copied</source>
+        <translation>PSBT కాపీ చేయబడింది</translation>
+    </message>
+    <message>
+        <source>Send Coins</source>
+        <translation>నాణేలను పంపండి</translation>
+    </message>
+    <message>
+        <source>Signer error</source>
+        <translation>సంతకం చేసే సాధనం లోపం</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation>హెచ్చరిక: అవసరమైనప్పుడు మిగులు అవుట్‌పుట్‌లను తగ్గించడం లేదా ఇన్‌పుట్‌లను జోడించడం ద్వారా అదనపు ఫీజు చెల్లించవచ్చు. మిగులు అవుట్‌పుట్ ఇప్పటికే లేకపోతే కొత్తది జోడించవచ్చు. ఈ మార్పులు గోప్యతకు సంబంధించిన సమాచారాన్ని బయటపెట్టవచ్చు.</translation>
     </message>
 </context>
 </TS>

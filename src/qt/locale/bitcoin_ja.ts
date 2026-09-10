@@ -59,13 +59,13 @@
         <translation type="unfinished">選択(&amp;C)</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">これらは、あなたが知っている送信先の Bitcoin アドレスです。コインを送る前に必ず、金額と受取用アドレスを確認してください。</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">これらは、あなたが知っている送信先の ConnectCoin アドレスです。コインを送る前に必ず、金額と受取用アドレスを確認してください。</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">これが支払いを受け取るためのあなたのビットコインアドレスです。新しいアドレスを作成するには、受信タブの「新しい受信アドレスを作成」ボタンを使用してください。署名は「レガシー」タイプのアドレスでのみ可能です。</translation>
+        <translation type="unfinished">これが支払いを受け取るためのあなたのConnectCoinアドレスです。新しいアドレスを作成するには、受信タブの「新しい受信アドレスを作成」ボタンを使用してください。署名は「レガシー」タイプのアドレスでのみ可能です。</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -164,8 +164,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ウォレットの暗号化の確認</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">警告: ウォレットの暗号化後にパスフレーズを忘れてしまった場合、&lt;b&gt;あなたの Bitcoin はすべて失われます&lt;/b&gt;！</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">警告: ウォレットの暗号化後にパスフレーズを忘れてしまった場合、&lt;b&gt;あなたの ConnectCoin はすべて失われます&lt;/b&gt;！</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -192,8 +192,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">戻る</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">ウォレットを暗号化しても、コンピュータに感染したマルウェアなどによる Bitcoin の盗難を完全に防ぐことはできないことにご注意ください。</translation>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished">ウォレットを暗号化しても、コンピュータに感染したマルウェアなどによる ConnectCoin の盗難を完全に防ぐことはできないことにご注意ください。</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -327,8 +327,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">金額</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Bitcoin アドレスを入力してください (例: %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">ConnectCoin アドレスを入力してください (例: %1)</translation>
     </message>
     <message>
         <source>Unroutable</source>
@@ -446,6 +446,56 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>default wallet</source>
         <translation type="unfinished">デフォルトウォレット</translation>
     </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>該当なし</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -515,8 +565,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">プロキシは&lt;b&gt;有効&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Bitcoin アドレスにコインを送る</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">ConnectCoin アドレスにコインを送る</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -559,16 +609,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">メッセージを署名…(&amp;m)</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Bitcoin アドレスでメッセージに署名することで、そのアドレスの所有権を証明する</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">ConnectCoin アドレスでメッセージに署名することで、そのアドレスの所有権を証明する</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">メッセージを検証…(&amp;V)</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">メッセージを検証して、指定された Bitcoin アドレスで署名されたことを確認する</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">メッセージを検証して、指定された ConnectCoin アドレスで署名されたことを確認する</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -627,8 +677,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ピアに接続中…</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">支払いをリクエストする（QRコードと bitcoin:で始まるURIを生成する）</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">支払いをリクエストする（QRコードと connectcoin:で始まるURIを生成する）</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -681,16 +731,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ブロックは最新</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">部分的に署名されたビットコインのトランザクションを読み込み</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">部分的に署名されたConnectCoinのトランザクションを読み込み</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">PSBTをクリップボードから読む…</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">部分的に署名されたビットコインのトランザクションをクリップボードから読み込み</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">部分的に署名されたConnectCoinのトランザクションをクリップボードから読み込み</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -709,8 +759,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">受取用アドレス一覧(&amp;R)...</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">bitcoin: URIを開く</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">connectcoin: URIを開く</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -747,8 +797,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">ウォレットの移行</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">%1 のヘルプ メッセージを表示し、使用可能な Bitcoin のコマンドラインオプション一覧を見る。</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">%1 のヘルプ メッセージを表示し、使用可能な ConnectCoin のコマンドラインオプション一覧を見る。</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -824,10 +874,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">表示</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform>%n ビットコイン ネットワークへのアクティブな接続。</numerusform>
+            <numerusform>%n ConnectCoin ネットワークへのアクティブな接続。</numerusform>
         </translation>
     </message>
     <message>
@@ -937,6 +987,54 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>pay-to-connect報酬を作成</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>採掘(&amp;M)</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>CPU採掘を制御</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>すべてのファイル</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>エクスポートエラー</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>エクスポート完了</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>現在のウォレットの監視専用版をエクスポートします。別のノードで復元できます。</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>監視専用ウォレットをエクスポート</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>ウォレットファイルを復元して移行…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>監視専用ウォレットのエクスポートを保存</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>ウォレットのエクスポート先: </translation>
     </message>
 </context>
 <context>
@@ -1080,6 +1178,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>(change)</source>
         <translation type="unfinished">（おつり）</translation>
     </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>入力ごとに +/- %1 connect 変動する場合があります。</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1206,6 +1308,18 @@ The migration process will create a backup of the wallet before migrating. This 
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">移行に成功しました</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>ノードがプルーニングされており、ウォレットの作成時点がプルーニング済みのブロック高より前の場合、移行後のウォレットを読み込む際に移行処理が失敗する可能性があります。</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>移行後にウォレットを読み込む</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>移行後のウォレットは読み込まれていません。「ファイル &gt; ウォレットを開く」メニューから開くことができます。</translation>
     </message>
 </context>
 <context>
@@ -1383,8 +1497,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">送金先アドレスを編集</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">入力されたアドレス "%1" は無効な Bitcoin アドレスです。</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">入力されたアドレス "%1" は無効な ConnectCoin アドレスです。</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1547,6 +1661,18 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>Error</source>
         <translation type="unfinished">エラー</translation>
     </message>
+    <message>
+        <source> GB</source>
+        <translation> GB</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 は ConnectCoin ブロックチェーンのコピーをダウンロードして保存します。</translation>
+    </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1555,8 +1681,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">フォーム</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">最近の取引がまだ表示されていない可能性があります。そのため、ウォレットの残高が正しく表示されていないかもしれません。この情報は、ウォレットが Bitcoin ネットワークへの同期が完了すると正確なものとなります。詳細は下記を参照してください。</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">最近の取引がまだ表示されていない可能性があります。そのため、ウォレットの残高が正しく表示されていないかもしれません。この情報は、ウォレットが ConnectCoin ネットワークへの同期が完了すると正確なものとなります。詳細は下記を参照してください。</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1606,17 +1732,29 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">不明。ヘッダーの事前同期をしています (%1, %2%)…</translation>
     </message>
+    <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>まだ表示されていない取引の影響を受ける ConnectCoin 資金を使用しようとしても、ネットワークには受け入れられません。</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">bitcoin URIを開く</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">ConnectCoin URIを開く</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">クリップボードからアドレスを貼り付け</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1659,8 +1797,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">%1 対応スクリプトのフルパス（例：C:\Downloads\hwi.exe や /Users/you/Downloads/hwi.py）。マルウェアにコインを盗まれないようご注意ください。</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished">自動的にルーター上の Bitcoin クライアントのポートを開放します。これは、あなたのルーターが PCP または NAT-PMP をサポートし、有効になっている場合にのみ機能します。外部ポートはランダムで構いません。</translation>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation type="unfinished">自動的にルーター上の ConnectCoin クライアントのポートを開放します。これは、あなたのルーターが PCP または NAT-PMP をサポートし、有効になっている場合にのみ機能します。外部ポートはランダムで構いません。</translation>
     </message>
     <message>
         <source>Map port using PCP or NA&amp;T-PMP</source>
@@ -1790,8 +1928,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">外部からの接続を許可する(&amp;g)</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">SOCKS5 プロキシ経由で Bitcoin ネットワークに接続する。</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">SOCKS5 プロキシ経由で ConnectCoin ネットワークに接続する。</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1870,8 +2008,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">コインコントロール機能を表示するか否か。</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Tor onion service用の別のSOCKS5プロキシを介してBitcoinネットワークに接続します。</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">Tor onion service用の別のSOCKS5プロキシを介してConnectCoinネットワークに接続します。</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1948,6 +2086,46 @@ The migration process will create a backup of the wallet before migrating. This 
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">プロキシアドレスが無効です。</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>ポップアップ通知を有効にする</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>受信・送信した取引を含むデスクトップのポップアップ通知を表示します。初期設定では無効です。エラーと確認のダイアログは引き続き表示されます。</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation>OK(&amp;O)</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>プルーニングを有効にすると、取引の保存に必要なディスク容量が大幅に減ります。すべてのブロックは引き続き完全に検証されます。古いブロックデータが削除される前に同期を維持できるよう、プルーニング中は起動時にウォレットを読み込み、有効な状態を保ってください。同期がプルーニング済みデータより遅れたウォレットでは、再インデックスが必要になる場合があります。この設定を元に戻すには、ブロックチェーン全体を再ダウンロードする必要があります。</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>-popupnotifications または connectcoin.conf の popupnotifications で設定されています。</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1963,8 +2141,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">フォーム</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">表示されている情報は古い可能性があります。ウォレットは接続確立後に Bitcoin ネットワークと自動的に同期しますが、同期処理はまだ完了していません。</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">表示されている情報は古い可能性があります。ウォレットは接続確立後に ConnectCoin ネットワークと自動的に同期しますが、同期処理はまだ完了していません。</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -2055,8 +2233,8 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
+        <translation>
+            <numerusform>%n 個の入力に署名しましたが、さらに署名が必要です。</numerusform>
         </translation>
     </message>
     <message>
@@ -2118,8 +2296,8 @@ The migration process will create a backup of the wallet before migrating. This 
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
+        <translation>
+            <numerusform>この取引には未署名の入力が %n 個あります。</numerusform>
         </translation>
     </message>
     <message>
@@ -2158,16 +2336,16 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation type="unfinished">支払いリクエストのエラー</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Bitcoin を起動できません: click-to-pay handler</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">ConnectCoin を起動できません: click-to-pay handler</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">URIの処理</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin://' は正しいURIではありません｡ 'bitcoin:'を使用してください｡</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin://' は正しいURIではありません｡ 'connectcoin:'を使用してください｡</translation>
     </message>
     <message>
         <source>Cannot process payment request because BIP70 is not supported.
@@ -2178,8 +2356,8 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
 このエラーが発生した場合、事業者に対してBIP21に対応したURIを要求してください。</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">URIを解析できませんでした！ Bitcoin アドレスが無効であるか、URIパラメーターが不正な形式である可能性があります。</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">URIを解析できませんでした！ ConnectCoin アドレスが無効であるか、URIパラメーターが不正な形式である可能性があります。</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -2242,6 +2420,11 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
         <source>Outbound</source>
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">外向き</translation>
+    </message>
+    <message>
+        <source>Ping</source>
+        <extracomment>Title of Peers Table column which indicates the current latency of the connection with the peer.</extracomment>
+        <translation>Ping</translation>
     </message>
 </context>
 <context>
@@ -2327,8 +2510,8 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
         <translation type="unfinished">ローカルアドレス</translation>
     </message>
     <message>
-        <source>Network addresses that your Bitcoin node is currently using to communicate with other nodes.</source>
-        <translation type="unfinished">Bitcoinノードが現在他のノード通信するために使用しているネットワークアドレス</translation>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation type="unfinished">ConnectCoinノードが現在他のノード通信するために使用しているネットワークアドレス</translation>
     </message>
     <message>
         <source>Block chain</source>
@@ -2498,7 +2681,7 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
     </message>
     <message>
         <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
-        <translation type="unfinished">このピアと接続しているネットワークプロトコル: IPv4, IPv6, Onion, I2P, or CJDNS.</translation>
+        <translation>このピアが接続に使用しているネットワークプロトコル: IPv4、IPv6、Onion、I2P、または CJDNS。</translation>
     </message>
     <message>
         <source>Services</source>
@@ -2767,6 +2950,50 @@ For more information on using this console, type %6.
         <source>Unknown</source>
         <translation type="unfinished">不明</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation>該当なし</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2783,8 +3010,8 @@ For more information on using this console, type %6.
         <translation type="unfinished">メッセージ (&amp;M):</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">支払いリクエストに添付する任意のメッセージで、支払リクエストの開封時に表示されます。注意: メッセージは Bitcoin ネットワーク上へ送信されません。</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">支払いリクエストに添付する任意のメッセージで、支払リクエストの開封時に表示されます。注意: メッセージは ConnectCoin ネットワーク上へ送信されません。</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -3025,7 +3252,7 @@ For more information on using this console, type %6.
     </message>
     <message>
         <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until you have validated the complete chain.</source>
-        <translation type="unfinished">不適切な料金を利用することで、承認されるまでに数時間または数日 (あるいは永久に承認されない) 取引を送信してしまう可能性があります。手動にて手数料を設定するか、ブロックチェーンの検証が完全に終わるまで待つことを考慮してください。</translation>
+        <translation>フォールバック手数料を使用すると、承認まで数時間または数日かかる取引を送信する可能性があり、まったく承認されない場合もあります。手数料を手動で選択するか、チェーン全体の検証が完了するまで待つことを検討してください。</translation>
     </message>
     <message>
         <source>Warning: Fee estimation is currently not possible.</source>
@@ -3080,7 +3307,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
 注意: 手数料はbyte単位で計算されます。"100 satoshis / kvB"という手数料率のとき、500 仮想バイト (1 kvBの半分)の取引の手数料はたったの50 satoshisと計算されます。</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
         <translation type="unfinished">ブロック内の空きより取引の量が少ない場合、マイナーや中継ノードは最低限の手数料でも処理することがあります。この最低限の手数料だけを支払っても問題ありませんが、一度取引の需要がネットワークの処理能力を超えてしまった場合には、取引が永久に承認されなくなってしまう可能性があることに注意してください。</translation>
     </message>
     <message>
@@ -3166,7 +3393,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">未署名で作成(&amp;e)</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <translation type="unfinished">オフラインの %1 ウォレット、あるいはPSBTに対応したハードウェアウォレットで使用するためのPSBT(部分的に署名された取引)を作成します。</translation>
     </message>
     <message>
@@ -3222,9 +3449,9 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">手数料は後から上乗せ可能です(Replace-By-Fee(手数料の上乗せ: BIP-125)機能が有効)。</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
-        <translation type="unfinished">取引の提案を確認してください。これにより、部分的に署名されたBitcoin取引（PSBT）が作成されます。これを保存するかコピーして例えばオフラインの %1 ウォレットやPSBTを扱えるハードウェアウォレットで残りの署名が出来ます。</translation>
+        <translation type="unfinished">取引の提案を確認してください。これにより、部分的に署名されたConnectCoin取引（PSBT）が作成されます。これを保存するかコピーして例えばオフラインの %1 ウォレットやPSBTを扱えるハードウェアウォレットで残りの署名が出来ます。</translation>
     </message>
     <message>
         <source>%1 from wallet '%2'</source>
@@ -3236,9 +3463,9 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">この取引を作成しますか？</translation>
     </message>
     <message>
-        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
-        <translation type="unfinished">取引を確認してください。 この取引を作成して送信するか、部分的に署名されたBitcoin取引（Partially Signed Bitcoin Transaction: PSBT）を作成できます。これを保存またはコピーして、オフラインの %1 ウォレットやPSBT互換のハードウェアウォレットなどで署名できます。</translation>
+        <translation type="unfinished">取引を確認してください。 この取引を作成して送信するか、部分的に署名されたConnectCoin取引（Partially Signed ConnectCoin Transaction: PSBT）を作成できます。これを保存またはコピーして、オフラインの %1 ウォレットやPSBT互換のハードウェアウォレットなどで署名できます。</translation>
     </message>
     <message>
         <source>Please, review your transaction.</source>
@@ -3312,8 +3539,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">警告: 無効な Bitcoin アドレスです</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">警告: 無効な ConnectCoin アドレスです</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -3325,11 +3552,31 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     </message>
     <message>
         <source>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</source>
-        <translation type="unfinished">お釣り用として指定されたアドレスはこのウォレットのものではありません。このウォレットの一部又は全部の資産がこのアドレスへ送金されます。確かですか？</translation>
+        <translation>お釣り用に選択したアドレスは、このウォレットに属していません。ウォレット内の資金の一部または全部がこのアドレスに送信される可能性があります。よろしいですか？</translation>
     </message>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">（ラベル無し）</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>取引の仮想サイズ 1 kB (1,000 バイト) あたりの手数料を指定してください。
+
+注意:  手数料はバイト単位で計算されるため、手数料率が「1 kvB あたり 100 connects」で、取引サイズが 500 仮想バイト (1 kvB の半分) の場合、実際の手数料は 50 connects になります。</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>現在の最低手数料を使用しています。承認時間は推定されていません。</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>後で手数料を引き上げることができます。</translation>
     </message>
 </context>
 <context>
@@ -3351,8 +3598,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">これまでに使用したことがあるアドレスから選択</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">送金先 Bitcoin アドレス</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">送金先 ConnectCoin アドレス</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -3387,8 +3634,20 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">このアドレスに対するラベルを入力することで、送金したことがあるアドレスの一覧に追加することができます</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">bitcoin URIに添付されていたメッセージです。これは参照用として取引とともに保存されます。注意: メッセージは Bitcoin ネットワーク上へ送信されません。</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">ConnectCoin URIに添付されていたメッセージです。これは参照用として取引とともに保存されます。注意: メッセージは ConnectCoin ネットワーク上へ送信されません。</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>手数料は送金額から差し引かれます。受取人が受け取る ConnectCoin は、金額欄に入力した額より少なくなります。受取人が複数の場合、手数料は均等に分割されます。</translation>
     </message>
 </context>
 <context>
@@ -3417,8 +3676,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">あなたの所有しているレガシー（P2PKH）アドレスによりメッセージや合意書に署名をすることで、それらアドレスに対して送られたビットコインを受け取ることができることを証明できます。フィッシング攻撃により不正にあなたの識別情報を署名させられてしまうことを防ぐために、不明確なものやランダムなものに対して署名しないよう注意してください。あなたが同意した、よく詳細の記された文言にのみ署名するようにしてください。</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">メッセージの署名に使用する Bitcoin アドレス</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">メッセージの署名に使用する ConnectCoin アドレス</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3441,8 +3700,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">この署名をクリップボードにコピー</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation type="unfinished">メッセージに署名してこの Bitcoin アドレスを所有していることを証明</translation>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation type="unfinished">メッセージに署名してこの ConnectCoin アドレスを所有していることを証明</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -3462,11 +3721,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     </message>
     <message>
         <source>Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation type="unfinished">送金先のアドレスと、メッセージ（改行やスペース、タブなども完全に一致させること）および署名を以下に入力し、メッセージを検証します。中間者攻撃により騙されるのを防ぐため、署名対象のメッセージから書かれていること以上の意味を読み取ろうとしないでください。また、これは署名作成者がこのアドレスで受け取れることを証明するだけであり、取引の送信権限を証明するものではありません！</translation>
+        <translation>メッセージを検証するには、以下に受信者のアドレス、メッセージ（改行、空白、タブなども完全に一致するようコピーしてください）、署名を入力します。中間者攻撃で騙されないよう、署名が、署名されたメッセージ自体に書かれている内容以上のことを証明すると解釈しないでください。これは署名者がそのアドレスで資金を受け取れることだけを証明し、どの取引についても誰が送信したかを証明するものではありません！</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">メッセージの署名に使われた Bitcoin アドレス</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">メッセージの署名に使われた ConnectCoin アドレス</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -3477,8 +3736,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">メッセージの署名時に生成された署名</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">メッセージを検証して指定された Bitcoin アドレスで署名されたことを確認</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">メッセージを検証して指定された ConnectCoin アドレスで署名されたことを確認</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3543,6 +3802,18 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">メッセージは検証されました。</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>レガシー (P2PKH) アドレスを使用してメッセージや合意内容に署名することで、そのアドレス宛てに送られた ConnectCoin 資金を受け取れることを証明できます。フィッシング攻撃によって、第三者があなたになりすますための署名を求められる恐れがあります。曖昧な内容や無作為な内容には署名しないでください。内容が十分に明確で、同意できる文書にのみ署名してください。</translation>
     </message>
 </context>
 <context>
@@ -3831,6 +4102,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
         <translation>ユーザーが指定したトランザクションの意図・目的、またはP2Cドメイン。</translation>
     </message>
+    <message>
+        <source>(n/a)</source>
+        <translation>(該当なし)</translation>
+    </message>
 </context>
 <context>
     <name>TransactionView</name>
@@ -3987,6 +4262,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>検索するアドレス、P2Cドメイン、トランザクションID、またはラベルを入力</translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
     </message>
 </context>
 <context>
@@ -4179,8 +4458,8 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation type="unfinished">エラー: ダンプファイルの識別子レコードが不正です。得られた値は"%s"で、期待値は"%s"です。</translation>
     </message>
     <message>
-        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
-        <translation type="unfinished">エラー: ダンプファイルのバージョンがサポート外です。このバージョンの Bitcoin ウォレットは、バージョン 1 のダンプファイルのみをサポートします。バージョン%sのダンプファイルでした。</translation>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">エラー: ダンプファイルのバージョンがサポート外です。このバージョンの ConnectCoin ウォレットは、バージョン 1 のダンプファイルのみをサポートします。バージョン%sのダンプファイルでした。</translation>
     </message>
     <message>
         <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
@@ -5190,6 +5469,136 @@ Please try running the latest software version.
         <source>Settings file could not be written</source>
         <translation type="unfinished">設定ファイルを書けませんでした</translation>
     </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>お釣りの送信先はタイプ1のP2PK（bech32m）送信先である必要があります</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoinはタイプ1のP2PK（bech32m）アドレスのみをサポートしています</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoinはタイプ1のP2PK（bech32m）お釣りアドレスのみをサポートしています</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>ConnectCoinのトランザクションには、有効なタイプ1の送信先またはタイプ2のPAY_TO_CONNECT出力が必要です</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>ConnectCoinのタイプ1出力はSIGHASH_DEFAULTのみをサポートしています</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>入力はSIGHASH_DEFAULTを使用する完全なタイプ1の支出ではありません</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>入力にはP2C証明の完全なウィットネスデータが必要です</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>メインネットはまだ開始されていません。ジェネシスブロックが定義されていません。公開テストには-testnet4、ローカルテストには-regtestを使用してください。</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>この開発ビルドには、プロジェクトが所有する公開ソースコードのURLが設定されていません。</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>利用可能なファイル記述子が不足しています。-rpcmaxconnectionsを減らすか、既定値の%dを使用してください</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>%sが役立つと思われたら、ぜひご協力ください。</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+%s (%s) または %s (%s) の変更を検討してください。</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf は非推奨であり、次のリリースで完全に削除されます。</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>致命的な内部エラーが発生しました。詳細は %s を参照してください: %s</translation>
+    </message>
+    <message>
+        <source>Copyright (C) %i-%i</source>
+        <translation>著作権 (C) %i-%i</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>組み込みの asmap データを読み込めませんでした</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>組み込みの asmap データは利用できません</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>エラー: 取引 %s を監視専用ウォレットに追加できませんでした</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>エラー: ファイル '%s' を作成できませんでした</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>エラー: エクスポート先 '%s' はすでに存在します</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>エラー: エクスポート先を空にすることはできません</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>エラー: 新しい監視専用ウォレットを作成できませんでした。%s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>エラー: エクスポートしたウォレットを書き込めませんでした</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>エラー: このウォレットにはエクスポートするディスクリプターがありません</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>エラー: 監視専用ウォレットのエクスポート用データベーストランザクションをコミットできません</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>エラー: 新しい監視専用ウォレット %s のデータベーストランザクションを実行できません</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>手数料率 (%s) が設定された最低手数料率 (%s) を下回っています。</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>プルーニングモードは -txospenderindex と併用できません。</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>-testactivationheight オプションはメインネットでは使用できません。</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>-vbparams オプションはメインネットでは使用できません。</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>取引手数料 %s を含めると、合計額が残高を超えます。</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>ディスクリプターキャッシュを書き込めません</translation>
+    </message>
 </context>
 <context>
     <name>P2CClaimDialog</name>
@@ -5537,7 +5946,85 @@ Root certificates version: %2</source>
     <name>MiningPage</name>
     <message>
         <source>Optional: empty uses this wallet</source>
-        <translation>任意：空欄の場合はこのウォレットを使用します</translation>
+        <translation>任意: 空欄の場合はこのウォレットを使用</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPUスレッド数:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>報酬アドレスを生成できませんでした。ウォレットが受取用アドレスを生成できることを確認してください。</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>エラー</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>FASTモードは約2 GiBのRandomXメモリを検証処理と共有します。スレッド数を増やすとCPUと電力の使用量が増えるため、ノード用の余力を残してください。データセットの初期化には時間がかかることがあります。</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>RandomXを使用してCPUでテストネットのブロックを採掘します。採掘は開始するまで無効です。このノードのすべてのウォレットが採掘処理を共有し、タブを切り替えたりウォレットを閉じたりしても採掘は続きます。</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>採掘</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>採掘中 / RandomXを準備中</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>このウォレットの新しいアドレス</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>このネットワーク用の報酬アドレス</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>報酬アドレス:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>採掘を開始</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>開始中</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>状態: %1
+ハッシュレート: %2 H/s
+ハッシュ数: %3 | 承認済みブロック数: %4
+使用中の報酬アドレス: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>採掘を停止</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>停止</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>停止中（現在の処理を待機中）</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>ノードの同期完了を待機中</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>警告: 採掘スレッド数%1は、検出された論理CPU数%2を超えています。ハッシュレートが低下し、ノードの動作が遅くなる可能性があります。</translation>
     </message>
 </context>
 </TS>

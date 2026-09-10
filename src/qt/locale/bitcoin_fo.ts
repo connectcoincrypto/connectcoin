@@ -58,13 +58,13 @@
         <translation type="unfinished">&amp;Vel</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Hetta eru goymdar Bitcoin adressur at senda til. Kanna altíð upphæddina og útgjaldsadressuna áðrenn hvørja flyting.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">Hetta eru goymdar ConnectCoin adressur at senda til. Kanna altíð upphæddina og útgjaldsadressuna áðrenn hvørja flyting.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Hetta eru tínar Bitcoin adressur at móttakað við. Vel 'Framleið nýggja inngjaldsadressu', undir Móttak-skiljiblaðnum fyri at útroknað nýggjar adressur.
+        <translation type="unfinished">Hetta eru tínar ConnectCoin adressur at móttakað við. Vel 'Framleið nýggja inngjaldsadressu', undir Móttak-skiljiblaðnum fyri at útroknað nýggjar adressur.
 Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</translation>
     </message>
     <message>
@@ -164,8 +164,8 @@ Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</t
         <translation type="unfinished">Vátta mappu bronglan</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">Gev gætur: Bronglar tú mappuna og gloymur loyniorðið &lt;b&gt;MISSUR TÚ ALLAR TÍNAR BITCOINS&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">Gev gætur: Bronglar tú mappuna og gloymur loyniorðið &lt;b&gt;MISSUR TÚ ALLAR TÍNAR CONNECTCOINS&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -192,8 +192,8 @@ Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</t
         <translation type="unfinished">Ógilda</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">Hav í huga at tað at brongla tína mappu ikki er ein fullfíggjað verja ímóti at tínar bitcoins kunnu stjalast av illbúnaði á tíni teldu.</translation>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished">Hav í huga at tað at brongla tína mappu ikki er ein fullfíggjað verja ímóti at tínar ConnectCoins kunnu stjalast av illbúnaði á tíni teldu.</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -327,8 +327,8 @@ Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</t
         <translation type="unfinished">Upphædd</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Inntøppa eina Bitcoin adressu (t.d. %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">Inntøppa eina ConnectCoin adressu (t.d. %1)</translation>
     </message>
     <message>
         <source>Ctrl+W</source>
@@ -440,6 +440,68 @@ Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</t
         <source>default wallet</source>
         <translation type="unfinished">forsett mappa</translation>
     </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -509,8 +571,8 @@ Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</t
         <translation type="unfinished">&lt;b&gt;Virktur&lt;/b&gt; proxy: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Send myntir til eina Bitcoin adressu</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">Send myntir til eina ConnectCoin adressu</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -549,16 +611,16 @@ Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</t
         <translation type="unfinished">&amp;Undirrita boð…</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Undirrita boðini við tíni Bitcoin-adressu fyri at prógva at tey eru tíni</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">Undirrita boðini við tíni ConnectCoin-adressu fyri at prógva at tey eru tíni</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">&amp;Vátta boð…</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">Sannroyn boð fyri at tryggja at tey vóru undirritaði av ávísaru Bitcoin adressu</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">Sannroyn boð fyri at tryggja at tey vóru undirritaði av ávísaru ConnectCoin adressu</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -621,8 +683,8 @@ Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</t
         <translation type="unfinished">Sambindur við javningar…</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Umbið gjald (framleiður QR kotu og bitcoin: URI'ir)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">Umbið gjald (framleiður QR kotu og connectcoin: URI'ir)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -676,16 +738,16 @@ Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</t
         <translation type="unfinished">Javnsettur</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">Innles Partvís Undirritaða Bitcoin Flyting</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">Innles Partvís Undirritaða ConnectCoin Flyting</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">Innles PSBT av setiborði…</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">Innles Partvís Undirritaða Bitcoin Flyting av setiborði</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">Innles Partvís Undirritaða ConnectCoin Flyting av setiborði</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -704,8 +766,8 @@ Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</t
         <translation type="unfinished">&amp;Inngjaldsadressur</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">Innles eitt bitcoin: URI</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">Innles eitt connectcoin: URI</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -742,8 +804,8 @@ Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</t
         <translation type="unfinished">Uppstiga forsniðið á eini mappu</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Vís %1 hjálpartekstin fyri ein lista við Bitcoin stýriboð-linju møgulleikum</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">Vís %1 hjálpartekstin fyri ein lista við ConnectCoin stýriboð-linju møgulleikum</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -819,11 +881,11 @@ Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</t
         <translation type="unfinished">&amp;Vís</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform>%n virkið samband til Bitcoin netið.</numerusform>
-            <numerusform>%n virkin sambond til Bitcoin netið.</numerusform>
+            <numerusform>%n virkið samband til ConnectCoin netið.</numerusform>
+            <numerusform>%n virkin sambond til ConnectCoin netið.</numerusform>
         </translation>
     </message>
     <message>
@@ -933,6 +995,54 @@ Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</t
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>Stovna pay-to-connect-lønir</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Námsvinna</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>Stýr CPU-námsvinnu</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation>&amp;Send</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Allar fílur</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Útflutningsvilla</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>Útflutningur eydnaðist</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>Flyt út eina útgávu av verandi mappu, sum bert kann eygleiða, og sum kann endurstovnast á einum øðrum knúti.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>Flyt út mappu til eygleiðing</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>Goym útflutning av mappu til eygleiðing</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>Mappan er flutt út til </translation>
     </message>
 </context>
 <context>
@@ -1076,6 +1186,10 @@ Undirritan, av boðum, er einans møgulig fyri 'legacy' (eldri) adressusløg.</t
         <source>(change)</source>
         <translation type="unfinished">(vekslipeningur)</translation>
     </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>Kann broytast +/- %1 connect fyri hvørt inntak.</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1203,6 +1317,18 @@ Trygdaravritið verður kallað &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">Uppstiganin eydnaðist</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Um knúturin er skerdur, og mappan varð stovnað áðrenn skerdu hæddina, kann flytingin miseydnast, tá ið flutta mappan skal lesast inn.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Les mappu inn eftir flyting</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>Mappan varð ikki lisin inn eftir flytingina. Tú kanst opna hana úr valmyndini «Fíla &gt; Opna mappu».</translation>
     </message>
 </context>
 <context>
@@ -1380,8 +1506,8 @@ Trygdaravritið verður kallað &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak
         <translation type="unfinished">Broyt útgjaldsadressu</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">Inntøppaða adressan "%1" er ikki ein gildig Bitcoin adressa.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">Inntøppaða adressan "%1" er ikki ein gildig ConnectCoin adressa.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1552,6 +1678,14 @@ Trygdaravritið verður kallað &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak
         <source>Error</source>
         <translation type="unfinished">Villa</translation>
     </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 tekur niður og goymir eitt avrit av ConnectCoin-blokkketurni.</translation>
+    </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1560,8 +1694,8 @@ Trygdaravritið verður kallað &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak
         <translation type="unfinished">Formil</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">Nýggjari flytingar eru enn ókendar, og tí kann vísta saldan, á mappuni, vera óeftirfarandi. Kunningin gerst tíðarhóskandi tá tín knútur er samstillaður við bitcoin netið; nágreina niðanfyri.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">Nýggjari flytingar eru enn ókendar, og tí kann vísta saldan, á mappuni, vera óeftirfarandi. Kunningin gerst tíðarhóskandi tá tín knútur er samstillaður við ConnectCoin netið; nágreina niðanfyri.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1611,17 +1745,29 @@ Trygdaravritið verður kallað &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">Ókent. Undan-samstillar blokkhøvd (%1, %2%)…</translation>
     </message>
+    <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Netið góðtekur ikki royndir at brúka ConnectCoin-ognir, sum eru ávirkaðar av flytingum, ið ikki eru vístar enn.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">Innles bitcoin URI</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">Innles ConnectCoin URI</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">Innset adressu av setiborði</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1664,8 +1810,8 @@ Trygdaravritið verður kallað &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak
         <translation type="unfinished">Fullfíggja leið til eitt %1 sínamillumvirki skeljarrit (t.d. C:\Downloads\hwi.exe ella /Users/you/Downloads/hwi.py). Gev gætur: Illbúnaður kann stjala tín pening!</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished">Sjálvvirkandi upplating av Bitcoin viðskiftara portrið á beinaranum. Hetta virkar bert um tín beinari hevur virktan PCP ella NAT-PMP hentleika. Ytra portrið kann vera tilvildarligt.</translation>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation type="unfinished">Sjálvvirkandi upplating av ConnectCoin viðskiftara portrið á beinaranum. Hetta virkar bert um tín beinari hevur virktan PCP ella NAT-PMP hentleika. Ytra portrið kann vera tilvildarligt.</translation>
     </message>
     <message>
         <source>Map port using PCP or NA&amp;T-PMP</source>
@@ -1795,8 +1941,8 @@ Trygdaravritið verður kallað &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak
         <translation type="unfinished">Loyv &amp;inngangandi sambondum</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Sambind við Bitcoin netið umvegis ein SOCKS5 proxy.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">Sambind við ConnectCoin netið umvegis ein SOCKS5 proxy.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1871,8 +2017,8 @@ Trygdaravritið verður kallað &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak
         <translation type="unfinished">Um mynt-val møgulleikin er sjónligur ella ikki.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Sambind við Bitcoin netið umvegis ein serstakan SOCKS5 proxy, til at røkka Tor-onion-tænastum.</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">Sambind við ConnectCoin netið umvegis ein serstakan SOCKS5 proxy, til at røkka Tor-onion-tænastum.</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1953,6 +2099,46 @@ Trygdaravritið verður kallað &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">Inntøppaða proxy-atsetrið er ógildigt.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Virkja sprettfráboðanir</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Vís sprettfráboðanir á skriviborðinum, eisini um móttiknar og sendar flytingar. Óvirkið sum vanligt. Villu- og váttanarrøður eru framvegis virknar.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Skerjing minkar munandi um plássið á diskinum, sum krevst til at goyma flytingar. Allar blokkir verða framvegis fullkomiliga staðfestar. Mappur eiga at lesast inn við byrjan og vera virknar, meðan skerjing er virkin, so tær eru samstillaðar áðrenn gomul blokkdata verða strikað; mappur, ið eru aftan fyri skerdu dátunum, kunnu krevja nýggja indeksering. At broyta hesa stilling aftur krevur, at øll blokkketan verður tikin niður av nýggjum.</translation>
+    </message>
+    <message>
+        <source>Proxy &amp;IP:</source>
+        <translation>Mellumtænara-&amp;IP:</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>Sett við -popupnotifications ella popupnotifications í connectcoin.conf.</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1968,8 +2154,8 @@ Trygdaravritið verður kallað &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak
         <translation type="unfinished">Formil</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">Vísta kunningin kann vera ótíðarhóskandi. Tín knútur samstillar við Bitcoin netið, sjálvvirkandi, eftir at samband er fingið við tað; men tann tilgongdin er ikki liðug enn.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">Vísta kunningin kann vera ótíðarhóskandi. Tín knútur samstillar við ConnectCoin netið, sjálvvirkandi, eftir at samband er fingið við tað; men tann tilgongdin er ikki liðug enn.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -2165,16 +2351,16 @@ Trygdaravritið verður kallað &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak
         <translation type="unfinished">Gjaldsumbøn villa</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Bar ikki til at byrja bitcoin: click-to-pay handfaran</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">Bar ikki til at byrja connectcoin: click-to-pay handfaran</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">URI handfaring</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">"bitcoin://" er ikki eitt gildigt URI. Brúka ístaðin 'bitcoin:'.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">"connectcoin://" er ikki eitt gildigt URI. Brúka ístaðin 'connectcoin:'.</translation>
     </message>
     <message>
         <source>Cannot process payment request because BIP70 is not supported.
@@ -2185,8 +2371,8 @@ Vegnað væl kend trygdarhol í BIP70, er harðliga frámælt at fylgja boðum, 
 Fært tú hesi feilboð, skalt tú biðja seljaran, ella tann vinnurekandi, útflýggja tær eitt BIP21-sínamillumvirki URI.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">Bar ikki til at tulkað URI! Tað kann standast av ógildigari Bitcoin adressu ella avskeplaðum URI ávirkjum.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">Bar ikki til at tulkað URI! Tað kann standast av ógildigari ConnectCoin adressu ella avskeplaðum URI ávirkjum.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -2244,6 +2430,16 @@ Fært tú hesi feilboð, skalt tú biðja seljaran, ella tann vinnurekandi, útf
         <source>Outbound</source>
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">Útgangandi</translation>
+    </message>
+    <message>
+        <source>Ping</source>
+        <extracomment>Title of Peers Table column which indicates the current latency of the connection with the peer.</extracomment>
+        <translation>Ping</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <extracomment>Title of Peers Table column which indicates the total amount of network information we have sent to the peer.</extracomment>
+        <translation>Sent</translation>
     </message>
 </context>
 <context>
@@ -2333,8 +2529,8 @@ Fært tú hesi feilboð, skalt tú biðja seljaran, ella tann vinnurekandi, útf
         <translation type="unfinished">Nærnetatsetur</translation>
     </message>
     <message>
-        <source>Network addresses that your Bitcoin node is currently using to communicate with other nodes.</source>
-        <translation type="unfinished">Tín Bitcoin knútur brúkar fylgjandi net-atsetur at samskifta við aðrar knútar.</translation>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation type="unfinished">Tín ConnectCoin knútur brúkar fylgjandi net-atsetur at samskifta við aðrar knútar.</translation>
     </message>
     <message>
         <source>Block chain</source>
@@ -2769,6 +2965,50 @@ Fyri meira upplýsingar um nýtslu av hesi stýristøð, skriva og send %6.
         <source>Unknown</source>
         <translation type="unfinished">Ókunnugt</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Sent</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2785,8 +3025,8 @@ Fyri meira upplýsingar um nýtslu av hesi stýristøð, skriva og send %6.
         <translation type="unfinished">&amp;Boð:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">Eini valfríð boð at festa í gjaldsumbønina, ið kunnu verða víst, tá umbønin verður latin upp. Hav í huga: Boðini verða ikki send, við gjaldinum, umvegis Bitcoin netið.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">Eini valfríð boð at festa í gjaldsumbønina, ið kunnu verða víst, tá umbønin verður latin upp. Hav í huga: Boðini verða ikki send, við gjaldinum, umvegis ConnectCoin netið.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -3086,8 +3326,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
 Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgjaldssatsur á "100 satoshis fyri ktB" fyri eina flyting, ið er 500 tykislig být (helvtin av 1 ktB), at elva til eitt avgjald á 50 satoshis.</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
-        <translation type="unfinished">Tá nøgdin av flytingum er minni enn pláss er fyri teimum, í blokkunum, kunnu blokk-útvinnarar og framsendandi knútar hava lágmark fyri flytingaravgjald. Tað er í lagið at gjalda hesa minstu upphædd sum flytingaravgjald, men hav í huga at tað kann elva til at flytingin ongantíð verður váttað, tá eftirspurningurin, eftir bitcoin flytingum, er stórri enn netið kann útinna.</translation>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
+        <translation type="unfinished">Tá nøgdin av flytingum er minni enn pláss er fyri teimum, í blokkunum, kunnu blokk-útvinnarar og framsendandi knútar hava lágmark fyri flytingaravgjald. Tað er í lagið at gjalda hesa minstu upphædd sum flytingaravgjald, men hav í huga at tað kann elva til at flytingin ongantíð verður váttað, tá eftirspurningurin, eftir ConnectCoin flytingum, er stórri enn netið kann útinna.</translation>
     </message>
     <message>
         <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
@@ -3168,8 +3408,8 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
         <translation type="unfinished">Ger &amp;óundirritaða flyting</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation type="unfinished">Ger eina Partvís Undirritaða Bitcoin Flyting (PSBT) at nýta við t.d. einum avlinju-%1 mappu, ella eini tólbúnaðarmappu við PSBT hentleika.</translation>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation type="unfinished">Ger eina Partvís Undirritaða ConnectCoin Flyting (PSBT) at nýta við t.d. einum avlinju-%1 mappu, ella eini tólbúnaðarmappu við PSBT hentleika.</translation>
     </message>
     <message>
         <source>%1 to '%2'</source>
@@ -3224,7 +3464,7 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
         <translation type="unfinished">Tú hevur møgulleika at hækka avgjaldið seinni (signalerar Replace-By-Fee, BIP-125).</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
         <translation type="unfinished">Vinaliga met um flytingaruppskotið. Hetta ger eina partvís undirritaða bitcoin flyting (PSBT), ið tú kanst goyma ella avrita og síðani undirrita við t.d. eini avlinju %1 mappu, ella eini tólbúnaðarmappu við PSBT hentleika.</translation>
     </message>
@@ -3238,7 +3478,7 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
         <translation type="unfinished">Ynskir tú at fremja hesa flyting?</translation>
     </message>
     <message>
-        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
         <translation type="unfinished">Vinaliga met um flytingina. Tú kanst gera og senda flytingina, ella gera eina partvís undirritaða bitcoin flyting (PSBT), ið tú kanst goyma ella avrita og síðani undirrita við t.d. eini avlinju %1 mappu, ella eini tólbúnaðarmappu við PSBT hentleika.</translation>
     </message>
@@ -3281,7 +3521,7 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
     </message>
     <message>
         <source>Confirm send coins</source>
-        <translation type="unfinished">Vátta bitcoin flyting</translation>
+        <translation type="unfinished">Vátta ConnectCoin flyting</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -3319,8 +3559,8 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">Ávaring: Ógildig Bitcoin adressa</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">Ávaring: Ógildig ConnectCoin adressa</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -3337,6 +3577,26 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(einki spjaldur)</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation>S&amp;end</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Áset eitt tillagað gjald fyri hvørt kB (1.000 byte) av virtuella støddini á flytingini.
+
+Viðmerking: Av tí at gjaldið verður roknað fyri hvørt byte, gevur eitt gjald á «100 connects fyri hvørt kvB» fyri eina flyting á 500 virtuell byte (helvtin av 1 kvB) at enda eitt gjald á bert 50 connects.</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>Núverandi minstagjald verður brúkt. Staðfestingartíðin verður ikki mett.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>Tú kanst hækka gjaldið seinni.</translation>
     </message>
 </context>
 <context>
@@ -3358,8 +3618,8 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
         <translation type="unfinished">Brúka adressuna ið frammanundan var brúkt</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">Bitcoin adressan at rinda til</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">ConnectCoin adressan at rinda til</translation>
     </message>
     <message>
         <source>Alt+A</source>
@@ -3402,8 +3662,12 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
         <translation type="unfinished">Inntøppa eitt spjaldur ið verður knýtt at hesi adressuni í útgjaldsadressuskránni</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">Eini boð, ið vóru partur at bitcoin: URI'inum, ið verða goymd saman við flytingini, og sum tú kann brúka sum tilvísing. Hav í huga: Boðini verða ikki send, við gjaldinum, umvegis Bitcoin netið.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">Eini boð, ið vóru partur at connectcoin: URI'inum, ið verða goymd saman við flytingini, og sum tú kann brúka sum tilvísing. Hav í huga: Boðini verða ikki send, við gjaldinum, umvegis ConnectCoin netið.</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Gjaldið verður drigið frá upphæddini, sum verður send. Móttakarin fær minni ConnectCoin enn tað, tú skrivar í upphæddarteigin. Verða fleiri móttakarar valdir, verður gjaldið býtt javnt.</translation>
     </message>
 </context>
 <context>
@@ -3411,6 +3675,10 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
     <message>
         <source>Create Unsigned</source>
         <translation type="unfinished">Ger óundirritaða flyting</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation>Send</translation>
     </message>
 </context>
 <context>
@@ -3428,8 +3696,8 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
         <translation type="unfinished">Tú kann undirrita boð/sáttmálar við tínum legacy/eldru (P2PKH) adressum, fyri at prógva at tú kann móttaka bitcoins, sendar til tær. Ver ansin so tú ikki skrivar undir nakað ógreitt ella tilvildarligt, tí fysking-álop kunnu royna at snýta teg til at latað tín samleika til tey. Undirrita bert nágreiniligar útsagnir sum tú tekur undir við.</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">Bitcoin adressan at undirskriva boðini við</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">ConnectCoin adressan at undirskriva boðini við</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3460,8 +3728,8 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
         <translation type="unfinished">Avrita undirskriftina á setiborðið</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation type="unfinished">Undirskriva boðini fyri at prógva at Bitcoin-adressan er tín</translation>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation type="unfinished">Undirskriva boðini fyri at prógva at ConnectCoin-adressan er tín</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -3484,8 +3752,8 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
         <translation type="unfinished">Inntøppa undirritara-adressuna, boðið (syrg fyri neyvari varðveitslu av reglubrotum, millumrúmum, teigarum, o.s.fr.), og undirskrift niðanfyri fyri at vátta boðið. Ver varin við ikki at lesa meira inn í boðið enn hvat neyvt stendur í tí, fyri at umgangast svik av einum sokallaðum "man-in-the-middle" álopi. Hav í huga at hetta prógvar bert at undirritarin kann móttakað við adressuni; tað kann ikki prógva sendaraskap av flytingum!</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">Bitcoin-adressan ið undirskrivaði boðini</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">ConnectCoin-adressan ið undirskrivaði boðini</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -3496,8 +3764,8 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
         <translation type="unfinished">Givna undirskrift boðsins</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">Vátta at boðini vóru undirritað av ásettu Bitcoin adressuni</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">Vátta at boðini vóru undirritað av ásettu ConnectCoin adressuni</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3562,6 +3830,10 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">Boð váttaði.</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Tú kanst undirskriva boð ella avtalur við tínum eldru (P2PKH) adressum fyri at prógva, at tú kanst taka ímóti ConnectCoin-ognunum, ið verða sendar hagar. Ansa eftir ikki at undirskriva nakað ógreitt ella tilvildarligt, tí phishing-álop kunnu royna at lumpa teg at lata samleikan frá tær við undirskrift. Undirskriva bert fullfíggjaðar frágreiðingar, sum tú ert samdur í.</translation>
     </message>
 </context>
 <context>
@@ -4005,6 +4277,10 @@ Gev gætur: Av tí at avgjaldið verður roknað fyri hvørt být, fer ein avgja
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>Skriva adressu, P2C-øki, flytingarauðkenni ella merki at leita eftir</translation>
     </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -4196,8 +4472,8 @@ Vel Fíla -&gt; Innles Mappu fyri at innlesa eina mappu.
         <translation type="unfinished">Villa: Dátuheitis-dáta, tilhoyrandi dusmfílu, er ikki rætt. Fekk "%s", væntaði "%s".</translation>
     </message>
     <message>
-        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
-        <translation type="unfinished">Villa: Hendan útgávan av bitcoin-mappuni kann bert innlesa útgávu 1 dumsufílur. Læs útgávu %s dumsufílu</translation>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Villa: Hendan útgávan av ConnectCoin-mappuni kann bert innlesa útgávu 1 dumsufílur. Læs útgávu %s dumsufílu</translation>
     </message>
     <message>
         <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
@@ -5227,6 +5503,116 @@ Vinaliga royn við nýggjastu útgávu av forritinum.
         <source>Settings file could not be written</source>
         <translation type="unfinished">Skriving av uppsetanarfílu miseydnaðist</translation>
     </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>Málið fyri vekslupengar má vera eitt P2PK-mál av slag 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin stuðlar bert P2PK-adressum av slag 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin stuðlar bert P2PK-adressum fyri vekslupengar av slag 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>ConnectCoin-flytingar krevja gild mál av slag 1 ella PAY_TO_CONNECT-úttøk av slag 2</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>ConnectCoin-úttøk av slag 1 stuðla bert SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>Inntakið er ikki ein fullfíggjað nýtsla av slag 1 við SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>Inntakið krevur fullfíggjað vitnisdáta til eina P2C-prógvan</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>Høvuðsnetið er ikki sett í gongd: eingin upphavsblokkur er ásettur. Nýt -testnet4 til almenna royndarkoyring ella -regtest til staðbundna royndarkoyring.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>Eingin almenn URL til upprunakotu, sum verkætlanin eigur, er sett upp fyri hesa menningarútgávu.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Ikki nóg nógvir fílulýsar eru tøkir. Royn at minka -rpcmaxconnections ella brúka sjálvgefna virðið %d</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>Vinarliga legg títt íkast afturat, um tú heldur, at %s er nyttigt.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Umhugsa at broyta %s (%s) ella %s (%s).</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf er úrelt og verður heilt tikið burtur í næstu útgávu.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>Ein álvarsom innanhýsis villa kom fyri; sí %s fyri nærri upplýsingar: %s</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Villa: Kundi ikki leggja flyting %s í mappuna til eygleiðing</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Villa: Kundi ikki stovna fíluna '%s'</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Villa: Útflutningsmálið '%s' er longu til</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Villa: Útflutningsmálið kann ikki vera tómt</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Villa: Kundi ikki stovna nýggja mappu til eygleiðing. %s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Villa: Kundi ikki skriva útfluttu mappuna</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Villa: Mappan hevur ongar lýsarar at flyta út</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Villa: Kann ikki staðfesta dátugrunnsflytingina fyri útflutning av mappu til eygleiðing</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Villa: Dátugrunnsflyting kann ikki gerast fyri nýggju mappuna til eygleiðing %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>Gjaldssatsurin (%s) er lægri enn stillingin fyri minsta gjaldssats (%s).</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>Møguleikin -testactivationheight kann ikki brúkast á høvuðsnetinum.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>Møguleikin -vbparams kann ikki brúkast á høvuðsnetinum.</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Kundi ikki skriva millumgoymsluna fyri lýsarar</translation>
+    </message>
 </context>
 <context>
     <name>P2CClaimDialog</name>
@@ -5574,7 +5960,92 @@ Root certificates version: %2</source>
     <name>MiningPage</name>
     <message>
         <source>Optional: empty uses this wallet</source>
-        <translation>Valfrítt: tómt øki brúkar hesa mappuna</translation>
+        <translation>Valfrítt: tómt brúkar hesa mappu</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPU-træðrir:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Kundi ikki gera eina lønaradressu. Kanna, at mappan kann gera móttøkuadressur.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Villa</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>FAST-støða deilir umleið 2 GiB av RandomX-minni við staðfestingina. Fleiri træðrir brúka meira CPU-orku og streym; lat orku vera eftir til knútin. Tað kann taka eina løtu at gera dátusavnið klárt.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Vinn blokkir á royndarnetinum við tíni CPU og RandomX. Námsvinna er sløkt, til tú byrjar hana. Allar mappur í hesum knúti deila sama námsvinnara, og hann heldur fram, tá tú skiftir flipa ella letur eina mappu aftur.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Námsvinna</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Námsvinna / ger RandomX klárt</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Nýggj adressa úr hesi mappu</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Lønaradressa fyri hetta netið</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Lønaradressa:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Byrja námsvinnu</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Byrjar</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Støða: %1
+Hashferð: %2 H/s
+Hash: %3 | Góðtiknar blokkir: %4
+Virkin lønaradressa: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Steðga námsvinnu</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Steðgað</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Steðgar (bíðar eftir verandi arbeiði)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Bíðar eftir at knúturin verður samstillaður</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Ávaring: %1 námsvinnu-træðrir eru fleiri enn tær %2 logisku CPU, sum eru funnar. Hetta kann minka hashferðina og gera knútin seinni.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
     </message>
 </context>
 </TS>

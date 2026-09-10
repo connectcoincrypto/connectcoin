@@ -54,13 +54,13 @@
         <translation type="unfinished">V&amp;älj</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">Detta är dina Bitcoin-adresser för att skicka betalningar. Kontrollera alltid belopp och mottagaradress innan du skickar bitcoin.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">Detta är dina ConnectCoin-adresser för att skicka betalningar. Kontrollera alltid belopp och mottagaradress innan du skickar ConnectCoin.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Detta är dina Bitcoinadresser för att ta emot betalningar. Använd knappen 'Skapa ny mottagaradress' i mottagsfliken för att skapa nya adresser. Signering är bara tillgänglig för adresser av typen 'legacy'</translation>
+        <translation type="unfinished">Detta är dina ConnectCoinadresser för att ta emot betalningar. Använd knappen 'Skapa ny mottagaradress' i mottagsfliken för att skapa nya adresser. Signering är bara tillgänglig för adresser av typen 'legacy'</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -96,6 +96,14 @@ Försök igen.</translation>
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">Export misslyckades</translation>
+    </message>
+    <message>
+        <source>Sending addresses - %1</source>
+        <translation type="unfinished">Avsändaradresser - %1</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the clipboard</source>
+        <translation>Kopiera den markerade adressen till urklipp</translation>
     </message>
 </context>
 <context>
@@ -156,8 +164,8 @@ Försök igen.</translation>
         <translation type="unfinished">Bekräfta kryptering av plånbok</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">VARNING: Om du krypterar din plånbok och glömmer din lösenfras, &lt;b&gt;FÖRLORAR DU ALLA DINA BITCOIN&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">VARNING: Om du krypterar din plånbok och glömmer din lösenfras, &lt;b&gt;FÖRLORAR DU ALLA DINA CONNECTCOIN&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -184,8 +192,8 @@ Försök igen.</translation>
         <translation type="unfinished">Tillbaka</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation type="unfinished">Kom ihåg att kryptering av din plånbok inte helt kan skydda dig från stöld av dina bitcoins om skadlig kod infekterat din dator.</translation>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
+        <translation type="unfinished">Kom ihåg att kryptering av din plånbok inte helt kan skydda dig från stöld av dina ConnectCoins om skadlig kod infekterat din dator.</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -315,8 +323,8 @@ Försök igen.</translation>
         <translation type="unfinished">Belopp</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Ange en Bitcoin-adress (t.ex. %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">Ange en ConnectCoin-adress (t.ex. %1)</translation>
     </message>
     <message>
         <source>Inbound</source>
@@ -348,37 +356,37 @@ Försök igen.</translation>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n second(s)</numerusform>
-            <numerusform>%n second(s)</numerusform>
+        <translation>
+            <numerusform>%n sekund</numerusform>
+            <numerusform>%n sekunder</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n minute(s)</numerusform>
-            <numerusform>%n minute(s)</numerusform>
+        <translation>
+            <numerusform>%n minut</numerusform>
+            <numerusform>%n minuter</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n hour(s)</numerusform>
-            <numerusform>%n hour(s)</numerusform>
+        <translation>
+            <numerusform>%n timme</numerusform>
+            <numerusform>%n timmar</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n day(s)</numerusform>
-            <numerusform>%n day(s)</numerusform>
+        <translation>
+            <numerusform>%n dag</numerusform>
+            <numerusform>%n dagar</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n week(s)</numerusform>
-            <numerusform>%n week(s)</numerusform>
+        <translation>
+            <numerusform>%n vecka</numerusform>
+            <numerusform>%n veckor</numerusform>
         </translation>
     </message>
     <message>
@@ -387,14 +395,112 @@ Försök igen.</translation>
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n year(s)</numerusform>
-            <numerusform>%n year(s)</numerusform>
+        <translation>
+            <numerusform>%n år</numerusform>
+            <numerusform>%n år</numerusform>
         </translation>
     </message>
     <message>
         <source>default wallet</source>
         <translation type="unfinished">Standardplånbok</translation>
+    </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <extracomment>Short-lived peer connection type that solicits known addresses from a peer.</extracomment>
+        <translation>Adresshämtning</translation>
+    </message>
+    <message>
+        <source>Default system font "%1"</source>
+        <translation>Systemets standardteckensnitt ”%1”</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <extracomment>Short-lived peer connection type that tests the aliveness of known addresses.</extracomment>
+        <translation>Sond</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <extracomment>Peer connection type established manually through one of several methods.</extracomment>
+        <translation>Manuell</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>Privat utsändning</translation>
+    </message>
+    <message>
+        <source>Unroutable</source>
+        <translation>Ej routbar</translation>
     </message>
 </context>
 <context>
@@ -465,8 +571,8 @@ Försök igen.</translation>
         <translation type="unfinished">Proxy är &lt;b&gt; aktiverad &lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Skicka bitcoin till en Bitcoin-adress</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">Skicka ConnectCoin till en ConnectCoin-adress</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -509,16 +615,16 @@ Försök igen.</translation>
         <translation type="unfinished">Signera &amp;meddelandet...</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Signera meddelanden med dina Bitcoin-adresser för att bevisa att du äger dem</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">Signera meddelanden med dina ConnectCoin-adresser för att bevisa att du äger dem</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">&amp;Bekräfta meddelandet…</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">Verifiera meddelanden för att vara säker på att de signerades med angivna Bitcoin-adresser</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">Verifiera meddelanden för att vara säker på att de signerades med angivna ConnectCoin-adresser</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -577,8 +683,8 @@ Försök igen.</translation>
         <translation type="unfinished">Ansluter till noder...</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Begär betalningar (skapar QR-koder och bitcoin: -URIer)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">Begär betalningar (skapar QR-koder och connectcoin: -URIer)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -628,16 +734,16 @@ Försök igen.</translation>
         <translation type="unfinished">Uppdaterad</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">Läs in Delvis signerad Bitcoin transaktion (PSBT)</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">Läs in Delvis signerad ConnectCoin transaktion (PSBT)</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">Ladda PSBT från &amp;urklipp...</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">Läs in Delvis signerad Bitcoin transaktion (PSBT) från urklipp</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">Läs in Delvis signerad ConnectCoin transaktion (PSBT) från urklipp</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -656,8 +762,8 @@ Försök igen.</translation>
         <translation type="unfinished">Mottaga&amp;radresser</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">Öppna en bitcoin:-URI</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">Öppna en connectcoin:-URI</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -694,8 +800,8 @@ Försök igen.</translation>
         <translation type="unfinished">Migrera en plånbok</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation type="unfinished">Visa %1 hjälpmeddelande för att få en lista med möjliga Bitcoin kommandoradsalternativ.</translation>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
+        <translation type="unfinished">Visa %1 hjälpmeddelande för att få en lista med möjliga ConnectCoin kommandoradsalternativ.</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
@@ -754,11 +860,11 @@ Försök igen.</translation>
         <translation type="unfinished">V&amp;isa</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform>%n aktiva anslutningar till Bitcoin-nätverket.</numerusform>
-            <numerusform>%n aktiva anslutningar till Bitcoin-nätverket.</numerusform>
+            <numerusform>%n aktiva anslutningar till ConnectCoin-nätverket.</numerusform>
+            <numerusform>%n aktiva anslutningar till ConnectCoin-nätverket.</numerusform>
         </translation>
     </message>
     <message>
@@ -868,6 +974,75 @@ Försök igen.</translation>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>Skapa pay-to-connect-belöningar</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Utvinning</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>Styr CPU-utvinning</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Alla filer</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Exportfel</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>Exporten lyckades</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>Exportera en version av den aktuella plånboken som endast bevakar och kan återställas på en annan nod.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>Exportera plånbok som endast bevakar</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Information</translation>
+    </message>
+    <message>
+        <source>Invalid Wallet Name</source>
+        <translation>Ogiltigt plånboksnamn</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>Återställ och migrera plånbok</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>Återställ och migrera säkerhetskopia av plånbok</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>Återställ och migrera plånboksfil…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>Spara export av plånbok som endast bevakar</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>Plånboken har exporterats till </translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>Plånboksnamnet får inte vara tomt</translation>
     </message>
 </context>
 <context>
@@ -1011,6 +1186,10 @@ Försök igen.</translation>
         <source>(change)</source>
         <translation type="unfinished">(växel)</translation>
     </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>Kan variera med +/- %1 connect per indata.</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1103,6 +1282,50 @@ Om den här plånboken innehåller lösbara</translation>
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">Migrering genomförd</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>Är du säker på att du vill återställa plånboksfilen &lt;i&gt;%1&lt;/i&gt; till &lt;i&gt;%2&lt;/i&gt; och migrera den?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Om noden är beskuren och plånboken skapades före beskärningshöjden kan migreringen misslyckas när den migrerade plånboken ska läsas in.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Läs in plånboken efter migreringen</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>Återställ och migrera plånbok</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>När plånboken återställs kopieras säkerhetskopian till plånbokskatalogen och placeras enligt den vanliga katalogstrukturen för plånböcker. Originalfilen ändras inte.
+
+Migreringen omvandlar den återställda plånboken till en eller flera deskriptorplånböcker. En ny säkerhetskopia av plånboken måste göras.
+Om plånboken innehåller skript som endast bevakas skapas en ny plånbok med dessa skript.
+Om plånboken innehåller lösbara skript som inte bevakas skapas en annan ny plånbok med dessa skript.
+
+Migreringen skapar en säkerhetskopia av plånboken innan den migreras. Säkerhetskopian får namnet &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak och finns i plånbokens katalog. Om migreringen blir felaktig kan säkerhetskopian återställas med funktionen ”Återställ plånbok”.</translation>
+    </message>
+    <message>
+        <source>Solvable but not watched scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>Lösbara skript som inte bevakas har migrerats till en ny plånbok med namnet '%1'.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>Plånboken lästes inte in efter migreringen. Du kan öppna den via menyn ”Arkiv &gt; Öppna plånbok”.</translation>
+    </message>
+    <message>
+        <source>Watchonly scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>Skript som endast bevakas har migrerats till en ny plånbok med namnet '%1'.</translation>
     </message>
 </context>
 <context>
@@ -1240,6 +1463,10 @@ Om den här plånboken innehåller lösbara</translation>
         <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
         <translation type="unfinished">Kompilerad utan stöd för extern signering (krävs för extern signering)</translation>
     </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>Skapa en tom plånbok. Tomma plånböcker har från början inga privata nycklar eller skript. Privata nycklar och adresser kan importeras med deskriptorer senare.</translation>
+    </message>
 </context>
 <context>
     <name>EditAddressDialog</name>
@@ -1276,8 +1503,8 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Redigera avsändaradress</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">Den angivna adressen "%1" är inte en giltig Bitcoin-adress.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">Den angivna adressen "%1" är inte en giltig ConnectCoin-adress.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1328,6 +1555,10 @@ Om den här plånboken innehåller lösbara</translation>
     <message>
         <source>Command-line options</source>
         <translation type="unfinished">Kommandoradsalternativ</translation>
+    </message>
+    <message>
+        <source>version</source>
+        <translation>version</translation>
     </message>
 </context>
 <context>
@@ -1444,6 +1675,14 @@ Om den här plånboken innehåller lösbara</translation>
         <source>Error</source>
         <translation type="unfinished">Fel</translation>
     </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 kommer att hämta och lagra en kopia av ConnectCoins blockkedja.</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1452,8 +1691,8 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Formulär</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">Nyligen gjorda transaktioner visas inte korrekt och därför kan din plånboks saldo visas felaktigt. Denna information kommer att visas korrekt så snart din plånbok har synkroniserats med Bitcoin-nätverket enligt informationen nedan.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">Nyligen gjorda transaktioner visas inte korrekt och därför kan din plånboks saldo visas felaktigt. Denna information kommer att visas korrekt så snart din plånbok har synkroniserats med ConnectCoin-nätverket enligt informationen nedan.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1503,17 +1742,29 @@ Om den här plånboken innehåller lösbara</translation>
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">Okänd. För-synkar rubriker (%1, %2%)...</translation>
     </message>
+    <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Försök att spendera ConnectCoin-medel som påverkas av transaktioner som ännu inte visas kommer inte att godtas av nätverket.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">Öppna bitcoin-URI</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">Öppna ConnectCoin-URI</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">Klistra in adress från Urklipp</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1656,8 +1907,8 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Tillåt inkommande anslutningar</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Anslut till Bitcoin-nätverket genom en SOCKS5-proxy.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">Anslut till ConnectCoin-nätverket genom en SOCKS5-proxy.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1724,8 +1975,8 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Om myntkontrollfunktioner skall visas eller inte</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Anslut till Bitcoin-nätverket genom en separat SOCKS5-proxy för onion-tjänster genom Tor.</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">Anslut till ConnectCoin-nätverket genom en separat SOCKS5-proxy för onion-tjänster genom Tor.</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1797,6 +2048,94 @@ Om den här plånboken innehåller lösbara</translation>
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">Den angivna proxy-adressen är ogiltig.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Aktivera popupaviseringar</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Visa popupaviseringar på skrivbordet, inklusive inkommande och skickade transaktioner. Avstängt som standard. Fel- och bekräftelsedialoger förblir aktiverade.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>&amp;Port:</source>
+        <translation>&amp;Port: </translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
+        <source>&amp;External signer script path</source>
+        <translation>Skriptsökväg för &amp;extern signerare</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation>&amp;OK</translation>
+    </message>
+    <message>
+        <source>&amp;Third-party transaction URLs</source>
+        <translation>Transaktions-URL:er från &amp;tredje part</translation>
+    </message>
+    <message>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation>Öppna automatiskt ConnectCoin-klientens port på routern. Detta fungerar bara om routern stöder PCP eller NAT-PMP och funktionen är aktiverad. Den externa porten kan vara slumpmässig.</translation>
+    </message>
+    <message>
+        <source>Current settings will be backed up at "%1".</source>
+        <extracomment>Text explaining to the user that the client's current settings will be backed up at a specific location. %1 is a stand-in argument for the backup location's path.</extracomment>
+        <translation>De aktuella inställningarna säkerhetskopieras till ”%1”.</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Beskärning minskar avsevärt det diskutrymme som krävs för att lagra transaktioner. Alla block valideras fortfarande fullständigt. Plånböcker bör läsas in vid start och hållas aktiva medan beskärning är aktiverad, så att de förblir synkroniserade innan gamla blockdata tas bort. Plånböcker som hamnar efter de beskurna uppgifterna kan behöva en omindexering. Om du återställer den här inställningen måste hela blockkedjan hämtas igen.</translation>
+    </message>
+    <message>
+        <source>Expert</source>
+        <translation>Expert</translation>
+    </message>
+    <message>
+        <source>Map port using PCP or NA&amp;T-PMP</source>
+        <translation>Mappa port med PCP eller NA&amp;T-PMP</translation>
+    </message>
+    <message>
+        <source>Maximum database cache size. Make sure you have enough RAM. A larger cache can contribute to faster sync, after which the benefit is less pronounced for most use cases. Lowering the cache size will reduce memory usage. Unused mempool memory is shared for this cache.</source>
+        <extracomment>Tooltip text for Options window setting that sets the size of the database cache. Explains the corresponding effects of increasing/decreasing this value.</extracomment>
+        <translation>Största storlek för databascachen. Se till att du har tillräckligt med RAM. En större cache kan göra synkroniseringen snabbare; därefter är nyttan mindre märkbar i de flesta fall. En mindre cache minskar minnesanvändningen. Oanvänt mempool-minne delas med denna cache.</translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>Anges med -popupnotifications eller popupnotifications i connectcoin.conf.</translation>
+    </message>
+    <message>
+        <source>Third-party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
+        <translation>URL:er från tredje part (t.ex. en blockutforskare) som visas som alternativ i snabbmenyn på transaktionsfliken. %s i URL:en ersätts med transaktionens hash. Flera URL:er avgränsas med lodrätt streck |.</translation>
+    </message>
+    <message>
+        <source>Whether to set subtract fee from amount as default or not.</source>
+        <extracomment>Tooltip text for Options window setting that sets subtracting the fee from a sending amount as default.</extracomment>
+        <translation>Om avgiften ska dras av från beloppet som standard eller inte.</translation>
+    </message>
+    <message>
+        <source>Whether to show PSBT controls.</source>
+        <extracomment>Tooltip text for options window setting that enables PSBT controls.</extracomment>
+        <translation>Om PSBT-kontroller ska visas.</translation>
+    </message>
 </context>
 <context>
     <name>OverviewPage</name>
@@ -1805,8 +2144,8 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Formulär</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">Den visade informationen kan vara inaktuell. Plånboken synkroniseras automatiskt med Bitcoin-nätverket efter att anslutningen är upprättad, men denna process har inte slutförts ännu.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">Den visade informationen kan vara inaktuell. Plånboken synkroniseras automatiskt med ConnectCoin-nätverket efter att anslutningen är upprättad, men denna process har inte slutförts ännu.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1889,9 +2228,9 @@ Om den här plånboken innehåller lösbara</translation>
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Signerade %n indata, men fler signaturer behövs fortfarande.</numerusform>
+            <numerusform>Signerade %n indata, men fler signaturer behövs fortfarande.</numerusform>
         </translation>
     </message>
     <message>
@@ -1936,9 +2275,9 @@ Om den här plånboken innehåller lösbara</translation>
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Transaktionen har %n osignerad indata.</numerusform>
+            <numerusform>Transaktionen har %n osignerade indata.</numerusform>
         </translation>
     </message>
     <message>
@@ -1951,7 +2290,7 @@ Om den här plånboken innehåller lösbara</translation>
     </message>
     <message>
         <source>(But no wallet is loaded.)</source>
-        <translation type="unfinished">&lt;br&gt;(</translation>
+        <translation>(Men ingen plånbok är inläst.)</translation>
     </message>
     <message>
         <source>(But this wallet cannot sign transactions.)</source>
@@ -1965,6 +2304,35 @@ Om den här plånboken innehåller lösbara</translation>
         <source>Transaction status is unknown.</source>
         <translation type="unfinished">Transaktionens status är okänd.</translation>
     </message>
+    <message>
+        <source>Cannot sign inputs while wallet is locked.</source>
+        <translation>Kan inte signera indata när plånboken är låst.</translation>
+    </message>
+    <message>
+        <source>PSBT Operations</source>
+        <translation>PSBT-åtgärder</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation>Delvis signerad transaktion (binär)</translation>
+    </message>
+    <message>
+        <source>Signed transaction successfully. Transaction is ready to broadcast.</source>
+        <translation>Transaktionen signerades. Den är redo att sändas ut.</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast failed: %1</source>
+        <translation>Utsändning av transaktionen misslyckades: %1</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast successfully! Transaction ID: %1</source>
+        <translation>Transaktionen sändes ut! Transaktions-ID: %1</translation>
+    </message>
+    <message>
+        <source>Transaction is fully signed and ready for broadcast.</source>
+        <translation>Transaktionen är fullständigt signerad och redo att sändas ut.</translation>
+    </message>
 </context>
 <context>
     <name>PaymentServer</name>
@@ -1973,24 +2341,32 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Fel vid betalningsbegäran</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Kan inte starta bitcoin: klicka-och-betala hanteraren</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">Kan inte starta connectcoin: klicka-och-betala hanteraren</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">URI-hantering</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin://' är inte en accepterad URI. Använd 'bitcoin:' istället.</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin://' är inte en accepterad URI. Använd 'connectcoin:' istället.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">URI kan inte parsas! Detta kan orsakas av en ogiltig Bitcoin-adress eller felaktiga URI-parametrar.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">URI kan inte parsas! Detta kan orsakas av en ogiltig ConnectCoin-adress eller felaktiga URI-parametrar.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
         <translation type="unfinished">Hantering av betalningsbegäransfil</translation>
+    </message>
+    <message>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation>Kan inte behandla betalningsbegäran eftersom BIP70 inte stöds.
+På grund av utbredda säkerhetsbrister i BIP70 rekommenderas starkt att du ignorerar alla uppmaningar från handlare om att byta plånbok.
+Om du får detta fel bör du be handlaren om en BIP21-kompatibel URI.</translation>
     </message>
 </context>
 <context>
@@ -2044,6 +2420,16 @@ Om den här plånboken innehåller lösbara</translation>
         <source>Outbound</source>
         <extracomment>An Outbound Connection to a Peer.</extracomment>
         <translation type="unfinished">Utgående</translation>
+    </message>
+    <message>
+        <source>Peer</source>
+        <extracomment>Title of Peers Table column which contains a unique number used to identify a connection.</extracomment>
+        <translation>Motpart</translation>
+    </message>
+    <message>
+        <source>Ping</source>
+        <extracomment>Title of Peers Table column which indicates the current latency of the connection with the peer.</extracomment>
+        <translation>Ping</translation>
     </message>
 </context>
 <context>
@@ -2392,6 +2778,227 @@ Om den här plånboken innehåller lösbara</translation>
         <source>Unknown</source>
         <translation type="unfinished">Okänd</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>&amp;Copy IP/Netmask</source>
+        <extracomment>Context menu action to copy the IP/Netmask of a banned peer. IP/Netmask is the combination of a peer's IP address and its Netmask. For IP address, see: https://en.wikipedia.org/wiki/IP_address.</extracomment>
+        <translation>&amp;Kopiera IP/nätmask</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Information</translation>
+    </message>
+    <message>
+        <source>(peer: %1)</source>
+        <translation>(motpart: %1)</translation>
+    </message>
+    <message>
+        <source>Address Relay</source>
+        <extracomment>Text title for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>Adressvidarebefordran</translation>
+    </message>
+    <message>
+        <source>Addresses Processed</source>
+        <extracomment>Text title for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>Behandlade adresser</translation>
+    </message>
+    <message>
+        <source>Addresses Rate-Limited</source>
+        <extracomment>Text title for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>Hastighetsbegränsade adresser</translation>
+    </message>
+    <message>
+        <source>Current block height</source>
+        <translation>Aktuell blockhöjd</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation>Tid som har gått sedan ett nytt block som klarade de inledande giltighetskontrollerna togs emot från denna motpart.</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <extracomment>Tooltip text for the Last Transaction field in the peer details area.</extracomment>
+        <translation>Tid som har gått sedan en ny transaktion som godtogs i vår mempool togs emot från denna motpart.</translation>
+    </message>
+    <message>
+        <source>Hide Peers Detail</source>
+        <translation>Dölj motpartsdetaljer</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation>Vidarebefordran av kompakta block med hög bandbredd enligt BIP152: %1</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>In:</translation>
+    </message>
+    <message>
+        <source>Inbound: initiated by peer</source>
+        <extracomment>Explanatory text for an inbound peer connection.</extracomment>
+        <translation>Inkommande: initierad av motparten</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Minsta pingtid</translation>
+    </message>
+    <message>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
+        <translation>Nätverksadresser som din ConnectCoin-nod för närvarande använder för att kommunicera med andra noder.</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to request addresses from a peer.</extracomment>
+        <translation>Utgående adresshämtning: kortvarig, för att begära adresser</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays network information about blocks and not transactions or addresses.</extracomment>
+        <translation>Utgående blockvidarebefordran: vidarebefordrar inte transaktioner eller adresser</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to test the aliveness of known addresses.</extracomment>
+        <translation>Utgående sond: kortvarig, för att testa adresser</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <extracomment>Explanatory text for an outbound peer connection that relays all network information. This is the default behavior for outbound connections.</extracomment>
+        <translation>Utgående fullständig vidarebefordran: standard</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <extracomment>Explanatory text for an outbound peer connection that was established manually through one of several methods. The numbered arguments are stand-ins for the methods available to establish manual connections.</extracomment>
+        <translation>Utgående manuell: tillagd med RPC %1 eller konfigurationsalternativen %2/%3</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>Privat utsändning: kortvarig, för att sända ut integritetskänsliga transaktioner</translation>
+    </message>
+    <message>
+        <source>Session ID</source>
+        <translation>Sessions-ID</translation>
+    </message>
+    <message>
+        <source>The direction and type of peer connection: %1</source>
+        <translation>Motpartsanslutningens riktning och typ: %1</translation>
+    </message>
+    <message>
+        <source>The mapped Autonomous System used for diversifying peer selection.</source>
+        <translation>Det mappade autonoma system som används för att variera valet av motparter.</translation>
+    </message>
+    <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation>Det nätverksprotokoll som motparten är ansluten genom: IPv4, IPv6, Onion, I2P eller CJDNS.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</source>
+        <extracomment>Tooltip text for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation>Det totala antalet adresser som tagits emot från denna motpart och kasserats (inte behandlats) på grund av hastighetsbegränsning.</translation>
+    </message>
+    <message>
+        <source>The total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</source>
+        <extracomment>Tooltip text for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation>Det totala antalet adresser som tagits emot från denna motpart och behandlats (exklusive adresser som kasserats på grund av hastighetsbegränsning).</translation>
+    </message>
+    <message>
+        <source>The transport layer version: %1</source>
+        <translation>Transportlagrets version: %1</translation>
+    </message>
+    <message>
+        <source>Transport</source>
+        <translation>Transport</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Version</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.
+Use up and down arrows to navigate history, and %2 to clear screen.
+Use %3 and %4 to increase or decrease the font size.
+Type %5 for an overview of available commands.
+For more information on using this console, type %6.
+
+%7WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.%8</source>
+        <extracomment>RPC console welcome message. Placeholders %7 and %8 are style tags for the warning content, and they are not space separated from the rest of the text intentionally.</extracomment>
+        <translation>Välkommen till RPC-konsolen i %1.
+Använd uppåt- och nedåtpilarna för att navigera i historiken och %2 för att rensa skärmen.
+Använd %3 och %4 för att öka eller minska teckenstorleken.
+Skriv %5 för en översikt över tillgängliga kommandon.
+Skriv %6 för mer information om hur konsolen används.
+
+%7VARNING: Bedragare har uppmanat användare att skriva kommandon här och på så sätt stulit innehållet i deras plånböcker. Använd inte konsolen utan att fullständigt förstå konsekvenserna av ett kommando.%8</translation>
+    </message>
+    <message>
+        <source>Whether we relay addresses to this peer.</source>
+        <extracomment>Tooltip text for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation>Om vi vidarebefordrar adresser till denna motpart.</translation>
+    </message>
+    <message>
+        <source>Whether we relay transactions to this peer.</source>
+        <translation>Om vi vidarebefordrar transaktioner till denna motpart.</translation>
+    </message>
+    <message>
+        <source>detecting: peer could be v1 or v2</source>
+        <extracomment>Explanatory text for "detecting" transport type.</extracomment>
+        <translation>identifierar: motparten kan använda v1 eller v2</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation>ingen vidarebefordran med hög bandbredd vald</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation>motparten valde oss för vidarebefordran med hög bandbredd</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>via %1</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation>vi valde motparten för vidarebefordran med hög bandbredd</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2408,8 +3015,8 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">&amp;Meddelande:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">Ett valfritt meddelande att bifoga betalningsbegäran, vilket visas när begäran öppnas. Obs: Meddelandet kommer inte att sändas med betalningen över Bitcoin-nätverket.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">Ett valfritt meddelande att bifoga betalningsbegäran, vilket visas när begäran öppnas. Obs: Meddelandet kommer inte att sändas med betalningen över ConnectCoin-nätverket.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -2483,6 +3090,14 @@ Om den här plånboken innehåller lösbara</translation>
         <source>Could not generate new %1 address</source>
         <translation type="unfinished">Kan inte generera ny %1 adress</translation>
     </message>
+    <message>
+        <source>An optional label to associate with the new receiving address (used by you to identify an invoice).  It is also attached to the payment request.</source>
+        <translation>En valfri etikett att koppla till den nya mottagaradressen (som du använder för att identifiera en faktura).  Den bifogas också betalningsbegäran.</translation>
+    </message>
+    <message>
+        <source>An optional message that is attached to the payment request and may be displayed to the sender.</source>
+        <translation>Ett valfritt meddelande som bifogas betalningsbegäran och kan visas för avsändaren.</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -2534,6 +3149,10 @@ Om den här plånboken innehåller lösbara</translation>
         <source>Request payment to %1</source>
         <translation type="unfinished">Begär betalning till %1</translation>
     </message>
+    <message>
+        <source>Verify this address on e.g. a hardware wallet screen</source>
+        <translation>Verifiera adressen på t.ex. skärmen på en hårdvaruplånbok</translation>
+    </message>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -2570,7 +3189,7 @@ Om den här plånboken innehåller lösbara</translation>
     <name>SendCoinsDialog</name>
     <message>
         <source>Send Coins</source>
-        <translation type="unfinished">Skicka Bitcoins</translation>
+        <translation type="unfinished">Skicka ConnectCoins</translation>
     </message>
     <message>
         <source>Coin Control Features</source>
@@ -2665,7 +3284,7 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Dölj alternativ för transaktionsavgift</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
         <translation type="unfinished">När transaktionsvolymen är mindre än utrymmet i blocken kan både brytardatorer och relänoder kräva en minimiavgift. Det är okej att bara betala denna minimiavgift, men du ska vara medveten om att det kan leda till att en transaktion aldrig bekräftas så fort efterfrågan på bitcointransaktioner är större än vad nätverket kan hantera.</translation>
     </message>
     <message>
@@ -2737,8 +3356,8 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Sk&amp;apa Osignerad</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation type="unfinished">Skapar en delvis signerad Bitcoin transaktion (PSBT) att använda vid t.ex. en offline %1 plånbok, eller en PSBT-kompatibel hårdvaruplånbok.</translation>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation type="unfinished">Skapar en delvis signerad ConnectCoin transaktion (PSBT) att använda vid t.ex. en offline %1 plånbok, eller en PSBT-kompatibel hårdvaruplånbok.</translation>
     </message>
     <message>
         <source>%1 to '%2'</source>
@@ -2770,9 +3389,9 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Du kan höja avgiften senare (signalerar Replace-By-Fee, BIP-125).</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
-        <translation type="unfinished">Verifiera ditt transaktionsförslag. Det kommer skapas en delvis signerad Bitcoin transaktion (PSBT) som du kan spara eller kopiera och sen signera med t.ex. en offline %1 plånbok, eller en PSBT-kompatibel hårdvaruplånbok.</translation>
+        <translation type="unfinished">Verifiera ditt transaktionsförslag. Det kommer skapas en delvis signerad ConnectCoin transaktion (PSBT) som du kan spara eller kopiera och sen signera med t.ex. en offline %1 plånbok, eller en PSBT-kompatibel hårdvaruplånbok.</translation>
     </message>
     <message>
         <source>%1 from wallet '%2'</source>
@@ -2830,14 +3449,14 @@ Om den här plånboken innehåller lösbara</translation>
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform>Estimated to begin confirmation within %n block(s).</numerusform>
-            <numerusform>Estimated to begin confirmation within %n block(s).</numerusform>
+        <translation>
+            <numerusform>Bekräftelse beräknas börja inom %n block.</numerusform>
+            <numerusform>Bekräftelse beräknas börja inom %n block.</numerusform>
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">Varning: Ogiltig Bitcoin-adress</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">Varning: Ogiltig ConnectCoin-adress</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -2854,6 +3473,92 @@ Om den här plånboken innehåller lösbara</translation>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(Ingen etikett)</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks…)</source>
+        <translation>(Smart avgift har ännu inte initierats. Det tar vanligtvis några block…)</translation>
+    </message>
+    <message>
+        <source>External balance:</source>
+        <translation>Externt saldo:</translation>
+    </message>
+    <message>
+        <source>External signer failure</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Fel på extern signerare</translation>
+    </message>
+    <message>
+        <source>External signer not found</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Extern signerare hittades inte</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk</source>
+        <translation>PSBT sparad på disk</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation>Delvis signerad transaktion (binär)</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
+        <translation>Granska din transaktion. Du kan skapa och skicka transaktionen eller skapa en delvis signerad ConnectCoin-transaktion (PSBT) som du kan spara eller kopiera och sedan signera med t.ex. en frånkopplad %1-plånbok eller en PSBT-kompatibel hårdvaruplånbok.</translation>
+    </message>
+    <message>
+        <source>Set external signer script path in Options -&gt; Wallet</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation>Ange skriptsökvägen för extern signerare under Alternativ -&gt; Plånbok</translation>
+    </message>
+    <message>
+        <source>Sign on device</source>
+        <extracomment>"device" usually means a hardware wallet.</extracomment>
+        <translation>Signera på enhet</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Ange en anpassad avgift per kB (1 000 byte) av transaktionens virtuella storlek.
+
+Obs:  Eftersom avgiften beräknas per byte skulle avgiftssatsen ”100 connects per kvB” för en transaktion på 500 virtuella byte (hälften av 1 kvB) ge en slutlig avgift på bara 50 connects.</translation>
+    </message>
+    <message>
+        <source>The PSBT has been copied to the clipboard. You can also save it.</source>
+        <translation>PSBT har kopierats till urklipp. Du kan också spara den.</translation>
+    </message>
+    <message>
+        <source>To review recipient list click "Show Details…"</source>
+        <translation>Klicka på ”Visa detaljer…” för att granska mottagarlistan</translation>
+    </message>
+    <message>
+        <source>Unsigned Transaction</source>
+        <comment>PSBT copied</comment>
+        <extracomment>Caption of "PSBT has been copied" messagebox</extracomment>
+        <translation>Osignerad transaktion</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>Använder den aktuella minimiavgiften. Bekräftelsetiden uppskattas inte.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>Du kan höja avgiften senare.</translation>
+    </message>
+    <message>
+        <source>per kilobyte</source>
+        <translation>per kilobyte</translation>
     </message>
 </context>
 <context>
@@ -2875,8 +3580,8 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Välj tidigare använda adresser</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">Bitcoin-adress att sända betalning till</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">ConnectCoin-adress att sända betalning till</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -2911,8 +3616,20 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Ange en etikett för denna adress för att lägga till den i listan med använda adresser</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">Ett meddelande som bifogades bitcoin: -URIn och som sparas med transaktionen som referens. Obs: Meddelandet sänds inte över Bitcoin-nätverket.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">Ett meddelande som bifogades connectcoin: -URIn och som sparas med transaktionen som referens. Obs: Meddelandet sänds inte över ConnectCoin-nätverket.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Avgiften dras av från beloppet som skickas. Mottagaren får mindre ConnectCoin än du anger i beloppsfältet. Om flera mottagare väljs delas avgiften lika.</translation>
     </message>
 </context>
 <context>
@@ -2937,8 +3654,8 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">&amp;Signera meddelande</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">Bitcoin-adress att signera meddelandet med</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">ConnectCoin-adress att signera meddelandet med</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -2957,8 +3674,8 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Signatur</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation type="unfinished">Signera meddelandet för att bevisa att du äger denna Bitcoin-adress</translation>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
+        <translation type="unfinished">Signera meddelandet för att bevisa att du äger denna ConnectCoin-adress</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -2981,8 +3698,8 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Ange mottagarens adress, meddelande (kopiera radbrytningar, mellanslag, TAB-tecken, osv. exakt) och signatur nedan, för att verifiera meddelandet. Undvik att läsa in mera information i signaturen än vad som stod i själva det signerade meddelandet, för att undvika ett man-in-the-middle-angrepp. Notera att detta endast bevisar att den signerande parten tar emot med adressen, det bevisar inte vem som skickat transaktionen!</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">Bitcoin-adress som meddelandet signerades med</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">ConnectCoin-adress som meddelandet signerades med</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -2993,8 +3710,8 @@ Om den här plånboken innehåller lösbara</translation>
         <translation type="unfinished">Signatur när meddelandet signerades</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">Verifiera meddelandet för att vara säker på att det signerades med angiven Bitcoin-adress</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">Verifiera meddelandet för att vara säker på att det signerades med angiven ConnectCoin-adress</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3056,6 +3773,26 @@ Om den här plånboken innehåller lösbara</translation>
         <source>Message verified.</source>
         <translation type="unfinished">Meddelande verifierat.</translation>
     </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the clipboard</source>
+        <translation>Kopiera den aktuella signaturen till urklipp</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>Den angivna adressen avser inte en äldre nyckel (P2PKH). Den här versionen av %1 stöder inte meddelandesignering för SegWit eller andra adresstyper än P2PKH. Kontrollera adressen och försök igen.</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Du kan signera meddelanden/avtal med dina äldre adresser (P2PKH) för att visa att du kan ta emot ConnectCoin-medel som skickas till dem. Var försiktig så att du inte signerar något vagt eller slumpmässigt, eftersom nätfiskeattacker kan försöka lura dig att överlåta din identitet genom en signatur. Signera endast fullständigt detaljerade påståenden som du håller med om.</translation>
+    </message>
 </context>
 <context>
     <name>SplashScreen</name>
@@ -3063,7 +3800,11 @@ Om den här plånboken innehåller lösbara</translation>
         <source>(press q to shutdown and continue later)</source>
         <translation type="unfinished">(Tryck på q för att stänga av och fortsätt senare)</translation>
     </message>
-    </context>
+        <message>
+        <source>press q to shutdown</source>
+        <translation>tryck på q för att stänga av</translation>
+    </message>
+</context>
 <context>
     <name>TransactionDesc</name>
     <message>
@@ -3124,9 +3865,9 @@ Om den här plånboken innehåller lösbara</translation>
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform>matures in %n more block(s)</numerusform>
-            <numerusform>matures in %n more block(s)</numerusform>
+        <translation>
+            <numerusform>mognar om ytterligare %n block</numerusform>
+            <numerusform>mognar om ytterligare %n block</numerusform>
         </translation>
     </message>
     <message>
@@ -3216,6 +3957,20 @@ Om den här plånboken innehåller lösbara</translation>
     <message>
         <source>P2C domain</source>
         <translation>P2C-domän</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is in the memory pool.</extracomment>
+        <translation>0/obekräftad, i minnespoolen</translation>
+    </message>
+    <message>
+        <source>0/unconfirmed, not in memory pool</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that is not in the memory pool.</extracomment>
+        <translation>0/obekräftad, inte i minnespoolen</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Status</translation>
     </message>
 </context>
 <context>
@@ -3318,6 +4073,10 @@ Om den här plånboken innehåller lösbara</translation>
     <message>
         <source>User-defined intent/purpose of the transaction, or the P2C domain.</source>
         <translation>Användarens beskrivning av transaktionens syfte, eller P2C-domänen.</translation>
+    </message>
+    <message>
+        <source>(n/a)</source>
+        <translation>(ej tillämpligt)</translation>
     </message>
 </context>
 <context>
@@ -3451,6 +4210,35 @@ Om den här plånboken innehåller lösbara</translation>
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>Ange adress, P2C-domän, transaktions-ID eller etikett att söka efter</translation>
     </message>
+    <message>
+        <source>&amp;Edit address label</source>
+        <translation>&amp;Redigera adressetikett</translation>
+    </message>
+    <message>
+        <source>A&amp;bandon transaction</source>
+        <translation>Över&amp;ge transaktion</translation>
+    </message>
+    <message>
+        <source>Copy &amp;raw transaction</source>
+        <translation>Kopiera &amp;rå transaktion</translation>
+    </message>
+    <message>
+        <source>Copy full transaction &amp;details</source>
+        <translation>Kopiera fullständiga transaktions&amp;detaljer</translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <source>Increase transaction &amp;fee</source>
+        <translation>Höj transaktions&amp;avgiften</translation>
+    </message>
+    <message>
+        <source>Show in %1</source>
+        <extracomment>Transactions table context menu action to show the selected transaction in a third-party block explorer. %1 is a stand-in argument for the URL of the explorer.</extracomment>
+        <translation>Visa i %1</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -3495,7 +4283,7 @@ Gå till Fil &gt; Öppna plånbok för att läsa in en plånbok.
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
-        <translation type="unfinished">Skicka Bitcoins</translation>
+        <translation type="unfinished">Skicka ConnectCoins</translation>
     </message>
     <message>
         <source>Fee bump error</source>
@@ -3549,6 +4337,14 @@ Gå till Fil &gt; Öppna plånbok för att läsa in en plånbok.
     <message>
         <source>Can't display address</source>
         <translation type="unfinished">Kan inte visa adress</translation>
+    </message>
+    <message>
+        <source>Can't draft transaction.</source>
+        <translation>Kan inte skapa transaktionsutkast.</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation>Varning: Detta kan betala den extra avgiften genom att minska växelutdata eller lägga till indata vid behov. En ny växelutdata kan läggas till om det inte redan finns någon. Dessa ändringar kan medföra att privat information röjs.</translation>
     </message>
 </context>
 <context>
@@ -3775,7 +4571,7 @@ Gå till Fil &gt; Öppna plånbok för att läsa in en plånbok.
     </message>
     <message>
         <source>Insufficient funds</source>
-        <translation type="unfinished">Otillräckligt med bitcoins</translation>
+        <translation type="unfinished">Otillräckligt med ConnectCoins</translation>
     </message>
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
@@ -3819,7 +4615,7 @@ Gå till Fil &gt; Öppna plånbok för att läsa in en plånbok.
     </message>
     <message>
         <source>Need to specify a port with -whitebind: '%s'</source>
-        <translation type="unfinished">Port måste anges med -whitelist: '%s'</translation>
+        <translation>Port måste anges med -whitebind: '%s'</translation>
     </message>
     <message>
         <source>No addresses available</source>
@@ -3988,6 +4784,764 @@ Gå till Fil &gt; Öppna plånbok för att läsa in en plånbok.
     <message>
         <source>Settings file could not be written</source>
         <translation type="unfinished">Filen för inställningar kunde inte skapas</translation>
+    </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>Växelns destination måste vara en P2PK-destination av typ 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin stöder endast P2PK-adresser av typ 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin stöder endast P2PK-växeladresser av typ 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>ConnectCoin-transaktioner kräver giltiga destinationer av typ 1 eller PAY_TO_CONNECT-utgångar av typ 2</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>ConnectCoin-utgångar av typ 1 stöder endast SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>Ingången är inte en fullständig inlösen av typ 1 med SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>Ingången kräver fullständiga vittnesdata för ett P2C-bevis</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>Huvudnätverket har inte lanserats: inget genesisblock är definierat. Använd -testnet4 för offentlig testning eller -regtest för lokal testning.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>Ingen offentlig källkods-URL som tillhör projektet är konfigurerad för denna utvecklingsversion.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Det finns inte tillräckligt med tillgängliga filbeskrivare. Försök minska -rpcmaxconnections eller använda standardvärdet %d</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>Bidra gärna om du tycker att %s är användbart.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Överväg att ändra %s (%s) eller %s (%s).</translation>
+    </message>
+    <message>
+        <source>
+Unable to cleanup failed migration</source>
+        <translation>
+Kunde inte städa upp efter misslyckad migrering</translation>
+    </message>
+    <message>
+        <source>
+Unable to restore backup of wallet.</source>
+        <translation>
+Kunde inte återställa säkerhetskopian av plånboken.</translation>
+    </message>
+    <message>
+        <source>%s failed to validate the -assumeutxo snapshot state. This indicates a hardware problem, or a bug in the software, or a bad software modification that allowed an invalid snapshot to be loaded. As a result of this, the node will shut down and stop using any state that was built on the snapshot, resetting the chain height from %d to %d. On the next restart, the node will resume syncing from %d without using any snapshot data. Please report this incident to %s, including how you obtained the snapshot. The invalid snapshot chainstate will be left on disk in case it is helpful in diagnosing the issue that caused this error.</source>
+        <translation>%s kunde inte validera tillståndet för ögonblicksbilden -assumeutxo. Detta tyder på ett maskinvaruproblem, ett programfel eller en felaktig programändring som tillät att en ogiltig ögonblicksbild lästes in. Noden kommer därför att stängas av och sluta använda alla tillstånd som byggts på ögonblicksbilden. Kedjehöjden återställs från %d till %d. Vid nästa start fortsätter noden att synkronisera från %d utan att använda några data från ögonblicksbilden. Rapportera händelsen till %s och ange hur du fick tag på ögonblicksbilden. Den ogiltiga ögonblicksbildens kedjetillstånd lämnas kvar på disk ifall det kan hjälpa till att diagnostisera problemet som orsakade felet.</translation>
+    </message>
+    <message>
+        <source>%s is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation>%s är inställd mycket högt! Så stora avgifter kan betalas för en enda transaktion.</translation>
+    </message>
+    <message>
+        <source>%s request to listen on port %u. This port is considered "bad" and thus it is unlikely that any peer will connect to it. See doc/p2p-bad-ports.md for details and a full list.</source>
+        <translation>%s begär att lyssna på port %u. Porten anses vara ”olämplig”, och det är därför osannolikt att någon motpart ansluter till den. Se doc/p2p-bad-ports.md för detaljer och en fullständig lista.</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf är föråldrat och tas bort helt i nästa version.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>En dbcache på %zu MiB kan vara för stor för ett systemminne på bara %zu MiB.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>Ett allvarligt internt fel inträffade, se %s för detaljer: %s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>Assumeutxo-data hittades inte för den angivna blockhashen '%s'.</translation>
+    </message>
+    <message>
+        <source>Block verification was interrupted</source>
+        <translation>Blockverifieringen avbröts</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version %d pre-selected input with a version 3 tx</source>
+        <translation>Kan inte spendera förvald obekräftad indata av version %d med en transaktion av version 3</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version 3 pre-selected input with a version %d tx</source>
+        <translation>Kan inte spendera förvald obekräftad indata av version 3 med en transaktion av version %d</translation>
+    </message>
+    <message>
+        <source>Cannot obtain a lock on directory %s. %s is probably already running.</source>
+        <translation>Kan inte låsa katalogen %s. %s körs förmodligen redan.</translation>
+    </message>
+    <message>
+        <source>Cannot provide specific connections and have addrman find outgoing connections at the same time.</source>
+        <translation>Det går inte att ange specifika anslutningar och samtidigt låta addrman hitta utgående anslutningar.</translation>
+    </message>
+    <message>
+        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
+        <translation>Det går inte att sätta -forcednsseed till true när -dnsseed sätts till false.</translation>
+    </message>
+    <message>
+        <source>Cannot write to directory '%s'; check permissions.</source>
+        <translation>Kan inte skriva till katalogen '%s'; kontrollera behörigheterna.</translation>
+    </message>
+    <message>
+        <source>Copyright (C) %i-%i</source>
+        <translation>Upphovsrätt (C) %i-%i</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>Ett skadat block hittades, vilket tyder på ett möjligt maskinvarufel.</translation>
+    </message>
+    <message>
+        <source>Could not generate scriptPubKeys (cache is empty)</source>
+        <translation>Kunde inte generera scriptPubKeys (cachen är tom)</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>Kunde inte läsa inbäddade asmap-data</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>Skapar plånbok…</translation>
+    </message>
+    <message>
+        <source>Disk space for %s may not accommodate the block files. Approximately %u GB of data will be stored in this directory.</source>
+        <translation>Diskutrymmet för %s kanske inte räcker för blockfilerna. Ungefär %u GB data kommer att lagras i denna katalog.</translation>
+    </message>
+    <message>
+        <source>Do you want to rebuild the databases now?</source>
+        <translation>Vill du bygga om databaserna nu?</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>Duplicerad bindningskonfiguration för adressen %s. Kontrollera inställningarna -bind, -bind=...=onion och -whitebind.</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>Rimlighetskontrollen av elliptisk kurvkryptografi misslyckades. %s stängs av.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>Inbäddade asmap-data är inte tillgängliga</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>Fel när %s skapades: Kunde inte skriva versionsmetadata.</translation>
+    </message>
+    <message>
+        <source>Error loading %s: External signer wallet being loaded without external signer support compiled</source>
+        <translation>Fel vid inläsning av %s: En plånbok med extern signerare läses in utan att stöd för externa signerare har kompilerats in</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>Fel vid inläsning av %s: Plånboken har äldre format. Migrera till en deskriptorplånbok med migreringsverktyget (RPC migratewallet).</translation>
+    </message>
+    <message>
+        <source>Error loading databases</source>
+        <translation>Fel vid inläsning av databaser</translation>
+    </message>
+    <message>
+        <source>Error loading wallet. Wallet requires blocks to be downloaded, and software does not currently support loading wallets while blocks are being downloaded out of order when using assumeutxo snapshots. Wallet should be able to load successfully after node sync reaches height %s</source>
+        <translation>Fel vid inläsning av plånbok. Plånboken kräver att block hämtas. Programmet stöder för närvarande inte inläsning av plånböcker medan block hämtas i fel ordning vid användning av assumeutxo-ögonblicksbilder. Plånboken bör kunna läsas in när nodens synkronisering når höjden %s</translation>
+    </message>
+    <message>
+        <source>Error opening coins database</source>
+        <translation>Fel när myntdatabasen öppnades</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address metadata may be missing or incorrect.</source>
+        <translation>Fel vid läsning av %s! Alla nycklar lästes korrekt, men transaktionsdata eller adressmetadata kan saknas eller vara felaktiga.</translation>
+    </message>
+    <message>
+        <source>Error reading %s! Transaction data may be missing or incorrect. Rescanning wallet.</source>
+        <translation>Fel vid läsning av %s! Transaktionsdata kan saknas eller vara felaktiga. Söker igenom plånboken på nytt.</translation>
+    </message>
+    <message>
+        <source>Error reading configuration file: %s</source>
+        <translation>Fel vid läsning av konfigurationsfilen: %s</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation>Fel vid läsning av nästa post i plånboksdatabasen</translation>
+    </message>
+    <message>
+        <source>Error starting/committing db txn for wallet transactions removal process</source>
+        <translation>Fel när databastransaktionen för borttagning av plånbokstransaktioner skulle påbörjas/verkställas</translation>
+    </message>
+    <message>
+        <source>Error: Address book data in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>Fel: Det går inte att avgöra vilka migrerade plånböcker adressboksuppgifterna i plånboken tillhör</translation>
+    </message>
+    <message>
+        <source>Error: Cannot extract destination from the generated scriptpubkey</source>
+        <translation>Fel: Kan inte extrahera mottagaren från den genererade scriptpubkey</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Fel: Kunde inte lägga till transaktionen %s i plånboken som endast bevakar</translation>
+    </message>
+    <message>
+        <source>Error: Could not add watchonly tx %s to watchonly wallet</source>
+        <translation>Fel: Kunde inte lägga till den endast bevakade transaktionen %s i plånboken som endast bevakar</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Fel: Kunde inte skapa filen '%s'</translation>
+    </message>
+    <message>
+        <source>Error: Could not delete watchonly transactions. </source>
+        <translation>Fel: Kunde inte ta bort endast bevakade transaktioner. </translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation>Fel: Kunde inte skapa en markör i databasen</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation>Fel: Dumpfilens kontrollsumma stämmer inte. Beräknad %s, förväntad %s</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation>Fel: Dumpfilens formatpost är felaktig. Fick ”%s”, förväntade ”format”.</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation>Fel: Dumpfilens identifierarpost är felaktig. Fick ”%s”, förväntade ”%s”.</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>Fel: Dumpfilen anger ett databasformat som inte stöds (%s). Endast dumpar av sqlite-databaser stöds</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation>Fel: Dumpfilens version stöds inte. Den här versionen av connectcoin-wallet stöder endast dumpfiler av version 1. Fick en dumpfil med version %s</translation>
+    </message>
+    <message>
+        <source>Error: Duplicate descriptors created during migration. Your wallet may be corrupted.</source>
+        <translation>Fel: Duplicerade deskriptorer skapades under migreringen. Plånboken kan vara skadad.</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Fel: Exportmålet '%s' finns redan</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Fel: Exportmålet får inte vara tomt</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet</source>
+        <translation>Fel: Kunde inte skapa en ny plånbok som endast bevakar</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Fel: Kunde inte skapa en ny plånbok som endast bevakar. %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation>Fel: Fick en nyckel som inte var hexadecimal: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation>Fel: Fick ett värde som inte var hexadecimalt: %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>Fel: Nyckelpoolen tog slut, anropa keypoolrefill först</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>Fel: Alla adressboksposter migrerades inte</translation>
+    </message>
+    <message>
+        <source>Error: Not all transaction records were migrated</source>
+        <translation>Fel: Alla transaktionsposter migrerades inte</translation>
+    </message>
+    <message>
+        <source>Error: This wallet already uses SQLite</source>
+        <translation>Fel: Plånboken använder redan SQLite</translation>
+    </message>
+    <message>
+        <source>Error: This wallet is already a descriptor wallet</source>
+        <translation>Fel: Plånboken är redan en deskriptorplånbok</translation>
+    </message>
+    <message>
+        <source>Error: Transaction %s in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>Fel: Det går inte att avgöra vilka migrerade plånböcker transaktionen %s i plånboken tillhör</translation>
+    </message>
+    <message>
+        <source>Error: Unable to begin reading all records in the database</source>
+        <translation>Fel: Kan inte börja läsa alla poster i databasen</translation>
+    </message>
+    <message>
+        <source>Error: Unable to make a backup of your wallet</source>
+        <translation>Fel: Kan inte säkerhetskopiera plånboken</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation>Fel: Kan inte tolka version %u som uint32_t</translation>
+    </message>
+    <message>
+        <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
+        <translation>Fel: Kan inte skapa deskriptorer för denna äldre plånbok. Ange plånbokens lösenfras om den är krypterad.</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read all records in the database</source>
+        <translation>Fel: Kan inte läsa alla poster i databasen</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read wallet's best block locator record</source>
+        <translation>Fel: Kan inte läsa plånbokens post för lokalisering av bästa block</translation>
+    </message>
+    <message>
+        <source>Error: Unable to remove watchonly address book data</source>
+        <translation>Fel: Kan inte ta bort endast bevakade adressboksuppgifter</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write data to disk for wallet %s</source>
+        <translation>Fel: Kan inte skriva data till disk för plånboken %s</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation>Fel: Kan inte skriva posten till den nya plånboken</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write solvable wallet best block locator record</source>
+        <translation>Fel: Kan inte skriva posten för lokalisering av bästa block i den lösbara plånboken</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Fel: Kan inte skriva den exporterade plånboken</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write watchonly wallet best block locator record</source>
+        <translation>Fel: Kan inte skriva posten för lokalisering av bästa block i plånboken som endast bevakar</translation>
+    </message>
+    <message>
+        <source>Error: Wallet does not exist</source>
+        <translation>Fel: Plånboken finns inte</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Fel: Plånboken saknar deskriptorer att exportera</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Fel: Kan inte verkställa databastransaktionen för export av plånboken som endast bevakar</translation>
+    </message>
+    <message>
+        <source>Error: cannot remove legacy wallet records</source>
+        <translation>Fel: Kan inte ta bort äldre plånboksposter</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Fel: Databastransaktionen kan inte utföras för den nya plånboken som endast bevakar %s</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for wallet %s</source>
+        <translation>Fel: Databastransaktionen kan inte utföras för plånboken %s</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>Kunde inte reservera omsökning under initieringen av plånboken</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>Kunde inte beräkna avgiftshöjningar eftersom obekräftade UTXO:er beror på ett enormt kluster av obekräftade transaktioner.</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>Kunde inte stänga blockets återställningsfil.</translation>
+    </message>
+    <message>
+        <source>Failed to close file when writing block.</source>
+        <translation>Kunde inte stänga filen vid skrivning av block.</translation>
+    </message>
+    <message>
+        <source>Failed to disconnect block.</source>
+        <translation>Kunde inte koppla från blocket.</translation>
+    </message>
+    <message>
+        <source>Failed to read block.</source>
+        <translation>Kunde inte läsa blocket.</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>Kunde inte ta bort ögonblicksbildens kedjetillståndskatalog (%s). Ta bort den manuellt före omstart.
+</translation>
+    </message>
+    <message>
+        <source>Failed to rename invalid peers.dat file. Please move or delete it and try again.</source>
+        <translation>Kunde inte byta namn på den ogiltiga peers.dat-filen. Flytta eller ta bort den och försök igen.</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>Kunde inte starta indexen, stänger av…</translation>
+    </message>
+    <message>
+        <source>Failed to write block.</source>
+        <translation>Kunde inte skriva blocket.</translation>
+    </message>
+    <message>
+        <source>Failed to write undo data.</source>
+        <translation>Kunde inte skriva återställningsdata.</translation>
+    </message>
+    <message>
+        <source>Failure removing transaction: %s</source>
+        <translation>Transaktionen kunde inte tas bort: %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>Avgiftssatsen (%s) är lägre än den inställda minimiavgiftssatsen (%s).</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation>Filen %s finns redan. Om du är säker på att detta är vad du vill, flytta den först till en annan plats.</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Tömning av blockfilen till disk misslyckades. Detta beror troligen på ett I/O-fel.</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Tömning av återställningsfilen till disk misslyckades. Detta beror troligen på ett I/O-fel.</translation>
+    </message>
+    <message>
+        <source>Incompatible options: -dnsseed=1 was explicitly specified, but -onlynet forbids connections to IPv4/IPv6</source>
+        <translation>Oförenliga alternativ: -dnsseed=1 angavs uttryckligen, men -onlynet förbjuder anslutningar till IPv4/IPv6</translation>
+    </message>
+    <message>
+        <source>Input not found or already spent</source>
+        <translation>Indata hittades inte eller har redan spenderats</translation>
+    </message>
+    <message>
+        <source>Insufficient dbcache for block verification</source>
+        <translation>Otillräcklig dbcache för blockverifiering</translation>
+    </message>
+    <message>
+        <source>Invalid -i2psam address or hostname: '%s'</source>
+        <translation>Ogiltig -i2psam-adress eller ogiltigt värdnamn: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>Ogiltig -proxy-adress eller ogiltigt värdnamn, slutar med '=': '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s'</source>
+        <translation>Ogiltigt belopp för %s=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation>Ogiltigt belopp för %s=&lt;amount&gt;: '%s' (måste vara minst minrelay-avgiften %s för att förhindra att transaktioner fastnar)</translation>
+    </message>
+    <message>
+        <source>Invalid or corrupt peers.dat (%s). If you believe this is a bug, please report it to %s. As a workaround, you can move the file (%s) out of the way (rename, move, or delete) to have a new one created on the next start.</source>
+        <translation>Ogiltig eller skadad peers.dat (%s). Om du tror att detta är ett programfel, rapportera det till %s. Som en tillfällig lösning kan du flytta undan filen (%s) (byta namn, flytta eller ta bort) så att en ny skapas vid nästa start.</translation>
+    </message>
+    <message>
+        <source>Invalid port specified in %s: '%s'</source>
+        <translation>Ogiltig port angiven i %s: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid value detected for '-wallet' or '-nowallet'. '-wallet' requires a string value, while '-nowallet' accepts only '1' to disable all wallets</source>
+        <translation>Ogiltigt värde för '-wallet' eller '-nowallet'. '-wallet' kräver ett strängvärde, medan '-nowallet' endast godtar '1' för att inaktivera alla plånböcker</translation>
+    </message>
+    <message>
+        <source>Listening for incoming connections failed (listen returned error %s)</source>
+        <translation>Lyssning efter inkommande anslutningar misslyckades (listen returnerade felet %s)</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>Den maximala transaktionsvikten måste vara mellan %d och %d</translation>
+    </message>
+    <message>
+        <source>Missing solving data for estimating transaction size</source>
+        <translation>Lösningsdata saknas för att uppskatta transaktionsstorleken</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Ingen dumpfil angiven. För att använda createfromdump måste -dumpfile=&lt;filename&gt; anges.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use dump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation>Ingen dumpfil angiven. För att använda dump måste -dumpfile=&lt;filename&gt; anges.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. %d available, %d required.</source>
+        <translation>Det finns inte tillräckligt många tillgängliga fildeskriptorer. %d tillgängliga, %d krävs.</translation>
+    </message>
+    <message>
+        <source>Not found pre-selected input %s</source>
+        <translation>Förvald indata %s hittades inte</translation>
+    </message>
+    <message>
+        <source>Not solvable pre-selected input %s</source>
+        <translation>Förvald indata %s är inte lösbar</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>Endast riktningen angavs, inga behörigheter: '%s'</translation>
+    </message>
+    <message>
+        <source>Option '-checkpoints' is set but checkpoints were removed. This option has no effect.</source>
+        <translation>Alternativet '-checkpoints' är inställt, men kontrollpunkter har tagits bort. Alternativet har ingen effekt.</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Alternativet '-limitancestorsize' är angivet, men gränserna för förfäders storlek har ersatts med gränser för klusterstorlek (se -limitclustersize). Alternativet har ingen effekt.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Alternativet '-limitdescendantsize' är angivet, men gränserna för efterkommandes storlek har ersatts med gränser för klusterstorlek (se -limitclustersize). Alternativet har ingen effekt.</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to CJDNS (-onlynet=cjdns) but -cjdnsreachable is not provided</source>
+        <translation>Utgående anslutningar är begränsade till CJDNS (-onlynet=cjdns), men -cjdnsreachable har inte angetts</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is explicitly forbidden: -onion=0</source>
+        <translation>Utgående anslutningar är begränsade till Tor (-onlynet=onion), men proxyn för att nå Tor-nätverket är uttryckligen förbjuden: -onion=0</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
+        <translation>Utgående anslutningar är begränsade till Tor (-onlynet=onion), men proxyn för att nå Tor-nätverket har inte angetts: inget av -proxy, -onion eller -listenonion har angetts</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to i2p (-onlynet=i2p) but -i2psam is not provided</source>
+        <translation>Utgående anslutningar är begränsade till i2p (-onlynet=i2p), men -i2psam har inte angetts</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>Privat utsändning av egna transaktioner begärs (-privatebroadcast), och -proxyrandomize är inaktiverat. Tor-kretsar för privata utsändningsanslutningar kan kopplas till andra anslutningar över Tor. Ställ in -proxyrandomize=1 för högsta integritet.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>Privat utsändning av egna transaktioner begärs (-privatebroadcast), men -connect är också konfigurerat. De är oförenliga eftersom privat utsändning behöver öppna nya anslutningar till slumpmässigt valda Tor- eller I2P-motparter. Överväg att använda -maxconnections=0 -addnode=... i stället</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>Privat utsändning av egna transaktioner begärs (-privatebroadcast), men varken Tor- eller I2P-nätverket kan nås</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -reindex-chainstate. Use full -reindex instead.</source>
+        <translation>Beskärningsläget är oförenligt med -reindex-chainstate. Använd en fullständig -reindex i stället.</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>Beskärningsläget är oförenligt med -txospenderindex.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
+        <translation>Beskärning: Plånbokens senaste synkronisering ligger före de beskurna uppgifterna. Du behöver -reindex (hämta hela blockkedjan igen om noden är beskuren)</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>Namnbyte från '%s' -&gt; '%s' misslyckades. Kan inte städa upp leveldb-katalogen för kedjetillståndet i bakgrunden.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
+        <translation>Namnbyte från '%s' -&gt; '%s' misslyckades. Lös detta genom att manuellt flytta eller ta bort katalogen för den ogiltiga ögonblicksbilden %s. Annars uppstår samma fel igen vid nästa start.</translation>
+    </message>
+    <message>
+        <source>Replaying blocks…</source>
+        <translation>Återspelar block…</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>Signeraren returnerade inte adressen</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>Signeraren returnerade en oväntad adress %s</translation>
+    </message>
+    <message>
+        <source>Signer returned error: %s</source>
+        <translation>Signeraren returnerade felet: %s</translation>
+    </message>
+    <message>
+        <source>Specified data directory "%s" does not exist.</source>
+        <translation>Den angivna datakatalogen ”%s” finns inte.</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>Systemfel vid tömning: %s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>Systemfel vid inläsning av extern blockfil: %s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>Systemfel när block skulle sparas på disk: %s</translation>
+    </message>
+    <message>
+        <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
+        <translation>Sökvägen %s använder exFAT, som är känt för återkommande datakorruptionsproblem på macOS. Flytta katalogen till ett annat filsystem för att undvika dataförlust.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>Alternativet -testactivationheight får inte användas på huvudnätet.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>Alternativet -vbparams får inte användas på huvudnätet.</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>Kombinationen av förvalda indata och plånbokens automatiska indataval överskrider transaktionens maximala vikt. Försök att skicka ett mindre belopp eller slå ihop plånbokens UTXO:er manuellt</translation>
+    </message>
+    <message>
+        <source>The inputs size exceeds the maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>Indatastorleken överskrider den maximala vikten. Försök att skicka ett mindre belopp eller slå ihop plånbokens UTXO:er manuellt</translation>
+    </message>
+    <message>
+        <source>The preselected coins total amount does not cover the transaction target. Please allow other inputs to be automatically selected or include more coins manually</source>
+        <translation>Det totala beloppet i de förvalda mynten täcker inte transaktionens mål. Tillåt att andra indata väljs automatiskt eller lägg till fler mynt manuellt</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist</source>
+        <translation>Den angivna konfigurationsfilen %s finns inte</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>Summan överskrider ditt saldo när transaktionsavgiften %s räknas med.</translation>
+    </message>
+    <message>
+        <source>The transactions removal process can only be executed within a db txn</source>
+        <translation>Borttagning av transaktioner kan endast utföras inom en databastransaktion</translation>
+    </message>
+    <message>
+        <source>There is no ScriptPubKeyManager for this address</source>
+        <translation>Det finns ingen ScriptPubKeyManager för denna adress</translation>
+    </message>
+    <message>
+        <source>This is the maximum transaction fee you pay (in addition to the normal fee) to prioritize partial spend avoidance over regular coin selection.</source>
+        <translation>Detta är den högsta transaktionsavgift du betalar (utöver den normala avgiften) för att prioritera undvikande av partiell spendering framför vanligt myntval.</translation>
+    </message>
+    <message>
+        <source>Transaction %s does not belong to this wallet</source>
+        <translation>Transaktionen %s tillhör inte denna plånbok</translation>
+    </message>
+    <message>
+        <source>Transaction change output index out of range</source>
+        <translation>Indexet för transaktionens växelutdata ligger utanför intervallet</translation>
+    </message>
+    <message>
+        <source>Transaction needs a change address, but we can't generate it.</source>
+        <translation>Transaktionen behöver en växeladress, men vi kan inte generera den.</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>Transaktionen kräver en mottagare med ett värde som inte är noll, en avgiftssats som inte är noll eller en förvald indata</translation>
+    </message>
+    <message>
+        <source>UTXO snapshot failed to validate. Restart to resume normal initial block download, or try loading a different snapshot.</source>
+        <translation>UTXO-ögonblicksbilden kunde inte valideras. Starta om för att återuppta normal inledande blockhämtning, eller försök läsa in en annan ögonblicksbild.</translation>
+    </message>
+    <message>
+        <source>Unable to find UTXO for external input</source>
+        <translation>Kan inte hitta UTXO för extern indata</translation>
+    </message>
+    <message>
+        <source>Unable to parse -maxuploadtarget: '%s'</source>
+        <translation>Kan inte tolka -maxuploadtarget: '%s'</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Kan inte skriva deskriptorcachen</translation>
+    </message>
+    <message>
+        <source>Unconfirmed UTXOs are available, but spending them creates a chain of transactions that will be rejected by the mempool</source>
+        <translation>Obekräftade UTXO:er finns tillgängliga, men att spendera dem skapar en transaktionskedja som avvisas av mempoolen</translation>
+    </message>
+    <message>
+        <source>Unexpected legacy entry in descriptor wallet found. Loading wallet %s
+
+The wallet might have been tampered with or created with malicious intent.
+</source>
+        <translation>En oväntad äldre post hittades i deskriptorplånboken. Läser in plånboken %s
+
+Plånboken kan ha manipulerats eller skapats med skadligt uppsåt.
+</translation>
+    </message>
+    <message>
+        <source>Unknown new rules activated (versionbit %i)</source>
+        <translation>Okända nya regler har aktiverats (versionbit %i)</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>Okänt alternativ ”%s” angivet i -test=&lt;option&gt;.</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>En okänd deskriptor hittades. Läser in plånboken %s
+
+Plånboken kan ha skapats med en nyare version.
+Försök att köra den senaste programversionen.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>Okänt nätverk i -proxy='%s': '%s'</translation>
+    </message>
+    <message>
+        <source>Unsupported category-specific logging level %1$s=%2$s. Expected %1$s=&lt;category&gt;:&lt;loglevel&gt;. Valid categories: %3$s. Valid loglevels: %4$s.</source>
+        <translation>Kategorispecifik loggnivå %1$s=%2$s stöds inte. Förväntade %1$s=&lt;category&gt;:&lt;loglevel&gt;. Giltiga kategorier: %3$s. Giltiga loggnivåer: %4$s.</translation>
+    </message>
+    <message>
+        <source>Unsupported chainstate database format found. Please restart with -reindex-chainstate. This will rebuild the chainstate database.</source>
+        <translation>Ett databasformat för kedjetillståndet som inte stöds hittades. Starta om med -reindex-chainstate. Detta bygger om kedjetillståndsdatabasen.</translation>
+    </message>
+    <message>
+        <source>Unsupported global logging level %s=%s. Valid values: %s.</source>
+        <translation>Global loggnivå %s=%s stöds inte. Giltiga värden: %s.</translation>
+    </message>
+    <message>
+        <source>Wallet file creation failed: %s</source>
+        <translation>Kunde inte skapa plånboksfilen: %s</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>Varning: En ogiltig kedja hittades som är mer än 6 block längre än vår bästa kedja. Detta kan bero på en skadad databas eller oförenliga konsensusregler hos motparterna.</translation>
+    </message>
+    <message>
+        <source>Witness data for blocks after height %d requires validation. Please restart with -reindex.</source>
+        <translation>Vittnesdata för block efter höjd %d måste valideras. Starta om med -reindex.</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>Datorns datum och tid verkar skilja sig från nätverkets med mer än %d minuter, vilket kan leda till konsensusfel. När du har kontrollerat datorns klocka bör meddelandet försvinna när du startar om noden. Utan omstart bör det försvinna automatiskt när du har anslutit till tillräckligt många nya utgående motparter, vilket kan ta en stund. Du kan granska fältet `timeoffset` i RPC-metoderna `getpeerinfo` och `getnetworkinfo` för mer information.</translation>
+    </message>
+    <message>
+        <source>acceptstalefeeestimates is not supported on %s chain.</source>
+        <translation>acceptstalefeeestimates stöds inte på kedjan %s.</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>whitebind får endast användas för inkommande anslutningar (”out” angavs)</translation>
     </message>
 </context>
 <context>
@@ -4337,6 +5891,98 @@ Rotcertifikatsversion: %2</translation>
     <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Valfritt: tomt fält använder denna plånbok</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>CPU-trådar:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Kunde inte skapa en belöningsadress. Kontrollera att plånboken kan skapa mottagningsadresser.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Fel</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>FAST-läget delar ungefär 2 GiB RandomX-minne med valideringen. Fler trådar använder mer CPU och ström; lämna kapacitet åt noden. Det kan ta en stund att initiera datamängden.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Utvinn testnätsblock med din CPU med hjälp av RandomX. Utvinningen är avstängd tills du startar den. Utvinnaren delas av alla plånböcker i den här noden och fortsätter när du byter flik eller stänger en plånbok.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Utvinning</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Utvinning / förbereder RandomX</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Ny adress från den här plånboken</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Belöningsadress för det här nätverket</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Belöningsadress:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Starta utvinning</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Startar</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Tillstånd: %1
+Hashhastighet: %2 H/s
+Hashar: %3 | Godkända block: %4
+Aktiv belöningsadress: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Stoppa utvinning</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Stoppad</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Stoppar (väntar på pågående arbete)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Väntar på att noden ska komma ikapp</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Varning: %1 utvinningstrådar överstiger de %2 identifierade logiska CPU:erna. Detta kan minska hashhastigheten och göra noden långsammare.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsModel</name>
+    <message>
+        <source>Could not read setting "%1", %2.</source>
+        <translation>Kunde inte läsa inställningen ”%1”, %2.</translation>
     </message>
 </context>
 </TS>

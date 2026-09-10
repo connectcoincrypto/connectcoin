@@ -11,6 +11,7 @@
 #include <util/translation.h>
 #include <wallet/coincontrol.h>
 #include <wallet/p2c_claim.h>
+#include <wallet/p2c_worker.h>
 #include <wallet/rpc/util.h>
 #include <wallet/wallet.h>
 
@@ -62,7 +63,7 @@ RPCMethod setp2cclaiming()
         "Wallets start disabled after reload; saved proposals and completed proofs resume only after explicit enabling.\n",
         {
             {"connections_per_second", RPCArg::Type::NUM, RPCArg::Optional::NO, "0 to disable, -1 for unlimited, otherwise a positive aggregate rate."},
-            {"concurrency", RPCArg::Type::NUM, RPCArg::Default{4}, "Maximum simultaneous handshakes; any positive 32-bit integer. Actual capacity depends on system resources."},
+            {"concurrency", RPCArg::Type::NUM, RPCArg::Default{DEFAULT_P2C_CLAIM_CONCURRENCY}, "Maximum simultaneous handshakes; any positive 32-bit integer. Actual capacity depends on system resources."},
             {"domains", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "Optional allowlist. Empty means all canonical public domains with bounties.", {
                 {"domain", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "Canonical lower-case ASCII domain."},
             }},
@@ -79,7 +80,7 @@ RPCMethod setp2cclaiming()
                 for (const auto& domain : request.params[2].getValues()) domains.push_back(domain.get_str());
             }
             const int rate{request.params[0].getInt<int>()};
-            const int concurrency{request.params[1].isNull() ? 4 : request.params[1].getInt<int>()};
+            const int concurrency{request.params[1].isNull() ? DEFAULT_P2C_CLAIM_CONCURRENCY : request.params[1].getInt<int>()};
             auto& worker{wallet->GetP2CClaimWorker()};
             if (auto result{worker.Configure(rate, concurrency, std::move(domains), request.params[3].isNull() ? "" : request.params[3].get_str())}; !result) {
                 throw JSONRPCError(RPC_WALLET_ERROR, util::ErrorString(result).original);

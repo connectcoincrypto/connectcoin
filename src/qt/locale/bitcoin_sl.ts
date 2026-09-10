@@ -54,13 +54,13 @@
         <translation type="unfinished">&amp;Izberi</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation type="unfinished">To so vaši bitcoin-naslovi za pošiljanje. Pred pošiljanjem vedno preverite znesek in prejemnikov naslov.</translation>
+        <source>These are your ConnectCoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation type="unfinished">To so vaši ConnectCoin-naslovi za pošiljanje. Pred pošiljanjem vedno preverite znesek in prejemnikov naslov.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
+        <source>These are your ConnectCoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">To so vaši bitcoin-naslovi, ki jih uporabljate za prejemanje plačil. Za tvorbo novega naslova uporabite gumb "Ustvari nov prejemni naslov" v zavihku Prejmi.
+        <translation type="unfinished">To so vaši ConnectCoin-naslovi, ki jih uporabljate za prejemanje plačil. Za tvorbo novega naslova uporabite gumb "Ustvari nov prejemni naslov" v zavihku Prejmi.
 Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     </message>
     <message>
@@ -100,6 +100,10 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     <message>
         <source>Exporting Failed</source>
         <translation type="unfinished">Izvoz je spodletel.</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the clipboard</source>
+        <translation>Kopiraj trenutno izbrani naslov v odložišče</translation>
     </message>
 </context>
 <context>
@@ -160,8 +164,8 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Potrdi šifriranje denarnice</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation type="unfinished">Opozorilo: V primeru izgube gesla šifrirane denarnice, boste &lt;b&gt;IZGUBILI VSE SVOJE BITCOINE&lt;/b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR CONNECTCOIN FUNDS&lt;/b&gt;!</source>
+        <translation type="unfinished">Opozorilo: V primeru izgube gesla šifrirane denarnice, boste &lt;b&gt;IZGUBILI VSE SVOJE CONNECTCOINE&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -173,7 +177,7 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     </message>
     <message>
         <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation type="unfinished">Vnesite novo geslo za denarnico. &lt;br/&gt;Prosimo, uporabite geslo z vsaj &lt;b&gt;10 ali več naključnimi simboli&lt;/b&gt; ali vsaj osmimi besedami.&lt;b&gt;</translation>
+        <translation>Vnesite novo geslo za denarnico.&lt;br/&gt;Uporabite geslo z &lt;b&gt;desetimi ali več naključnimi znaki&lt;/b&gt; ali &lt;b&gt;osmimi ali več besedami&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase for the wallet.</source>
@@ -188,7 +192,7 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Nazaj</translation>
     </message>
     <message>
-        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <source>Remember that encrypting your wallet cannot fully protect your ConnectCoins from being stolen by malware infecting your computer.</source>
         <translation type="unfinished">Pomnite, da šifriranje denarnice ne more preprečiti morebitnim virusom na vašem računalniku, da bi ukradli vaše bitcoine.</translation>
     </message>
     <message>
@@ -254,6 +258,10 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <source>Banned Until</source>
         <translation type="unfinished">Blokiran do</translation>
     </message>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/Omrežna maska</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinApplication</name>
@@ -311,8 +319,8 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Znesek</translation>
     </message>
     <message>
-        <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation type="unfinished">Vnesite bitcoin-naslov (npr. %1)</translation>
+        <source>Enter a ConnectCoin address (e.g. %1)</source>
+        <translation type="unfinished">Vnesite ConnectCoin-naslov (npr. %1)</translation>
     </message>
     <message>
         <source>Inbound</source>
@@ -419,6 +427,93 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <source>default wallet</source>
         <translation type="unfinished">privzeta denarnica</translation>
     </message>
+    <message>
+        <source>%1 B</source>
+        <translation>%1 B</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <source>%1 kB</source>
+        <translation>%1 kB</translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation>Ctrl+W</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv4 network in peer info</extracomment>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <comment>network name</comment>
+        <extracomment>Name of IPv6 network in peer info</extracomment>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>%1 d</source>
+        <translation>%1 d</translation>
+    </message>
+    <message>
+        <source>%1 h</source>
+        <translation>%1 h</translation>
+    </message>
+    <message>
+        <source>%1 m</source>
+        <translation>%1 m</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation>%1 ms</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>CJDNS</source>
+        <comment>network name</comment>
+        <extracomment>Name of CJDNS network in peer info</extracomment>
+        <translation>CJDNS</translation>
+    </message>
+    <message>
+        <source>Default system font "%1"</source>
+        <translation>Privzeta sistemska pisava »%1«</translation>
+    </message>
+    <message>
+        <source>Embedded "%1"</source>
+        <translation>Vgrajena »%1«</translation>
+    </message>
+    <message>
+        <source>I2P</source>
+        <comment>network name</comment>
+        <extracomment>Name of I2P network in peer info</extracomment>
+        <translation>I2P</translation>
+    </message>
+    <message>
+        <source>Onion</source>
+        <comment>network name</comment>
+        <extracomment>Name of Tor network in peer info</extracomment>
+        <translation>Onion</translation>
+    </message>
+    <message>
+        <source>Private Broadcast</source>
+        <extracomment>Short-lived peer connection type that is used for broadcasting privacy-sensitive data.</extracomment>
+        <translation>Zasebno razširjanje</translation>
+    </message>
+    <message>
+        <source>Unroutable</source>
+        <translation>Neusmerljivo</translation>
+    </message>
 </context>
 <context>
     <name>BitcoinGUI</name>
@@ -488,8 +583,8 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Posredniški strežnik je &lt;b&gt;omogočen&lt;/b&gt;: %1</translation>
     </message>
     <message>
-        <source>Send coins to a Bitcoin address</source>
-        <translation type="unfinished">Pošljite novce na bitcoin-naslov</translation>
+        <source>Send coins to a ConnectCoin address</source>
+        <translation type="unfinished">Pošljite novce na ConnectCoin-naslov</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -532,16 +627,16 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">&amp;Podpiši sporočilo...</translation>
     </message>
     <message>
-        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Podpišite poljubno sporočilo z enim svojih bitcoin-naslovov, da prejemniku sporočila dokažete, da je ta naslov v vaši lasti.</translation>
+        <source>Sign messages with your ConnectCoin addresses to prove you own them</source>
+        <translation type="unfinished">Podpišite poljubno sporočilo z enim svojih ConnectCoin-naslovov, da prejemniku sporočila dokažete, da je ta naslov v vaši lasti.</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
         <translation type="unfinished">P&amp;reveri podpis...</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation type="unfinished">Preverite, če je bilo prejeto sporočilo podpisano z določenim bitcoin-naslovom.</translation>
+        <source>Verify messages to ensure they were signed with specified ConnectCoin addresses</source>
+        <translation type="unfinished">Preverite, če je bilo prejeto sporočilo podpisano z določenim ConnectCoin-naslovom.</translation>
     </message>
     <message>
         <source>&amp;Load PSBT from file…</source>
@@ -600,8 +695,8 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Povezujem se s soležniki...</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">Zahtevajte plačilo (ustvarite zahtevek s kodo QR in URI tipa bitcoin)</translation>
+        <source>Request payments (generates QR codes and connectcoin: URIs)</source>
+        <translation type="unfinished">Zahtevajte plačilo (ustvarite zahtevek s kodo QR in URI tipa ConnectCoin)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -657,16 +752,16 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Ažurno</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction</source>
-        <translation type="unfinished">Naloži delno podpisano bitcoin-transakcijo</translation>
+        <source>Load Partially Signed ConnectCoin Transaction</source>
+        <translation type="unfinished">Naloži delno podpisano ConnectCoin-transakcijo</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">Naloži DPBT z &amp;odložišča...</translation>
     </message>
     <message>
-        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
-        <translation type="unfinished">Naloži delno podpisano bitcoin-transakcijo z odložišča</translation>
+        <source>Load Partially Signed ConnectCoin Transaction from clipboard</source>
+        <translation type="unfinished">Naloži delno podpisano ConnectCoin-transakcijo z odložišča</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -685,8 +780,8 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">&amp;Naslovi za prejemanje</translation>
     </message>
     <message>
-        <source>Open a bitcoin: URI</source>
-        <translation type="unfinished">Odpri URI tipa bitcoin:</translation>
+        <source>Open a connectcoin: URI</source>
+        <translation type="unfinished">Odpri URI tipa connectcoin:</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -723,7 +818,7 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Migriranje denarnice</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <source>Show the %1 help message to get a list with possible ConnectCoin command-line options</source>
         <translation type="unfinished">Pokaži %1 sporočilo za pomoč s seznamom vseh možnosti v ukazni vrstici</translation>
     </message>
     <message>
@@ -783,13 +878,13 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">&amp;Prikaži</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
+        <source>%n active connection(s) to the ConnectCoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform>%n aktivna povezava v omrežje bitcoin. </numerusform>
-            <numerusform>%n aktivni povezavi v omrežje bitcoin.</numerusform>
-            <numerusform>%n aktivne povezave v omrežje bitcoin.</numerusform>
-            <numerusform>%n aktivnih povezav v omrežje bitcoin.</numerusform>
+            <numerusform>%n aktivna povezava v omrežje ConnectCoin. </numerusform>
+            <numerusform>%n aktivni povezavi v omrežje ConnectCoin.</numerusform>
+            <numerusform>%n aktivne povezave v omrežje ConnectCoin.</numerusform>
+            <numerusform>%n aktivnih povezav v omrežje ConnectCoin.</numerusform>
         </translation>
     </message>
     <message>
@@ -899,6 +994,71 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     <message>
         <source>Create pay-to-connect bounties</source>
         <translation>Ustvari nagrade pay-to-connect</translation>
+    </message>
+    <message>
+        <source>&amp;Mining</source>
+        <translation>&amp;Rudarjenje</translation>
+    </message>
+    <message>
+        <source>Control CPU mining</source>
+        <translation>Upravljaj rudarjenje s CPU</translation>
+    </message>
+    <message>
+        <source>Ctrl+M</source>
+        <translation>Ctrl+M</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Vse datoteke</translation>
+    </message>
+    <message>
+        <source>Export Error</source>
+        <translation>Napaka pri izvozu</translation>
+    </message>
+    <message>
+        <source>Export Successful</source>
+        <translation>Izvoz je uspel</translation>
+    </message>
+    <message>
+        <source>Export a watch-only version of the current wallet that can be restored onto another node.</source>
+        <translation>Izvozi različico trenutne denarnice samo za opazovanje, ki jo je mogoče obnoviti na drugem vozlišču.</translation>
+    </message>
+    <message>
+        <source>Export watch-only wallet</source>
+        <translation>Izvozi denarnico samo za opazovanje</translation>
+    </message>
+    <message>
+        <source>Invalid Wallet Name</source>
+        <translation>Neveljavno ime denarnice</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet</source>
+        <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
+        <translation>Obnovi in preseli denarnico</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet Backup</source>
+        <translation>Obnovi in preseli varnostno kopijo denarnice</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate Wallet File…</source>
+        <translation>Obnovi in preseli datoteko denarnice…</translation>
+    </message>
+    <message>
+        <source>Save Watch-only Wallet Export</source>
+        <translation>Shrani izvoz denarnice samo za opazovanje</translation>
+    </message>
+    <message>
+        <source>The wallet has been exported to </source>
+        <translation>Denarnica je bila izvožena v </translation>
+    </message>
+    <message>
+        <source>Wallet name cannot be empty</source>
+        <translation>Ime denarnice ne sme biti prazno</translation>
     </message>
 </context>
 <context>
@@ -1034,6 +1194,18 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <source>(change)</source>
         <translation type="unfinished">(vračilo)</translation>
     </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 zaklenjenih)</translation>
+    </message>
+    <message>
+        <source>Can vary +/- %1 connect(s) per input.</source>
+        <translation>Lahko se razlikuje za +/- %1 connect na vhod.</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopiraj znesek</translation>
+    </message>
 </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -1116,6 +1288,62 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     <message>
         <source>Migration Successful</source>
         <translation type="unfinished">Migracija uspešna</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to restore the wallet file &lt;i&gt;%1&lt;/i&gt; to &lt;i&gt;%2&lt;/i&gt; and migrate it?</source>
+        <translation>Ali res želite obnoviti datoteko denarnice &lt;i&gt;%1&lt;/i&gt; v &lt;i&gt;%2&lt;/i&gt; in jo preseliti?</translation>
+    </message>
+    <message>
+        <source>If the node is pruned and the wallet was created before the pruned height, the migration process may fail trying to load the migrated wallet.</source>
+        <translation>Če je vozlišče obrezano in je bila denarnica ustvarjena pred obrezano višino, lahko selitev spodleti pri nalaganju preseljene denarnice.</translation>
+    </message>
+    <message>
+        <source>Load wallet after migration</source>
+        <translation>Naloži denarnico po selitvi</translation>
+    </message>
+    <message>
+        <source>Migrating the wallet will convert this wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>Selitev pretvori to denarnico v eno ali več denarnic z opisniki. Izdelati bo treba novo varnostno kopijo denarnice.
+Če denarnica vsebuje skripte samo za opazovanje, bo ustvarjena nova denarnica, ki vsebuje te skripte.
+Če vsebuje rešljive skripte, ki niso opazovani, bo zanje ustvarjena druga nova denarnica.
+
+Postopek selitve pred začetkom ustvari varnostno kopijo denarnice. Datoteka bo imenovana &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak in bo v imeniku te denarnice. Če je selitev nepravilna, lahko varnostno kopijo obnovite s funkcijo »Obnovi denarnico«.</translation>
+    </message>
+    <message>
+        <source>Restore and Migrate wallet</source>
+        <translation>Obnovi in preseli denarnico</translation>
+    </message>
+    <message>
+        <source>Restoring the wallet will copy the backup file to the wallets directory and place it in the standard wallet directory layout. The original file will not be modified.
+
+Migrating the wallet will convert the restored wallet to one or more descriptor wallets. A new wallet backup will need to be made.
+If this wallet contains any watchonly scripts, a new wallet will be created which contains those watchonly scripts.
+If this wallet contains any solvable but not watched scripts, a different and new wallet will be created which contains those scripts.
+
+The migration process will create a backup of the wallet before migrating. This backup file will be named &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak and can be found in the directory for this wallet. In the event of an incorrect migration, the backup can be restored with the "Restore Wallet" functionality.</source>
+        <translation>Obnova denarnice kopira varnostno kopijo v imenik denarnic in jo umesti v standardno imeniško strukturo denarnice. Izvirna datoteka ne bo spremenjena.
+
+Selitev pretvori obnovljeno denarnico v eno ali več denarnic z opisniki. Izdelati bo treba novo varnostno kopijo denarnice.
+Če denarnica vsebuje skripte samo za opazovanje, bo ustvarjena nova denarnica, ki vsebuje te skripte.
+Če vsebuje rešljive skripte, ki niso opazovani, bo zanje ustvarjena druga nova denarnica.
+
+Postopek selitve pred začetkom ustvari varnostno kopijo denarnice. Datoteka bo imenovana &lt;wallet name&gt;-&lt;timestamp&gt;.legacy.bak in bo v imeniku te denarnice. Če je selitev nepravilna, lahko varnostno kopijo obnovite s funkcijo »Obnovi denarnico«.</translation>
+    </message>
+    <message>
+        <source>Solvable but not watched scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>Rešljivi, a neopazovani skripti so bili preseljeni v novo denarnico z imenom '%1'.</translation>
+    </message>
+    <message>
+        <source>The wallet was not loaded after migration. You can open it from the "File &gt; Open wallet" menu.</source>
+        <translation>Denarnica po selitvi ni bila naložena. Odprete jo lahko v meniju »Datoteka &gt; Odpri denarnico«.</translation>
+    </message>
+    <message>
+        <source>Watchonly scripts have been migrated to a new wallet named '%1'.</source>
+        <translation>Skripti samo za opazovanje so bili preseljeni v novo denarnico z imenom '%1'.</translation>
     </message>
 </context>
 <context>
@@ -1253,6 +1481,10 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <extracomment>"External signing" means using devices such as hardware wallets.</extracomment>
         <translation type="unfinished">Prevedeno brez podpore za zunanje podpisovanje</translation>
     </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported using descriptors at a later time.</source>
+        <translation>Ustvari prazno denarnico. Prazne denarnice sprva nimajo zasebnih ključev ali skriptov. Zasebne ključe in naslove je mogoče pozneje uvoziti z opisniki.</translation>
+    </message>
 </context>
 <context>
     <name>EditAddressDialog</name>
@@ -1289,8 +1521,8 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Uredi naslov za pošiljanje</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation type="unfinished">Vnešeni naslov "%1" ni veljaven bitcoin-naslov.</translation>
+        <source>The entered address "%1" is not a valid ConnectCoin address.</source>
+        <translation type="unfinished">Vnešeni naslov "%1" ni veljaven ConnectCoin-naslov.</translation>
     </message>
     <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
@@ -1465,6 +1697,18 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <source>Error</source>
         <translation type="unfinished">Napaka</translation>
     </message>
+    <message>
+        <source> GB</source>
+        <translation> GB</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the ConnectCoin blockchain.</source>
+        <translation>%1 bo prenesel in shranil kopijo verige blokov ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>ConnectCoin</source>
+        <translation>ConnectCoin</translation>
+    </message>
 </context>
 <context>
     <name>ModalOverlay</name>
@@ -1473,8 +1717,8 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Obrazec</translation>
     </message>
     <message>
-        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation type="unfinished">Zadnje transakcije morda še niso vidne, zato je prikazano dobroimetje v denarnici lahko napačno. Pravilni podatki bodo prikazani, ko bo vaša denarnica končala s sinhronizacijo z omrežjem bitcoin; glejte podrobnosti spodaj.</translation>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the ConnectCoin network, as detailed below.</source>
+        <translation type="unfinished">Zadnje transakcije morda še niso vidne, zato je prikazano dobroimetje v denarnici lahko napačno. Pravilni podatki bodo prikazani, ko bo vaša denarnica končala s sinhronizacijo z omrežjem ConnectCoin; glejte podrobnosti spodaj.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1524,17 +1768,29 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <source>Unknown. Pre-syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">Neznano. Predsinhronizacija zaglavij (%1, %2 %)...</translation>
     </message>
+    <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
+    </message>
+    <message>
+        <source>Attempting to spend ConnectCoin funds that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Omrežje ne bo sprejelo poskusov porabe sredstev ConnectCoin, na katera vplivajo še neprikazane transakcije.</translation>
+    </message>
 </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation type="unfinished">Odpri URI tipa bitcoin:</translation>
+        <source>Open ConnectCoin URI</source>
+        <translation type="unfinished">Odpri URI tipa connectcoin:</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
         <translation type="unfinished">Prilepite naslov iz odložišča</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation>URI:</translation>
     </message>
 </context>
 <context>
@@ -1577,8 +1833,8 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Polna pot do skripte, združljive z %1 (n.pr. C:\Downloads\hwi.exe ali /Users/you/Downloads/hwi.py). Pozor: zlonamerna programska oprema vam lahko ukrade kovance!</translation>
     </message>
     <message>
-        <source>Automatically open the Bitcoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished">Samodejno odpiranje vrat (port) za bitcoin-odjemalec na usmerjevalniku. To deluje le, če usmerjevalnik podpira PCP ali NAT-PMP in je ta funkcija na usmerjevalniku vklopljena. Zunanja številka vrat je lahko naključna.</translation>
+        <source>Automatically open the ConnectCoin client port on the router. This only works when your router supports PCP or NAT-PMP and it is enabled. The external port could be random.</source>
+        <translation type="unfinished">Samodejno odpiranje vrat (port) za ConnectCoin-odjemalec na usmerjevalniku. To deluje le, če usmerjevalnik podpira PCP ali NAT-PMP in je ta funkcija na usmerjevalniku vklopljena. Zunanja številka vrat je lahko naključna.</translation>
     </message>
     <message>
         <source>Map port using PCP or NA&amp;T-PMP</source>
@@ -1704,8 +1960,8 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Dovoli &amp;dohodne povezave</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">Poveži se v omrežje Bitcoin preko posredniškega strežnika SOCKS5.</translation>
+        <source>Connect to the ConnectCoin network through a SOCKS5 proxy.</source>
+        <translation type="unfinished">Poveži se v omrežje ConnectCoin preko posredniškega strežnika SOCKS5.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1784,8 +2040,8 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Omogoči dodatne možnosti podrobnega nadzora nad  kovanci v transakcijah.</translation>
     </message>
     <message>
-        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
-        <translation type="unfinished">Poveži se v omrežje Bitcoin prek ločenega posredniškega strežnika SOCKS5 za storitve onion (Tor).</translation>
+        <source>Connect to the ConnectCoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation type="unfinished">Poveži se v omrežje ConnectCoin prek ločenega posredniškega strežnika SOCKS5 za storitve onion (Tor).</translation>
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
@@ -1866,6 +2122,46 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <source>The supplied proxy address is invalid.</source>
         <translation type="unfinished">Vnešeni naslov posredniškega strežnika ni veljaven.</translation>
     </message>
+    <message>
+        <source>Enable pop-up notifications</source>
+        <translation>Omogoči pojavna obvestila</translation>
+    </message>
+    <message>
+        <source>Show desktop pop-up notifications, including incoming and sent transactions. Disabled by default. Error and confirmation dialogs remain enabled.</source>
+        <translation>Prikazuj pojavna obvestila na namizju, vključno s prejetimi in poslanimi transakcijami. Privzeto onemogočeno. Pogovorna okna za napake in potrditve ostanejo omogočena.</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Wallets should be loaded at startup and kept active while pruning is enabled so they stay synchronized before old block data is deleted; wallets that fall behind pruned data may require a reindex. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Obrezovanje znatno zmanjša prostor na disku, potreben za shranjevanje transakcij. Vsi bloki se še vedno v celoti preverijo. Ko je obrezovanje omogočeno, naj bodo denarnice naložene ob zagonu in ostanejo dejavne, da se uskladijo pred brisanjem starih podatkov blokov; denarnice, ki zaostanejo za obrezanimi podatki, lahko potrebujejo ponovno indeksiranje. Razveljavitev te nastavitve zahteva ponoven prenos celotne verige blokov.</translation>
+    </message>
+    <message>
+        <source>Font in the Overview tab: </source>
+        <translation>Pisava na zavihku Pregled: </translation>
+    </message>
+    <message>
+        <source>Set by -popupnotifications or popupnotifications in connectcoin.conf.</source>
+        <translation>Nastavljeno z -popupnotifications ali s popupnotifications v connectcoin.conf.</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
 </context>
 <context>
     <name>OptionsModel</name>
@@ -1881,8 +2177,8 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Obrazec</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation type="unfinished">Prikazani podatki so morda zastareli. Program ob vzpostavitvi povezave samodejno sinhronizira denarnico z omrežjem Bitcoin, a trenutno ta postopek še ni zaključen.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the ConnectCoin network after a connection is established, but this process has not completed yet.</source>
+        <translation type="unfinished">Prikazani podatki so morda zastareli. Program ob vzpostavitvi povezave samodejno sinhronizira denarnico z omrežjem ConnectCoin, a trenutno ta postopek še ni zaključen.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -1973,11 +2269,11 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     </message>
     <message numerus="yes">
         <source>Signed %n input(s), but more signatures are still required.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Podpisan je %n vhod, vendar so potrebni še drugi podpisi.</numerusform>
+            <numerusform>Podpisana sta %n vhoda, vendar so potrebni še drugi podpisi.</numerusform>
+            <numerusform>Podpisani so %n vhodi, vendar so potrebni še drugi podpisi.</numerusform>
+            <numerusform>Podpisanih je %n vhodov, vendar so potrebni še drugi podpisi.</numerusform>
         </translation>
     </message>
     <message>
@@ -2035,11 +2331,11 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     </message>
     <message numerus="yes">
         <source>Transaction has %n unsigned input(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
-            <numerusform />
+        <translation>
+            <numerusform>Transakcija ima %n nepodpisan vhod.</numerusform>
+            <numerusform>Transakcija ima %n nepodpisana vhoda.</numerusform>
+            <numerusform>Transakcija ima %n nepodpisane vhode.</numerusform>
+            <numerusform>Transakcija ima %n nepodpisanih vhodov.</numerusform>
         </translation>
     </message>
     <message>
@@ -2070,6 +2366,10 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <source>Transaction status is unknown.</source>
         <translation type="unfinished">Status transakcije ni znan.</translation>
     </message>
+    <message>
+        <source>Sends %1 to %2</source>
+        <translation>Pošlje %1 na %2</translation>
+    </message>
 </context>
 <context>
     <name>PaymentServer</name>
@@ -2078,16 +2378,16 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation type="unfinished">Napaka pri zahtevku za plačilo</translation>
     </message>
     <message>
-        <source>Cannot start bitcoin: click-to-pay handler</source>
-        <translation type="unfinished">Ni mogoče zagnati rokovalca plačilnih povezav tipa bitcoin:.</translation>
+        <source>Cannot start connectcoin: click-to-pay handler</source>
+        <translation type="unfinished">Ni mogoče zagnati rokovalca plačilnih povezav tipa connectcoin:.</translation>
     </message>
     <message>
         <source>URI handling</source>
         <translation type="unfinished">Rokovanje z URI</translation>
     </message>
     <message>
-        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation type="unfinished">'bitcoin://' ni veljaven URI. Namesto tega uporabite 'bitcoin:' .</translation>
+        <source>'connectcoin://' is not a valid URI. Use 'connectcoin:' instead.</source>
+        <translation type="unfinished">'connectcoin://' ni veljaven URI. Namesto tega uporabite 'connectcoin:' .</translation>
     </message>
     <message>
         <source>Cannot process payment request because BIP70 is not supported.
@@ -2098,8 +2398,8 @@ Zaradi široko razširjenih varnostih hib v BIP70 vam toplo priporočamo, da mor
 Svetujemo, da prodajalca prosite, naj vam priskrbi URI na podlagi BIP21.</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation type="unfinished">URI je nerazumljiv. Možno je, da je bitcoin-naslov neveljaven ali pa so parametri URI-ja napačno oblikovani.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid ConnectCoin address or malformed URI parameters.</source>
+        <translation type="unfinished">URI je nerazumljiv. Možno je, da je ConnectCoin-naslov neveljaven ali pa so parametri URI-ja napačno oblikovani.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -2256,7 +2556,7 @@ Svetujemo, da prodajalca prosite, naj vam priskrbi URI na podlagi BIP21.</transl
         <translation type="unfinished">Lokalni naslovi</translation>
     </message>
     <message>
-        <source>Network addresses that your Bitcoin node is currently using to communicate with other nodes.</source>
+        <source>Network addresses that your ConnectCoin node is currently using to communicate with other nodes.</source>
         <translation type="unfinished">Omrežni naslovi, ki jih vaše vozlišče trenutno uporablja za komunikacijo z drugimi vozlišči.</translation>
     </message>
     <message>
@@ -2668,6 +2968,74 @@ Za več informacij glede uporabe konzole uporabite ukaz %6.
         <source>Unknown</source>
         <translation type="unfinished">Neznano</translation>
     </message>
+    <message>
+        <source>Ctrl++</source>
+        <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl++</translation>
+    </message>
+    <message>
+        <source>Ctrl+-</source>
+        <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+-</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Ctrl+N</source>
+        <translation>Ctrl+N</translation>
+    </message>
+    <message>
+        <source>Ctrl+P</source>
+        <translation>Ctrl+P</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation>Ctrl+=</translation>
+    </message>
+    <message>
+        <source>Ctrl+_</source>
+        <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
+        <translation>Ctrl+_</translation>
+    </message>
+    <message>
+        <source>Private broadcast: short-lived, for broadcasting privacy-sensitive transactions</source>
+        <extracomment>Explanatory text for a short-lived outbound peer connection that is used to broadcast privacy-sensitive data (like our transactions).</extracomment>
+        <translation>Zasebno razširjanje: kratkotrajna povezava za razširjanje transakcij, občutljivih z vidika zasebnosti</translation>
+    </message>
+    <message>
+        <source>The BIP324 session ID string in hex.</source>
+        <translation>Identifikator seje BIP324 v šestnajstiškem zapisu.</translation>
+    </message>
+    <message>
+        <source>Transport</source>
+        <translation>Prenos</translation>
+    </message>
+    <message>
+        <source>detecting: peer could be v1 or v2</source>
+        <extracomment>Explanatory text for "detecting" transport type.</extracomment>
+        <translation>zaznavanje: vrstnik je lahko v1 ali v2</translation>
+    </message>
+    <message>
+        <source>v1: unencrypted, plaintext transport protocol</source>
+        <extracomment>Explanatory text for v1 transport type.</extracomment>
+        <translation>v1: nešifriran prenosni protokol z navadnim besedilom</translation>
+    </message>
+    <message>
+        <source>v2: BIP324 encrypted transport protocol</source>
+        <extracomment>Explanatory text for v2 transport type.</extracomment>
+        <translation>v2: šifriran prenosni protokol BIP324</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -2684,8 +3052,8 @@ Za več informacij glede uporabe konzole uporabite ukaz %6.
         <translation type="unfinished">&amp;Sporočilo:</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation type="unfinished">Neobvezno sporočilo kot priponka zahtevku za plačilo, ki bo prikazano, ko bo zahtevek odprt. Opomba: Opravljeno plačilo v omrežju bitcoin tega sporočila ne bo vsebovalo.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the ConnectCoin network.</source>
+        <translation type="unfinished">Neobvezno sporočilo kot priponka zahtevku za plačilo, ki bo prikazano, ko bo zahtevek odprt. Opomba: Opravljeno plačilo v omrežju ConnectCoin tega sporočila ne bo vsebovalo.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -2985,7 +3353,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
 Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB" za transakcijo velikosti 500 navideznih bajtov (polovica enega kvB) znašala le 50 satošijev.</translation>
     </message>
     <message>
-        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for ConnectCoin transactions than the network can process.</source>
         <translation type="unfinished">Kadar je v blokih manj prostora, kot je zahtev po transakcijah, lahko rudarji in posredovalna vozlišča zahtevajo minimalno provizijo. V redu, če plačate samo to minimalno provizijo, vendar se zavedajte, da se potem transakcija lahko nikoli ne potrdi, če bo povpraševanje po transakcijah večje, kot ga omrežje lahko obdela.</translation>
     </message>
     <message>
@@ -3067,7 +3435,7 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
         <translation type="unfinished">Ustvari n&amp;epodpisano</translation>
     </message>
     <message>
-        <source>Creates a Partially Signed Bitcoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Creates a Partially Signed ConnectCoin Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <translation type="unfinished">Ustvari delno podpisano bitcoin-transakcijo (DPBT, angl. PSBT), ki jo lahko kopirate in potem podpišete n.pr. z nepovezano (offline) %1 denarnico ali pa s hardversko denarnico, ki podpira DPBT.</translation>
     </message>
     <message>
@@ -3123,7 +3491,7 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
         <translation type="unfinished">Provizijo lahko zvišate kasneje (vsebuje Replace-By-Fee, BIP-125).</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed ConnectCoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can only create a PSBT. This string is displayed when private keys are disabled and an external signer is not available.</extracomment>
         <translation type="unfinished">Prosimo, preglejte predlog za transakcijo. Ustvarjena bo delno podpisana bitcoin-transakcija (DPBT), ki jo lahko shranite ali kopirate in potem podpišete n.pr. z nepovezano (offline) %1 denarnico ali pa s hardversko denarnico, ki podpira DPBT.</translation>
     </message>
@@ -3133,7 +3501,7 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
         <translation type="unfinished">Želite ustvariti takšno transakcijo?</translation>
     </message>
     <message>
-        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed ConnectCoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
         <translation type="unfinished">Prosimo, preglejte podrobnosti transakcije. Transakcijo lahko ustvarite in pošljete, lahko pa tudi ustvarite delno podpisano bitcoin-transakcijo (DPBT, angl. PSBT), ki jo lahko shranite ali kopirate na odložišče in kasneje prodpišete n.pr. z nepovezano %1 denarnico ali z denarnico, ki podpiral DPBT.</translation>
     </message>
@@ -3206,8 +3574,8 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
         </translation>
     </message>
     <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation type="unfinished">Opozorilo: Neveljaven bitcoin-naslov</translation>
+        <source>Warning: Invalid ConnectCoin address</source>
+        <translation type="unfinished">Opozorilo: Neveljaven ConnectCoin-naslov</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -3224,6 +3592,40 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(brez oznake)</translation>
+    </message>
+    <message>
+        <source>%1 from wallet '%2'</source>
+        <translation>%1 iz denarnice '%2'</translation>
+    </message>
+    <message>
+        <source>%1 kvB</source>
+        <comment>PSBT transaction creation</comment>
+        <extracomment>When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context</extracomment>
+        <translation>%1 kvB</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation>%1/kvB</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopiraj znesek</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 connects per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 connects.</source>
+        <translation>Določite provizijo po meri za vsak kB (1.000 bajtov) navidezne velikosti transakcije.
+
+Opomba: Ker se provizija izračuna na bajt, bi stopnja »100 connects na kvB« za transakcijo velikosti 500 navideznih bajtov (polovica 1 kvB) na koncu pomenila provizijo le 50 connects.</translation>
+    </message>
+    <message>
+        <source>Using the current minimum fee. Confirmation time is not estimated.</source>
+        <translation>Uporablja se trenutna najnižja provizija. Čas potrditve ni ocenjen.</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later.</source>
+        <translation>Provizijo lahko povečate pozneje.</translation>
     </message>
 </context>
 <context>
@@ -3245,8 +3647,8 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
         <translation type="unfinished">Izberite enega od že uporabljenih naslovov</translation>
     </message>
     <message>
-        <source>The Bitcoin address to send the payment to</source>
-        <translation type="unfinished">Bitcoin-naslov, na katerega bo plačilo poslano</translation>
+        <source>The ConnectCoin address to send the payment to</source>
+        <translation type="unfinished">ConnectCoin-naslov, na katerega bo plačilo poslano</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -3281,8 +3683,20 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
         <translation type="unfinished">Če vnesete oznako za zgornji naslov, se bo skupaj z naslovom shranila v imenik že uporabljenih naslovov</translation>
     </message>
     <message>
-        <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation type="unfinished">Sporočilo, ki je bilo pripeto na URI tipa bitcoin: in bo shranjeno skupaj s podatki o transakciji. Opomba: Sporočilo ne bo poslano preko omrežja Bitcoin.</translation>
+        <source>A message that was attached to the connectcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the ConnectCoin network.</source>
+        <translation type="unfinished">Sporočilo, ki je bilo pripeto na URI tipa connectcoin: in bo shranjeno skupaj s podatki o transakciji. Opomba: Sporočilo ne bo poslano preko omrežja ConnectCoin.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less ConnectCoin than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <translation>Provizija bo odšteta od poslanega zneska. Prejemnik bo prejel manj ConnectCoin, kot vnesete v polje za znesek. Če je izbranih več prejemnikov, se provizija razdeli enakomerno.</translation>
     </message>
 </context>
 <context>
@@ -3307,8 +3721,8 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
         <translation type="unfinished">&amp;Podpiši sporočilo</translation>
     </message>
     <message>
-        <source>The Bitcoin address to sign the message with</source>
-        <translation type="unfinished">Bitcoin-naslov, s katerim podpisujete sporočilo</translation>
+        <source>The ConnectCoin address to sign the message with</source>
+        <translation type="unfinished">ConnectCoin-naslov, s katerim podpisujete sporočilo</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3327,7 +3741,7 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
         <translation type="unfinished">Podpis</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Bitcoin address</source>
+        <source>Sign the message to prove you own this ConnectCoin address</source>
         <translation type="unfinished">Podpišite sporočilo, da dokažete lastništvo zgornjega naslova.</translation>
     </message>
     <message>
@@ -3351,8 +3765,8 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
         <translation type="unfinished">Da preverite verodostojnost sporočila, spodaj vnesite: prejemnikov naslov, prejeto sporočilo (pazljivo skopirajte vse prelome vrstic, presledke, tabulatorje itd.) ter prejeti podpis. Da se izognete napadom tipa man-in-the-middle, vedite, da iz veljavnega podpisa ne sledi nič drugega, kot tisto, kar je navedeno v sporočilu. Podpis samo potrjuje dejstvo, da ima podpisnik v lasti prejemni naslov, ne more pa dokazati pošiljanja nobene transakcije!</translation>
     </message>
     <message>
-        <source>The Bitcoin address the message was signed with</source>
-        <translation type="unfinished">Bitcoin-naslov, s katerim je bilo sporočilo podpisano</translation>
+        <source>The ConnectCoin address the message was signed with</source>
+        <translation type="unfinished">ConnectCoin-naslov, s katerim je bilo sporočilo podpisano</translation>
     </message>
     <message>
         <source>The signed message to verify</source>
@@ -3363,8 +3777,8 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
         <translation type="unfinished">Podpis, ustvarjen ob podpisovanju sporočila</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation type="unfinished">Preverite, ali je bilo sporočilo v resnici podpisano z navedenim bitcoin-naslovom.</translation>
+        <source>Verify the message to ensure it was signed with the specified ConnectCoin address</source>
+        <translation type="unfinished">Preverite, ali je bilo sporočilo v resnici podpisano z navedenim ConnectCoin-naslovom.</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -3425,6 +3839,26 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
     <message>
         <source>Message verified.</source>
         <translation type="unfinished">Sporočilo je preverjeno.</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the clipboard</source>
+        <translation>Kopiraj trenutni podpis v odložišče</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a legacy (P2PKH) key. Message signing for SegWit and other non-P2PKH address types is not supported in this version of %1. Please check the address and try again.</source>
+        <translation>Vneseni naslov se ne nanaša na ključ stare vrste (P2PKH). Podpisovanje sporočil za SegWit in druge vrste naslovov, ki niso P2PKH, v tej različici %1 ni podprto. Preverite naslov in poskusite znova.</translation>
+    </message>
+    <message>
+        <source>You can sign messages/agreements with your legacy (P2PKH) addresses to prove you can receive ConnectCoin funds sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Sporočila ali sporazume lahko podpišete s svojimi naslovi stare vrste (P2PKH) in tako dokažete, da lahko prejmete nanje poslana sredstva ConnectCoin. Ne podpisujte ničesar nejasnega ali naključnega, saj vas lahko napadi lažnega predstavljanja zavedejo v predajo svoje identitete s podpisom. Podpisujte samo podrobne izjave, s katerimi se strinjate.</translation>
     </message>
 </context>
 <context>
@@ -3602,6 +4036,10 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
     <message>
         <source>P2C domain</source>
         <translation>Domena P2C</translation>
+    </message>
+    <message>
+        <source>%1 (Certificate was not verified)</source>
+        <translation>%1 (potrdilo ni bilo preverjeno)</translation>
     </message>
 </context>
 <context>
@@ -3866,6 +4304,10 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kvB"
         <source>Enter address, P2C domain, transaction id, or label to search</source>
         <translation>Vnesite naslov, domeno P2C, identifikator transakcije ali oznako za iskanje</translation>
     </message>
+    <message>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
 </context>
 <context>
     <name>WalletFrame</name>
@@ -3969,6 +4411,10 @@ Za odpiranje denarnice kliknite Datoteka &gt; Odpri denarnico
         <source>Can't display address</source>
         <translation type="unfinished">Ne morem prikazati naslova</translation>
     </message>
+    <message>
+        <source>Signer error</source>
+        <translation>Napaka podpisnika</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -4037,8 +4483,8 @@ Za odpiranje denarnice kliknite Datoteka &gt; Odpri denarnico
         <translation type="unfinished">Napaka: identifikator zapisa v izvozni (dump) datoteki je napačen. Vsebuje "%s", pričakovano "%s".</translation>
     </message>
     <message>
-        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
-        <translation type="unfinished">Napaka: verzija izvozne (dump) datoteke ni podprta. Ta verzija ukaza bitcoin-wallet podpira le izvozne datoteke verzije 1, ta datoteka pa ima verzijo %s.</translation>
+        <source>Error: Dumpfile version is not supported. This version of connectcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Napaka: verzija izvozne (dump) datoteke ni podprta. Ta verzija ukaza connectcoin-wallet podpira le izvozne datoteke verzije 1, ta datoteka pa ima verzijo %s.</translation>
     </message>
     <message>
         <source>Error: Unable to produce descriptors for this legacy wallet. Make sure to provide the wallet's passphrase if it is encrypted.</source>
@@ -4620,6 +5066,556 @@ Obnovitev varnostne kopije denarnice ni bila mogoča.</translation>
         <source>Settings file could not be written</source>
         <translation type="unfinished">V nastavitveno datoteko ni bilo mogoče pisati</translation>
     </message>
+    <message>
+        <source>Change destination must be a type-1 P2PK (bech32m) destination</source>
+        <translation>Cilj vračila mora biti cilj P2PK tipa 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) addresses</source>
+        <translation>ConnectCoin podpira samo naslove P2PK tipa 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin supports only type-1 P2PK (bech32m) change addresses</source>
+        <translation>ConnectCoin podpira samo naslove za vračilo P2PK tipa 1 (bech32m)</translation>
+    </message>
+    <message>
+        <source>ConnectCoin transactions require valid type-1 destinations or type-2 PAY_TO_CONNECT outputs</source>
+        <translation>Transakcije ConnectCoin zahtevajo veljavne cilje tipa 1 ali izhode PAY_TO_CONNECT tipa 2</translation>
+    </message>
+    <message>
+        <source>ConnectCoin type-1 outputs support only SIGHASH_DEFAULT</source>
+        <translation>Izhodi ConnectCoin tipa 1 podpirajo samo SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input is not a complete type-1 SIGHASH_DEFAULT spend</source>
+        <translation>Vhod ni popolna poraba tipa 1 s SIGHASH_DEFAULT</translation>
+    </message>
+    <message>
+        <source>Input requires a complete P2C proof witness</source>
+        <translation>Vhod zahteva popolne podatke priče za dokaz P2C</translation>
+    </message>
+    <message>
+        <source>Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing.</source>
+        <translation>Glavno omrežje še ni zagnano: začetni blok ni določen. Za javno testiranje uporabite -testnet4, za lokalno testiranje pa -regtest.</translation>
+    </message>
+    <message>
+        <source>No project-owned public source URL is configured for this development build.</source>
+        <translation>Za to razvojno različico ni nastavljen javni URL izvorne kode v lasti projekta.</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. Try reducing -rpcmaxconnections or using the default value of %d</source>
+        <translation>Na voljo ni dovolj opisnikov datotek. Poskusite zmanjšati -rpcmaxconnections ali uporabiti privzeto vrednost %d</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful.</source>
+        <translation>Prosimo, prispevajte, če se vam zdi %s uporaben.</translation>
+    </message>
+    <message>
+        <source>
+Consider modifying %s (%s) or %s (%s).</source>
+        <translation>
+Razmislite o spremembi %s (%s) ali %s (%s).</translation>
+    </message>
+    <message>
+        <source>%s failed to validate the -assumeutxo snapshot state. This indicates a hardware problem, or a bug in the software, or a bad software modification that allowed an invalid snapshot to be loaded. As a result of this, the node will shut down and stop using any state that was built on the snapshot, resetting the chain height from %d to %d. On the next restart, the node will resume syncing from %d without using any snapshot data. Please report this incident to %s, including how you obtained the snapshot. The invalid snapshot chainstate will be left on disk in case it is helpful in diagnosing the issue that caused this error.</source>
+        <translation>%s ni uspel preveriti stanja posnetka -assumeutxo. To kaže na težavo s strojno opremo, napako v programu ali neustrezno spremembo programa, ki je dovolila nalaganje neveljavnega posnetka. Zato se bo vozlišče zaustavilo in prenehalo uporabljati stanje, zgrajeno na posnetku, ter ponastavilo višino verige z %d na %d. Ob naslednjem zagonu bo nadaljevalo usklajevanje od %d brez podatkov posnetka. Dogodek prijavite na %s in navedite, kako ste dobili posnetek. Neveljavno stanje verige iz posnetka bo ostalo na disku, če bi pomagalo pri ugotavljanju vzroka te napake.</translation>
+    </message>
+    <message>
+        <source>%s is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation>%s je nastavljen zelo visoko! Tako visoka provizija bi lahko bila plačana za eno samo transakcijo.</translation>
+    </message>
+    <message>
+        <source>%s request to listen on port %u. This port is considered "bad" and thus it is unlikely that any peer will connect to it. See doc/p2p-bad-ports.md for details and a full list.</source>
+        <translation>%s zahteva poslušanje na vratih %u. Ta vrata veljajo za »slaba«, zato je malo verjetno, da bi se nanje povezal kateri koli vrstnik. Podrobnosti in celoten seznam so v doc/p2p-bad-ports.md.</translation>
+    </message>
+    <message>
+        <source>-walletrbf is deprecated and will be fully removed in the next release.</source>
+        <translation>-walletrbf je zastarel in bo v naslednji izdaji v celoti odstranjen.</translation>
+    </message>
+    <message>
+        <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
+        <translation>dbcache velikosti %zu MiB je lahko prevelik za sistem s samo %zu MiB pomnilnika.</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see %s for details: %s</source>
+        <translation>Prišlo je do usodne notranje napake; podrobnosti so v %s: %s</translation>
+    </message>
+    <message>
+        <source>Assumeutxo data not found for the given blockhash '%s'.</source>
+        <translation>Podatki Assumeutxo za podano zgoščeno vrednost bloka '%s' niso bili najdeni.</translation>
+    </message>
+    <message>
+        <source>Block verification was interrupted</source>
+        <translation>Preverjanje blokov je bilo prekinjeno</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version %d pre-selected input with a version 3 tx</source>
+        <translation>Nepotrjenega vnaprej izbranega vhoda različice %d ni mogoče porabiti s transakcijo različice 3</translation>
+    </message>
+    <message>
+        <source>Can't spend unconfirmed version 3 pre-selected input with a version %d tx</source>
+        <translation>Nepotrjenega vnaprej izbranega vhoda različice 3 ni mogoče porabiti s transakcijo različice %d</translation>
+    </message>
+    <message>
+        <source>Cannot obtain a lock on directory %s. %s is probably already running.</source>
+        <translation>Imenika %s ni mogoče zakleniti. %s verjetno že teče.</translation>
+    </message>
+    <message>
+        <source>Cannot write to directory '%s'; check permissions.</source>
+        <translation>V imenik '%s' ni mogoče pisati; preverite dovoljenja.</translation>
+    </message>
+    <message>
+        <source>Corrupt block found indicating potential hardware failure.</source>
+        <translation>Najden je poškodovan blok, kar kaže na morebitno okvaro strojne opreme.</translation>
+    </message>
+    <message>
+        <source>Could not generate scriptPubKeys (cache is empty)</source>
+        <translation>Vrednosti scriptPubKeys ni bilo mogoče ustvariti (predpomnilnik je prazen)</translation>
+    </message>
+    <message>
+        <source>Could not read embedded asmap data</source>
+        <translation>Vgrajenih podatkov asmap ni bilo mogoče prebrati</translation>
+    </message>
+    <message>
+        <source>Creating wallet…</source>
+        <translation>Ustvarjanje denarnice…</translation>
+    </message>
+    <message>
+        <source>Duplicate binding configuration for address %s. Please check your -bind, -bind=...=onion and -whitebind settings.</source>
+        <translation>Podvojena nastavitev vezave za naslov %s. Preverite nastavitve -bind, -bind=...=onion in -whitebind.</translation>
+    </message>
+    <message>
+        <source>Elliptic curve cryptography sanity check failure. %s is shutting down.</source>
+        <translation>Preizkus pravilnega delovanja kriptografije eliptičnih krivulj ni uspel. %s se zaustavlja.</translation>
+    </message>
+    <message>
+        <source>Embedded asmap data not available</source>
+        <translation>Vgrajeni podatki asmap niso na voljo</translation>
+    </message>
+    <message>
+        <source>Error creating %s: Could not write version metadata.</source>
+        <translation>Napaka pri ustvarjanju %s: metapodatkov različice ni bilo mogoče zapisati.</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet is a legacy wallet. Please migrate to a descriptor wallet using the migration tool (migratewallet RPC).</source>
+        <translation>Napaka pri nalaganju %s: denarnica je stare vrste. Z orodjem za selitev jo pretvorite v denarnico z opisniki (RPC migratewallet).</translation>
+    </message>
+    <message>
+        <source>Error loading databases</source>
+        <translation>Napaka pri nalaganju podatkovnih zbirk</translation>
+    </message>
+    <message>
+        <source>Error loading wallet. Wallet requires blocks to be downloaded, and software does not currently support loading wallets while blocks are being downloaded out of order when using assumeutxo snapshots. Wallet should be able to load successfully after node sync reaches height %s</source>
+        <translation>Napaka pri nalaganju denarnice. Denarnica zahteva prenos blokov, program pa trenutno ne podpira nalaganja denarnic med prenosom blokov zunaj vrstnega reda pri uporabi posnetkov assumeutxo. Denarnico bo predvidoma mogoče naložiti, ko usklajevanje vozlišča doseže višino %s</translation>
+    </message>
+    <message>
+        <source>Error opening coins database</source>
+        <translation>Napaka pri odpiranju podatkovne zbirke kovancev</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address metadata may be missing or incorrect.</source>
+        <translation>Napaka pri branju %s! Vsi ključi so bili pravilno prebrani, vendar lahko podatki o transakcijah ali metapodatki naslovov manjkajo ali so napačni.</translation>
+    </message>
+    <message>
+        <source>Error starting/committing db txn for wallet transactions removal process</source>
+        <translation>Napaka pri začetku ali potrditvi transakcije podatkovne zbirke za postopek odstranjevanja transakcij denarnice</translation>
+    </message>
+    <message>
+        <source>Error: Cannot extract destination from the generated scriptpubkey</source>
+        <translation>Napaka: iz ustvarjenega scriptpubkey ni mogoče razbrati cilja</translation>
+    </message>
+    <message>
+        <source>Error: Could not add tx %s to watchonly wallet</source>
+        <translation>Napaka: transakcije %s ni bilo mogoče dodati v denarnico samo za opazovanje</translation>
+    </message>
+    <message>
+        <source>Error: Could not add watchonly tx %s to watchonly wallet</source>
+        <translation>Napaka: transakcije %s samo za opazovanje ni bilo mogoče dodati v denarnico samo za opazovanje</translation>
+    </message>
+    <message>
+        <source>Error: Could not create file '%s'</source>
+        <translation>Napaka: datoteke '%s' ni bilo mogoče ustvariti</translation>
+    </message>
+    <message>
+        <source>Error: Could not delete watchonly transactions. </source>
+        <translation>Napaka: transakcij samo za opazovanje ni bilo mogoče izbrisati. </translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile specifies an unsupported database format (%s). Only sqlite database dumps are supported</source>
+        <translation>Napaka: datoteka izpisa določa nepodprto obliko podatkovne zbirke (%s). Podprti so samo izpisi zbirk sqlite</translation>
+    </message>
+    <message>
+        <source>Error: Export destination '%s' already exists</source>
+        <translation>Napaka: cilj izvoza '%s' že obstaja</translation>
+    </message>
+    <message>
+        <source>Error: Export destination cannot be empty</source>
+        <translation>Napaka: cilj izvoza ne sme biti prazen</translation>
+    </message>
+    <message>
+        <source>Error: Failed to create new watchonly wallet. %s</source>
+        <translation>Napaka: nove denarnice samo za opazovanje ni bilo mogoče ustvariti. %s</translation>
+    </message>
+    <message>
+        <source>Error: Not all address book records were migrated</source>
+        <translation>Napaka: niso bili preseljeni vsi zapisi imenika naslovov</translation>
+    </message>
+    <message>
+        <source>Error: Not all transaction records were migrated</source>
+        <translation>Napaka: niso bili preseljeni vsi zapisi transakcij</translation>
+    </message>
+    <message>
+        <source>Error: Transaction %s in wallet cannot be identified to belong to migrated wallets</source>
+        <translation>Napaka: ni mogoče ugotoviti, ali transakcija %s v denarnici pripada preseljenim denarnicam</translation>
+    </message>
+    <message>
+        <source>Error: Unable to read wallet's best block locator record</source>
+        <translation>Napaka: zapisa lokatorja najboljšega bloka denarnice ni mogoče prebrati</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write data to disk for wallet %s</source>
+        <translation>Napaka: podatkov za denarnico %s ni mogoče zapisati na disk</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write solvable wallet best block locator record</source>
+        <translation>Napaka: zapisa lokatorja najboljšega bloka rešljive denarnice ni mogoče zapisati</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write the exported wallet</source>
+        <translation>Napaka: izvožene denarnice ni mogoče zapisati</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write watchonly wallet best block locator record</source>
+        <translation>Napaka: zapisa lokatorja najboljšega bloka denarnice samo za opazovanje ni mogoče zapisati</translation>
+    </message>
+    <message>
+        <source>Error: Wallet does not exist</source>
+        <translation>Napaka: denarnica ne obstaja</translation>
+    </message>
+    <message>
+        <source>Error: Wallet has no descriptors to export</source>
+        <translation>Napaka: denarnica nima opisnikov za izvoz</translation>
+    </message>
+    <message>
+        <source>Error: cannot commit db transaction for watchonly wallet export</source>
+        <translation>Napaka: transakcije podatkovne zbirke za izvoz denarnice samo za opazovanje ni mogoče potrditi</translation>
+    </message>
+    <message>
+        <source>Error: cannot remove legacy wallet records</source>
+        <translation>Napaka: zapisov denarnice stare vrste ni mogoče odstraniti</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for new watchonly wallet %s</source>
+        <translation>Napaka: transakcije podatkovne zbirke ni mogoče izvesti za novo denarnico samo za opazovanje %s</translation>
+    </message>
+    <message>
+        <source>Error: database transaction cannot be executed for wallet %s</source>
+        <translation>Napaka: transakcije podatkovne zbirke ni mogoče izvesti za denarnico %s</translation>
+    </message>
+    <message>
+        <source>Failed to acquire rescan reserver during wallet initialization</source>
+        <translation>Med inicializacijo denarnice ni bilo mogoče pridobiti rezervacije za ponovni pregled</translation>
+    </message>
+    <message>
+        <source>Failed to calculate bump fees, because unconfirmed UTXOs depend on an enormous cluster of unconfirmed transactions.</source>
+        <translation>Povečanja provizij ni bilo mogoče izračunati, ker so nepotrjeni UTXO odvisni od ogromne gruče nepotrjenih transakcij.</translation>
+    </message>
+    <message>
+        <source>Failed to close block undo file.</source>
+        <translation>Datoteke za razveljavitev bloka ni bilo mogoče zapreti.</translation>
+    </message>
+    <message>
+        <source>Failed to close file when writing block.</source>
+        <translation>Med pisanjem bloka datoteke ni bilo mogoče zapreti.</translation>
+    </message>
+    <message>
+        <source>Failed to disconnect block.</source>
+        <translation>Bloka ni bilo mogoče odklopiti.</translation>
+    </message>
+    <message>
+        <source>Failed to read block.</source>
+        <translation>Bloka ni bilo mogoče prebrati.</translation>
+    </message>
+    <message>
+        <source>Failed to remove snapshot chainstate dir (%s). Manually remove it before restarting.
+</source>
+        <translation>Imenika stanja verige posnetka (%s) ni bilo mogoče odstraniti. Pred ponovnim zagonom ga odstranite ročno.
+</translation>
+    </message>
+    <message>
+        <source>Failed to start indexes, shutting down…</source>
+        <translation>Indeksov ni bilo mogoče zagnati, zaustavljanje…</translation>
+    </message>
+    <message>
+        <source>Failed to write block.</source>
+        <translation>Bloka ni bilo mogoče zapisati.</translation>
+    </message>
+    <message>
+        <source>Failed to write undo data.</source>
+        <translation>Podatkov za razveljavitev ni bilo mogoče zapisati.</translation>
+    </message>
+    <message>
+        <source>Failure removing transaction: %s</source>
+        <translation>Odstranjevanje transakcije ni uspelo: %s</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s).</source>
+        <translation>Stopnja provizije (%s) je nižja od nastavljene najnižje stopnje (%s).</translation>
+    </message>
+    <message>
+        <source>Flushing block file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Zapis datoteke blokov na disk ni uspel. Verjetno gre za vhodno-izhodno napako.</translation>
+    </message>
+    <message>
+        <source>Flushing undo file to disk failed. This is likely the result of an I/O error.</source>
+        <translation>Zapis datoteke za razveljavitev na disk ni uspel. Verjetno gre za vhodno-izhodno napako.</translation>
+    </message>
+    <message>
+        <source>Incompatible options: -dnsseed=1 was explicitly specified, but -onlynet forbids connections to IPv4/IPv6</source>
+        <translation>Nezdružljivi možnosti: -dnsseed=1 je izrecno določen, vendar -onlynet prepoveduje povezave IPv4/IPv6</translation>
+    </message>
+    <message>
+        <source>Insufficient dbcache for block verification</source>
+        <translation>Premalo dbcache za preverjanje blokov</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname, ends with '=': '%s'</source>
+        <translation>Neveljaven naslov ali ime gostitelja -proxy, ki se konča z '=': '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for %s=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation>Neveljaven znesek za %s=&lt;amount&gt;: '%s' (znašati mora vsaj najnižjo posredovalno provizijo %s, da transakcije ne obstanejo)</translation>
+    </message>
+    <message>
+        <source>Invalid port specified in %s: '%s'</source>
+        <translation>Neveljavna vrata, določena v %s: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid value detected for '-wallet' or '-nowallet'. '-wallet' requires a string value, while '-nowallet' accepts only '1' to disable all wallets</source>
+        <translation>Zaznana je neveljavna vrednost za '-wallet' ali '-nowallet'. '-wallet' zahteva besedilno vrednost, '-nowallet' pa sprejme le '1' za izklop vseh denarnic</translation>
+    </message>
+    <message>
+        <source>Listening for incoming connections failed (listen returned error %s)</source>
+        <translation>Poslušanje za dohodne povezave ni uspelo (listen je vrnil napako %s)</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is less than transaction weight without inputs</source>
+        <translation>Največja teža transakcije je manjša od teže transakcije brez vhodov</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight is too low, can not accommodate change output</source>
+        <translation>Največja teža transakcije je prenizka in ne dopušča izhoda za vračilo</translation>
+    </message>
+    <message>
+        <source>Maximum transaction weight must be between %d and %d</source>
+        <translation>Največja teža transakcije mora biti med %d in %d</translation>
+    </message>
+    <message>
+        <source>Not enough file descriptors available. %d available, %d required.</source>
+        <translation>Ni dovolj razpoložljivih datotečnih opisnikov. Na voljo jih je %d, potrebnih je %d.</translation>
+    </message>
+    <message>
+        <source>Not found pre-selected input %s</source>
+        <translation>Vnaprej izbrani vhod %s ni bil najden</translation>
+    </message>
+    <message>
+        <source>Not solvable pre-selected input %s</source>
+        <translation>Vnaprej izbrani vhod %s ni rešljiv</translation>
+    </message>
+    <message>
+        <source>Only direction was set, no permissions: '%s'</source>
+        <translation>Določena je bila samo smer, ne pa dovoljenja: '%s'</translation>
+    </message>
+    <message>
+        <source>Option '-checkpoints' is set but checkpoints were removed. This option has no effect.</source>
+        <translation>Možnost '-checkpoints' je nastavljena, vendar so bile kontrolne točke odstranjene. Ta možnost nima učinka.</translation>
+    </message>
+    <message>
+        <source>Option '-limitancestorsize' is given but ancestor size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Možnost '-limitancestorsize' je podana, vendar so omejitve velikosti prednikov nadomestile omejitve velikosti gruč (glejte -limitclustersize). Ta možnost nima učinka.</translation>
+    </message>
+    <message>
+        <source>Option '-limitdescendantsize' is given but descendant size limits have been replaced with cluster size limits (see -limitclustersize). This option has no effect.</source>
+        <translation>Možnost '-limitdescendantsize' je podana, vendar so omejitve velikosti potomcev nadomestile omejitve velikosti gruč (glejte -limitclustersize). Ta možnost nima učinka.</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to CJDNS (-onlynet=cjdns) but -cjdnsreachable is not provided</source>
+        <translation>Odhodne povezave so omejene na CJDNS (-onlynet=cjdns), vendar -cjdnsreachable ni podan</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is explicitly forbidden: -onion=0</source>
+        <translation>Odhodne povezave so omejene na Tor (-onlynet=onion), vendar je posrednik za dostop do omrežja Tor izrecno prepovedan: -onion=0</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to Tor (-onlynet=onion) but the proxy for reaching the Tor network is not provided: none of -proxy, -onion or -listenonion is given</source>
+        <translation>Odhodne povezave so omejene na Tor (-onlynet=onion), vendar posrednik za dostop do omrežja Tor ni podan: ni podane nobene od možnosti -proxy, -onion ali -listenonion</translation>
+    </message>
+    <message>
+        <source>Outbound connections restricted to i2p (-onlynet=i2p) but -i2psam is not provided</source>
+        <translation>Odhodne povezave so omejene na i2p (-onlynet=i2p), vendar -i2psam ni podan</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast) and -proxyrandomize is disabled. Tor circuits for private broadcast connections may be correlated to other connections over Tor. For maximum privacy set -proxyrandomize=1.</source>
+        <translation>Zahtevano je zasebno razširjanje lastnih transakcij (-privatebroadcast), -proxyrandomize pa je izklopljen. Tokokroge Tor za zasebno razširjanje je mogoče povezati z drugimi povezavami prek Tor. Za največjo zasebnost nastavite -proxyrandomize=1.</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but -connect is also configured. They are incompatible because the private broadcast needs to open new connections to randomly chosen Tor or I2P peers. Consider using -maxconnections=0 -addnode=... instead</source>
+        <translation>Zahtevano je zasebno razširjanje lastnih transakcij (-privatebroadcast), vendar je nastavljen tudi -connect. Možnosti nista združljivi, saj mora zasebno razširjanje odpirati nove povezave z naključno izbranimi vrstniki Tor ali I2P. Namesto tega razmislite o -maxconnections=0 -addnode=...</translation>
+    </message>
+    <message>
+        <source>Private broadcast of own transactions requested (-privatebroadcast), but none of Tor or I2P networks is reachable</source>
+        <translation>Zahtevano je zasebno razširjanje lastnih transakcij (-privatebroadcast), vendar ni dosegljivo niti omrežje Tor niti I2P</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txospenderindex.</source>
+        <translation>Način obrezovanja ni združljiv z -txospenderindex.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of a pruned node)</source>
+        <translation>Obrezovanje: zadnja uskladitev denarnice sega za obrezane podatke. Potreben je -reindex (pri obrezanem vozlišču ponovni prenos celotne verige blokov)</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. Cannot clean up the background chainstate leveldb directory.</source>
+        <translation>Preimenovanje '%s' -&gt; '%s' ni uspelo. Imenika leveldb za stanje verige v ozadju ni mogoče počistiti.</translation>
+    </message>
+    <message>
+        <source>Rename of '%s' -&gt; '%s' failed. You should resolve this by manually moving or deleting the invalid snapshot directory %s, otherwise you will encounter the same error again on the next startup.</source>
+        <translation>Preimenovanje '%s' -&gt; '%s' ni uspelo. Neveljavni imenik posnetka %s ročno premaknite ali izbrišite, sicer se bo ista napaka ponovila ob naslednjem zagonu.</translation>
+    </message>
+    <message>
+        <source>Signer did not echo address</source>
+        <translation>Podpisnik ni vrnil naslova</translation>
+    </message>
+    <message>
+        <source>Signer echoed unexpected address %s</source>
+        <translation>Podpisnik je vrnil nepričakovan naslov %s</translation>
+    </message>
+    <message>
+        <source>Signer returned error: %s</source>
+        <translation>Podpisnik je vrnil napako: %s</translation>
+    </message>
+    <message>
+        <source>Specified data directory "%s" does not exist.</source>
+        <translation>Navedeni podatkovni imenik »%s« ne obstaja.</translation>
+    </message>
+    <message>
+        <source>System error while flushing: %s</source>
+        <translation>Sistemska napaka pri zapisovanju na disk: %s</translation>
+    </message>
+    <message>
+        <source>System error while loading external block file: %s</source>
+        <translation>Sistemska napaka pri nalaganju zunanje datoteke blokov: %s</translation>
+    </message>
+    <message>
+        <source>System error while saving block to disk: %s</source>
+        <translation>Sistemska napaka pri shranjevanju bloka na disk: %s</translation>
+    </message>
+    <message>
+        <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
+        <translation>Pot %s uporablja exFAT, pri katerem so znane občasne težave s poškodbami podatkov v macOS. Ta imenik premaknite na drug datotečni sistem, da preprečite izgubo podatkov.</translation>
+    </message>
+    <message>
+        <source>The -testactivationheight option may not be used on mainnet.</source>
+        <translation>Možnosti -testactivationheight ni dovoljeno uporabljati v glavnem omrežju.</translation>
+    </message>
+    <message>
+        <source>The -vbparams option may not be used on mainnet.</source>
+        <translation>Možnosti -vbparams ni dovoljeno uporabljati v glavnem omrežju.</translation>
+    </message>
+    <message>
+        <source>The combination of the pre-selected inputs and the wallet automatic inputs selection exceeds the transaction maximum weight. Please try sending a smaller amount or manually consolidating your wallet's UTXOs</source>
+        <translation>Kombinacija vnaprej izbranih vhodov in samodejnega izbora vhodov denarnice presega največjo težo transakcije. Poskusite poslati manjši znesek ali ročno združiti UTXO svoje denarnice</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %s transaction fee is included.</source>
+        <translation>Skupni znesek presega vaše stanje, ko se prišteje transakcijska provizija %s.</translation>
+    </message>
+    <message>
+        <source>The transactions removal process can only be executed within a db txn</source>
+        <translation>Postopek odstranjevanja transakcij se lahko izvede samo znotraj transakcije podatkovne zbirke</translation>
+    </message>
+    <message>
+        <source>There is no ScriptPubKeyManager for this address</source>
+        <translation>Za ta naslov ni upravljalnika ScriptPubKeyManager</translation>
+    </message>
+    <message>
+        <source>Transaction %s does not belong to this wallet</source>
+        <translation>Transakcija %s ne pripada tej denarnici</translation>
+    </message>
+    <message>
+        <source>Transaction requires one destination of non-zero value, a non-zero feerate, or a pre-selected input</source>
+        <translation>Transakcija zahteva en cilj z neničelno vrednostjo, neničelno stopnjo provizije ali vnaprej izbrani vhod</translation>
+    </message>
+    <message>
+        <source>UTXO snapshot failed to validate. Restart to resume normal initial block download, or try loading a different snapshot.</source>
+        <translation>Preverjanje posnetka UTXO ni uspelo. Znova zaženite za nadaljevanje običajnega začetnega prenosa blokov ali poskusite naložiti drug posnetek.</translation>
+    </message>
+    <message>
+        <source>Unable to write descriptor cache</source>
+        <translation>Predpomnilnika opisnikov ni mogoče zapisati</translation>
+    </message>
+    <message>
+        <source>Unconfirmed UTXOs are available, but spending them creates a chain of transactions that will be rejected by the mempool</source>
+        <translation>Na voljo so nepotrjeni UTXO, vendar njihova poraba ustvari verigo transakcij, ki jo bo pomnilniški bazen zavrnil</translation>
+    </message>
+    <message>
+        <source>Unexpected legacy entry in descriptor wallet found. Loading wallet %s
+
+The wallet might have been tampered with or created with malicious intent.
+</source>
+        <translation>V denarnici z opisniki je bil najden nepričakovan zapis stare vrste. Nalaganje denarnice %s
+
+Denarnica je bila morda spremenjena ali ustvarjena z zlonamernim namenom.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognised option "%s" provided in -test=&lt;option&gt;.</source>
+        <translation>V -test=&lt;option&gt; je bila podana neprepoznana možnost »%s«.</translation>
+    </message>
+    <message>
+        <source>Unrecognized descriptor found. Loading wallet %s
+
+The wallet might have been created on a newer version.
+Please try running the latest software version.
+</source>
+        <translation>Najden je neprepoznan opisnik. Nalaganje denarnice %s
+
+Denarnica je bila morda ustvarjena z novejšo različico.
+Poskusite zagnati najnovejšo različico programa.
+</translation>
+    </message>
+    <message>
+        <source>Unrecognized network in -proxy='%s': '%s'</source>
+        <translation>Neprepoznano omrežje v -proxy='%s': '%s'</translation>
+    </message>
+    <message>
+        <source>Unsupported category-specific logging level %1$s=%2$s. Expected %1$s=&lt;category&gt;:&lt;loglevel&gt;. Valid categories: %3$s. Valid loglevels: %4$s.</source>
+        <translation>Nepodprta raven beleženja za kategorijo %1$s=%2$s. Pričakovano je %1$s=&lt;category&gt;:&lt;loglevel&gt;. Veljavne kategorije: %3$s. Veljavne ravni beleženja: %4$s.</translation>
+    </message>
+    <message>
+        <source>Unsupported global logging level %s=%s. Valid values: %s.</source>
+        <translation>Nepodprta globalna raven beleženja %s=%s. Veljavne vrednosti: %s.</translation>
+    </message>
+    <message>
+        <source>Wallet file creation failed: %s</source>
+        <translation>Ustvarjanje datoteke denarnice ni uspelo: %s</translation>
+    </message>
+    <message>
+        <source>Warning: Found invalid chain more than 6 blocks longer than our best chain. This could be due to database corruption or consensus incompatibility with peers.</source>
+        <translation>Opozorilo: najdena je neveljavna veriga, več kot 6 blokov daljša od naše najboljše verige. Vzrok so lahko poškodovana podatkovna zbirka ali nezdružljiva pravila soglasja z vrstniki.</translation>
+    </message>
+    <message>
+        <source>Your computer's date and time appear to be more than %d minutes out of sync with the network, this may lead to consensus failure. After you've confirmed your computer's clock, this message should no longer appear when you restart your node. Without a restart, it should stop showing automatically after you've connected to a sufficient number of new outbound peers, which may take some time. You can inspect the `timeoffset` field of the `getpeerinfo` and `getnetworkinfo` RPC methods to get more info.</source>
+        <translation>Datum in čas vašega računalnika očitno odstopata od omrežja za več kot %d minut, kar lahko povzroči neuspeh soglasja. Ko preverite računalniško uro, se sporočilo po ponovnem zagonu vozlišča ne bi smelo več prikazovati. Brez ponovnega zagona bi moralo samodejno izginiti, ko vzpostavite dovolj novih odhodnih povezav z vrstniki, kar lahko traja nekaj časa. Več informacij dobite v polju `timeoffset` metod RPC `getpeerinfo` in `getnetworkinfo`.</translation>
+    </message>
+    <message>
+        <source>acceptstalefeeestimates is not supported on %s chain.</source>
+        <translation>acceptstalefeeestimates v verigi %s ni podprt.</translation>
+    </message>
+    <message>
+        <source>whitebind may only be used for incoming connections ("out" was passed)</source>
+        <translation>whitebind se lahko uporablja samo za dohodne povezave (podan je bil »out«)</translation>
+    </message>
 </context>
 <context>
     <name>P2CClaimDialog</name>
@@ -4968,6 +5964,91 @@ Različica korenskih potrdil: %2</translation>
     <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Neobvezno: prazno polje pomeni uporabo te denarnice</translation>
+    </message>
+    <message>
+        <source>CPU threads:</source>
+        <translation>Niti CPU:</translation>
+    </message>
+    <message>
+        <source>Could not generate a reward address. Check that the wallet can generate receiving addresses.</source>
+        <translation>Naslova za nagrado ni bilo mogoče ustvariti. Preverite, ali denarnica lahko ustvarja prejemne naslove.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Napaka</translation>
+    </message>
+    <message>
+        <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>
+        <translation>Način FAST si s preverjanjem deli približno 2 GiB pomnilnika RandomX. Več niti porabi več zmogljivosti CPU in energije; pustite dovolj zmogljivosti za vozlišče. Inicializacija podatkovne zbirke lahko traja nekaj časa.</translation>
+    </message>
+    <message>
+        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Rudarite bloke testnega omrežja s svojim CPU z uporabo RandomX. Rudarjenje je izklopljeno, dokler ga ne zaženete. Rudar je skupen vsem denarnicam tega vozlišča in deluje tudi, ko zamenjate zavihek ali zaprete denarnico.</translation>
+    </message>
+    <message>
+        <source>Mining</source>
+        <translation>Rudarjenje</translation>
+    </message>
+    <message>
+        <source>Mining / preparing RandomX</source>
+        <translation>Rudarjenje / priprava RandomX</translation>
+    </message>
+    <message>
+        <source>New address from this wallet</source>
+        <translation>Nov naslov iz te denarnice</translation>
+    </message>
+    <message>
+        <source>Reward address for this network</source>
+        <translation>Naslov za nagrado v tem omrežju</translation>
+    </message>
+    <message>
+        <source>Reward address:</source>
+        <translation>Naslov za nagrado:</translation>
+    </message>
+    <message>
+        <source>Start mining</source>
+        <translation>Začni rudarjenje</translation>
+    </message>
+    <message>
+        <source>Starting</source>
+        <translation>Zaganjanje</translation>
+    </message>
+    <message>
+        <source>State: %1
+Hashrate: %2 H/s
+Hashes: %3 | Accepted blocks: %4
+Active reward address: %5</source>
+        <translation>Stanje: %1
+Hitrost zgoščevanja: %2 H/s
+Zgoščene vrednosti: %3 | Sprejeti bloki: %4
+Dejavni naslov za nagrado: %5</translation>
+    </message>
+    <message>
+        <source>Stop mining</source>
+        <translation>Ustavi rudarjenje</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Ustavljeno</translation>
+    </message>
+    <message>
+        <source>Stopping (waiting for current work)</source>
+        <translation>Ustavljanje (čakanje na trenutno delo)</translation>
+    </message>
+    <message>
+        <source>Waiting for the node to catch up</source>
+        <translation>Čakanje, da se vozlišče sinhronizira</translation>
+    </message>
+    <message>
+        <source>Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.</source>
+        <translation>Opozorilo: %1 rudarskih niti presega %2 zaznanih logičnih CPU. To lahko zmanjša hitrost zgoščevanja in upočasni vozlišče.</translation>
+    </message>
+</context>
+<context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>kB/s</source>
+        <translation>kB/s</translation>
     </message>
 </context>
 </TS>

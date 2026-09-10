@@ -20,17 +20,32 @@ endforeach()
 # Extract _("...") strings for translation and convert to Qt stringdefs so that
 # they can be picked up by Qt linguist.
 function(extract_strings output)
+  # Passing every source path on the command line exceeds the Windows command
+  # length limit. gettext accepts one complete filename per line, including
+  # paths containing spaces.
+  set(source_list "${CMAKE_CURRENT_BINARY_DIR}/gettext-sources.list")
+  set(relative_sources "")
+  foreach(source IN LISTS ARGN)
+    file(RELATIVE_PATH relative_source "${PROJECT_SOURCE_DIR}" "${source}")
+    list(APPEND relative_sources "${relative_source}")
+  endforeach()
+  list(JOIN relative_sources "\n" source_lines)
+  file(WRITE "${source_list}" "${source_lines}\n")
+  file(RELATIVE_PATH source_list_argument "${PROJECT_SOURCE_DIR}" "${source_list}")
+  file(RELATIVE_PATH gettext_output_argument "${PROJECT_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/bitcoinstrings.po")
   execute_process(
     COMMAND ${XGETTEXT_EXECUTABLE}
-      --output=bitcoinstrings.po
+      "--output=${gettext_output_argument}"
       --no-location
       --from-code=utf-8
+      --language=C++
       --keyword=_
-      ${ARGN}
+      "--files-from=${source_list_argument}"
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
     COMMAND_ERROR_IS_FATAL ANY
   )
 
-  file(STRINGS "bitcoinstrings.po" text ENCODING "UTF-8")
+  file(STRINGS "${CMAKE_CURRENT_BINARY_DIR}/bitcoinstrings.po" text ENCODING "UTF-8")
 
   set(messages "${COPYRIGHT_HOLDERS}")
   foreach(line IN LISTS text)
@@ -99,6 +114,23 @@ extract_strings("${PROJECT_SOURCE_DIR}/src/qt/bitcoinstrings.cpp"
   ${translatable_sources}
 )
 
+# lupdate reads @lists using the platform's local encoding on Windows. Keep
+# paths relative to the Unicode-capable working directory, avoiding UTF-8
+# checkout prefixes being misread under a legacy Windows code page. Repository
+# source paths are ASCII; complete lines also preserve embedded spaces.
+set(qt_source_list "${CMAKE_CURRENT_BINARY_DIR}/lupdate-sources.list")
+set(qt_sources ${ui_files} ${qt_translatable_sources}
+  "${PROJECT_SOURCE_DIR}/src/qt/bitcoinstrings.cpp"
+)
+list(REMOVE_DUPLICATES qt_sources)
+set(qt_relative_sources "")
+foreach(source IN LISTS qt_sources)
+  file(RELATIVE_PATH relative_source "${PROJECT_SOURCE_DIR}" "${source}")
+  list(APPEND qt_relative_sources "${relative_source}")
+endforeach()
+list(JOIN qt_relative_sources "\n" qt_source_lines)
+file(WRITE "${qt_source_list}" "${qt_source_lines}\n")
+
 execute_process(
   COMMAND ${LUPDATE_EXECUTABLE}
     -no-obsolete
@@ -106,9 +138,8 @@ execute_process(
     -I ${PROJECT_SOURCE_DIR}/src
     -locations none
     -target-language en
-    ${ui_files}
-    ${qt_translatable_sources}
-    ${PROJECT_SOURCE_DIR}/src/qt/bitcoinstrings.cpp
+    "@${qt_source_list}"
     -ts ${PROJECT_SOURCE_DIR}/src/qt/locale/bitcoin_en.ts
+  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
   COMMAND_ERROR_IS_FATAL ANY
 )

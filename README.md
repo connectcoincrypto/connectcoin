@@ -77,7 +77,11 @@ not straightforward.
 Translations
 ------------
 
-The translation catalogs are inherited from Bitcoin Core and have not yet been
-reviewed as ConnectCoin translations. New or changed ConnectCoin strings fall
-back to English until this project establishes its own translation workflow.
-See the [branding inventory](doc/connectcoin-branding.md) for this limitation.
+ConnectCoin maintains the bundled Qt translation catalogs, including its P2C,
+mining, and notification interfaces. Every bundled catalog is checked for full
+coverage of the currently extracted messages. Runtime fallback to a base-language
+catalog or English still exists, but does not count as a completed translation.
+
+New translations are AI-assisted and are not a claim of native-speaker review.
+See the [translation workflow](doc/translation_process.md) and the
+[per-locale coverage report](doc/translation-coverage.md).
