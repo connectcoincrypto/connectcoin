@@ -11,10 +11,13 @@
 #include <tinyformat.h>
 #include <util/check.h>
 #include <util/fs.h>
+#include <util/fs_helpers.h>
 #include <util/translation.h>
 #include <wallet/sqlite.h>
+#include <wallet/history.h>
 #include <wallet/migrate.h>
 #include <wallet/test/util.h>
+#include <wallet/walletdb.h>
 #include <wallet/walletutil.h>
 
 #include <sqlite3.h>
@@ -23,11 +26,13 @@
 #include <cstddef>
 #include <cstdint>
 #include <fstream>
+#include <iterator>
 #include <memory>
 #include <set>
 #include <span>
 #include <string>
 #include <string_view>
+#include <system_error>
 #include <utility>
 #include <vector>
 
@@ -433,6 +438,262 @@ BOOST_AUTO_TEST_CASE(in_memory_database_cannot_reopen)
     InMemoryWalletDatabase database;
     database.Close();
     BOOST_CHECK_THROW(database.Open(), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(sqlite_require_existing_never_initializes_a_wallet)
+{
+    DatabaseOptions existing;
+    existing.require_existing = true;
+    DatabaseStatus status;
+    bilingual_str error;
+    const fs::path missing{m_path_root / "missing-existing-wallet"};
+    BOOST_CHECK(!MakeSQLiteDatabase(missing, existing, status, error));
+    BOOST_CHECK(!fs::exists(missing));
+    BOOST_REQUIRE(fs::create_directory(missing));
+    error = {};
+    BOOST_CHECK(!MakeSQLiteDatabase(missing, existing, status, error));
+    BOOST_CHECK(!fs::exists(missing / "wallet.dat"));
+
+    const fs::path wallet_path{m_path_root / "existing-wallet-schema"};
+    error = {};
+    auto database = MakeSQLiteDatabase(wallet_path, DatabaseOptions{}, status, error);
+    BOOST_REQUIRE_MESSAGE(database, error.original);
+    BOOST_REQUIRE(database->MakeBatch()->Write(std::string{"synthetic"}, std::string{"record"}));
+    database.reset();
+    database = MakeSQLiteDatabase(wallet_path, existing, status, error);
+    BOOST_REQUIRE_MESSAGE(database, error.original);
+    std::string read_value;
+    BOOST_REQUIRE(database->MakeBatch()->Read(std::string{"synthetic"}, read_value));
+    BOOST_CHECK_EQUAL(read_value, "record");
+    SQliteExecHandler sql;
+    BOOST_REQUIRE_EQUAL(sql.Exec(*database, "DROP TABLE main"), SQLITE_OK);
+    database.reset();
+    const auto file_contents = [&] {
+        std::ifstream input{(wallet_path / "wallet.dat").std_path(), std::ios::binary};
+        return std::string{std::istreambuf_iterator<char>{input}, std::istreambuf_iterator<char>{}};
+    };
+    const auto before = file_contents();
+    error = {};
+    BOOST_CHECK(!MakeSQLiteDatabase(wallet_path, existing, status, error));
+    BOOST_CHECK(error.original.find("missing its main records table") != std::string::npos);
+    BOOST_CHECK(file_contents() == before);
+}
+
+static MockableData ReadHistoryTestRecords(WalletDatabase& database)
+{
+    MockableData records;
+    auto batch = database.MakeBatch();
+    auto cursor = batch->GetNewCursor();
+    BOOST_REQUIRE(cursor);
+    while (true) {
+        DataStream key, value;
+        const auto status = cursor->Next(key, value);
+        if (status == DatabaseCursor::Status::DONE) break;
+        BOOST_REQUIRE(status == DatabaseCursor::Status::MORE);
+        BOOST_REQUIRE(records.emplace(SerializeData{key.begin(), key.end()}, SerializeData{value.begin(), value.end()}).second);
+    }
+    return records;
+}
+
+class HistoryTestBatch final : public SQLiteBatch
+{
+    int m_failure;
+    size_t m_erases{0};
+public:
+    HistoryTestBatch(SQLiteDatabase& database, int failure) : SQLiteBatch{database}, m_failure{failure}
+    {
+        if (failure == 9) {
+            SetExecHandler(std::make_unique<DbExecBlocker>(std::set<std::string>{"COMMIT TRANSACTION", "ROLLBACK TRANSACTION"}));
+        } else if (failure == 1 || failure == 2) {
+            SetExecHandler(std::make_unique<DbExecBlocker>(std::set<std::string>{failure == 1 ? "BEGIN TRANSACTION" : "COMMIT TRANSACTION"}));
+        }
+    }
+    bool ErasePrefix(std::span<const std::byte> prefix) override
+    {
+        if (m_failure == 3 && ++m_erases == 2) return false;
+        if (m_failure == 4) BOOST_REQUIRE(Write(DBKeys::VERSION, 123456));
+        return SQLiteBatch::ErasePrefix(prefix);
+    }
+    std::unique_ptr<DatabaseCursor> GetNewCursor() override
+    {
+        if (m_failure == 7) return nullptr;
+        return SQLiteBatch::GetNewCursor();
+    }
+};
+
+class HistoryTestDatabase final : public SQLiteDatabase
+{
+public:
+    using SQLiteDatabase::SQLiteDatabase;
+    int failure{0};
+    std::unique_ptr<DatabaseBatch> MakeBatch() override
+    {
+        return std::make_unique<HistoryTestBatch>(*this, failure);
+    }
+    bool Backup(const std::string& dest) const override
+    {
+        if (failure == 5) return false;
+        if (failure == 8) {
+            std::ofstream partial{fs::PathFromString(dest).std_path(), std::ios::binary};
+            partial << "incomplete backup";
+            return true;
+        }
+        if (!SQLiteDatabase::Backup(dest)) return false;
+        if (failure == 6) {
+            DatabaseOptions options;
+            options.require_existing = true;
+            DatabaseStatus status;
+            bilingual_str error;
+            auto backup = MakeSQLiteDatabase(fs::PathFromString(dest).parent_path(), options, status, error);
+            BOOST_REQUIRE_MESSAGE(backup, error.original);
+            BOOST_REQUIRE(backup->MakeBatch()->Write(DBKeys::VERSION, 123456));
+        }
+        return true;
+    }
+};
+
+BOOST_AUTO_TEST_CASE(reset_transaction_history_is_atomic_and_preserves_records)
+{
+    struct RestoreParams {
+        std::unique_ptr<const CChainParams> value{std::make_unique<const CChainParams>(Params())};
+        ~RestoreParams() { SelectParams(std::move(value)); }
+    } restore_params;
+    SelectParams(CChainParams::RegTest());
+    const fs::path path{m_path_root / "history-wallet"};
+    HistoryTestDatabase database{path, path / "wallet.dat", DatabaseOptions{}};
+    {
+        auto batch = database.MakeBatch();
+        // Deliberately unreadable transaction payloads: this operation must not
+        // need to parse old P2C wire formats, nor reinterpret malformed bytes.
+        BOOST_REQUIRE(batch->Write(std::make_pair(DBKeys::TX, Txid::FromUint256(uint256::ONE)), std::string{"obsolete tx"}));
+        BOOST_REQUIRE(batch->Write(std::make_pair(DBKeys::WTX_VARIANT, uint256::ONE), std::string{"obsolete witness"}));
+        BOOST_REQUIRE(batch->Write(std::make_pair(DBKeys::LOCKED_UTXO, COutPoint{Txid::FromUint256(uint256::ONE), 0}), true));
+        // Include every important non-historical family, plus an unknown future
+        // record. Only synthetic values are used; no real key material is read.
+        for (const auto& key : {DBKeys::WALLETDESCRIPTOR, DBKeys::WALLETDESCRIPTORKEY,
+                DBKeys::WALLETDESCRIPTORCKEY, std::string{"walletdescriptorcache"}, std::string{"walletdescriptorlhcache"},
+                DBKeys::KEY, DBKeys::CRYPTED_KEY, DBKeys::MASTER_KEY, DBKeys::NAME, DBKeys::PURPOSE,
+                DBKeys::DESTDATA, DBKeys::FLAGS, DBKeys::BESTBLOCK, DBKeys::BESTBLOCK_NOMERKLE,
+                DBKeys::ORDERPOSNEXT, DBKeys::VERSION, std::string{"future-opaque-record"}}) {
+            BOOST_REQUIRE(batch->Write(key, std::string{"synthetic preserved value"}));
+        }
+    }
+    const auto original = ReadHistoryTestRecords(database);
+    bilingual_str error;
+    size_t removed{999};
+    const auto assert_unchanged = [&] {
+        BOOST_CHECK_EQUAL(removed, 0);
+        BOOST_CHECK(!error.empty());
+        BOOST_CHECK(!database.HasActiveTxn());
+        const auto failure = database.failure;
+        database.failure = 0;
+        BOOST_CHECK(ReadHistoryTestRecords(database) == original);
+        database.failure = failure;
+    };
+    // Fail BEGIN, COMMIT, the second erase, preservation verification, backup,
+    // backup record comparison, cursor reads, incomplete backup, and COMMIT
+    // plus ROLLBACK together (the connection-close fallback must roll back).
+    // Every failure must leave the source intact.
+    for (int failure = 1; failure <= 9; ++failure) {
+        database.failure = failure;
+        BOOST_CHECK(!ResetTransactionHistory(database, m_path_root / fs::PathFromString(strprintf("history-failure-%d", failure)), removed, error));
+        if (failure == 9) BOOST_CHECK(error.original.find("rollback reported an error") != std::string::npos);
+        assert_unchanged();
+    }
+    database.failure = 0;
+    BOOST_CHECK(!ResetTransactionHistory(database, fs::path{"relative-backup"}, removed, error));
+    assert_unchanged();
+    const fs::path existing{m_path_root / "existing-backup"};
+    BOOST_REQUIRE(fs::create_directory(existing));
+    BOOST_CHECK(!ResetTransactionHistory(database, existing, removed, error));
+    assert_unchanged();
+    const fs::path existing_file{m_path_root / "existing-backup-file"};
+    {
+        std::ofstream file{existing_file.std_path()};
+        file << "do not overwrite";
+    }
+    BOOST_CHECK(!ResetTransactionHistory(database, existing_file, removed, error));
+    assert_unchanged();
+    BOOST_CHECK_EQUAL(fs::file_size(existing_file), 16);
+    const fs::path backup_link{m_path_root / "backup-link"};
+    std::error_code link_error;
+    fs::create_directory_symlink(m_path_root / "missing-link-target", backup_link, link_error);
+    if (!link_error) {
+        BOOST_CHECK(!ResetTransactionHistory(database, backup_link, removed, error));
+        assert_unchanged();
+        BOOST_CHECK(fs::is_symlink(fs::symlink_status(backup_link)));
+    } else {
+        BOOST_TEST_MESSAGE("Skipping backup symlink fixture: " << link_error.message());
+    }
+    {
+        // A truncated CompactSize string is not a valid database record key.
+        // Reject it before even creating a backup, not as removable history.
+        MockableSQLiteBatch batch{database};
+        DataStream malformed_key, malformed_value;
+        malformed_key << uint8_t{0xff};
+        malformed_value << std::string{"synthetic"};
+        BOOST_REQUIRE(batch.WriteKey(std::move(malformed_key), std::move(malformed_value)));
+        const auto malformed = ReadHistoryTestRecords(database);
+        BOOST_CHECK(!ResetTransactionHistory(database, m_path_root / "malformed-key-backup", removed, error));
+        BOOST_CHECK(ReadHistoryTestRecords(database) == malformed);
+        BOOST_CHECK(!fs::exists(m_path_root / "malformed-key-backup"));
+        BOOST_REQUIRE(batch.Erase(std::array{std::byte{0xff}}));
+        BOOST_CHECK(ReadHistoryTestRecords(database) == original);
+    }
+    // Metadata, not -chain alone: the actual regtest wallet must be rejected
+    // when either another test chain or mainnet is selected.
+    SelectParams(CChainParams::TestNet4());
+    BOOST_CHECK(!ResetTransactionHistory(database, m_path_root / "wrong-chain-backup", removed, error));
+    assert_unchanged();
+    BOOST_CHECK(!fs::exists(m_path_root / "wrong-chain-backup"));
+    SelectParams(CChainParams::Main());
+    BOOST_CHECK(!ResetTransactionHistory(database, m_path_root / "main-backup", removed, error));
+    assert_unchanged();
+    BOOST_CHECK(!fs::exists(m_path_root / "main-backup"));
+    {
+        const fs::path main_path{m_path_root / "actual-main-wallet"};
+        HistoryTestDatabase main_database{main_path, main_path / "wallet.dat", DatabaseOptions{}};
+        BOOST_REQUIRE(main_database.MakeBatch()->Write(DBKeys::NAME, std::string{"main fixture"}));
+        const auto main_records = ReadHistoryTestRecords(main_database);
+        SelectParams(CChainParams::RegTest());
+        BOOST_CHECK(!ResetTransactionHistory(main_database, m_path_root / "main-as-regtest-backup", removed, error));
+        BOOST_CHECK(ReadHistoryTestRecords(main_database) == main_records);
+        BOOST_CHECK(!fs::exists(m_path_root / "main-as-regtest-backup"));
+    }
+    SelectParams(CChainParams::RegTest());
+
+    const fs::path backup_dir{m_path_root / "verified-history-backup"};
+    BOOST_REQUIRE_MESSAGE(ResetTransactionHistory(database, backup_dir, removed, error), error.original);
+    BOOST_CHECK_EQUAL(removed, 3);
+    BOOST_CHECK(error.empty());
+    auto expected = original;
+    for (auto it = expected.begin(); it != expected.end();) {
+        DataStream key{it->first};
+        std::string type;
+        key >> type;
+        if (type == DBKeys::TX || type == DBKeys::WTX_VARIANT || type == DBKeys::LOCKED_UTXO) it = expected.erase(it);
+        else ++it;
+    }
+    BOOST_CHECK(ReadHistoryTestRecords(database) == expected);
+    DatabaseOptions options;
+    options.require_existing = true;
+    DatabaseStatus status;
+    auto backup = MakeSQLiteDatabase(backup_dir, options, status, error);
+    BOOST_REQUIRE_MESSAGE(backup, error.original);
+    BOOST_CHECK(ReadHistoryTestRecords(*backup) == original);
+}
+
+BOOST_AUTO_TEST_CASE(checked_backup_directory_sync)
+{
+#ifdef WIN32
+    // Unsupported is explicit, never falsely reported as a successful sync.
+    BOOST_CHECK(!DirectoryCommitChecked(m_path_root).has_value());
+#else
+    BOOST_CHECK(DirectoryCommitChecked(m_path_root).value_or(false));
+    const auto missing = DirectoryCommitChecked(m_path_root / "nonexistent-backup-directory");
+    BOOST_REQUIRE(missing.has_value());
+    BOOST_CHECK(!*missing);
+#endif
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -14,6 +14,7 @@ add_library(connectcoin_wallet STATIC EXCLUDE_FROM_ALL
   external_signer_scriptpubkeyman.cpp
   feebumper.cpp
   fees.cpp
+  history.cpp
   interfaces.cpp
   load.cpp
   migrate.cpp

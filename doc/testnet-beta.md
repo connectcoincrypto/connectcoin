@@ -132,6 +132,53 @@ The wallet's saved chain locator is a separate safeguard: a different genesis
 is still rejected by default, even when its database identifier matches. Only
 an intentional reset restore should override that safeguard as described below.
 
+### Wallets containing pre-mask P2C transactions
+
+The stable database identifier preserves recognition of the wallet, not old
+transaction serialization. A wallet containing P2C transactions written before
+the one-byte mask was introduced can fail to load with `Wallet corrupted` and
+`Invalid PAY_TO_CONNECT signature algorithms mask` or `end of data` in its log.
+That error can be caused by incompatible transaction history; it does not by
+itself mean that the private keys are damaged. Do not delete or recreate the
+wallet. `-walletcrosschain=1` and a rescan cannot parse those old records.
+
+For an intentional test-network reset, an **offline, explicitly destructive**
+recovery command is available. Keep the original wallet backup untouched and
+work on a separate copy placed in the new data directory's wallet directory.
+Stop every process using that copy before running, for example:
+
+```sh
+connectcoin-wallet -datadir=/absolute/new-data -wallet=recovery-copy \
+  -backupdir=/absolute/new-backup-directory \
+  -confirm=DELETE-TRANSACTION-HISTORY reset-tx-history
+```
+
+The command requires an explicit data directory and wallet name, checks the
+actual SQLite network identity, and is unavailable for mainnet. The backup
+directory must be absolute and must not exist. It creates `wallet.dat` there,
+checks database integrity and all backed-up records, then atomically removes
+**all** transaction records, witness variants, and persistent coin locks. This
+also removes unconfirmed transactions and transaction-specific comments and
+payment-request history; a rescan cannot recover such metadata. Keys (including
+encrypted keys), descriptors and their caches, address labels, flags, and all
+other records remain byte-for-byte unchanged. The saved block locator is
+preserved, so the separate cross-chain safeguard is not bypassed by this tool.
+
+After successful reset, load the recovery copy using the one-time
+`-walletcrosschain=1` override, unlock it if encrypted, and explicitly run
+`rescanblockchain 0`. Then stop normally and restart without the override.
+Only funds on the new chain can be recovered; old-chain balances are not
+migrated. This is not a general repair for damaged keys or a way to make
+obsolete transactions valid. On failure the backup directory is retained for
+inspection; an incomplete or unverified backup must not replace the original.
+Before deleting history, the tool flushes the verified backup file and, on
+POSIX systems, checks synchronization of both its directory and the parent
+directory. On Windows, directory synchronization is unavailable through this
+tool: flushing the file does not guarantee persistence of the new directory
+across sudden power loss. Even successful sync requests depend on filesystem
+and hardware behavior. Always retain the separate original wallet backup and
+perform this procedure on a recovery copy, not the only copy of a wallet.
+
 Before upgrading an existing node:
 
 1. Stop it normally and back up its wallets outside Git, including an offline
@@ -152,6 +199,8 @@ Before upgrading an existing node:
    Stop the node normally after restoration/rescan, then restart in the new
    directory without `-walletcrosschain`. Do not save that override permanently
    in the configuration. Keep the original backup untouched.
+   If incompatible pre-mask P2C history prevents loading, use the offline-copy
+   procedure above before attempting the load/rescan again.
 4. Upgrade all VPS/seed nodes and peers to the same build and fresh chain before
    advertising them. DNS names and port 48179 stay the same; updating this code
    does not deploy anything to those machines.

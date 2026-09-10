@@ -44,6 +44,12 @@ bool FileCommit(FILE* file);
  */
 void DirectoryCommit(const fs::path& dirname);
 
+/** Checked directory synchronization. Returns false on an open/sync/close
+ * error, or nullopt when directory synchronization is unavailable (Windows).
+ * A true result still depends on the filesystem and hardware honoring sync.
+ */
+std::optional<bool> DirectoryCommitChecked(const fs::path& dirname);
+
 bool TruncateFile(FILE* file, unsigned int length);
 
 /**

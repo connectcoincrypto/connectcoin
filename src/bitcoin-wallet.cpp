@@ -38,6 +38,8 @@ static void SetupWalletToolArgs(ArgsManager& argsman)
     argsman.AddArg("-datadir=<dir>", "Specify data directory", ArgsManager::ALLOW_ANY | ArgsManager::DISALLOW_NEGATION, OptionsCategory::OPTIONS);
     argsman.AddArg("-wallet=<wallet-name>", "Specify wallet name", ArgsManager::ALLOW_ANY | ArgsManager::NETWORK_ONLY, OptionsCategory::OPTIONS);
     argsman.AddArg("-dumpfile=<file name>", "When used with 'dump', writes out the records to this file. When used with 'createfromdump', loads the records into a new wallet.", ArgsManager::ALLOW_ANY | ArgsManager::DISALLOW_NEGATION, OptionsCategory::COMMAND_OPTIONS);
+    argsman.AddArg("-backupdir=<dir>", "New absolute directory for the verified wallet backup required by reset-tx-history. Must not already exist.", ArgsManager::ALLOW_ANY | ArgsManager::DISALLOW_NEGATION, OptionsCategory::COMMAND_OPTIONS);
+    argsman.AddArg("-confirm=<text>", "For reset-tx-history, explicitly acknowledge destruction of all transaction history with DELETE-TRANSACTION-HISTORY.", ArgsManager::ALLOW_ANY | ArgsManager::DISALLOW_NEGATION, OptionsCategory::COMMAND_OPTIONS);
     argsman.AddArg("-debug=<category>", "Output debugging information (default: 0).", ArgsManager::ALLOW_ANY, OptionsCategory::DEBUG_TEST);
     argsman.AddArg("-printtoconsole", "Send trace/debug info to console (default: 1 when no -debug is true, 0 otherwise).", ArgsManager::ALLOW_ANY, OptionsCategory::DEBUG_TEST);
 
@@ -45,6 +47,7 @@ static void SetupWalletToolArgs(ArgsManager& argsman)
     argsman.AddCommand("create", "Create a new descriptor wallet file");
     argsman.AddCommand("dump", "Print out all of the wallet key-value records", {"-dumpfile"});
     argsman.AddCommand("createfromdump", "Create new wallet file from dumped records", {"-dumpfile"});
+    argsman.AddCommand("reset-tx-history", "DESTRUCTIVE: remove test-network transaction history and coin locks after a verified backup; preserve keys, descriptors, labels and chain locator. Requires explicit -datadir, -wallet, -backupdir and -confirm=DELETE-TRANSACTION-HISTORY.", {"-backupdir", "-confirm"});
 }
 
 static std::optional<int> WalletAppInit(ArgsManager& args, int argc, char* argv[])

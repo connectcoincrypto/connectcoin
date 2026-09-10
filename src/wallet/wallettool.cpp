@@ -9,6 +9,7 @@
 #include <util/fs.h>
 #include <util/translation.h>
 #include <wallet/dump.h>
+#include <wallet/history.h>
 #include <wallet/wallet.h>
 #include <wallet/walletutil.h>
 
@@ -112,7 +113,33 @@ bool ExecuteWalletToolFunc(const ArgsManager& args, const std::string& command)
     }
     const fs::path& path = *path_res;
 
-    if (command == "create") {
+    if (command == "reset-tx-history") {
+        if (!args.IsArgSet("-datadir") || !args.IsArgSet("-wallet") || name.empty() ||
+            args.GetArg("-confirm", "") != "DELETE-TRANSACTION-HISTORY" || args.GetArg("-backupdir", "").empty()) {
+            tfm::format(std::cerr, "reset-tx-history requires explicit -datadir, nonempty -wallet, absolute new -backupdir and -confirm=DELETE-TRANSACTION-HISTORY. This destroys all transaction history and persistent coin locks.\n");
+            return false;
+        }
+        DatabaseOptions options;
+        options.require_existing = true;
+        options.require_format = DatabaseFormat::SQLITE;
+        DatabaseStatus status;
+        bilingual_str error;
+        auto database = MakeDatabase(path, options, status, error);
+        if (!database) {
+            tfm::format(std::cerr, "%s\n", error.original);
+            return false;
+        }
+        size_t removed{0};
+        if (!ResetTransactionHistory(*database, fs::PathFromString(args.GetArg("-backupdir", "")), removed, error)) {
+            tfm::format(std::cerr, "%s\nAny backup directory created by this attempt was retained; do not assume an incomplete backup is usable.\n", error.original);
+            return false;
+        }
+        tfm::format(std::cout, "Removed %u transaction-history and persistent coin-lock records.\nVerified backup: %s\nKeys, descriptors, labels and all other records (including the old chain locator) were preserved.\nOld-chain balances were NOT migrated. For an intentional network reset, restore with the one-time -walletcrosschain=1 override and run rescanblockchain 0, then restart without the override.\n", removed, args.GetArg("-backupdir", ""));
+#ifdef WIN32
+        tfm::format(std::cout, "Windows does not provide directory synchronization through this tool. The backup file was flushed, but directory persistence across sudden power loss is not guaranteed. Keep a separate original wallet backup.\n");
+#endif
+        return true;
+    } else if (command == "create") {
         if (name.empty()) {
             tfm::format(std::cerr, "Wallet name cannot be empty\n");
             return false;

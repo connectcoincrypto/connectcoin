@@ -129,8 +129,10 @@ Bytes PssAlgorithm(const Bytes& params)
     return Der(0x30, Join({Oid(MBEDTLS_OID_RSASSA_PSS, MBEDTLS_OID_SIZE(MBEDTLS_OID_RSASSA_PSS)), params}));
 }
 
-/** Generate ephemeral, test-only keys. Independently encode the original PSS
- * OID and parameters into certificates, then sign the complete new TBS bytes.
+/** Use a deliberately public, test-only RSA-2048 key. Generating fresh primes
+ * for every fixture dominated sanitizer runtime, but these tests exercise
+ * certificate parsing, TLS and signature verification, not RSA key generation.
+ * Certificates and signatures are still created and checked at runtime.
  * No production roots or stored wallet keys participate in these fixtures.
  */
 struct RsaFixture {
@@ -138,11 +140,44 @@ struct RsaFixture {
     Bytes root;
     Bytes leaf;
 
-    explicit RsaFixture(unsigned bits = 2048)
+    RsaFixture()
     {
+        // Generated solely for this fixture with:
+        // openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048
+        // This private key is PUBLIC TEST DATA. Never use it outside tests.
+        static constexpr unsigned char KEY[]{R"pem(-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC6/43cbDm0ABiD
+s2KWDhAuI4gIlJ9Zt1H7zAovmYAZpumeoZrxzxtHg0OnNGpDWDW/qnERgITwyE+G
+KZqJR3sXIunpS6NgUf13HfAqmk8yLRMpnwh+DWFq/Q6EilAsztfeJjz3rcK1DIJp
+8Zvph3kLN8Z9ukAHMthVmNF50Sf813I57c1Yt2bKYh+dDqggaprovpQHaOrVqedz
+x5IZysbcnpi20XYoC4cYVIvlP+szmJlgswRzk5wOFe5Qm8JXltWnjqRK/Oy1qARW
+rzrOfrc5u3GZeFZDPYS0r2ki6ZsyJiNKnT8JPKVEVecqc6VgA0l8z3TyhNSewGpV
+BEKDovtnAgMBAAECggEANhyiW/ETZ5OJhH7h3eM26msMv9LmI8uJFVCPeAO2znV+
+8BD6qdORJMoGxzlDMLazYwG602I51gVZAc1DM0t0gpbvUju5jLNdId2PdHyPw0jI
+3UfwaK2NjaypyU/O8JBwZg/xn4hwKfzzNh4czGCP9d+PeC1vvsWHVYmxwEr2g9MD
+nHyhyPiPs3hCzfrOaffETIPgvZJ/DKg7ItSYqmmiK/a9LceViLSb/7fLdfL/9ESk
+cxmHQtHEJZTkkFA12wH4I8K6URDRE/RDgphJI5jYtpeIPZSROc6mZSh4sW06aD6N
+jHNtWr/xTbmWDRS0mMyvGMRH5d5GE2eZSaG6MlUsOQKBgQDnrk1aoHOk65PapdB3
+LRp9nZsdgi+hUfgn2yEGX8RmHm7zm9Pc1/8dzoGvQRy+YM8u3fqQrh82et9BXq7w
+nf3XVE7AAcDdjKwHFNlbscbQrbC/GHU63lqSkXCFBcbNJuFwlw/vJArHR0x+qBy6
+cwU5JkRZd8p61PNhfEKSUUHvLwKBgQDOoIv5LlW+BdFuYkmqrgww6sfsZnhWwvQC
+tkcMP+csjglmjtkiVFUbXIyojWYmtiXFyzCPhTaIIKeSWywevXQ0+qowFdDC38Zw
+iiwNWPbUCnZk0PSLV5ryWzNPntdcmX5M+TvSYwcPt1RzoUaKhfOVVHdZduDgmy/U
+mJiZlBzpSQKBgASgoaDmxYiMwAZE+5X1y6qopDmBqSvitD8vjEhRT13uy66H9UJa
++hiBUGvMtCNFUb4Q5vlO0QbIi38Fwh7CORi88Vm6bzy9m44Ep5bCRUNTxMz8UxMa
+79ovl3zAscjVNvmFuua+5Iw4a1m4R+Kde4Q5tHHJB71OVZIj5jx/7P43AoGAcL0s
+YkMjyVCHWsEKDLR2NmKDvrqSQlSQqsIltctQKQE+o9ShKJf277zpijXMXKbZqTga
+QNSgUlnu1G4mfodEVnvGTAI7K3jJXzIkowu9cShcPNm99CFSi5WzQ2gZfY7KWNlM
+CJi7i5mt3IFMadx4cSvrCsdQH3zM9iRkbrdfpvECgYA7W1441Ps8HWby9n0SRFpV
+QVdTwGHpgagi/3QpuS9QMAoPwgCYUW/eFGrFo7M5G/0TNVQlEpA+Bz+CnZMkyzQ6
+Snwm9dDUNZiK2/gtbNjnUNVt+qMzgfsPkxNeZYQW49uwoG7Cc9Qrm8XgiRLvhcFe
+lNgW44LomPeKsFSCCcqrVg==
+-----END PRIVATE KEY-----
+)pem"};
         BOOST_REQUIRE_EQUAL(psa_crypto_init(), PSA_SUCCESS);
-        BOOST_REQUIRE_EQUAL(mbedtls_pk_setup(&key.value, mbedtls_pk_info_from_type(MBEDTLS_PK_RSA)), 0);
-        BOOST_REQUIRE_EQUAL(mbedtls_rsa_gen_key(mbedtls_pk_rsa(key.value), Random, nullptr, bits, 65537), 0);
+        BOOST_REQUIRE_EQUAL(mbedtls_pk_parse_key(&key.value, KEY, sizeof(KEY), nullptr, 0, Random, nullptr), 0);
+        BOOST_REQUIRE_EQUAL(mbedtls_pk_get_bitlen(&key.value), 2048U);
+        BOOST_REQUIRE_EQUAL(mbedtls_rsa_check_privkey(mbedtls_pk_rsa(key.value)), 0);
         root = MakeCertificate(true);
         leaf = MakeCertificate(false);
     }

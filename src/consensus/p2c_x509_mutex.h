@@ -7,6 +7,7 @@
 
 #include <atomic>
 #include <mutex>
+#include <version>
 
 namespace consensus::p2c {
 

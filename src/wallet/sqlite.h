@@ -110,6 +110,7 @@ private:
     const std::string m_file_path;
 
     const int m_additional_flags;
+    const bool m_require_existing;
 
     /**
      * This mutex protects SQLite initialization and shutdown.

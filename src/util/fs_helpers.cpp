@@ -138,12 +138,19 @@ bool FileCommit(FILE* file)
 
 void DirectoryCommit(const fs::path& dirname)
 {
+    (void)DirectoryCommitChecked(dirname);
+}
+
+std::optional<bool> DirectoryCommitChecked(const fs::path& dirname)
+{
 #ifndef WIN32
     FILE* file = fsbridge::fopen(dirname, "r");
-    if (file) {
-        fsync(fileno(file));
-        fclose(file);
-    }
+    if (!file) return false;
+    const bool synced{fsync(fileno(file)) == 0};
+    const bool closed{fclose(file) == 0};
+    return synced && closed;
+#else
+    return std::nullopt;
 #endif
 }
 
@@ -206,7 +213,7 @@ void AllocateFileRange(FILE* file, unsigned int offset, unsigned int length)
     int64_t nEndPos = (int64_t)offset + length;
     nFileSize.u.LowPart = nEndPos & 0xFFFFFFFF;
     nFileSize.u.HighPart = nEndPos >> 32;
-    SetFilePointerEx(hFile, nFileSize, 0, FILE_BEGIN);
+    SetFilePointerEx(hFile, nFileSize, nullptr, FILE_BEGIN);
     SetEndOfFile(hFile);
 #elif defined(__APPLE__)
     // OSX specific version

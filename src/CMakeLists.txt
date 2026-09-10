@@ -82,10 +82,11 @@ unset(mbedtls_suffix)
 
 # The public headers are third-party too: consumers such as the wallet must
 # not promote their documentation/redeclaration warnings to project errors.
-# Attach this to the dependency so every direct or transitive consumer gets
-# the same system-header treatment, while its own sources keep strict checks.
+# Attach this to the dependency and its consumers, including our RSA-PSS
+# adapter compiled inside mbedcrypto. Only the third-party headers are system
+# headers; ConnectCoin's own sources keep strict checks.
 foreach(mbedtls_target IN LISTS p2c_mbedtls_targets)
-  target_include_directories(${mbedtls_target} SYSTEM INTERFACE
+  target_include_directories(${mbedtls_target} SYSTEM PUBLIC
     ${connectcoin_mbedtls_SOURCE_DIR}/include
   )
 endforeach()

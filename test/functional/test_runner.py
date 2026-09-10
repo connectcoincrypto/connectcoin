@@ -465,7 +465,6 @@ UNSUPPORTED_TYPED_OUTPUT_SCRIPTS = {
     "rpc_scantxoutset.py",
     "rpc_signmessagewithprivkey.py",
     "tool_bitcoin_chainstate.py",
-    "tool_wallet.py",
     "wallet_anchor.py",
     "wallet_assumeutxo.py",
     "wallet_balance.py",

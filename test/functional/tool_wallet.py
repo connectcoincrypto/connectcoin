@@ -10,11 +10,18 @@ import subprocess
 import textwrap
 
 from collections import OrderedDict
+from contextlib import closing
+try:
+    import sqlite3
+except ImportError:
+    pass
 
+from test_framework.messages import COIN, COutPoint, CTransaction, CTxIn, CTxOut, hash256, ser_string
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than,
+    assert_raises_rpc_error,
     sha256sum_file,
 )
 
@@ -67,7 +74,7 @@ class ToolWalletTest(BitcoinTestFramework):
 
     def get_expected_info_output(self, name="", transactions=0, keypool=2, address=0, imported_privs=0):
         wallet_name = self.default_wallet_name if name == "" else name
-        output_types = 4  # p2pkh, p2sh, segwit, bech32m
+        output_types = 1  # ConnectCoin type-1 key outputs only.
         return textwrap.dedent('''\
             Wallet info
             ===========
@@ -79,7 +86,7 @@ class ToolWalletTest(BitcoinTestFramework):
             Keypool Size: %d
             Transactions: %d
             Address Book: %d
-        ''' % (wallet_name, keypool * output_types, transactions, imported_privs * 3 + address))
+        ''' % (wallet_name, keypool * output_types, transactions, imported_privs + address))
 
     def read_dump(self, filename):
         dump = OrderedDict()
@@ -237,8 +244,8 @@ class ToolWalletTest(BitcoinTestFramework):
         self.log.debug('Wallet file timestamp after calling getwalletinfo: {}'.format(timestamp_after))
 
         assert_equal(0, out['txcount'])
-        assert_equal(4000, out['keypoolsize'])
-        assert_equal(4000, out['keypoolsize_hd_internal'])
+        assert_equal(1000, out['keypoolsize'])
+        assert_equal(1000, out['keypoolsize_hd_internal'])
 
         self.log_wallet_timestamp_comparison(timestamp_before, timestamp_after)
         assert_equal(timestamp_before, timestamp_after)
@@ -372,7 +379,7 @@ class ToolWalletTest(BitcoinTestFramework):
             Descriptors: yes
             Encrypted: no
             HD (hd seed available): yes
-            Keypool Size: 8
+            Keypool Size: 2
             Transactions: 4
             Address Book: 4
         ''')
@@ -393,8 +400,10 @@ class ToolWalletTest(BitcoinTestFramework):
         self.generate(self.nodes[0], 101)
         def_wallet = self.nodes[0].get_wallet_rpc(self.default_wallet_name)
         outputs = {}
-        for i in range(500):
-            outputs[wallet.getnewaddress(address_type="p2sh-segwit")] = 0.01
+        # Type-1 inputs are smaller than legacy script inputs. Keep the original
+        # >70KB record requirement rather than reducing overflow-page coverage.
+        for i in range(700):
+            outputs[wallet.getnewaddress(address_type="bech32m")] = 0.01
         def_wallet.sendmany(amounts=outputs)
         self.generate(self.nodes[0], 1)
         send_res = wallet.sendall([def_wallet.getnewaddress()])
@@ -432,6 +441,96 @@ class ToolWalletTest(BitcoinTestFramework):
         self.assert_raises_tool_error("Wallet name cannot be empty", "-wallet=", "-dumpfile=wallet.dump", "createfromdump")
         assert not (self.nodes[0].wallets_path / "wallet.dat").exists()
 
+    def test_reset_transaction_history(self):
+        if "sqlite3" not in globals():
+            self.log.warning("sqlite3 module not available, skipping history reset fixture")
+            return
+        self.log.info("Offline history reset recovers a synthetic pre-mask P2C wallet without changing keys")
+        self.start_node(0)
+        node = self.nodes[0]
+        name = "history-reset-fixture"
+        passphrase = "synthetic history reset passphrase"
+        node.createwallet(name, passphrase=passphrase)
+        wallet = node.get_wallet_rpc(name)
+        address = wallet.getnewaddress("preserved label")
+        funding_txid = node.get_wallet_rpc(self.default_wallet_name).sendtoaddress(address, 1)
+        self.generate(node, 1)
+        funding_hex = wallet.gettransaction(funding_txid)["hex"]
+        funding_coin = wallet.listunspent()[0]
+        wallet.lockunspent(False, [{"txid": funding_txid, "vout": funding_coin["vout"]}], persistent=True)
+        descriptors = wallet.listdescriptors()
+        fixture = (node.wallets_path / name / "wallet.dat").resolve(strict=True)
+        assert fixture.is_relative_to(node.datadir_path.resolve(strict=True))
+        backup = node.datadir_path / "history-reset-backup"
+        options = [f"-wallet={name}", f"-backupdir={backup}", "-confirm=DELETE-TRANSACTION-HISTORY", "reset-tx-history"]
+        self.assert_raises_tool_error("exclusive lock", *options)
+        assert not backup.exists()
+        self.stop_node(0)
+
+        def records(path):
+            assert path.resolve(strict=True).is_relative_to(node.datadir_path.resolve(strict=True))
+            with closing(sqlite3.connect(path.as_uri() + '?mode=ro', uri=True)) as con:
+                return dict(con.execute('SELECT key,value FROM main'))
+
+        original = records(fixture)
+        # Build the old serialization solely in this disposable fixture: the
+        # pre-mask output ends after the root bundle version. Its locktime's
+        # first zero is now (correctly) rejected as an invalid signature mask.
+        tx = CTransaction()
+        tx.vin = [CTxIn(COutPoint(1, 0))]
+        domain = b"example.com"
+        tx.vout = [CTxOut(COIN, b"\x52" + bytes([len(domain)]) + domain + b"\xff" * 32 + b"\x01\x00\x00\x00\x07")]
+        current = tx.serialize()
+        assert_equal(current[-5], 7)
+        legacy = current[:-5] + current[-4:]
+        funding_key = ser_string(b"tx") + bytes.fromhex(funding_txid)[::-1]
+        funding_value = original[funding_key]
+        assert funding_value.startswith(bytes.fromhex(funding_hex))
+        legacy_value = legacy + funding_value[len(bytes.fromhex(funding_hex)):]
+        with closing(sqlite3.connect(fixture.as_uri() + '?mode=rw', uri=True)) as con:
+            con.execute('INSERT INTO main VALUES(?,?)', (ser_string(b"tx") + hash256(legacy), legacy_value))
+            # An orphan obsolete variant is removed too, not left to break a
+            # future reload. No parsing of its incompatible bytes is required.
+            con.execute('INSERT INTO main VALUES(?,?)', (ser_string(b"wtxvariant") + hash256(legacy) * 2, legacy))
+            con.commit()
+        before = records(fixture)
+        self.assert_raises_tool_error("Wallet corrupted", f"-wallet={name}", "info")
+        assert_equal(records(fixture), before)
+        self.assert_raises_tool_error("requires explicit", f"-wallet={name}", f"-backupdir={backup}", "reset-tx-history")
+        assert not backup.exists()
+        assert_equal(records(fixture), before)
+
+        process = self.connectcoin_wallet_process(*options)
+        stdout, stderr = process.communicate()
+        assert_equal(process.returncode, 0)
+        assert_equal(stderr, '')
+        assert "Old-chain balances were NOT migrated" in stdout
+        assert_equal(records(backup / "wallet.dat"), before)
+        def is_history(key):
+            return any(key.startswith(ser_string(kind)) for kind in (b"tx", b"wtxvariant", b"lockedutxo"))
+        expected = {key: value for key, value in before.items() if not is_history(key)}
+        assert_equal(records(fixture), expected)
+        self.assert_raises_tool_error("already exists", *options)
+        assert_equal(records(fixture), expected)
+        assert_equal(records(backup / "wallet.dat"), before)
+
+        self.start_node(0)
+        if name not in node.listwallets():
+            node.loadwallet(name)
+        wallet = node.get_wallet_rpc(name)
+        assert_equal(wallet.getwalletinfo()["unlocked_until"], 0)
+        assert_equal(wallet.getaddressinfo(address)["labels"], ["preserved label"])
+        assert_equal(wallet.listdescriptors(), descriptors)
+        assert_equal(wallet.listlockunspent(), [])
+        assert_raises_rpc_error(-22, "TX decode failed", node.decoderawtransaction, legacy.hex())
+        wallet.walletpassphrase(passphrase, 60)
+        assert_equal(wallet.rescanblockchain(0)["start_height"], 0)
+        assert_equal(wallet.getbalance(), 1)
+        sent = wallet.sendtoaddress(node.get_wallet_rpc(self.default_wallet_name).getnewaddress(), 0.5)
+        self.generate(node, 1)
+        assert_equal(wallet.gettransaction(sent)["confirmations"], 1)
+        self.stop_node(0)
+
     def run_test(self):
         self.wallet_path = self.nodes[0].wallets_path / self.default_wallet_name / self.wallet_data_filename
         self.test_invalid_tool_commands_and_args()
@@ -445,6 +544,7 @@ class ToolWalletTest(BitcoinTestFramework):
         self.test_dump_very_large_records()
         self.test_no_create_legacy()
         self.test_no_create_unnamed()
+        self.test_reset_transaction_history()
 
 
 if __name__ == '__main__':

@@ -116,7 +116,7 @@ SQLiteDatabase::SQLiteDatabase(const fs::path& dir_path, const fs::path& file_pa
 {}
 
 SQLiteDatabase::SQLiteDatabase(const fs::path& dir_path, const fs::path& file_path, const DatabaseOptions& options, int additional_flags)
-    : WalletDatabase(), m_dir_path(dir_path), m_file_path(fs::PathToString(file_path)), m_additional_flags(additional_flags), m_write_semaphore(1), m_use_unsafe_sync(options.use_unsafe_sync)
+    : WalletDatabase(), m_dir_path(dir_path), m_file_path(fs::PathToString(file_path)), m_additional_flags(additional_flags), m_require_existing(options.require_existing), m_write_semaphore(1), m_use_unsafe_sync(options.use_unsafe_sync)
 {
     {
         LOCK(g_sqlite_mutex);
@@ -255,11 +255,12 @@ void SQLiteDatabase::Open()
 
 void SQLiteDatabase::Open(int additional_flags)
 {
-    int flags = SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | additional_flags;
+    int flags = SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE | additional_flags;
+    if (!m_require_existing) flags |= SQLITE_OPEN_CREATE;
 
     if (m_db == nullptr) {
         if (!(flags & SQLITE_OPEN_MEMORY)) {
-            TryCreateDirectories(m_dir_path);
+            if (!m_require_existing) TryCreateDirectories(m_dir_path);
             if (!IsDirWritable(m_dir_path)) {
                 throw std::runtime_error(strprintf("SQLiteDatabase: Failed to open database in directory '%s': directory is not writable", fs::PathToString(m_dir_path)));
             }
@@ -330,6 +331,11 @@ void SQLiteDatabase::Open(int additional_flags)
 
     // Do the db setup things because the table doesn't exist only when we are creating a new wallet
     if (!table_exists) {
+        // Opening an existing wallet is not wallet creation. In particular an
+        // offline recovery/backup must never initialize a malformed source.
+        if (m_require_existing) {
+            throw std::runtime_error("SQLiteDatabase: Existing wallet is missing its main records table");
+        }
         ret = sqlite3_exec(m_db, "CREATE TABLE main(key BLOB PRIMARY KEY NOT NULL, value BLOB NOT NULL)", nullptr, nullptr, nullptr);
         if (ret != SQLITE_OK) {
             throw std::runtime_error(strprintf("SQLiteDatabase: Failed to create new database: %s\n", sqlite3_errstr(ret)));

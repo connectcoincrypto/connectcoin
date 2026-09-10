@@ -74,6 +74,33 @@ In order to avoid rebuilding all dependencies for each build, the binaries are
 cached and reused when possible. Changes in the dependency-generator will
 trigger cache-invalidation and rebuilds as necessary.
 
+## Fuzz replay scheduling
+
+The Linux ASan and MSan fuzz jobs use `ci/fuzz-timings.json` to balance targets
+between shards and start expensive targets first. These are summed process
+seconds from a completed CI run, not whole-job wall times. They only change
+scheduling: every selected target and corpus input still runs, with the same
+corpus partitions, worker limit, replay arguments, and empty-corpus mutation
+budget. Targets added after a measurement are retained and estimated from their
+corpus size and file count.
+
+Each profile records its source run, exact QA-assets commit, fuzz engine, and
+SHA256 of the corresponding setup script (UTF-8 with normalized LF line endings).
+The runner checks the actual corpus checkout and detected engine before using it.
+A run without a profile uses the corpus-work estimator. An invalid profile may
+fall back only for a single-shard run; a requested profile that cannot be
+validated in a multi-shard run is a fatal error. Otherwise, a transient failure
+on just one runner could select a different partition and silently miss targets.
+
+To refresh a profile, sum all successful `Finished TARGET in ...s` measurements
+for each target, including every corpus partition, from the same completed run
+and configuration. A value below the log clock's resolution is recorded as
+0.1 seconds, not used to reduce execution. Update its provenance and configuration
+hash, and run `python3 test/lint/lint-fuzz-corpus.py`. When changing the pinned
+corpus or setup flags, either collect fresh timings or remove both timing
+arguments from that configuration so that **all** its shards use the original
+estimator together. Do not bypass a mismatched profile on just one shard.
+
 ## Configuring a repository for CI
 
 The checked-in workflow uses GitHub-hosted runners and GitHub Actions caches for

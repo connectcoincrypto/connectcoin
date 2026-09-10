@@ -12,6 +12,7 @@ import configparser
 import hashlib
 import json
 import logging
+import math
 import os
 import random
 import subprocess
@@ -72,7 +73,49 @@ def install_p2c_seed_corpus(*, targets, corpus_dir, source_dir):
     return {'p2c_tls_proof'} if was_empty else set()
 
 
-def select_fuzz_shard(*, targets, corpus_dir, shard_count, shard_index):
+def load_fuzz_timings(*, profile_path, config_file, source_dir, corpus_dir, using_libfuzzer, required=False):
+    """Treat timings as optional scheduling hints, never as a target allowlist."""
+    if profile_path is None:
+        if required:
+            raise ValueError('A timings profile is required for this sharded run')
+        return {}
+    try:
+        profile = json.loads((Path(source_dir) / profile_path).read_text(encoding='utf-8'))
+        if type(profile['version']) is not int or profile['version'] != 1:
+            raise ValueError('unknown timings format')
+        configuration = profile['configurations'][config_file]
+        # Normalize checkout line endings so native and git-archive checkouts
+        # identify the same configuration. Any actual flag change invalidates it.
+        config_text = (Path(source_dir) / config_file).read_text(encoding='utf-8')
+        if hashlib.sha256(config_text.encode()).hexdigest() != configuration['config_sha256']:
+            raise ValueError('configuration changed')
+        if configuration['engine'] != ('libfuzzer' if using_libfuzzer else 'replay'):
+            raise ValueError('fuzz engine changed')
+        corpus_commit = subprocess.run(
+            ['git', '-C', str(corpus_dir), 'rev-parse', 'HEAD'],
+            check=True, capture_output=True, text=True, timeout=30,
+        ).stdout.strip()
+        if len(corpus_commit) != 40 or any(c not in '0123456789abcdef' for c in corpus_commit) or corpus_commit != profile['corpus_commit']:
+            raise ValueError('corpus commit changed')
+        timings = configuration['target_seconds']
+        if not isinstance(timings, dict) or not timings or any(
+            not isinstance(target, str) or not target or
+            type(seconds) not in (int, float) or not math.isfinite(seconds) or seconds <= 0
+            for target, seconds in timings.items()
+        ) or not math.isfinite(math.fsum(timings.values())):
+            raise ValueError('timings must be finite positive seconds')
+        logging.info('Using fuzz scheduling timings for %s at corpus %s', config_file, corpus_commit)
+        return timings
+    except (OSError, ValueError, KeyError, TypeError, OverflowError, subprocess.SubprocessError) as error:
+        if required:
+            # A fallback on only one CI shard would use a different partition
+            # than the other shards, silently omitting some targets. Fail closed.
+            raise ValueError(f'Required multi-shard fuzz timings are invalid: {error}') from error
+        logging.warning('Ignoring fuzz timings profile (%s); using corpus-work estimates', error)
+        return {}
+
+
+def select_fuzz_shard(*, targets, corpus_dir, shard_count, shard_index, timings=None):
     """Balance targets by estimated corpus work and return one deterministic shard."""
     weighted_targets = []
     for target in targets:
@@ -93,6 +136,22 @@ def select_fuzz_shard(*, targets, corpus_dir, shard_count, shard_index):
         # they still represent work.
         estimated_work = max(input_count + (input_bytes + 4095) // 4096, 1)
         weighted_targets.append((target, estimated_work))
+
+    if timings:
+        # Keep new targets, estimating their cost from the observed seconds per
+        # corpus-work unit. Timings never remove a target or an input. Sorting
+        # before summation makes the result independent of caller target order.
+        known = sorted((target, work) for target, work in weighted_targets if target in timings)
+        if known:
+            scale = math.fsum(timings[target] for target, _ in known) / sum(work for _, work in known)
+            timed_targets = [(target, timings.get(target, work * scale)) for target, work in weighted_targets]
+            try:
+                valid = all(work > 0 for _, work in timed_targets) and math.isfinite(math.fsum(work for _, work in timed_targets))
+            except OverflowError:
+                valid = False
+            if not valid:
+                raise ValueError('Fuzz timings cannot represent the selected corpus work safely')
+            weighted_targets = timed_targets
 
     shards = [[] for _ in range(shard_count)]
     shard_loads = [0] * shard_count
@@ -152,6 +211,15 @@ def main():
         type=int,
         default=0,
         help='Zero-based shard of the sorted fuzz target list to execute.',
+    )
+    parser.add_argument(
+        '--timings-profile',
+        type=Path,
+        help='Optional versioned timings JSON used only for replay scheduling; invalid profiles fail multi-shard runs.',
+    )
+    parser.add_argument(
+        '--timings-config',
+        help='Source-relative CI configuration identifying a timings profile.',
     )
     parser.add_argument(
         '--corpus-shards',
@@ -243,6 +311,37 @@ def main():
         parser.error('--corpus-shards must be at least 1')
     if args.corpus_shard_min_files < 1:
         parser.error('--corpus-shard-min-files must be at least 1')
+    if not test_list_selection:
+        parser.error('No fuzz targets selected')
+    print("Check if using libFuzzer ... ", end='', flush=True)
+    try:
+        # Probe before sharding, so every shard validates RPC registration and
+        # the engine identity used to select an optional timings profile.
+        using_libfuzzer = detect_fuzz_engine(
+            fuzz_bin=fuzz_bin,
+            target='rpc' if 'rpc' in test_list_selection else test_list_selection[0],
+            source_dir=config['environment']['SRCDIR'],
+        )
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, RuntimeError) as error:
+        logging.error('Fuzz engine probe failed: %s\n%s', error, getattr(error, 'stderr', '') or '')
+        sys.exit(1)
+    print(using_libfuzzer, flush=True)
+    if (args.generate or args.m_dir) and not using_libfuzzer:
+        logging.error("Must be built with libFuzzer")
+        sys.exit(1)
+
+    profile_path = None if args.generate or args.m_dir or args.valgrind else args.timings_profile
+    try:
+        timings = load_fuzz_timings(
+            profile_path=profile_path,
+            config_file=args.timings_config,
+            source_dir=config['environment']['SRCDIR'],
+            corpus_dir=args.corpus_dir,
+            using_libfuzzer=using_libfuzzer,
+            required=profile_path is not None and args.shard_count > 1,
+        )
+    except ValueError as error:
+        parser.error(str(error))
     seeded_empty_targets = install_p2c_seed_corpus(
         targets=test_list_selection, corpus_dir=args.corpus_dir, source_dir=config['environment']['SRCDIR'],
     )
@@ -251,13 +350,16 @@ def main():
         corpus_dir=args.corpus_dir,
         shard_count=args.shard_count,
         shard_index=args.shard_index,
+        timings=timings,
     )
     if not test_list_selection:
         parser.error('Selected fuzz shard contains no targets')
 
     load_description = ''
     if shard_loads is not None:
-        load_description = ' (estimated corpus work units: {})'.format(shard_loads[args.shard_index])
+        load_description = ' (estimated {}: {})'.format(
+            'process seconds' if timings else 'corpus work units', shard_loads[args.shard_index],
+        )
     logging.info(
         "{} of {} detected fuzz target(s) selected for shard {}/{}{}: {}".format(
             len(test_list_selection),
@@ -286,22 +388,6 @@ def main():
                 "Retain new ConnectCoin-specific corpora with the project issue or "
                 "pull request until a project-owned corpus repository exists"
             )
-
-    print("Check if using libFuzzer ... ", end='', flush=True)
-    try:
-        # Check RPC registration before any expensive replay when it is selected.
-        using_libfuzzer = detect_fuzz_engine(
-            fuzz_bin=fuzz_bin,
-            target='rpc' if 'rpc' in test_list_selection else test_list_selection[0],
-            source_dir=config['environment']['SRCDIR'],
-        )
-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, RuntimeError) as error:
-        logging.error('Fuzz engine probe failed: %s\n%s', error, getattr(error, 'stderr', '') or '')
-        sys.exit(1)
-    print(using_libfuzzer, flush=True)
-    if (args.generate or args.m_dir) and not using_libfuzzer:
-        logging.error("Must be built with libFuzzer")
-        sys.exit(1)
 
     with ThreadPoolExecutor(max_workers=args.par) as fuzz_pool:
         if args.generate:

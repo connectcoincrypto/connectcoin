@@ -20,6 +20,8 @@ export CI_CACHE_NAME="ci_native_fuzz_msan"
 # Queue four corpus chunks per worker so slow inputs do not leave one process
 # running long after the other worker finishes. --par still caps concurrency.
 export FUZZ_TESTS_CONFIG="--shard-count=${FUZZ_SHARD_COUNT} --shard-index=${FUZZ_SHARD_INDEX} --corpus-shards=8 --corpus-shard-min-files=512"
+# Optional, versioned scheduling hints only; all targets and inputs still run.
+export FUZZ_TESTS_CONFIG="${FUZZ_TESTS_CONFIG} --timings-profile=ci/fuzz-timings.json --timings-config=ci/test/00_setup_env_native_fuzz_with_msan.sh"
 export PACKAGES="clang-${APT_LLVM_V} llvm-${APT_LLVM_V} llvm-${APT_LLVM_V}-dev libclang-${APT_LLVM_V}-dev libclang-rt-${APT_LLVM_V}-dev"
 export DEP_OPTS="DEBUG=1 NO_QT=1 CC=clang CXX=clang++ CFLAGS='${MSAN_FLAGS}' CXXFLAGS='${MSAN_AND_LIBCXX_FLAGS}'"
 export GOAL="all"
