@@ -55,8 +55,13 @@ or `--help`:
 | [`lint-shell.py`](/test/lint/lint-shell.py) | [ShellCheck](https://github.com/koalaman/shellcheck)
 | `py_lint` | [ruff](https://github.com/astral-sh/ruff)
 | markdown link check | [mlc](https://github.com/becheran/mlc)
+| `lint-fs-helpers-mocks.py` | C++20 GCC-compatible compiler (`CXX`, or `c++`)
 
 Dependency versions and installation instructions are available in the [CI setup](../../ci/lint/01_install.sh) and the [lint_imagefile](../../ci/lint_imagefile) (for tools where an OCI imagefile exists).
+
+The descriptor-limit check compiles the current function with real utility headers
+and simulated operating-system calls. It covers POSIX and Windows branches even
+on a single host, but does not replace native builds or resource-limit tests.
 
 Please be aware that on Linux distributions all dependencies are usually available as packages, but could be outdated.
 

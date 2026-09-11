@@ -237,8 +237,8 @@ int RaiseFileDescriptorLimit()
         }
     }
     LogInfo("File descriptor limits: soft=%s, hard=%s\n",
-            effective.rlim_cur == RLIM_INFINITY ? "unlimited" : ::ToString(effective.rlim_cur),
-            effective.rlim_max == RLIM_INFINITY ? "unlimited" : ::ToString(effective.rlim_max));
+            effective.rlim_cur == RLIM_INFINITY ? "unlimited" : util::ToString(effective.rlim_cur),
+            effective.rlim_max == RLIM_INFINITY ? "unlimited" : util::ToString(effective.rlim_max));
     // Limit only the returned budget, not the actual OS limit. Handle the
     // platform-specific infinity sentinel before converting to a signed int.
     int descriptor_budget{std::numeric_limits<int>::max()};

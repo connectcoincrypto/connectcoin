@@ -137,13 +137,10 @@ if [[ "${GOAL}" != all && "${GOAL}" != codegen ]]; then
   GOAL="all ${GOAL}"
 fi
 
+# Keep compiler commands in the original log. A serial diagnostic rebuild can
+# spend many minutes building unrelated targets before reaching the same error.
 # shellcheck disable=SC2086
-cmake --build "${BASE_BUILD_DIR}" "$MAKEJOBS" --target $GOAL || (
-  echo "Build failure. Verbose build follows."
-  # shellcheck disable=SC2086
-  cmake --build "${BASE_BUILD_DIR}" -j1 --target $GOAL --verbose
-  false
-)
+cmake --build "${BASE_BUILD_DIR}" "$MAKEJOBS" --target $GOAL --verbose
 
 if [[ "${RUN_IWYU}" == true ]]; then
   # CMake's codegen target does not include the custom Cap'n Proto/mpgen

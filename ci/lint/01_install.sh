@@ -17,9 +17,10 @@ ${CI_RETRY_EXE} apt-get update
 # Lint dependencies:
 # - cargo (used to run the lint tests)
 # - curl/xz-utils (to install shellcheck)
+# - g++ (to compile descriptor-limit portability mocks with real utility headers)
 # - git (used in many lint scripts)
 # - moreutils (used by scripted-diff)
-${CI_RETRY_EXE} apt-get install -y cargo curl xz-utils git moreutils
+${CI_RETRY_EXE} apt-get install -y cargo curl xz-utils g++ git moreutils
 
 # Install Python and create venv using uv (reads version from .python-version)
 uv venv /python_env
