@@ -34,8 +34,8 @@ Usage examples:
 
 In configuration output, this function prints a string by the following pattern:
 
-  -- Performing Test CXX_SUPPORTS_[flags]
-  -- Performing Test CXX_SUPPORTS_[flags] - Success
+  -- Performing Test CXX_SUPPORTS_[flags]_[werror_policy_hash]
+  -- Performing Test CXX_SUPPORTS_[flags]_[werror_policy_hash] - Success
 
 ]=]
 function(try_append_cxx_flags flags)
@@ -63,7 +63,10 @@ function(try_append_cxx_flags flags)
   # This avoids running a linker.
   set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
   set(CMAKE_REQUIRED_FLAGS "${flags_as_string} ${working_compiler_werror_flag}")
-  set(compiler_result CXX_SUPPORTS_${id_string})
+  # Do not reuse checks made without (or with different) warning promotion.
+  string(SHA256 werror_policy_hash "${working_compiler_werror_flag}")
+  string(SUBSTRING "${werror_policy_hash}" 0 8 werror_policy_hash)
+  set(compiler_result CXX_SUPPORTS_${id_string}_${werror_policy_hash})
   check_cxx_source_compiles("${source}" ${compiler_result})
 
   if(${compiler_result})
@@ -119,7 +122,8 @@ function(try_append_cxx_flags flags)
   endif()
 endfunction()
 
-if(MSVC)
+# MSVC is also true for clang-cl, but /options:strict is MSVC-only.
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   try_append_cxx_flags("/WX /options:strict" VAR working_compiler_werror_flag SKIP_LINK)
 else()
   try_append_cxx_flags("-Werror" VAR working_compiler_werror_flag SKIP_LINK)

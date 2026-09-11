@@ -5209,6 +5209,10 @@ Reyndu að keyra nýjustu útgáfu hugbúnaðarins.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Viðvörun: fleiri en 100 tengingar á sekúndu, ótakmarkaður hraði eða fleiri en 100 samtímis tengingar geta ofhlaðið tölvuna þína eða netið og aftengt þennan hnút.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Nýjustu blokkir til að leita í:</translation>
     </message>

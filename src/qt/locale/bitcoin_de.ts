@@ -5613,6 +5613,10 @@ Erwägen Sie, %s (%s) oder %s (%s) zu ändern.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Warnung: Mehr als 100 Verbindungen pro Sekunde, eine unbegrenzte Verbindungsrate oder mehr als 100 gleichzeitige Verbindungen können Ihren Computer oder Ihr Netzwerk überlasten und die Verbindung dieses Knotens unterbrechen.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Zu durchsuchende letzte Blöcke:</translation>
     </message>

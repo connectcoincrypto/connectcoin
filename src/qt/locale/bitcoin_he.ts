@@ -5534,6 +5534,10 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>אזהרה: יותר מ־100 חיבורים לשנייה, קצב ללא הגבלה או יותר מ־100 חיבורים במקביל עלולים להעמיס יתר על המידה על המחשב או הרשת שלך ולנתק את הצומת הזה.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>בלוקים אחרונים לחיפוש:</translation>
     </message>

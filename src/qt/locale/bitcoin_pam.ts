@@ -5049,6 +5049,10 @@ Subukan paandaran ing pinakabayung bersyun ning programa.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Babala: ing mas dakal king 100 koneksyun kada segundu, alang limitasyung bilis, o mas dakal king 100 sabay-sabay a koneksyun malyari lang makasobra king kaya ning kekang kompyuter o network at makaputul king koneksyun ning nodung ini.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Deng bayung bloke a panintunan:</translation>
     </message>

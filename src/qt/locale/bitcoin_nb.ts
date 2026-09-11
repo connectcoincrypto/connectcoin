@@ -5549,6 +5549,10 @@ Prøv å kjøre den nyeste programvareversjonen.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Advarsel: mer enn 100 tilkoblinger per sekund, ubegrenset hastighet eller mer enn 100 samtidige tilkoblinger kan overbelaste datamaskinen eller nettverket ditt og koble fra denne noden.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Nylige blokker å søke i:</translation>
     </message>

@@ -5111,6 +5111,10 @@ Proqramın ən son versiyasını işə salmağa çalışın.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Xəbərdarlıq: saniyədə 100-dən çox bağlantı, məhdudiyyətsiz sürət və ya 100-dən çox eyni vaxtda bağlantı kompüterinizi və ya şəbəkənizi həddindən artıq yükləyə və bu qovşağın bağlantısını kəsə bilər.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Axtarılacaq son bloklar:</translation>
     </message>

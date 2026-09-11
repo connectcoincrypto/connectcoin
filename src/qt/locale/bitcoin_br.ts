@@ -5158,6 +5158,10 @@ Klaskit lañsañ stumm diwezhañ ar meziant.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Diwallit: ouzhpenn 100 kennask dre eilenn, un tizh didermenet pe ouzhpenn 100 kennask war un dro a c'hall gorsammañ ho urzhiataer pe ho rouedad ha digennaskañ ar skoulm-mañ.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Blokoù nevez da glask enno:</translation>
     </message>

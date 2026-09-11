@@ -3390,6 +3390,10 @@ Whakamātauria te whakahaere i te putanga pūmanawa hōu rawa.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Whakatūpato: ki te neke atu i te 100 ngā hononga ia hēkona, ki te kore he tepe tere, ki te neke atu rānei i te 100 ngā hononga tukutahi, ka taumaha rawa pea tō rorohiko, tō whatunga rānei, ā, ka momotu pea tēnei kōpuku.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Ngā paraka hou hei rapu:</translation>
     </message>

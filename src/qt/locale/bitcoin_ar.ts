@@ -5105,6 +5105,10 @@ The wallet might have been tampered with or created with malicious intent.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>تحذير: قد يؤدي إجراء أكثر من 100 اتصال في الثانية، أو استخدام معدل غير محدود، أو إجراء أكثر من 100 اتصال متزامن إلى تحميل حاسوبك أو شبكتك فوق طاقتهما وفصل هذه العقدة.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>الكتل الأخيرة التي سيُبحث فيها:</translation>
     </message>

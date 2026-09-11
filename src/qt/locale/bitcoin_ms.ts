@@ -4912,6 +4912,10 @@ Sila cuba jalankan versi perisian terkini.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Amaran: lebih daripada 100 sambungan sesaat, kadar tanpa had, atau lebih daripada 100 sambungan serentak boleh membebankan komputer atau rangkaian anda secara berlebihan dan memutuskan sambungan nod ini.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Blok terkini untuk dicari:</translation>
     </message>

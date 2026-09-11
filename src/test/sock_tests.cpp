@@ -247,6 +247,13 @@ BOOST_AUTO_TEST_CASE(wait_many_rejects_fd_set_overflow)
     struct UnownedSock : Sock {
         explicit UnownedSock(SOCKET handle) : Sock{handle} {}
         ~UnownedSock() override { m_socket = INVALID_SOCKET; }
+
+    private:
+        UnownedSock& operator=(Sock&&) override
+        {
+            assert(false && "Move of Sock into UnownedSock not allowed.");
+            return *this;
+        }
     };
     Sock waiter{INVALID_SOCKET};
     Sock::EventsPerSock events;

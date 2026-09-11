@@ -5513,6 +5513,10 @@ Dasturning eng so‘nggi versiyasini ishlating.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Ogohlantirish: soniyasiga 100 tadan ortiq ulanish, cheksiz tezlik yoki bir vaqtning o‘zida 100 tadan ortiq ulanish kompyuteringiz yoki tarmog‘ingizga ortiqcha yuk tushirishi va bu tugun bilan aloqani uzishi mumkin.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Qidiriladigan so‘nggi bloklar:</translation>
     </message>

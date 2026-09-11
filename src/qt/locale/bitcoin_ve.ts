@@ -3013,6 +3013,10 @@ Iyani kha Faela &gt; Vulani tshipatshi u vula tshipatshi.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Tsivhudzo: vhukwamani vhu fhiraho 100 nga sekhondo, luvhilo lu si na mukano, kana vhukwamani vhu fhiraho 100 nga tshifhinga tshithihi zwi nga lemedza khomphiyutha kana netiweke yaṋu nahone zwa khaula vhukwamani ha ino node.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Buloko dza zwino dza u ṱoḓa:</translation>
     </message>

@@ -5413,6 +5413,10 @@ Bandykite paleisti naujausią programos versiją.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Įspėjimas: daugiau nei 100 ryšių per sekundę, neribota sparta arba daugiau nei 100 vienalaikių ryšių gali perkrauti jūsų kompiuterį ar tinklą ir atjungti šį mazgą.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Naujausi blokai, kuriuose ieškoti:</translation>
     </message>

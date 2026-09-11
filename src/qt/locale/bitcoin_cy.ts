@@ -5450,6 +5450,10 @@ Ceisiwch redeg y fersiwn ddiweddaraf o'r feddalwedd.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Rhybudd: gall mwy na 100 o gysylltiadau yr eiliad, cyfradd ddiderfyn, neu fwy na 100 o gysylltiadau ar yr un pryd orlwytho eich cyfrifiadur neu rwydwaith a datgysylltu'r nod hwn.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Blociau diweddar i'w chwilio:</translation>
     </message>

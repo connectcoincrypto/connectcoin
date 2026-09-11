@@ -4227,6 +4227,10 @@ Alu i Faila &gt; Tatala le atotupe e uta ai se atotupe.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Lapata'iga: e sili atu i le 100 so'otaga i le sekone, se saoasaoa e lē fa'atapula'aina, po o le sili atu i le 100 so'otaga i le taimi e tasi e ono so'ona mamafa ai lau komepiuta po o lau fesootaiga ma motusia ai le so'otaga o lenei node.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Poloka lata mai e su'e:</translation>
     </message>

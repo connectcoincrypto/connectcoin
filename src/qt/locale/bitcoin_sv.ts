@@ -5547,6 +5547,10 @@ Försök att köra den senaste programversionen.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Varning: fler än 100 anslutningar per sekund, obegränsad hastighet eller fler än 100 samtidiga anslutningar kan överbelasta din dator eller ditt nätverk och koppla från denna nod.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Senaste block att söka igenom:</translation>
     </message>

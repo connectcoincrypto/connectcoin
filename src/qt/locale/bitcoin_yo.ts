@@ -3397,6 +3397,10 @@ Lọ sí Fáìlì &gt; Ṣí àpò owó láti gbé àpò owó wọlé.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Ìkìlọ̀: ìsopọ̀ tí ó ju 100 lọ fún ìṣẹ́jú-àáyá kan, ìyára aláìlópin, tàbí ìsopọ̀ tí ó ju 100 lọ ní àkókò kan náà lè di ẹrù tó pọ̀ jù fún kọ̀ǹpútà tàbí nẹ́tíwọ́ọ̀kì rẹ, kí ó sì gé ìsopọ̀ nóòdù yìí.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Àwọn búlọ́ọ̀kù àìpẹ́ láti wá nínú:</translation>
     </message>

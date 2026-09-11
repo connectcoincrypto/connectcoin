@@ -5448,6 +5448,10 @@ Jekk jogħġbok ipprova ħaddem l-aħħar verżjoni tas-softwer.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Twissija: aktar minn 100 konnessjoni kull sekonda, rata bla limitu, jew aktar minn 100 konnessjoni simultanja jistgħu jgħabbu żżejjed il-kompjuter jew in-netwerk tiegħek u jiskonnettjaw dan in-nodu.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Blokki reċenti li għandhom jitfittxu:</translation>
     </message>

@@ -5344,6 +5344,10 @@ Bonvolu provi ruli la plej novan programaran version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Averto: pli ol 100 konektoj sekunde, senlima konektrapido aŭ pli ol 100 samtempaj konektoj povas troŝarĝi vian komputilon aŭ reton kaj malkonekti ĉi tiun nodon.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Lastatempaj blokoj por serĉi:</translation>
     </message>

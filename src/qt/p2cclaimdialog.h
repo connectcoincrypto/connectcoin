@@ -29,10 +29,13 @@ private:
     static QString StateText(const std::string& state);
     void Configure(bool stop);
     void Refresh();
+    void UpdateLoadWarning();
     QPointer<WalletModel> m_model;
     QSpinBox* m_rate;
     QCheckBox* m_unlimited;
     QSpinBox* m_concurrency;
+    QLabel* m_load_warning;
+    bool m_active_high_load{false};
     QSpinBox* m_recent_blocks;
     QCheckBox* m_unlimited_history;
     QLineEdit* m_domains;

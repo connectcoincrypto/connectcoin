@@ -5634,6 +5634,10 @@ Smaoinigh ar %s (%s) nó %s (%s) a athrú.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Rabhadh: d’fhéadfadh níos mó ná 100 nasc sa soicind, ráta neamhtheoranta, nó níos mó ná 100 nasc comhuaineach do ríomhaire nó do líonra a ró-ualú agus an nód seo a dhícheangal.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Bloic is déanaí le cuardach:</translation>
     </message>

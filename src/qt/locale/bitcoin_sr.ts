@@ -5580,6 +5580,10 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Упозорење: више од 100 веза у секунди, неограничена брзина или више од 100 истовремених веза могу преоптеретити ваш рачунар или мрежу и прекинути везу овог чвора.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Недавни блокови за претрагу:</translation>
     </message>

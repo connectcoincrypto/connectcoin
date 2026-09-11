@@ -5283,6 +5283,10 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>අවවාදයයි: තත්පරයකට සම්බන්ධතා 100කට වඩා වැඩි ගණනක්, අසීමිත වේගයක් හෝ එකවර සම්බන්ධතා 100කට වඩා වැඩි ගණනක් ඔබේ පරිගණකයට හෝ ජාලයට අධික බරක් ඇති කර මෙම නෝඩය විසන්ධි කළ හැකිය.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>සෙවිය යුතු මෑතකාලීන බ්ලොක්:</translation>
     </message>

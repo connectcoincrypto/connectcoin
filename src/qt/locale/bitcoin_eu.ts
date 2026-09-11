@@ -5613,6 +5613,10 @@ Aintzat hartu %s (%s) edo %s (%s) aldatzea.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Abisua: segundoko 100 konexio baino gehiagok, konexio-tasa mugagabeak edo aldibereko 100 konexio baino gehiagok zure ordenagailua edo sarea gainkargatu eta nodo hau deskonekta dezakete.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Bilaketa egiteko azken blokeak:</translation>
     </message>

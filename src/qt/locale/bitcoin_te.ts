@@ -5430,6 +5430,10 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>హెచ్చరిక: సెకనుకు 100 కంటే ఎక్కువ కనెక్షన్లు, అపరిమిత వేగం లేదా ఒకేసారి 100 కంటే ఎక్కువ కనెక్షన్లు మీ కంప్యూటర్ లేదా నెట్‌వర్క్‌పై అధిక భారం వేసి ఈ నోడ్ కనెక్షన్‌ను తెంచవచ్చు.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>శోధించాల్సిన ఇటీవలి బ్లాక్‌లు:</translation>
     </message>

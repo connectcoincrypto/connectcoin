@@ -3560,6 +3560,10 @@ Ve a Ficheru &gt; Abrir cartera pa cargar una cartera.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Avisu: más de 100 conexones por segundu, una tasa ensin llende o más de 100 conexones simultánees puen sobrecargar el to ordenador o la to rede y desconectar esti nodu.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Bloques recientes nos que buscar:</translation>
     </message>

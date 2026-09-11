@@ -5617,6 +5617,10 @@ Umhugsa at broyta %s (%s) ella %s (%s).</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Ávaring: fleiri enn 100 sambond um sekundið, óavmarkaður sambandstíttleiki ella fleiri enn 100 samstundis sambond kunnu ovbyrða telduna ella netið hjá tær og bróta sambandið hjá hesum knútinum.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Nýggjastu blokkar at leita í:</translation>
     </message>

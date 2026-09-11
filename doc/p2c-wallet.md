@@ -120,14 +120,20 @@ connectcoin-cli -rpcwallet=claimant setp2cclaiming 0
 ```
 
 The examples explicitly select four simultaneous connections. The GUI, initial
-worker status, and RPC default use **1000** simultaneous connections; omitting
+worker status, and RPC default use **100** simultaneous connections; omitting
 the RPC's second argument (or passing `null`) selects that default. HTTPS remains
 disabled when the wallet loads until you explicitly enable it.
 
-The GUI rate field starts at **1000 connections per second**, but this is only
+The GUI rate field starts at **100 connections per second**, but this is only
 a proposed limit: the active worker rate remains **0 (disabled)** until you
 click **Apply / start** and accept the confirmation. Cancelling leaves HTTPS
 disabled. The stop button still sets the rate to 0.
+
+These defaults are not hard caps. Selecting more than 100 connections per second,
+an unlimited rate, or more than 100 simultaneous connections shows a prominent
+warning about overloading the computer or network and disconnecting the node.
+The confirmation repeats the warning, but still allows starting. The page also
+warns while a high-load configuration is active, including one enabled via RPC.
 
 On POSIX systems (including Linux, macOS and BSD), startup automatically tries
 to raise the process's soft file-descriptor limit to its inherited hard limit.
@@ -176,7 +182,7 @@ prompt confirmation if demand rises before submission.
   displays `Unlimited` in the status, not the RPC sentinel `-1`.
 - Positive rates limit connection starts across all workers **in this wallet**;
   they are not a node-wide limit shared by multiple wallets. Concurrency accepts
-  any positive 32-bit integer (default **1000**), with no separate 64-connection cap. It is a maximum,
+  any positive 32-bit integer (default **100**), with no separate 64-connection cap. It is a maximum,
   not guaranteed throughput: OS thread/socket limits, memory, the selected rate
   and server responsiveness determine actual parallelism. If the OS refuses
   additional connection threads, already-started workers keep searching and

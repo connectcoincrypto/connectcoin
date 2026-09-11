@@ -3761,6 +3761,10 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>ಎಚ್ಚರಿಕೆ: ಪ್ರತಿ ಸೆಕೆಂಡಿಗೆ 100 ಕ್ಕಿಂತ ಹೆಚ್ಚು ಸಂಪರ್ಕಗಳು, ಅಪರಿಮಿತ ವೇಗ ಅಥವಾ 100 ಕ್ಕಿಂತ ಹೆಚ್ಚು ಏಕಕಾಲಿಕ ಸಂಪರ್ಕಗಳು ನಿಮ್ಮ ಕಂಪ್ಯೂಟರ್ ಅಥವಾ ನೆಟ್‌ವರ್ಕ್ ಮೇಲೆ ಅತಿಯಾದ ಹೊರೆ ಉಂಟುಮಾಡಬಹುದು ಮತ್ತು ಈ ನೋಡ್‌ನ ಸಂಪರ್ಕವನ್ನು ಕಡಿತಗೊಳಿಸಬಹುದು.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>ಹುಡುಕಬೇಕಾದ ಇತ್ತೀಚಿನ ಬ್ಲಾಕ್‌ಗಳು:</translation>
     </message>

@@ -5286,6 +5286,10 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>คำเตือน: การเชื่อมต่อมากกว่า 100 ครั้งต่อวินาที อัตราไม่จำกัด หรือการเชื่อมต่อพร้อมกันมากกว่า 100 รายการ อาจทำให้คอมพิวเตอร์หรือเครือข่ายของคุณทำงานหนักเกินไป และทำให้โหนดนี้ขาดการเชื่อมต่อ</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>บล็อกล่าสุดที่จะค้นหา:</translation>
     </message>

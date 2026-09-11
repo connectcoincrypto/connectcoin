@@ -5597,6 +5597,10 @@ Fontolja meg a következők módosítását: %s (%s) vagy %s (%s).</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Figyelmeztetés: a másodpercenkénti 100-nál több kapcsolat, a korlátlan sebesség vagy a 100-nál több egyidejű kapcsolat túlterhelheti a számítógépét vagy a hálózatát, és megszakíthatja ennek a csomópontnak a kapcsolatát.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Átvizsgálandó legutóbbi blokkok:</translation>
     </message>

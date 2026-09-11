@@ -5579,6 +5579,10 @@ Consider modifying %s (%s) or %s (%s).</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>警告：每秒超過 100 個連線、使用不限速，或者同時超過 100 個連線，可能令你嘅電腦或網絡負荷過重，並令呢個節點斷線。</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>要搜尋嘅近期區塊：</translation>
     </message>

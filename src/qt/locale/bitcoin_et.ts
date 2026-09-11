@@ -5409,6 +5409,10 @@ Proovi kasutada tarkvara uusimat versiooni.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Hoiatus: üle 100 ühenduse sekundis, piiramatu ühendussagedus või üle 100 samaaegse ühenduse võivad teie arvutit või võrku üle koormata ja selle sõlme ühenduse katkestada.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Läbiotsitavad viimased plokid:</translation>
     </message>

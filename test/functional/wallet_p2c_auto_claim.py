@@ -34,13 +34,13 @@ class P2CAutoClaimTest(BitcoinTestFramework):
         claimant = node.get_wallet_rpc("auto-claimant")
         initial_status = claimant.getp2cclaimstatus()
         assert_equal(initial_status["connections_per_second"], 0)
-        assert_equal(initial_status["concurrency"], 1000)
+        assert_equal(initial_status["concurrency"], 100)
         assert_equal(initial_status["recent_blocks"], 600)
         assert_equal(initial_status["reward_address"], "")
         # Omitting concurrency must apply the same default as a fresh wallet,
         # including when disabling claims. This does not start HTTPS.
-        assert_equal(claimant.setp2cclaiming(0)["concurrency"], 1000)
-        assert_equal(claimant.setp2cclaiming(0, None)["concurrency"], 1000)
+        assert_equal(claimant.setp2cclaiming(0)["concurrency"], 100)
+        assert_equal(claimant.setp2cclaiming(0, None)["concurrency"], 100)
         assert_equal(claimant.setp2cclaiming(0, recent_blocks=None)["recent_blocks"], 600)
         for recent_blocks in (1, 600, 0, 2**31 - 1):
             progress = claimant.setp2cclaiming(0, recent_blocks=recent_blocks)
@@ -51,7 +51,10 @@ class P2CAutoClaimTest(BitcoinTestFramework):
         for recent_blocks in (2**31, -(2**31) - 1):
             assert_raises_rpc_error(-1, "JSON integer out of range", claimant.setp2cclaiming, 0, recent_blocks=recent_blocks)
             assert_equal(claimant.getp2cclaimstatus()["recent_blocks"], 2**31 - 1)
-        assert_raises_rpc_error(-3, "Wrong type passed", claimant.setp2cclaiming, 0, recent_blocks="600")
+        # CLI numeric arguments are parsed as JSON. Keep this value a string
+        # in both transports instead of letting the CLI convert it to 600.
+        invalid_recent_blocks = '"600"' if self.options.usecli else "600"
+        assert_raises_rpc_error(-3, "Wrong type passed", claimant.setp2cclaiming, 0, recent_blocks=invalid_recent_blocks)
         assert_equal(claimant.getp2cclaimstatus()["recent_blocks"], 2**31 - 1)
         # Both positional and named CLI arguments must parse this as a number.
         cli = node.cli("-rpcwallet=auto-claimant")
@@ -105,7 +108,7 @@ class P2CAutoClaimTest(BitcoinTestFramework):
         node.unloadwallet("auto-claimant")
         node.loadwallet("auto-claimant")
         assert_equal(claimant.getp2cclaimstatus()["connections_per_second"], 0)
-        assert_equal(claimant.getp2cclaimstatus()["concurrency"], 1000)
+        assert_equal(claimant.getp2cclaimstatus()["concurrency"], 100)
         assert_equal(claimant.getp2cclaimstatus()["recent_blocks"], 600)
         claimant.setp2cclaiming(1, 2, ["never-funded.invalid"])
         claimant.setp2cclaiming(0)

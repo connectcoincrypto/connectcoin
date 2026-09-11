@@ -5490,6 +5490,10 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Огоҳлантириш: сониясига 100 тадан ортиқ уланиш, чексиз тезлик ёки бир вақтнинг ўзида 100 тадан ортиқ уланиш компьютерингиз ёки тармоғингизга ортиқча юк тушириши ва бу тугун билан алоқани узиши мумкин.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Қидириладиган сўнгги блоклар:</translation>
     </message>

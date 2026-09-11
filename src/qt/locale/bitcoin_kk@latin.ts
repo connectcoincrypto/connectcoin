@@ -4982,6 +4982,10 @@ Bağdarlamanıŋ eŋ soŋğı nūsqasın iske qosıp köriŋiz.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Eskertu: sekundyna 100-den astam qosylym, şekteusız jyldamdyq nemese 100-den astam bır mezgıldegı qosylym kompüterıñızge nemese jelıñızge şamadan tys jükteme tüsırıp, osy tüiınnıñ bailanysyn üzuı mümkın.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>İzdeletın soŋğy bloktar:</translation>
     </message>

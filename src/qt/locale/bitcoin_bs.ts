@@ -5021,6 +5021,10 @@ Pokušajte pokrenuti najnoviju verziju softvera.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Upozorenje: više od 100 veza u sekundi, neograničena stopa ili više od 100 istovremenih veza mogu preopteretiti vaš računar ili mrežu i prekinuti vezu ovog čvora.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Nedavni blokovi za pretragu:</translation>
     </message>

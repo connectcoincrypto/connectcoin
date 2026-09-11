@@ -36,6 +36,57 @@ endfunction()
 
 create_test_config()
 
+if(BUILD_TESTS)
+  # Configure separately so the fixture does not inherit the module's GLOBAL
+  # include guard or mutate flags in this project (or any of its dependencies).
+  set(flag_probe_args
+    -S "${CMAKE_CURRENT_SOURCE_DIR}/cmake/try_append_cxx_flags"
+    -B "${CMAKE_CURRENT_BINARY_DIR}/cmake/try_append_cxx_flags"
+    -G "${CMAKE_GENERATOR}"
+    -U "CXX_SUPPORTS_*"
+    -U "LINKER_SUPPORTS_*"
+    -U "WARNING_COMPILES_WITHOUT_WERROR"
+  )
+  foreach(generator_option IN ITEMS PLATFORM TOOLSET)
+    if(CMAKE_GENERATOR_${generator_option})
+      if(generator_option STREQUAL "PLATFORM")
+        list(APPEND flag_probe_args -A "${CMAKE_GENERATOR_PLATFORM}")
+      else()
+        list(APPEND flag_probe_args -T "${CMAKE_GENERATOR_TOOLSET}")
+      endif()
+    endif()
+  endforeach()
+  set(flag_probe_variables
+    CMAKE_GENERATOR_INSTANCE CMAKE_MAKE_PROGRAM CMAKE_TOOLCHAIN_FILE
+    CMAKE_CXX_COMPILER CMAKE_CXX_COMPILER_ARG1 CMAKE_CXX_COMPILER_TARGET
+    CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN CMAKE_AR CMAKE_RANLIB CMAKE_LINKER
+    CMAKE_CXX_FLAGS CMAKE_EXE_LINKER_FLAGS CMAKE_BUILD_TYPE
+    CMAKE_SYSROOT CMAKE_SYSROOT_COMPILE CMAKE_SYSROOT_LINK CMAKE_FIND_ROOT_PATH
+    CMAKE_OSX_SYSROOT CMAKE_OSX_DEPLOYMENT_TARGET CMAKE_OSX_ARCHITECTURES
+    CMAKE_TRY_COMPILE_CONFIGURATION CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
+    VCPKG_INSTALLED_DIR VCPKG_TARGET_TRIPLET VCPKG_HOST_TRIPLET
+    VCPKG_CHAINLOAD_TOOLCHAIN_FILE
+    ${CMAKE_TRY_COMPILE_PLATFORM_VARIABLES}
+  )
+  if(CMAKE_CROSSCOMPILING)
+    list(APPEND flag_probe_variables CMAKE_SYSTEM_NAME CMAKE_SYSTEM_VERSION CMAKE_SYSTEM_PROCESSOR)
+  endif()
+  foreach(config IN ITEMS DEBUG RELEASE RELWITHDEBINFO MINSIZEREL)
+    list(APPEND flag_probe_variables CMAKE_CXX_FLAGS_${config} CMAKE_EXE_LINKER_FLAGS_${config})
+  endforeach()
+  foreach(var IN LISTS flag_probe_variables)
+    if(DEFINED ${var})
+      # Each -D must remain one command argument, including list-valued settings.
+      string(REPLACE ";" "\\;" flag_probe_value "${${var}}")
+      list(APPEND flag_probe_args "-D${var}:STRING=${flag_probe_value}")
+    endif()
+  endforeach()
+  # Keep the fixture dependency-free even when a forwarded toolchain uses vcpkg.
+  list(APPEND flag_probe_args -DVCPKG_MANIFEST_INSTALL:BOOL=OFF)
+  add_test(NAME cmake_try_append_cxx_flags COMMAND "${CMAKE_COMMAND}" ${flag_probe_args})
+  set_tests_properties(cmake_try_append_cxx_flags PROPERTIES LABELS "cmake" TIMEOUT 180)
+endif()
+
 
 function(create_test_directory_links)
   file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/functional)

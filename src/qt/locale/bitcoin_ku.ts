@@ -5076,6 +5076,10 @@ Ji kerema xwe xebitandina guhertoya nermalavê ya herî nû biceribîne.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Hişyarî: zêdetirî 100 girêdan di saniyeyê de, rêjeya bêsînor an zêdetirî 100 girêdanên hevdem dikarin barekî zêde li ser kompîtur an tora we çêkin û girêdana vê girêkê qut bikin.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Blokên dawî yên ku bên lêgerîn:</translation>
     </message>

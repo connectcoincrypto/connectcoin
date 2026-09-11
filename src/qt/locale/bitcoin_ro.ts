@@ -5577,6 +5577,10 @@ Portofelul poate fi creat cu o versiune mai nouă.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Avertisment: peste 100 de conexiuni pe secundă, o viteză nelimitată sau peste 100 de conexiuni simultane pot suprasolicita calculatorul sau rețeaua și pot deconecta acest nod.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Blocuri recente de căutat:</translation>
     </message>

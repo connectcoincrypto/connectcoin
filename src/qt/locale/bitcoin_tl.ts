@@ -4848,6 +4848,10 @@ Subukang patakbuhin ang pinakabagong bersiyon ng software.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Babala: ang higit sa 100 koneksyon bawat segundo, walang limitasyon sa bilis, o higit sa 100 sabay-sabay na koneksyon ay maaaring magdulot ng labis na pagkarga sa iyong computer o network at magdiskonekta sa node na ito.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Mga kamakailang bloke na hahanapan:</translation>
     </message>

@@ -5058,6 +5058,10 @@ Tafadhali jaribu kuendesha toleo la karibuni zaidi la programu.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Onyo: zaidi ya miunganisho 100 kwa sekunde, kasi isiyo na kikomo au zaidi ya miunganisho 100 kwa wakati mmoja vinaweza kulemea kompyuta au mtandao wako na kukata muunganisho wa nodi hii.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Vitalu vya hivi karibuni vya kutafuta:</translation>
     </message>

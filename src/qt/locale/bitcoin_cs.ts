@@ -5437,6 +5437,10 @@ Zvažte úpravu %s (%s) nebo %s (%s).</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Varování: více než 100 připojení za sekundu, neomezená rychlost nebo více než 100 současných připojení mohou přetížit váš počítač či síť a odpojit tento uzel.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Počet posledních bloků k prohledání:</translation>
     </message>

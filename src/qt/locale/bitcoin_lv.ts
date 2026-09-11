@@ -5415,6 +5415,10 @@ Mēģiniet palaist jaunāko programmatūras versiju.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Brīdinājums: vairāk nekā 100 savienojumi sekundē, neierobežots ātrums vai vairāk nekā 100 vienlaicīgi savienojumi var pārslogot datoru vai tīklu un atvienot šo mezglu.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Meklējamie jaunākie bloki:</translation>
     </message>

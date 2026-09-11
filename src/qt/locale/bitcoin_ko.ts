@@ -5599,6 +5599,10 @@ Consider modifying %s (%s) or %s (%s).</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>경고: 초당 연결 수가 100개를 초과하거나, 속도를 무제한으로 설정하거나, 동시 연결 수가 100개를 초과하면 컴퓨터 또는 네트워크에 과부하가 발생하여 이 노드의 연결이 끊어질 수 있습니다.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>검색할 최근 블록 수:</translation>
     </message>

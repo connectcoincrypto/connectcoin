@@ -54,7 +54,7 @@ P2CClaimDialog::P2CClaimDialog(QWidget* parent) : QWidget(parent)
     m_rate->setRange(0, 1'000'000);
     // This is only the proposed rate. The worker remains disabled until the
     // user presses Apply / start and accepts the confirmation.
-    m_rate->setValue(1000);
+    m_rate->setValue(100);
     form->addRow(tr("Connections per second (this wallet):"), m_rate);
     auto* rate_hint = new QLabel(tr("0 disables HTTPS. For no rate limit, select Unlimited rate below."), this);
     rate_hint->setWordWrap(true);
@@ -68,6 +68,17 @@ P2CClaimDialog::P2CClaimDialog(QWidget* parent) : QWidget(parent)
     m_concurrency->setRange(1, std::numeric_limits<int>::max());
     m_concurrency->setValue(wallet::DEFAULT_P2C_CLAIM_CONCURRENCY);
     form->addRow(tr("Simultaneous connections:"), m_concurrency);
+    m_load_warning = new QLabel(tr("Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node."), this);
+    m_load_warning->setObjectName("p2cClaimLoadWarning");
+    m_load_warning->setTextFormat(Qt::PlainText);
+    m_load_warning->setWordWrap(true);
+    m_load_warning->setMargin(10);
+    m_load_warning->setStyleSheet("QLabel { color: white; background-color: #b00020; font-weight: bold; border-radius: 4px; }");
+    form->addRow(m_load_warning);
+    connect(m_rate, &QSpinBox::valueChanged, this, &P2CClaimDialog::UpdateLoadWarning);
+    connect(m_concurrency, &QSpinBox::valueChanged, this, &P2CClaimDialog::UpdateLoadWarning);
+    connect(m_unlimited, &QCheckBox::toggled, this, &P2CClaimDialog::UpdateLoadWarning);
+    UpdateLoadWarning();
     m_recent_blocks = new QSpinBox(this);
     m_recent_blocks->setObjectName("p2cClaimRecentBlocks");
     m_recent_blocks->setRange(1, std::numeric_limits<int>::max());
@@ -117,8 +128,17 @@ P2CClaimDialog::P2CClaimDialog(QWidget* parent) : QWidget(parent)
 void P2CClaimDialog::setModel(WalletModel* model)
 {
     m_model = model;
+    m_active_high_load = false;
+    UpdateLoadWarning();
     setEnabled(model != nullptr);
     Refresh();
+}
+
+void P2CClaimDialog::UpdateLoadWarning()
+{
+    // Advisory only: neither high settings nor an unlimited rate block Start.
+    // Keep warning about an active configuration even while editing lower values.
+    m_load_warning->setVisible(m_active_high_load || m_unlimited->isChecked() || m_rate->value() > 100 || m_concurrency->value() > 100);
 }
 
 void P2CClaimDialog::Configure(bool stop)
@@ -126,6 +146,7 @@ void P2CClaimDialog::Configure(bool stop)
     if (!m_model || m_operation.valid()) return;
     m_configuration_error.clear();
     const int rate{stop ? 0 : m_unlimited->isChecked() ? -1 : m_rate->value()};
+    const int concurrency{m_concurrency->value()};
     const int recent_blocks{m_unlimited_history->isChecked() ? 0 : m_recent_blocks->value()};
     const QString reward_address{stop ? QString{} : m_address->text().trimmed()};
     std::vector<std::string> domains;
@@ -133,11 +154,13 @@ void P2CClaimDialog::Configure(bool stop)
     if (rate != 0) {
         const QPointer<P2CClaimDialog> guard{this};
         const QPointer<WalletModel> model{m_model};
-        auto* confirmation = new QMessageBox(QMessageBox::Question, tr("Enable automatic P2C claiming?"),
+        const bool high_load{rate < 0 || rate > 100 || concurrency > 100};
+        auto* confirmation = new QMessageBox(high_load ? QMessageBox::Warning : QMessageBox::Question, tr("Enable automatic P2C claiming?"),
             tr("This makes direct HTTPS connections to public domains and automatically submits successful claims. Your IP address is visible to those servers. Proxy configurations are not bypassed. Fees are deducted from rewards.\n\n%1\n\nContinue?")
                 .arg((rate < 0 ? tr("You selected UNLIMITED connections per second.") : tr("Rate: %1 connections per second for this wallet.").arg(rate)) +
                      QStringLiteral("\n") + tr("Reward target: %1").arg(reward_address.isEmpty() ? tr("This wallet (default)") : reward_address.toHtmlEscaped())),
             QMessageBox::Yes | QMessageBox::No, this);
+        if (high_load) confirmation->setInformativeText(m_load_warning->text());
         // The wallet/page can disappear during exec(). A stack-owned modal
         // parented to this page would also be destroyed by its parent's teardown.
         confirmation->setAttribute(Qt::WA_DeleteOnClose);
@@ -148,7 +171,7 @@ void P2CClaimDialog::Configure(bool stop)
     }
     if (stop) { m_unlimited->setChecked(false); m_rate->setValue(0); }
     try {
-        m_operation = m_model->wallet().configureP2CClaiming(rate, m_concurrency->value(), stop ? std::vector<std::string>{} : std::move(domains),
+        m_operation = m_model->wallet().configureP2CClaiming(rate, concurrency, stop ? std::vector<std::string>{} : std::move(domains),
                                                           reward_address.toStdString(), recent_blocks);
     } catch (const std::exception& error) {
         m_configuration_error = QString::fromUtf8(error.what());
@@ -197,6 +220,8 @@ void P2CClaimDialog::Refresh()
         }
         const auto progress = m_model->wallet().getP2CClaimStatus();
         const int rate = progress["connections_per_second"].getInt<int>();
+        m_active_high_load = rate != 0 && (rate < 0 || rate > 100 || progress["concurrency"].getInt<int>() > 100);
+        UpdateLoadWarning();
         const QString rate_text = rate == -1 ? tr("Unlimited") : rate == 0 ? tr("Disabled (0)") : QString::number(rate);
         const auto reward_address{QString::fromStdString(progress["reward_address"].get_str())};
         m_reward_status->setText(tr("Reward target: %1").arg(reward_address.isEmpty() ? tr("This wallet (default)") : reward_address));

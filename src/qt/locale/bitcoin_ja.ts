@@ -5603,6 +5603,10 @@ Consider modifying %s (%s) or %s (%s).</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>警告: 1秒あたりの接続数が100を超える場合、接続速度を無制限にする場合、または同時接続数が100を超える場合、コンピューターやネットワークに過剰な負荷がかかり、このノードの接続が切断される可能性があります。</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>検索する直近のブロック数:</translation>
     </message>

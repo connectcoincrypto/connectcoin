@@ -5179,6 +5179,10 @@ Provoni të ekzekutoni versionin më të fundit të programit.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node.</source>
+        <translation>Paralajmërim: më shumë se 100 lidhje në sekondë, shpejtësia pa kufi ose më shumë se 100 lidhje të njëkohshme mund të mbingarkojnë kompjuterin ose rrjetin tuaj dhe të shkëputin këtë nyjë.</translation>
+    </message>
+    <message>
         <source>Recent blocks to search:</source>
         <translation>Blloqe të fundit për t’u kërkuar:</translation>
     </message>

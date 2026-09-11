@@ -15,7 +15,7 @@ class UniValue;
 
 namespace wallet {
 class CWallet;
-inline constexpr int DEFAULT_P2C_CLAIM_CONCURRENCY{1000};
+inline constexpr int DEFAULT_P2C_CLAIM_CONCURRENCY{100};
 inline constexpr int DEFAULT_P2C_BOUNTY_LOOKBACK{600};
 /** Wallet-owned, opt-in worker. Never owns a shared_ptr back to its wallet.
  * Stop before unloading the wallet/chain. All HTTPS is outside wallet locks.
