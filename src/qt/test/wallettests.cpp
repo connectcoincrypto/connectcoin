@@ -847,7 +847,7 @@ void TestP2CGUI(interfaces::Node& node)
     QTRY_VERIFY(claim_load_warning->isHidden());
     const auto external{EncodeDestination(ExternalTestDestination())};
     // Independently exercise every active-status branch with safe GUI fields.
-    for (const auto [rate, concurrency] : {std::pair{101, 100}, std::pair{100, 101}, std::pair{-1, 100}}) {
+    for (const auto& [rate, concurrency] : {std::pair{101, 100}, std::pair{100, 101}, std::pair{-1, 100}}) {
         auto reset_claims = gui.walletModel->wallet().configureP2CClaiming(10, 100, {"unfunded.example"});
         QVERIFY(reset_claims.get().empty());
         QTRY_VERIFY(claim_load_warning->isHidden());

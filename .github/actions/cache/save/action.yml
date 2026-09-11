@@ -42,7 +42,9 @@ runs:
 
     - name: Save depends sources cache
       uses: ./.github/actions/cache/save/internal
-      if: ${{ (success() || failure()) && github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') && steps.depends-status.outputs.complete == 'true' && env.depends-sources-cache-hit != 'true' }}
+      # Per-platform source archives duplicate downloads in GHA's shared
+      # storage budget. Keep built depends (including Qt) cached below instead.
+      if: ${{ (success() || failure()) && inputs.provider != 'gha' && github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') && steps.depends-status.outputs.complete == 'true' && env.depends-sources-cache-hit != 'true' }}
       with:
         path: ${{ env.SOURCES_PATH }}
         key: depends-sources-${{ env.CI_CACHE_NAME }}-${{ env.DEPENDS_HASH }}

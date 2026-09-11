@@ -7,6 +7,7 @@ Never sources/runs a whole CI script. All fixture effects stay in temporary dire
 No dependency builds, containers, cache uploads, or network access occur.
 """
 import ast
+import hashlib
 import itertools
 import os
 from pathlib import Path
@@ -19,9 +20,11 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 BASH = shutil.which('bash')
+MAKE = shutil.which('make')
 HOST_SOURCE = (ROOT / 'ci/test_run_all.sh').read_text(encoding='utf-8')
 GUEST_SOURCE = (ROOT / 'ci/test/03_test_script.sh').read_text(encoding='utf-8')
 SAVE_SOURCE = (ROOT / '.github/actions/cache/save/action.yml').read_text(encoding='utf-8')
+RESTORE_SOURCE = (ROOT / '.github/actions/cache/restore/action.yml').read_text(encoding='utf-8')
 INTERNAL_SOURCE = (ROOT / '.github/actions/cache/save/internal/action.yml').read_text(encoding='utf-8')
 WORKFLOWS = '\n'.join((ROOT / '.github/workflows' / name).read_text(encoding='utf-8')
                       for name in ('ci.yml', 'ci-windows-cross.yml'))
@@ -44,6 +47,7 @@ def predicate(block):
 
 
 SAVE_STEPS = dict(step_blocks(SAVE_SOURCE))
+RESTORE_STEPS = dict(step_blocks(RESTORE_SOURCE))
 VALIDATION = textwrap.dedent(SAVE_STEPS['Check completed dependency build'].split('run: |\n', 1)[1])
 
 
@@ -196,6 +200,84 @@ export -f make
         self.assertIn('"CI_DEPENDS_CACHE_RUN",', source)
         self.assertIn('CI_CACHE_RUN: ${{ github.run_id }}:${{ github.run_attempt }}:${{ github.job }}:${{ env.CONTAINER_NAME }}', SAVE_SOURCE)
 
+    def test_built_depends_without_downloaded_sources(self):
+        """Execute the real package rules, with fetching replaced by a tripwire."""
+        if MAKE is None or BASH is None:
+            self.skipTest('GNU make and bash are required')
+        version = subprocess.run([MAKE, '--version'], capture_output=True, text=True, timeout=10)
+        if 'GNU Make' not in version.stdout:
+            self.skipTest('GNU make is required')
+
+        def definition(path, name):
+            source = (ROOT / path).read_text(encoding='utf-8')
+            match = re.search(rf'^define {name}\n.*?^endef$', source, re.M | re.S)
+            self.assertIsNotNone(match, name)
+            return match.group()
+
+        # Relative paths keep the fixture portable even when its directory has
+        # spaces. The production checksum check changes into BASE_CACHE/host/pkg;
+        # using '.' for these three components keeps that directory unchanged.
+        fixture = '''
+.DEFAULT_GOAL := all
+BASE_CACHE := .
+host := .
+package := .
+build_SHA256SUM := sha256sum
+build_TAR := tar
+build_TOUCH := touch
+SOURCES_PATH := sources
+._cached := package.tar
+._cached_checksum := package.tar.hash
+._source_dir := sources
+._fetched := sources/download-stamps/fetched
+._all_sources := input.tar
+._extracted := work/extracted
+._preprocessed := work/preprocessed
+._configured := work/configured
+._built := work/built
+._staged := work/staged
+._postprocessed := work/postprocessed
+._fetch_cmds := echo CACHE_FIXTURE_FETCH_ATTEMPTED; false
+.PHONY: all check-packages
+all: check-packages .
+check-packages:
+\t@$(call check_or_remove_cached,.)
+'''
+        fixture += definition('depends/Makefile', 'check_or_remove_cached') + '\n'
+        fixture += definition('depends/funcs.mk', 'int_add_cmds') + '\n'
+        fixture += '$(eval $(call int_add_cmds,.))\n'
+        payload = b'already built dependency package\n'
+        cache = self.directory / 'package.tar'
+        checksum = self.directory / 'package.tar.hash'
+        for state in ('valid', 'corrupt', 'missing'):
+            with self.subTest(state=state):
+                if cache.exists():
+                    cache.unlink()
+                if state != 'missing':
+                    cache.write_bytes(payload if state == 'valid' else b'corrupt package\n')
+                checksum.write_text(hashlib.sha256(payload).hexdigest() + '  package.tar\n', encoding='utf-8', newline='\n')
+                self.assertFalse((self.directory / 'sources/input.tar').exists())
+                result = subprocess.run([MAKE, '-f', '-', '-j1', f'SHELL={BASH}'], input=fixture,
+                                        cwd=self.directory, env=self.env, capture_output=True,
+                                        text=True, timeout=10)
+                if state == 'valid':
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                    self.assertNotIn('CACHE_FIXTURE_FETCH_ATTEMPTED', result.stdout)
+                    self.assertFalse((self.directory / 'sources').exists())
+                else:
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn('CACHE_FIXTURE_FETCH_ATTEMPTED', result.stdout, result.stderr)
+                    self.assertFalse(cache.exists())
+
+    def test_real_yaml_restore_gates(self):
+        for provider in ('gha', 'warp'):
+            with self.subTest(provider=provider):
+                self.assertEqual(evaluate(predicate(RESTORE_STEPS['Restore depends sources cache']),
+                                          {'inputs.provider': provider}, 'success'), provider != 'gha')
+        for name in ('Restore Ccache cache', 'Restore built depends cache'):
+            self.assertNotRegex(RESTORE_STEPS[name], re.compile(r'^\s+if:', re.M), name)
+            self.assertIn('uses: ./.github/actions/cache/restore/internal', RESTORE_STEPS[name])
+
     def test_real_yaml_gates(self):
         checks = 0
         for status, event, provider, branch, shard, complete, sources_hit, built_hit in itertools.product(
@@ -212,6 +294,8 @@ export -f make
             for name in ('Save Ccache cache', 'Save depends sources cache', 'Save built depends cache'):
                 cache_hit = sources_hit if name == 'Save depends sources cache' else built_hit
                 expected = allowed and (name == 'Save Ccache cache' or (complete == 'true' and cache_hit != 'true'))
+                if name == 'Save depends sources cache' and provider == 'gha':
+                    expected = False
                 self.assertEqual(evaluate(predicate(SAVE_STEPS[name]), context, status), expected,
                                  (name, status, event, provider, branch, shard, complete, sources_hit, built_hit))
                 checks += 1

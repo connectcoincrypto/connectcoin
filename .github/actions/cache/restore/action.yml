@@ -21,6 +21,9 @@ runs:
     - name: Restore depends sources cache
       id: depends-sources
       uses: ./.github/actions/cache/restore/internal
+      # Preserve GHA storage for built packages and compiler outputs. Sources
+      # are checksum-verified downloads needed only when a package must rebuild.
+      if: ${{ inputs.provider != 'gha' }}
       with:
         path: ${{ env.SOURCES_PATH }}
         # Shards have different container names but identical dependencies.

@@ -52,12 +52,19 @@ int main() { return 0; }
 include(CMakePushCheckState)
 cmake_push_check_state(RESET)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
-# The parent project may already enable warnings as errors globally.
+# The parent project may promote all warnings or this specific diagnostic.
 if(MSVC)
   set(CMAKE_REQUIRED_FLAGS "/WX-")
 else()
   set(CMAKE_REQUIRED_FLAGS "-Wno-error")
 endif()
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  string(APPEND CMAKE_REQUIRED_FLAGS " -Wno-error=#warnings")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  string(APPEND CMAKE_REQUIRED_FLAGS " -Wno-error=cpp")
+endif()
+# Rerun the fixture baseline, including after a previous warning-policy failure.
+unset(WARNING_COMPILES_WITHOUT_WERROR CACHE)
 check_cxx_source_compiles("${warning_source}" WARNING_COMPILES_WITHOUT_WERROR)
 cmake_pop_check_state()
 if(NOT WARNING_COMPILES_WITHOUT_WERROR)
