@@ -6,11 +6,11 @@
 #include <connectcoin-build-config.h> // IWYU pragma: keep
 
 #include <util/fs_helpers.h>
+
 #include <random.h>
 #include <sync.h>
 #include <tinyformat.h>
 #include <util/byte_units.h> // IWYU pragma: keep
-#include <util/check.h>
 #include <util/fs.h>
 #include <util/log.h>
 #include <util/syserror.h>
@@ -29,12 +29,11 @@
 #include <utility>
 
 #ifndef WIN32
-#include <util/string.h>
-
 #include <fcntl.h>
 #include <sys/resource.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <util/string.h>
 #else
 #include <io.h>
 #include <shlobj.h>

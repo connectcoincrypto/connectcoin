@@ -34,19 +34,18 @@ class SetBanTests(BitcoinTestFramework):
         self.restart_node(1, [])
         context = ExitStack()
         context.enter_context(self.nodes[1].assert_debug_log(expected_msgs=["dropped (banned)\n"]))
-        # When disconnected right after connecting, a v2 node will attempt to reconnect with v1.
-        # Wait for all disconnects on node0, so that it cannot mess with later tests.
+        # Probe the ban with v1 so exactly one disconnect must finish before
+        # later tests. A rejected v2 connection only retries v1 if it sent at
+        # least a v1 header's worth of bytes before the remote socket closed;
+        # an immediate ban can close it before that, depending on scheduling.
+        # The initial and subsequent permitted connections still test v2 when
+        # --v2transport is enabled.
         context.enter_context(self.nodes[0].assert_debug_log(
-            expected_msgs=[
-                "retrying with v1 transport protocol for peer=2",
-                "Cleared nodestate for peer=2",
-                "Cleared nodestate for peer=3",
-            ] if self.options.v2transport else [
-                "Cleared nodestate for peer=2",  # Just one v1 disconnect to wait for
-            ],
+            expected_msgs=["Cleared nodestate for peer=2"],
+            unexpected_msgs=["retrying with v1 transport protocol"],
             timeout=8))
         with context:
-            self.nodes[0].addnode("127.0.0.1:" + str(p2p_port(1)), "onetry")
+            self.nodes[0].addnode("127.0.0.1:" + str(p2p_port(1)), "onetry", v2transport=False)
         assert not self.nodes[0].is_connected_to(self.nodes[1])
 
         # However, node 0 should be able to reconnect if it has noban permission

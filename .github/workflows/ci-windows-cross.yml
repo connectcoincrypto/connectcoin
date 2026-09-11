@@ -1,0 +1,138 @@
+# Copyright (c) 2026 The ConnectCoin developers
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or https://opensource.org/license/mit/.
+
+name: Windows cross-build and native tests
+on:
+  workflow_call:
+    inputs:
+      commit:
+        description: Frozen commit shared by the build and its native tests
+        required: true
+        type: string
+      crt:
+        description: CRT selected by the caller's fixed matrix
+        required: true
+        type: string
+      file-env:
+        description: CI configuration selected by the caller's fixed matrix
+        required: true
+        type: string
+      artifact-name:
+        description: CRT-specific artifact prefix selected by the caller's fixed matrix
+        required: true
+        type: string
+
+# Caller workflow env/defaults are not inherited by a reusable workflow.
+env:
+  CI_FAILFAST_TEST_LEAVE_DANGLING: 1
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  windows-cross:
+    name: 'Windows-cross to x86_64, ${{ inputs.crt }}'
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    env:
+      FILE_ENV: ${{ inputs.file-env }}
+      DANGER_CI_ON_HOST_FOLDERS: 1
+      CI_PRUNE_BUILDX_AFTER_IMAGE: 1
+
+    steps:
+      - &ANNOTATION_PR_NUMBER
+        name: Annotate with pull request number
+        # Keep the machine-readable PR annotation in both check runs.
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "::notice title=debug_pull_request_number_str::${{ github.event.number }}"
+          fi
+
+      - &FROZEN_CHECKOUT
+        name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.commit }}
+
+      - name: Configure environment
+        uses: ./.github/actions/configure-environment
+
+      - name: Restore caches
+        id: restore-cache
+        uses: ./.github/actions/cache/restore
+        with:
+          provider: gha
+
+      - name: Configure Docker
+        uses: ./.github/actions/configure-docker
+        with:
+          provider: gha
+
+      - name: CI script
+        run: ./ci/test_run_all.sh
+
+      - name: Save caches
+        uses: ./.github/actions/cache/save
+        if: ${{ (success() || failure()) && github.event_name == 'push' }}
+        with:
+          provider: gha
+
+      - name: Upload built executables
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ inputs.artifact-name }}-${{ github.run_id }}
+          path: |
+            ${{ env.BASE_BUILD_DIR }}/bin/*.dll
+            ${{ env.BASE_BUILD_DIR }}/bin/*.exe
+            ${{ env.BASE_BUILD_DIR }}/src/secp256k1/bin/*.exe
+            ${{ env.BASE_BUILD_DIR }}/src/univalue/*.exe
+            ${{ env.BASE_BUILD_DIR }}/test/config.ini
+
+  windows-native-test:
+    name: 'Windows, ${{ inputs.crt }}, test cross-built'
+    runs-on: windows-2022
+    needs: windows-cross
+    timeout-minutes: 360
+
+    env:
+      PYTHONUTF8: 1
+      TEST_RUNNER_TIMEOUT_FACTOR: 40
+
+    steps:
+      - *ANNOTATION_PR_NUMBER
+
+      - *FROZEN_CHECKOUT
+
+      - name: Download built executables
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ inputs.artifact-name }}-${{ github.run_id }}
+
+      - name: Run connectcoind.exe
+        run: py -3 .github/ci-windows-cross.py print_version
+
+      - name: Import Visual Studio env vars
+        run: py -3 .github/ci-windows.py "standard" github_import_vs_env
+
+      - name: Check imported DLLs
+        env:
+          CRT: ${{ inputs.crt }}
+        run: py -3 .github/ci-windows-cross.py check_imports
+
+      - name: Check executable manifests
+        run: py -3 .github/ci-windows-cross.py check_manifests
+
+      - name: Prepare Windows test environment
+        run: py -3 .github/ci-windows-cross.py prepare_tests
+
+      - name: Run unit tests
+        run: py -3 .github/ci-windows-cross.py run_unit_tests
+
+      - name: Run functional tests
+        env:
+          TEST_RUNNER_EXTRA: "--timeout-factor=${{ env.TEST_RUNNER_TIMEOUT_FACTOR }} ${{ case(github.event_name == 'pull_request', '', '--extended') }}"
+        run: |
+          py -3 .github/ci-windows-cross.py run_functional_tests

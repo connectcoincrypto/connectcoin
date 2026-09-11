@@ -23,7 +23,8 @@ HOST_SOURCE = (ROOT / 'ci/test_run_all.sh').read_text(encoding='utf-8')
 GUEST_SOURCE = (ROOT / 'ci/test/03_test_script.sh').read_text(encoding='utf-8')
 SAVE_SOURCE = (ROOT / '.github/actions/cache/save/action.yml').read_text(encoding='utf-8')
 INTERNAL_SOURCE = (ROOT / '.github/actions/cache/save/internal/action.yml').read_text(encoding='utf-8')
-WORKFLOW = (ROOT / '.github/workflows/ci.yml').read_text(encoding='utf-8')
+WORKFLOWS = '\n'.join((ROOT / '.github/workflows' / name).read_text(encoding='utf-8')
+                      for name in ('ci.yml', 'ci-windows-cross.yml'))
 HOST_PREFIX = HOST_SOURCE.split('source ./ci/test/00_setup_env.sh', 1)[0]
 GUEST_PREFIX = GUEST_SOURCE.split('cd "${BASE_ROOT_DIR}"', 1)[0]
 DEPENDS_BLOCK = GUEST_SOURCE[GUEST_SOURCE.index('if [ -z "$NO_DEPENDS" ]; then'):].split('CONNECTCOIN_CONFIG_ALL=', 1)[0]
@@ -217,9 +218,9 @@ export -f make
         print(f'Validated {checks} cache-export predicate combinations', flush=True)
 
     def test_workflow_and_internal_gates(self):
-        steps = [block for name, block in step_blocks(WORKFLOW) if name == 'Save caches']
+        steps = [block for name, block in step_blocks(WORKFLOWS) if name == 'Save caches']
         self.assertEqual(len(steps), 2)
-        self.assertNotIn('name: Save Ccache cache after failure', WORKFLOW)
+        self.assertNotIn('name: Save Ccache cache after failure', WORKFLOWS)
         for block in steps:
             self.assertIn('uses: ./.github/actions/cache/save', block)
             expression = predicate(block)

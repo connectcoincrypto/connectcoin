@@ -12,6 +12,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <cassert>
+#include <memory>
 #include <thread>
 
 #ifdef USE_POLL
@@ -239,6 +240,30 @@ BOOST_AUTO_TEST_CASE(wait_many_readiness_and_timeout)
     BOOST_CHECK_EQUAL(events.at(first_receiver).occurred & both, both);
     BOOST_CHECK_EQUAL(events.at(second_receiver).occurred & both, both);
 }
+
+#ifdef WIN32
+BOOST_AUTO_TEST_CASE(wait_many_rejects_fd_set_overflow)
+{
+    struct UnownedSock : Sock {
+        explicit UnownedSock(SOCKET handle) : Sock{handle} {}
+        ~UnownedSock() override { m_socket = INVALID_SOCKET; }
+    };
+    Sock waiter{INVALID_SOCKET};
+    Sock::EventsPerSock events;
+    // EventsPerSock keys by handle, not object identity. Use distinct synthetic
+    // handles without acquiring/closing any OS socket. The size guard must
+    // reject the request before passing these values to Winsock.
+    for (int i{0}; i <= FD_SETSIZE; ++i) {
+        events.emplace(std::make_shared<UnownedSock>(static_cast<SOCKET>(i)), Sock::Events{Sock::RecvEvent});
+    }
+    BOOST_REQUIRE_EQUAL(events.size(), FD_SETSIZE + 1);
+    WSASetLastError(0);
+    const bool success{waiter.WaitMany(0ms, events)};
+    const int error{WSAGetLastError()};
+    BOOST_CHECK(!success);
+    BOOST_CHECK_EQUAL(error, WSAEINVAL);
+}
+#endif
 
 #ifdef USE_POLL
 #ifndef __NetBSD__

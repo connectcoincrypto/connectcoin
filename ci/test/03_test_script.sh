@@ -155,30 +155,7 @@ if [[ "${RUN_IWYU}" == true ]]; then
 fi
 
 ccache --version | head -n 1 && ccache --show-stats --verbose
-ccache --print-stats | python3 -c '
-import os
-import sys
-
-for line in sys.stdin:
-    key, value = line.split("\t", 1)
-    # "primary storage" fallback only needed for ccache version 4.5.1
-    if key in ("local_storage_hit", "primary_storage_hit"):
-        hits = int(value)
-    elif key in ("local_storage_miss", "primary_storage_miss"):
-        miss = int(value)
-
-calls = hits + miss
-# codegen has no calls, so skip that here
-if calls:
-    rate = (hits / calls * 100)
-    print(f"{rate:.2f}")
-    if rate < 75:
-        container = os.environ["CONTAINER_NAME"]
-        print(
-            "::notice title=low ccache hitrate::"
-            f"Ccache hit-rate in {container} was {rate:.2f}%"
-        )
-'
+ccache --print-stats | python3 "${BASE_ROOT_DIR}/ci/test/ccache_stats.py"
 du -sh "${DEPENDS_DIR}"/*/
 if [ -n "${CI_LIMIT_STACK_SIZE}" ]; then
   ulimit -s 512

@@ -382,7 +382,7 @@ struct P2CClaimWorkerImpl::Impl {
 
     // Called only once per refresh, never for each connection. The node catalog
     // itself applies block deltas; only P2C entries are visited here.
-    void Refresh(const std::atomic<bool>& stop)
+    void Refresh(const std::atomic<bool>& stop, ScheduleClock::time_point& refresh_after)
     {
         std::map<COutPoint, CTxOut> snapshot;
         std::set<COutPoint> recent_outpoints;
@@ -397,7 +397,12 @@ struct P2CClaimWorkerImpl::Impl {
                 catalog_masks.emplace(bounty->domain, bounty->signature_algorithms_mask);
             }
             return true;
-        }, [&] { return stop.load(); }, recent_blocks)) return;
+        }, [&] { return stop.load(); }, recent_blocks)) {
+            // Failed/unavailable discovery still waits a full interval before
+            // retrying; otherwise a stale deadline would rescan every 100 ms.
+            refresh_after = ScheduleClock::now() + SCHEDULE_REFRESH;
+            return;
+        }
 
         std::lock_guard work_lock{work_mutex};
         int wallet_height;
@@ -502,12 +507,18 @@ struct P2CClaimWorkerImpl::Impl {
             group->economic_key.reset();
             UpdateEconomicOrder(*group);
         }
-        if (groups.empty()) {
+        {
             std::lock_guard lock{mutex};
-            domain.clear();
-            state = snapshot.empty() ? "waiting for bounties" : "waiting for eligible bounties";
+            // Arm the next deadline before publishing completion. Otherwise a
+            // status observer can advance the mock clock after seeing this
+            // refresh, but before Run arms the next one, losing that advance.
+            refresh_after = ScheduleClock::now() + SCHEDULE_REFRESH;
+            if (groups.empty()) {
+                domain.clear();
+                state = snapshot.empty() ? "waiting for bounties" : "waiting for eligible bounties";
+            }
+            ++schedule_refreshes;
         }
-        { std::lock_guard lock{mutex}; ++schedule_refreshes; }
         wake.notify_all();
     }
 
@@ -728,7 +739,8 @@ struct P2CClaimWorkerImpl::Impl {
                 return !IsP2CClaimPayout(wallet, entry.second->vout[0], payout_destination);
             });
             Save();
-            Refresh(stop);
+            ScheduleClock::time_point refresh_after{};
+            Refresh(stop, refresh_after);
             std::atomic<bool> failed{false};
             std::exception_ptr search_error;
             std::vector<std::thread> connections;
@@ -745,7 +757,6 @@ struct P2CClaimWorkerImpl::Impl {
                     for (auto& connection : connections) if (connection.joinable()) connection.join();
                 }
             } stop_and_join{stop_requested, wake, connections};
-            auto refresh_after{ScheduleClock::now() + SCHEDULE_REFRESH};
             while (!stop.load() && !failed) {
                 // A huge configured concurrency with no eligible bounty must
                 // remain idle, not allocate OS threads speculatively.
@@ -778,8 +789,7 @@ struct P2CClaimWorkerImpl::Impl {
                     SubmitReady(stop);
                 }
                 if (ScheduleClock::now() >= refresh_after) {
-                    Refresh(stop);
-                    refresh_after = ScheduleClock::now() + SCHEDULE_REFRESH;
+                    Refresh(stop, refresh_after);
                 }
                 Pause(stop, std::chrono::milliseconds{100});
             }

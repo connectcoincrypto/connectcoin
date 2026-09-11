@@ -1218,6 +1218,33 @@ BOOST_FIXTURE_TEST_CASE(worker_filters_each_bounty_before_network_and_rechecks_e
     BOOST_CHECK(!wrong_domain);
 }
 
+BOOST_FIXTURE_TEST_CASE(worker_refresh_completion_arms_next_deadline, TestChain100Setup)
+{
+    using namespace std::chrono_literals;
+    FakeSteadyClock clock;
+    auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
+    auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
+    wallet->SetBroadcastTransactions(true);
+    auto worker{MakeP2CClaimWorker(*wallet)};
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    // A completed refresh is a synchronization boundary: immediately advancing
+    // five seconds must trigger the next refresh, even with no eligible work.
+    // Do not keep advancing the clock in the wait loop or extend its timeout;
+    // either would hide a deadline armed after completion became observable.
+    for (uint64_t expected{1}; expected <= 21; ++expected) {
+        const auto deadline{std::chrono::steady_clock::now() + 15s};
+        while (worker->Status()["schedule_refreshes"].getInt<uint64_t>() < expected &&
+               std::chrono::steady_clock::now() < deadline) {
+            std::this_thread::yield();
+        }
+        const auto status{worker->Status()};
+        BOOST_REQUIRE_EQUAL(status["schedule_refreshes"].getInt<uint64_t>(), expected);
+        BOOST_CHECK_EQUAL(status["attempts"].getInt<uint64_t>(), 0U);
+        clock += 5s;
+    }
+    worker->Stop();
+}
+
 BOOST_FIXTURE_TEST_CASE(worker_keeps_connection_history_separate_for_exact_signature_masks, TestChain100Setup)
 {
     using namespace std::chrono_literals;
