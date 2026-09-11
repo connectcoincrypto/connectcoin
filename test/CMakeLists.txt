@@ -36,6 +36,11 @@ if(BUILD_TESTING AND TARGET CapnProto::kj-test)
   target_link_libraries(mptest PRIVATE CapnProto::kj-test)
   target_link_libraries(mptest PRIVATE Threads::Threads)
 
+  add_executable(mpspawn_fd_check mp/test/spawn_fd_check.cpp)
+  target_link_libraries(mpspawn_fd_check PRIVATE Libmultiprocess::multiprocess Threads::Threads)
+  target_compile_definitions(mptest PRIVATE MP_SPAWN_FD_CHECK_PATH="$<TARGET_FILE:mpspawn_fd_check>")
+  add_dependencies(mptest mpspawn_fd_check)
+
   add_dependencies(mptests mptest)
   add_test(NAME mptest COMMAND mptest)
 endif()
