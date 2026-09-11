@@ -5344,6 +5344,18 @@ Bonvolu provi ruli la plej novan programaran version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Lastatempaj blokoj por serĉi:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Senlima blokhistorio</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Altaj limoj aŭ senlima historio povas inkluzivi malnovajn, neproduktemajn P2C-rekompencojn (&quot;senutilajn rekompencojn&quot;).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Nedevige: malplena kampo uzas ĉi tiun monujon</translation>
     </message>

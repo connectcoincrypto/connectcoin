@@ -98,12 +98,12 @@ P2CClaimPriority GetP2CClaimPriority(const uint256& target, CAmount net_reward)
     return MultiplyP2CTarget(target, static_cast<uint64_t>(net_reward));
 }
 
-bool IsP2CClaimAttemptLimitExceeded(const uint256& target, uint64_t attempts)
+bool IsP2CClaimConnectionLimitExceeded(const uint256& target, uint64_t successful_connections)
 {
-    // attempts * (target + 1) > 2^257. The full uint64 range fits in
+    // successful_connections * (target + 1) > 2^257. The full uint64 range fits in
     // 320 bits, including target=2^256-1; no rounded division or overflow.
     constexpr P2CClaimPriority twice_space{0, 2};
-    return MultiplyP2CTarget(target, attempts) > twice_space;
+    return MultiplyP2CTarget(target, successful_connections) > twice_space;
 }
 
 util::Result<CAmount> CalculateP2CClaimFee(const CFeeRate& rate, size_t proof_size)

@@ -35,11 +35,29 @@ class P2CAutoClaimTest(BitcoinTestFramework):
         initial_status = claimant.getp2cclaimstatus()
         assert_equal(initial_status["connections_per_second"], 0)
         assert_equal(initial_status["concurrency"], 1000)
+        assert_equal(initial_status["recent_blocks"], 600)
         assert_equal(initial_status["reward_address"], "")
         # Omitting concurrency must apply the same default as a fresh wallet,
         # including when disabling claims. This does not start HTTPS.
         assert_equal(claimant.setp2cclaiming(0)["concurrency"], 1000)
         assert_equal(claimant.setp2cclaiming(0, None)["concurrency"], 1000)
+        assert_equal(claimant.setp2cclaiming(0, recent_blocks=None)["recent_blocks"], 600)
+        for recent_blocks in (1, 600, 0, 2**31 - 1):
+            progress = claimant.setp2cclaiming(0, recent_blocks=recent_blocks)
+            assert_equal(progress["recent_blocks"], recent_blocks)
+        for recent_blocks in (-1, -(2**31)):
+            assert_raises_rpc_error(-4, "lookback must be zero", claimant.setp2cclaiming, 0, recent_blocks=recent_blocks)
+            assert_equal(claimant.getp2cclaimstatus()["recent_blocks"], 2**31 - 1)
+        for recent_blocks in (2**31, -(2**31) - 1):
+            assert_raises_rpc_error(-1, "JSON integer out of range", claimant.setp2cclaiming, 0, recent_blocks=recent_blocks)
+            assert_equal(claimant.getp2cclaimstatus()["recent_blocks"], 2**31 - 1)
+        assert_raises_rpc_error(-3, "Wrong type passed", claimant.setp2cclaiming, 0, recent_blocks="600")
+        assert_equal(claimant.getp2cclaimstatus()["recent_blocks"], 2**31 - 1)
+        # Both positional and named CLI arguments must parse this as a number.
+        cli = node.cli("-rpcwallet=auto-claimant")
+        assert_equal(cli.setp2cclaiming(0, 1, [], "", 0)["recent_blocks"], 0)
+        assert_equal(cli.setp2cclaiming(connections_per_second=0, recent_blocks=17)["recent_blocks"], 17)
+        assert_equal(claimant.setp2cclaiming(0)["recent_blocks"], 600)
         assert "domain_round_seconds" not in initial_status
         for rate, concurrency in ((-2, 1), (1, 0), (1, -1)):
             assert_raises_rpc_error(-4, "Use rate", claimant.setp2cclaiming, rate, concurrency)
@@ -88,6 +106,7 @@ class P2CAutoClaimTest(BitcoinTestFramework):
         node.loadwallet("auto-claimant")
         assert_equal(claimant.getp2cclaimstatus()["connections_per_second"], 0)
         assert_equal(claimant.getp2cclaimstatus()["concurrency"], 1000)
+        assert_equal(claimant.getp2cclaimstatus()["recent_blocks"], 600)
         claimant.setp2cclaiming(1, 2, ["never-funded.invalid"])
         claimant.setp2cclaiming(0)
         assert_equal(claimant.getp2cclaimstatus()["attempts"], 0)
@@ -102,26 +121,29 @@ class P2CAutoClaimTest(BitcoinTestFramework):
         finally:
             claimant.setp2cclaiming(0)
 
-        self.log.info("Only discover the last 600 blocks; older bounties remain manually claimable")
+        self.log.info("Configurable discovery window and unlimited mode; older bounties remain manually claimable")
         old = funder.sendtop2c("old-bounty.invalid", 1, {"work_bits": 0}, fee_rate=10000)
         self.generate(node, 1)
         old_txid = old["txids"][0]
         old_tx = funder.gettransaction(old_txid, verbose=True)["decoded"]
         old_vout = next(output["n"] for output in old_tx["vout"] if output.get("type") == 2)
-        # 600 confirmations is still in the inclusive discovery window. Lock
+        # Two confirmations is still in a two-block discovery window. Lock
         # it so this boundary check cannot issue DNS/TLS, even if regressed.
         funder.lockunspent(False, [{"txid": old_txid, "vout": old_vout}])
-        # Real RandomX mining can exceed the per-RPC timeout for one 599-block
-        # request. Keep the same chain boundary while bounding each request.
-        for generated in range(0, 599, 25):
-            self.generate(node, min(25, 599 - generated))
-        funder.setp2cclaiming(-1, 1, ["old-bounty.invalid"])
+        # A small configured window tests the boundary without 599 extra blocks.
+        self.generate(node, 1)
+        funder.setp2cclaiming(-1, 1, ["old-bounty.invalid"], recent_blocks=2)
         try:
             self.wait_until(lambda: funder.getp2cclaimstatus()["state"] == "waiting for eligible bounties")
             assert_equal(funder.getp2cclaimstatus()["attempts"], 0)
-            # At 601 confirmations it is absent from discovery, rather than
+            # At three confirmations it is absent from discovery, rather than
             # individually looked up and rejected by wallet eligibility.
             newest = self.generate(node, 1)[0]
+            self.wait_until(lambda: funder.getp2cclaimstatus()["state"] == "waiting for bounties")
+            funder.setp2cclaiming(-1, 1, ["old-bounty.invalid"], recent_blocks=0)
+            self.wait_until(lambda: funder.getp2cclaimstatus()["state"] == "waiting for eligible bounties")
+            assert_equal(funder.getp2cclaimstatus()["recent_blocks"], 0)
+            funder.setp2cclaiming(-1, 1, ["old-bounty.invalid"], recent_blocks=2)
             self.wait_until(lambda: funder.getp2cclaimstatus()["state"] == "waiting for bounties")
             node.invalidateblock(newest)
             self.wait_until(lambda: funder.getp2cclaimstatus()["state"] == "waiting for eligible bounties")

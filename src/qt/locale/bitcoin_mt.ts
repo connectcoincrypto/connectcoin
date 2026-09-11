@@ -5448,6 +5448,18 @@ Jekk jogħġbok ipprova ħaddem l-aħħar verżjoni tas-softwer.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Blokki reċenti li għandhom jitfittxu:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Storja tal-blokki bla limitu</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Limiti għoljin jew storja bla limitu jistgħu jinkludu premjijiet P2C qodma u mhux produttivi (“premjijiet bla siwi”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Mhux obbligatorju: jekk jitħalla vojt, tintuża din il-kartiera</translation>
     </message>

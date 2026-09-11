@@ -5548,6 +5548,18 @@ Pokušajte pokrenuti najnoviju verziju softvera.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Nedavni blokovi za pretragu:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Neograničena istorija blokova</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Visoka ograničenja ili neograničena istorija mogu uključiti stare, neproduktivne P2C nagrade („bezvredne nagrade“).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Neobavezno: prazno polje koristi ovaj novčanik</translation>
     </message>

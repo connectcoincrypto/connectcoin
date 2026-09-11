@@ -5617,6 +5617,18 @@ Umhugsa at broyta %s (%s) ella %s (%s).</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Nýggjastu blokkar at leita í:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Óavmarkað blokkasøga</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Høg mørk ella óavmarkað søga kunnu taka gamlar P2C-lønir við, sum einki geva (&quot;virðisleysar lønir&quot;).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Valfrítt: tómt øki brúkar hesa mappuna</translation>
     </message>

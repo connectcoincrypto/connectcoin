@@ -5430,6 +5430,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>శోధించాల్సిన ఇటీవలి బ్లాక్‌లు:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>అపరిమిత బ్లాక్ చరిత్ర</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>అధిక పరిమితులు లేదా అపరిమిత చరిత్ర వల్ల పాత, ఫలితం ఇవ్వని P2C బహుమతులు (“పనికిరాని బహుమతులు”) చేర్చబడవచ్చు.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>ఐచ్ఛికం: ఖాళీగా వదిలితే ఈ వాలెట్ ఉపయోగించబడుతుంది</translation>
     </message>

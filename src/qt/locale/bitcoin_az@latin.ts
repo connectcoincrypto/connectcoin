@@ -5111,6 +5111,18 @@ Proqramın ən son versiyasını işə salmağa çalışın.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Axtarılacaq son bloklar:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Limitsiz blok tarixçəsi</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Yüksək limitlər və ya limitsiz tarixçə köhnə, səmərəsiz P2C mükafatlarını (&quot;yararsız mükafatlar&quot;) daxil edə bilər.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>İstəyə bağlı: boş olduqda bu pul kisəsi istifadə olunur</translation>
     </message>

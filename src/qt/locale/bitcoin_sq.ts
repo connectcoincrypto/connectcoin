@@ -5179,6 +5179,18 @@ Provoni të ekzekutoni versionin më të fundit të programit.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Blloqe të fundit për t’u kërkuar:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Historik i pakufizuar blloqesh</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Kufijtë e lartë ose historiku i pakufizuar mund të përfshijnë shpërblime P2C të vjetra dhe joproduktive (“shpërblime pa vlerë”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opsionale: nëse lihet bosh, përdoret ky portofol</translation>
     </message>

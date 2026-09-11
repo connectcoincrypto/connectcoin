@@ -5547,6 +5547,18 @@ Försök att köra den senaste programversionen.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Senaste block att söka igenom:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Obegränsad blockhistorik</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Höga gränser eller obegränsad historik kan inkludera gamla, improduktiva P2C-belöningar (”skräpbelöningar”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Valfritt: tomt fält använder denna plånbok</translation>
     </message>

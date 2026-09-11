@@ -5295,6 +5295,18 @@ Coba jalankan perangkat lunak versi terbaru.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Blok terbaru yang akan ditelusuri:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Riwayat blok tanpa batas</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Batas yang tinggi atau riwayat tanpa batas dapat mencakup imbalan P2C lama yang tidak produktif (&quot;imbalan sampah&quot;).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opsional: kosong berarti menggunakan dompet ini</translation>
     </message>

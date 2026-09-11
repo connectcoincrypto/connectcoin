@@ -5207,6 +5207,18 @@ Sprōbuj zapuścić nŏjnowszõ wersyjõ ôprogramowanio.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Ôstatnie bloki do przeszukaniŏ:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Niyôgraniczōnŏ historyjŏ blokōw</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Wysokie limity abo niyôgraniczōnŏ historyjŏ mogōm ôbejmować stare, niyproduktywne nagrody P2C („śmieciowe nagrody”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Niyôbowiōnzkowe: puste pole używo tego portmanyja</translation>
     </message>

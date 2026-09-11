@@ -5634,6 +5634,18 @@ Smaoinigh ar %s (%s) nó %s (%s) a athrú.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Bloic is déanaí le cuardach:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Stair bloc gan teorainn</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>D'fhéadfadh teorainneacha arda nó stair gan teorainn seanluaíochtaí P2C neamhtháirgiúla (&quot;luaíochtaí gan mhaith&quot;) a chur san áireamh.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Roghnach: úsáidtear an sparán seo má tá an réimse folamh</translation>
     </message>

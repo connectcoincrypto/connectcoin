@@ -164,10 +164,19 @@ bool Sock::WaitMany(std::chrono::milliseconds timeout, EventsPerSock& events_per
 {
 #ifdef USE_POLL
     std::vector<pollfd> pfds;
+    pfds.reserve(events_per_sock.size());
     for (const auto& [sock, events] : events_per_sock) {
         pfds.emplace_back();
         auto& pfd = pfds.back();
         pfd.fd = sock->m_socket;
+#ifdef __APPLE__
+        // Darwin implements poll using kqueue. Request its read-side hangup
+        // filter for error-only waits. Ordinary read/write waits already
+        // register a filter; avoid adding unrequested read interest to them.
+        if ((events.requested & (RecvEvent | SendEvent)) == 0) {
+            pfd.events = POLLHUP;
+        }
+#endif
         if (events.requested & RecvEvent) {
             pfd.events |= POLLIN;
         }
@@ -191,7 +200,7 @@ bool Sock::WaitMany(std::chrono::milliseconds timeout, EventsPerSock& events_per
         if (pfds[i].revents & POLLOUT) {
             events.occurred |= SendEvent;
         }
-        if (pfds[i].revents & (POLLERR | POLLHUP)) {
+        if (pfds[i].revents & (POLLERR | POLLHUP | POLLNVAL)) {
             events.occurred |= ErrorEvent;
         }
         ++i;
@@ -199,6 +208,14 @@ bool Sock::WaitMany(std::chrono::milliseconds timeout, EventsPerSock& events_per
 
     return true;
 #else
+#ifdef WIN32
+    // Winsock FD_SET silently drops sockets when the set is full. Each socket
+    // is added to the error set, even if neither read nor write was requested.
+    if (events_per_sock.size() > FD_SETSIZE) {
+        WSASetLastError(WSAEINVAL);
+        return false;
+    }
+#endif
     fd_set recv;
     fd_set send;
     fd_set err;

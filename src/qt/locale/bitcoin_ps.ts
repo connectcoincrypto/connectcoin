@@ -4209,6 +4209,18 @@ Go to File &gt; Open Wallet to load a wallet.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>د لټون لپاره وروستي بلاکونه:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>د بلاکونو نامحدود تاریخ</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>لوړ حدونه یا نامحدود تاریخ ښايي زاړه، بې‌ګټې P2C انعامونه («بې‌ارزښته انعامونه») هم شامل کړي.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>اختیاري: که تش پرېښودل شي، دا بټوه کارول کېږي</translation>
     </message>

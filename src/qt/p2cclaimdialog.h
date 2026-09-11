@@ -33,6 +33,8 @@ private:
     QSpinBox* m_rate;
     QCheckBox* m_unlimited;
     QSpinBox* m_concurrency;
+    QSpinBox* m_recent_blocks;
+    QCheckBox* m_unlimited_history;
     QLineEdit* m_domains;
     QLineEdit* m_address;
     QLabel* m_reward_status;

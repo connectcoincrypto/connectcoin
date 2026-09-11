@@ -5271,6 +5271,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>खोजने के लिए हाल के ब्लॉक:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>असीमित ब्लॉक इतिहास</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>बड़ी सीमाओं या असीमित इतिहास में पुराने, निष्फल P2C इनाम (&quot;बेकार इनाम&quot;) शामिल हो सकते हैं।</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>वैकल्पिक: खाली रखने पर इस वॉलेट का उपयोग होगा</translation>
     </message>

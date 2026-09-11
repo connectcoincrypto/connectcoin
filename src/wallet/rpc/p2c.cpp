@@ -40,6 +40,7 @@ RPCResult ClaimWorkerResult()
     return RPCResult{RPCResult::Type::OBJ, "", "", {
         {RPCResult::Type::NUM, "connections_per_second", "Aggregate per-wallet rate; 0 disables, -1 is unlimited."},
         {RPCResult::Type::NUM, "concurrency", "Maximum simultaneous TLS handshakes."},
+        {RPCResult::Type::NUM, "recent_blocks", "Discover bounties in this many latest blocks, including the tip; 0 means unlimited."},
         {RPCResult::Type::STR, "reward_address", "Explicit destination for new searches; empty means this wallet. Completed proofs retain their original destination."},
         {RPCResult::Type::NUM, "domain_rounds", "Connection assignments since the last configuration (legacy field name)."},
         {RPCResult::Type::NUM, "schedule_refreshes", "Completed bounty/priority refreshes since the last configuration."},
@@ -68,6 +69,7 @@ RPCMethod setp2cclaiming()
                 {"domain", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "Canonical lower-case ASCII domain."},
             }},
             {"address", RPCArg::Type::STR, RPCArg::DefaultHint{"this wallet"}, "Optional reward address. Changing it restarts unfinished searches; completed proofs keep their original destination."},
+            {"recent_blocks", RPCArg::Type::NUM, RPCArg::Default{DEFAULT_P2C_BOUNTY_LOOKBACK}, "Discover bounties from this many latest blocks, including the tip. 0 means unlimited. Large limits may include old, unproductive bounties. This is not a consensus expiry rule."},
         },
         ClaimWorkerResult(),
         RPCExamples{HelpExampleCli("setp2cclaiming", "1 4") + HelpExampleCli("setp2cclaiming", "0")},
@@ -81,8 +83,9 @@ RPCMethod setp2cclaiming()
             }
             const int rate{request.params[0].getInt<int>()};
             const int concurrency{request.params[1].isNull() ? DEFAULT_P2C_CLAIM_CONCURRENCY : request.params[1].getInt<int>()};
+            const int recent_blocks{request.params[4].isNull() ? DEFAULT_P2C_BOUNTY_LOOKBACK : request.params[4].getInt<int>()};
             auto& worker{wallet->GetP2CClaimWorker()};
-            if (auto result{worker.Configure(rate, concurrency, std::move(domains), request.params[3].isNull() ? "" : request.params[3].get_str())}; !result) {
+            if (auto result{worker.Configure(rate, concurrency, std::move(domains), request.params[3].isNull() ? "" : request.params[3].get_str(), recent_blocks)}; !result) {
                 throw JSONRPCError(RPC_WALLET_ERROR, util::ErrorString(result).original);
             }
             return worker.Status();

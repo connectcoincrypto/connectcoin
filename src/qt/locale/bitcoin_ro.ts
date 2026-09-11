@@ -5577,6 +5577,18 @@ Portofelul poate fi creat cu o versiune mai nouă.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Blocuri recente de căutat:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Istoric nelimitat al blocurilor</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Limitele mari sau istoricul nelimitat pot include recompense P2C vechi, neproductive („recompense inutile”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opțional: dacă este gol, se folosește acest portofel</translation>
     </message>

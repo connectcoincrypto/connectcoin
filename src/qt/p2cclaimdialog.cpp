@@ -14,6 +14,7 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QSpinBox>
 #include <QStringList>
 #include <QTimer>
@@ -27,7 +28,15 @@
 
 P2CClaimDialog::P2CClaimDialog(QWidget* parent) : QWidget(parent)
 {
-    auto* layout = new QVBoxLayout(this);
+    auto* outer_layout = new QVBoxLayout(this);
+    auto* scroll = new QScrollArea(this);
+    scroll->setObjectName("p2cClaimScrollArea");
+    scroll->setWidgetResizable(true);
+    scroll->setFrameShape(QFrame::NoFrame);
+    auto* content = new QWidget(scroll);
+    auto* layout = new QVBoxLayout(content);
+    scroll->setWidget(content);
+    outer_layout->addWidget(scroll);
     auto* explanation = new QLabel(tr("Automatically discover confirmed bounties, generate TLS proofs and send rewards to this wallet. Fees come only from each reward. No private-key unlock is needed while receiving addresses remain in the keypool. HTTPS is disabled until you explicitly start it."), this);
     explanation->setWordWrap(true);
     layout->addWidget(explanation);
@@ -43,7 +52,9 @@ P2CClaimDialog::P2CClaimDialog(QWidget* parent) : QWidget(parent)
     m_rate = new QSpinBox(this);
     m_rate->setObjectName("p2cClaimRate");
     m_rate->setRange(0, 1'000'000);
-    m_rate->setValue(0);
+    // This is only the proposed rate. The worker remains disabled until the
+    // user presses Apply / start and accepts the confirmation.
+    m_rate->setValue(1000);
     form->addRow(tr("Connections per second (this wallet):"), m_rate);
     auto* rate_hint = new QLabel(tr("0 disables HTTPS. For no rate limit, select Unlimited rate below."), this);
     rate_hint->setWordWrap(true);
@@ -57,6 +68,19 @@ P2CClaimDialog::P2CClaimDialog(QWidget* parent) : QWidget(parent)
     m_concurrency->setRange(1, std::numeric_limits<int>::max());
     m_concurrency->setValue(wallet::DEFAULT_P2C_CLAIM_CONCURRENCY);
     form->addRow(tr("Simultaneous connections:"), m_concurrency);
+    m_recent_blocks = new QSpinBox(this);
+    m_recent_blocks->setObjectName("p2cClaimRecentBlocks");
+    m_recent_blocks->setRange(1, std::numeric_limits<int>::max());
+    m_recent_blocks->setValue(wallet::DEFAULT_P2C_BOUNTY_LOOKBACK);
+    form->addRow(tr("Recent blocks to search:"), m_recent_blocks);
+    m_unlimited_history = new QCheckBox(tr("Unlimited block history"), this);
+    m_unlimited_history->setObjectName("p2cClaimUnlimitedHistory");
+    form->addRow(m_unlimited_history);
+    connect(m_unlimited_history, &QCheckBox::toggled, this, [this](bool enabled) { m_recent_blocks->setEnabled(!enabled); });
+    auto* history_warning = new QLabel(tr("Large limits or unlimited history may include old, unproductive P2C bounties (\"trash bounties\")."), this);
+    history_warning->setObjectName("p2cClaimHistoryWarning");
+    history_warning->setWordWrap(true);
+    form->addRow(QString{}, history_warning);
     m_domains = new QLineEdit(this);
     m_domains->setObjectName("p2cClaimDomains");
     m_domains->setMaxLength(65535);
@@ -102,6 +126,7 @@ void P2CClaimDialog::Configure(bool stop)
     if (!m_model || m_operation.valid()) return;
     m_configuration_error.clear();
     const int rate{stop ? 0 : m_unlimited->isChecked() ? -1 : m_rate->value()};
+    const int recent_blocks{m_unlimited_history->isChecked() ? 0 : m_recent_blocks->value()};
     const QString reward_address{stop ? QString{} : m_address->text().trimmed()};
     std::vector<std::string> domains;
     for (const auto& domain : m_domains->text().split(',', Qt::SkipEmptyParts)) domains.push_back(domain.trimmed().toStdString());
@@ -124,7 +149,7 @@ void P2CClaimDialog::Configure(bool stop)
     if (stop) { m_unlimited->setChecked(false); m_rate->setValue(0); }
     try {
         m_operation = m_model->wallet().configureP2CClaiming(rate, m_concurrency->value(), stop ? std::vector<std::string>{} : std::move(domains),
-                                                          reward_address.toStdString());
+                                                          reward_address.toStdString(), recent_blocks);
     } catch (const std::exception& error) {
         m_configuration_error = QString::fromUtf8(error.what());
         m_status->setText(m_configuration_error);

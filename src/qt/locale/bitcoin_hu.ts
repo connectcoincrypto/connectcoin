@@ -5597,6 +5597,18 @@ Fontolja meg a következők módosítását: %s (%s) vagy %s (%s).</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Átvizsgálandó legutóbbi blokkok:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Korlátlan blokkelőzmény</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Magas korlátok vagy korlátlan előzmény használatakor régi, nem kifizetődő P2C-jutalmak („haszontalan jutalmak”) is bekerülhetnek.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Nem kötelező: üresen ezt a tárcát használja</translation>
     </message>

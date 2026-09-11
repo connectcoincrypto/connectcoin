@@ -72,6 +72,7 @@
 #include <QRadioButton>
 #include <QPixmap>
 #include <QSpinBox>
+#include <QScrollArea>
 #include <QStackedWidget>
 #include <QTemporaryDir>
 #include <QTabWidget>
@@ -698,7 +699,13 @@ void TestP2CGUI(interfaces::Node& node)
     auto* claim_rate = page.findChild<QSpinBox*>("p2cClaimRate");
     auto* claim_unlimited = page.findChild<QCheckBox*>("p2cClaimUnlimited");
     auto* claim_concurrency = page.findChild<QSpinBox*>("p2cClaimConcurrency");
+    auto* claim_recent_blocks = page.findChild<QSpinBox*>("p2cClaimRecentBlocks");
+    auto* claim_unlimited_history = page.findChild<QCheckBox*>("p2cClaimUnlimitedHistory");
+    auto* claim_history_warning = page.findChild<QLabel*>("p2cClaimHistoryWarning");
+    auto* claim_scroll = page.findChild<QScrollArea*>("p2cClaimScrollArea");
+    auto* claim_start = page.findChild<QPushButton*>("p2cClaimStart");
     auto* claim_stop = page.findChild<QPushButton*>("p2cClaimStop");
+    auto* claim_domains = page.findChild<QLineEdit*>("p2cClaimDomains");
     auto* claim_status = page.findChild<QLabel*>("p2cClaimStatus");
     auto* claim_address = page.findChild<QLineEdit*>("p2cClaimAddress");
     auto* claim_reward_status = page.findChild<QLabel*>("p2cClaimRewardStatus");
@@ -707,7 +714,30 @@ void TestP2CGUI(interfaces::Node& node)
     QTRY_VERIFY(claim_reward_status->text().contains("This wallet (default)"));
     QVERIFY(!page.findChild<QLabel*>("p2cClaimRoundHint"));
     QVERIFY(!page.findChild<QSpinBox*>("p2cClaimRoundSeconds"));
-    QVERIFY(claim_rate && claim_unlimited && claim_concurrency && claim_stop && claim_status);
+    QVERIFY(claim_rate && claim_unlimited && claim_concurrency && claim_start && claim_stop && claim_domains && claim_status);
+    QCOMPARE(claim_rate->value(), 1000);
+    QCOMPARE(claim_rate->text(), QStringLiteral("1000"));
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 0);
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["attempts"].getInt<uint64_t>(), uint64_t{0});
+    QTRY_VERIFY(claim_status->text().contains("Active rate: Disabled (0)"));
+    QVERIFY(claim_recent_blocks && claim_unlimited_history && claim_history_warning);
+    QVERIFY(claim_scroll && claim_scroll->widgetResizable());
+    QVERIFY(claim_scroll->widget()->isAncestorOf(claim_history_warning));
+    QCOMPARE(claim_recent_blocks->value(), 600);
+    QCOMPARE(claim_recent_blocks->minimum(), 1);
+    QCOMPARE(claim_recent_blocks->maximum(), std::numeric_limits<int>::max());
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["recent_blocks"].getInt<int>(), 600);
+    QVERIFY(!claim_unlimited_history->isChecked());
+    QVERIFY(claim_recent_blocks->isEnabled());
+    QVERIFY(claim_history_warning->text().contains("trash bounties"));
+    QVERIFY(claim_history_warning->wordWrap());
+    claim_recent_blocks->setValue(1200);
+    claim_unlimited_history->setChecked(true);
+    QVERIFY(!claim_recent_blocks->isEnabled());
+    QVERIFY(claim_rate->isEnabled()); // Block history is independent of rate.
+    claim_unlimited_history->setChecked(false);
+    QVERIFY(claim_recent_blocks->isEnabled());
+    QCOMPARE(claim_recent_blocks->value(), 1200);
     QCOMPARE(claim_concurrency->value(), 1000);
     QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["concurrency"].getInt<int>(), 1000);
     QTRY_VERIFY(claim_status->text().contains("Concurrency: 1000"));
@@ -716,8 +746,47 @@ void TestP2CGUI(interfaces::Node& node)
     QTest::keyClicks(claim_concurrency, "128");
     QTest::keyClick(claim_concurrency, Qt::Key_Tab);
     QCOMPARE(claim_concurrency->value(), 128);
+    // The suggested rate must not become active on page creation or when the
+    // user cancels its explicit confirmation. Keep the accepted-start test
+    // offline with an allowlist that matches no funded bounty.
+    claim_domains->setText("unfunded.example");
+    QString default_confirmation_text;
+    bool confirmation_defaults_to_no{false};
+    QTimer::singleShot(0, [&] {
+        for (auto* widget : QApplication::topLevelWidgets()) {
+            if (auto* dialog{qobject_cast<QMessageBox*>(widget)}; dialog && dialog->isVisible()) {
+                default_confirmation_text = dialog->text();
+                confirmation_defaults_to_no = dialog->defaultButton() == dialog->button(QMessageBox::No);
+                dialog->button(QMessageBox::No)->click();
+            }
+        }
+    });
+    claim_start->click();
+    QVERIFY(default_confirmation_text.contains("Rate: 1000 connections per second for this wallet."));
+    QVERIFY(confirmation_defaults_to_no);
+    QCOMPARE(claim_rate->value(), 1000);
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 0);
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["attempts"].getInt<uint64_t>(), uint64_t{0});
+    default_confirmation_text.clear();
+    QTimer::singleShot(0, [&default_confirmation_text] {
+        for (auto* widget : QApplication::topLevelWidgets()) {
+            if (auto* dialog{qobject_cast<QMessageBox*>(widget)}; dialog && dialog->isVisible()) {
+                default_confirmation_text = dialog->text();
+                dialog->button(QMessageBox::Yes)->click();
+            }
+        }
+    });
+    claim_start->click();
+    QVERIFY(default_confirmation_text.contains("Rate: 1000 connections per second for this wallet."));
+    QTRY_VERIFY(claim_stop->isEnabled());
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 1000);
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["attempts"].getInt<uint64_t>(), uint64_t{0});
+    QTRY_VERIFY(claim_status->text().contains("Active rate: 1000 |"));
+    claim_stop->click();
+    QTRY_VERIFY(claim_stop->isEnabled());
     QCOMPARE(claim_rate->value(), 0);
-    QCOMPARE(claim_rate->text(), QStringLiteral("0"));
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 0);
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["attempts"].getInt<uint64_t>(), uint64_t{0});
     claim_rate->selectAll();
     QTest::keyClicks(claim_rate, "10");
     QTest::keyClick(claim_rate, Qt::Key_Tab);
@@ -738,6 +807,7 @@ void TestP2CGUI(interfaces::Node& node)
     QCOMPARE(claim_rate->text(), QStringLiteral("0"));
     QVERIFY(!claim_unlimited->isChecked());
     QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 0);
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["recent_blocks"].getInt<int>(), 1200);
     QTRY_VERIFY(claim_status->text().contains("Active rate: Disabled (0)"));
     const auto external{EncodeDestination(ExternalTestDestination())};
     auto configure_limited = gui.walletModel->wallet().configureP2CClaiming(10, 4, {"unfunded.example"}, external);
@@ -749,6 +819,7 @@ void TestP2CGUI(interfaces::Node& node)
     QTRY_VERIFY(claim_reward_status->text().contains("This wallet (default)"));
     claim_address->setText(QString::fromStdString(external));
     claim_rate->setValue(1);
+    claim_unlimited_history->setChecked(true);
     page.findChild<QLineEdit*>("p2cClaimDomains")->setText("unfunded.example");
     QString confirmation_text;
     QTimer::singleShot(0, [&confirmation_text] {
@@ -763,8 +834,18 @@ void TestP2CGUI(interfaces::Node& node)
     QVERIFY(confirmation_text.contains(QString::fromStdString(external)));
     QTRY_VERIFY(claim_stop->isEnabled());
     QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["reward_address"].get_str(), external);
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["recent_blocks"].getInt<int>(), 0);
     claim_stop->click();
     QTRY_VERIFY(claim_stop->isEnabled());
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["recent_blocks"].getInt<int>(), 0);
+    QVERIFY(claim_unlimited_history->isChecked());
+    // Applying a finite value while disabled must not enable HTTPS.
+    claim_unlimited_history->setChecked(false);
+    claim_recent_blocks->setValue(1);
+    page.findChild<QPushButton*>("p2cClaimStart")->click();
+    QTRY_VERIFY(claim_stop->isEnabled());
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["recent_blocks"].getInt<int>(), 1);
+    QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 0);
 
     // Destruction during confirmation must never start HTTPS or double-delete
     // a stack-owned dialog when its wallet page disappears.
@@ -1475,6 +1556,8 @@ void WalletTests::p2cTranslations()
             QVERIFY2(!translator.translate("P2CCreateDialog", source).isEmpty(), qPrintable(locale + ": " + source));
         }
         for (const auto* source : {"Disabled", "Unlimited", "Waiting for bounties", "Simultaneous connections:", "Enable automatic P2C claiming?",
+                 "Recent blocks to search:", "Unlimited block history",
+                 "Large limits or unlimited history may include old, unproductive P2C bounties (\"trash bounties\").",
                  "Optional: empty uses this wallet", "Reward address:", "Reward target: %1", "This wallet (default)",
                  "An optional reward address overrides this wallet. Completed proofs keep their original destination when you change it."}) {
             QVERIFY2(!translator.translate("P2CClaimDialog", source).isEmpty(), qPrintable(locale + ": " + source));

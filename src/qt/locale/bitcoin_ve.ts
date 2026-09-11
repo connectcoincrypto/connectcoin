@@ -3013,6 +3013,18 @@ Iyani kha Faela &gt; Vulani tshipatshi u vula tshipatshi.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Buloko dza zwino dza u ṱoḓa:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Ḓivhazwakale ya buloko i si na mukano</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Mikano mihulwane kana ḓivhazwakale i si na mukano zwi nga katela pfufho dza P2C dza kale dzi sa bveledzi tshithu (“pfufho dzi si na mushumo”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>A si khombe-khombe: arali hu si na tshithu, hu shumiswa itshi tshipatshi</translation>
     </message>

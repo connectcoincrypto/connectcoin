@@ -5541,6 +5541,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>தேட வேண்டிய சமீபத்திய தொகுதிகள்:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>வரம்பற்ற தொகுதி வரலாறு</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>அதிக வரம்புகள் அல்லது வரம்பற்ற வரலாறு பழைய, பயனற்ற P2C வெகுமதிகளை (“குப்பை வெகுமதிகள்”) உள்ளடக்கக்கூடும்.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>விருப்பத்திற்குரியது: காலியாக இருந்தால் இந்தப் பணப்பை பயன்படுத்தப்படும்</translation>
     </message>

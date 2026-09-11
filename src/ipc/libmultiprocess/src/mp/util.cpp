@@ -5,12 +5,14 @@
 #include <mp/config.h>
 #include <mp/util.h>
 
+#include <algorithm>
 #include <cerrno>
 #include <cstdio>
 #include <filesystem>
 #include <iostream>
 #include <kj/common.h>
 #include <kj/string-tree.h>
+#include <limits>
 #include <pthread.h>
 #include <sstream>
 #include <string>
@@ -27,6 +29,9 @@
 #ifdef __linux__
 #include <sys/syscall.h>
 #endif
+#ifdef __APPLE__
+#include <sys/sysctl.h>
+#endif
 
 #ifdef HAVE_PTHREAD_GETTHREADID_NP
 #include <pthread_np.h>
@@ -36,6 +41,23 @@ namespace fs = std::filesystem;
 
 namespace mp {
 namespace {
+
+class ScopedFd
+{
+    int m_fd;
+
+public:
+    explicit ScopedFd(int fd) : m_fd{fd} {}
+    ScopedFd(const ScopedFd&) = delete;
+    ScopedFd& operator=(const ScopedFd&) = delete;
+    ~ScopedFd()
+    {
+        if (m_fd >= 0) close(Release());
+    }
+    // Relinquish ownership before close(): even a failed close must not be
+    // retried after another thread could reuse the descriptor number.
+    int Release() noexcept { return std::exchange(m_fd, -1); }
+};
 
 std::vector<char*> MakeArgv(const std::vector<std::string>& args)
 {
@@ -48,15 +70,73 @@ std::vector<char*> MakeArgv(const std::vector<std::string>& args)
     return argv;
 }
 
-//! Return highest possible file descriptor.
-size_t MaxFd()
+//! Inclusive fallback bound. Query in the parent, not in the post-fork child.
+int MaxFd()
 {
-    struct rlimit nofile;
-    if (getrlimit(RLIMIT_NOFILE, &nofile) == 0) {
-        return nofile.rlim_cur - 1;
-    } else {
-        return 1023;
+    int max_fd{std::numeric_limits<int>::max()};
+    struct rlimit nofile{};
+    if (getrlimit(RLIMIT_NOFILE, &nofile) == 0 &&
+        nofile.rlim_max != RLIM_INFINITY && nofile.rlim_max > 0 &&
+        std::cmp_less_equal(nofile.rlim_max - 1, max_fd)) {
+        // Use the hard limit so lowering only the soft limit does not hide
+        // already-open descriptors. Do not narrow the infinity sentinel.
+        max_fd = static_cast<int>(nofile.rlim_max - 1);
     }
+#ifdef __APPLE__
+    // Darwin can report an unlimited resource limit while its descriptor
+    // table still has this finite kernel ceiling.
+    int kernel_limit{0};
+    size_t size{sizeof(kernel_limit)};
+    if (sysctlbyname("kern.maxfilesperproc", &kernel_limit, &size, nullptr, 0) == 0 &&
+        size == sizeof(kernel_limit) && kernel_limit > 0) {
+        max_fd = std::min(max_fd, kernel_limit - 1);
+    }
+#endif
+    return max_fd;
+}
+
+//! Close an inclusive range without allocating or using library locks after fork.
+bool CloseDescriptors(int first, int last, int max_fd)
+{
+    if (first > last) return true;
+#if defined(__linux__) && defined(SYS_close_range)
+    // Raw syscall also works with libc versions predating close_range(). The
+    // child's descriptor table is already private after fork().
+    if (syscall(SYS_close_range, static_cast<unsigned int>(first),
+                static_cast<unsigned int>(last), 0U) == 0) return true;
+#endif
+#if defined(__FreeBSD__)
+    if (last == std::numeric_limits<int>::max()) {
+        closefrom(first);
+        return true;
+    }
+#elif defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__)
+    if (last == std::numeric_limits<int>::max()) {
+        int result;
+        do {
+            result = closefrom(first);
+        } while (result != 0 && errno == EINTR);
+        if (result == 0 || errno == EBADF) return true;
+    }
+#endif
+    // Portable fallback, including older Linux kernels. Close the last valid
+    // descriptor too, without incrementing past INT_MAX for unlimited limits.
+    last = std::min(last, max_fd);
+    // If no finite bound is known and the range API is unavailable, fail
+    // closed instead of leaking descriptors or making billions of syscalls.
+    if (last == std::numeric_limits<int>::max()) return false;
+    for (int fd{first}; fd < last; ++fd) close(fd);
+    if (first <= last) close(last);
+    return true;
+}
+
+bool CloseChildDescriptors(int keep_fd, int max_fd)
+{
+    if (!CloseDescriptors(3, keep_fd - 1, max_fd)) return false;
+    if (keep_fd < std::numeric_limits<int>::max()) {
+        return CloseDescriptors(std::max(3, keep_fd + 1), std::numeric_limits<int>::max(), max_fd);
+    }
+    return true;
 }
 
 } // namespace
@@ -122,6 +202,8 @@ int SpawnProcess(int& pid, FdToArgsFn&& fd_to_args)
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, fds) != 0) {
         throw std::system_error(errno, std::system_category(), "socketpair");
     }
+    ScopedFd child_socket{fds[0]};
+    ScopedFd parent_socket{fds[1]};
 
     // Evaluate the callback and build the argv array before forking.
     //
@@ -131,6 +213,7 @@ int SpawnProcess(int& pid, FdToArgsFn&& fd_to_args)
     // indefinitely. Precomputing arguments in the parent avoids this.
     const std::vector<std::string> args{fd_to_args(fds[0])};
     const std::vector<char*> argv{MakeArgv(args)};
+    const int max_fd{MaxFd()};
 
     pid = fork();
     if (pid == -1) {
@@ -139,9 +222,8 @@ int SpawnProcess(int& pid, FdToArgsFn&& fd_to_args)
     // Parent process closes the descriptor for socket 0, child closes the
     // descriptor for socket 1. On failure, the parent throws, but the child
     // must _exit(126) (post-fork child must not throw).
-    if (close(fds[pid ? 0 : 1]) != 0) {
+    if (close((pid ? child_socket : parent_socket).Release()) != 0) {
         if (pid) {
-            (void)close(fds[1]);
             throw std::system_error(errno, std::system_category(), "close");
         }
         static constexpr char msg[] = "SpawnProcess(child): close(fds[1]) failed\n";
@@ -151,24 +233,24 @@ int SpawnProcess(int& pid, FdToArgsFn&& fd_to_args)
     }
 
     if (!pid) {
-        // Child process must close all potentially open descriptors, except
-        // socket 0. Do not throw, allocate, or do non-fork-safe work here.
-        const int maxFd = MaxFd();
-        for (int fd = 3; fd < maxFd; ++fd) {
-            if (fd != fds[0]) {
-                close(fd);
-            }
+        // Close inherited descriptor ranges except socket 0. The portable
+        // fallback uses the known limit bound. Do not throw, allocate, or do
+        // non-fork-safe work here.
+        if (!CloseChildDescriptors(fds[0], max_fd)) {
+            static constexpr char msg[] = "SpawnProcess(child): cannot safely bound descriptor cleanup\n";
+            const ssize_t write_result{::write(STDERR_FILENO, msg, sizeof(msg) - 1)};
+            (void)write_result;
+            _exit(126);
         }
 
         execvp(argv[0], argv.data());
-        // NOTE: perror() is not async-signal-safe; calling it here in a
-        // post-fork child may deadlock in multithreaded parents.
-        // TODO: Report errors to the parent via a pipe (e.g. write errno)
-        // so callers can get diagnostics without relying on perror().
-        perror("execvp failed");
+        // Do not call stdio or format a message in the post-fork child.
+        static constexpr char msg[] = "SpawnProcess(child): execvp failed\n";
+        const ssize_t write_result{::write(STDERR_FILENO, msg, sizeof(msg) - 1)};
+        (void)write_result;
         _exit(127);
     }
-    return fds[1];
+    return parent_socket.Release();
 }
 
 void ExecProcess(const std::vector<std::string>& args)

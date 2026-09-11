@@ -4982,6 +4982,18 @@ Bağdarlamanıŋ eŋ soŋğı nūsqasın iske qosıp köriŋiz.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>İzdeletın soŋğy bloktar:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Şekteusız blok tarihy</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Joğary şekteuler nemese şekteusız tarih eskı, nätijesız P2C syiaqylaryn («paidasız syiaqylar») qamtuı mümkın.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Mındettı emes: bos qaldyrylsa, osy ämiian qoldanylady</translation>
     </message>

@@ -4227,6 +4227,18 @@ Alu i Faila &gt; Tatala le atotupe e uta ai se atotupe.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Poloka lata mai e su'e:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Tala'aga o poloka e lē fa'atapula'aina</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>O tapula'a maualuga po o se tala'aga e lē fa'atapula'aina e ono aofia ai taui P2C tuai e lē aogā (“taui lapisi”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>E lē faamalosia: a tuu avanoa, e faaaogā lenei atotupe</translation>
     </message>

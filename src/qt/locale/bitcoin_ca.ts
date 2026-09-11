@@ -5579,6 +5579,18 @@ Proveu d'executar la versió més recent del programari.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Blocs recents on cercar:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Historial de blocs il·limitat</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Els límits alts o un historial il·limitat poden incloure recompenses P2C antigues i improductives («recompenses brossa»).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opcional: si és buit, s'utilitza aquest moneder</translation>
     </message>

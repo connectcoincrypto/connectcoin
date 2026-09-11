@@ -5579,6 +5579,18 @@ Consider modifying %s (%s) or %s (%s).</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>愛搜尋个近期區塊數：</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>無限制个區塊歷史</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>限制設較大抑係無限制个歷史，可能會包含舊个、無效益个 P2C 懸賞（「垃圾懸賞」）。</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>選填：留空就會用這隻錢包</translation>
     </message>

@@ -5534,6 +5534,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>בלוקים אחרונים לחיפוש:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>היסטוריית בלוקים ללא הגבלה</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>מגבלות גבוהות או היסטוריה ללא הגבלה עלולות לכלול פרסי P2C ישנים ולא מועילים (&quot;פרסי זבל&quot;).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>רשות: שדה ריק משתמש בארנק זה</translation>
     </message>

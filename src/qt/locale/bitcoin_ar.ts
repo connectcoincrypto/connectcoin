@@ -5105,6 +5105,18 @@ The wallet might have been tampered with or created with malicious intent.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>الكتل الأخيرة التي سيُبحث فيها:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>سجل كتل غير محدود</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>قد تؤدي الحدود الكبيرة أو السجل غير المحدود إلى تضمين مكافآت P2C قديمة وغير مجدية (&quot;مكافآت عديمة الفائدة&quot;).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>اختياري: اتركه فارغًا لاستخدام هذه المحفظة</translation>
     </message>

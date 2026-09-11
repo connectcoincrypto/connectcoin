@@ -5335,6 +5335,18 @@ Tenta executar a última versión do software.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Bloques recentes nos que buscar:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Historial de bloques ilimitado</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Os límites altos ou un historial ilimitado poden incluír recompensas P2C antigas e improdutivas («recompensas lixo»).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opcional: baleiro utiliza esta carteira</translation>
     </message>

@@ -5450,6 +5450,18 @@ Ceisiwch redeg y fersiwn ddiweddaraf o'r feddalwedd.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Blociau diweddar i'w chwilio:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Hanes blociau diderfyn</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Gall terfynau uchel neu hanes diderfyn gynnwys gwobrau P2C hen ac anghynhyrchiol (&quot;gwobrau diwerth&quot;).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Dewisol: mae maes gwag yn defnyddio'r waled hon</translation>
     </message>

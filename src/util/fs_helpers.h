@@ -53,15 +53,23 @@ std::optional<bool> DirectoryCommitChecked(const fs::path& dirname);
 bool TruncateFile(FILE* file, unsigned int length);
 
 /**
- * Try to raise the file descriptor limit to the requested number.
+ * Try to raise this process's soft file descriptor limit to its inherited hard
+ * limit on POSIX systems. The requested hard limit is never changed. If the
+ * kernel rejects that value, try the highest accepted finite soft limit up to
+ * INT_MAX. Connection counts and global system settings are not changed.
+ * On Windows, independently try to raise CRT file streams to the documented
+ * runtime ceiling (8192 for UCRT, 2048 for legacy MSVCRT). This does not change
+ * the Winsock socket limit or install a global invalid-parameter handler.
  *
- * @param[in] min_fd  The requested minimum number of file descriptors.
- * @returns           The actual file descriptor limit. It may be lower or
- *                    higher than min_fd. Returns std::numeric_limits<int>::max()
- *                    if the OS imposes no limit (RLIM_INFINITY).
+ * @returns The last observed soft limit, saturated at INT_MAX (also for
+ *          RLIM_INFINITY) and capped by kern.maxfilesperproc when queryable on
+ *          macOS, or 0 if the initial getrlimit fails. If verification fails
+ *          after a raise, use the original soft limit for budgeting.
+ *          Windows has no RLIMIT_NOFILE and returns its existing compatibility
+ *          connection budget, not an actual OS file/socket limit.
  *
  */
-int RaiseFileDescriptorLimit(int min_fd);
+int RaiseFileDescriptorLimit();
 
 void AllocateFileRange(FILE* file, unsigned int offset, unsigned int length);
 

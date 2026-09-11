@@ -254,6 +254,7 @@ BASE_SCRIPTS = [
     'p2p_disconnect_ban.py --v1transport',
     'p2p_disconnect_ban.py --v2transport',
     'feature_posix_fs_permissions.py',
+    'feature_file_descriptor_limit.py',
     'rpc_blockchain.py --v1transport',
     'rpc_blockchain.py --v2transport',
     'mining_template_verification.py',

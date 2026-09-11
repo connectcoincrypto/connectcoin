@@ -5548,6 +5548,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>ប្លុកថ្មីៗដែលត្រូវស្វែងរក៖</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>ប្រវត្តិប្លុកគ្មានដែនកំណត់</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>ដែនកំណត់ខ្ពស់ ឬប្រវត្តិគ្មានដែនកំណត់ អាចរួមបញ្ចូលរង្វាន់ P2C ចាស់ៗដែលមិនផ្តល់ផល (&quot;រង្វាន់ឥតប្រយោជន៍&quot;)។</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>មិនចាំបាច់បំពេញ៖ បើទុកទទេ នឹងប្រើកាបូបនេះ</translation>
     </message>

@@ -5489,6 +5489,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>تلاش کرنے کے لیے حالیہ بلاکس:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>بلاکس کی لامحدود تاریخ</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>زیادہ حدیں یا لامحدود تاریخ پرانے، غیر مفید P2C انعامات (“بیکار انعامات”) کو شامل کر سکتی ہیں۔</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>اختیاری: خالی چھوڑنے پر یہ بٹوا استعمال ہوگا</translation>
     </message>

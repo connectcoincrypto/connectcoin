@@ -5514,6 +5514,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>მოსაძებნი ბოლო ბლოკები:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>ბლოკების შეუზღუდავი ისტორია</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>მაღალმა ლიმიტებმა ან შეუზღუდავმა ისტორიამ შესაძლოა მოიცვას ძველი, არაპროდუქტიული P2C ჯილდოები („უსარგებლო ჯილდოები“).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>არასავალდებულო: ცარიელი ველის შემთხვევაში გამოიყენება ეს საფულე</translation>
     </message>

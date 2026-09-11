@@ -402,26 +402,26 @@ BOOST_AUTO_TEST_CASE(expected_return_floor_uses_net_payout_and_domain_efficiency
     BOOST_CHECK(!IsP2CClaimWorthAttempting(GetP2CClaimPriority(tiny, MAX_MONEY), 5005.0));
 }
 
-BOOST_AUTO_TEST_CASE(attempt_limit_is_strict_and_overflow_safe)
+BOOST_AUTO_TEST_CASE(successful_connection_limit_is_strict_and_overflow_safe)
 {
     for (unsigned bits = 0; bits <= 62; ++bits) {
         // target = 2^(256-bits)-1, p = 2^-bits, 2*E = 2^(bits+1).
         uint256 target;
         for (unsigned bit = 0; bit < 256 - bits; ++bit) target.begin()[bit / 8] |= 1U << (bit % 8);
         const uint64_t twice_expected{uint64_t{1} << (bits + 1)};
-        BOOST_CHECK(!IsP2CClaimAttemptLimitExceeded(target, twice_expected - 1));
-        BOOST_CHECK(!IsP2CClaimAttemptLimitExceeded(target, twice_expected));
-        BOOST_CHECK(IsP2CClaimAttemptLimitExceeded(target, twice_expected + 1));
+        BOOST_CHECK(!IsP2CClaimConnectionLimitExceeded(target, twice_expected - 1));
+        BOOST_CHECK(!IsP2CClaimConnectionLimitExceeded(target, twice_expected));
+        BOOST_CHECK(IsP2CClaimConnectionLimitExceeded(target, twice_expected + 1));
     }
     const uint64_t maximum{std::numeric_limits<uint64_t>::max()};
-    BOOST_CHECK(!IsP2CClaimAttemptLimitExceeded(uint256{}, maximum));
-    BOOST_CHECK(!IsP2CClaimAttemptLimitExceeded(uint256::FromHex(std::string(16, '0') + std::string(48, 'f')).value(), maximum));
+    BOOST_CHECK(!IsP2CClaimConnectionLimitExceeded(uint256{}, maximum));
+    BOOST_CHECK(!IsP2CClaimConnectionLimitExceeded(uint256::FromHex(std::string(16, '0') + std::string(48, 'f')).value(), maximum));
     const auto above_half{uint256::FromHex("8" + std::string(63, '0')).value()};
-    BOOST_CHECK(!IsP2CClaimAttemptLimitExceeded(above_half, 3));
-    BOOST_CHECK(IsP2CClaimAttemptLimitExceeded(above_half, 4));
+    BOOST_CHECK(!IsP2CClaimConnectionLimitExceeded(above_half, 3));
+    BOOST_CHECK(IsP2CClaimConnectionLimitExceeded(above_half, 4));
     const auto below_half{uint256::FromHex("7" + std::string(62, 'f') + "e").value()};
-    BOOST_CHECK(!IsP2CClaimAttemptLimitExceeded(below_half, 4));
-    BOOST_CHECK(IsP2CClaimAttemptLimitExceeded(below_half, 5));
+    BOOST_CHECK(!IsP2CClaimConnectionLimitExceeded(below_half, 4));
+    BOOST_CHECK(IsP2CClaimConnectionLimitExceeded(below_half, 5));
     // Independent bytewise shift/add oracle, including full-width counters.
     for (int trial = 0; trial < 256; ++trial) {
         const auto target{m_rng.rand256()};
@@ -453,7 +453,7 @@ BOOST_AUTO_TEST_CASE(attempt_limit_is_strict_and_overflow_safe)
         }
         threshold[32] = 2;
         const bool exceeded{std::lexicographical_compare(threshold.rbegin(), threshold.rend(), product.rbegin(), product.rend())};
-        BOOST_CHECK_EQUAL(IsP2CClaimAttemptLimitExceeded(target, count), exceeded);
+        BOOST_CHECK_EQUAL(IsP2CClaimConnectionLimitExceeded(target, count), exceeded);
     }
 }
 
@@ -820,6 +820,66 @@ BOOST_FIXTURE_TEST_CASE(worker_retries_dns_reuses_endpoints_and_stops, TestChain
     BOOST_CHECK(!worker->Configure(-1, 4));
 }
 
+BOOST_FIXTURE_TEST_CASE(worker_configurable_bounty_lookback, TestChain100Setup)
+{
+    using namespace std::chrono_literals;
+    auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
+    auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
+    wallet->SetBroadcastTransactions(true);
+    const COutPoint old{Txid::FromUint256(uint256::ONE), 0};
+    const COutPoint latest{Txid::FromUint256(uint256::ONE), 1};
+    const auto target{uint256::FromHex(std::string(64, 'f')).value()};
+    {
+        LOCK(cs_main);
+        auto& coins{m_node.chainman->ActiveChainstate().CoinsTip()};
+        coins.AddCoin(old, Coin{CTxOut{COIN, PayToDomainOutput{"old.example", target, 1}}, 0, false}, false);
+        coins.AddCoin(latest, Coin{CTxOut{COIN, PayToDomainOutput{"tip.example", target, 1}}, 100, false}, false);
+    }
+    // Locked outputs remain visible to discovery but cannot initiate DNS/TLS.
+    WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(old, false)));
+    WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(latest, false)));
+    RestoreDNSLookup restore_dns;
+    RestoreSocketFactory restore_sockets;
+    std::atomic<unsigned> network_calls{0};
+    g_dns_lookup = [&](const std::string&, bool) { ++network_calls; return std::vector<CNetAddr>{}; };
+    CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> { ++network_calls; return nullptr; };
+    auto worker{MakeP2CClaimWorker(*wallet)};
+    const auto wait_for_state = [&](const std::string& expected) {
+        const auto deadline{std::chrono::steady_clock::now() + 15s};
+        while (worker->Status()["state"].get_str() != expected) {
+            if (std::chrono::steady_clock::now() >= deadline) return false;
+            std::this_thread::sleep_for(5ms);
+        }
+        return true;
+    };
+    BOOST_CHECK_EQUAL(DEFAULT_P2C_BOUNTY_LOOKBACK, 600);
+    BOOST_CHECK_EQUAL(worker->Status()["recent_blocks"].getInt<int>(), 600);
+    BOOST_REQUIRE(worker->Configure(-1, 1, {"old.example"}));
+    BOOST_REQUIRE(wait_for_state("waiting for eligible bounties"));
+    for (const int lookback : {1, 100, 101, 0, std::numeric_limits<int>::max(), 100, 0}) {
+        BOOST_REQUIRE(worker->Configure(-1, 1, {"old.example"}, {}, lookback));
+        BOOST_CHECK_EQUAL(worker->Status()["recent_blocks"].getInt<int>(), lookback);
+        BOOST_REQUIRE(wait_for_state(lookback > 0 && lookback < 101 ? "waiting for bounties" : "waiting for eligible bounties"));
+    }
+    BOOST_REQUIRE(worker->Configure(-1, 1, {"tip.example"}, {}, 1));
+    BOOST_REQUIRE(wait_for_state("waiting for eligible bounties"));
+    for (const int invalid : {-1, std::numeric_limits<int>::min()}) {
+        BOOST_CHECK(!worker->Configure(0, 2, {}, {}, invalid));
+        // Invalid configuration is atomic: leave the running worker unchanged.
+        BOOST_CHECK_EQUAL(worker->Status()["recent_blocks"].getInt<int>(), 1);
+        BOOST_CHECK_EQUAL(worker->Status()["connections_per_second"].getInt<int>(), -1);
+        BOOST_CHECK_EQUAL(worker->Status()["concurrency"].getInt<int>(), 1);
+    }
+    worker->Stop();
+    BOOST_CHECK_EQUAL(worker->Status()["recent_blocks"].getInt<int>(), 1);
+    BOOST_REQUIRE(worker->Configure(0, 1));
+    BOOST_CHECK_EQUAL(worker->Status()["recent_blocks"].getInt<int>(), 600);
+    BOOST_CHECK_EQUAL(network_calls.load(), 0U);
+    BOOST_CHECK_EQUAL(worker->Status()["attempts"].getInt<uint64_t>(), 0U);
+    worker = MakeP2CClaimWorker(*wallet);
+    BOOST_CHECK_EQUAL(worker->Status()["recent_blocks"].getInt<int>(), 600);
+}
+
 BOOST_FIXTURE_TEST_CASE(worker_age_window_does_not_cancel_inflight_tls, TestChain100Setup)
 {
     using namespace std::chrono_literals;
@@ -867,12 +927,11 @@ BOOST_FIXTURE_TEST_CASE(worker_age_window_does_not_cancel_inflight_tls, TestChai
         }
         return true;
     };
-    // Do the slow chain preparation before starting the real-time TLS timeout.
-    for (int i = 0; i < 599; ++i) CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
-    BOOST_REQUIRE(worker->Configure(-1, 1));
+    // A one-block window tests aging without mining hundreds of extra blocks.
+    BOOST_REQUIRE(worker->Configure(-1, 1, {}, {}, 1));
     BOOST_REQUIRE(wait_until([&] { return sockets == 1; }));
     // The catalog advances using real block deltas, without resetting the
-    // assigned challenge. Height 100 is now just outside the 600-block window.
+    // assigned challenge. Height 100 is now just outside the one-block window.
     CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
     const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
     clock += 5s;
@@ -888,7 +947,7 @@ BOOST_FIXTURE_TEST_CASE(worker_age_window_does_not_cancel_inflight_tls, TestChai
     BOOST_CHECK_EQUAL(sockets.load(), 1U);
 }
 
-BOOST_FIXTURE_TEST_CASE(worker_attempt_budget_is_per_bounty_concurrent_and_memory_only, TestChain100Setup)
+BOOST_FIXTURE_TEST_CASE(worker_success_budget_ignores_failures_and_is_per_bounty_memory_only, TestChain100Setup)
 {
     using namespace std::chrono_literals;
     FakeSteadyClock clock;
@@ -906,6 +965,101 @@ BOOST_FIXTURE_TEST_CASE(worker_attempt_budget_is_per_bounty_concurrent_and_memor
     const auto address{LookupHost("8.8.8.8", false, restore_dns.original)};
     BOOST_REQUIRE(address);
     g_dns_lookup = [&](const std::string&, bool) { return std::vector<CNetAddr>{*address}; };
+    const auto config{std::make_shared<test::P2CTLSServer>()};
+    config->Setup();
+    std::atomic<unsigned> sockets{0};
+    std::vector<unsigned char> sent;
+    auto worker{MakeP2CClaimWorker(*wallet)};
+    struct StopBeforeLocals {
+        std::unique_ptr<P2CClaimWorker>& worker;
+        ~StopBeforeLocals() { if (worker) worker->Stop(); }
+    } stop_before_locals{worker};
+    static constexpr unsigned FAILED_CONNECTIONS{12};
+    CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
+        const auto attempt{++sockets};
+        if (attempt <= FAILED_CONNECTIONS) {
+            if (attempt % 2 == 0) return nullptr; // TCP/socket failure.
+            sent.clear();
+            return std::make_unique<ClientHelloSocket>(sent, 127); // TLS EOF before CertificateVerify.
+        }
+        return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+    };
+    const auto wait_until = [](const auto& predicate) {
+        const auto deadline{std::chrono::steady_clock::now() + 30s};
+        while (!predicate()) {
+            if (std::chrono::steady_clock::now() >= deadline) return false;
+            std::this_thread::sleep_for(5ms);
+        }
+        return true;
+    };
+    // p=1/2: four completed captures equal 2*E, the fifth exceeds it.
+    // More than five failed attempts per bounty must not exhaust that budget.
+    // The TLS fixture is deliberately untrusted by Core: captures count even
+    // when subsequent certificate/claim validation cannot submit the reward.
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
+    BOOST_CHECK_EQUAL(sockets.load(), FAILED_CONNECTIONS + 10U);
+    BOOST_CHECK_EQUAL(worker->Status()["attempts"].getInt<uint64_t>(), FAILED_CONNECTIONS + 10U);
+    BOOST_CHECK_EQUAL(worker->Status()["submitted"].getInt<uint64_t>(), 0U);
+    const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
+    clock += 5s;
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; }));
+    worker->Stop();
+    // Neither reconfiguration nor replacing unsigned payout challenges resets
+    // the in-memory counter for an outpoint.
+    const auto destination{EncodeDestination(WitnessV1Taproot{XOnlyPubKey{GenerateRandomKey().GetPubKey()}})};
+    BOOST_REQUIRE(worker->Configure(-1, 1, {}, destination));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > 0; }));
+    worker->Stop();
+    BOOST_CHECK_EQUAL(sockets.load(), FAILED_CONNECTIONS + 10U);
+    BOOST_REQUIRE(worker->Configure(-1, 1, {"unfunded.example"}));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > 0; }));
+    worker->Stop();
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > 0; }));
+    worker->Stop();
+    BOOST_CHECK_EQUAL(sockets.load(), FAILED_CONNECTIONS + 10U); // Domain-filter changes do not reset budgets.
+
+    // Once fully outside discovery and no longer in flight, counters are
+    // collected. Use a one-block lookback to exercise the same cleanup/reorg
+    // boundary without 600 RandomX blocks; the default is covered separately.
+    CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
+    BOOST_REQUIRE(worker->Configure(-1, 1, {}, {}, 1));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for bounties"; }));
+    worker->Stop();
+    BOOST_CHECK_EQUAL(sockets.load(), FAILED_CONNECTIONS + 10U);
+    BlockValidationState state;
+    auto* tip{WITH_LOCK(cs_main, return m_node.chainman->ActiveChain().Tip())};
+    BOOST_REQUIRE(m_node.chainman->ActiveChainstate().InvalidateBlock(state, tip));
+    BOOST_REQUIRE(worker->Configure(-1, 1, {}, {}, 1));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
+    worker->Stop();
+    BOOST_CHECK_EQUAL(sockets.load(), FAILED_CONNECTIONS + 20U);
+    // A newly loaded worker has no persisted per-bounty budget. The aggregate
+    // status counter remains durable, but does not restrict this new session.
+    worker.reset();
+    worker = MakeP2CClaimWorker(*wallet);
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
+    worker->Stop();
+    BOOST_CHECK_EQUAL(sockets.load(), FAILED_CONNECTIONS + 30U);
+}
+
+BOOST_FIXTURE_TEST_CASE(worker_pending_and_failed_connections_do_not_reserve_success_budget, TestChain100Setup)
+{
+    using namespace std::chrono_literals;
+    auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
+    auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
+    wallet->SetBroadcastTransactions(true);
+    const auto half{uint256::FromHex("7" + std::string(63, 'f')).value()};
+    WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(
+        COutPoint{Txid::FromUint256(uint256::ONE), 0},
+        Coin{CTxOut{COIN, PayToDomainOutput{"pending.example", half, 1}}, 100, false}, false));
+    RestoreDNSLookup restore_dns;
+    RestoreSocketFactory restore_sockets;
+    const auto address{LookupHost("8.8.8.8", false, restore_dns.original)};
+    BOOST_REQUIRE(address);
+    g_dns_lookup = [&](const std::string&, bool) { return std::vector<CNetAddr>{*address}; };
     std::atomic<unsigned> sockets{0};
     std::mutex pending_mutex;
     std::condition_variable release;
@@ -915,13 +1069,13 @@ BOOST_FIXTURE_TEST_CASE(worker_attempt_budget_is_per_bounty_concurrent_and_memor
         std::mutex& mutex;
         std::condition_variable& wake;
         bool& released;
-        std::unique_ptr<P2CClaimWorker>& worker;
+        P2CClaimWorker& worker;
         ~ReleaseAndStop() {
             { std::lock_guard lock{mutex}; released = true; }
             wake.notify_all();
-            if (worker) worker->Stop();
+            worker.Stop();
         }
-    } release_and_stop{pending_mutex, release, released, worker};
+    } release_and_stop{pending_mutex, release, released, *worker};
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
         ++sockets;
         std::unique_lock lock{pending_mutex};
@@ -936,56 +1090,18 @@ BOOST_FIXTURE_TEST_CASE(worker_attempt_budget_is_per_bounty_concurrent_and_memor
         }
         return true;
     };
-    // p=1/2: four equals 2*E, the fifth exceeds it. Even with 64
-    // workers, exactly five starts per bounty may be in flight, not 64.
-    BOOST_REQUIRE(worker->Configure(-1, 64));
-    BOOST_REQUIRE(wait_until([&] { return sockets >= 10; }));
-    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
-    BOOST_CHECK_EQUAL(sockets.load(), 10U);
-    BOOST_CHECK_EQUAL(worker->Status()["attempts"].getInt<uint64_t>(), 10U);
-    const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
-    clock += 5s;
-    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; }));
+    // Five successes would exhaust p=1/2, but none of these eight in-flight
+    // connections has completed yet. Concurrency is not a success reservation.
+    BOOST_REQUIRE(worker->Configure(-1, 8));
+    BOOST_REQUIRE(wait_until([&] { return sockets >= 8; }));
+    BOOST_CHECK_EQUAL(sockets.load(), 8U);
     { std::lock_guard lock{pending_mutex}; released = true; }
     release.notify_all();
+    // The whole first batch fails; another batch must still be allowed.
+    BOOST_REQUIRE(wait_until([&] { return sockets >= 16; }));
     worker->Stop();
-    // Neither reconfiguration nor replacing unsigned payout challenges resets
-    // the in-memory counter for an outpoint.
-    const auto destination{EncodeDestination(WitnessV1Taproot{XOnlyPubKey{GenerateRandomKey().GetPubKey()}})};
-    BOOST_REQUIRE(worker->Configure(-1, 64, {}, destination));
-    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > 0; }));
-    worker->Stop();
-    BOOST_CHECK_EQUAL(sockets.load(), 10U);
-    BOOST_REQUIRE(worker->Configure(-1, 64, {"unfunded.example"}));
-    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > 0; }));
-    worker->Stop();
-    BOOST_REQUIRE(worker->Configure(-1, 64));
-    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > 0; }));
-    worker->Stop();
-    BOOST_CHECK_EQUAL(sockets.load(), 10U); // Domain-filter changes do not reset budgets.
-
-    // Once fully outside discovery and no longer in flight, counters are
-    // collected. A subsequent reorg may make these old bounties eligible anew.
-    for (int i = 0; i < 600; ++i) CreateAndProcessBlock({}, GetScriptForP2PKOutput(coinbaseKey));
-    BOOST_REQUIRE(worker->Configure(-1, 64));
-    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for bounties"; }));
-    worker->Stop();
-    BOOST_CHECK_EQUAL(sockets.load(), 10U);
-    BlockValidationState state;
-    auto* tip{WITH_LOCK(cs_main, return m_node.chainman->ActiveChain().Tip())};
-    BOOST_REQUIRE(m_node.chainman->ActiveChainstate().InvalidateBlock(state, tip));
-    BOOST_REQUIRE(worker->Configure(-1, 64));
-    BOOST_REQUIRE(wait_until([&] { return sockets >= 20; }));
-    worker->Stop();
-    BOOST_CHECK_EQUAL(sockets.load(), 20U);
-    // A newly loaded worker has no persisted per-bounty budget. The aggregate
-    // status counter remains durable, but does not restrict this new session.
-    worker.reset();
-    worker = MakeP2CClaimWorker(*wallet);
-    BOOST_REQUIRE(worker->Configure(-1, 64));
-    BOOST_REQUIRE(wait_until([&] { return sockets >= 30; }));
-    worker->Stop();
-    BOOST_CHECK_EQUAL(sockets.load(), 30U);
+    BOOST_CHECK_GE(worker->Status()["attempts"].getInt<uint64_t>(), 16U);
+    BOOST_CHECK_EQUAL(worker->Status()["submitted"].getInt<uint64_t>(), 0U);
 }
 
 BOOST_FIXTURE_TEST_CASE(worker_filters_each_bounty_before_network_and_rechecks_efficiency, TestChain100Setup)

@@ -5423,6 +5423,18 @@ Programma üpjünçiliginiň iň täze wersiýasyny işledip görüň.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Gözlenjek soňky bloklar:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Çäksiz blok taryhy</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Ýokary çäkler ýa-da çäksiz taryh köne, netijesiz P2C sylaglaryny (“peýdasyz sylaglar”) öz içine alyp biler.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Hökmany däl: boş goýulsa, şu gapjyk ulanylýar</translation>
     </message>

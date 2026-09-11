@@ -16,6 +16,7 @@ class UniValue;
 namespace wallet {
 class CWallet;
 inline constexpr int DEFAULT_P2C_CLAIM_CONCURRENCY{1000};
+inline constexpr int DEFAULT_P2C_BOUNTY_LOOKBACK{600};
 /** Wallet-owned, opt-in worker. Never owns a shared_ptr back to its wallet.
  * Stop before unloading the wallet/chain. All HTTPS is outside wallet locks.
  * Rate is aggregate per wallet: 0 disables, -1 explicitly means unlimited.
@@ -23,7 +24,8 @@ inline constexpr int DEFAULT_P2C_CLAIM_CONCURRENCY{1000};
 class P2CClaimWorker {
 public:
     virtual ~P2CClaimWorker() = default;
-    virtual util::Result<void> Configure(int connections_per_second, int concurrency, std::vector<std::string> domains = {}, std::string reward_address = {}) = 0;
+    //! recent_blocks includes the tip; 0 discovers all confirmed bounty ages.
+    virtual util::Result<void> Configure(int connections_per_second, int concurrency, std::vector<std::string> domains = {}, std::string reward_address = {}, int recent_blocks = DEFAULT_P2C_BOUNTY_LOOKBACK) = 0;
     virtual void Stop() = 0;
     virtual void Shutdown() = 0;
     virtual UniValue Status() const = 0;

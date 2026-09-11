@@ -5603,6 +5603,18 @@ Consider modifying %s (%s) or %s (%s).</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>検索する直近のブロック数:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>ブロック履歴を無制限に検索</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>上限を大きくするか履歴を無制限にすると、古くて成果の見込めない P2C 懸賞（「ゴミ懸賞」）が含まれる可能性があります。</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>任意：空欄の場合はこのウォレットを使用します</translation>
     </message>

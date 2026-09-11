@@ -5612,6 +5612,18 @@ Considere modificar %s (%s) o %s (%s).</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Bloques recientes en los que buscar:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Historial de bloques ilimitado</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Los límites altos o un historial ilimitado pueden incluir recompensas P2C antiguas e improductivas («recompensas basura»).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opcional: vacío utiliza esta cartera</translation>
     </message>

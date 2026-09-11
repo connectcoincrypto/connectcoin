@@ -5620,6 +5620,18 @@ Envisagez de modifier %s (%s) ou %s (%s).</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Blocs récents à parcourir :</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Historique des blocs illimité</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Des limites élevées ou un historique illimité peuvent inclure des primes P2C anciennes et improductives (« primes inutiles »).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Facultatif : un champ vide utilise ce portefeuille</translation>
     </message>

@@ -3397,6 +3397,18 @@ Lọ sí Fáìlì &gt; Ṣí àpò owó láti gbé àpò owó wọlé.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Àwọn búlọ́ọ̀kù àìpẹ́ láti wá nínú:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Ìtàn àwọn búlọ́ọ̀kù aláìlópin</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Àwọn ààlà tó ga tàbí ìtàn aláìlópin lè ní àwọn ẹ̀san P2C àtijọ́ tí kò ní èso (“ẹ̀san tí kò wúlò”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Kì í ṣe dandan: bí ó bá ṣófo, àpamọ́ yìí ni a ó lò</translation>
     </message>

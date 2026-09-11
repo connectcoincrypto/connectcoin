@@ -5437,6 +5437,18 @@ Zvažte úpravu %s (%s) nebo %s (%s).</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Počet posledních bloků k prohledání:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Neomezená historie bloků</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Vysoké limity nebo neomezená historie mohou zahrnout staré, nevýnosné P2C odměny („bezcenné odměny“).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Volitelné: prázdné pole použije tuto peněženku</translation>
     </message>

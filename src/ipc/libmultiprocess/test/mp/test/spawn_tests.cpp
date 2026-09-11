@@ -110,3 +110,60 @@ KJ_TEST("SpawnProcess does not run callback in child")
     KJ_EXPECT(exited, "Timeout waiting for child process to exit");
     KJ_EXPECT(WIFEXITED(status) && WEXITSTATUS(status) == 0);
 }
+
+KJ_TEST("SpawnProcess closes the highest descriptor and preserves its IPC socket")
+{
+    int pid{-1};
+    const int fd{mp::SpawnProcess(pid, [&](int) {
+        return std::vector<std::string>{MP_SPAWN_FD_CHECK_PATH, "parent"};
+    })};
+    ::close(fd);
+    int status{0};
+    const bool exited{WaitPidWithTimeout(pid, FAILURE_TIMEOUT, status)};
+    if (!exited) {
+        ::kill(-pid, SIGKILL); // The helper gives its descendants a separate group.
+        ::kill(pid, SIGKILL);
+        ::waitpid(pid, &status, 0);
+    }
+    KJ_EXPECT(exited, "Timeout waiting for descriptor-inheritance helper");
+    if (exited && WIFEXITED(status) && WEXITSTATUS(status) == 77) {
+        KJ_LOG(WARNING, "Skipping descriptor-inheritance check: constrained descriptor limit unavailable");
+        return;
+    }
+    KJ_EXPECT(WIFEXITED(status) && WEXITSTATUS(status) == 0);
+}
+
+KJ_TEST("SpawnProcess callback failures close both descriptors without accumulation")
+{
+    int pid{-1};
+    const int fd{mp::SpawnProcess(pid, [&](int) {
+        return std::vector<std::string>{MP_SPAWN_FD_CHECK_PATH, "callback-failure"};
+    })};
+    ::close(fd);
+    int status{0};
+    const bool exited{WaitPidWithTimeout(pid, FAILURE_TIMEOUT, status)};
+    if (!exited) {
+        ::kill(pid, SIGKILL);
+        ::waitpid(pid, &status, 0);
+    }
+    KJ_EXPECT(exited, "Timeout waiting for callback-failure helper");
+    KJ_EXPECT(WIFEXITED(status) && WEXITSTATUS(status) == 0);
+}
+
+KJ_TEST("SpawnProcess missing executable exits without post-fork stdio")
+{
+    int pid{-1};
+    const int fd{mp::SpawnProcess(pid, [&](int) {
+        // /dev/null is not a directory, so this cannot name an executable.
+        return std::vector<std::string>{"/dev/null/connectcoin-nonexistent"};
+    })};
+    ::close(fd);
+    int status{0};
+    const bool exited{WaitPidWithTimeout(pid, FAILURE_TIMEOUT, status)};
+    if (!exited) {
+        ::kill(pid, SIGKILL);
+        ::waitpid(pid, &status, 0);
+    }
+    KJ_EXPECT(exited, "Timeout waiting for failed execvp");
+    KJ_EXPECT(WIFEXITED(status) && WEXITSTATUS(status) == 127);
+}

@@ -5545,6 +5545,18 @@ Lütfen yazılımın en son sürümünü çalıştırmayı deneyin.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Aranacak son bloklar:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Sınırsız blok geçmişi</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Yüksek sınırlar veya sınırsız geçmiş, eski ve verimsiz P2C ödüllerini (“çöp ödüller”) içerebilir.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>İsteğe bağlı: boş bırakılırsa bu cüzdan kullanılır</translation>
     </message>

@@ -14,6 +14,13 @@
 #include <cassert>
 #include <thread>
 
+#ifdef USE_POLL
+#include <sys/resource.h>
+#endif
+#ifdef __APPLE__
+#include <sys/sysctl.h>
+#endif
+
 using namespace std::chrono_literals;
 
 BOOST_FIXTURE_TEST_SUITE(sock_tests, BasicTestingSetup)
@@ -148,12 +155,142 @@ BOOST_AUTO_TEST_CASE(wait)
 {
     TcpSocketPair socks = TcpSocketPair{};
 
-    std::thread waiter([&socks]() { (void)socks.receiver.Wait(24h, Sock::RecvEvent); });
+    bool wait_result{false};
+    Sock::Event occurred{0};
+    std::thread waiter([&]() { wait_result = socks.receiver.Wait(1s, Sock::RecvEvent, &occurred); });
 
-    BOOST_REQUIRE_EQUAL(socks.sender.Send("a", 1, 0), 1);
+    BOOST_CHECK_EQUAL(socks.sender.Send("a", 1, 0), 1);
 
     waiter.join();
+    BOOST_CHECK(wait_result);
+    BOOST_CHECK(occurred & Sock::RecvEvent);
 }
+
+static void CheckReadinessAndClose(Sock& sender, Sock& receiver)
+{
+    // Non-blocking sockets ensure a readiness regression cannot hang recv().
+    BOOST_REQUIRE(sender.SetNonBlocking());
+    BOOST_REQUIRE(receiver.SetNonBlocking());
+    BOOST_CHECK(sender.IsSelectable());
+    BOOST_CHECK(receiver.IsSelectable());
+
+    Sock::Event occurred{Sock::ErrorEvent};
+    BOOST_REQUIRE(receiver.Wait(2ms, Sock::RecvEvent, &occurred));
+    BOOST_CHECK_EQUAL(occurred, 0);
+
+    BOOST_REQUIRE(sender.Wait(1s, Sock::SendEvent, &occurred));
+    BOOST_CHECK(occurred & Sock::SendEvent);
+    BOOST_CHECK(!(occurred & Sock::ErrorEvent));
+    BOOST_REQUIRE_EQUAL(sender.Send("a", 1, 0), 1);
+    BOOST_REQUIRE(receiver.Wait(1s, Sock::RecvEvent, &occurred));
+    BOOST_CHECK(occurred & Sock::RecvEvent);
+    // Request both events on the same descriptor. In particular, Darwin poll
+    // needs one combined pollfd entry, not duplicate entries for each event.
+    constexpr auto both{Sock::RecvEvent | Sock::SendEvent};
+    BOOST_REQUIRE(receiver.Wait(1s, both, &occurred));
+    BOOST_CHECK_EQUAL(occurred & both, both);
+    char received{};
+    BOOST_REQUIRE_EQUAL(receiver.Recv(&received, 1, 0), 1);
+    BOOST_CHECK_EQUAL(received, 'a');
+
+    sender = Sock{INVALID_SOCKET};
+    BOOST_REQUIRE(receiver.Wait(1s, Sock::RecvEvent, &occurred));
+    // Depending on the socket family/OS, EOF is readable, a hangup, or both.
+    BOOST_CHECK(occurred & (Sock::RecvEvent | Sock::ErrorEvent));
+    BOOST_CHECK_EQUAL(receiver.Recv(&received, 1, 0), 0);
+}
+
+BOOST_AUTO_TEST_CASE(wait_readiness_timeout_and_peer_close)
+{
+    TcpSocketPair socks{};
+    CheckReadinessAndClose(socks.sender, socks.receiver);
+}
+
+BOOST_AUTO_TEST_CASE(wait_many_readiness_and_timeout)
+{
+    TcpSocketPair first{};
+    TcpSocketPair second{};
+    BOOST_REQUIRE(first.receiver.SetNonBlocking());
+    BOOST_REQUIRE(second.receiver.SetNonBlocking());
+    // Alias the existing stack-owned sockets without taking ownership.
+    const std::shared_ptr<const Sock> first_receiver{std::shared_ptr<const Sock>{}, &first.receiver};
+    const std::shared_ptr<const Sock> second_receiver{std::shared_ptr<const Sock>{}, &second.receiver};
+    Sock::EventsPerSock events{
+        {first_receiver, Sock::Events{Sock::RecvEvent}},
+        {second_receiver, Sock::Events{Sock::RecvEvent}},
+    };
+    BOOST_REQUIRE(first.receiver.WaitMany(2ms, events));
+    BOOST_CHECK_EQUAL(events.at(first_receiver).occurred, 0);
+    BOOST_CHECK_EQUAL(events.at(second_receiver).occurred, 0);
+
+    BOOST_REQUIRE_EQUAL(first.sender.Send("a", 1, 0), 1);
+    BOOST_REQUIRE_EQUAL(second.sender.Send("b", 1, 0), 1);
+    Sock::Event occurred{0};
+    // Establish that each byte has arrived before also requesting send events,
+    // otherwise writable readiness could win the race against TCP delivery.
+    BOOST_REQUIRE(first.receiver.Wait(1s, Sock::RecvEvent, &occurred));
+    BOOST_REQUIRE(occurred & Sock::RecvEvent);
+    BOOST_REQUIRE(second.receiver.Wait(1s, Sock::RecvEvent, &occurred));
+    BOOST_REQUIRE(occurred & Sock::RecvEvent);
+    constexpr Sock::Event both{Sock::RecvEvent | Sock::SendEvent};
+    events.at(first_receiver).requested = both;
+    events.at(second_receiver).requested = both;
+    BOOST_REQUIRE(first.receiver.WaitMany(1s, events));
+    BOOST_CHECK_EQUAL(events.at(first_receiver).occurred & both, both);
+    BOOST_CHECK_EQUAL(events.at(second_receiver).occurred & both, both);
+}
+
+#ifdef USE_POLL
+#ifndef __NetBSD__
+// NetBSD reports socket EOF as requested read readiness, not POLLHUP. Its
+// poll(2) therefore cannot signal peer close to a wait with no read interest.
+// The RecvEvent EOF checks above and below cover that platform as well.
+BOOST_AUTO_TEST_CASE(wait_error_only_peer_close)
+{
+    int sockets[2];
+    BOOST_REQUIRE_EQUAL(socketpair(AF_UNIX, SOCK_STREAM, 0, sockets), 0);
+    Sock sender{static_cast<SOCKET>(sockets[0])};
+    Sock receiver{static_cast<SOCKET>(sockets[1])};
+    Sock::Event occurred{Sock::ErrorEvent};
+    BOOST_REQUIRE(receiver.Wait(2ms, 0, &occurred));
+    BOOST_CHECK_EQUAL(occurred, 0);
+    sender = Sock{INVALID_SOCKET};
+    BOOST_REQUIRE(receiver.Wait(1s, 0, &occurred));
+    BOOST_CHECK(occurred & Sock::ErrorEvent);
+}
+#endif
+
+BOOST_AUTO_TEST_CASE(wait_above_fd_setsize)
+{
+    rlimit limits{};
+    BOOST_REQUIRE_EQUAL(getrlimit(RLIMIT_NOFILE, &limits), 0);
+    if (limits.rlim_cur != RLIM_INFINITY && limits.rlim_cur <= FD_SETSIZE) {
+        BOOST_TEST_MESSAGE("Skipping high-fd poll test: inherited soft limit is at most FD_SETSIZE");
+        return;
+    }
+#ifdef __APPLE__
+    int kernel_limit{0};
+    size_t size{sizeof(kernel_limit)};
+    if (sysctlbyname("kern.maxfilesperproc", &kernel_limit, &size, nullptr, 0) == 0 &&
+        size == sizeof(kernel_limit) && kernel_limit > 0 && kernel_limit <= FD_SETSIZE) {
+        BOOST_TEST_MESSAGE("Skipping high-fd poll test: kernel descriptor ceiling is at most FD_SETSIZE");
+        return;
+    }
+#endif
+
+    int sockets[2];
+    BOOST_REQUIRE_EQUAL(socketpair(AF_UNIX, SOCK_STREAM, 0, sockets), 0);
+    Sock sender{static_cast<SOCKET>(sockets[0])};
+    Sock original_receiver{static_cast<SOCKET>(sockets[1])};
+    // Reserve only one high-numbered descriptor, not thousands of sockets.
+    // Do not raise process-wide limits from this unit test.
+    const int high_fd{fcntl(sockets[1], F_DUPFD_CLOEXEC, FD_SETSIZE)};
+    BOOST_REQUIRE_MESSAGE(high_fd >= FD_SETSIZE, "Cannot duplicate high socket: " << NetworkErrorString(errno));
+    Sock receiver{static_cast<SOCKET>(high_fd)};
+    original_receiver = Sock{INVALID_SOCKET};
+    CheckReadinessAndClose(sender, receiver);
+}
+#endif
 
 BOOST_AUTO_TEST_CASE(recv_until_terminator_limit)
 {

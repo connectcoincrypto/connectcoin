@@ -5613,6 +5613,18 @@ Aintzat hartu %s (%s) edo %s (%s) aldatzea.</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Bilaketa egiteko azken blokeak:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Mugarik gabeko bloke-historia</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Muga handiek edo mugarik gabeko historiak P2C sari zaharrak eta emankorrak ez direnak (&quot;zabor-sariak&quot;) barne har ditzakete.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Aukerakoa: hutsik badago, zorro hau erabiltzen da</translation>
     </message>

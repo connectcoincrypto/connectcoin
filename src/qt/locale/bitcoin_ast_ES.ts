@@ -3560,6 +3560,18 @@ Ve a Ficheru &gt; Abrir cartera pa cargar una cartera.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Bloques recientes nos que buscar:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Historial de bloques illimitáu</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Llímites altos o un historial illimitáu pueden incluyir recompenses P2C antigües y improductives (&quot;recompenses basura&quot;).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opcional: si ta balero, usa esta cartera</translation>
     </message>

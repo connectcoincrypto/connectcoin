@@ -5174,6 +5174,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Колькасць апошніх блокаў для пошуку:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Неабмежаваная гісторыя блокаў</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Вялікія ліміты або неабмежаваная гісторыя могуць уключаць старыя, непрадуктыўныя ўзнагароды P2C («смеццевыя ўзнагароды»).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Неабавязкова: пустое поле азначае гэты кашалёк</translation>
     </message>

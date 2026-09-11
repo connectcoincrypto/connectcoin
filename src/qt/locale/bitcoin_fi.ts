@@ -5595,6 +5595,18 @@ Kokeile ohjelmiston uusinta versiota.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Haettavien uusimpien lohkojen määrä:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Rajoittamaton lohkohistoria</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Suuret rajat tai rajoittamaton historia voivat sisällyttää vanhoja, tuottamattomia P2C-palkkioita (”roskapalkkioita”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Valinnainen: tyhjä kenttä käyttää tätä lompakkoa</translation>
     </message>

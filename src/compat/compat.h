@@ -98,10 +98,11 @@ typedef SSIZE_T ssize_t;
 #define MAIN_FUNCTION int main(int argc, char* argv[])
 #endif
 
-// Note these both should work with the current usage of poll, but best to be safe
-// WIN32 poll is broken https://daniel.haxx.se/blog/2012/10/10/wsapoll-is-broken/
-// __APPLE__ poll is broke https://github.com/bitcoin/bitcoin/pull/14336#issuecomment-437384408
-#if defined(__linux__)
+// POSIX poll accepts descriptors above FD_SETSIZE without changing fd_set's ABI.
+// Sock::WaitMany consolidates events into one pollfd per descriptor, avoiding
+// the duplicate-descriptor issue seen with older Darwin poll implementations.
+// Windows keeps Winsock select; WSAPoll has different compatibility constraints.
+#ifndef WIN32
 #define USE_POLL
 #endif
 

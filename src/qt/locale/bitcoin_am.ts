@@ -5076,6 +5076,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>የሚፈለጉባቸው የቅርብ ጊዜ ብሎኮች፦</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>ያልተገደበ የብሎክ ታሪክ</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>ከፍተኛ ገደቦች ወይም ያልተገደበ ታሪክ ያረጁና ውጤት የማያስገኙ የP2C ሽልማቶችን (&quot;የማይጠቅሙ ሽልማቶች&quot;) ሊያካትቱ ይችላሉ።</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>አማራጭ፦ ባዶ ከሆነ ይህን የገንዘብ ቦርሳ ይጠቀማል</translation>
     </message>

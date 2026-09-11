@@ -3390,6 +3390,18 @@ Whakamātauria te whakahaere i te putanga pūmanawa hōu rawa.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Ngā paraka hou hei rapu:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Hītori paraka mutunga kore</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Mā ngā tepenga nui, mā te hītori mutunga kore rānei, ka uru pea ngā utu whiwhi P2C tawhito, kāore e whai hua (“utu whiwhi para”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>He kōwhiringa: ki te waiho pātea, ka whakamahia tēnei pūkoro</translation>
     </message>

@@ -5209,6 +5209,18 @@ Reyndu að keyra nýjustu útgáfu hugbúnaðarins.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Nýjustu blokkir til að leita í:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Ótakmörkuð blokkasaga</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Há mörk eða ótakmörkuð saga geta tekið með gamlar, óarðbærar P2C-umbunir („gagnslausar umbunir“).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Valfrjálst: auður reitur notar þetta veski</translation>
     </message>

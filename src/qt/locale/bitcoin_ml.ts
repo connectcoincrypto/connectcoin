@@ -5377,6 +5377,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>തിരയേണ്ട സമീപകാല ബ്ലോക്കുകൾ:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>പരിധിയില്ലാത്ത ബ്ലോക്ക് ചരിത്രം</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>ഉയർന്ന പരിധികളോ പരിധിയില്ലാത്ത ചരിത്രമോ പഴയതും ഫലപ്രദമല്ലാത്തതുമായ P2C പ്രതിഫലങ്ങൾ (“പാഴ് പ്രതിഫലങ്ങൾ”) ഉൾപ്പെടുത്തിയേക്കാം.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>നിർബന്ധമില്ല: ശൂന്യമായി വിട്ടാൽ ഈ വാലറ്റ് ഉപയോഗിക്കും</translation>
     </message>

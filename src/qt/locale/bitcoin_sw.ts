@@ -5058,6 +5058,18 @@ Tafadhali jaribu kuendesha toleo la karibuni zaidi la programu.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Vitalu vya hivi karibuni vya kutafuta:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Historia ya vitalu isiyo na kikomo</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Vikomo vikubwa au historia isiyo na kikomo inaweza kujumuisha zawadi za P2C za zamani zisizo na tija (“zawadi taka”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Hiari: ikiachwa tupu, pochi hii itatumika</translation>
     </message>

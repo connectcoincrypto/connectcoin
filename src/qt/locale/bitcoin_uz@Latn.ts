@@ -5490,6 +5490,18 @@ Dasturning eng so‘nggi versiyasini ishlating.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Qidiriladigan so‘nggi bloklar:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Cheklanmagan bloklar tarixi</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Yuqori chegaralar yoki cheklanmagan tarix eski, samarasiz P2C mukofotlarini (“keraksiz mukofotlar”) qamrab olishi mumkin.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Ixtiyoriy: bo‘sh qoldirilsa, shu hamyon ishlatiladi</translation>
     </message>

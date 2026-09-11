@@ -3880,6 +3880,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>לעצטע בלאָקן צו דורכזוכן:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>אומבאַגרענעצטע בלאָק־געשיכטע</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>הויכע גרענעצן אָדער אַן אומבאַגרענעצטע געשיכטע קענען אַרײַננעמען אַלטע, אומפּראָדוקטיווע P2C־באַלוינונגען („מיסט־באַלוינונגען“).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>נישט מחויב: אַ ליידיק פֿעלד ניצט דעם בײַטל</translation>
     </message>

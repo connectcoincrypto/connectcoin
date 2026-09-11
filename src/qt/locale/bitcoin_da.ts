@@ -5097,6 +5097,18 @@ Prøv at køre den nyeste softwareversion.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Seneste blokke at søge i:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Ubegrænset blokhistorik</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Høje grænser eller ubegrænset historik kan medtage gamle, uproduktive P2C-belønninger (&quot;værdiløse belønninger&quot;).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Valgfrit: et tomt felt bruger denne tegnebog</translation>
     </message>

@@ -17,6 +17,7 @@
 #include <util/fs.h>
 #include <util/result.h>
 #include <util/ui_change_type.h>
+#include <wallet/p2c_worker.h>
 
 #include <cstdint>
 #include <functional>
@@ -72,7 +73,8 @@ public:
     //! Configure HTTPS in the background, retaining the wallet until completion.
     //! The future yields an empty string on success, otherwise an error.
     //! Empty reward_address pays this wallet; an explicit address overrides new searches.
-    virtual std::future<std::string> configureP2CClaiming(int rate, int concurrency, std::vector<std::string> domains, std::string reward_address = {}) = 0;
+    //! recent_blocks includes the tip; 0 discovers all confirmed bounty ages.
+    virtual std::future<std::string> configureP2CClaiming(int rate, int concurrency, std::vector<std::string> domains, std::string reward_address = {}, int recent_blocks = wallet::DEFAULT_P2C_BOUNTY_LOOKBACK) = 0;
     virtual UniValue getP2CClaimStatus() = 0;
 
     //! Encrypt wallet.

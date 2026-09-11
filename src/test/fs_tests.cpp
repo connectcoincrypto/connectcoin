@@ -8,11 +8,44 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <algorithm>
+#include <cstdio>
 #include <fstream>
 #include <ios>
+#include <memory>
 #include <string>
+#include <vector>
 
 BOOST_FIXTURE_TEST_SUITE(fs_tests, BasicTestingSetup)
+
+#ifdef WIN32
+BOOST_AUTO_TEST_CASE(raise_crt_stream_limit)
+{
+    const int original{_getmaxstdio()};
+    struct RestoreLimit {
+        int value;
+        ~RestoreLimit() { _setmaxstdio(value); }
+    } restore{original};
+#if defined(_MSC_VER) || defined(_UCRT)
+    constexpr int runtime_ceiling{8192};
+#else
+    constexpr int runtime_ceiling{2048};
+#endif
+    BOOST_REQUIRE_EQUAL(RaiseFileDescriptorLimit(), 2048); // Separate socket budget.
+    BOOST_CHECK_EQUAL(_getmaxstdio(), std::max(original, runtime_ceiling));
+    // A second call must not lower a limit already raised by the first one.
+    BOOST_CHECK_EQUAL(RaiseFileDescriptorLimit(), 2048);
+    BOOST_CHECK_EQUAL(_getmaxstdio(), std::max(original, runtime_ceiling));
+
+    // Exceed the CRT's default 512 streams without touching wallet/disk data.
+    // Streams close before RestoreLimit runs, including on assertion failure.
+    std::vector<std::unique_ptr<FILE, decltype(&std::fclose)>> streams;
+    for (int i{0}; i < 600; ++i) {
+        streams.emplace_back(std::fopen("NUL", "rb"), &std::fclose);
+        BOOST_REQUIRE(streams.back());
+    }
+}
+#endif
 
 BOOST_AUTO_TEST_CASE(fsbridge_pathtostring)
 {

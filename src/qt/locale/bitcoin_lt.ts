@@ -5413,6 +5413,18 @@ Bandykite paleisti naujausią programos versiją.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Naujausi blokai, kuriuose ieškoti:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Neribota blokų istorija</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Dideli limitai arba neribota istorija gali įtraukti senus, nenašius P2C atlygius („beverčius atlygius“).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Neprivaloma: palikus tuščią, naudojama ši piniginė</translation>
     </message>

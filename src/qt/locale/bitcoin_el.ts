@@ -5394,6 +5394,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Πρόσφατα μπλοκ προς αναζήτηση:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Απεριόριστο ιστορικό μπλοκ</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Τα υψηλά όρια ή το απεριόριστο ιστορικό ενδέχεται να περιλαμβάνουν παλιές, μη αποδοτικές αμοιβές P2C («άχρηστες αμοιβές»).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Προαιρετικό: αν μείνει κενό, χρησιμοποιείται αυτό το πορτοφόλι</translation>
     </message>

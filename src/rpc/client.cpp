@@ -180,6 +180,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "setp2cclaiming", 0, "connections_per_second" },
     { "setp2cclaiming", 1, "concurrency" },
     { "setp2cclaiming", 2, "domains" },
+    { "setp2cclaiming", 4, "recent_blocks" },
     { "setp2cproof", 1, "input_index" },
     { "decoderawtransaction", 1, "iswitness" },
     { "signrawtransactionwithkey", 1, "privkeys" },

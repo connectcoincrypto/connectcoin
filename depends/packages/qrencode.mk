@@ -1,6 +1,7 @@
 package=qrencode
 $(package)_version=4.1.1
-$(package)_download_path=https://fukuchi.org/works/qrencode/
+# Upstream no longer hosts this release archive; retain its pinned original bytes.
+$(package)_download_path=https://bitcoincore.org/depends-sources
 $(package)_file_name=$(package)-$($(package)_version).tar.gz
 $(package)_sha256_hash=da448ed4f52aba6bcb0cd48cac0dd51b8692bccc4cd127431402fca6f8171e8e
 $(package)_patches=cmake_fixups.patch

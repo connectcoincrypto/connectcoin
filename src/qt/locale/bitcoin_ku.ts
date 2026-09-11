@@ -5076,6 +5076,18 @@ Ji kerema xwe xebitandina guhertoya nermalavê ya herî nû biceribîne.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Blokên dawî yên ku bên lêgerîn:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Dîroka blokan a bêsînor</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Sînorên bilind an dîroka bêsînor dikarin xelatên P2C yên kevn û bêencam (&quot;xelatên bêfeyde&quot;) tê de bihêlin.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Bijarte: vala be vê cizdanê bi kar tîne</translation>
     </message>

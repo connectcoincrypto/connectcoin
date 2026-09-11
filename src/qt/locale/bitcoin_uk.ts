@@ -5638,6 +5638,18 @@ Consider modifying %s (%s) or %s (%s).</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Останні блоки для пошуку:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Необмежена історія блоків</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Високі ліміти або необмежена історія можуть охоплювати старі, непродуктивні винагороди P2C («сміттєві винагороди»).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Необов’язково: порожнє поле означає використання цього гаманця</translation>
     </message>

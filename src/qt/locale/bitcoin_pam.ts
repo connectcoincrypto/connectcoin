@@ -5049,6 +5049,18 @@ Subukan paandaran ing pinakabayung bersyun ning programa.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Deng bayung bloke a panintunan:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Alang limitasyung kasalesayan da reng bloke</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Deng matas a limitasyun o kasalesayan a alang limitasyun malyari lang maglakip kareng laun at alang pakinabang a pabuya ning P2C (“basurang pabuya”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opsiyunal: nung alang laman, gamitan ya ing pitakang ini</translation>
     </message>

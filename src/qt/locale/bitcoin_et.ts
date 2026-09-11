@@ -5409,6 +5409,18 @@ Proovi kasutada tarkvara uusimat versiooni.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Läbiotsitavad viimased plokid:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Piiramatu plokiajalugu</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Kõrged piirmäärad või piiramatu ajalugu võivad kaasata vanu, tulutuid P2C-preemiaid („rämpspreemiaid“).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Valikuline: tühi väli kasutab seda rahakotti</translation>
     </message>

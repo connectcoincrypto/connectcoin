@@ -5286,6 +5286,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>บล็อกล่าสุดที่จะค้นหา:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>ประวัติบล็อกแบบไม่จำกัด</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>การตั้งขีดจำกัดสูงหรือใช้ประวัติแบบไม่จำกัดอาจรวมรางวัล P2C เก่าที่ไม่ก่อให้เกิดผล (“รางวัลขยะ”) เข้ามาด้วย</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>ไม่บังคับ: หากเว้นว่างจะใช้กระเป๋าเงินนี้</translation>
     </message>

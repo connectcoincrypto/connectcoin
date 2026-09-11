@@ -5415,6 +5415,18 @@ Mēģiniet palaist jaunāko programmatūras versiju.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Meklējamie jaunākie bloki:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Neierobežota bloku vēsture</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Lieli ierobežojumi vai neierobežota vēsture var ietvert vecas, neproduktīvas P2C atlīdzības (“nederīgas atlīdzības”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Neobligāti: atstājot tukšu, tiek izmantots šis maks</translation>
     </message>

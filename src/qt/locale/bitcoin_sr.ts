@@ -5580,6 +5580,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Недавни блокови за претрагу:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Неограничена историја блокова</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Висока ограничења или неограничена историја могу укључити старе, непродуктивне P2C награде („безвредне награде“).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Необавезно: празно поље користи овај новчаник</translation>
     </message>

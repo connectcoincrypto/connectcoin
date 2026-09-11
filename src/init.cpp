@@ -1096,7 +1096,7 @@ bool AppInitParameterInteraction(const ArgsManager& args)
 
     // Reserve enough FDs to account for the bare minimum, plus any manual connections, plus the bound interfaces.
     // Every element is an int >= 0 so summing in int64_t cannot overflow.
-    // RaiseFileDescriptorLimit() accepts an int so we check that limit before casting.
+    // The descriptor budget is represented as an int, so check before using it.
     const int64_t total_fds = int64_t{MIN_CORE_FDS} +
                               MAX_ADDNODE_CONNECTIONS +
                               num_p2p_bind +
@@ -1117,8 +1117,9 @@ bool AppInitParameterInteraction(const ArgsManager& args)
                            num_rpc_bind +
                            user_rpc_max_connections;
 
-    // Try raising the FD limit to what the user wants (available_fds may be smaller than the requested amount if this fails)
-    available_fds = RaiseFileDescriptorLimit(static_cast<int>(total_fds));
+    // Raise the process limit to the permitted maximum. P2C HTTPS and wallet
+    // files also need descriptors beyond this P2P/RPC connection budget.
+    available_fds = RaiseFileDescriptorLimit();
     // If we are using select instead of poll, our actual limit may be even smaller
 #ifndef USE_POLL
     available_fds = std::min(FD_SETSIZE, available_fds);

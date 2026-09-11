@@ -5283,6 +5283,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>සෙවිය යුතු මෑතකාලීන බ්ලොක්:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>සීමා රහිත බ්ලොක් ඉතිහාසය</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>ඉහළ සීමා හෝ සීමා රහිත ඉතිහාසයක් මඟින් පැරණි, ඵලදායී නොවන P2C ත්‍යාග (“නිෂ්ඵල ත්‍යාග”) ඇතුළත් විය හැක.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>විකල්පයි: හිස්ව තැබුවහොත් මෙම පසුම්බිය භාවිත කෙරේ</translation>
     </message>

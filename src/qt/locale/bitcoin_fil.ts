@@ -5395,6 +5395,18 @@ Subukang patakbuhin ang pinakabagong bersiyon ng software.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Mga kamakailang bloke na hahanapan:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Walang limitasyong kasaysayan ng mga bloke</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Maaaring maisama ng malalaking limitasyon o walang limitasyong kasaysayan ang mga luma at hindi kapaki-pakinabang na P2C na gantimpala (&quot;walang-silbing gantimpala&quot;).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opsyonal: ginagamit ang wallet na ito kapag walang laman</translation>
     </message>

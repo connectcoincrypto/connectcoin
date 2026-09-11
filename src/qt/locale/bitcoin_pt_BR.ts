@@ -5630,6 +5630,18 @@ Tente executar a versão mais recente do software.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Blocos recentes a pesquisar:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Histórico de blocos ilimitado</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Limites muito altos ou um histórico ilimitado podem incluir recompensas P2C antigas e improdutivas (“recompensas inúteis”).</translation>
+    </message>
+    <message>
         <source>Reward address:</source>
         <translation>Endereço da recompensa:</translation>
     </message>

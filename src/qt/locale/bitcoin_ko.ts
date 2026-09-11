@@ -5599,6 +5599,18 @@ Consider modifying %s (%s) or %s (%s).</source>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>검색할 최근 블록 수:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>블록 기록 제한 없음</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>한도를 높게 설정하거나 기록을 무제한으로 검색하면 오래되고 성과를 기대하기 어려운 P2C 현상금(&quot;쓸모없는 현상금&quot;)이 포함될 수 있습니다.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>선택 사항: 비워 두면 이 지갑을 사용합니다</translation>
     </message>

@@ -495,8 +495,13 @@ else()
   try_append_cxx_flags("-Wduplicated-branches" TARGET warn_interface SKIP_LINK)
   try_append_cxx_flags("-Wduplicated-cond" TARGET warn_interface SKIP_LINK)
   try_append_cxx_flags("-Wlogical-op" TARGET warn_interface SKIP_LINK)
-  try_append_cxx_flags("-Woverloaded-virtual" TARGET warn_interface SKIP_LINK)
-  try_append_cxx_flags("-Wsuggest-override" TARGET warn_interface SKIP_LINK)
+  # These warnings apply only to C++; the wallet also compiles TLS glue as C.
+  try_append_cxx_flags("-Woverloaded-virtual" TARGET warn_interface SKIP_LINK
+    IF_CHECK_PASSED "$<$<COMPILE_LANGUAGE:CXX>:-Woverloaded-virtual>"
+  )
+  try_append_cxx_flags("-Wsuggest-override" TARGET warn_interface SKIP_LINK
+    IF_CHECK_PASSED "$<$<COMPILE_LANGUAGE:CXX>:-Wsuggest-override>"
+  )
   try_append_cxx_flags("-Wimplicit-fallthrough" TARGET warn_interface SKIP_LINK)
   try_append_cxx_flags("-Wunreachable-code" TARGET warn_interface SKIP_LINK)
   try_append_cxx_flags("-Wdocumentation" TARGET warn_interface SKIP_LINK)

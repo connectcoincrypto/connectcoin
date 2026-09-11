@@ -5084,6 +5084,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>بلۆکە نوێیەکان بۆ گەڕان:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>مێژووی بلۆک بەبێ سنوور</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>سنوورە بەرزەکان یان مێژووی بێ سنوور لەوانەیە پاداشتە کۆن و بێ‌بەرهەمەکانی P2C (&quot;پاداشتی بێ‌سوود&quot;) لەخۆ بگرن.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>ئارەزوومەندانە: ئەگەر بەتاڵ بێت، ئەم جزدانە بەکاردێت</translation>
     </message>

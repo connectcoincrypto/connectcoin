@@ -1989,6 +1989,18 @@ Active reward address: %5</translation>
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Recent blocks to search:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Unlimited block history</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</translation>
+    </message>
+    <message>
         <source>0 disables HTTPS. For no rate limit, select Unlimited rate below.</source>
         <translation>0 disables HTTPS. For no rate limit, select Unlimited rate below.</translation>
     </message>

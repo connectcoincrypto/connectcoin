@@ -4999,6 +4999,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Ізделетін соңғы блоктар:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Шектеусіз блок тарихы</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Жоғары шектеулер немесе шектеусіз тарих ескі, нәтижесіз P2C сыйақыларын («пайдасыз сыйақылар») қамтуы мүмкін.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Міндетті емес: бос қалдырылса, осы әмиян қолданылады</translation>
     </message>

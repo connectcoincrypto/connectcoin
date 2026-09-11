@@ -5220,6 +5220,18 @@ Please try running the latest software version.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>بلوک‌های اخیر برای جستجو:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>تاریخچهٔ نامحدود بلوک‌ها</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>محدوده‌های بزرگ یا تاریخچهٔ نامحدود ممکن است پاداش‌های قدیمی و بی‌ثمر P2C («پاداش‌های بی‌فایده») را نیز شامل شوند.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>اختیاری: خالی بماند تا از این کیف پول استفاده شود</translation>
     </message>

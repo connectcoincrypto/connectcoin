@@ -5158,6 +5158,18 @@ Klaskit lañsañ stumm diwezhañ ar meziant.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Blokoù nevez da glask enno:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Istor divevenn ar blokoù</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Bevennoù uhel pe un istor divevenn a c'hall lakaat dic'hoproù P2C kozh ha didalvez da vezañ kemeret e kont («dic'hoproù lastez»).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Diret: implijout a ra an doug-moneiz-mañ ma vez goullo</translation>
     </message>

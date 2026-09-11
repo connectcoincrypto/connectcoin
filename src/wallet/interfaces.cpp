@@ -279,10 +279,10 @@ public:
         }
         return P2CTransactionBatch::Prepare(m_wallet, recipient, output_count, control);
     }
-    std::future<std::string> configureP2CClaiming(int rate, int concurrency, std::vector<std::string> domains, std::string reward_address) override
+    std::future<std::string> configureP2CClaiming(int rate, int concurrency, std::vector<std::string> domains, std::string reward_address, int recent_blocks) override
     {
-        return std::async(std::launch::async, [wallet = m_wallet, rate, concurrency, domains = std::move(domains), reward_address = std::move(reward_address)]() mutable {
-            auto result{wallet->GetP2CClaimWorker().Configure(rate, concurrency, std::move(domains), std::move(reward_address))};
+        return std::async(std::launch::async, [wallet = m_wallet, rate, concurrency, domains = std::move(domains), reward_address = std::move(reward_address), recent_blocks]() mutable {
+            auto result{wallet->GetP2CClaimWorker().Configure(rate, concurrency, std::move(domains), std::move(reward_address), recent_blocks)};
             return util::ErrorString(result).original;
         });
     }

@@ -15,7 +15,9 @@
 #include <util/log.h>
 #include <util/syserror.h>
 
+#include <algorithm>
 #include <cerrno>
+#include <cstdio>
 #include <fstream>
 #include <limits>
 #include <map>
@@ -27,6 +29,8 @@
 #include <utility>
 
 #ifndef WIN32
+#include <util/string.h>
+
 #include <fcntl.h>
 #include <sys/resource.h>
 #include <sys/types.h>
@@ -39,6 +43,7 @@
 #ifdef __APPLE__
 #include <sys/mount.h>
 #include <sys/param.h>
+#include <sys/sysctl.h>
 #endif
 
 /** Mutex to protect dir_locks. */
@@ -163,40 +168,100 @@ bool TruncateFile(FILE* file, unsigned int length)
 #endif
 }
 
-int RaiseFileDescriptorLimit(int min_fd)
+int RaiseFileDescriptorLimit()
 {
-    Assert(min_fd >= 0);
 #if defined(WIN32)
+    // CRT streams start at 512, independently of Winsock sockets. Request only
+    // the documented ceiling of the linked runtime; probing arbitrary larger
+    // values can invoke its fatal invalid-parameter handler. Older MinGW
+    // builds can still use MSVCRT rather than the Universal CRT (UCRT).
+#if defined(_MSC_VER) || defined(_UCRT)
+    constexpr int max_stdio{8192};
+#else
+    constexpr int max_stdio{2048};
+#endif
+    const int original_stdio{_getmaxstdio()};
+    if (original_stdio < max_stdio && _setmaxstdio(max_stdio) == -1) {
+        LogWarning("Could not raise CRT stream limit to %d: %s\n", max_stdio, SysErrorString(errno));
+    }
+    LogInfo("CRT stream limit: %d (previously %d); separate from Winsock sockets\n", _getmaxstdio(), original_stdio);
+    // Winsock sockets do not share a POSIX RLIMIT_NOFILE with CRT file streams.
+    // Retain the existing connection budget; this is not a queried OS limit.
     return 2048;
 #else
-    struct rlimit limitFD;
-    if (getrlimit(RLIMIT_NOFILE, &limitFD) != -1) {
-        // If the current soft limit is already higher, don't raise it
-        if (limitFD.rlim_cur != RLIM_INFINITY && std::cmp_less(limitFD.rlim_cur, min_fd)) {
-            const auto current_limit{limitFD.rlim_cur};
-            static_assert(std::in_range<rlim_t>(std::numeric_limits<int>::max()));
-            limitFD.rlim_cur = static_cast<rlim_t>(min_fd);
-            // Don't raise soft limit beyond hard limit
-            if ((limitFD.rlim_max != RLIM_INFINITY) && (limitFD.rlim_cur > limitFD.rlim_max)) {
-                limitFD.rlim_cur = limitFD.rlim_max;
-            }
-            if (current_limit != limitFD.rlim_cur) {
-                setrlimit(RLIMIT_NOFILE, &limitFD);
-                getrlimit(RLIMIT_NOFILE, &limitFD);
-            }
-        }
-        // Check the (possibly raised) current soft limit against the special
-        // value of RLIM_INFINITY. Some platforms implement this as the maximum
-        // uint64, others as int64 (-1). Avoid casting even if the return type
-        // is changed to uint64_t. We also cap unlikely but possible values
-        // that would overflow int.
-        if (limitFD.rlim_cur == RLIM_INFINITY ||
-            std::cmp_greater_equal(limitFD.rlim_cur, std::numeric_limits<int>::max())) {
-            return std::numeric_limits<int>::max();
-        }
-        return static_cast<int>(limitFD.rlim_cur);
+    struct rlimit original;
+    if (getrlimit(RLIMIT_NOFILE, &original) != 0) {
+        LogError("Cannot query file descriptor limit: %s\n", SysErrorString(errno));
+        return 0; // Let startup's minimum-capacity check fail, rather than guess.
     }
-    return min_fd; // getrlimit failed, assume it's fine
+
+    // P2C HTTPS sockets, wallet databases and block files all share this limit.
+    // Raise to the inherited hard limit, not merely the P2P/RPC socket budget.
+    // This requests a change only to this process's soft limit, never a new hard
+    // limit, and does not allocate descriptors or change connection counts.
+    struct rlimit effective{original};
+    if (original.rlim_cur != RLIM_INFINITY && original.rlim_cur != original.rlim_max) {
+        struct rlimit requested{original};
+        requested.rlim_cur = original.rlim_max;
+        if (setrlimit(RLIMIT_NOFILE, &requested) != 0) {
+            const int raise_error{errno};
+            // Some kernels reject an inherited unlimited/oversized hard limit
+            // as a soft limit (e.g. Darwin). Find the
+            // highest accepted finite limit without lowering the current one.
+            // Bound the fallback by our int descriptor-budget representation.
+            if (raise_error == EINVAL || raise_error == EPERM) {
+                static_assert(std::in_range<rlim_t>(std::numeric_limits<int>::max()));
+                rlim_t low{original.rlim_cur};
+                rlim_t high{static_cast<rlim_t>(std::numeric_limits<int>::max())};
+                if (original.rlim_max != RLIM_INFINITY) high = std::min(high, original.rlim_max);
+                while (low < high) {
+                    const rlim_t candidate{low + (high - low) / 2 + (high - low) % 2};
+                    requested.rlim_cur = candidate;
+                    if (setrlimit(RLIMIT_NOFILE, &requested) == 0) {
+                        low = candidate;
+                    } else {
+                        if (errno != EINVAL && errno != EPERM) break;
+                        high = candidate - 1;
+                    }
+                }
+            }
+            LogWarning("Could not raise file descriptor soft limit directly to the hard limit: %s\n", SysErrorString(raise_error));
+        }
+        // Kernels may clamp even a successful request. Never report the
+        // requested value as if it were an observed limit.
+        struct rlimit observed;
+        if (getrlimit(RLIMIT_NOFILE, &observed) == 0) {
+            effective = observed;
+        } else {
+            LogWarning("Cannot verify file descriptor limit; using previous limit for budgeting: %s\n", SysErrorString(errno));
+        }
+    }
+    LogInfo("File descriptor limits: soft=%s, hard=%s\n",
+            effective.rlim_cur == RLIM_INFINITY ? "unlimited" : ::ToString(effective.rlim_cur),
+            effective.rlim_max == RLIM_INFINITY ? "unlimited" : ::ToString(effective.rlim_max));
+    // Limit only the returned budget, not the actual OS limit. Handle the
+    // platform-specific infinity sentinel before converting to a signed int.
+    int descriptor_budget{std::numeric_limits<int>::max()};
+    if (effective.rlim_cur != RLIM_INFINITY &&
+        std::cmp_less(effective.rlim_cur, descriptor_budget)) {
+        descriptor_budget = static_cast<int>(effective.rlim_cur);
+    }
+#ifdef __APPLE__
+    // Recent Darwin kernels can report an unlimited RLIMIT_NOFILE while
+    // enforcing a separate, finite per-process cap. Query it for budgeting
+    // only; never change global settings or lower an inherited process limit.
+    int kernel_max_files{0};
+    size_t kernel_max_files_size{sizeof(kernel_max_files)};
+    if (sysctlbyname("kern.maxfilesperproc", &kernel_max_files, &kernel_max_files_size, nullptr, 0) != 0) {
+        LogWarning("Cannot query kernel file descriptor limit; using RLIMIT_NOFILE for budgeting: %s\n", SysErrorString(errno));
+    } else if (kernel_max_files_size != sizeof(kernel_max_files) || kernel_max_files <= 0) {
+        LogWarning("Invalid kern.maxfilesperproc value; using RLIMIT_NOFILE for budgeting\n");
+    } else {
+        LogInfo("Kernel file descriptor limit: kern.maxfilesperproc=%d\n", kernel_max_files);
+        descriptor_budget = std::min(descriptor_budget, kernel_max_files);
+    }
+#endif
+    return descriptor_budget;
 #endif
 }
 

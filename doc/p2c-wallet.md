@@ -124,10 +124,38 @@ worker status, and RPC default use **1000** simultaneous connections; omitting
 the RPC's second argument (or passing `null`) selects that default. HTTPS remains
 disabled when the wallet loads until you explicitly enable it.
 
+The GUI rate field starts at **1000 connections per second**, but this is only
+a proposed limit: the active worker rate remains **0 (disabled)** until you
+click **Apply / start** and accept the confirmation. Cancelling leaves HTTPS
+disabled. The stop button still sets the rate to 0.
+
+On POSIX systems (including Linux, macOS and BSD), startup automatically tries
+to raise the process's soft file-descriptor limit to its inherited hard limit.
+If the kernel rejects that value, it tries the highest accepted finite limit
+up to `INT_MAX`. The observed limits are logged as `File descriptor limits`.
+No administrator privileges or global settings are changed, and raising the
+limit does not allocate sockets or increase configured concurrency. POSIX
+socket waits use `poll()`, so descriptor numbers above `FD_SETSIZE` remain
+usable. macOS also accounts for the kernel's `kern.maxfilesperproc` ceiling.
+On Windows, startup raises the CRT stream limit to 8192 (UCRT) or 2048 (legacy
+MSVCRT); this is separate from Winsock sockets. Windows retains its existing
+connection budget and `select()` set capacity. See
+[file descriptor limits](file-descriptor-limits.md) for platform details.
+
 The optional fourth argument of `setp2cclaiming` is `address`. For example,
 `setp2cclaiming 1 4 '["example.com"]' "REWARD_ADDRESS"` sends rewards there.
 `getp2cclaimstatus.reward_address` reports this setting; an empty string means
 the wallet default. Omitting it on reconfiguration restores the default.
+
+The optional fifth argument, `recent_blocks`, controls bounty discovery age:
+`setp2cclaiming 1 4 '["example.com"]' "" 1200` searches the latest 1,200 blocks,
+including the tip. It defaults to **600**; **0 means unlimited**. Negative values
+are rejected. `getp2cclaimstatus.recent_blocks` reports the current setting.
+Omitting it on reconfiguration restores 600. The wallet dialog provides a block
+count and a separate **Unlimited** checkbox, and warns that very high limits may
+include old, unproductive ("trash") bounties. A wider range can also increase
+catalog snapshot and scheduling work. The worker starts disabled with the default
+lookback after wallet reload; this setting does not change consensus.
 
 Changing the target stops and joins old searches before starting new ones.
 Unfinished proposals with a different payout are replaced because the payout
@@ -169,8 +197,10 @@ from the current UTXO snapshot. It is not persisted: restarting the node require
 one initial scan again. Wallets sharing the node's chain interface reuse the
 catalog, rather than each flushing/scanning the entire UTXO database.
 
-Automatic discovery requests only bounties created in the **last 600 blocks**,
-including the tip (about 100 minutes at the 10-second target spacing). Creation
+By default, automatic discovery requests only bounties created in the **last 600
+blocks**, including the tip (about 100 minutes at the 10-second target spacing).
+The configured lookback replaces this range; unlimited mode includes all ages.
+Creation
 heights are retained by the catalog, including after a rebuild or reorg. A
 height index selects the recent range without walking ancient entries or
 passing them to wallet eligibility checks; this does not add per-bounty UTXO
@@ -242,13 +272,19 @@ and submitted. A domain with only below-floor bounties is not probed just to
 refresh its speed estimate. This is wallet search policy, not a consensus
 restriction or a restriction on preparing/submitting a claim manually.
 
-Each bounty also has a local connection-start budget. With
+Each bounty also has a local successful-connection budget. With
 `p = (target + 1) / 2^256`, new attempts stop once its count is **strictly greater
-than `2 / p`**. For example, `p = 1/2` permits five starts: four equals `2 / p`,
-and the fifth exceeds it. The comparison uses exact 320-bit arithmetic. Starts
-are serialized across workers, so concurrency cannot overshoot the budget;
-already started handshakes may finish and successful proofs are not discarded.
-TCP/TLS failures consume this budget too; DNS resolution and waiting do not.
+than `2 / p`**. Only completed TLS captures through **CertificateVerify** count,
+regardless of whether their work hash meets the target; certificate/claim
+acceptance is still checked separately. TCP/TLS failures, timeouts, incomplete
+local cancellations, DNS resolution and waiting do not consume this budget.
+For example, with one worker and `p = 1/2`, the fifth successful capture exceeds
+the limit: four equals `2 / p`. The comparison uses exact 320-bit arithmetic.
+Updates and start checks are serialized across workers. Connections already in
+flight may finish, so concurrent captures can exceed that count; completed
+proofs are retained and submitted even after the cutoff. The aggregate RPC
+`attempts` field still counts starts, and failed attempts still affect the
+domain/mask's last-100 performance history.
 Counters are per outpoint, not per domain or payout address, and survive
 five-second refreshes, proposal-cache eviction and stop/start while the wallet
 is loaded. They are **only in memory** and reset on wallet unload/restart.
@@ -257,9 +293,9 @@ in-flight work/proofs drain, bounding retained history to recent work. Changing
 the domain allowlist, temporary mempool spends or locking a coin does not reset
 a recent bounty's budget. A reorg restoring an already forgotten bounty can
 start a fresh budget; this is deliberately a soft local search policy.
-For independent valid trials with small `p`, failing around `2 / p` times has
+For independent valid work candidates with small `p`, missing the target around `2 / p` times has
 probability approximately 13.5%; this is a resource policy, not evidence that
-a domain is malicious, especially when some attempts fail before hashing.
+a domain is malicious.
 
 The oldest attempt is removed when the window exceeds 100. Histories survive
 priority refreshes, temporary bounty ineligibility and stop/start in the same

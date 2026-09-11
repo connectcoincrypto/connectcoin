@@ -5419,6 +5419,18 @@ Probeer de nieuwste softwareversie te gebruiken.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Recente blokken om te doorzoeken:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Onbeperkte blokgeschiedenis</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Hoge limieten of een onbeperkte geschiedenis kunnen oude, onproductieve P2C-beloningen (“rommelbeloningen”) omvatten.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Optioneel: leeg gebruikt deze portemonnee</translation>
     </message>

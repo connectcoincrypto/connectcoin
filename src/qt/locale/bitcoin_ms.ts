@@ -4912,6 +4912,18 @@ Sila cuba jalankan versi perisian terkini.
 <context>
     <name>P2CClaimDialog</name>
     <message>
+        <source>Recent blocks to search:</source>
+        <translation>Blok terkini untuk dicari:</translation>
+    </message>
+    <message>
+        <source>Unlimited block history</source>
+        <translation>Sejarah blok tanpa had</translation>
+    </message>
+    <message>
+        <source>Large limits or unlimited history may include old, unproductive P2C bounties (&quot;trash bounties&quot;).</source>
+        <translation>Had yang besar atau sejarah tanpa had mungkin merangkumi ganjaran P2C lama yang tidak produktif (“ganjaran sampah”).</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Pilihan: jika kosong, dompet ini digunakan</translation>
     </message>

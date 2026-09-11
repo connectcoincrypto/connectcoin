@@ -51,7 +51,6 @@ using Clock = std::chrono::steady_clock;
 using ScheduleClock = MockableSteadyClock;
 constexpr size_t MAX_PENDING_CLAIMS{256};
 constexpr size_t MAX_SAVED_STATE{64 * 1024 * 1024};
-constexpr int RECENT_BOUNTY_BLOCKS{600};
 constexpr auto SCHEDULE_REFRESH{std::chrono::seconds{5}};
 constexpr auto DNS_REFRESH{std::chrono::seconds{60}};
 constexpr auto STATE_KEY{"p2c_claim_worker_v1"};
@@ -72,7 +71,7 @@ class P2CClaimWorkerImpl final : public P2CClaimWorker {
 public:
     explicit P2CClaimWorkerImpl(CWallet& wallet);
     ~P2CClaimWorkerImpl() override;
-    util::Result<void> Configure(int rate, int concurrency, std::vector<std::string> domains, std::string reward_address) override;
+    util::Result<void> Configure(int rate, int concurrency, std::vector<std::string> domains, std::string reward_address, int recent_blocks) override;
     void Stop() override;
     void Shutdown() override;
     UniValue Status() const override;
@@ -94,6 +93,7 @@ struct P2CClaimWorkerImpl::Impl {
     bool closing{false};
     int rate{0};
     int concurrency{DEFAULT_P2C_CLAIM_CONCURRENCY};
+    int recent_blocks{DEFAULT_P2C_BOUNTY_LOOKBACK};
     std::vector<std::string> domains;
     std::string reward_address;
     std::optional<CTxDestination> payout_destination;
@@ -156,9 +156,11 @@ struct P2CClaimWorkerImpl::Impl {
     using DomainMask = std::pair<std::string, uint8_t>;
     std::map<DomainMask, std::shared_ptr<P2CDomainStats>> domain_statistics;
     std::map<COutPoint, std::shared_ptr<ClaimWork>> claim_cache;
-    // Local search budget, independent of proposal-cache eviction, payout
-    // changes and stop/start. Deliberately not saved to the wallet database.
-    std::map<COutPoint, uint64_t> bounty_attempts;
+    // Completed TLS captures through CertificateVerify, independent of whether
+    // the work hash wins. Failures and incomplete cancellations do not count.
+    // Survives proposal-cache eviction, payout changes and stop/start, but is
+    // deliberately not saved to the wallet database.
+    std::map<COutPoint, uint64_t> bounty_successful_connections;
     // Negative weighted score sorts best first; the exact bounty key breaks
     // floating-point ties. Store immutable snapshots, not a mutable comparator.
     std::set<std::pair<std::pair<double, PriorityKey>, std::string>> economic_order;
@@ -395,7 +397,7 @@ struct P2CClaimWorkerImpl::Impl {
                 catalog_masks.emplace(bounty->domain, bounty->signature_algorithms_mask);
             }
             return true;
-        }, [&] { return stop.load(); }, RECENT_BOUNTY_BLOCKS)) return;
+        }, [&] { return stop.load(); }, recent_blocks)) return;
 
         std::lock_guard work_lock{work_mutex};
         int wallet_height;
@@ -418,7 +420,7 @@ struct P2CClaimWorkerImpl::Impl {
         // Confirmed-spent/aged-out bounties can be forgotten after live work
         // drains. Mempool spends, locks, fees and filters do not remove entries
         // from the recent catalog and therefore cannot reset their counters.
-        std::erase_if(bounty_attempts, [&](const auto& entry) {
+        std::erase_if(bounty_successful_connections, [&](const auto& entry) {
             return !recent_outpoints.contains(entry.first) && !claim_cache.contains(entry.first) && !HasCompleted(entry.first);
         });
         // One batched availability check for cached/in-flight challenges. A
@@ -469,7 +471,7 @@ struct P2CClaimWorkerImpl::Impl {
             // uint256. Even MAX_MONEY at the maximum smoothed rate (5005/s)
             // cannot reach 1000 connects/s when these 64 target bits are zero.
             if (bounty.connection_work_target.GetUint64(3) == 0) continue;
-            if (AttemptLimitExceeded(outpoint, bounty.connection_work_target)) continue;
+            if (ConnectionLimitExceeded(outpoint, bounty.connection_work_target)) continue;
             const DomainMask domain_mask{bounty.domain, bounty.signature_algorithms_mask};
             const double connection_rate{connection_rates.try_emplace(domain_mask, 5.0).first->second};
             const auto priority{GetP2CClaimPriority(bounty.connection_work_target, payout)};
@@ -515,11 +517,11 @@ struct P2CClaimWorkerImpl::Impl {
         return std::any_of(completed.begin(), completed.end(), [&](const auto& item) { return item.tx->vin[0].prevout == outpoint; });
     }
 
-    bool AttemptLimitExceeded(const COutPoint& outpoint, const uint256& target) const
+    bool ConnectionLimitExceeded(const COutPoint& outpoint, const uint256& target) const
     {
-        const auto found{bounty_attempts.find(outpoint)};
-        return found != bounty_attempts.end() &&
-            (found->second == std::numeric_limits<uint64_t>::max() || IsP2CClaimAttemptLimitExceeded(target, found->second));
+        const auto found{bounty_successful_connections.find(outpoint)};
+        return found != bounty_successful_connections.end() &&
+            (found->second == std::numeric_limits<uint64_t>::max() || IsP2CClaimConnectionLimitExceeded(target, found->second));
     }
 
     std::optional<Assignment> Next(const std::atomic<bool>& stop)
@@ -561,7 +563,7 @@ struct P2CClaimWorkerImpl::Impl {
                 group->bounties.erase(candidate);
                 UpdateEconomicOrder(*group);
             };
-            if (AttemptLimitExceeded(outpoint, candidate->second.GetPayToDomain()->connection_work_target)) {
+            if (ConnectionLimitExceeded(outpoint, candidate->second.GetPayToDomain()->connection_work_target)) {
                 discard();
                 continue;
             }
@@ -658,11 +660,10 @@ struct P2CClaimWorkerImpl::Impl {
                 std::lock_guard lock{work_mutex};
                 if (group->endpoints.empty() || claim_cancelled()) continue;
                 const auto outpoint{claim->prepared.tx->vin[0].prevout};
-                // Reserve the start under the shared lock: high concurrency
-                // cannot overshoot the per-bounty budget. Already started
-                // attempts may finish and submit a proof after this cutoff.
-                if (AttemptLimitExceeded(outpoint, claim->prepared.bounty.GetPayToDomain()->connection_work_target)) continue;
-                ++bounty_attempts[outpoint];
+                // Check completed successes under the same lock as updates.
+                // In-flight attempts are not yet successes; they may finish
+                // and submit a proof after this cutoff, but no new work starts.
+                if (ConnectionLimitExceeded(outpoint, claim->prepared.bounty.GetPayToDomain()->connection_work_target)) continue;
                 { std::lock_guard status_lock{mutex}; ++attempts; }
                 group->endpoint_offset %= group->endpoints.size();
                 endpoint = group->endpoints[group->endpoint_offset];
@@ -679,6 +680,10 @@ struct P2CClaimWorkerImpl::Impl {
                 // Full TLS capture is a success even if its work hash misses
                 // the target. Local cancellation is not a server failure.
                 assignment->statistics->Record(bool(captured), seconds);
+                if (captured) {
+                    auto& successes{bounty_successful_connections[claim->prepared.tx->vin[0].prevout]};
+                    if (successes != std::numeric_limits<uint64_t>::max()) ++successes;
+                }
             }
             if (!captured) {
                 if (!claim_cancelled()) {
@@ -808,13 +813,14 @@ void P2CClaimWorkerImpl::Shutdown()
     m_impl->StopUnlocked();
 }
 
-util::Result<void> P2CClaimWorkerImpl::Configure(int rate, int concurrency, std::vector<std::string> domains, std::string reward_address)
+util::Result<void> P2CClaimWorkerImpl::Configure(int rate, int concurrency, std::vector<std::string> domains, std::string reward_address, int recent_blocks)
 {
     std::lock_guard control{m_impl->control_mutex};
     if (m_impl->closing) return util::Error{Untranslated("Wallet is unloading")};
     if (rate < -1 || concurrency < 1 || domains.size() > 256) {
         return util::Error{Untranslated("Use rate -1, 0 or positive; positive concurrency; up to 256 domains")};
     }
+    if (recent_blocks < 0) return util::Error{Untranslated("P2C bounty lookback must be zero (unlimited) or a positive number of blocks")};
     for (const auto& domain : domains) if (!IsCanonicalP2CDomain(domain)) return util::Error{Untranslated("Invalid P2C domain filter")};
     std::optional<CTxDestination> destination;
     try {
@@ -834,6 +840,7 @@ util::Result<void> P2CClaimWorkerImpl::Configure(int rate, int concurrency, std:
         std::lock_guard lock{m_impl->mutex};
         m_impl->rate = rate;
         m_impl->concurrency = concurrency;
+        m_impl->recent_blocks = recent_blocks;
         m_impl->domains = std::move(domains);
         m_impl->reward_address = destination ? EncodeDestination(*destination) : "";
         m_impl->payout_destination = std::move(destination);
@@ -864,6 +871,7 @@ UniValue P2CClaimWorkerImpl::Status() const
     UniValue result{UniValue::VOBJ};
     result.pushKV("connections_per_second", m_impl->rate);
     result.pushKV("concurrency", m_impl->concurrency);
+    result.pushKV("recent_blocks", m_impl->recent_blocks);
     result.pushKV("reward_address", m_impl->reward_address);
     result.pushKV("domain_rounds", m_impl->domain_rounds);
     result.pushKV("schedule_refreshes", m_impl->schedule_refreshes);
