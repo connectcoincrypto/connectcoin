@@ -127,7 +127,9 @@ P2CClaimDialog::P2CClaimDialog(QWidget* parent) : QWidget(parent)
 
 void P2CClaimDialog::setModel(WalletModel* model)
 {
+    if (m_model) disconnect(m_model, nullptr, this, nullptr);
     m_model = model;
+    if (model) connect(model, &QObject::destroyed, this, [this] { setModel(nullptr); });
     m_active_high_load = false;
     UpdateLoadWarning();
     setEnabled(model != nullptr);

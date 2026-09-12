@@ -11,6 +11,7 @@
 #include <qt/miningpage.h>
 #include <qt/optionsmodel.h>
 #include <qt/overviewpage.h>
+#include <qt/p2cclaimdialog.h>
 #include <qt/p2ccreatedialog.h>
 #include <qt/platformstyle.h>
 #include <qt/receivecoinsdialog.h>
@@ -65,6 +66,8 @@ WalletView::WalletView(WalletModel* wallet_model, const PlatformStyle* _platform
     sendCoinsPage = new SendCoinsDialog(platformStyle);
     sendCoinsPage->setModel(walletModel);
 
+    p2cClaimPage = new P2CClaimDialog(this);
+    p2cClaimPage->setModel(walletModel);
     p2cPage = new P2CCreateDialog(this);
     p2cPage->setModel(walletModel);
     miningPage = new MiningPage(walletModel, this);
@@ -79,8 +82,10 @@ WalletView::WalletView(WalletModel* wallet_model, const PlatformStyle* _platform
     addWidget(transactionsPage);
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
+    addWidget(p2cClaimPage);
     addWidget(p2cPage);
     addWidget(miningPage);
+    gotoP2CClaimPage();
 
     connect(overviewPage, &OverviewPage::transactionClicked, this, &WalletView::transactionClicked);
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
@@ -176,6 +181,11 @@ void WalletView::gotoSendCoinsPage(QString addr)
 
     if (!addr.isEmpty())
         sendCoinsPage->setAddress(addr);
+}
+
+void WalletView::gotoP2CClaimPage()
+{
+    setCurrentWidget(p2cClaimPage);
 }
 
 void WalletView::gotoP2CPage()

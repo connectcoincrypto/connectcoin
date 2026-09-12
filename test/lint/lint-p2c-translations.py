@@ -16,6 +16,8 @@ ROOT = Path(__file__).resolve().parents[2]
 QT = ROOT / "src/qt"
 EXTRA_MESSAGES = {
     "BitcoinGUI": {"&P2C", "Create pay-to-connect bounties"},
+    # The main toolbar reuses the original label's translation context.
+    "P2CCreateDialog": {"Automatic claims"},
     "TransactionView": {"Enter address, P2C domain, transaction id, or label to search"},
     "TransactionTableModel": {"P2C: %1", "User-defined intent/purpose of the transaction, or the P2C domain."},
     "TransactionDesc": {"P2C domain"},
@@ -28,7 +30,7 @@ def required_messages():
         # These dialogs use standalone C++ string literals, whose escapes here
         # are also valid JSON escapes. Decode newlines before comparing with TS.
         source = (QT / filename).read_text(encoding="utf-8")
-        result[name] = {json.loads('"' + value + '"') for value in re.findall(r'\btr\("((?:[^"\\]|\\.)*)"\)', source)}
+        result.setdefault(name, set()).update(json.loads('"' + value + '"') for value in re.findall(r'\btr\("((?:[^"\\]|\\.)*)"\)', source))
     return result
 
 

@@ -18,6 +18,7 @@
 #include <qt/csvmodelwriter.h>
 #include <qt/optionsmodel.h>
 #include <qt/overviewpage.h>
+#include <qt/p2cclaimdialog.h>
 #include <qt/p2ccreatedialog.h>
 #include <qt/platformstyle.h>
 #include <qt/qvalidatedlineedit.h>
@@ -392,10 +393,11 @@ void TestGUI(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet)
         frame.gotoOverviewPage();
         QVERIFY(stack->currentWidget() != fallback);
         frame.setClientModel(mini_gui.clientModel.get());
-        auto* overview_view = new WalletView(&walletModel, platformStyle.get(), &frame);
-        QVERIFY(frame.addView(overview_view));
+        auto* default_view = new WalletView(&walletModel, platformStyle.get(), &frame);
+        QVERIFY(qobject_cast<P2CClaimDialog*>(default_view->currentWidget()));
+        QVERIFY(frame.addView(default_view));
         frame.setCurrentWallet(&walletModel);
-        QVERIFY(!qobject_cast<MiningPage*>(overview_view->currentWidget()));
+        QVERIFY(qobject_cast<P2CClaimDialog*>(default_view->currentWidget()));
         frame.removeWallet(&walletModel);
         QVERIFY(stack->currentWidget() != fallback);
         QVERIFY(QMetaObject::invokeMethod(&walletModel, "canGetAddressesChanged", Qt::DirectConnection));
@@ -666,7 +668,88 @@ void TestP2CGUI(interfaces::Node& node)
     std::unique_ptr<const PlatformStyle> style(PlatformStyle::instantiate("other"));
     MiniGUI gui(node, style.get());
     gui.initModelForWallet(node, wallet, style.get(), /*unload=*/false);
+    {
+        // Claims are the first wallet page, but visiting it or switching
+        // wallets must never opt a wallet into making HTTPS connections.
+        const auto second_wallet = SetupDescriptorsWallet(node, test);
+        WalletModel second_model{interfaces::MakeWallet(*node.walletLoader().context(), second_wallet), *gui.clientModel, style.get()};
+        WalletFrame frame{style.get(), nullptr};
+        frame.setClientModel(gui.clientModel.get());
+        auto* first_view = new WalletView(gui.walletModel.get(), style.get(), &frame);
+        auto* first_claims = first_view->findChild<P2CClaimDialog*>();
+        auto* first_creation = first_view->findChild<P2CCreateDialog*>();
+        QVERIFY(first_claims && first_creation);
+        QCOMPARE(first_view->findChildren<P2CClaimDialog*>().size(), 1);
+        QCOMPARE(first_claims->parentWidget(), first_view);
+        QCOMPARE(first_creation->parentWidget(), first_view);
+        QCOMPARE(first_view->currentWidget(), first_claims);
+        QVERIFY(frame.addView(first_view));
+        frame.setCurrentWallet(gui.walletModel.get());
+        QCOMPARE(frame.currentWalletView(), first_view);
+        QCOMPARE(first_view->currentWidget(), first_claims);
+        auto* first_rate = first_claims->findChild<QSpinBox*>("p2cClaimRate");
+        QVERIFY(first_rate);
+        QCOMPARE(first_rate->value(), 100);
+        first_rate->setValue(37);
+        first_view->gotoP2CPage();
+        QCOMPARE(first_view->currentWidget(), first_creation);
+        QVERIFY(!first_creation->findChild<QTabWidget*>());
+        QVERIFY(!first_creation->findChild<P2CClaimDialog*>());
+        auto* draft_domain = first_creation->findChild<QLineEdit*>("p2cDomain");
+        QVERIFY(draft_domain);
+        draft_domain->setText("draft.example");
+        first_view->gotoP2CClaimPage();
+        QCOMPARE(first_view->currentWidget(), first_claims);
+        QCOMPARE(first_rate->value(), 37);
+        QCOMPARE(draft_domain->text(), QStringLiteral("draft.example"));
+
+        // A new wallet inherits the page selected by the user. Frame
+        // navigation subsequently updates all wallets, including hidden ones.
+        frame.gotoP2CPage();
+        auto* second_view = new WalletView(&second_model, style.get(), &frame);
+        auto* second_claims = second_view->findChild<P2CClaimDialog*>();
+        auto* second_creation = second_view->findChild<P2CCreateDialog*>();
+        QVERIFY(second_claims && second_creation);
+        QCOMPARE(second_view->currentWidget(), second_claims);
+        QVERIFY(frame.addView(second_view));
+        QCOMPARE(first_view->currentWidget(), first_creation);
+        QCOMPARE(second_view->currentWidget(), second_creation);
+        frame.setCurrentWallet(&second_model);
+        QCOMPARE(frame.currentWalletView(), second_view);
+        QCOMPARE(second_view->currentWidget(), second_creation);
+        frame.gotoP2CClaimPage();
+        QCOMPARE(first_view->currentWidget(), first_claims);
+        QCOMPARE(second_view->currentWidget(), second_claims);
+        frame.setCurrentWallet(gui.walletModel.get());
+        QCOMPARE(frame.currentWalletView(), first_view);
+        QCOMPARE(first_view->currentWidget(), first_claims);
+        QCOMPARE(first_rate->value(), 37);
+        QCOMPARE(second_claims->findChild<QSpinBox*>("p2cClaimRate")->value(), 100);
+        for (auto* model : {gui.walletModel.get(), &second_model}) {
+            QCOMPARE(model->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 0);
+            QCOMPARE(model->wallet().getP2CClaimStatus()["attempts"].getInt<uint64_t>(), uint64_t{0});
+        }
+        frame.gotoOverviewPage();
+        QVERIFY(qobject_cast<OverviewPage*>(first_view->currentWidget()));
+        QVERIFY(qobject_cast<OverviewPage*>(second_view->currentWidget()));
+        frame.setCurrentWallet(&second_model);
+        QVERIFY(qobject_cast<OverviewPage*>(frame.currentWalletView()->currentWidget()));
+        frame.gotoP2CClaimPage();
+        const QPointer<P2CClaimDialog> first_claim_guard{first_claims};
+        const QPointer<P2CClaimDialog> second_claim_guard{second_claims};
+        frame.removeAllWallets();
+        QVERIFY(first_claim_guard.isNull());
+        QVERIFY(second_claim_guard.isNull());
+        QVERIFY(!frame.currentWalletView());
+        auto* reopened_view = new WalletView(gui.walletModel.get(), style.get(), &frame);
+        QVERIFY(frame.addView(reopened_view));
+        frame.setCurrentWallet(gui.walletModel.get());
+        QVERIFY(qobject_cast<P2CClaimDialog*>(reopened_view->currentWidget()));
+        QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 0);
+        QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["attempts"].getInt<uint64_t>(), uint64_t{0});
+    }
     P2CCreateDialog page;
+    P2CClaimDialog claim_page;
     struct ProbeFixture {
         enum class Outcome { FAILURE, SUCCESS, PENDING, LATE_SUCCESS, EXCEPTION };
         std::atomic<Outcome> outcome{Outcome::FAILURE};
@@ -697,26 +780,52 @@ void TestP2CGUI(interfaces::Node& node)
     // Never use DNS or real TLS in the normal Qt test suite.
     page.setRsaProbeForTest(mock_probe);
     page.setModel(gui.walletModel.get());
-    auto* claim_rate = page.findChild<QSpinBox*>("p2cClaimRate");
-    auto* claim_unlimited = page.findChild<QCheckBox*>("p2cClaimUnlimited");
-    auto* claim_concurrency = page.findChild<QSpinBox*>("p2cClaimConcurrency");
-    auto* claim_load_warning = page.findChild<QLabel*>("p2cClaimLoadWarning");
-    auto* claim_recent_blocks = page.findChild<QSpinBox*>("p2cClaimRecentBlocks");
-    auto* claim_unlimited_history = page.findChild<QCheckBox*>("p2cClaimUnlimitedHistory");
-    auto* claim_history_warning = page.findChild<QLabel*>("p2cClaimHistoryWarning");
-    auto* claim_scroll = page.findChild<QScrollArea*>("p2cClaimScrollArea");
-    auto* claim_start = page.findChild<QPushButton*>("p2cClaimStart");
-    auto* claim_stop = page.findChild<QPushButton*>("p2cClaimStop");
-    auto* claim_domains = page.findChild<QLineEdit*>("p2cClaimDomains");
-    auto* claim_status = page.findChild<QLabel*>("p2cClaimStatus");
-    auto* claim_address = page.findChild<QLineEdit*>("p2cClaimAddress");
-    auto* claim_reward_status = page.findChild<QLabel*>("p2cClaimRewardStatus");
+    QVERIFY(!page.findChild<QTabWidget*>());
+    QVERIFY(!page.findChild<P2CClaimDialog*>());
+    QVERIFY(!page.findChild<QPushButton*>("p2cClaimStart"));
+    QVERIFY(!claim_page.isEnabled());
+    claim_page.setModel(gui.walletModel.get());
+    QVERIFY(claim_page.isEnabled());
+    QVERIFY(!claim_page.findChild<QPushButton*>("p2cCreateButton"));
+    auto* claim_rate = claim_page.findChild<QSpinBox*>("p2cClaimRate");
+    auto* claim_unlimited = claim_page.findChild<QCheckBox*>("p2cClaimUnlimited");
+    auto* claim_concurrency = claim_page.findChild<QSpinBox*>("p2cClaimConcurrency");
+    auto* claim_load_warning = claim_page.findChild<QLabel*>("p2cClaimLoadWarning");
+    auto* claim_recent_blocks = claim_page.findChild<QSpinBox*>("p2cClaimRecentBlocks");
+    auto* claim_unlimited_history = claim_page.findChild<QCheckBox*>("p2cClaimUnlimitedHistory");
+    auto* claim_history_warning = claim_page.findChild<QLabel*>("p2cClaimHistoryWarning");
+    auto* claim_scroll = claim_page.findChild<QScrollArea*>("p2cClaimScrollArea");
+    auto* claim_start = claim_page.findChild<QPushButton*>("p2cClaimStart");
+    auto* claim_stop = claim_page.findChild<QPushButton*>("p2cClaimStop");
+    auto* claim_domains = claim_page.findChild<QLineEdit*>("p2cClaimDomains");
+    auto* claim_status = claim_page.findChild<QLabel*>("p2cClaimStatus");
+    auto* claim_address = claim_page.findChild<QLineEdit*>("p2cClaimAddress");
+    auto* claim_reward_status = claim_page.findChild<QLabel*>("p2cClaimRewardStatus");
     QVERIFY(claim_address && claim_reward_status);
     QVERIFY(claim_address->text().isEmpty());
     QTRY_VERIFY(claim_reward_status->text().contains("This wallet (default)"));
-    QVERIFY(!page.findChild<QLabel*>("p2cClaimRoundHint"));
-    QVERIFY(!page.findChild<QSpinBox*>("p2cClaimRoundSeconds"));
+    QVERIFY(!claim_page.findChild<QLabel*>("p2cClaimRoundHint"));
+    QVERIFY(!claim_page.findChild<QSpinBox*>("p2cClaimRoundSeconds"));
     QVERIFY(claim_rate && claim_unlimited && claim_concurrency && claim_start && claim_stop && claim_domains && claim_status);
+    {
+        // The independently owned claim page detaches from old models and
+        // disables itself when its current wallet model is destroyed.
+        auto temporary_model = std::make_unique<WalletModel>(interfaces::MakeWallet(*node.walletLoader().context(), wallet), *gui.clientModel, style.get());
+        claim_page.setModel(temporary_model.get());
+        claim_page.setModel(gui.walletModel.get());
+        temporary_model.reset();
+        QVERIFY(claim_page.isEnabled());
+        QVERIFY(claim_start->isEnabled());
+        temporary_model = std::make_unique<WalletModel>(interfaces::MakeWallet(*node.walletLoader().context(), wallet), *gui.clientModel, style.get());
+        claim_page.setModel(temporary_model.get());
+        temporary_model.reset();
+        QVERIFY(!claim_page.isEnabled());
+        QVERIFY(!claim_start->isEnabled());
+        QVERIFY(!claim_stop->isEnabled());
+        claim_page.setModel(gui.walletModel.get());
+        QVERIFY(claim_page.isEnabled());
+        QVERIFY(claim_start->isEnabled());
+    }
     QCOMPARE(claim_rate->value(), 100);
     QCOMPARE(claim_rate->text(), QStringLiteral("100"));
     QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 0);
@@ -867,7 +976,7 @@ void TestP2CGUI(interfaces::Node& node)
     claim_address->setText(QString::fromStdString(external));
     claim_rate->setValue(1);
     claim_unlimited_history->setChecked(true);
-    page.findChild<QLineEdit*>("p2cClaimDomains")->setText("unfunded.example");
+    claim_domains->setText("unfunded.example");
     QString confirmation_text;
     QTimer::singleShot(0, [&] {
         for (auto* widget : QApplication::topLevelWidgets()) {
@@ -879,7 +988,7 @@ void TestP2CGUI(interfaces::Node& node)
             }
         }
     });
-    page.findChild<QPushButton*>("p2cClaimStart")->click();
+    claim_start->click();
     QVERIFY(confirmation_text.contains(QString::fromStdString(external)));
     QVERIFY(load_confirmation_text.isEmpty());
     QCOMPARE(confirmation_icon, QMessageBox::Question);
@@ -893,15 +1002,15 @@ void TestP2CGUI(interfaces::Node& node)
     // Applying a finite value while disabled must not enable HTTPS.
     claim_unlimited_history->setChecked(false);
     claim_recent_blocks->setValue(1);
-    page.findChild<QPushButton*>("p2cClaimStart")->click();
+    claim_start->click();
     QTRY_VERIFY(claim_stop->isEnabled());
     QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["recent_blocks"].getInt<int>(), 1);
     QCOMPARE(gui.walletModel->wallet().getP2CClaimStatus()["connections_per_second"].getInt<int>(), 0);
 
     // Destruction during confirmation must never start HTTPS or double-delete
     // a stack-owned dialog when its wallet page disappears.
-    auto* closing_claim_page{new P2CCreateDialog};
-    const QPointer<P2CCreateDialog> closing_claim_guard{closing_claim_page};
+    auto* closing_claim_page{new P2CClaimDialog};
+    const QPointer<P2CClaimDialog> closing_claim_guard{closing_claim_page};
     closing_claim_page->setModel(gui.walletModel.get());
     closing_claim_page->findChild<QSpinBox*>("p2cClaimRate")->setValue(1);
     closing_claim_page->findChild<QLineEdit*>("p2cClaimDomains")->setText("unfunded.example");
@@ -1629,22 +1738,22 @@ void WalletTests::p2cTranslations()
             QVERIFY2(!translator.value.translate("P2CCreateDialog", source).isEmpty(), qPrintable(locale + ": " + source));
         }
         P2CCreateDialog page;
-        const auto* tabs = page.findChild<QTabWidget*>();
-        QVERIFY(tabs);
-        QCOMPARE(tabs->tabText(0), QStringLiteral("Criar recompensas"));
-        QCOMPARE(tabs->tabText(1), QStringLiteral("Resgates automáticos"));
-        const auto* status = page.findChild<QLabel*>("p2cClaimStatus");
+        QVERIFY(!page.findChild<QTabWidget*>());
+        QVERIFY(!page.findChild<P2CClaimDialog*>());
+        QCOMPARE(QCoreApplication::translate("P2CCreateDialog", "Automatic claims"), QStringLiteral("Resgates automáticos"));
+        P2CClaimDialog claim_page;
+        const auto* status = claim_page.findChild<QLabel*>("p2cClaimStatus");
         QVERIFY(status);
         QCOMPARE(status->text(), QStringLiteral("Desativado"));
-        const auto* start = page.findChild<QPushButton*>("p2cClaimStart");
+        const auto* start = claim_page.findChild<QPushButton*>("p2cClaimStart");
         QVERIFY(start);
         QCOMPARE(start->text(), QStringLiteral("Aplicar / iniciar resgates automáticos"));
-        const auto* load_warning = page.findChild<QLabel*>("p2cClaimLoadWarning");
+        const auto* load_warning = claim_page.findChild<QLabel*>("p2cClaimLoadWarning");
         QVERIFY(load_warning);
         QCOMPARE(load_warning->text(), translator.value.translate("P2CClaimDialog", "Warning: more than 100 connections per second, unlimited rate, or more than 100 simultaneous connections may overload your computer or network and disconnect this node."));
         QVERIFY(!load_warning->text().startsWith("Warning:"));
         QVERIFY(load_warning->isHidden());
-        page.findChild<QSpinBox*>("p2cClaimRate")->setValue(101);
+        claim_page.findChild<QSpinBox*>("p2cClaimRate")->setValue(101);
         QVERIFY(!load_warning->isHidden());
         QVERIFY(!translator.value.translate("MiningPage", "Warning: %1 mining threads exceed the %2 logical CPUs detected. This can reduce hashrate and slow down the node.").isEmpty());
     }

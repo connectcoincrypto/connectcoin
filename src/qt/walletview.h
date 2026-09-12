@@ -13,6 +13,7 @@
 class ClientModel;
 class OverviewPage;
 class MiningPage;
+class P2CClaimDialog;
 class P2CCreateDialog;
 class PlatformStyle;
 class ReceiveCoinsDialog;
@@ -64,6 +65,7 @@ private:
     QWidget *transactionsPage;
     ReceiveCoinsDialog *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
+    P2CClaimDialog* p2cClaimPage;
     P2CCreateDialog* p2cPage;
     MiningPage* miningPage;
     AddressBookPage *usedSendingAddressesPage;
@@ -83,6 +85,8 @@ public Q_SLOTS:
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
+    /** Switch to opt-in automatic claims. */
+    void gotoP2CClaimPage();
     /** Switch to P2C bounty creation. */
     void gotoP2CPage();
     void gotoMiningPage();

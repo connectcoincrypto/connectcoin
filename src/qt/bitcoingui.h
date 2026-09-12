@@ -138,6 +138,7 @@ private:
     QAction* historyAction = nullptr;
     QAction* quitAction = nullptr;
     QAction* sendCoinsAction = nullptr;
+    QAction* p2cClaimAction = nullptr;
     QAction* p2cAction = nullptr;
     QAction* miningAction = nullptr;
     QAction* usedSendingAddressesAction = nullptr;
@@ -290,6 +291,7 @@ public Q_SLOTS:
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
+    void gotoP2CClaimPage();
     void gotoP2CPage();
     void gotoMiningPage();
 

@@ -27,6 +27,18 @@ Copyright: 2018-2019, tevador <tevador@gmail.com>
            2014-2019, The Monero Project
 License: BSD-3-Clause
 
+Files: src/qt/res/src/p2c.svg
+       src/qt/res/icons/p2c.png
+Copyright: 2026, ConnectCoin contributors
+           Stephen Hutchings
+License: Expat
+Comment: Send-arrow design adapted from Stephen Hutchings' Typicons.
+
+Files: src/qt/res/src/p2c_claim.svg
+       src/qt/res/icons/p2c_claim.png
+Copyright: 2026, ConnectCoin contributors
+License: Expat
+
 Files: debian/*
 Copyright: 2010-2011, Jonas Smedegaard <dr@jones.dk>
            2011, Matt Corallo <matt@bluematt.me>

@@ -45,6 +45,7 @@
 #include <QActionGroup>
 #include <QApplication>
 #include <QComboBox>
+#include <QCoreApplication>
 #include <QCursor>
 #include <QDateTime>
 #include <QDragEnterEvent>
@@ -269,6 +270,15 @@ void BitcoinGUI::createActions()
     sendCoinsAction->setShortcut(QKeySequence(QStringLiteral("Alt+2")));
     tabGroup->addAction(sendCoinsAction);
 
+    // Keep the existing translation context when moving this label out of P2C.
+    p2cClaimAction = new QAction(platformStyle->SingleColorIcon(":/icons/p2c_claim"), QCoreApplication::translate("P2CCreateDialog", "Automatic claims"), this);
+    p2cClaimAction->setObjectName("p2cClaimAction");
+    p2cClaimAction->setStatusTip(p2cClaimAction->text());
+    p2cClaimAction->setToolTip(p2cClaimAction->statusTip());
+    p2cClaimAction->setCheckable(true);
+    p2cClaimAction->setShortcut(QKeySequence(QStringLiteral("Alt+7")));
+    tabGroup->addAction(p2cClaimAction);
+
     p2cAction = new QAction(platformStyle->SingleColorIcon(":/icons/p2c"), tr("&P2C"), this);
     p2cAction->setObjectName("p2cAction");
     p2cAction->setStatusTip(tr("Create pay-to-connect bounties"));
@@ -307,6 +317,8 @@ void BitcoinGUI::createActions()
     connect(overviewAction, &QAction::triggered, this, &BitcoinGUI::gotoOverviewPage);
     connect(sendCoinsAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
     connect(sendCoinsAction, &QAction::triggered, [this]{ gotoSendCoinsPage(); });
+    connect(p2cClaimAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
+    connect(p2cClaimAction, &QAction::triggered, this, &BitcoinGUI::gotoP2CClaimPage);
     connect(p2cAction, &QAction::triggered, [this]{ showNormalIfMinimized(); });
     connect(p2cAction, &QAction::triggered, this, &BitcoinGUI::gotoP2CPage);
     connect(miningAction, &QAction::triggered, this, [this] { showNormalIfMinimized(); gotoMiningPage(); });
@@ -676,11 +688,12 @@ void BitcoinGUI::createToolBars()
         toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         toolbar->addAction(overviewAction);
         toolbar->addAction(sendCoinsAction);
+        toolbar->addAction(p2cClaimAction);
         toolbar->addAction(p2cAction);
         toolbar->addAction(miningAction);
         toolbar->addAction(receiveCoinsAction);
         toolbar->addAction(historyAction);
-        overviewAction->setChecked(true);
+        p2cClaimAction->setChecked(true);
 
 #ifdef ENABLE_WALLET
         QWidget *spacer = new QWidget();
@@ -856,7 +869,7 @@ void BitcoinGUI::removeWallet(WalletModel* walletModel)
     m_wallet_selector->removeItem(index);
     if (m_wallet_selector->count() == 0) {
         setWalletActionsEnabled(false);
-        if (!miningAction->isChecked()) overviewAction->setChecked(true);
+        if (!miningAction->isChecked()) p2cClaimAction->setChecked(true);
     } else if (m_wallet_selector->count() == 1) {
         m_wallet_selector_label_action->setVisible(false);
         m_wallet_selector_action->setVisible(false);
@@ -892,6 +905,7 @@ void BitcoinGUI::removeAllWallets()
         return;
     setWalletActionsEnabled(false);
     walletFrame->removeAllWallets();
+    if (!miningAction->isChecked()) p2cClaimAction->setChecked(true);
 }
 #endif // ENABLE_WALLET
 
@@ -899,6 +913,7 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
 {
     overviewAction->setEnabled(enabled);
     sendCoinsAction->setEnabled(enabled);
+    p2cClaimAction->setEnabled(enabled);
     p2cAction->setEnabled(enabled);
     receiveCoinsAction->setEnabled(enabled);
     historyAction->setEnabled(enabled && !isPrivacyModeActivated());
@@ -1074,6 +1089,12 @@ void BitcoinGUI::gotoSendCoinsPage(QString addr)
 {
     sendCoinsAction->setChecked(true);
     if (walletFrame) walletFrame->gotoSendCoinsPage(addr);
+}
+
+void BitcoinGUI::gotoP2CClaimPage()
+{
+    p2cClaimAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoP2CClaimPage();
 }
 
 void BitcoinGUI::gotoP2CPage()
@@ -1386,6 +1407,7 @@ void BitcoinGUI::changeEvent(QEvent *e)
     if (e->type() == QEvent::PaletteChange) {
         overviewAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/overview")));
         sendCoinsAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/send")));
+        p2cClaimAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/p2c_claim")));
         p2cAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/p2c")));
         miningAction->setIcon(platformStyle->MiningIcon());
         receiveCoinsAction->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/receiving_addresses")));

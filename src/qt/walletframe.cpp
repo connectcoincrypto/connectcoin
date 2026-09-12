@@ -86,7 +86,7 @@ bool WalletFrame::addView(WalletView* walletView)
     } else if (walletStack->currentWidget() == m_walletless_mining_page) {
         walletView->gotoMiningPage();
     } else {
-        walletView->gotoOverviewPage();
+        walletView->gotoP2CClaimPage();
     }
 
     walletStack->addWidget(walletView);
@@ -194,6 +194,11 @@ void WalletFrame::gotoSendCoinsPage(QString addr)
     QMap<WalletModel*, WalletView*>::const_iterator i;
     for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
         i.value()->gotoSendCoinsPage(addr);
+}
+
+void WalletFrame::gotoP2CClaimPage()
+{
+    for (auto* view : mapWalletViews) view->gotoP2CClaimPage();
 }
 
 void WalletFrame::gotoP2CPage()

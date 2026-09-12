@@ -13,6 +13,7 @@
 #include <qt/bitcoin.h>
 #include <qt/bitcoingui.h>
 #include <qt/networkstyle.h>
+#include <qt/platformstyle.h>
 #include <qt/rpcconsole.h>
 #ifdef ENABLE_WALLET
 #include <qt/miningpage.h>
@@ -37,6 +38,7 @@
 #include <QTest>
 #include <QTextEdit>
 #include <QTimer>
+#include <QToolBar>
 #include <QtGlobal>
 #include <QtTest/QtTestWidgets>
 #include <QtTest/QtTestGui>
@@ -64,22 +66,41 @@ void TestRpcCommand(RPCConsole* console)
     const QString pattern = QStringLiteral("\"chain\": \"(\\w+)\"");
     QCOMPARE(FindInConsole(output, pattern), QString("regtest"));
 }
-//! P2C keeps its own recolorable glyph, including after a theme change.
+//! Creation and automatic claims keep distinct glyphs after a theme change.
 void TestP2CIcon(BitcoinGUI* window)
 {
     auto* action = window->findChild<QAction*>("p2cAction");
-    QVERIFY(action);
+    auto* claims = window->findChild<QAction*>("p2cClaimAction");
+    QVERIFY(action && claims);
     const QImage source(":/icons/p2c");
+    const QImage claims_source(":/icons/p2c_claim");
     QVERIFY(!source.isNull());
+    QVERIFY(!claims_source.isNull());
     QVERIFY(source.hasAlphaChannel());
+    QVERIFY(claims_source.hasAlphaChannel());
     QCOMPARE(source.size(), QSize(128, 128));
+    QCOMPARE(claims_source.size(), QSize(128, 128));
+    QCOMPARE(source.pixelColor(0, 0).alpha(), 0);
+    QCOMPARE(claims_source.pixelColor(0, 0).alpha(), 0);
     const auto expected = QIcon(":/icons/p2c").pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8);
+    const auto claims_expected = QIcon(":/icons/p2c_claim").pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8);
     const auto send = QIcon(":/icons/send").pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8);
     QVERIFY(expected != send);
+    QVERIFY(claims_expected != send);
+    QVERIFY(claims_expected != expected);
     QCOMPARE(action->icon().pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8), expected);
+    QCOMPARE(claims->icon().pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8), claims_expected);
     QEvent palette_change(QEvent::PaletteChange);
     QCoreApplication::sendEvent(window, &palette_change);
     QCOMPARE(action->icon().pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8), expected);
+    QCOMPARE(claims->icon().pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8), claims_expected);
+    // Exercise the recoloring path even when this test runs on Windows.
+    for (const auto& platform : {QStringLiteral("windows"), QStringLiteral("macosx"), QStringLiteral("other")}) {
+        QScopedPointer<const PlatformStyle> style(PlatformStyle::instantiate(platform));
+        QVERIFY(style);
+        QCOMPARE(style->SingleColorIcon(QStringLiteral(":/icons/p2c")).pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8), expected);
+        QCOMPARE(style->SingleColorIcon(QStringLiteral(":/icons/p2c_claim")).pixmap(32, 32).toImage().convertToFormat(QImage::Format_Alpha8), claims_expected);
+    }
 }
 
 //! Disabling desktop notifications must not suppress modal errors/confirmations.
@@ -103,6 +124,33 @@ void TestNotificationDialogs(BitcoinGUI* window)
 }
 
 #ifdef ENABLE_WALLET
+//! Claims is the default main tab, directly before creation, without enabling it.
+void TestAutomaticClaimsNavigation(BitcoinGUI* window)
+{
+    auto* claims = window->findChild<QAction*>("p2cClaimAction");
+    auto* create = window->findChild<QAction*>("p2cAction");
+    auto* toolbar = window->findChild<QToolBar*>();
+    auto* frame = window->findChild<WalletFrame*>();
+    QVERIFY(claims && create && toolbar && frame);
+    QVERIFY(!frame->currentWalletModel());
+    QVERIFY(claims->isChecked());
+    QVERIFY(!create->isChecked());
+    QVERIFY(!claims->isEnabled());
+    QCOMPARE(claims->text(), QCoreApplication::translate("P2CCreateDialog", "Automatic claims"));
+    const auto actions{toolbar->actions()};
+    const auto position{actions.indexOf(claims)};
+    QVERIFY(position >= 0);
+    QVERIFY(position + 1 < actions.size());
+    QCOMPARE(actions.at(position + 1), create);
+    window->gotoP2CPage();
+    QVERIFY(create->isChecked());
+    QVERIFY(!claims->isChecked());
+    window->gotoP2CClaimPage();
+    QVERIFY(claims->isChecked());
+    QVERIFY(!create->isChecked());
+    QVERIFY(!claims->isEnabled());
+}
+
 //! The node's mining controls are available before any wallet is loaded.
 void TestMiningWithoutWallet(BitcoinGUI* window)
 {
@@ -156,6 +204,7 @@ void AppTests::guiTests(BitcoinGUI* window)
     TestP2CIcon(window);
     TestNotificationDialogs(window);
 #ifdef ENABLE_WALLET
+    TestAutomaticClaimsNavigation(window);
     TestMiningWithoutWallet(window);
 #endif
     connect(window, &BitcoinGUI::consoleShown, this, &AppTests::consoleTests);

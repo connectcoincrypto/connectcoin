@@ -3,7 +3,6 @@
 // file COPYING or https://opensource.org/license/mit/.
 
 #include <qt/p2ccreatedialog.h>
-#include <qt/p2cclaimdialog.h>
 
 #include <arith_uint256.h>
 #include <consensus/amount.h>
@@ -37,7 +36,6 @@
 #include <QSpinBox>
 #include <QStringList>
 #include <QTimer>
-#include <QTabWidget>
 #include <QVBoxLayout>
 
 #include <atomic>
@@ -56,14 +54,7 @@ struct P2CCreateDialog::RsaProbeState
 
 P2CCreateDialog::P2CCreateDialog(QWidget* parent) : QWidget(parent), m_rsa_probe{wallet::ProbeP2CRsa}
 {
-    auto* outer = new QVBoxLayout(this);
-    auto* tabs = new QTabWidget(this);
-    outer->addWidget(tabs);
-    auto* create_page = new QWidget(tabs);
-    auto* layout = new QVBoxLayout(create_page);
-    tabs->addTab(create_page, tr("Create bounties"));
-    m_claim = new P2CClaimDialog(tabs);
-    tabs->addTab(m_claim, tr("Automatic claims"));
+    auto* layout = new QVBoxLayout(this);
     auto* title = new QLabel(tr("Create pay-to-connect bounties"), this);
     QFont title_font = title->font();
     title_font.setBold(true);
@@ -226,7 +217,6 @@ void P2CCreateDialog::setModel(WalletModel* model)
     if (m_confirmation) m_confirmation->reject();
     m_batch.reset();
     m_model = model;
-    m_claim->setModel(model);
     m_form->setEnabled(model != nullptr);
     if (!model) return;
     const auto unit = model->getOptionsModel()->getDisplayUnit();

@@ -77,6 +77,7 @@ public Q_SLOTS:
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
+    void gotoP2CClaimPage();
     void gotoP2CPage();
     void gotoMiningPage();
 
