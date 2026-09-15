@@ -2,7 +2,7 @@
 
 The configuration file is used by `connectcoind`, `connectcoin-qt` and `connectcoin-cli`.
 
-All command-line options (except for `-?`, `-help`, `-version` and `-conf`) may be specified in a configuration file, and all configuration file options (except for `includeconf`) may also be specified on the command line. Command-line options override values set in the configuration file and configuration file options override values set in the GUI.
+All command-line options (except for `-?`, `-help`, `-version` and `-conf`) may be specified in a configuration file, and all configuration file options (except for `includeconf`) may also be specified on the command line. Their interaction with persistent settings is described below.
 
 Changes to the configuration file while `connectcoind` or `connectcoin-qt` is running only take effect after restarting.
 
@@ -10,11 +10,16 @@ Users should never make any configuration changes which they do not understand. 
 
 ## Configuration File Precedence
 
-Options specified in the configuration file can be overridden by options in the [`settings.json` file](files.md) and by options specified on the command line.
+For ordinary single-value node settings, user-supplied sources are considered in this order, from highest to lowest priority:
+
+1. Command-line options.
+2. The [`settings.json` file](files.md).
+3. The selected network's section in `connectcoin.conf`.
+4. The default section in `connectcoin.conf`.
 
 The `settings.json` file contains dynamic settings that are set by the ConnectCoin GUI and RPCs at runtime, and augment or replace the static settings specified in the `connectcoin.conf` file.
 
-Command line options also augment or replace `connectcoin.conf` options, and can be useful for scripting and debugging.
+List-valued options can combine values from multiple sources; negation can clear earlier values. Internally forced settings take precedence over these user-supplied sources. GUI-only preferences are not necessarily node settings and are not covered by this ordering.
 
 It is possible to see which setting values are in use by checking `debug.log` output. Any unrecognized options that are found in `connectcoin.conf` also show up as warnings in `debug.log` output.
 
@@ -23,8 +28,9 @@ It is possible to see which setting values are in use by checking `debug.log` ou
 The configuration file is a plain text file and consists of `option=value` entries, one per line. Leading and trailing whitespaces are removed.
 
 In contrast to the command-line usage:
+
 - an option must be specified without leading `-`;
-- a value of the given option is mandatory; e.g., `testnet=1` (for chain selection options), `noconnect=1` (for negated options).
+- a value of the given option is mandatory; e.g., `testnet4=1` (for chain selection options), `noconnect=1` (for negated options).
 
 ### Blank lines
 
@@ -35,12 +41,14 @@ Blank lines are allowed and ignored by the parser.
 A comment starts with a number sign (`#`) and extends to the end of the line. All comments are ignored by the parser.
 
 Comments may appear in two ways:
+
 - on their own on an otherwise empty line (_preferable_);
 - after an `option=value` entry.
 
 ### Network specific options
 
 Network specific options can be:
+
 - placed into sections with headers `[main]` (not `[mainnet]`), `[test]` (not `[testnet]`, for testnet3), `[testnet4]`, `[signet]` or `[regtest]`;
 - prefixed with a chain name; e.g., `regtest.maxmempool=100`.
 

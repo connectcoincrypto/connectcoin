@@ -18,7 +18,7 @@ To run:
 
 #### forms/
 
-- A directory that contains [Designer UI](https://doc.qt.io/qt-5.9/designer-using-a-ui-file.html) files. These files specify the characteristics of form elements in XML. Qt UI files can be edited with [Qt Creator](#using-qt-creator-as-ide) or using any text editor.
+- A directory that contains [Designer UI](https://doc.qt.io/qt-5.9/designer-using-a-ui-file.html) files. These files specify the characteristics of form elements in XML. Qt UI files can be edited with [Qt Creator](#using-qt-creator-as-an-ide) or using any text editor.
 
 #### locale/
 
@@ -30,7 +30,7 @@ To run:
 
 #### test/
 
-- Functional tests used to ensure proper functionality of the GUI. Significant changes to the GUI code normally require new or updated tests.
+- Qt tests registered with CTest to verify GUI behavior. Significant changes to the GUI code normally require new or updated tests.
 
 #### bitcoingui.(h/cpp)
 
@@ -51,7 +51,7 @@ To run:
 
 #### paymentserver.(h/cpp)
 
-- (Deprecated) Used to process BIP21 payment URI requests. Also handles URI-based application switching (e.g. when following a connectcoin:... link from a browser).
+- Processes `connectcoin:` payment URI requests and handles application switching when following such a link from a browser.
 
 #### walletview.(h/cpp)
 
@@ -72,7 +72,7 @@ To run:
 
 See [CONTRIBUTING.md](/CONTRIBUTING.md) for general guidelines.
 
-**Note:** Do not change `local/bitcoin_en.ts`. It is updated [automatically](/doc/translation_process.md#writing-code-with-translations).
+**Note:** Do not change `locale/bitcoin_en.ts` manually. It is updated [automatically](/doc/translation_process.md#updating-source-strings).
 
 ## Using Qt Creator as an IDE
 

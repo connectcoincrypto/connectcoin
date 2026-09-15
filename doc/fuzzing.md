@@ -5,7 +5,7 @@
 To quickly get started fuzzing ConnectCoin Core using [libFuzzer](https://llvm.org/docs/LibFuzzer.html):
 
 ```sh
-$ git clone YOUR_CONNECTCOIN_REPOSITORY_URL connectcoin
+$ git clone https://github.com/connectcoincrypto/connectcoin.git connectcoin
 $ cd connectcoin/
 $ cmake --preset=libfuzzer
 $ cmake --build build_fuzz
@@ -135,7 +135,13 @@ Patience is useful; even with improved throughput, libFuzzer may need days and
 
 ## Reproduce a fuzzer crash reported by the CI
 
-- `cd` into the `qa-assets` directory and update it with `git pull qa-assets`
+- Run the commands below from the ConnectCoin repository root, not from inside
+  `qa-assets`.
+- Use the exact source revision, build configuration, and corpus revision from
+  the failing CI run. The earlier clone creates an `origin` remote, so fetch
+  corpus revisions with `git -C qa-assets fetch origin`, then check out the
+  recorded corpus commit in that repository. Preserve any local corpus changes
+  before changing its checkout.
 - locate the crash case described in the CI output, e.g. `Test unit written to
   ./crash-1bc91feec9fc00b107d97dc225a9f2cdaa078eb6`
 - make sure to compile with all sanitizers, if they are needed (fuzzing runs
@@ -144,11 +150,10 @@ Patience is useful; even with improved throughput, libFuzzer may need days and
 - run the fuzzer with the case number appended to the seed corpus path:
   `FUZZ=process_message build_fuzz/bin/fuzz
   qa-assets/fuzz_corpora/process_message/1bc91feec9fc00b107d97dc225a9f2cdaa078eb6`
-- If the file does not exist, make sure you are checking out the exact same commit id
-  for the qa-assets repo. If the file was found while running the fuzz engine in the CI,
-  you should be able to reproduce the crash locally  with the same (or a similar input)
-  within a few minutes. Alternatively, you can use the base64 encoded file from the CI log,
-  if it exists. e.g.
+- A crash input newly found by CI may not exist in the corpus checkout. Retrieve
+  the saved crash artifact and pass its local path to the fuzz binary instead.
+  Alternatively, decode the base64 input from the CI log if one is available;
+  for example:
   `echo "Nb6Fc/97AACAAAD/ewAAgAAAAIAAAACAAAAAoA==" |
   base64 --decode > qa-assets/fuzz_corpora/process_message/1bc91feec9fc00b107d97dc225a9f2cdaa078eb6`
 
@@ -217,7 +222,7 @@ fuzz binary without support for any specific fuzzing engine.
 To quickly get started fuzzing ConnectCoin Core using [afl++](https://github.com/AFLplusplus/AFLplusplus):
 
 ```sh
-$ git clone YOUR_CONNECTCOIN_REPOSITORY_URL connectcoin
+$ git clone https://github.com/connectcoincrypto/connectcoin.git connectcoin
 $ cd connectcoin/
 $ git clone https://github.com/AFLplusplus/AFLplusplus
 $ make -C AFLplusplus/ source-only
@@ -244,7 +249,7 @@ Read the [afl++ documentation](https://github.com/AFLplusplus/AFLplusplus) for m
 To quickly get started fuzzing ConnectCoin Core using [Honggfuzz](https://github.com/google/honggfuzz):
 
 ```sh
-$ git clone YOUR_CONNECTCOIN_REPOSITORY_URL connectcoin
+$ git clone https://github.com/connectcoincrypto/connectcoin.git connectcoin
 $ cd connectcoin/
 $ git clone https://github.com/google/honggfuzz
 $ cd honggfuzz/

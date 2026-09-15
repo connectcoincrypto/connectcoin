@@ -4,6 +4,7 @@ variables, and defining build commands.
 The package "mylib" will be used here as an example
 
 General tips:
+
 - mylib_foo is written as $(package)_foo in order to make recipes more similar.
 - Secondary dependency packages relative to the ConnectCoin binaries/libraries (i.e.
   those not in `ALLOWED_LIBRARIES` in `contrib/guix/symbol-check.py`) don't
@@ -29,8 +30,11 @@ define these variables:
     $(package)_sha256_hash:
     The sha256 hash of the upstream file
 
-If a package does define a `$(package)_local_dir` variable, the above variables
-are not required and will be ignored.
+For a local source package, `$(package)_download_path` is unnecessary and the
+build computes `$(package)_sha256_hash` from the generated tarball. An optional
+`$(package)_file_name` selects that tarball's name; otherwise the name is derived
+from the local directory path. `$(package)_version` still participates in build
+paths and cache identifiers.
 
 These variables are optional:
 
@@ -57,9 +61,11 @@ These variables are optional:
 If a package defines a `$(package)_local_dir` variable, the specified directory
 will be treated as a download source, and a tarball of its contents will be
 saved to `sources/`. A hash of the tarball will also become part of the package
-build id, so if the directory contents change, the package and everything
-depending on it will be rebuilt. For efficiency, the tarball is cached once it
-has been created, but if the local directory is touched, it will be rebuilt.
+build id. For efficiency, an existing tarball is regenerated only when the local
+directory itself or a path inside it has a modification time newer than the tarball.
+Ordinary edits therefore invalidate the cache, but changes that preserve older
+timestamps may not be detected. This is not an unconditional content scan on
+every invocation.
 
 Local packages can be useful for using git submodules or subtrees to manage
 package sources, or for testing local changes that are not available to
@@ -74,15 +80,20 @@ $(package)_set_vars. For example:
     ...
     endef
 
-Most variables can be prefixed with the host, architecture, or both, to make
-the modifications specific to that case. For example:
+Flags and options can have architecture and OS suffixes, which are appended to
+the unsuffixed value. For example:
 
-    Universal:     $(package)_cc=gcc
-    Linux only:    $(package)_linux_cc=gcc
-    x86_64 only:       $(package)_x86_64_cc = gcc
-    x86_64 linux only: $(package)_x86_64_linux_cc = gcc
+    Universal:        $(package)_cflags += -DPORTABLE_BUILD
+    Linux only:       $(package)_cflags_linux += -DLINUX_BUILD
+    x86_64 only:      $(package)_cflags_x86_64 += -DX86_64_BUILD
+    x86_64 Linux:     $(package)_cflags_x86_64_linux += -DX86_64_LINUX_BUILD
 
-These variables may be set to override or append their default values.
+This expansion applies to `cflags`, `cxxflags`, `cppflags`, `ldflags`,
+`build_opts`, `config_opts`, and `config_env`. It does not select a compiler
+from a variable such as `$(package)_linux_cc`. Override `$(package)_cc` or
+`$(package)_cxx` directly, using a Make conditional if necessary.
+
+The following base variables may be set to override or append their defaults:
 
     $(package)_cc
     $(package)_cxx
@@ -118,35 +129,41 @@ the user. Other variables may be defined as needed.
 ## Build commands:
 
   For each build, a unique build dir and staging dir are created. For example,
-  `work/build/mylib/1.0-1adac830f6e` and `work/staging/mylib/1.0-1adac830f6e`.
+  `work/build/<host>/mylib/1.0-1adac830f6e` and
+  `work/staging/<host>/mylib/1.0-1adac830f6e`.
 
   The following build commands are available for each recipe:
 
     $(package)_fetch_cmds:
-    Runs from: build dir
+    Runs from: source download-stamp directory (normally sources/download-stamps)
     Fetch the source file. If undefined, it will be fetched and verified
     against its hash.
 
     $(package)_extract_cmds:
-    Runs from: build dir
+    Runs from: $(package)_extract_dir
     Verify the source file against its hash and extract it. If undefined, the
     source is assumed to be a tarball.
 
     $(package)_preprocess_cmds:
-    Runs from: build dir/$(package)_build_subdir
+    Runs from: $(package)_extract_dir (not the build subdirectory)
     Preprocess the source as necessary. If undefined, does nothing.
 
     $(package)_config_cmds:
-    Runs from: build dir/$(package)_build_subdir
+    Runs from: $(package)_build_dir, which includes $(package)_build_subdir
     Configure the source. If undefined, does nothing.
 
     $(package)_build_cmds:
-    Runs from: build dir/$(package)_build_subdir
+    Runs from: $(package)_build_dir
     Build the source. If undefined, does nothing.
 
     $(package)_stage_cmds:
-    Runs from: build dir/$(package)_build_subdir
+    Runs from: $(package)_build_dir
     Stage the build results. If undefined, does nothing.
+
+    $(package)_postprocess_cmds:
+    Runs from: $(package)_staging_prefix_dir
+    Adjust staged files before caching them. The extracted source/build tree
+    has already been removed by this point.
 
   The following variables are available for each recipe:
 
@@ -202,7 +219,9 @@ dependency chain to worry about as `libprimary` has all the symbols.
 
 ## Build targets:
 
-To build an individual package (useful for debugging), following build targets are available.
+From the `depends` directory, the following targets build an individual package
+(useful for debugging). Substitute the recipe name for `${package}`; use `gmake`
+on platforms that require it:
 
     make ${package}
     make ${package}_fetched

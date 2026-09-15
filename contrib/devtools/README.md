@@ -81,16 +81,16 @@ headerssync-params.py
 A script to generate optimal parameters for the headerssync module (stored in
 `src/kernel/chainparams.cpp`). Network-dependent values are mandatory so the
 tool cannot silently reuse another chain's genesis or minimum-chain-work data.
-It runs many times faster inside PyPy. Example invocation for the current
-development mainnet parameters (review the target date and chain-work policy
+It runs many times faster inside PyPy. Example invocation for testnet4
+parameters (review the target date and chain-work policy
 before using generated values in a release):
 
 ```bash
 pypy3 contrib/devtools/headerssync-params.py \
   --target-date 2031-08-25 \
-  --genesis-time 1787596781 \
+  --genesis-time 1788912001 \
   --minchainwork-headers 1 \
-  --block-interval-seconds 600
+  --block-interval-seconds 10
 ```
 
 gen-connectcoin-conf.sh

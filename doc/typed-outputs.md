@@ -1,9 +1,8 @@
 # ConnectCoin typed transaction outputs
 
-ConnectCoin is experimenting with a typed UTXO format that removes Script from
-the transaction-output wire format. This is a hard fork from Bitcoin's
-transaction format and is not backward-compatible with Bitcoin blocks,
-transactions, UTXO snapshots, wallets, or signing hardware.
+ConnectCoin uses a typed UTXO wire format rather than Script-based transaction
+outputs. It is not compatible with Bitcoin blocks, transactions, UTXO
+snapshots, wallets, or signing hardware.
 
 ## Consensus wire format
 
@@ -40,8 +39,8 @@ output serialization. P2PKH, P2SH, P2WPKH, P2WSH, multisig, Script trees,
 
 ### Type 2: PAY_TO_CONNECT
 
-Type `2` has exactly one payload form. It pays for proving a fresh TLS 1.3
-connection to a canonical DNS domain. Its payload is:
+Type `2` pays for proving a fresh TLS 1.3 connection to a canonical DNS domain.
+Its payload is:
 
 | Field | Size | Meaning |
 | --- | ---: | --- |
@@ -55,12 +54,10 @@ The mask is mandatory on the wire. Bit 0 (`1`) allows ECDSA P-256/SHA-256,
 bit 1 (`2`) allows `rsa_pss_rsae_sha256`, and bit 2 (`4`) allows
 `rsa_pss_pss_sha256`. Mask `6` allows both RSA schemes; mask `7` allows all
 three and is the default for creators. Zero and reserved bits are invalid.
-Type-2 payloads from the previous layout that omit the mask are not supported;
-there is no old-layout fallback.
+Payloads that omit the required mask are rejected.
 
-There is no mode byte and no certificate-specific output form. The leaf
-certificate and every intermediate sent by the server appear in the redemption
-proof, where consensus validates the chain, domain, validity time, TLS
+The leaf certificate and every intermediate sent by the server appear in the
+redemption proof, where consensus validates the chain, domain, validity time, TLS
 CertificateVerify signature, claim challenge, and connection-work target.
 
 A type-2 spend has an empty `scriptSig` and exactly one witness element: the
@@ -69,9 +66,9 @@ for the complete proof profile.
 
 ## Internal compatibility view
 
-`CTxOut::scriptPubKey` remains temporarily available in memory because wallet,
-descriptor, PSBT, GUI, and RPC code use Bitcoin's destination abstraction. For
-a valid type-1 output it is deterministically reconstructed as `OP_1 <32-byte
+`CTxOut::scriptPubKey` provides an in-memory compatibility view for wallet,
+descriptor, PSBT, GUI, and RPC code that use Bitcoin's destination abstraction.
+For a valid type-1 output it is deterministically reconstructed as `OP_1 <32-byte
 key>`. The canonical type and public key are stored separately, and only those
 canonical fields are serialized or compared. Assigning any other compatibility
 script produces invalid type `0`; its script bytes never enter consensus
@@ -92,8 +89,8 @@ bytes `aa21a9ed` followed by the 32-byte commitment. If multiple canonical
 markers are present, the last one is authoritative. The coinbase witness still
 contains the single 32-byte reserved value.
 
-`getblocktemplate` clients must declare the `typedoutputs` rule. Templates
-advertise `!typedoutputs` and provide the canonical 37-byte push in both
+`getblocktemplate` clients must declare both `segwit` and `typedoutputs` rules.
+Templates advertise `!typedoutputs` and provide the canonical 37-byte push in both
 `coinbaseaux.typedoutputs` and `default_witness_commitment`. The mining IPC
 interface includes the same marker in `script_sig_prefix`; clients preserve
 that prefix and append pool names or extra nonces after it.
@@ -114,11 +111,14 @@ that prefix and append pool names or extra nonces after it.
   arbitrary Script output that the typed-output format cannot represent.
 - Upstream unit vectors that embed Bitcoin's Script-based transaction wire
   format, PSBT fixtures, P2SH execution-cache tests, and witness-script swap
-  fixtures are not registered as ConnectCoin consensus tests. The experimental
-  Kernel test executable remains compile-checked but its inherited Bitcoin
-  transaction/block corpus is likewise not registered with CTest. Native typed
+  fixtures are not registered as ConnectCoin consensus tests. Native typed
   serialization, Schnorr authorization, mempool, mining, wallet, RPC, and
-  validation tests replace that coverage.
+  validation tests provide current-format coverage.
+- The optional Kernel test build registers `kernel_typed_output_tests` with
+  CTest. The separate `connectcoin-test-kernel` executable also includes a
+  typed-output regtest corpus mined with real RandomX, but is not registered
+  with CTest: that corpus must not run under the mock-PoW profile used by some
+  CI jobs. See [the Kernel test declarations](../src/test/kernel/CMakeLists.txt).
 - `test/functional/test_runner.py` names the remaining incompatible inherited
   functional suites and benchmark fixtures explicitly. They are excluded only
   when they require removed address/descriptor families, arbitrary Script

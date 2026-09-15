@@ -73,7 +73,8 @@ Now that all the required dependencies are installed, let's clone the ConnectCoi
 All build scripts and commands will run from this directory.
 
 ``` bash
-git clone YOUR_CONNECTCOIN_REPOSITORY_URL connectcoin
+git clone https://github.com/connectcoincrypto/connectcoin.git connectcoin
+cd connectcoin
 ```
 
 ### 5. Install Optional Dependencies
@@ -195,10 +196,10 @@ others that can be listed with `connectcoin help`.
 The first time you run `connectcoind` or `connectcoin-qt`, it will start downloading the blockchain.
 This process could take many hours, or even days on slower than average systems.
 
-By default, blockchain and wallet data files will be stored in:
+By default, the beta uses testnet4 and stores blockchain and wallet data in:
 
 ``` bash
-/Users/${USER}/Library/Application Support/ConnectCoin/
+/Users/${USER}/Library/Application Support/ConnectCoin/testnet4/
 ```
 
 Before running, you may create an empty configuration file:
@@ -214,7 +215,7 @@ chmod 600 "/Users/${USER}/Library/Application Support/ConnectCoin/connectcoin.co
 You can monitor the download process by looking at the debug.log file:
 
 ```shell
-tail -f $HOME/Library/Application\ Support/ConnectCoin/debug.log
+tail -f $HOME/Library/Application\ Support/ConnectCoin/testnet4/debug.log
 ```
 
 ## Other commands:

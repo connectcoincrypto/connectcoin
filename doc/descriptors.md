@@ -10,8 +10,9 @@ documentation.
 
 > **Consensus limitation:** the parser is inherited and can still inspect many
 > Bitcoin descriptor forms, but the current wallet and transaction builders
-> accept only single-key `tr(KEY)`/Bech32m destinations that map to type-1
-> ConnectCoin P2PK outputs. Script trees, multisig, P2PKH, P2SH, P2WPKH,
+> accept key-path-only `tr(KEY)` or `rawtr(KEY)` descriptors and Bech32m
+> destinations that map to type-1 ConnectCoin P2PK outputs. Script trees,
+> multisig, P2PKH, P2SH, P2WPKH,
 > P2WSH, raw scripts, and data outputs are not valid transaction outputs. See
 > [typed-outputs.md](typed-outputs.md).
 
@@ -49,8 +50,8 @@ Output descriptors currently support:
 - `pk(ccpubKDazFod7ockyt4NZjUvABrxZxRXMz3tsynhhQ6ZKnFvqMPUM8A96Sne1KAxUEwBm5FtuZjQFpQNcXrV1tRWyaodu6zeq6U1DBcmeGiRaKd6)` describes a P2PK output with the public key of the specified xpub.
 - `pkh(ccpubKFrQFWvatssy2fWGwEno4u4gHF5iN8NtfQ8bNBwSkT87ifmXYPgBZvzR6SXAzF6J5UBURxwgZ3ShWFT9qTFMeh6dJdT61muRhYuCaT6D5vW/1/2)` describes a P2PKH output with child key *1/2* of the specified xpub.
 - `pkh([d34db33f/44'/0'/0']ccpubKMzo77FtSa24xNb7C1L5WfPqCayp5JMSeqY5A2b7dSHjupN4te98f1uvKaa6VFNzXGebdc4ibWn7ouvgGTA8m9v7eEjMxsRtHraYc5dxvAr/1/*)` describes a set of P2PKH outputs, but additionally specifies that the specified xpub is a child of a master with fingerprint `d34db33f`, and derived using path `44'/0'/0'`.
-- `wsh(multi(1,ccpubKDazFod7ockysfstqdzSe4gLCcfnfg9hfNVRh3J9ke3heNVYJJv2sgobfH3SxBYiyp8hUQ4RDUssFeDF1cS8iidqxvrHvxVsVzSkYiqTq2C/1/0/*,ccpubKGrjXXK5Hdb4PwUByRNKhs5rZaR3NedzDYEnrrKbq3ufLLwWsaG72XNrEk1LkGZAC8csLd4AcZiqQodvtm8Z4KJ8EyaxqJeFdUZQyvQqvB7/0/0/*))` describes a set of *1-of-2* P2WSH multisig outputs where the first multisig key is the *1/0/`i`* child of the first specified xpub and the second multisig key is the *0/0/`i`* child of the second specified xpub, and `i` is any number in a configurable range (`0-1000` by default).
-- `wsh(sortedmulti(1,ccpubKDazFod7ockysfstqdzSe4gLCcfnfg9hfNVRh3J9ke3heNVYJJv2sgobfH3SxBYiyp8hUQ4RDUssFeDF1cS8iidqxvrHvxVsVzSkYiqTq2C/1/0/*,ccpubKGrjXXK5Hdb4PwUByRNKhs5rZaR3NedzDYEnrrKbq3ufLLwWsaG72XNrEk1LkGZAC8csLd4AcZiqQodvtm8Z4KJ8EyaxqJeFdUZQyvQqvB7/0/0/*))` describes a set of *1-of-2* P2WSH multisig outputs where one multisig key is the *1/0/`i`* child of the first specified xpub and the other multisig key is the *0/0/`i`* child of the second specified xpub, and `i` is any number in a configurable range (`0-1000` by default). The order of public keys in the resulting witnessScripts is determined by the lexicographic order of the public keys at that index.
+- `wsh(multi(1,ccpubKDazFod7ockysfstqdzSe4gLCcfnfg9hfNVRh3J9ke3heNVYJJv2sgobfH3SxBYiyp8hUQ4RDUssFeDF1cS8iidqxvrHvxVsVzSkYiqTq2C/1/0/*,ccpubKGrjXXK5Hdb4PwUByRNKhs5rZaR3NedzDYEnrrKbq3ufLLwWsaG72XNrEk1LkGZAC8csLd4AcZiqQodvtm8Z4KJ8EyaxqJeFdUZQyvQqvB7/0/0/*))` describes a set of *1-of-2* P2WSH multisig outputs where the first multisig key is the *1/0/`i`* child of the first specified xpub and the second multisig key is the *0/0/`i`* child of the second specified xpub, and `i` is any number in a configurable range.
+- `wsh(sortedmulti(1,ccpubKDazFod7ockysfstqdzSe4gLCcfnfg9hfNVRh3J9ke3heNVYJJv2sgobfH3SxBYiyp8hUQ4RDUssFeDF1cS8iidqxvrHvxVsVzSkYiqTq2C/1/0/*,ccpubKGrjXXK5Hdb4PwUByRNKhs5rZaR3NedzDYEnrrKbq3ufLLwWsaG72XNrEk1LkGZAC8csLd4AcZiqQodvtm8Z4KJ8EyaxqJeFdUZQyvQqvB7/0/0/*))` describes a set of *1-of-2* P2WSH multisig outputs where one multisig key is the *1/0/`i`* child of the first specified xpub and the other multisig key is the *0/0/`i`* child of the second specified xpub, and `i` is any number in a configurable range. The order of public keys in the resulting witnessScripts is determined by the lexicographic order of the public keys at that index.
 - `tr(c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5,{pk(fff97bd5755eeea420453a14355235d382f6472f8568a18b2f057a1460297556),pk(e493dbf1c10d80f3581e4904930b1404cc6c13900ee0758474fa94abe8c4cd13)})` describes a P2TR output with the `c6...` x-only pubkey as internal key, and two script paths.
 - `tr(c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5,sortedmulti_a(2,2f8bde4d1a07209355b4a7250a5c5128e88b84bddc619ab7cba8d569b240efe4,5cbdf0646e5db4eaa398f365f2ea7a0e3d419b7e0330e39ce92bddedcac4f9bc))` describes a P2TR output with the `c6...` x-only pubkey as internal key, and a single `multi_a` script that needs 2 signatures with 2 specified x-only keys, which will be sorted lexicographically.
 - `wsh(sortedmulti(2,[6f53d49c/44h/1h/0h]tcubNKNmt79jZcxbiz7uBDP8jqQwpHtHrJ4WLgmJ2X7n3yqTnZgqhKR1Tkd971E5KZ5Z4fhdgczLgN5sQo5tcJwMvguCJ63KKPLFsYAjxRQ6uwB/<0;1>/*,[e6807791/44h/1h/0h]tcubNJoacVcuzEvCQ7PMKRGpBU7cpokcJeup17NrDYode4zAfYCxWbu3CUezuHmYdRYtshvWnuwk5MWthUggWkzsqGyLyUeU2E36Ev8uLMdNjPZ/<0;1>/*,[367c9cfa/44h/1h/0h]tcubNKXJU8cqxp6FNbryG8Nb8ez93mw78c3SSMTUx1Uv1ApAjC9JbhxBfYixUvXevtSXGwNh7knBh2psHj1v3d43qTHxfJEemdSyCWKao37y4H3/<0;1>/*))` describes a *2-of-3* multisig with a multipath descriptor specifying both receiving (/0) and change (/1) address derivation paths.
@@ -75,7 +76,7 @@ Descriptors consist of several types of expressions. The top level expression is
 - `tr(KEY)` or `tr(KEY,TREE)` (top level only): P2TR output with the specified key as internal key, and optionally a tree of script paths, defined in [BIP 386](https://github.com/bitcoin/bips/blob/master/bip-0386.mediawiki).
 - `addr(ADDR)` (top level only): the script which ADDR expands to, defined in [BIP 385](https://github.com/bitcoin/bips/blob/master/bip-0385.mediawiki).
 - `raw(HEX)` (top level only): the script whose hex encoding is HEX, defined in [BIP 385](https://github.com/bitcoin/bips/blob/master/bip-0385.mediawiki).
-- `rawtr(KEY)` (top level only): P2TR output with the specified key as output key. NOTE: while it's possible to use this to construct wallets, it has several downsides, like being unable to prove no hidden script path exists. Use at your own risk.
+- `rawtr(KEY)` (top level only): uses the specified key directly as the output key. ConnectCoin wallets accept this form for type-1 P2PK outputs; consensus does not permit spending through a script path.
 - The miniscript expressions `0`, `1`, `pk_k(KEY)`, `pk_h(KEY)`, `older(k)`, `after(k)`, `sha256(HEX)`, `hash256(HEX)`, `ripemd160(HEX)`, `hash160(HEX)`, `andor(SCRIPT,SCRIPT,SCRIPT)`, `and_v(SCRIPT,SCRIPT)`, `and_b(SCRIPT,SCRIPT)`, `and_n(SCRIPT,SCRIPT)`, `or_b(SCRIPT,SCRIPT)`, `or_c(SCRIPT,SCRIPT)`, `or_d(SCRIPT,SCRIPT)`, `or_i(SCRIPT,SCRIPT)`, `thresh(k,SCRIPT,SCRIPT,...)`, `a:SCRIPT`, `s:SCRIPT`, `c:SCRIPT`, `t:SCRIPT`, `d:SCRIPT`, `v:SCRIPT`, `j:SCRIPT`, `n:SCRIPT`, `l:SCRIPT`, and `u:SCRIPT`, all only inside `wsh()` and `tr()`. Various rules apply that control how these can be combined. For details, see [BIP 379](https://github.com/bitcoin/bips/blob/master/bip-0379.md).
 
 `KEY` expressions, defined in [BIP 380](https://github.com/bitcoin/bips/blob/master/bip-0380.mediawiki):
@@ -94,7 +95,7 @@ Descriptors consist of several types of expressions. The top level expression is
       - No more than one of these derivation steps may be of the form `<NUM;NUM;...;NUM>` (including hardened indicators with either or both `NUM`). If such specifiers are included, the descriptor will be parsed as multiple descriptors where the first descriptor uses all of the first `NUM` in the pair, and the second descriptor uses the second `NUM` in the pair for all `KEY` expressions, and so on. Defined in [BIP 389](https://github.com/bitcoin/bips/blob/master/bip-0389.mediawiki).
     - Optionally followed by a single `/*` or `/*'` final step to denote all (direct) unhardened or hardened children.
     - The usage of hardened derivation steps requires providing the private key.
-  - `musig(KEY,KEY,...)` to represent the MuSig2 key aggregation of the relevant keys, only inside `tr()` expressions. It may be followed by unhardened `/NUM` derivation steps if all `KEY` subexpressions are xpubs or derived thereof, and none use `/*` or `/<NUM;NUM;...>`. Defined in [BIP 390](https://github.com/bitcoin/bips/blob/master/bip-0390.mediawiki).
+  - `musig(KEY,KEY,...)` to represent the MuSig2 key aggregation of the relevant keys, only inside `tr()` or `rawtr()` expressions. It may be followed by unhardened `/NUM` derivation steps if all `KEY` subexpressions are xpubs or derived thereof, and none use `/*` or `/<NUM;NUM;...>`. Defined in [BIP 390](https://github.com/bitcoin/bips/blob/master/bip-0390.mediawiki).
 
 (Anywhere a `'` suffix is permitted to denote hardened derivation, the suffix `h` can be used instead.)
 
@@ -147,13 +148,15 @@ are lexicographically ordered as described in BIP67.
 
 #### Basic multisig example
 
-For a good example of a basic M-of-N multisig between multiple participants using descriptor
-wallets and PSBTs, as well as a signing flow, see [this functional test](/test/functional/wallet_multisig_descriptor_psbt.py).
+For an inherited example of M-of-N multisig between multiple participants using
+descriptor wallets and PSBTs, see [this reference test](/test/functional/wallet_multisig_descriptor_psbt.py).
+The steps below describe the upstream workflow; they cannot create or spend
+valid ConnectCoin multisig outputs.
 
-Disclaimers: It is important to note that this example serves as a quick-start and is kept basic for readability. A downside of the approach
+Disclaimers: This inherited example is kept basic for readability. A downside of the approach
 outlined here is that each participant must maintain (and backup) two separate wallets: a signer and the corresponding multisig.
 It should also be noted that privacy best-practices are not "by default" here - participants should take care to only use the signer to sign
-transactions related to the multisig. Lastly, it is not recommended to use anything other than a ConnectCoin Core descriptor wallet to serve as your
+transactions related to the multisig. The upstream example assumes a Bitcoin Core descriptor wallet to serve as the
 signer(s). Other wallets, whether hardware or software, likely impose additional checks and safeguards to prevent users from signing transactions that
 could lead to loss of funds, or are deemed security hazards. Conforming to various 3rd-party checks and verifications is not in the scope of this example.
 
@@ -188,11 +191,15 @@ it is kept as simple and readable as possible.
 
 #### Basic Miniscript-enabled "decaying" multisig example
 
-For an example of a multisig that starts as 4-of-4 and "decays" to 3-of-4, 2-of-4, and finally 1-of-4 at each future halvening block height, see [this functional test](/test/functional/wallet_miniscript_decaying_multisig_descriptor_psbt.py).
+For an inherited example of a multisig that starts as 4-of-4 and "decays" to 3-of-4, 2-of-4, and finally 1-of-4 at each future halvening block height, see [this reference test](/test/functional/wallet_miniscript_decaying_multisig_descriptor_psbt.py).
+Its Script-based outputs are not valid ConnectCoin outputs. The test runner
+quarantines this test: it is excluded from both the default and `--extended`
+suites, but developers can select its filename explicitly for diagnosis or
+porting. It is not a working ConnectCoin wallet tutorial.
 
 This has the same "architecture" and signing flow as the above [Basic multisig example](#basic-multisig-example). The basic steps are identical aside from the descriptor that defines this wallet, which is of the form: `wsh(thresh(4,pk(XPUB1),s:pk(XPUB2),s:pk(XPUB3),s:pk(XPUB4),sln:after(t1),sln:after(t2),sln:after(t3)))`.
 
-[The test](/test/functional/wallet_miniscript_decaying_multisig_descriptor_psbt.py) is meant to be documentation as much as it is a functional test, so it is kept as simple and readable as possible.
+[The test](/test/functional/wallet_miniscript_decaying_multisig_descriptor_psbt.py) remains a readable reference for the inherited design.
 
 ### BIP32 derived keys and chains
 
@@ -204,7 +211,12 @@ path consists of a sequence of 0 or more integers (in the range
 *0..2<sup>31</sup>-1*) each optionally followed by `'` or `h`, and
 separated by `/` characters. The string may optionally end with the
 literal `/*` or `/*'` (or `/*h`) to refer to all unhardened or hardened
-child keys in a configurable range (by default `0-1000`, inclusive).
+child keys in a configurable range. The descriptor syntax itself does not set
+a default range. For an accepted ranged type-1 descriptor, `importdescriptors`
+without a `range` uses the wallet's default keypool range, normally `0-999`
+(1,000 keys, configurable with `-keypool`). In contrast, `deriveaddresses`
+requires an explicit `range` for a ranged descriptor. An explicitly supplied
+range uses inclusive endpoints in both RPCs.
 
 Whenever a public key is described using a hardened derivation step, the
 script cannot be computed without access to the corresponding private
@@ -250,14 +262,19 @@ This is useful when private keys are necessary for hardened derivation
 steps, for signing transactions, or for dumping wallet descriptors
 including private key material.
 
-For example, after importing the following 2-of-3 multisig descriptor
-into a wallet, one could use `signrawtransactionwithwallet`
-to sign a transaction with the first key:
+For example, a key-path-only type-1 descriptor can include an extended private
+key and a derivation path:
+
 ```
-sh(multi(2,ccprv.../84'/0'/0'/0/0,ccpub1...,ccpub2...))
+tr(<network-appropriate-extended-private-key>/0/0)
 ```
-Note how the first key is an xprv private key with a specific derivation path,
-while the other two are public keys.
+
+This is a syntax template: the placeholder is not a usable key or an importable
+descriptor. With a real ConnectCoin key for the selected network and a valid
+descriptor checksum, importing this form into a private-key-enabled wallet
+supplies the key needed by `signrawtransactionwithwallet` to sign a transaction
+spending the corresponding type-1 output. Keep descriptors containing private
+keys secret; do not publish them or share them as public descriptors.
 
 
 ### Specifying receiving and change descriptors in one descriptor
@@ -284,13 +301,13 @@ will expand to the 3 descriptors
 When this tuple contains only two elements, wallet implementations can use the
 first descriptor for receiving addresses and the second descriptor for change addresses.
 
-### Compatibility with old wallets
+### Inherited parser compatibility
 
-In order to easily represent the sets of scripts currently supported by
-existing ConnectCoin Core wallets, a convenience function `combo` is
-provided, which takes as input a public key, and describes a set of P2PK,
+The inherited `combo` function takes a public key and describes a set of P2PK,
 P2PKH, P2WPKH, and P2SH-P2WPKH scripts for that key. In case the key is
 uncompressed, the set only includes P2PK and P2PKH scripts.
+This is parser reference material; `combo` descriptors are not accepted by
+ConnectCoin wallets and these Script-based outputs are not consensus-valid.
 
 ### Checksums
 

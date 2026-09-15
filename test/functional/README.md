@@ -19,8 +19,9 @@ don't have test cases for.
 #### Style guidelines
 
 - Where possible, try to adhere to [PEP-8 guidelines](https://www.python.org/dev/peps/pep-0008/)
-- Use a python linter like flake8 before submitting PRs to catch common style
-  nits (eg trailing whitespace, unused imports, etc)
+- Run the Ruff-based `py_lint` check before submitting PRs to catch common style
+  issues (eg trailing whitespace, unused imports). See the
+  [lint instructions](/test/lint/README.md#running-locally).
 - The oldest supported Python version is specified in [doc/dependencies.md](/doc/dependencies.md).
   Consider using [pyenv](https://github.com/pyenv/pyenv), which checks [.python-version](/.python-version),
   to prevent accidentally introducing modern syntax from an unsupported Python version.
@@ -45,13 +46,13 @@ don't have test cases for.
 
 #### Naming guidelines
 
-- Name the test `<area>_test.py`, where area can be one of the following:
-    - `feature` for tests for full features that aren't wallet/mining/mempool, eg `feature_rbf.py`
+- Name the test `<area>_<description>.py`, where area can be one of the following:
+    - `feature` for tests for full features that aren't wallet/mining/mempool, eg `feature_typed_outputs.py`
     - `interface` for tests for other interfaces (REST, ZMQ, etc), eg `interface_rest.py`
     - `mempool` for tests for mempool behaviour, eg `mempool_reorg.py`
     - `mining` for tests for mining features, eg `mining_prioritisetransaction.py`
     - `p2p` for tests that explicitly test the p2p interface, eg `p2p_disconnect_ban.py`
-    - `rpc` for tests for individual RPC methods or features, eg `rpc_listtransactions.py`
+    - `rpc` for tests for individual RPC methods or features, eg `rpc_net.py`
     - `tool` for tests for tools, eg `tool_wallet.py`
     - `wallet` for tests for wallet features, eg `wallet_keypool.py`
 - Use an underscore to separate words
@@ -73,10 +74,12 @@ don't have test cases for.
 - Set the `self.setup_clean_chain` variable in `set_test_params()` to `True` to
   initialize an empty blockchain and start from the Genesis block, rather than
   load a premined blockchain from cache with the default value of `False`. The
-  cached data directories contain a 200-block pre-mined blockchain with the
-  spendable mining rewards being split between four nodes. Each node has 25
-  mature block subsidies (25x15=375 CC) in its wallet. Using them is much more
-  efficient than mining blocks in your test.
+  cache contains 199 blocks; setup adds a fresh block to reach height 200.
+  Cached rewards are split between the first three nodes' deterministic keys
+  and a separate deterministic address. Tests that enable wallet use import
+  the corresponding node keys, giving each of the first three wallets 25
+  mature block subsidies (25x15=375 CC). Do not assume additional nodes have
+  funded wallets. Reusing the cache avoids mining the full chain in each test.
 - When calling RPCs with lots of arguments, consider using named keyword
   arguments instead of positional arguments to make the intent of the call
   clear to readers.

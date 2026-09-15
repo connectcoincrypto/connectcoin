@@ -8,10 +8,12 @@ builder running any OS/architecture. In practice, build-side tools must be
 specified when the defaults don't fit, and packages must be amended to work
 on new hosts.
 
-### No reliance on timestamps
+### Rebuild checks
 
-File presence is used to determine what needs to be built. This makes the
-results distributable and easily digestible by automated builders.
+Build results are identified by content hashes, and file presence determines
+which build steps need to run. Packages with a `local_dir` source also use
+modification timestamps to detect when their source tarball must be regenerated;
+the new tarball's hash then contributes to the package build ID.
 
 ### Each build only has its specified dependencies available at build-time.
 

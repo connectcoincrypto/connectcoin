@@ -27,6 +27,10 @@ order.
 Given two or more linearized clusters, we can construct a linearization of the
 union by simply merge sorting the chunks of each cluster by feerate.
 
+Fees in these linearizations and diagrams are modified fees: base fees plus any
+local fee delta from `prioritisetransaction`. These adjustments affect policy
+and template ordering, not the fee actually paid by the transaction.
+
 For any set of linearized clusters, then, we can define the **feerate diagram**
 of the set by plotting the cumulative fee (y-axis) against the cumulative size
 (x-axis) as we progress from chunk to chunk. Given two linearizations for the
@@ -51,14 +55,9 @@ linearization when we need to free up space in the mempool.
 
 ## Replace-by-fee
 
-Prior to the cluster mempool implementation, it was possible for replacements
-to be prevented even if they would make the mempool more profitable for miners,
-and it was possible for replacements to be permitted even if the newly accepted
-transaction was less desirable to miners than the transactions it was
-replacing. With the ability to construct linearizations of the mempool, we're
-now able to compare the feerate diagram of the mempool before and after a
-proposed replacement, and only accept the replacement if it makes the feerate
-diagram strictly better.
+Replacement policy compares the mempool's feerate diagram before and after a
+proposed replacement. The new diagram must be strictly better, in addition to
+satisfying the other [replacement rules](mempool-replacements.md#current-replace-by-fee-policy).
 
 In simple cases, the intuition is that a replacement should have a higher
 feerate and fee than the transaction(s) it replaces. But for more complex cases
@@ -86,18 +85,22 @@ transactions in a cluster is necessary to ensure that we're able to find good
 
 ### Limits
 
-Transactions submitted to the mempool must not result in clusters that would
-exceed the cluster limits (64 transactions and 101 kvB total per cluster).
+Transactions submitted to the mempool must not result in clusters that exceed
+the node's configured limits. The defaults are 64 transactions and 101,000 vB
+per cluster. `-limitclustercount` configures the transaction-count limit, and
+`-limitclustersize` configures the size limit in units of 1,000 virtual bytes.
+These are local mempool-policy limits, not block consensus limits.
 
 ## References/Notes
+
 [1] This is an instance of the maximal-ratio closure problem, which is closely
 related to the maximal-weight closure problem, as found in the field of mineral
 extraction for open pit mining.
 
 [2] See
 https://delvingbitcoin.org/t/an-overview-of-the-cluster-mempool-proposal/393
-for a high level overview of the cluster mempool implementation (PR#33629,
-since v31.0) and its design rationale.
+for a high level overview of the upstream Bitcoin Core cluster mempool
+implementation (PR#33629) and its design rationale.
 
 [3] See https://delvingbitcoin.org/t/mempool-incentive-compatibility/553 for an
 explanation of why and how we use feerate diagrams for mining, eviction, and

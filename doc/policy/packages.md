@@ -2,8 +2,10 @@
 
 ## Definitions
 
-A **package** is an ordered list of transactions, representable by a connected Directed Acyclic
+A **package** is an ordered list of transactions, representable by a Directed Acyclic
 Graph (a directed edge exists between a transaction that spends the output of another transaction).
+The graph need not be connected for test accepts; submission to the mempool has the
+additional topology restrictions below.
 
 For every transaction `t` in a **topologically sorted** package, if any of its parents are present
 in the package, they appear somewhere in the list before `t`.
@@ -39,10 +41,10 @@ The following rules are enforced for all packages:
    - Packages are 1-parent-1-child, with no in-mempool ancestors of the package.
 
    - The number of distinct clusters containing conflicting transactions can be no more than 100, analogous to
-     regular [replacement rule](./mempool-replacements.md) 5).
+     regular [replacement rule](./mempool-replacements.md) 3).
 
    - Replacements must pay more total fees at the incremental relay fee (analogous to
-     regular [replacement rules](./mempool-replacements.md) 3 and 4).
+     regular [replacement rules](./mempool-replacements.md) 1 and 2).
 
    - Parent feerate must be lower than package feerate.
 
@@ -57,8 +59,7 @@ The following rules are enforced for all packages:
 The following rules are only enforced for packages to be submitted to the mempool (not
 enforced for test accepts):
 
-* Packages must be child-with-parents packages. This also means packages must contain at
-  least 1 transaction. (#31096)
+* Submissions must be a single transaction or a child-with-parents package. (#31096)
 
    - *Rationale*: This allows for fee-bumping by CPFP. Allowing multiple parents makes it possible
      to fee-bump a batch of transactions. Restricting packages to a defined topology is easier to
@@ -89,11 +90,14 @@ enforced for test accepts):
 If any transactions in the package are already in the mempool, they are not submitted again
 ("deduplicated") and are thus excluded from this calculation.
 
-To meet the dynamic mempool minimum feerate, i.e., the feerate determined by the transactions
-evicted when the mempool reaches capacity (not the static minimum relay feerate), the total package
-feerate instead of individual feerate can be used. For example, if the mempool minimum feerate is
-5con/vB and a 1con/vB parent transaction has a high-feerate child, it may be accepted if
-submitted as a package.
+For child-with-parents packages, the total package feerate instead of individual feerate can
+be used to meet both the rolling mempool minimum feerate (which rises when transactions are
+evicted at capacity) and the active minimum relay feerate. The default relay floor is
+subsidy-dependent; an explicit `-minrelaytxfee` fixes that floor instead.
+For a hypothetical node with a mempool minimum of 5 connects/vB and a relay floor no higher
+than that, a 1 connect/vB parent may be accepted with a high-feerate child if their package
+feerate meets both floors and they satisfy the other policy checks. These rates are
+illustrative, not a statement of the default relay floor.
 
 *Rationale*: This can be thought of as "CPFP within a package," solving the issue of a presigned
 transaction (i.e. in which a replacement transaction with a higher fee cannot be signed) being

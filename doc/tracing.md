@@ -349,7 +349,7 @@ void CConnman::PushMessage(…) {
       pnode->GetId(),
       pnode->m_addr_name.c_str(),
       pnode->ConnectionTypeAsString().c_str(),
-      sanitizedType.c_str(),
+      msg.m_type.c_str(),
       msg.data.size(),
       msg.data.data()
   );

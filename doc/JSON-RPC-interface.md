@@ -10,7 +10,7 @@ Dialog.
 There are two JSON-RPC endpoints on the server:
 
 1. `/`
-2. `/wallet/<walletname>/`
+2. `/wallet/<walletname>`
 
 ### `/` endpoint
 
@@ -18,25 +18,31 @@ This endpoint is always active.
 It can always service non-wallet requests and can service wallet requests when
 exactly one wallet is loaded.
 
-### `/wallet/<walletname>/` endpoint
+### `/wallet/<walletname>` endpoint
 
 This endpoint is only activated when the wallet component has been compiled in.
 It can service both wallet and non-wallet requests.
 It MUST be used for wallet requests when two or more wallets are loaded.
 
 This is the endpoint used by connectcoin-cli when a `-rpcwallet=` parameter is passed in.
+Percent-encode the wallet name when constructing the URL. Do not append a slash:
+the server treats it as part of the wallet name.
 
-Best practice would dictate using the `/wallet/<walletname>/` endpoint for ALL
+Best practice would dictate using the `/wallet/<walletname>` endpoint for ALL
 requests when multiple wallets are in use.
 
 ### Examples
 
-```sh
-# Get block count from the / endpoint when rpcuser=alice and rpcport=48172
-$ curl --user alice --data-binary '{"jsonrpc": "2.0", "id": "0", "method": "getblockcount", "params": []}' -H 'content-type: application/json' localhost:48172/
+These examples use testnet4's default RPC port, `48178`, with a configured
+RPC user named `alice`. The wallet example also requires `desc-wallet` to be
+loaded. The HTTP wallet path selects the wallet; `-rpcwallet` is a client option.
 
-# Get balance from the /wallet/walletname endpoint when rpcuser=alice, rpcport=48172 and rpcwallet=desc-wallet
-$ curl --user alice --data-binary '{"jsonrpc": "2.0", "id": "0", "method": "getbalance", "params": []}' -H 'content-type: application/json' localhost:48172/wallet/desc-wallet
+```sh
+# Get block count from the / endpoint
+$ curl --user alice --data-binary '{"jsonrpc": "2.0", "id": "0", "method": "getblockcount", "params": []}' -H 'content-type: application/json' localhost:48178/
+
+# Get balance from the /wallet/desc-wallet endpoint
+$ curl --user alice --data-binary '{"jsonrpc": "2.0", "id": "0", "method": "getbalance", "params": []}' -H 'content-type: application/json' localhost:48178/wallet/desc-wallet
 
 ```
 
@@ -52,8 +58,8 @@ are combined with named values.
 Examples:
 
 ```sh
-# "params": ["mywallet", false, false, "", false, false, true]
-connectcoin-cli createwallet mywallet false false "" false false true
+# "params": ["mywallet", false, false, "", false, true, true]
+connectcoin-cli createwallet mywallet false false "" false true true
 
 # "params": {"wallet_name": "mywallet", "load_on_startup": true}
 connectcoin-cli -named createwallet wallet_name=mywallet load_on_startup=true
@@ -62,7 +68,9 @@ connectcoin-cli -named createwallet wallet_name=mywallet load_on_startup=true
 connectcoin-cli -named createwallet mywallet load_on_startup=true
 ```
 
-`connectcoin rpc` can also be substituted for `connectcoin-cli -named`, and is a newer alternative.
+`connectcoin rpc` can also be substituted for `connectcoin-cli -named`.
+New wallets must use descriptors; the positional example explicitly sets
+`descriptors=true`, which the named examples obtain from the default.
 
 ## Versioning
 
@@ -76,17 +84,17 @@ major version via the `-deprecatedrpc=` command line option. The release notes
 of a new major release come with detailed instructions on what RPC features
 were deprecated and how to re-enable them temporarily.
 
-## JSON-RPC 1.1 vs 2.0
+## Legacy JSON-RPC vs 2.0
 
 The server recognizes [JSON-RPC v2.0](https://www.jsonrpc.org/specification) requests
 and responds accordingly. A 2.0 request is identified by the presence of
-`"jsonrpc": "2.0"` in the request body. If that key + value is not present in a request,
-the legacy JSON-RPC v1.1 protocol is followed instead, which was the only available
-protocol in v27.0 and prior releases.
+`"jsonrpc": "2.0"` in the request body. Omitting `jsonrpc` selects the inherited
+legacy protocol. `"jsonrpc": "1.0"` is also accepted for compatibility; other
+non-null version values are rejected. New clients should use version 2.0.
 
-|| 1.1 | 2.0 |
+|| Legacy | 2.0 |
 |-|-|-|
-| Request marker | `"version": "1.1"` (or none) | `"jsonrpc": "2.0"` |
+| Request marker | none (also accepts `"jsonrpc": "1.0"`) | `"jsonrpc": "2.0"` |
 | Response marker | (none) | `"jsonrpc": "2.0"` |
 | `"error"` and `"result"` fields in response | both present | only one is present |
 | HTTP codes in response | `200` unless there is any kind of RPC error (invalid parameters, method not found, etc) | Always `200` unless there is an actual HTTP server error (request parsing error, endpoint not found, etc) |
@@ -159,15 +167,15 @@ RPC interface will be abused.
     Related, if you use ConnectCoin Core inside a Docker container, you may
     need to expose the RPC port to the host system.  The default way to
     do this in Docker also exposes the port to the public Internet.
-    Instead, expose it only on the host system's localhost, for example:
-    `-p 127.0.0.1:48172:48172`
+    Instead, expose it only on the host system's localhost, for example for
+    testnet4: `-p 127.0.0.1:48178:48178`.
 
 - **Secure authentication:** By default, when no `rpcpassword` is specified, ConnectCoin Core generates unique
   login credentials each time it restarts and puts them into a file
   readable only by the user that started ConnectCoin Core, allowing any of
   that user's RPC clients with read access to the file to login
-  automatically.  The file is `.cookie` in the ConnectCoin Core
-  configuration directory, and using these credentials is the preferred
+  automatically. By default, `.cookie` is in the selected network's data
+  directory (`testnet4/` for the beta), and using these credentials is the preferred
   RPC authentication method.  If you need to generate static login
   credentials for your programs, you can use the script in the
   `share/rpcauth` directory in the ConnectCoin Core source tree.  As a final
@@ -217,16 +225,13 @@ wallet would reflect the removal of these mempool transactions in the state.
 
 However, the wallet may not be up-to-date with the current state of the mempool
 or the state of the mempool by an RPC that returned before this RPC. For
-example, a wallet transaction that was BIP-125-replaced in the mempool prior to
+example, a wallet transaction that was fee-replaced in the mempool prior to
 this RPC may not yet be reflected as such in this RPC response.
 
 ## Limitations
 
-There is a known issue in the JSON-RPC interface that can cause a node to crash if
-too many http connections are being opened at the same time because the system runs
-out of available file descriptors. To prevent this from happening you might
-want to increase the number of maximum allowed file descriptors in your system
-and try to prevent opening too many connections to your JSON-RPC interface at the
-same time if this is under your control. It is hard to give general advice
-since this depends on your system but if you make several hundred requests at
-once you are definitely at risk of encountering this issue.
+Concurrent HTTP connections and RPC work consume file descriptors, memory, and
+CPU time. Excessive client concurrency can exhaust resources or make the node
+unresponsive. Bound the number of outstanding requests and monitor resource use;
+there is no universally safe connection count. Raising a file-descriptor limit
+does not remove the other constraints. See [File descriptor limits](file-descriptor-limits.md).

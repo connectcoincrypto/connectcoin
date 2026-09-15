@@ -4,7 +4,7 @@
 
 ### 1.1 Creating the Wallet
 
-ConnectCoin Core inherits Bitcoin Core's post-0.21 wallet behavior and does not create a default wallet.
+ConnectCoin Core does not create a default wallet automatically.
 Wallets can be created with the `createwallet` RPC or with the `Create wallet` GUI menu item.
 
 In the GUI, the `Create a new wallet` button is displayed on the main screen when there is no wallet loaded. Alternatively, there is the option `File` ->`Create wallet`.
@@ -17,13 +17,18 @@ $ connectcoin-cli createwallet "wallet-01"
 
 `connectcoin rpc` can also be substituted for `connectcoin-cli`.
 
-By default, wallets are created in the `wallets` folder of the data directory, which varies by operating system, as shown below. The user can change the default by using the `-datadir` or `-walletdir` initialization parameters.
+On a fresh installation using the default testnet4 beta, wallets are created in
+the network's `wallets` directory, as shown below. Other selected networks use
+their own directories. Use `-datadir` to change the base data directory or
+`-walletdir` to select an existing wallet directory explicitly. If the network
+directory already exists without a `wallets` subdirectory, that network
+directory itself is used for wallets.
 
 | Operating System | Default wallet directory                                    |
 | -----------------|:------------------------------------------------------------|
-| Linux            | `/home/<user>/.connectcoin/wallets`                             |
-| Windows          | `C:\Users\<user>\AppData\Local\ConnectCoin\wallets`             |
-| macOS            | `/Users/<user>/Library/Application Support/ConnectCoin/wallets` |
+| Linux            | `/home/<user>/.connectcoin/testnet4/wallets`                             |
+| Windows          | `C:\Users\<user>\AppData\Local\ConnectCoin\testnet4\wallets`             |
+| macOS            | `/Users/<user>/Library/Application Support/ConnectCoin/testnet4/wallets` |
 
 ### 1.2 Encrypting the Wallet
 
@@ -33,7 +38,10 @@ Wallet encryption may prevent unauthorized access. However, this significantly i
 
 Wallet encryption may also not protect against more sophisticated attacks. An attacker can, for example, obtain the password by installing a keylogger on the user's machine.
 
-After encrypting the wallet or changing the passphrase, a new backup needs to be created immediately. The reason is that the keypool is flushed and a new HD seed is generated after encryption. Any coins received by the new seed cannot be recovered from the previous backups.
+Create a new backup immediately after encrypting the wallet: encryption generates
+new receiving-key material that previous backups cannot recover. Also make a
+fresh backup after changing the passphrase so the backup uses the current
+passphrase; changing the passphrase alone does not generate a new seed.
 
 The wallet's private key may be encrypted with the following command:
 
@@ -61,10 +69,13 @@ Note that if the passphrase is lost, all the coins in the wallet will also be lo
 
 ### 1.3 Unlocking the Wallet
 
-If the wallet is encrypted and the user tries any operation related to private keys, such as sending ConnectCoin, an error message will be displayed.
+If the wallet is encrypted and locked, an operation requiring its private keys,
+such as sending ConnectCoin, returns an error. This shell example uses a type-1
+P2PK address from the same wallet and selected network:
 
 ```
-$ connectcoin-cli -rpcwallet="wallet-01" sendtoaddress "ccrt1q4u4nsgk6ug0sqz7r3rj9tykjxrsl0yy4cdzj5u" 0.01
+$ address=$(connectcoin-cli -rpcwallet="wallet-01" getnewaddress "" "bech32m")
+$ connectcoin-cli -rpcwallet="wallet-01" sendtoaddress "$address" 0.01
 error code: -13
 error message:
 Error: Please enter the wallet passphrase with walletpassphrase first.
@@ -100,13 +111,13 @@ If both the wallet and all backups are lost for any reason, the coins related to
 
 ### 1.5 Backup Frequency
 
-The original upstream Bitcoin Core wallet was a collection of unrelated private keys. ConnectCoin inherits the later deterministic-wallet implementation. If a non-HD wallet had received funds to an address and then was restored from a backup made before the address was generated, then any funds sent to that address would have been lost because there was no deterministic mechanism to derive the address again.
+Descriptor wallets derive receiving keys deterministically from the key material
+stored in the wallet. A backup does not contain keys or descriptors added later,
+so keep it current, especially after encryption, imports, or migration. Also
+back up after changing the passphrase, as described above.
 
-Upstream Bitcoin Core [version 0.13](/doc/release-notes/release-notes-0.13.0.md) introduced HD wallets with deterministic key derivation; ConnectCoin inherits that implementation. With HD wallets, users no longer lose funds when restoring old backups because all addresses are derived from the HD wallet seed.
-
-This means that a single backup is enough to recover the coins at any time. It is still recommended to make regular backups (once a week) or after a significant number of new transactions to maintain the metadata, such as labels. Metadata cannot be retrieved from a blockchain rescan, so if the backup is too old, the metadata will be lost forever.
-
-Wallets created before version 0.13 are not HD and must be backed up every 100 keys used since the previous backup, or even more often to maintain the metadata.
+Make regular backups to preserve labels and other metadata. These cannot be
+recovered by rescanning the blockchain.
 
 ### 1.6 Restoring the Wallet From a Backup
 
@@ -132,7 +143,7 @@ Understanding wallet security is crucial for safely storing ConnectCoin. A key a
 The wallet passphrase and the seed are two separate components in wallet security. The seed, or HD seed, functions as a master key for deriving private and public keys in a hierarchical deterministic (HD) wallet. In contrast, the passphrase serves as an additional layer of security specifically designed to secure the private keys within the wallet. The passphrase serves as a safeguard, demanding an additional layer of authentication to access funds in the wallet.
 
 - **Protection Against Unauthorized Access:**
-The passphrase serves as a protective measure, securing your funds in situations where an unauthorized user gains access to your unlocked computer or device while your wallet application is active. Without the passphrase, they would be unable to access your wallet's funds or execute transactions. However, it's essential to be aware that someone with access can potentially compromise the security of your passphrase by installing a keylogger.
+Encryption protects stored private keys while the wallet is locked. After the wallet is unlocked, its keys can be used without entering the passphrase again until it is locked or the unlock timeout expires. Encryption does not protect an unlocked wallet or a compromised wallet process. Someone with access to the computer can also compromise the passphrase by installing a keylogger.
 
 - **Doesn't Encrypt Metadata or Public Keys:**
 It's important to note that the passphrase primarily secures the private keys and access to funds within the wallet. It does not encrypt metadata associated with transactions or public keys. Information about your transaction history and the public keys involved may still be visible.
@@ -142,28 +153,18 @@ If the wallet passphrase is too complex and is subsequently forgotten or lost, t
 
 ## Migrating Legacy Wallets to Descriptor Wallets
 
-Legacy wallets (traditional non-descriptor wallets) can be migrated to become Descriptor wallets
-through the use of the `migratewallet` RPC. Migrated wallets will have all of their addresses and private keys added to
-a newly created Descriptor wallet that has the same name as the original wallet. As Descriptor
-wallets do not support having both private keys and watch-only scripts, there may be up to two
-additional wallets created after migration. In addition to a descriptor wallet of the same name,
-there may also be a wallet named `<name>_watchonly` and `<name>_solvables`. `<name>_watchonly`
-contains all of the watchonly scripts. `<name>_solvables` contains any scripts that the wallet
-knows but for which it is not watching the corresponding P2(W)SH scripts. If the legacy wallet
-contains only watch-only scripts and no private keys, then only the `<name>_watchonly` wallet
-will be created and the descriptor wallet with the same name will not be created. Additionally,
-the created watch-only descriptor wallet will not have private keys enabled.
+New ConnectCoin wallets already use descriptors and do not require migration.
+The `migratewallet` RPC retains support for migrating legacy wallet databases.
+Migration changes wallet storage; it does not convert Bitcoin funds or unsupported
+output scripts into valid ConnectCoin [type-1 outputs](typed-outputs.md#type-1-p2pk).
 
-Migrated wallets will also generate new addresses differently. While the same BIP 32 seed will be
-used, the BIP 44, 49, 84, and 86 standard derivation paths will be used. After migrating, a new
-backup of the wallet(s) will need to be created.
+Migration is a best-effort process, so verify the result before relying on it.
+Preserve the original backup and create fresh backups of the resulting wallets
+after successful migration. The RPC returns the original backup location in
+`backup_path`. Report unexpected migration failures or missing data through the
+repository's issues, without sharing private wallet data.
 
-Given that there is an extremely large number of possible configurations for the scripts that
-Legacy wallets can know about, be watching for, and be able to sign for, `migratewallet` only
-makes a best effort attempt to capture all of these things into Descriptor wallets. There may be
-unforeseen configurations which result in some scripts being excluded. If a migration fails
-unexpectedly or otherwise misses any scripts, please create an issue on GitHub. A backup of the
-original wallet can be found in the wallet directory with the name `<name>-<timestamp>.legacy.bak`.
-
-The backup can be restored using the methods discussed in the
-[Restoring the Wallet From a Backup](#16-restoring-the-wallet-from-a-backup) section.
+To restore a backup of a resulting descriptor wallet, follow
+[Restoring the Wallet From a Backup](#16-restoring-the-wallet-from-a-backup).
+Preserve the original legacy backup for recovery or another migration attempt;
+it cannot be loaded directly with `restorewallet`.

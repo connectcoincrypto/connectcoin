@@ -39,10 +39,12 @@ a useful source of review practice for inherited code.
 Communication Channels
 ----------------------
 
-ConnectCoin does not yet publish official project chat, mailing-list, or security
-contact details. Use the issue and pull-request facilities of the repository
-hosting this tree, or coordinate directly with its maintainer. Do not use
-Bitcoin Core communication channels for ConnectCoin-specific support or reports.
+Join the [ConnectCoin Community](https://discord.gg/JYWbz5PsPp) for announcements,
+questions, and community discussions. Use this repository's issues and pull
+requests for development work. For vulnerabilities, follow the private reporting
+guidance in [SECURITY.md](SECURITY.md); do not post sensitive details publicly.
+Do not use Bitcoin Core communication channels for ConnectCoin-specific support
+or reports.
 Upstream Bitcoin Core channels remain appropriate only for issues independently
 reproduced in unmodified upstream Bitcoin Core.
 
@@ -147,9 +149,9 @@ commit. Instead, make any username mentions in a subsequent comment to the PR.
 
 ### Translation changes
 
-Note that translations should not be submitted as pull requests. Please see
-[Translation Process](/doc/translation_process.md)
-for more information on helping with translations.
+Submit translation updates through pull requests, including affected catalogs
+alongside source-string changes. Follow the [Translation Process](/doc/translation_process.md)
+for extraction, review requirements, and validation checks.
 
 ### Work in Progress Changes and Requests for Comments
 

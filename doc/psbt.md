@@ -73,29 +73,39 @@ hardware implementations will typically implement multiple roles simultaneously.
 ### RPCs
 
 - **`converttopsbt` (Creator)** is a utility RPC that converts an
-  unsigned raw transaction to PSBT format. It ignores existing signatures.
+  unsigned raw transaction to PSBT format. By default it rejects inputs that
+  contain signatures. Set `permitsigdata=true` to discard existing signature
+  data during conversion.
 - **`createpsbt` (Creator)** is a utility RPC that takes a list of inputs and
   outputs and converts them to a PSBT with no additional information. It is
   equivalent to calling `createrawtransaction` followed by `converttopsbt`.
 - **`walletcreatefundedpsbt` (Creator, Updater)** is a wallet RPC that creates a
-  PSBT with the specified inputs and outputs, adds additional inputs and change
-  to it to balance it out, and adds relevant metadata. In particular, for inputs
+  PSBT with the specified inputs and outputs, funds it, adds change as needed,
+  and adds relevant metadata. By default, wallet inputs are selected automatically
+  only when no inputs were supplied. Set the `add_inputs=true` option to allow
+  additional wallet inputs when supplied inputs are insufficient. For inputs
   that the wallet knows about (counting towards its normal or watch-only
   balance), UTXO information will be added. For outputs and inputs with UTXO
   information present, key and script information will be added which the wallet
-  knows about. It is equivalent to running `createrawtransaction`, followed by
-  `fundrawtransaction`, and `converttopsbt`.
+  knows about. A manual sequence of `createrawtransaction`, `fundrawtransaction`,
+  and `converttopsbt` has different funding defaults and does not add the same
+  PSBT metadata.
 - **`walletprocesspsbt` (Updater, Signer, Finalizer)** is a wallet RPC that takes as
   input a PSBT, adds UTXO, key, and script data to inputs and outputs that miss
   it, and optionally signs inputs. Where possible it also finalizes the partial
   signatures.
 - **`descriptorprocesspsbt` (Updater, Signer, Finalizer)** is a node RPC that takes
-  as input a PSBT and a list of descriptors. It updates SegWit inputs with
-  information available from the UTXO set and the mempool and signs the inputs using
-  the provided descriptors. Where possible it also finalizes the partial signatures.
-- **`utxoupdatepsbt` (Updater)** is a node RPC that takes a PSBT and updates it
-  to include information available from the UTXO set (works only for SegWit
-  inputs).
+  as input a PSBT and a list of descriptors. It uses the same previous-transaction
+  and UTXO lookups as `utxoupdatepsbt`, adds descriptor metadata, and signs supported
+  type-1 inputs when the provided descriptors contain the needed private keys.
+  Where possible it also finalizes those signatures; it does not authorize P2C
+  redemptions.
+- **`utxoupdatepsbt` (Updater)** is a node RPC that takes a PSBT and looks up
+  full previous transactions in the enabled transaction index or
+  mempool. Otherwise, it can fill `witness_utxo` from the UTXO set for inputs
+  represented by witness programs in the compatibility view, including type-1
+  outputs. Optional descriptors supply additional key and script metadata.
+  Adding this metadata does not sign inputs or authorize a P2C redemption.
 - **`finalizepsbt` (Finalizer, Extractor)** is a utility RPC that finalizes any
   partial signatures, and if all inputs are finalized, converts the result to a
   fully signed transaction which can be broadcast with `sendrawtransaction`.
@@ -104,8 +114,10 @@ hardware implementations will typically implement multiple roles simultaneously.
   different versions of the same PSBT. In particular it is useful to combine the
   output of multiple Updaters or Signers.
 - **`joinpsbts`** (Creator) is a utility RPC that joins multiple PSBTs together,
-  concatenating the inputs and outputs. This can be used to construct CoinJoin
-  transactions.
+  concatenating the inputs and outputs. It accepts only PSBT version 0.
+  `createpsbt`, `converttopsbt`, and `walletcreatefundedpsbt` default to version 2;
+  set `psbt_version=0` when creating PSBTs that will be joined. This can be used
+  to construct transactions with inputs from multiple participants.
 - **`decodepsbt`** is a diagnostic utility RPC which will show all information in
   a PSBT in human-readable form, as well as compute its eventual fee if known.
 - **`analyzepsbt`** is a utility RPC that examines a PSBT and reports the
@@ -116,6 +128,9 @@ hardware implementations will typically implement multiple roles simultaneously.
 
 ### Workflows
 
-#### Multisig with multiple ConnectCoin Core instances
+#### Inherited multisig reference
 
-For a quick start see [Basic M-of-N multisig example using descriptor wallets and PSBTs](./descriptors.md#basic-multisig-example).
+For background on the inherited PSBT roles, see [Basic M-of-N multisig example using descriptor wallets and PSBTs](./descriptors.md#basic-multisig-example).
+That example is reference material and does not produce valid ConnectCoin
+transactions. For a supported type-1 workflow, see the
+[Offline Signing Tutorial](offline-signing-tutorial.md).

@@ -25,7 +25,7 @@ user inputs. Such environments include the Python3 command line interpreter or
 ## 2. Importing `TestShell` from the ConnectCoin Core repository
 
 We can import the `TestShell` by adding the path of the configured ConnectCoin Core
-`test_framework` module to the beginning of the PATH variable, and then
+`test_framework` module to the beginning of Python's `sys.path`, and then
 importing the `TestShell` class from the `test_shell` sub-package. Since
 the build system creates a copy of the `test_framework` module into a new `build/`
 directory along with the required configuration file, the path to the build copy
@@ -60,7 +60,7 @@ The following sections demonstrate how to initialize, run, and shut down a
 The `TestShell` forwards all functional test parameters of the parent
 `BitcoinTestFramework` object. The full set of argument keywords which can be
 used to initialize the `TestShell` can be found in [section
-#6](#custom-testshell-parameters) of this document.
+#6](#6-custom-testshell-parameters) of this document.
 
 **Note: Running multiple instances of `TestShell` is not allowed.** Running a
 single process also ensures that logging remains consolidated in the same
@@ -84,8 +84,8 @@ interactively.
 
 **Example: Mining a regtest chain**
 
-By default, the `TestShell` nodes are initialized with a clean chain. This means
-that each node of the `TestShell` is initialized with a block height of 0.
+The example above sets `setup_clean_chain=True`, so each node starts at block
+height 0. Without that override, `TestShell` uses the cached chain.
 
 ```
 >>> test.nodes[0].getblockchaininfo()["blocks"]
@@ -115,7 +115,7 @@ first node.
 
 ```
 >>> test.nodes[0].getbalance()
-Decimal('100.0000000000')
+Decimal('15.0000000000')
 ```
 
 We can also log custom events to the logger.
@@ -173,17 +173,17 @@ can be called after the TestShell is shut down.
 | Test parameter key | Default Value | Description |
 |---|---|---|
 | `bind_to_localhost_only` | `True` | Binds connectcoind P2P services to `127.0.0.1` if set to `True`.|
-| `cachedir` | `"/path/to/connectcoin/build/test/cache"` | Sets the connectcoind datadir directory. |
+| `cachedir` | `"/path/to/connectcoin/build/test/cache"` | Sets the cached-chain directory used when `setup_clean_chain=False`. |
 | `chain`  | `"regtest"` | Sets the chain-type for the underlying test connectcoind processes. |
 | `configfile` | `"/path/to/connectcoin/build/test/config.ini"` | Sets the location of the test framework config file. |
 | `coveragedir` | `None` | Records connectcoind RPC test coverage into this directory if set. |
 | `loglevel` | `INFO` | Logs events at this level and higher. Can be set to `DEBUG`, `INFO`, `WARNING`, `ERROR` or `CRITICAL`. |
-| `nocleanup` | `False` | Cleans up temporary test directory if set to `True` during `shutdown`. |
+| `nocleanup` | `False` | Preserves the temporary test directory after `shutdown` if set to `True`. |
 | `num_nodes` | `1` | Sets the number of initialized connectcoind processes. |
-| `rpc_timeout` | `60` | Sets the RPC server timeout for the underlying connectcoind processes. |
-| `setup_clean_chain` | `False` | A 200-block-long chain is initialized from cache by default. Instead, `setup_clean_chain` initializes an empty blockchain if set to `True`. |
+| `rpc_timeout` | `60` | Sets the framework's timeout in seconds for node startup and shutdown. RPC clients use half this value by default. |
+| `setup_clean_chain` | `False` | Copies the 199-block cache and adds a fresh block during setup. Initializes an empty blockchain if set to `True`. |
 | `randomseed` | Random Integer | `TestShell().options.randomseed` is a member of `TestShell` which can be accessed during a test to seed a random generator. User can override default with a constant value for reproducible test runs. |
-| `supports_cli` | `False` | Whether the connectcoin-cli utility is compiled and available for the test. |
-| `tmpdir` | `"/var/folders/.../"` | Sets directory for test logs. Will be deleted upon a successful test run unless `nocleanup` is set to `True` |
+| `supports_cli` | `True` | Whether the test supports `usecli`; the framework separately checks that connectcoin-cli was compiled. |
+| `tmpdir` | A new directory under the system temporary directory | Sets the directory for test node data and logs. Deleted after successful shutdown unless `nocleanup=True`. |
 | `trace_rpc` | `False` | Logs all RPC calls if set to `True`. |
 | `usecli` | `False` | Uses the connectcoin-cli interface for all connectcoind commands instead of directly calling the RPC server. Requires `supports_cli`. |

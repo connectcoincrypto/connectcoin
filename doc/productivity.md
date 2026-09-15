@@ -97,7 +97,7 @@ You can also set up [upstream refspecs](#reference-prs-easily-with-refspecs) to 
 
 ### Format C/C++ diffs with `clang-format-diff.py`
 
-See [contrib/devtools/README.md](/contrib/devtools/README.md#clang-format-diff.py).
+See [contrib/devtools/README.md](/contrib/devtools/README.md#clang-format-diffpy).
 
 ### Format Python diffs with `yapf-diff.py`
 
@@ -159,10 +159,10 @@ As an alternative to fetching commits directly, when looking at pull requests by
 ```
 [remote "upstream-pull"]
         fetch = +refs/pull/*/head:refs/remotes/upstream-pull/*
-        url = <CONNECTCOIN_GITHUB_REPOSITORY_URL>
+        url = https://github.com/connectcoincrypto/connectcoin.git
 ```
 
-This will add an `upstream-pull` remote to your git repository, which can be fetched using `git fetch --all` or `git fetch upstream-pull`. It will download and store on disk quite a lot of data (all PRs, including merged and closed ones). Afterwards, you can use `upstream-pull/NUMBER/head` in arguments to `git show`, `git checkout` and anywhere a commit id would be acceptable to see the changes from pull request NUMBER.
+This will add an `upstream-pull` remote to your git repository, which can be fetched using `git fetch --all` or `git fetch upstream-pull`. It will download and store on disk quite a lot of data (all PRs, including merged and closed ones). Afterwards, you can use `upstream-pull/NUMBER` in arguments to `git show`, `git checkout` and anywhere a commit id would be acceptable to see the changes from pull request NUMBER.
 
 ### Fetch and update PRs individually
 
@@ -180,8 +180,8 @@ git fetch upstream pull/<number>/head:pr-<number> && git switch pr-<number>
 
 > [!NOTE]
 > The remote named "upstream" here must be the ConnectCoin repository against
-> which the pull request was opened. Replace the placeholder URL only after a
-> project-owned repository has been designated.
+> which the pull request was opened. Verify it with `git remote get-url upstream`
+> before fetching; your local remote names may differ.
 
 Make these easier to use by adding aliases to your git config:
 

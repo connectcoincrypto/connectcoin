@@ -6,13 +6,22 @@ as well as [packages.md](packages.md) for how to add packages.
 
 ## Usage
 
+Unless stated otherwise, run the dependency-build commands below from the
+`depends` directory. From the repository root, enter it with:
+
+    cd depends
+
+Use `gmake` instead of `make` on the platforms whose instructions specify it.
+The later CMake, `make -C depends`, and Nix-shell examples explicitly run from
+the repository root.
+
 ### Ubuntu & Debian
 
-    apt install cmake curl make patch
+    apt install cmake curl g++ make patch
 
 Skip the following packages if you don't intend to use the GUI and will build with [`NO_QT=1`](#dependency-options):
 
-    apt install bison g++ ninja-build pkgconf python3 xz-utils
+    apt install bison ninja-build pkgconf python3 xz-utils
 
 To build dependencies for the current arch+OS:
 
@@ -79,7 +88,9 @@ To build dependencies for the current arch+OS:
 order for it to pick up libraries, tools, and settings from the depends build,
 you must specify the toolchain file.
 In the above example for Ubuntu, a file named `depends/x86_64-pc-linux-gnu/toolchain.cmake` will be
-created. To use it while configuring ConnectCoin Core:
+created. To use it while configuring ConnectCoin Core, return to the repository
+root (`cd ..` if still in `depends`). Use a build directory that has not already
+been configured with a different toolchain; the example assumes `build` is new:
 
     cmake -B build --toolchain depends/x86_64-pc-linux-gnu/toolchain.cmake
 
@@ -119,13 +130,14 @@ default to `gcc`/`g++` on Linux and `clang`/`clang++` on macOS/FreeBSD/OpenBSD
 (see `./depends/builders/*.mk`).
 
 On a system where the default build compiler is not available (e.g. Linux
-without gcc/g++), you could use the following to build all packages using clang:
+without gcc/g++), you could use the following from the repository root to build
+all packages using clang:
 
     make -C depends build_CC=clang build_CXX=clang++ CC=clang CXX=clang++
 
 ## Cross compilation
 
-To build for another arch+OS:
+From the `depends` directory, to build for another arch+OS:
 
     make HOST=host-platform-triplet
 

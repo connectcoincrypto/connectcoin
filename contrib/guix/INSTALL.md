@@ -213,7 +213,7 @@ the environment variables of your current shell session.
 ```sh
 # Help Guile v3.0.x find packages in /usr/local
 export GUILE_LOAD_PATH="/usr/local/share/guile/site/3.0${GUILE_LOAD_PATH:+:}$GUILE_LOAD_PATH"
-export GUILE_LOAD_COMPILED_PATH="/usr/local/lib/guile/3.0/site-ccache${GUILE_LOAD_COMPILED_PATH:+:}$GUILE_COMPILED_LOAD_PATH"
+export GUILE_LOAD_COMPILED_PATH="/usr/local/lib/guile/3.0/site-ccache${GUILE_LOAD_COMPILED_PATH:+:}$GUILE_LOAD_COMPILED_PATH"
 ```
 
 Note that these environment variables are used to check for packages during

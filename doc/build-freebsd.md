@@ -34,7 +34,8 @@ See [dependencies.md](dependencies.md) for a complete overview.
 ### 2. Clone the ConnectCoin repository
 Now that `git` and all the required dependencies are installed, let's clone the ConnectCoin Core repository to a directory. All build scripts and commands will run from this directory.
 ```bash
-git clone YOUR_CONNECTCOIN_REPOSITORY_URL connectcoin
+git clone https://github.com/connectcoincrypto/connectcoin.git connectcoin
+cd connectcoin
 ```
 
 ### 3. Install Optional Dependencies

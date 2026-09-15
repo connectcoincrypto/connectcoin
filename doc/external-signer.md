@@ -44,7 +44,11 @@ Create a wallet, this automatically imports the public keys:
 connectcoin rpc createwallet wallet_name="hww2" disable_private_keys=true descriptors=true external_signer=true
 ```
 
-Creation of the external wallet can be confirmed with `getwalletinfo`, which will report `"external_signer": true`. These commands can also be executed using `connectcoin-qt` Debug Console instead of using `connectcoin rpc` or `connectcoin-cli`.
+Creation of the external wallet can be confirmed with `getwalletinfo`, which will report `"external_signer": true`.
+The same RPC methods are available in the `connectcoin-qt` Debug Console, but
+the console requires positional arguments, not the CLI's `name=value` syntax.
+Omit the `connectcoin rpc` or `connectcoin-cli` prefix and use the console's
+wallet selector instead of `-rpcwallet` for wallet-specific calls.
 
 ### Verify an address
 
@@ -211,4 +215,10 @@ It ignores legacy Bitcoin descriptor families and imports only key-path-only `tr
 
 The `walletdisplayaddress` RPC obtains the inferred descriptor for the provided address. It then calls `<cmd> --fingerprint 00000000 --chain <name> displayaddress --desc <descriptor>`.
 
-For external-signer wallets, spending uses `send` or `sendall`, and fee-bumping uses `bumpfee`. ConnectCoin Core builds a PSBT, adds key origin information, checks whether any input key origin fingerprint matches the signer, calls `<cmd> --stdin --fingerprint 00000000 --chain <name>`, and sends `signtx <psbt>` over stdin. If signatures are sufficient, it finalizes the transaction and, for broadcasting RPCs, broadcasts it. If signing cannot complete, the call fails with an error. For manual fee-bumping, use `psbtbumpfee` to obtain a PSBT for signing.
+For external-signer wallets, spending uses `send` or `sendall`, and fee-bumping uses `bumpfee`. ConnectCoin Core builds a PSBT, adds key origin information, checks whether any input key origin fingerprint matches the signer, calls `<cmd> --stdin --fingerprint 00000000 --chain <name>`, and sends `signtx <psbt>` over stdin. If signatures are sufficient, it finalizes the transaction and, for broadcasting RPCs, broadcasts it.
+
+A signer error causes the RPC to fail. If the signer returns a valid PSBT but
+signatures are insufficient to finalize it, `send` and `sendall` can instead
+return the PSBT with `complete: false`, without broadcasting. `bumpfee` fails
+if the replacement cannot be fully signed. For manual fee-bumping, use
+`psbtbumpfee` to obtain a PSBT for signing.

@@ -47,6 +47,12 @@ Configuration files
 * `trusted-sha512-root-commit`: This file should contain a single git commit hash which is the first commit without a SHA512 root commitment.
 * `trusted-keys`: This file should contain a \n-delimited list of all PGP fingerprints of authorized commit signers (primary, not subkeys).
 * `allow-revsig-commits`: This file should contain a \n-delimited list of git commit hashes. See next section for more info.
+* `allow-unclean-merge-commits`: A \n-delimited list of commits exempted from clean-merge verification.
+* `allow-incorrect-sha512-commits`: A \n-delimited list of commits exempted from the Tree-SHA512 check.
+
+The exception lists are trust-policy inputs too. Review each exception before
+replacing inherited entries with project-owned values; do not copy them into a
+new policy without review.
 
 Import trusted keys
 -------------------
@@ -65,7 +71,9 @@ verify-commits will start failing to verify all commits which were signed by
 said key. In order to avoid bumping the root-of-trust `trusted-git-root`
 file, individual commits which were signed by such a key can be added to the
 `allow-revsig-commits` file. That way, the PGP signatures are still verified
-but no new commits can be signed by any expired/revoked key. To easily build a
-list of commits which need to be added, verify-commits.py can be edited to test
-each commit with CONNECTCOIN_VERIFY_COMMITS_ALLOW_REVSIG set to both 1 and 0, and
-those which need it set to 1 printed.
+but commits not explicitly listed remain subject to the expiry/revocation check.
+The current verifier derives its `allow_revsig` decision from membership in
+`allow-revsig-commits`; it does not read a
+`CONNECTCOIN_VERIFY_COMMITS_ALLOW_REVSIG` environment variable. Any proposed
+exception must be independently reviewed under the project's trust policy,
+not automatically accepted merely because verification otherwise fails.

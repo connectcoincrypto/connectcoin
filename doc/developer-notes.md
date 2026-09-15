@@ -721,7 +721,7 @@ and its `cs_KeyStore` lock for example).
 ## Threads
 
 - [Main thread (`connectcoind`)](https://doxygen.bitcoincore.org/bitcoind_8cpp.html#main)
-  : Started from `main()` in `connectcoind.cpp`. Responsible for starting up and
+  : Started from `main()` in `src/bitcoind.cpp`. Responsible for starting up and
   shutting down the application.
 
 - [Init load (`b-initload`)](https://doxygen.bitcoincore.org/init_8cpp.html#initload)
@@ -757,10 +757,10 @@ and its `cs_KeyStore` lock for example).
     : Loads addresses of peers from the DNS.
 
   - [ThreadMapPort (`b-mapport`)](https://doxygen.bitcoincore.org/mapport_8cpp.html#mapport)
-    : Universal plug-and-play startup/shutdown.
+    : Manages automatic port mappings using PCP, with NAT-PMP fallback for IPv4.
 
   - [ThreadSocketHandler (`b-net`)](https://doxygen.bitcoincore.org/class_c_connman.html#net)
-    : Sends/Receives data from ConnectCoin peers on port 48173.
+    : Sends/receives data from ConnectCoin peers on the configured P2P port (48179 by default on Testnet4).
 
   - [ThreadOpenAddedConnections (`b-addcon`)](https://doxygen.bitcoincore.org/class_c_connman.html#addcon)
     : Opens network connections to added nodes.
@@ -1198,10 +1198,10 @@ you must be aware of.
 ### File Descriptor Counts
 
 In most configurations, we use the default LevelDB value for `max_open_files`,
-which is 1000 at the time of this writing. If LevelDB actually uses this many
-file descriptors, it will cause problems with Bitcoin's `select()` loop, because
-it may cause new sockets to be created where the fd value is >= 1024. For this
-reason, on 64-bit Unix systems, we rely on an internal LevelDB optimization that
+which is 1000 at the time of this writing. File descriptor exhaustion remains a
+concern even though current POSIX socket waits use `poll()` and support file
+descriptor values at or above `FD_SETSIZE`. On 64-bit Unix systems, we rely on an
+internal LevelDB optimization that
 uses `mmap()` + `close()` to open table files without actually retaining
 references to the table file descriptors. If you are upgrading LevelDB, you must
 sanity check the changes to make sure that this assumption remains valid.
@@ -1382,9 +1382,7 @@ A few guidelines for introducing and reviewing new RPC interfaces:
   RPCs whose behavior does *not* depend on the current chainstate may omit this
   call.
 
-  - *Rationale*: In previous versions of ConnectCoin Core, the wallet was always
-    in-sync with the chainstate (by virtue of them all being updated in the
-    same cs_main lock). In order to maintain the behavior that wallet RPCs
+  - *Rationale*: In order to maintain the behavior that wallet RPCs
     return results as of at least the highest best-known block an RPC
     client may be aware of prior to entering a wallet RPC call, we must block
     until the wallet is caught up to the chainstate as of the RPC call's entry.
@@ -1393,8 +1391,9 @@ A few guidelines for introducing and reviewing new RPC interfaces:
 - Use *invalid* bech32 addresses (e.g. in the constant array `EXAMPLE_ADDRESS`) for
   `RPCExamples` help documentation.
 
-  - *Rationale*: Prevent accidental transactions by users and encourage the use
-    of bech32 addresses by default.
+  - *Rationale*: Prevent accidental transactions by users. Address-parser
+    examples do not imply wallet or consensus support for that output type;
+    current payment addresses use type-1 P2PK (Bech32m).
 
 - Use the `UNIX_EPOCH_TIME` constant when describing UNIX epoch time or
   timestamps in the documentation.

@@ -1,7 +1,8 @@
 # P2C in the wallet
 
-The **P2C** tab (Alt+5) has separate **Create bounties** and **Automatic claims**
-pages. Creating bounties uses the same type-2 outputs as `sendtop2c`. During
+The wallet has separate **Automatic claims** (Alt+7) and **P2C** (Alt+5) pages
+in the left navigation. **Automatic claims** is the default page; **P2C** creates
+bounties using the same type-2 outputs as `sendtop2c`. During
 confirmation the GUI makes a bounded TLS capability probe, without sending an
 HTTP request. Automatic claiming is disabled until explicitly enabled.
 
@@ -18,7 +19,7 @@ HTTP request. Automatic claiming is disabled until explicitly enabled.
    Extreme rates that cannot be evaluated safely are rejected before transaction construction.
 6. Click **Review P2C** and unlock the wallet if requested. Review the domain,
    difficulty, roots version, total rewards, transaction count, fees, and total debit.
-   During the existing three-second confirmation delay, the GUI offers only
+   During the three-second confirmation delay, the GUI offers only
    `rsa_pss_rsae_sha256` and `rsa_pss_pss_sha256`. If a complete, authenticated
    handshake succeeds before the deadline, it selects mask `6` (both RSA schemes).
    Failure, timeout, cancellation of the probe, or a busy probe worker keeps mask
@@ -49,15 +50,15 @@ confirmation, and the wallet's normal broadcast configuration still applies. A b
 is not atomic across transactions: a storage failure may leave some committed. If
 submission reports an error, check the transaction IDs and wallet history before retrying.
 
-This initial interface requires a wallet with local private keys. Watch-only and
-external-signer workflows remain available through the existing raw transaction/PSBT
+Creating bounties in the GUI requires a wallet with local private keys.
+Watch-only and external-signer workflows remain available through the raw transaction/PSBT
 tools, not through this page. No consensus rules or trust roots are changed by this UI.
 
 ## Manual claim backend
 
-The wallet exposes `preparep2cclaim` and `submitp2cclaim` for external generators,
-including the independent p2c-tools. Neither of these two RPCs starts a connection,
-scans for bounties, or runs a background job.
+The wallet exposes `preparep2cclaim` and `submitp2cclaim` for external proof
+generators. Neither RPC starts a connection, scans for bounties, or runs a
+background job.
 
 ```
 connectcoin-cli -rpcwallet=claimant preparep2cclaim "funding_txid" 0
@@ -103,7 +104,7 @@ fees, or submit proof data obtained from an untrusted JSON envelope.
 
 ## Native automatic claims
 
-Open **P2C → Automatic claims**, select a connection rate, simultaneous connections,
+Open **Automatic claims** (Alt+7), select a connection rate, simultaneous connections,
 and optionally a comma-separated domain allowlist. Leave **Reward address**
 empty to pay this wallet (the default), or enter a type-1 P2PK address for this
 network. Confirm **Apply / start** and check the reward target in the status.
@@ -182,7 +183,7 @@ prompt confirmation if demand rises before submission.
   displays `Unlimited` in the status, not the RPC sentinel `-1`.
 - Positive rates limit connection starts across all workers **in this wallet**;
   they are not a node-wide limit shared by multiple wallets. Concurrency accepts
-  any positive 32-bit integer (default **100**), with no separate 64-connection cap. It is a maximum,
+  any positive 32-bit integer (default **100**). It is a maximum,
   not guaranteed throughput: OS thread/socket limits, memory, the selected rate
   and server responsiveness determine actual parallelism. If the OS refuses
   additional connection threads, already-started workers keep searching and
@@ -194,6 +195,9 @@ prompt confirmation if demand rises before submission.
   private/unroutable addresses are excluded. A configured name, IPv4 or IPv6 proxy
   disables this path rather than being silently bypassed. SOCKS support is not
   implemented for the claim generator.
+  `-onlynet` does not restrict these HTTPS connections, and an onion-only or
+  I2P-only proxy configuration does not disable them; stop automatic claiming
+  separately if direct public IPv4/IPv6 connections are not wanted.
 
 The node maintains a **shared in-memory catalog of confirmed P2C bounties**.
 The first lookup scans a flushed UTXO snapshot outside the chain lock. Subsequent
@@ -224,7 +228,7 @@ at refresh time, not performed before every repeated TLS attempt. A competitor
 can therefore cause some wasted work until the next refresh, but submission
 always rechecks current availability and every consensus/policy rule.
 
-**A domain is selected for each new connection**, not for a 30-second batch.
+**A domain is selected for each new connection**.
 Persistent connection workers share the scheduler. Guaranteed round-robin
 assignments alternate with extra assignments for the domain with the highest
 performance-weighted expected net return. Economic preference does not move the
@@ -314,10 +318,9 @@ There is **no per-domain connection quota or configurable per-domain limit**.
 Only the wallet-wide rate and concurrency settings limit traffic. A sole eligible
 domain may use all that capacity. Low-rate workers do not preassign a long queue
 of future connections: assignments are made when a connection slot is due.
-`domain_rounds` is retained for RPC compatibility, but now counts connection
-assignments since configuration, not timed rounds. `schedule_refreshes` counts
-completed catalog/priority refreshes. The displayed domain is the last assigned
-domain; other domains can be in flight simultaneously.
+`domain_rounds` counts connection assignments since configuration.
+`schedule_refreshes` counts completed catalog/priority refreshes. The displayed
+domain is the last assigned domain; other domains can be in flight simultaneously.
 
 Within a domain, bounties rotate in descending expected net return:
 `(target + 1) / 2^256 * (reward - claim_fee)`. The inclusive `+1` matches consensus's

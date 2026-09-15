@@ -39,7 +39,7 @@ If you want to build the Windows installer using the `deploy` build target, you 
 
 Acquire the source in the usual way:
 
-    git clone YOUR_CONNECTCOIN_REPOSITORY_URL connectcoin
+    git clone https://github.com/connectcoincrypto/connectcoin.git connectcoin
     cd connectcoin
 
 Note that for WSL the ConnectCoin Core source path MUST be somewhere in the default mount file system, for

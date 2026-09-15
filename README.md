@@ -1,32 +1,29 @@
 ConnectCoin Core development tree
 =================================
 
-ConnectCoin Core is a Bitcoin Core fork under active development. Its goal is a
+ConnectCoin Core is a Bitcoin Core fork under active development. It implements a
 UTXO cryptocurrency with native pay-to-connect (P2C) outputs backed by
 independently verifiable TLS 1.3 connection proofs.
 
+- [Official Website](https://connectcoincrypto.com/)
 - [ConnectCoin Community](https://discord.gg/JYWbz5PsPp)
 - [Blockchain Explorer](https://explorer.connectcoincrypto.com/)
 - [Whitepaper](https://connectcoincrypto.com/whitepaper.pdf)
 
-This repository is not production-ready. The current consensus milestone uses
-typed transaction outputs instead of serialized output scripts. Type `1` is a
-single 32-byte x-only public key authorized by one 64-byte BIP340 Schnorr
-signature. Type `2` is PAY_TO_CONNECT for a canonical DNS domain and is spent
-with a bounded, independently verified TLS 1.3 connection proof. There is no
-certificate-specific P2C output form.
+This repository is not production-ready. Consensus uses typed transaction
+outputs. Type `1` is a single 32-byte x-only public key authorized by one 64-byte
+BIP340 Schnorr signature. Type `2` is PAY_TO_CONNECT for a canonical DNS domain
+and is spent with a bounded, independently verified TLS 1.3 connection proof.
 
-Mainnet has **not** been launched and has no genesis block in the node. The beta
-defaults to `testnet4` without requiring a configuration file or network flag.
-Use `-regtest` for local testing; explicit mainnet startup is deliberately rejected. Test coins do
-not become mainnet coins. See [doc/testnet-beta.md](doc/testnet-beta.md) for the
-network boundary and the remaining requirements for a public beta.
+Mainnet has **not** been launched. The beta defaults to `testnet4` without
+requiring a configuration file or network flag. Use `-regtest` for local testing;
+explicit mainnet startup is deliberately rejected. Test coins do not become
+mainnet coins. See [doc/testnet-beta.md](doc/testnet-beta.md) for network setup
+and compatibility notes.
 
 The codebase retains Bitcoin Core copyright notices and upstream attribution.
 
-The current public identifier inventory and pre-launch registry warnings are in
-[doc/connectcoin-branding.md](doc/connectcoin-branding.md).
-The experimental consensus format and its compatibility boundaries are in
+The transaction format is documented in
 [doc/typed-outputs.md](doc/typed-outputs.md).
 The P2C payload and proof profile are specified in
 [doc/pay-to-connect.md](doc/pay-to-connect.md).
@@ -306,6 +303,8 @@ networking change. See [Installation](#installation) and the platform-specific
 
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md)
 and useful hints for developers can be found in [doc/developer-notes.md](doc/developer-notes.md).
+Project identifiers and pre-launch review notes are documented in
+[doc/connectcoin-branding.md](doc/connectcoin-branding.md).
 
 Testing
 -------

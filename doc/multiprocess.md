@@ -49,5 +49,13 @@ When the `-m` (`--multiprocess`) option is used the `connectcoin` command will e
 
 The multiprocess binaries currently function the same as the monolithic binaries, except they support an `-ipcbind` option.
 
-In the future, after [#10102](https://github.com/bitcoin/bitcoin/pull/10102) they will have other differences. Specifically `connectcoin-gui` will spawn a `connectcoin-node` process to run P2P and RPC code, communicating with it across a socket pair, and `connectcoin-node` will spawn `connectcoin-wallet` to run wallet code, also communicating over a socket pair. This will let node, wallet, and GUI code run in separate address spaces for better isolation, and allow future improvements like being able to start and stop components independently on different machines and environments. [#19460](https://github.com/bitcoin/bitcoin/pull/19460) also adds a new `connectcoin-wallet -ipcconnect` option to allow new wallet processes to connect to an existing node process.
-And [#19461](https://github.com/bitcoin/bitcoin/pull/19461) adds a new `connectcoin-gui -ipcconnect` option to allow new GUI processes to connect to an existing node process.
+Separating the GUI, node, and wallet into independently running processes is an
+inherited upstream design proposal, not implemented ConnectCoin behavior or a
+committed roadmap. Upstream Bitcoin proposals
+[#10102](https://github.com/bitcoin/bitcoin/pull/10102),
+[#19460](https://github.com/bitcoin/bitcoin/pull/19460), and
+[#19461](https://github.com/bitcoin/bitcoin/pull/19461) discuss spawning those
+components and connecting wallet or GUI processes to a node. They do not provide
+`connectcoin-wallet -ipcconnect` or `connectcoin-gui -ipcconnect` support in this
+tree. See the [design document](design/multiprocess.md) for the proposed
+architecture and its distinction from the available IPC interfaces.

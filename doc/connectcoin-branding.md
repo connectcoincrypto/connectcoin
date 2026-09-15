@@ -1,9 +1,8 @@
 # ConnectCoin public identity
 
-This file is the canonical inventory of identifiers that must be reviewed and
-frozen before a public ConnectCoin network is launched. Values may still change
-while the project is explicitly in development. Registry and name-conflict
-checks below were last refreshed on 2026-08-25.
+This file inventories ConnectCoin identifiers and their review requirements.
+Values may still change during development. Registry and name-conflict checks
+below were last refreshed on 2026-08-25.
 
 ## Pre-launch blockers
 
@@ -26,13 +25,12 @@ public launch**:
   that network's exchange ticker.
 - `connectcoin.com` was already registered and resolving when checked. GitHub
   accounts using `Connectcoin` and `Connectcoinnode` also already existed.
-- The original rebrand had no project-owned public source repository or DNS
-  seed domain. The project now uses `connectcoincrypto/connectcoin` on GitHub
+- The project uses `connectcoincrypto/connectcoin` on GitHub
   and the DNS/DDNS hostnames listed in
   [testnet-beta.md](testnet-beta.md#testnet4-bootstrap-dns) for testnet4 bootstrap.
-  These assignments do not by
-  themselves establish a release-signing identity, security contact or
-  package-publishing account. Verify `git remote -v` before any push.
+  These assignments do not by themselves establish a release-signing identity,
+  security contact or package-publishing account. Verify `git remote -v` before
+  any push.
 
 Development application identifiers use the reserved domain
 `connectcoin.invalid` and the reverse prefix `invalid.connectcoin`. Replace them
@@ -154,9 +152,8 @@ Signet message start is the first four bytes of SHA256d over the serialized
 string `ConnectCoin signet P2C mask v1 network` followed by the serialized challenge
 vector. See [testnet-beta.md](testnet-beta.md) before upgrading an existing node.
 
-Fixed seeds are intentionally absent during development. The inherited Bitcoin
-peer snapshots were removed from `contrib/seeds`, and the generated seed header
-is not included by the chain parameters. Testnet4 includes the DNS/DDNS seeds
+Fixed seeds are intentionally absent during development, and the generated seed
+header is not included by the chain parameters. Testnet4 includes the DNS/DDNS seeds
 `connectcoin1.com`, `connectcoin2.com`, `connectcoin3.com` and
 `dememzea.tplinkdns.com`; their operational requirements are documented in
 [testnet-beta.md](testnet-beta.md#testnet4-bootstrap-dns). No public DNS seed is

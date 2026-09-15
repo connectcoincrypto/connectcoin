@@ -2,14 +2,20 @@
 
 ## mainnet_alt.json
 
-This upstream fixture was mined against the Bitcoin genesis block and is not
-valid for ConnectCoin's mainnet genesis. The `mining_mainnet.py` test remains
-disabled until a ConnectCoin-specific proof-of-work fixture is generated.
+This upstream Bitcoin fixture is incompatible with ConnectCoin's typed
+transactions and RandomX proof of work. The `mining_mainnet.py` test skips
+unconditionally, and ConnectCoin mainnet is not available. Replacing the
+genesis hash alone would not make this fixture usable.
+
+The following records the historical **Bitcoin** generation procedure for
+provenance. It is not a ConnectCoin mining tutorial; the commands, addresses,
+retarget interval, and Script behavior below refer to that upstream environment.
 
 For easier testing the difficulty is maximally increased in the first (and only)
 retarget period, by producing blocks approximately 2 minutes apart.
 
 The alternate mainnet chain was generated as follows:
+
 - use faketime to set node clock to 2 minutes after genesis block
 - mine a block using a CPU miner such as https://github.com/pooler/cpuminer
 - restart node with a faketime 2 minutes later
@@ -19,14 +25,14 @@ for i in {1..2016}
 do
  t=$(( 1231006505 + $i * 120 ))
  faketime "`date -d @$t  +'%Y-%m-%d %H:%M:%S'`" \
- connectcoind -connect=0 -nocheckpoints -stopatheight=$i
+ bitcoind -connect=0 -nocheckpoints -stopatheight=$i
 done
 ```
 
 The CPU miner is kept running as follows:
 
 ```sh
-./minerd -u ... -p ... -o http://127.0.0.1:48172 --no-stratum \
+./minerd -u ... -p ... -o http://127.0.0.1:8332 --no-stratum \
         --coinbase-addr 1NQpH6Nf8QtR2HphLRcvuVqfhXBXsiWn8r \
         --algo sha256d --no-longpoll --scantime 3 --retry-pause 1
 ```

@@ -1,20 +1,24 @@
 # Assumeutxo Usage
 
-Assumeutxo is a feature that allows fast bootstrapping of a validating connectcoind
-instance.
+Assumeutxo can bootstrap a validating `connectcoind` instance from a UTXO
+snapshot whose commitment is included in the selected chain's parameters.
+The public testnet4 beta currently has no supported snapshot commitments, so
+`loadtxoutset` cannot bootstrap it. Testnet3 and signet also have none; mainnet
+is unavailable. Regtest includes commitments for deterministic test fixtures,
+which do not authorize arbitrary regtest snapshots.
 
 For notes on the design of Assumeutxo, please refer to [the design doc](/doc/design/assumeutxo.md).
 
 ## Loading a snapshot
 
-There is currently no canonical source for snapshots, but any downloaded snapshot
-will be checked against a hash that's been hardcoded in source code. If there is
-no source for the snapshot you need, you can generate it yourself using
-`dumptxoutset` on another node that is already synced (see
-[Generating a snapshot](#generating-a-snapshot)).
+Loading requires a snapshot matching a supported block and UTXO-set hash in the
+selected chain's parameters. A downloaded or locally generated snapshot does
+not establish that commitment. There is currently no canonical source for
+ConnectCoin snapshots.
 
-Once you've obtained the snapshot, you can use the RPC command `loadtxoutset` to
-load it.
+For a network and snapshot with a supported commitment, use the RPC command
+`loadtxoutset` to load it. This command is not currently usable for public beta
+bootstrapping:
 
 ```
 $ connectcoin-cli -rpcclienttimeout=0 loadtxoutset /path/to/input
@@ -25,15 +29,15 @@ and the background IBD chain can be monitored with the `getchainstates` RPC.
 
 ### Pruning
 
-A pruned node can load a snapshot. To save space, it's possible to delete the
-snapshot file as soon as `loadtxoutset` finishes.
+A pruned node can load a supported snapshot. To save space, it's possible to
+delete the snapshot file after `loadtxoutset` succeeds.
 
 The minimum `-prune` setting is 550 MiB, but this functionality ignores that
 minimum and uses at least 1100 MiB.
 
-As the background sync continues there will be temporarily two chainstate
-directories, each multiple gigabytes in size (likely growing larger than the
-downloaded snapshot).
+As the background sync continues there will temporarily be two chainstate
+directories. Their size depends on the chain's UTXO set and can exceed the
+downloaded snapshot's size.
 
 ### Indexes
 
@@ -54,31 +58,29 @@ to the snapshot block.
 
 ## Generating a snapshot
 
-The RPC command `dumptxoutset` can be used to generate a snapshot for the current
-tip (using type "latest") or a recent height (using type "rollback"). A generated
-snapshot from one node can then be loaded
-on any other node. However, keep in mind that the snapshot hash needs to be
-listed in the chainparams to make it usable. If there is no snapshot hash for
-the height you have chosen already, you will need to change the code there and
-re-compile.
+The RPC command `dumptxoutset` can export a snapshot of the current tip using
+type `latest`, including on testnet4. Exporting a snapshot does not make it
+loadable with `loadtxoutset`: loading still requires the matching commitment
+in the receiving node's chain parameters.
 
-Using the type parameter "rollback", `dumptxoutset` can also be used to verify the
-hardcoded snapshot hash in the source code by regenerating the snapshot and
-comparing the hash.
+To export an earlier state, specify the named `rollback` option with the desired
+height or block hash; the required block and undo data must be available.
+Using type `rollback` without an explicit height or hash selects the latest
+supported snapshot height and therefore requires an existing commitment. It
+does not work on the public beta networks. On a chain with a supported snapshot,
+regenerating it allows comparison with the committed UTXO-set hash.
 
-Example usage:
+Example export of the current state:
 
 ```
-$ connectcoin-cli -rpcclienttimeout=0 dumptxoutset /path/to/output rollback
+$ connectcoin-cli -rpcclienttimeout=0 dumptxoutset /path/to/output latest
 ```
 
-For most of the duration of `dumptxoutset` running the node is in a temporary
-state that does not actually reflect reality, i.e. blocks are marked invalid
-although we know they are not invalid. Because of this it is discouraged to
-interact with the node in any other way during this time to avoid inconsistent
-results and race conditions, particularly RPCs that interact with blockstorage.
-This inconsistent state is also why network activity is temporarily disabled,
-causing us to disconnect from all peers.
+Rollback copies the UTXO set into a temporary database and disconnects blocks
+from that copy. The active chain remains intact and peer connections are not
+disabled by the export. Allow enough disk space for the temporary database and
+output, or enough RAM if using `in_memory=true`. An unclean shutdown may leave
+a temporary database requiring manual cleanup; inspect it before removing it.
 
 `dumptxoutset` takes some time to complete, independent of hardware and
 what parameter is chosen. Because of that it is recommended to increase the RPC

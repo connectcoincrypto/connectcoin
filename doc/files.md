@@ -38,11 +38,14 @@ Windows  | `%LOCALAPPDATA%\ConnectCoin\` <sup>[\[1\]](#note1)</sup>
 
 Chain option                     | Data directory path
 ---------------------------------|------------------------------
-`-chain=main`                  | *path_to_datadir*`/`
+`-chain=main` (unavailable)     | *path_to_datadir*`/` (reserved mainnet location)
 `-chain=test` or `-testnet`      | *path_to_datadir*`/testnet3/`
 `-chain=testnet4` or `-testnet4` (beta default) | *path_to_datadir*`/testnet4/`
 `-chain=signet` or `-signet`     | *path_to_datadir*`/signet/`
 `-chain=regtest` or `-regtest`   | *path_to_datadir*`/regtest/`
+
+Mainnet startup is rejected. The reserved location is listed to identify old
+mainnet data; the beta does not load or move those files.
 
 ## Data directory layout
 
@@ -50,7 +53,7 @@ Subdirectory       | File(s)               | Description
 -------------------|-----------------------|------------
 `blocks/`          |                       | Blocks directory; can be specified by `-blocksdir` option (except for `blocks/index/`)
 `blocks/index/`    | LevelDB database      | Block index; `-blocksdir` option does not affect this path
-`blocks/`          | `blkNNNNN.dat`<sup>[\[2\]](#note2)</sup> | Actual ConnectCoin blocks (dumped in network format, 128 MiB per file)
+`blocks/`          | `blkNNNNN.dat`<sup>[\[2\]](#note2)</sup> | ConnectCoin block records (network magic, size, and network-format serialized block; normally up to 128 MiB per file); see XOR note below
 `blocks/`          | `revNNNNN.dat`<sup>[\[2\]](#note2)</sup> | Block undo data (custom format)
 `blocks/`          | `xor.dat`             | Rolling XOR pattern for block and undo data files
 `chainstate/`      | LevelDB database      | Blockchain state (a compact representation of all currently unspent transaction outputs (UTXOs) and metadata about the transactions they are from)
@@ -74,6 +77,12 @@ Subdirectory       | File(s)               | Description
 `./`               | `settings.json`       | Read-write settings set through GUI or RPC interfaces, augmenting manual settings from [connectcoin.conf](connectcoin-conf.md). File is created automatically if read-write settings storage is not disabled with `-nosettings` option. Path can be specified with `-settings` option
 `./`               | `.cookie`             | Session RPC authentication cookie; if used, created at start and deleted on shutdown; can be specified by `-rpccookiefile` option
 `./`               | `.lock`               | Data directory lock file
+
+Newly initialized block directories use XOR obfuscation for block and undo data
+by default. The pattern is stored in `xor.dat` and is needed to read the
+corresponding `blkNNNNN.dat` and `revNNNNN.dat` files. This is reversible
+obfuscation, not encryption; the pattern is not a secret. Preserve `xor.dat`
+with those files.
 
 ## Multi-wallet environment
 
@@ -137,7 +146,7 @@ This table describes the files installed by ConnectCoin across different platfor
 
 | **Path**                                                   | **Description**                                                             |
 |------------------------------------------------------------|-----------------------------------------------------------------------------|
-| [README.md](README.md) or [readme.txt](README_windows.txt) | Project information and instructions                                        |
+| [README.md](../README.md) or [readme.txt](README_windows.txt) | Project information and instructions                                        |
 | connectcoin.conf                                               | [Generated](../contrib/devtools/gen-connectcoin-conf.sh) configuration file     |
 | bin/connectcoin                                            | Command-line tool for interacting with ConnectCoin. Calls other binaries below. |
 | bin/connectcoin-cli                                            | Tool for making node and wallet RPC calls.                                  |
@@ -146,20 +155,21 @@ This table describes the files installed by ConnectCoin across different platfor
 | bin/connectcoin-util                                           | Miscellaneous utilities                                                     |
 | bin/connectcoin-wallet                                         | ConnectCoin wallet tool                                                         |
 | bin/connectcoind                                               | ConnectCoin node and wallet daemon                                              |
-| *lib/libconnectcoinkernel.so*                                  | Shared library containing core consensus and validation code                |
+| *lib/libconnectcoinkernel.a* or *lib/libconnectcoinkernel.so*    | Static or shared library containing core consensus and validation code (Linux path examples) |
 | *lib/pkgconfig/libconnectcoinkernel.pc*                        | Pkg-config metadata for linking to `libconnectcoinkernel`                       |
 | *libexec/connectcoin-bench*                                    | Benchmarking tool for measuring node performance                            |
 | *libexec/connectcoin-chainstate*                               | Tool to validate and connect blocks                                         |
 | libexec/connectcoin-gui                                        | IPC-enabled alternative to `connectcoin-qt`                                     |
 | libexec/connectcoin-node                                       | IPC-enabled alternative to `connectcoind`                                       |
 | libexec/connectcoin-test                                       | Unit test binary                                                            |
-| *libexec/test_connectcoin-qt*                                  | GUI-specific unit tests                                                     |
+| *libexec/connectcoin-test-qt*                                  | GUI-specific unit tests                                                     |
 | share/man/man1/                                            | Man pages for command-line tools like `connectcoin-cli`, `connectcoind`, and others |
 | share/rpcauth/                                             | Documentation and scripts for RPC authentication setup                      |
 
 ### Notes
 
 - *Italicized* files are only installed in source builds if relevant CMake options are enabled. They are not included in binary releases.
+- The kernel library requires `BUILD_KERNEL_LIB`; `BUILD_SHARED_LIBS` selects shared rather than static libraries. Library names and installation paths vary by platform, toolchain, and CMake configuration.
 - README and connectcoin.conf files are included in binary releases but not installed in source builds.
 - On Windows, binaries have a `.exe` suffix (e.g., `connectcoin-cli.exe`).
 

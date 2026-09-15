@@ -22,24 +22,25 @@ The size of some in-memory caches can be reduced. As caches trade off memory usa
 ## Memory pool
 
 - In ConnectCoin Core there is a memory pool limiter which can be configured with `-maxmempool=<n>`, where `<n>` is the size in MB (1000). The default value is `300`.
-  - The minimum value for `-maxmempool` is 5.
+  - The minimum positive value for `-maxmempool` depends on `-limitclustersize` and is 5 with its default value. `-maxmempool=0` is not an unlimited setting: size-limit eviction removes all retained transactions.
   - A lower maximum mempool size means that transactions will be evicted sooner. This will affect any uses of `connectcoind` that process unconfirmed transactions.
 
 - The unused memory allocated to the mempool (default: 300MB) is shared with the UTXO cache, so when trying to reduce memory usage you should limit the mempool, with the `-maxmempool` command line argument.
 
-- To disable most of the mempool functionality there is the `-blocksonly` option. This will reduce the default memory usage to 5MB and make the client opt out of receiving (and thus relaying) transactions, except from peers who have the `relay` permission set (e.g. whitelisted peers), and as part of blocks.
+- To disable most of the mempool functionality there is the `-blocksonly` option. This reduces the default mempool limit to 5 MB and makes the client opt out of receiving (and thus relaying) transactions, except from peers who have the `relay` permission set (e.g. whitelisted peers), and as part of blocks.
 
   - Do not use this when using the client to broadcast transactions as any transaction sent will stick out like a sore thumb, affecting privacy. When used with the wallet it should be combined with `-walletbroadcast=0` and `-spendzeroconfchange=0`. Another mechanism for broadcasting outgoing transactions (if any) should be used.
 
 ## Number of peers
 
-- `-maxconnections=<n>` - the maximum number of connections, which defaults to 200. Each active connection takes up some
-  memory. This option applies only if inbound connections are enabled; otherwise, the number of connections will not
-  be more than 11. Of the 11 outbound peers, there can be 8 full-relay connections, 2 block-relay-only ones,
-  and occasionally 1 short-lived feeler or extra outbound block-relay-only connection.
+- `-maxconnections=<n>` - the maximum number of automatic connections, which defaults to 200. Each active connection takes up some
+  memory. This option also limits automatic outbound connections when listening is disabled. With the default connection
+  settings, 11 slots are reserved for automatic outbound peers: 8 full-relay connections, 2 block-relay-only ones,
+  and 1 for a feeler or an extra outbound connection used by peer management.
 
 - These limits do not apply to connections added manually with the `-addnode` configuration option or
-  the `addnode` RPC, which have a separate limit of 8 connections.
+  the `addnode` RPC, which have a separate limit of 8 connections. Short-lived private broadcast connections
+  also have a separate limit of 64 when `-privatebroadcast` is enabled; it is disabled by default.
 
 ## Thread configuration
 
@@ -47,7 +48,7 @@ For each thread a thread stack needs to be allocated. By default on Linux,
 threads take up 8MiB for the thread stack on a 64-bit system, and 4MiB in a
 32-bit system.
 
-- `-par=<n>` - the number of script verification threads, defaults to the number of cores in the system minus one.
+- `-par=<n>` - script verification parallelism (`0`, the default, means autodetect). Autodetection requests the number of cores minus one dedicated worker threads, clamped to between 0 and 15 in the current implementation. The main thread can also perform script checks.
 - `-rpcthreads=<n>` - the number of threads used for processing RPC requests, defaults to `16`.
 - `-prevoutfetchthreads=<n>` - the number of threads used to fetch block input prevouts, defaults to `8`.
 

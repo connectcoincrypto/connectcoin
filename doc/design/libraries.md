@@ -8,16 +8,16 @@ API is a ConnectCoin-native, ABI-incompatible fork of the upstream API.
 | Name                         | Description |
 |------------------------------|-------------|
 | *libconnectcoin_cli*         | RPC client functionality used by *connectcoin-cli* executable |
+| *libconnectcoin_clientversion* | Build and version information shared by other targets. |
 | *libconnectcoin_common*      | Home for common functionality shared by different executables and libraries. Similar to *libconnectcoin_util*, but higher-level (see [Dependencies](#dependencies)). |
 | *libconnectcoin_consensus*   | Consensus functionality used by *libconnectcoin_node* and *libconnectcoin_wallet*. |
 | *libconnectcoin_crypto*      | Hardware-optimized functions for data encryption, hashing, message authentication, and key derivation. |
-| *libconnectcoinkernel*       | Experimental ConnectCoin consensus engine used for validation. |
+| *libconnectcoinkernel*       | Optional experimental consensus engine for external consumers, built with `BUILD_KERNEL_LIB`. |
 | *libconnectcoin_qt*          | GUI functionality used by *connectcoin-qt* and *connectcoin-gui* executables. |
 | *libconnectcoin_ipc*         | IPC functionality used by *connectcoin-node* and *connectcoin-gui* executables when [`-DENABLE_IPC=ON`](multiprocess.md) is used. |
 | *libconnectcoin_node*        | P2P and RPC server functionality used by *connectcoind* and *connectcoin-qt* executables. |
 | *libconnectcoin_util*        | Lower-level common functionality shared by other libraries (see [Dependencies](#dependencies)). |
 | *libconnectcoin_wallet*      | Wallet functionality used by *connectcoind* and *connectcoin-wallet* executables. |
-| *libconnectcoin_wallet_tool* | Lower-level wallet functionality used by *connectcoin-wallet* executable. |
 | *libconnectcoin_zmq*         | [ZeroMQ](../zmq.md) functionality used by *connectcoind* and *connectcoin-qt* executables. |
 
 ## Conventions
@@ -39,8 +39,12 @@ API is a ConnectCoin-native, ABI-incompatible fork of the upstream API.
 
 ## Dependencies
 
-- Libraries should minimize dependencies and only reference symbols following
-  the arrows shown below:
+The graph below shows direct CMake link dependencies among selected ConnectCoin
+targets, plus the kernel's object inclusion dependencies. It is not a complete
+symbol-level dependency graph. Conditional wallet and ZeroMQ edges apply only
+when those components are enabled; the kernel and chainstate utility are also
+optional. Other executables, tests, interface targets, and third-party libraries
+are omitted.
 
 <table><tr><td>
 
@@ -50,86 +54,84 @@ API is a ConnectCoin-native, ABI-incompatible fork of the upstream API.
 graph TD;
 
 connectcoin-cli[connectcoin-cli]-->libconnectcoin_cli;
+connectcoin-cli-->libconnectcoin_common;
+connectcoin-cli-->libconnectcoin_ipc;
+connectcoin-cli-->libconnectcoin_util;
 
 connectcoind[connectcoind]-->libconnectcoin_node;
 connectcoind[connectcoind]-->libconnectcoin_wallet;
 
 connectcoin-qt[connectcoin-qt]-->libconnectcoin_node;
 connectcoin-qt[connectcoin-qt]-->libconnectcoin_qt;
-connectcoin-qt[connectcoin-qt]-->libconnectcoin_wallet;
 
 connectcoin-wallet[connectcoin-wallet]-->libconnectcoin_wallet;
-connectcoin-wallet[connectcoin-wallet]-->libconnectcoin_wallet_tool;
-
-libconnectcoin_cli-->libconnectcoin_util;
-libconnectcoin_cli-->libconnectcoin_common;
+connectcoin-wallet-->libconnectcoin_common;
+connectcoin-wallet-->libconnectcoin_util;
 
 libconnectcoin_consensus-->libconnectcoin_crypto;
 
 libconnectcoin_common-->libconnectcoin_consensus;
-libconnectcoin_common-->libconnectcoin_crypto;
 libconnectcoin_common-->libconnectcoin_util;
 
-libconnectcoinkernel-->libconnectcoin_consensus;
-libconnectcoinkernel-->libconnectcoin_crypto;
-libconnectcoinkernel-->libconnectcoin_util;
+connectcoin-chainstate[connectcoin-chainstate]-->libconnectcoinkernel;
+libconnectcoinkernel-. includes objects .->libconnectcoin_crypto;
+libconnectcoinkernel-. includes objects .->libconnectcoin_clientversion;
 
-libconnectcoin_node-->libconnectcoin_consensus;
-libconnectcoin_node-->libconnectcoin_crypto;
-libconnectcoin_node-->libconnectcoinkernel;
 libconnectcoin_node-->libconnectcoin_common;
 libconnectcoin_node-->libconnectcoin_util;
+libconnectcoin_node-->libconnectcoin_zmq;
 
-libconnectcoin_qt-->libconnectcoin_common;
-libconnectcoin_qt-->libconnectcoin_util;
+libconnectcoin_qt-->libconnectcoin_cli;
+libconnectcoin_qt-->libconnectcoin_wallet;
 
 libconnectcoin_util-->libconnectcoin_crypto;
+libconnectcoin_util-->libconnectcoin_clientversion;
 
 libconnectcoin_wallet-->libconnectcoin_common;
-libconnectcoin_wallet-->libconnectcoin_crypto;
-libconnectcoin_wallet-->libconnectcoin_util;
-
-libconnectcoin_wallet_tool-->libconnectcoin_wallet;
-libconnectcoin_wallet_tool-->libconnectcoin_util;
 
 classDef bold stroke-width:2px, font-weight:bold, font-size: smaller;
-class connectcoin-qt,connectcoind,connectcoin-cli,connectcoin-wallet bold
+class connectcoin-qt,connectcoind,connectcoin-cli,connectcoin-wallet,connectcoin-chainstate bold
 ```
 </td></tr><tr><td>
 
-**Dependency graph**. Arrows show linker symbol dependencies. *Crypto* depends
-on nothing. *Util* is used throughout the project. *libconnectcoinkernel* depends
-only on consensus, crypto, and util.
+**Selected build dependencies**. Solid arrows are direct links; dotted arrows
+include object files. The declarations in [`src/CMakeLists.txt`](../../src/CMakeLists.txt)
+and the component CMake files are authoritative.
 
 </td></tr></table>
 
-- The graph shows direct linker-symbol dependencies, not indirect calls through
-  interfaces. Wallet and node implementations communicate through abstract
-  classes in [`src/interfaces/`](../../src/interfaces/), avoiding direct or
-  circular library dependencies.
+- Libraries should minimize dependencies. Node and wallet implementations
+  communicate through abstract classes in [`src/interfaces/`](../../src/interfaces/)
+  rather than introducing circular library dependencies.
 
 - *libconnectcoin_crypto* should be standalone and not depend on other project libraries.
 
-- *libconnectcoin_consensus* should only depend on *libconnectcoin_crypto*.
+- Among project libraries, *libconnectcoin_consensus* links to
+  *libconnectcoin_crypto*. It also uses third-party cryptographic libraries.
 
-- *libconnectcoin_util* should depend only on *libconnectcoin_crypto* and should
-  contain low-level functionality suitable for internal and kernel consumers.
+- *libconnectcoin_util* links to *libconnectcoin_crypto* and
+  *libconnectcoin_clientversion*. It should contain low-level functionality
+  suitable for internal and kernel consumers.
 
-- *libconnectcoin_common* should only depend on *libconnectcoin_util*,
-  *libconnectcoin_consensus*, and *libconnectcoin_crypto*.
+- *libconnectcoin_common* links to *libconnectcoin_util* and
+  *libconnectcoin_consensus*, with *libconnectcoin_crypto* available transitively.
 
-- *libconnectcoinkernel* should only depend on *libconnectcoin_util*,
-  *libconnectcoin_consensus*, and *libconnectcoin_crypto*.
+- *connectcoin-wallet* compiles `wallet/wallettool.cpp` directly; there is no
+  separate *libconnectcoin_wallet_tool* target.
 
-- Only *libconnectcoin_node* should depend directly on *libconnectcoinkernel*.
-  GUI and wallet libraries should use the consensus, common, crypto, and util
-  libraries for scripting and signing functionality.
+- *libconnectcoinkernel* compiles its own set of consensus, validation, and util
+  sources and includes crypto and version objects. It does not link the
+  *libconnectcoin_consensus* or *libconnectcoin_util* targets. Its other
+  dependencies include RandomX, Mbed TLS, secp256k1, and LevelDB; see
+  [`src/kernel/CMakeLists.txt`](../../src/kernel/CMakeLists.txt).
 
-- GUI, node, and wallet implementations should remain independent and interact
-  only through abstract interfaces in [`src/interfaces/`](../../src/interfaces/).
+- *libconnectcoin_node* compiles validation code directly and does not link
+  *libconnectcoinkernel*. The optional *connectcoin-chainstate* executable is a
+  consumer of the external kernel API.
 
 ## Work in progress
 
-- Validation code continues moving from *libconnectcoin_node* to
-  *libconnectcoinkernel*, following the architecture of the inherited upstream
-  [libbitcoinkernel project](https://github.com/bitcoin/bitcoin/issues/27587).
+- The kernel boundary remains experimental. The inherited upstream
+  [libbitcoinkernel project](https://github.com/bitcoin/bitcoin/issues/27587)
+  provides architectural background, not a description of the current
+  ConnectCoin node's link dependencies.

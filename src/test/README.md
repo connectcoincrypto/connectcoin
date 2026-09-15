@@ -13,6 +13,15 @@ which runs all of the unit tests. The main source file for the test library is f
 The examples in this document assume the build directory is named
 `build`. You'll need to adapt them if you named it differently.
 
+For a Windows/MSVC Release build, use `--config Release` with build commands
+and `--build-config Release` with CTest. Executables are in
+`build/bin/Release/` and have the `.exe` extension. For example:
+
+```cmd
+ctest --test-dir build --build-config Release --output-on-failure
+build\bin\Release\connectcoin-test.exe --run_test=getarg_tests/doubledash
+```
+
 ### Compiling/running unit tests
 
 Unit tests will be automatically compiled if dependencies were met

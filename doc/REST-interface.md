@@ -3,9 +3,9 @@ Unauthenticated REST Interface
 
 The REST API can be enabled with the `-rest` option.
 
-The interface runs on the same port as the JSON-RPC interface: by default 48172
-for mainnet, 48175 for testnet3, 48178 for testnet4, 48181 for signet, and 48184
-for regtest.
+The interface runs on the same port as the JSON-RPC interface: 48178 for the
+default testnet4 beta, 48175 for testnet3, 48181 for signet, and 48184 for
+regtest. Mainnet is unavailable; its reserved RPC port is 48172.
 
 REST Interface consistency guarantees
 -------------------------------------
@@ -58,7 +58,8 @@ With the /notxdetails/ option JSON response will only contain the transaction ha
 - `GET /rest/blockpart/<BLOCK-HASH>.<bin|hex>?offset=<OFFSET>&size=<SIZE>`
 
 Given a block hash: returns a block part, in binary or hex-encoded binary formats.
-Responds with 404 if the block or the byte range doesn't exist.
+Responds with 404 if the block is absent or its data is unavailable, and 400
+if `offset` or `size` is missing or the requested byte range is invalid.
 
 #### Blockheaders
 `GET /rest/headers/<BLOCK-HASH>.<bin|hex|json>?count=<COUNT=5>`
@@ -121,27 +122,40 @@ Refer to the `getdeploymentinfo` RPC help for details.
 
 The getutxos endpoint allows querying the UTXO set, given a set of outpoints.
 With the `/checkmempool/` option, the mempool is also taken into account.
-See [BIP64](https://github.com/bitcoin/bips/blob/master/bip-0064.mediawiki) for
-input and output serialization (relevant for `bin` and `hex` output formats).
+The request and response framing is inherited from
+[BIP64](https://github.com/bitcoin/bips/blob/master/bip-0064.mediawiki), but each
+returned output in `bin` and `hex` responses uses ConnectCoin's
+[typed-output serialization](typed-outputs.md#consensus-wire-format).
+It does not use Bitcoin's value-and-Script output encoding. In JSON responses,
+`scriptPubKey` describes the output's
+[in-memory compatibility view](typed-outputs.md#internal-compatibility-view).
 
-Illustrative response shape (replace the outpoint with one that exists on the
-selected ConnectCoin network):
+Request template for an outpoint on testnet4; replace `<TXID>` and `<N>` with
+the transaction ID and output index:
+
+```sh
+curl "http://127.0.0.1:48178/rest/getutxos/checkmempool/<TXID>-<N>.json"
 ```
-$ curl localhost:48175/rest/getutxos/checkmempool/b2cdfd7b89def827ff8af7cd9bff7627ff72e5e8b0f71210f92ea7a4000c5d75-0.json 2>/dev/null | json_pp
+
+Illustrative response template for one available type-1 output. Angle-bracket
+values are placeholders, not network data; the unquoted placeholders represent
+JSON numbers:
+
+```
 {
-   "chainHeight" : 325347,
-   "chaintipHash" : "00000000fb01a7f3745a717f8caebee056c484e6e0bfe4a9591c235bb70506fb",
+   "chainHeight" : <tip-height>,
+   "chaintipHash" : "<tip-hash>",
    "bitmap": "1",
    "utxos" : [
       {
-         "height" : 2147483647,
-         "value" : 8.8687,
+         "height" : <output-height>,
+         "value" : <amount-in-CC>,
          "scriptPubKey" : {
-            "asm" : "OP_DUP OP_HASH160 1c7cebb529b86a04c683dfa87be49de35bcf589e OP_EQUALVERIFY OP_CHECKSIG",
-            "desc" : "addr(TCZqa5JPG2za746oL4bCafFfRvqsK2brsK)#gd5e2td6",
-            "hex" : "76a9141c7cebb529b86a04c683dfa87be49de35bcf589e88ac",
-            "type" : "pubkeyhash",
-            "address" : "TCZqa5JPG2za746oL4bCafFfRvqsK2brsK"
+            "asm" : "1 <32-byte-x-only-public-key-hex>",
+            "desc" : "rawtr(<32-byte-x-only-public-key-hex>)#<checksum>",
+            "hex" : "5120<32-byte-x-only-public-key-hex>",
+            "type" : "witness_v1_taproot",
+            "address" : "<testnet4-Bech32m-address>"
          }
       }
    ]
@@ -167,4 +181,4 @@ Refer to the `getrawmempool` RPC help for details. Defaults to setting
 
 Risks
 -------------
-Running a web browser on the same node with a REST enabled connectcoind can be a risk. Accessing prepared XSS websites could read out tx/block data of your node by placing links like `<script src="http://127.0.0.1:48172/rest/tx/1234567890.json">` which might break the nodes privacy.
+Running a web browser on the same node with a REST enabled connectcoind can be a risk. Accessing prepared XSS websites could read out tx/block data of your node by placing links like `<script src="http://127.0.0.1:48178/rest/tx/1234567890.json">` which might break the nodes privacy.

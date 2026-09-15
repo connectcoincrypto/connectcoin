@@ -2,29 +2,40 @@
 
 Guide to the design and architecture of the ConnectCoin Core multiprocess feature
 
-> This document is inherited from Bitcoin Core and adapted to ConnectCoin's
-> public executable names. Some implementation target, library, namespace, and
-> interface names intentionally retain their upstream `bitcoin` identifiers.
+> This document combines the current IPC framework with design proposals
+> inherited from Bitcoin Core. Executable and CMake target names use ConnectCoin
+> branding; some C++ namespaces and source filenames retain upstream identifiers.
+> The proposed wallet/GUI process separation and Chain IPC flow below are not
+> implemented in this tree.
 
 _This document describes the design of the multiprocess feature. For usage information, see the top-level [multiprocess.md](../multiprocess.md) file._
 
 ## Introduction
 
-The ConnectCoin Core software has historically employed a monolithic architecture. The existing design has integrated functionality like P2P network operations, wallet management, and a GUI into a single executable. While effective, it has limitations in flexibility, security, and scalability. This project introduces changes that transition ConnectCoin Core to a more modular architecture. It aims to enhance security, improve usability, and facilitate maintenance and development of the software in the long run.
+ConnectCoin's node and graphical wallet integrate several components in one
+process. The current IPC framework exposes selected services across process
+boundaries. This document explains that framework and distinguishes it from
+the broader upstream proposal to separate node, wallet, and GUI processes.
 
 ## Current Architecture
 
 The current system features two primary executables: `connectcoind` and `connectcoin-qt`. `connectcoind` combines a ConnectCoin P2P node with an integrated JSON-RPC server, wallet, and indexes. `connectcoin-qt` extends this by incorporating a Qt-based GUI. This monolithic structure, although robust, presents challenges such as limited operational flexibility and increased security risks due to the tight integration of components.
 
+With IPC enabled, `connectcoin-node` and `connectcoin-gui` provide the same
+integrated functionality plus `-ipcbind`. They do not move the wallet or GUI
+into independent client processes. The existing `connectcoin-wallet` executable
+is an offline wallet tool, not an IPC wallet service.
+
 ## Proposed Architecture
 
-The new architecture divides the existing code into three specialized executables:
+The inherited upstream proposal would divide the code into three specialized
+executables. These roles describe the proposal, not the current binaries:
 
 - `connectcoin-node`: Manages the P2P node, indexes, and JSON-RPC server.
 - `connectcoin-wallet`: Handles all wallet functionality.
 - `connectcoin-gui`: Provides a standalone Qt-based GUI.
 
-This modular approach is designed to enhance security through component isolation and improve usability by allowing independent operation of each module. This allows for new use-cases, such as running the node on a dedicated machine and operating wallets and GUIs on separate machines with the flexibility to start and stop them as needed.
+This modular approach is intended to enhance security through component isolation and improve usability by allowing independent operation of each module. It could allow use-cases such as running the node on a dedicated machine and operating wallets and GUIs on separate machines with the flexibility to start and stop them as needed.
 
 This subdivision could be extended in the future. For example, indexes could be removed from the `connectcoin-node` executable and run in separate executables. And JSON-RPC servers could be added to wallet and index executables, so they can listen and respond to RPC requests on their own ports, without needing to forward RPC requests through `connectcoin-node`.
 
@@ -38,7 +49,7 @@ flowchart LR
 ```
 
 </td></tr><tr><td>
-Processes and socket connection.
+Proposed process separation and socket connections (not implemented).
 </td></tr></table>
 
 ## Component Overview: Navigating the IPC Framework
@@ -46,32 +57,42 @@ Processes and socket connection.
 This section describes the major components of the Inter-Process Communication (IPC) framework covering the relevant source files, generated files, tools, and libraries.
 
 ### Abstract C++ Classes in [`src/interfaces/`](../../src/interfaces/)
+
 - The foundation of the IPC implementation lies in the abstract C++ classes within the [`src/interfaces/`](../../src/interfaces/) directory. These classes define pure virtual methods that code in [`src/node/`](../../src/node/), [`src/wallet/`](../../src/wallet/), and [`src/qt/`](../../src/qt/) directories call to interact with each other.
-- Each abstract class in this directory represents a distinct interface that the different modules (node, wallet, GUI) implement and use for cross-process communication.
+- Each abstract class represents an interface between components; only the
+  subset with Cap'n Proto wrappers is available for cross-process communication.
 - The classes are written following conventions described in [Internal Interface
   Guidelines](../developer-notes.md#internal-interface-guidelines) to ensure
   compatibility with Cap'n Proto.
 
 ### Cap’n Proto Files in [`src/ipc/capnp/`](../../src/ipc/capnp/)
-- Corresponding to each abstract class, there are `.capnp` files within the [`src/ipc/capnp/`](../../src/ipc/capnp/) directory. These files are used as input to the `mpgen` tool (described below) to generate C++ code.
+
+- The [`src/ipc/CMakeLists.txt`](../../src/ipc/CMakeLists.txt) build currently
+  includes `common.capnp`, `echo.capnp`, `init.capnp`, `mining.capnp`, and
+  `rpc.capnp`. These files are inputs to `mpgen`; there is no `chain.capnp`
+  wrapper for the full `interfaces::Chain` interface in this tree.
 - These Cap’n Proto files ([learn more about Cap'n Proto RPC](https://capnproto.org/rpc.html)) define the structure and format of messages that are exchanged over IPC. They serve as blueprints for generating C++ code that bridges the gap between high-level C++ interfaces and low-level socket communication.
 
 ### The `mpgen` Code Generation Tool
+
 - A central component of the IPC framework is the `mpgen` tool which is part of the [`libmultiprocess` project](https://github.com/bitcoin-core/libmultiprocess). This tool takes the `.capnp` files as input and generates C++ code.
 - The generated code handles IPC communication, translating interface calls into socket reads and writes.
 
 ### C++ Client Subclasses in Generated Code
+
 - In the generated code, we have C++ client subclasses that inherit from the abstract classes in [`src/interfaces/`](../../src/interfaces/). These subclasses are the workhorses of the IPC mechanism.
 - They implement all the methods of the interface, marshalling arguments into a structured format, sending them as requests to the IPC server via a UNIX socket, and handling the responses.
 - These subclasses effectively mask the complexity of IPC, presenting a familiar C++ interface to developers.
 - Internally, the client subclasses generated by the `mpgen` tool wrap [client classes generated by Cap'n Proto](https://capnproto.org/cxxrpc.html#clients), and use them to send IPC requests. The Cap'n Proto client classes are low-level, with non-blocking methods that use asynchronous I/O and pass request and response objects, while mpgen client subclasses provide normal C++ methods that block while executing and convert between request/response objects and arguments/return values.
 
 ### C++ Server Classes in Generated Code
+
 - On the server side, corresponding generated C++ classes receive IPC requests. These server classes are responsible for unmarshalling method arguments, invoking the corresponding methods in the local [`src/interfaces/`](../../src/interfaces/) objects, and creating the IPC response.
 - The server classes ensure that return values (including output argument values and thrown exceptions) are marshalled and sent back to the client, completing the communication cycle.
 - Internally, the server subclasses generated by the `mpgen` tool inherit from [server classes generated by Cap'n Proto](https://capnproto.org/cxxrpc.html#servers), and use them to process IPC requests.
 
 ### The `libmultiprocess` Runtime Library
+
 - **Core Functionality**: The `libmultiprocess` runtime library's primary function is to instantiate the generated client and server classes as needed.
 - **Bootstrapping IPC Connections**: It provides functions for starting new IPC connections, specifically binding generated client and server classes for an initial `interfaces::Init` interface (defined in [`src/interfaces/init.h`](../../src/interfaces/init.h)) to a UNIX socket. This initial interface has methods returning other interfaces that different ConnectCoin Core modules use to communicate after the bootstrapping phase.
 - **Asynchronous I/O and Thread Management**: The library is also responsible for managing I/O and threading. Particularly, it ensures that IPC requests never block each other and that new threads on either side of a connection can always make client calls. It also manages worker threads on the server side of calls, ensuring that calls from the same client thread always execute on the same server thread (to avoid locking issues and support nested callbacks).
@@ -81,6 +102,7 @@ This section describes the major components of the Inter-Process Communication (
 - **Handling Special Cases**: The `mpgen` tool and `libmultiprocess` library can convert most C++ types to and from Cap’n Proto types automatically, including interface types, primitive C++ types, standard C++ types like `std::vector`, `std::set`, `std::map`, `std::tuple`, and `std::function`, as well as simple C++ structs that consist of aforementioned types and whose fields correspond 1:1 with Cap’n Proto struct fields. For other types, `*-types.h` files provide custom code to convert between C++ and Cap’n Proto data representations.
 
 ### Protocol-Agnostic IPC Code in [`src/ipc/`](../../src/ipc/)
+
 - **Broad Applicability**: Unlike the Cap’n Proto-specific code in [`src/ipc/capnp/`](../../src/ipc/capnp/), the code in the [`src/ipc/`](../../src/ipc/) directory is protocol-agnostic. This enables potential support for other protocols, such as gRPC or a custom protocol in the future.
 - **Process Management and Socket Operations**: The main purpose of this component is to provide functions for spawning new processes and creating and connecting to UNIX sockets.
 - **ipc::Exception Class**: This code also defines an `ipc::Exception` class which is thrown from the generated C++ client class methods when there is an unexpected IPC error, such as a disconnection.
@@ -89,17 +111,17 @@ This section describes the major components of the Inter-Process Communication (
 
 ```mermaid
 flowchart TD
-    capnpFile[ipc/capnp/chain.capnp] -->|Input to| mpgenTool([mpgen Tool])
-    mpgenTool -->|Generates| proxyTypesH[ipc/capnp/chain.capnp.proxy-types.h]
-    mpgenTool --> proxyClientCpp[ipc/capnp/chain.capnp.proxy-client.c++]
-    mpgenTool --> proxyServerCpp[ipc/capnp/chain.capnp.proxy-server.c++]
-    proxyTypesH -.->|Includes| interfaces/chain.h
-    proxyClientCpp -.-> interfaces/chain.h
-    proxyServerCpp -.-> interfaces/chain.h
+    capnpFile[ipc/capnp/echo.capnp] -->|Input to| mpgenTool([mpgen Tool])
+    mpgenTool -->|Generates| proxyTypesH[ipc/capnp/echo.capnp.proxy-types.h]
+    mpgenTool --> proxyClientCpp[ipc/capnp/echo.capnp.proxy-client.c++]
+    mpgenTool --> proxyServerCpp[ipc/capnp/echo.capnp.proxy-server.c++]
+    proxyTypesH -.->|Includes| interfaces/echo.h
+    proxyClientCpp -.-> interfaces/echo.h
+    proxyServerCpp -.-> interfaces/echo.h
 ```
 
 </td></tr><tr><td>
-Diagram showing generated source files and includes.
+Generated source files and includes for the implemented Echo test interface.
 </td></tr></table>
 
 ## Design Considerations
@@ -113,7 +135,10 @@ The choice to use an RPC framework at all instead of a custom protocol was neces
 
 The IPC mechanism is deliberately isolated from the rest of the codebase so less code has to be concerned with IPC.
 
-Building ConnectCoin Core with IPC support is optional, and node, wallet, and GUI code can be compiled to either run in the same process or separate processes. The build system also ensures Cap’n Proto library headers can only be used within the [`src/ipc/capnp/`](../../src/ipc/capnp/) directory, not in other parts of the codebase.
+Building ConnectCoin Core with IPC support is optional. The current IPC build
+exposes selected services, rather than separating all node, wallet, and GUI
+code into different processes. Cap'n Proto-specific implementation code is
+kept in [`src/ipc/capnp/`](../../src/ipc/capnp/).
 
 The libmultiprocess runtime is designed to place as few constraints as possible on IPC interfaces and to make IPC calls act like normal function calls. Method arguments, return values, and exceptions are automatically serialized and sent between processes. Object references and `std::function` arguments are tracked to allow invoked code to call back into invoking code at any time. And there is a 1:1 threading model where every client thread has a corresponding server thread responsible for executing incoming calls from that thread (there can be multiple calls from the same thread due to callbacks) without blocking, and holding the same thread-local variables and locks so behavior is the same whether IPC is used or not.
 
@@ -133,13 +158,16 @@ The currently defined IPC interfaces are unstable, and can change freely with no
 
 ## Security Considerations
 
-The integration of [Cap’n Proto](https://capnproto.org/) and [libmultiprocess](https://github.com/bitcoin-core/libmultiprocess) into the ConnectCoin Core architecture increases its potential attack surface. Cap’n Proto, being a complex and substantial new dependency, introduces potential sources of vulnerability, particularly through the creation of new UNIX sockets. The inclusion of libmultiprocess, while a smaller external dependency, also contributes to this risk. However, plans are underway to incorporate libmultiprocess as a git subtree, aligning it more closely with the project's well-reviewed internal libraries. While adopting these multiprocess features does introduce some risk, it's worth noting that they can be disabled, allowing builds without these new dependencies. This flexibility ensures that users can balance functionality with security considerations as needed.
+The integration of [Cap’n Proto](https://capnproto.org/) and [libmultiprocess](https://github.com/bitcoin-core/libmultiprocess) into the ConnectCoin Core architecture increases its potential attack surface. Cap’n Proto, being a complex and substantial new dependency, introduces potential sources of vulnerability, particularly through the creation of new UNIX sockets. The inclusion of libmultiprocess, while a smaller external dependency, also contributes to this risk. Its source is included in this repository at [`src/ipc/libmultiprocess`](../../src/ipc/libmultiprocess). While adopting these multiprocess features does introduce some risk, it's worth noting that they can be disabled, allowing builds without these new dependencies. This flexibility ensures that users can balance functionality with security considerations as needed.
 
-## Example Use Cases and Flows
+## Proposed Use Cases and Flows (Not Implemented)
 
 ### Retrieving a Block Hash
 
-Let’s walk through an example where the `connectcoin-wallet` process requests the hash of a block at a specific height from the `connectcoin-node` process. This example demonstrates the practical application of the IPC mechanism, specifically the interplay between C++ method calls and Cap’n Proto-generated RPC calls.
+The following hypothetical flow is retained from the upstream design to explain
+how C++ method calls could map to Cap'n Proto RPC calls. It assumes a separate
+wallet service and a `chain.capnp` wrapper, neither of which is implemented in
+this tree. It is not an example that can be run with `connectcoin-wallet`.
 
 <table><tr><td>
 
@@ -171,14 +199,14 @@ sequenceDiagram
 
 2. **Translation to Cap’n Proto RPC**
    - The `Chain::getBlockHash` virtual method is overridden by the `Chain` [client subclass](#c-client-subclasses-in-generated-code) to translate the method call into a Cap’n Proto RPC call.
-   - The client subclass is automatically generated by the `mpgen` tool from the [`chain.capnp`](https://github.com/ryanofsky/bitcoin/blob/pr/ipc/src/ipc/capnp/chain.capnp) file in [`src/ipc/capnp/`](../../src/ipc/capnp/).
+   - In the proposal, `mpgen` would generate the client subclass from the upstream [`chain.capnp`](https://github.com/ryanofsky/bitcoin/blob/pr/ipc/src/ipc/capnp/chain.capnp) schema, which is not included in this tree.
 
 3. **Request Preparation and Dispatch**
    - The `getBlockHash` method of the generated `Chain` client subclass in `connectcoin-wallet` populates a Cap’n Proto request with the `height` parameter, sends it to `connectcoin-node` process, and waits for a response.
 
 4. **Handling in connectcoin-node**
    - Upon receiving the request, the Cap'n Proto dispatching code in the `connectcoin-node` process calls the `getBlockHash` method of the `Chain` [server class](#c-server-classes-in-generated-code).
-   - The server class is automatically generated by the `mpgen` tool from the [`chain.capnp`](https://github.com/ryanofsky/bitcoin/blob/pr/ipc/src/ipc/capnp/chain.capnp) file in [`src/ipc/capnp/`](../../src/ipc/capnp/).
+   - In the proposal, `mpgen` would generate the server class from the same upstream `chain.capnp` schema.
    - The `getBlockHash` method of the generated `Chain` server subclass in `connectcoin-node` receives a Cap’n Proto request object with the `height` parameter, and calls the `getBlockHash` method on its local `Chain` object with the provided `height`.
    - When the call returns, it encapsulates the return value in a Cap’n Proto response, which it sends back to the `connectcoin-wallet` process.
 
@@ -188,7 +216,8 @@ sequenceDiagram
 
 ## Future Enhancements
 
-Further improvements are possible such as:
+The following inherited upstream ideas are possibilities, not committed
+ConnectCoin features or delivery plans:
 
 - Separating indexes from `connectcoin-node`, and running indexing code in separate processes (see [indexes: Stop using node internal types #24230](https://github.com/bitcoin/bitcoin/pull/24230)).
 - Enabling wallet processes to listen for JSON-RPC requests on their own ports instead of needing the node process to listen and forward requests to them.

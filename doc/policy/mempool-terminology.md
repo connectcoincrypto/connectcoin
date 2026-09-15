@@ -1,19 +1,41 @@
-## Fee and Size Terminology in Mempool Policy
+# Fee and Size Terminology in Mempool Policy
 
- * Each transaction has a **weight** and virtual size as defined in BIP 141 (different from serialized size for witness transactions, as witness data is discounted and the value is rounded up to the nearest integer).
+## Transaction sizes
 
-   * In the RPCs, "weight", refers to the weight as defined in BIP 141.
+A transaction's **weight** follows BIP 141: three times its serialized size
+without witness data, plus its serialized size including witness data. Its
+**BIP 141 virtual size** is `ceil(weight / 4)`, in virtual bytes (vB).
 
- * A transaction has a **sigops size**, defined as its sigop cost multiplied by the node's `-bytespersigop`, an adjustable policy.
+Mempool policy also accounts for signature-operation cost. Let `s` be the
+transaction's sigop cost and `b` the node's configurable `-bytespersigop` value:
 
- * A transaction's **virtual size (vsize)** refers to its **sigops-adjusted virtual size**: the maximum of its BIP 141 size and sigop size. This virtual size is used to simplify the process of building blocks that satisfy both the maximum weight limit and sigop limit.
+- **Sigops-adjusted weight:** `max(weight, s * b)`.
+- **Sigops-adjusted virtual size:** `ceil(max(weight, s * b) / 4)`.
 
-   * In the RPCs, "vsize" refers to this sigops-adjusted virtual size.
+The adjusted size helps account for both weight and signature-operation limits
+when selecting transactions. The mempool keeps the adjusted weight internally
+to avoid losing precision through virtual-size rounding.
 
-   * Mempool entry data with the suffix "-size" (eg "ancestorsize") refer to the cumulative sigops-adjusted virtual size of the transactions in the associated set.
+## RPC fields
 
- * A transaction can also have a **sigops-adjusted weight**, defined similarly as the maximum of its BIP 141 weight and 4 times the sigops size. This value is used internally by the mempool to avoid losing precision, and mempool entry data with the suffix "-weight" (eg "chunkweight", "clusterweight") refer to this sigops-adjusted weight.
+The meaning of `vsize` depends on the RPC; it is not universally sigops-adjusted.
 
- * A transaction's **base fee** is the difference between its input and output values.
+| Field and context | Meaning |
+| --- | --- |
+| `weight` in decoded transactions and mempool entries | BIP 141 weight |
+| `vsize` in decoded transactions, such as `decoderawtransaction` and verbose `getrawtransaction` | BIP 141 virtual size |
+| `vsize_bip141` in mempool entries, `testmempoolaccept`, and `submitpackage` results | BIP 141 virtual size |
+| `vsize_adjusted` in those same results | Sigops-adjusted virtual size; their `vsize` field is a deprecated alias for this value |
 
- * A transaction's **modified fee** is its base fee added to any **fee delta** introduced by using the `prioritisetransaction` RPC. Modified fee is used internally for all fee-related mempool policies and block building.
+Mempool entry fields `ancestorsize` and `descendantsize` sum the sigops-adjusted
+virtual sizes in the associated set, including the transaction itself.
+`chunkweight` and `clusterweight` sum sigops-adjusted weights in the chunk or
+cluster. Consult each RPC's help for its exact result schema.
+
+## Fees
+
+A transaction's **base fee** is the difference between its input and output
+values. Its **modified fee** adds any **fee delta** introduced by the
+`prioritisetransaction` RPC. This local adjustment is used for mempool policy
+and block-template selection; it does not change the fee actually paid by the
+transaction.

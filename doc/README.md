@@ -1,8 +1,9 @@
 # ConnectCoin Core
 
-ConnectCoin Core is an experimental Bitcoin Core fork. It is not
-production-ready; use regtest for development and do not treat development
-coins or wallet formats as durable.
+ConnectCoin Core is an experimental Bitcoin Core fork. It defaults to the public
+testnet4 beta; use regtest for isolated local development. Mainnet is unavailable.
+It is not production-ready, and test coins and wallet formats must not be treated
+as durable. See [Testnet beta](testnet-beta.md) for network setup and reset notes.
 
 ## Running
 

@@ -1,17 +1,19 @@
 ConnectCoin Core
 =============
 
-Below are notes on installing ConnectCoin Core software on Linux systems.
+These runtime notes describe GNU/Linux binaries produced by this repository's
+Guix build. Builds using distribution-provided dependencies or different
+configurations may require additional libraries or different Qt platform plugins.
 
 General Runtime Requirements
 ----------------------------
 
-ConnectCoin Core requires glibc (GNU C Library) 2.31 or newer.
+These binaries require glibc (GNU C Library) 2.31 or newer.
 
 GUI Runtime Requirements
 ------------------------
 
-The GUI executable, `connectcoin-qt`, is based on the Qt 6 framework and uses the `xcb` QPA (Qt Platform Abstraction) platform plugin
+The packaged GUI executable, `connectcoin-qt`, is based on the Qt 6 framework and uses the `xcb` QPA (Qt Platform Abstraction) platform plugin
 to run on X11. Its runtime library dependencies are as follows:
 - `libfontconfig`
 - `libfreetype`

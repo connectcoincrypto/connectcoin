@@ -32,6 +32,13 @@ The `translate` target requires GNU gettext (`xgettext`) and Qt Linguist
 English catalog. Source lists are passed through files, so extraction also
 works on Windows without exceeding its command-line length limit.
 
+Confirm that both tools are available and that extraction actually runs without
+tool errors. If CMake did not find `xgettext`, the current target only prints
+`Error: GNU gettext-tools not found` and can return success without regenerating
+either file. A zero exit status or unchanged catalog alone is not proof of a
+successful extraction. Make the tools available, reconfigure, and rerun the
+target before checking the generated files.
+
 For ordinary feature changes, update the affected translations alongside the
 source. Match entries by context, exact case-sensitive source, disambiguation
 comment, and plural status. Preserve existing reviewed wording and use the

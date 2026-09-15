@@ -14,10 +14,13 @@ Construct a linear, no-fork, best version of the blockchain.
 
 ### [Qos](/contrib/qos) ###
 
-A Linux bash script that sets up traffic control (`tc`) to limit outgoing bandwidth for ConnectCoin mainnet connections. This means one can have an always-on `connectcoind` instance and another local `connectcoind`/`connectcoin-qt` instance that connects to it and receives blocks.
+A Linux bash script that sets up traffic control (`tc`) to limit outgoing
+ConnectCoin bandwidth. Configure its port filters for the network in use;
+see the [QoS setup instructions](qos/README.md).
 
 ### [Seeds](/contrib/seeds) ###
-Utility to generate the pnSeed[] array that is compiled into the client.
+Tools for generating fixed peer seeds. Fixed seeds are not currently included
+in the ConnectCoin build; see the [seed-generation requirements](seeds/README.md).
 
 ### [ASMap](/contrib/asmap) ###
 Utilities to analyze and process asmap files.

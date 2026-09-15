@@ -1,8 +1,7 @@
 # Pay-to-connect (P2C)
 
 This document specifies ConnectCoin transaction output type `2`, named
-`PAY_TO_CONNECT`. There is exactly one type-2 form: pay-to-domain. There is no
-pay-to-domain-certificate mode and output type `3` is unassigned.
+`PAY_TO_CONNECT`, for bounties tied to a canonical DNS domain.
 
 The purpose of P2C is to let an output be redeemed with a TLS 1.3
 server-authenticated transcript bound to a claim and a specified DNS domain.
@@ -26,12 +25,21 @@ The mandatory mask uses bit 0 for ECDSA P-256/SHA-256 (`1`), bit 1 for
 `rsa_pss_rsae_sha256` (`2`), and bit 2 for `rsa_pss_pss_sha256` (`4`).
 The default mask is `7` (all three); `6` permits both RSA schemes. Zero and
 reserved bits are rejected. The byte follows the root version directly,
-without a length prefix. Previous type-2 payloads without this byte have no
-fallback decoder.
+without a length prefix. Payloads that omit this required byte are rejected.
+
+The target is serialized as a 32-byte little-endian unsigned integer, and the
+root-bundle version as a four-byte little-endian unsigned integer. The domain
+is raw ASCII preceded by its one-byte length, with no terminator. These wire
+encodings are distinct from the target's conventional hexadecimal RPC display.
 
 The domain is lower-case ASCII, contains only DNS LDH-label characters, has no
-empty labels or trailing dot, and is at most 253 bytes. Wildcards, IP literals,
-Unicode U-labels, underscores, and noncanonical spellings are rejected.
+empty labels or trailing dot, and is at most 253 bytes. Each label is at most
+63 bytes and cannot start or end with a hyphen. Wildcards, Unicode U-labels,
+underscores, and noncanonical spellings are rejected. The label grammar does
+not separately reject dotted numeric strings resembling IPv4 literals. This
+does not waive the exact SNI match or certificate-validation requirements below;
+the wallet's automatic connection path separately excludes private and
+unroutable endpoint addresses.
 
 Version `1` is currently the only supported trusted-root bundle. Its source file
 is `src/consensus/p2c_roots_v1.pem`. The bundle is immutable consensus data: an
@@ -49,12 +57,17 @@ element is at most 64 KiB and contains:
 5. the complete raw TLS `Certificate` handshake message; and
 6. the complete raw TLS `CertificateVerify` handshake message.
 
-Each raw handshake message includes its one-byte message type and three-byte
-length header. TLS record headers, encrypted record framing, `Finished`, and
-application data are not included. The Certificate message must carry the leaf
+The five messages are concatenated directly after the proof-version byte,
+without additional per-message CompactSize lengths. Each raw handshake message
+includes its one-byte message type and three-byte big-endian body-length header.
+No trailing bytes are allowed after CertificateVerify. TLS record headers,
+encrypted record framing, `Finished`, and application data are not included.
+The Certificate message must carry the leaf
 certificate followed by every server-supplied intermediate needed to build the
-path. The trusted root is obtained locally from the output's root-bundle
-version; it is not included in the proof.
+path. The trust anchor comes from the output's local root bundle, not from
+trust assigned to a server-supplied certificate. Preserve the complete raw
+Certificate message even if the server includes a root certificate: removing
+or modifying any of its authenticated bytes invalidates CertificateVerify.
 
 The Certificate message is limited to 48 KiB, at most eight certificates, and
 at most 16 KiB per certificate. The parser also applies individual limits to
@@ -67,6 +80,10 @@ The exact 32-byte claim challenge is:
 ```
 TaggedHash("ConnectCoin/P2C/claim/v1", txid || input_index)
 ```
+
+Here `txid` is its 32-byte serialized form: decode the RPC transaction ID's
+hexadecimal string and reverse the byte order, rather than hashing its ASCII
+characters. `input_index` is a zero-based, four-byte little-endian unsigned integer.
 
 It must appear verbatim in `ClientHello.random`. The transaction ID excludes
 witness data, so adding the proof does not create a hash cycle. It does commit
@@ -121,8 +138,8 @@ TaggedHash(
 )
 ```
 
-The proof is accepted only when this hash, interpreted with ConnectCoin's
-normal 256-bit hash ordering, is less than or equal to the output's
+The proof is accepted only when the 32 digest bytes, interpreted as a
+little-endian unsigned integer, are less than or equal to the output's
 `connection_work_target`.
 
 The entire `CertificateVerify` message is excluded from the work hash: its
@@ -141,9 +158,7 @@ manufacture or selectively release authenticated responses locally. P2C does
 not prove a counted number of physical connections, completed application
 requests, or independent visitors.
 
-Each P2C output is a normal UTXO and can be spent only once. There is no
-remaining-claims counter and no consensus set of previously used connection
-hashes.
+Each P2C output is a normal UTXO and can be spent only once.
 
 ## P2C mask v1 test-chain reset (September 9, 2026)
 
@@ -163,19 +178,26 @@ See [testnet-beta.md](testnet-beta.md) for reset identifiers and operator steps.
 
 ## RPC and command-line workflow
 
-Create a transaction whose output object contains a `p2c` member with
+Create and fund a transaction whose output object contains a `p2c` member with
 `amount`, `domain`, `connection_work_target`, and `root_certificates_version`.
-The optional `signature_algorithms_mask` defaults to `7`. The wallet
-`sendtop2c` RPC also accepts this optional named argument; it is appended after
-`verbose` for positional callers. Then:
+The optional `signature_algorithms_mask` defaults to `7`. Sign and broadcast
+that funding transaction, or use the wallet's `sendtop2c` RPC to create and send
+the bounty. That RPC also accepts this optional named argument, appended after
+`verbose` for positional callers.
+
+To claim the bounty, construct a **separate spending transaction** whose input
+references its funding transaction ID and output index. Waiting for the bounty
+to confirm is the simplest workflow. Finalize the claim's payout, fee, and all
+other non-witness fields before requesting its challenge:
 
 ```
 connectcoin-cli getp2cchallenge "unsigned_transaction_hex" 0
 ```
 
-Use the returned `clienthello_random` in an external TLS proof generator. Once
-the complete version-2 proof is available, attach it without changing the
-transaction ID:
+Here `unsigned_transaction_hex` is the claim transaction, not the funding
+transaction. Use the returned `clienthello_random` in an external TLS proof
+generator. Once the complete version-2 proof is available, attach it to that
+same claim transaction without changing its transaction ID:
 
 ```
 connectcoin-cli setp2cproof "unsigned_transaction_hex" 0 "proof_hex"
@@ -186,9 +208,15 @@ connectcoin-cli sendrawtransaction "witnessed_transaction_hex"
 The offline transaction utility also supports:
 
 ```
-connectcoin-tx outp2c=VALUE:DOMAIN:TARGET:ROOTS_VERSION[:SIGNATURE_ALGORITHMS_MASK]
-connectcoin-tx p2cproof=INPUT_INDEX:PROOF
+connectcoin-tx -testnet4 -create outp2c=VALUE:DOMAIN:TARGET:ROOTS_VERSION[:SIGNATURE_ALGORITHMS_MASK]
+connectcoin-tx -testnet4 "unsigned_transaction_hex" p2cproof=INPUT_INDEX:PROOF
 ```
+
+The first command starts a bounty-creating transaction that still needs funding
+inputs. The second attaches a proof to a separate transaction spending a bounty;
+finalize that spending transaction's non-witness fields before obtaining its
+challenge and TLS proof. Replace the placeholders with actual values; the
+bracketed mask is optional. Use `-regtest` instead for local tests.
 
 ConnectCoin Core provides parsing, validation, transaction construction,
 challenge calculation and proof attachment. Its opt-in wallet claim worker

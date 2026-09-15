@@ -17,7 +17,7 @@ tests and lint scripts can be run as explained in the sections below.
 
 # Running tests locally
 
-Before tests can be run locally, ConnectCoin Core must be built. See the [building instructions](/doc#building) for help.
+Before tests can be run locally, ConnectCoin Core must be built. See the [building instructions](/doc#building-and-development) for help.
 
 The following examples assume that the build directory is named `build`.
 
@@ -64,13 +64,13 @@ set PYTHONUTF8=1
 Individual tests can be run by directly calling the test script, e.g.:
 
 ```
-build/test/functional/feature_rbf.py
+build/test/functional/feature_typed_outputs.py
 ```
 
 or can be run through the test_runner harness, eg:
 
 ```
-build/test/functional/test_runner.py feature_rbf.py
+build/test/functional/test_runner.py feature_typed_outputs.py
 ```
 
 You can run any combination (incl. duplicates) of tests by calling:
@@ -79,28 +79,25 @@ You can run any combination (incl. duplicates) of tests by calling:
 build/test/functional/test_runner.py <testname1> <testname2> <testname3> ...
 ```
 
-Wildcard test names can be passed, if the paths are coherent and the test runner
-is called from a `bash` shell or similar that does the globbing. For example,
-to run all the wallet tests:
+Use `--filter` to select a family from the active test suite. For example,
+to run the active wallet tests:
 
 ```
-build/test/functional/test_runner.py test/functional/wallet*
-functional/test_runner.py functional/wallet*  # (called from the build/test/ directory)
-test_runner.py wallet*  # (called from the build/test/functional/ directory)
+build/test/functional/test_runner.py --filter="^wallet_"
 ```
 
-but not
+Combine families with a regular expression:
 
 ```
-build/test/functional/test_runner.py wallet*
+build/test/functional/test_runner.py --filter="^(tool_|mempool_)"
 ```
 
-Combinations of wildcards can be passed:
-
-```
-build/test/functional/test_runner.py ./test/functional/tool* test/functional/mempool*
-test_runner.py tool* mempool*
-```
+The runner excludes tests whose fixtures depend on unsupported transaction
+formats from its active suites. These tests remain explicitly selectable for
+porting and diagnosis; passing their names, including shell-expanded wildcards,
+will select them. See `QUARANTINED_TYPED_OUTPUT_SCRIPTS` in
+[test_runner.py](functional/test_runner.py). `--filter` without explicit test
+names keeps the active suite's exclusions.
 
 Run the regression test suite with:
 
@@ -108,7 +105,7 @@ Run the regression test suite with:
 build/test/functional/test_runner.py
 ```
 
-Run all possible tests with
+Run the active base and extended suites with:
 
 ```
 build/test/functional/test_runner.py --extended
@@ -131,8 +128,9 @@ options. Run `build/test/functional/test_runner.py -h` to see them all.
 
 #### Speed up test runs with a RAM disk
 
-If you have available RAM on your system you can create a RAM disk to use as the `cache` and `tmp` directories for the functional tests in order to speed them up.
-Speed-up amount varies on each system (and according to your RAM speed and other variables), but a 2-3x speed-up is not uncommon.
+If you have spare RAM, a RAM disk can hold the functional tests' cache and
+temporary data. Its effect on runtime depends on the tests and storage system.
+Reserve enough memory for the test processes as well as the RAM disk.
 
 **Linux**
 
@@ -143,14 +141,15 @@ sudo mkdir -p /mnt/tmp
 sudo mount -t tmpfs -o size=4g tmpfs /mnt/tmp/
 ```
 
-Configure the size of the RAM disk using the `size=` option.
-The size of the RAM disk needed is relative to the number of concurrent jobs the test suite runs.
-For example running the test suite with `--jobs=100` might need a 4 GiB RAM disk, but running with `--jobs=32` will only need a 2.5 GiB RAM disk.
+Configure the size of the RAM disk using the `size=` option. Required capacity
+depends on the selected tests, concurrent jobs, and retained logs. The example
+size does not guarantee enough space for every test selection.
 
-To use, run the test suite specifying the RAM disk as the `cachedir` and `tmpdir`:
+To use it, set `--cachedir` and `--tmpdirprefix`. Start with one job and monitor
+space and memory use:
 
 ```bash
-build/test/functional/test_runner.py --cachedir=/mnt/tmp/cache --tmpdir=/mnt/tmp
+build/test/functional/test_runner.py --cachedir=/mnt/tmp/cache --tmpdirprefix=/mnt/tmp --jobs=1
 ```
 
 Once finished with the tests and the disk, and to free the RAM, simply unmount the disk:
@@ -171,7 +170,7 @@ Configure the RAM disk size, expressed as the number of blocks, at the end of th
 (`4096 MiB * 2048 blocks/MiB = 8388608 blocks` for 4 GiB). To run the tests using the RAM disk:
 
 ```bash
-build/test/functional/test_runner.py --cachedir=/Volumes/ramdisk/cache --tmpdir=/Volumes/ramdisk/tmp
+build/test/functional/test_runner.py --cachedir=/Volumes/ramdisk/cache --tmpdirprefix=/Volumes/ramdisk --jobs=1
 ```
 
 To unmount:
@@ -194,35 +193,25 @@ where no other connectcoind processes are running.
 On linux, the test framework will warn if there is another
 connectcoind process running when the tests are started.
 
-If there are zombie connectcoind processes after test failure, you can kill them
-by running the following commands. **Note that these commands will kill all
-connectcoind processes running on the system, so should not be used if any non-test
-connectcoind processes are being run.**
-
-```bash
-killall connectcoind
-```
-
-or
-
-```bash
-pkill -9 connectcoind
-```
-
+After a test failure, identify any remaining test nodes by checking their
+process command lines against the test's printed temporary directory. Stop
+only those nodes, using RPC with the matching regtest data directory when
+available. If RPC is unavailable, send a normal termination signal only to
+the verified test process IDs. Wait for them to exit before changing their
+data or cache. Do not terminate unrelated test runs or wallet/node processes.
 
 ##### Data directory cache
 
-A pre-mined blockchain with 200 blocks is generated the first time a
-functional test is run and is stored in build/test/cache. This speeds up
-test startup times since new blockchains don't need to be generated for
-each test. However, the cache may get into a bad state, in which case
-tests will fail. If this happens, remove the cache directory (and make
-sure connectcoind processes are stopped as above):
+Tests that use a cached chain copy a 199-block cache and generate a fresh block
+to reach height 200 during setup. The runner creates a temporary cache for each
+invocation. Individual scripts use `build/test/cache` by default; `--cachedir`
+can select a persistent cache in either mode.
 
-```bash
-rm -rf build/test/cache
-killall connectcoind
-```
+If a persistent cache becomes unusable, stop the test nodes that use it and
+verify the exact cache path before moving that cache aside. The next run will
+recreate it. A normal runner invocation creates a fresh cache, so clearing
+`build/test/cache` does not affect that invocation unless it was explicitly
+selected. Keep wallet and other node data directories separate from test caches.
 
 ##### Test logging
 
@@ -285,11 +274,11 @@ necessary, this can be accomplished by first setting a pdb breakpoint
 at an appropriate location, running the test to that point, then using
 `gdb` (or `lldb` on macOS) to attach to the process and debug.
 
-For instance, to attach to `self.node[1]` during a run you can get
+For instance, to attach to `self.nodes[1]` during a run you can get
 the pid of the node within `pdb`.
 
 ```
-(pdb) self.node[1].process.pid
+(pdb) self.nodes[1].process.pid
 ```
 
 Alternatively, you can find the pid by inspecting the temp folder for the specific test

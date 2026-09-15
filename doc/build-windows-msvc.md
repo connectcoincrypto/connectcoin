@@ -49,7 +49,8 @@ winget install python3
 Clone the ConnectCoin Core repository to a directory. All build scripts and commands will run from this directory.
 
 ```powershell
-git clone YOUR_CONNECTCOIN_REPOSITORY_URL connectcoin
+git clone https://github.com/connectcoincrypto/connectcoin.git connectcoin
+cd connectcoin
 ```
 
 
@@ -66,7 +67,7 @@ Available presets can be listed as follows:
 cmake --list-presets
 ```
 
-By default, all presets set `BUILD_GUI` to `ON`.
+By default, the `vs2026` and `vs2026-static` presets set `BUILD_GUI` to `ON`.
 
 ## Building
 
@@ -130,7 +131,7 @@ Include the `tests` feature whenever either `BUILD_TESTS` or
 be configured with:
 
 ```powershell
-cmake -B build --preset vs2026 -DVCPKG_MANIFEST_NO_DEFAULT_FEATURES=ON -DVCPKG_MANIFEST_FEATURES=tests -DBUILD_TESTS=OFF -DBUILD_KERNEL_LIB=ON -DBUILD_KERNEL_TEST=ON
+cmake -B build --preset vs2026 -DVCPKG_MANIFEST_NO_DEFAULT_FEATURES=ON -DVCPKG_MANIFEST_FEATURES=tests -DBUILD_GUI=OFF -DENABLE_WALLET=OFF -DWITH_ZMQ=OFF -DBUILD_TESTS=OFF -DBUILD_KERNEL_LIB=ON -DBUILD_KERNEL_TEST=ON
 ```
 
 ### Antivirus Software

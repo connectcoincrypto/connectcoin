@@ -134,7 +134,7 @@ A BCC Python script showcasing eBPF and USDT limitations when passing data
 larger than about 32kb. Based on the `net:inbound_message` and
 `net:outbound_message` tracepoints.
 
-Bitcoin P2P messages can be larger than 32kb (e.g. `tx`, `block`, ...). The
+ConnectCoin P2P messages can be larger than 32kb (e.g. `tx`, `block`, ...). The
 eBPF VM's stack is limited to 512 bytes, and we can't allocate more than about
 32kb for a P2P message in the eBPF VM. The **message data is cut off** when the
 message is larger than MAX_MSG_DATA_LENGTH (see script). This can be detected
@@ -350,9 +350,9 @@ This should produce an output similar to the following.
 ```bash
 Attaching 6 probes...
 Logging opened, closed, misbehaving, and evicted P2P connections
-OUTBOUND conn to 127.0.0.1:15287: id=0, type=block-relay-only, network=0, total_out=1
-INBOUND conn from 127.0.0.1:45324: id=1, type=inbound, network=0, total_in=1
-MISBEHAVING conn id=1, score_before=0, score_increase=20, message='getdata message size = 50001', threshold_exceeded=false
+OUTBOUND conn to 127.0.0.1:15287: id=0, type=block-relay-only, network=0, total=1
+INBOUND conn from 127.0.0.1:45324: id=1, type=inbound, network=0, total=1
+MISBEHAVING conn id=1, message='getdata message size = 50001'
 CLOSED conn to 127.0.0.1:15287: id=0, type=block-relay-only, network=0, established=1231006505
 EVICTED conn to 127.0.0.1:45324: id=1, type=inbound, network=0, established=1612312312
 ...

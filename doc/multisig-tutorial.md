@@ -1,14 +1,18 @@
 # 1. Multisig Tutorial
 
-Currently, it is possible to create a multisig wallet using ConnectCoin Core only.
+**Reference only:** This inherited tutorial describes Bitcoin Core multisig
+workflows. ConnectCoin's [typed-output consensus](typed-outputs.md) does not
+support multisig or Script-based outputs. The examples below do not produce
+valid ConnectCoin transactions, including on regtest.
 
-Although there is already a brief explanation of multisig in the
-[Descriptors documentation](/doc/descriptors.md#multisig), this tutorial uses
-regtest so it is reproducible without public peers, DNS seeds, or a faucet.
+For background, see the multisig section of the inherited
+[Descriptors documentation](/doc/descriptors.md#multisig). The regtest examples
+below are retained as reference material, not as supported ConnectCoin instructions.
 
-This tutorial uses [jq](https://github.com/stedolan/jq) JSON processor to process the results from RPC and stores the relevant values in bash variables. This makes the tutorial reproducible and easier to follow step by step.
+The reference examples use the [jq](https://github.com/stedolan/jq) JSON processor
+to process RPC results and store the relevant values in Bash variables.
 
-Before starting this tutorial, start the ConnectCoin node on regtest.
+The inherited sequence begins by starting a regtest node:
 
 ```bash
 ./build/bin/connectcoin node -regtest -daemon

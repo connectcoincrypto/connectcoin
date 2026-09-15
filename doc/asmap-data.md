@@ -10,8 +10,11 @@ prevent having connections dominated by peers at the same large-scale hoster,
 for example, since such companies usually control many diverse IP ranges.
 In order to use ASMap, the mapping between IP prefixes and AS Numbers needs
 to be available. This mapping data can be provided through an external file
-but ConnectCoin Core also embeds a default map in its builds to make the feature
-available to users when they are unable to provide a file.
+but builds with `WITH_EMBEDDED_ASMAP=ON` (the default) also contain a map.
+Embedding the map does not enable ASMap bucketing by itself: pass `-asmap`
+or `-asmap=1` to use it. Builds without embedded data require an explicit map
+file, supplied with `-asmap=<file>`. Relative file paths are resolved under
+the selected network's data directory.
 
 ## Data sourcing and tools
 
@@ -52,7 +55,7 @@ or an explicit schedule.
 ## Release process
 
 As an upcoming release approaches the embedded ASMap data should be updated
-by replacing the `ip_asn.dat` with a newer ASMap file from the asmap-data
+by replacing [`src/node/data/ip_asn.dat`](../src/node/data/ip_asn.dat) with a newer ASMap file from the asmap-data
 repository so that its data is embedded in the release. Ideally, there may be a file
 already created recently that can be selected for an upcoming release. Alternatively,
 a new creation process can be initiated with the goal of obtaining a fresh map

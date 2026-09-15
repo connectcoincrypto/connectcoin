@@ -81,8 +81,9 @@ one of the networks has issues.
 The first time ConnectCoin Core connects to the I2P router, it automatically
 generates a persistent I2P address and its corresponding private key by default,
 unless `-i2pacceptincoming=0` is set.  The private key is saved in a file named
-`i2p_private_key` in the ConnectCoin Core data directory.  The persistent I2P
-address is used for making outbound connections and accepting inbound
+`i2p_private_key` in the network-specific data directory (for example,
+`~/.connectcoin/testnet4/i2p_private_key` on Linux with the default beta network).
+The persistent I2P address is used for making outbound connections and accepting inbound
 connections.
 
 In the I2P network, the receiver of an inbound connection sees the address of
@@ -102,6 +103,7 @@ listening should only be turned off if really needed.
 
 There are several ways to see your I2P address in ConnectCoin Core if accepting
 incoming I2P connections (`-i2pacceptincoming`):
+
 - in the "Local addresses" output of CLI `-netinfo`
 - in the "localaddresses" output of RPC `getnetworkinfo`
 - in the debug log (grep for `AddLocal`; the I2P address ends in `.b32.i2p`)
@@ -168,6 +170,15 @@ Please see the "General Guidance for Developers" section in https://i2p.net/en/d
 if you are developing a downstream application that may be bundling I2P with ConnectCoin.
 
 ## Privacy recommendations
+
+- `-i2psam` configures P2P connections, not the wallet's HTTPS connections for
+  P2C probes and automatic claims. `-onlynet=i2p` also does not restrict those
+  HTTPS connections. If enabled, P2C can connect directly to public websites
+  and reveal your IP address. A configured name, IPv4, or IPv6 proxy blocks
+  the current P2C connection path instead of being bypassed; an I2P SAM proxy
+  alone does not. **Review P2C** starts an HTTPS probe even when automatic
+  claims are off; avoid both actions if you require I2P-only traffic without
+  such a blocking proxy. See [P2C connection settings](p2c-wallet.md#native-automatic-claims).
 
 - Operating a node that listens on multiple networks (e.g. IPv4 and I2P) can help
   strengthen the ConnectCoin network, as nodes in this configuration (i.e. bridge nodes) increase

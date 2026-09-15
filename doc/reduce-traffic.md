@@ -3,11 +3,14 @@ Reduce Traffic
 
 Some node operators need to deal with bandwidth caps imposed by their ISPs.
 
-By default, ConnectCoin Core allows up to 200 connections to different peers, 11 of
-which are outbound. You can therefore, have at most 189 inbound connections, half of
-which can only be taken up by low-traffic block-relay-only peers.
-Of the 11 outbound peers, there can be 8 full-relay connections, 2
-block-relay-only ones and occasionally 1 short-lived feeler or an extra block-relay-only connection.
+By default, ConnectCoin Core allows up to 200 automatic peer connections, with 11
+slots reserved for outbound connections and at most 189 available for inbound
+connections. The outbound allocation is 8 full-relay peers, 2 block-relay-only
+peers, and 1 feeler or extra peer-management connection. At most 50% of inbound
+slots can be used by transaction-relaying peers with the default
+`-inboundrelaypercent`; the remainder can serve lower-traffic block-relay-only peers.
+Manually added peers and private broadcast connections use the separate limits
+described below.
 
 The default settings can result in relatively significant traffic consumption.
 
@@ -29,15 +32,21 @@ calculating the target.
 
 ## 2. Disable "listening" (`-listen=0`)
 
-Disabling listening will result in fewer nodes connected (remember the maximum of 11
-outbound peers). Fewer nodes will result in less traffic usage as you are relaying
-blocks and transactions to fewer nodes.
+Disabling listening removes inbound connections. With the default connection settings,
+there are up to 11 automatic outbound peers; manually added peers and short-lived
+private broadcast connections have separate limits. Fewer connected nodes generally
+reduce traffic, as you relay blocks and transactions to fewer nodes.
 
 ## 3. Reduce maximum connections (`-maxconnections=<num>`)
 
 Reducing the maximum connected nodes to a minimum could be desirable if traffic
 limits are tiny. Keep in mind that ConnectCoin's trustless model works best if you are
 connected to a handful of nodes.
+
+`-maxconnections` limits automatic connections, including outbound connections when
+listening is disabled. It does not limit `-addnode`/`addnode` RPC connections (separate
+limit of 8) or short-lived private broadcast connections (separate limit of 64 when
+`-privatebroadcast` is enabled, which is not the default).
 
 ## 4. Turn off transaction relay (`-blocksonly`)
 

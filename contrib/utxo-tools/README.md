@@ -19,7 +19,8 @@ utxos(txid TEXT, vout INT, value INT, coinbase INT, height INT, scriptpubkey TEX
 
 - Type 1 (P2PK): `51 20` followed by the 32-byte x-only public key.
 - Type 2 (P2C): `52`, the one-byte domain length, canonical ASCII domain,
-  32-byte little-endian work target, and four-byte little-endian root version.
+  32-byte little-endian work target, four-byte little-endian root version, and
+  one-byte signature-algorithms mask.
 
 These prefixes are **not** stored in the snapshot's typed payload. In particular,
 type 1 must not be interpreted as Bitcoin's compressed P2SH script tag.

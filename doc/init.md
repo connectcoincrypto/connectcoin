@@ -92,7 +92,11 @@ OpenRC).
     Binary:              /usr/local/bin/connectcoind
     Configuration file:  ~/Library/Application Support/ConnectCoin/connectcoin.conf
     Data directory:      ~/Library/Application Support/ConnectCoin
-    Lock file:           ~/Library/Application Support/ConnectCoin/.lock
+    Lock file:           ~/Library/Application Support/ConnectCoin/testnet4/.lock
+
+The lock path shown uses the default testnet4 beta. Selecting another test
+network changes the network subdirectory; the configuration file stays in the
+base data directory.
 
 Installing Service Configuration
 -----------------------------------

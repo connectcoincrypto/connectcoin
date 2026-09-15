@@ -72,7 +72,7 @@ Make automatic outbound connections only to CJDNS addresses. Inbound and manual
 connections are not affected by this option. It can be specified multiple times
 to allow multiple networks, e.g. onlynet=cjdns, onlynet=i2p, onlynet=onion.
 
-CJDNS support was added to ConnectCoin Core in version 23.0 and there may be fewer
+ConnectCoin Core supports CJDNS, and there may be fewer
 CJDNS peers than Tor or IP ones. Therefore, using CJDNS alone without other
 networks is discouraged: a node may be unable to fill its outbound connection slots
 but will repeatedly try the few addresses it knows and is more susceptible to

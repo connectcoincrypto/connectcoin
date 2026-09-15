@@ -93,4 +93,7 @@ The second example reduces the number of pluralized words that translators have 
 
 During a string freeze (often before a major release), no translation strings are to be added, modified or removed.
 
-This can be checked by building the `translate` target with `cmake` ([instructions](translation_process.md)), then verifying that `bitcoin_en.ts` remains unchanged.
+This can be checked by building the `translate` target with `cmake` ([instructions](translation_process.md)), confirming that extraction actually ran without tool errors, then verifying that `bitcoin_en.ts` remains unchanged.
+An unchanged catalog and a successful exit status alone are insufficient: the
+current target can return success without extracting strings when `xgettext`
+is missing. Resolve missing tools and rerun configuration and extraction first.

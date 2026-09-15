@@ -1,13 +1,17 @@
 # Offline Signing Tutorial
 
-This tutorial will describe how to use two instances of ConnectCoin Core, one online and one offline, to greatly increase security by not having private keys reside on a networked device.
+This tutorial uses an online watch-only wallet to prepare a transaction and an
+offline wallet to sign it. The private keys remain on the offline host.
 
-Maintaining an air-gap between private keys and any network connections drastically reduces the opportunity for those keys to be exfiltrated from the user.
-
-This workflow uses [Partially Signed Bitcoin Transactions](/doc/psbt.md) (PSBTs) to transfer the transaction to and from the offline wallet for signing using the private keys.
+The workflow uses ConnectCoin's [PSBT dialect](psbt.md) and type-1 P2PK
+addresses. Both hosts must run the same current ConnectCoin Core build;
+Bitcoin PSBT tools and example transactions are not compatible. P2C redemption
+proofs use a separate workflow described in [p2c-wallet.md](p2c-wallet.md).
 
 > [!NOTE]
-> While this tutorial demonstrates the process using `signet` network, you should omit the `-signet` flag in the provided commands when working with `mainnet`.
+> This tutorial explicitly selects ConnectCoin signet on both hosts. Keep the
+> same network selection in every command. Omitting `-signet` selects the
+> default Testnet4 beta, not mainnet. Mainnet startup is unavailable.
 
 ## Overview
 In this tutorial we have two hosts, both running the same current ConnectCoin Core build.
@@ -18,26 +22,42 @@ In this tutorial we have two hosts, both running the same current ConnectCoin Co
 We are going to first create an `offline_wallet` on the offline host. We will then create a `watch_only_wallet` on the online host using a wallet file exported from the `offline_wallet`. Next we will receive some coins into the wallet. In order to spend these coins we'll create an unsigned PSBT using the `watch_only_wallet`, sign the PSBT using the private keys in the `offline_wallet`, and finally broadcast the signed PSBT using the online host.
 
 ### Requirements
-- [jq](https://jqlang.github.io/jq/) installation - This tutorial uses jq to process certain fields from JSON RPC responses, but this convenience is optional.
+
+- A Bash-compatible shell and [jq](https://jqlang.github.io/jq/) on both hosts.
+- A running ConnectCoin node on each host, with `-signet` selected. Keep the
+  offline host disconnected from all networks; its node can additionally use
+  `-networkactive=0 -listen=0 -dnsseed=0`. It does not need the blockchain.
+- A synced online signet node and a source of ConnectCoin signet test coins.
+
+The `[offline]$` and `[online]$` labels below identify the host and are not part
+of the commands. Replace `/path/to/` with local file paths. Use a separate set
+of transaction files for each payment, and stop if any command fails.
+
+Enable pipeline error reporting in each shell:
+
+```sh
+set -o pipefail
+```
 
 ### Create and Prepare the `offline_wallet`
 
 1. On the offline machine create a wallet named `offline_wallet` secured by a wallet `passphrase`. This wallet will contain private keys and must remain unconnected to any networks at all times.
 
 ```sh
-[offline]$ ./build/bin/connectcoin-cli -signet -named createwallet \
-                wallet_name="offline_wallet" \
-                passphrase="** enter passphrase **"
-
-{
-  "name": "offline_wallet"
-}
+[offline]$ ./build/bin/connectcoin-cli -signet -stdin -named createwallet \
+                wallet_name="offline_wallet"
 ```
 
-`connectcoin rpc` can also be substituted for `connectcoin-cli`.
+At the waiting input, enter `passphrase=<your chosen passphrase>` on one line,
+then finish input with Ctrl-D. This supplies the passphrase through standard
+input instead of putting it in the command line or shell history. This input
+mode does not hide what you type, so use a private console.
 
 > [!NOTE]
-> The use of a passphrase is crucial to encrypt the wallet.dat file. This encryption ensures that even if an unauthorized individual gains access to the offline host, they won't be able to access the wallet's contents. Further details about securing your wallet can be found in  [Managing the Wallet](/doc/managing-wallets.md#12-encrypting-the-wallet)
+> Encryption protects the private keys while the wallet is locked; it does not
+> encrypt transaction history or other public metadata. Keep the wallet file,
+> its backups, and the passphrase offline. See
+> [Managing the Wallet](managing-wallets.md#12-encrypting-the-wallet).
 
 2. Export the wallet in a watch-only format to a .dat file named `watch_only_wallet.dat`.
 ```sh
@@ -46,7 +66,9 @@ We are going to first create an `offline_wallet` on the offline host. We will th
 ```
 
 > [!NOTE]
-> The `watch_only_wallet.dat` file will be transferred to the online machine (e.g. using a USB flash drive) where it can be imported to create a related watch-only wallet.
+> Transfer only the exported `watch_only_wallet.dat` to the online machine
+> (for example, using removable media). Do not transfer the original wallet or
+> its private-key backups. The exported file contains public wallet data.
 
 ### Create the online `watch_only_wallet`
 
@@ -57,10 +79,6 @@ The `watch_only_wallet` wallet will be used to track and validate incoming trans
 [online]$ ./build/bin/connectcoin-cli -signet -named restorewallet \
               wallet_name="watch_only_wallet" \
               backup_file=/path/to/watch_only_wallet.dat
-
-{
-  "name": "watch_only_wallet"
-}
 ```
 
 ### Fund the `offline_wallet`
@@ -70,10 +88,10 @@ At this point, it's important to understand that both the `offline_wallet` and o
 1. Generate an address to receive coins. You can use _either_ the `offline_wallet` or the online `watch_only_wallet` to generate this address, as they will produce the same addresses. For the sake of this guide, we'll use the online `watch_only_wallet` to generate the address.
 
 ```sh
-[online]$ ./build/bin/connectcoin-cli -signet -rpcwallet="watch_only_wallet" getnewaddress
-
-tcc1qtu5qgc6ddhmqm5yqjvhg83qgk2t4ewaj2wwjr9
+[online]$ ./build/bin/connectcoin-cli -signet -rpcwallet="watch_only_wallet" getnewaddress "" "bech32m"
 ```
+
+Use the returned `tcc1p...` address; it is generated from this wallet's keys.
 
 2. Fund the address from an existing ConnectCoin signet peer or faucet. No public ConnectCoin signet faucet is currently documented; Bitcoin signet faucets cannot fund this network.
 
@@ -81,76 +99,48 @@ tcc1qtu5qgc6ddhmqm5yqjvhg83qgk2t4ewaj2wwjr9
 
 ```sh
 [online]$ ./build/bin/connectcoin-cli -signet -rpcwallet="watch_only_wallet" listunspent
-
-[
-  {
-    "txid": "0f3953dfc3eb8e753cd1633151837c5b9953992914ff32b7de08c47f1f29c762",
-    "vout": 1,
-    "address": "tcc1qtu5qgc6ddhmqm5yqjvhg83qgk2t4ewaj2wwjr9",
-    "label": "",
-    "scriptPubKey": "00145f2804634d6df60dd080932e83c408b2975cbbb2",
-    "amount": 0.01000000,
-    "confirmations": 4,
-    "spendable": true,
-    "solvable": true,
-    "desc": "wpkh([306c734f/84h/1h/0h/0/0]025932ccee7590158f7e08bb36290d135d30a0b045163da896e1cd7645ec4223a9)#xytvyr4a",
-    "parent_descs": ["..."],
-    "safe": true
-  }
-]
 ```
+
+Check the actual received amounts and confirmations. For the example payment
+below, wait for a confirmed balance greater than `0.009` CC plus the fee.
 
 ### Create and Export an Unsigned PSBT
 
-1. Get a destination address for the transaction. In this tutorial we'll be sending funds to the address `tcc1q9k5w0nhnhyeh78snpxh0t5t7c3lxdeg3mzq2kc`, but if you don't need the coins for further testing you can use another ConnectCoin signet address you control.
+1. Obtain a type-1 Bech32m receiving address from a ConnectCoin signet wallet
+you control. Enter that actual destination below; do not use an address copied
+from documentation.
 
-2. Create a funded but unsigned PSBT to the destination address with the online `watch_only_wallet` by using `send [{"address":amount},...]` and export the unsigned PSBT to a file `funded_psbt.txt` for easy portability to the `offline_wallet` for signing:
+2. Create a funded, unsigned PSBT with the online `watch_only_wallet`. The
+example sends `0.009` CC and lets the wallet select a fee using its configured
+policy and current network conditions. `psbt=true` requests a PSBT without
+broadcasting. Review the actual fee on the offline host before signing.
 
 ```sh
-[online]$ ./build/bin/connectcoin-cli -signet -rpcwallet="watch_only_wallet" send \
-              '{"tcc1q9k5w0nhnhyeh78snpxh0t5t7c3lxdeg3mzq2kc": 0.009}' \
-              | jq -r '.psbt' \
-              >> /path/to/funded_psbt.txt
-
-[online]$ cat /path/to/funded_psbt.txt
-
-cHNidP8BAHECAAAAAWLHKR9/xAjetzL/FCmZU5lbfINRMWPRPHWO68PfUzkPAQAAAAD9////AoA4AQAAAAAAFgAULajnzvO5M38eEwmu9dF+xH5m5RGs0g0AAAAAABYAFMaT0f/Wp2DCZzL6dkJ3GhWj4Y9vAAAAAAABAHECAAAAAY+dRPEBrGopkw4ugSzS9npzJDEIrE/bq1XXI0KbYnYrAQAAAAD+////ArKaXgAAAAAAFgAUwEc4LdoxSjbWo/2Ue+HS+QjwfiBAQg8AAAAAABYAFF8oBGNNbfYN0ICTLoPECLKXXLuyYW8CAAEBH0BCDwAAAAAAFgAUXygEY01t9g3QgJMug8QIspdcu7IiBgJZMszudZAVj34IuzYpDRNdMKCwRRY9qJbhzXZF7EIjqRgwbHNPVAAAgAEAAIAAAACAAAAAAAAAAAAAACICA7BlBnyAR4F2UkKuSX9MFhYCsn6j//z9i7lHDm1O0CU0GDBsc09UAACAAQAAgAAAAIABAAAAAAAAAAA=
+[online]$ read -r -p "ConnectCoin signet recipient address: " recipient
+[online]$ outputs=$(jq -n --arg address "$recipient" '{($address): 0.009}')
+[online]$ ./build/bin/connectcoin-cli -signet -rpcwallet="watch_only_wallet" -named send \
+              outputs="$outputs" psbt=true \
+              | jq -er '.psbt' > /path/to/funded_psbt.txt
 ```
+
+Transfer `funded_psbt.txt` to the offline host. This file contains the PSBT
+returned for your transaction, including the input UTXO data needed for offline
+signing.
 
 ### Decode and Analyze the Unsigned PSBT
 
 Decode and analyze the unsigned PSBT on the `offline_wallet` using the `funded_psbt.txt` file:
 
 ```sh
-[offline]$ ./build/bin/connectcoin-cli -signet decodepsbt $(cat /path/to/funded_psbt.txt)
-
-{
-    ...
-}
-
-[offline]$ ./build/bin/connectcoin-cli -signet analyzepsbt $(cat /path/to/funded_psbt.txt)
-
-{
-  "inputs": [
-    {
-      "has_utxo": true,
-      "is_final": false,
-      "next": "signer",
-      "missing": {
-        "signatures": [
-          "5f2804634d6df60dd080932e83c408b2975cbbb2"
-        ]
-      }
-    }
-  ],
-  "estimated_vsize": 141,
-  "estimated_feerate": 0.00100000,
-  "fee": 0.00014100,
-  "next": "signer"
-}
+[offline]$ ./build/bin/connectcoin-cli -signet decodepsbt "$(cat /path/to/funded_psbt.txt)"
+[offline]$ ./build/bin/connectcoin-cli -signet analyzepsbt "$(cat /path/to/funded_psbt.txt)"
 ```
 
-Notice that the analysis of the PSBT shows that "signatures" are missing and should be provided by the private key corresponding to the public key hash (hash160) "5f2804634d6df60dd080932e83c408b2975cbbb2"
+Inspect the actual inputs, destination addresses, amounts, change, and fee on
+the offline host before signing. Confirm that change belongs to the offline
+wallet, for example with `getaddressinfo`. Analysis describes the supplied
+PSBT; it does not replace your approval of the payment. If required input data
+is missing, return to the online host to prepare a complete unsigned PSBT.
 
 ### Process and Sign the PSBT
 
@@ -159,25 +149,40 @@ Notice that the analysis of the PSBT shows that "signatures" are missing and sho
 Use the walletpassphrase command to unlock the `offline_wallet` with the passphrase. You should specify the passphrase and a timeout (in seconds) for how long you want the wallet to remain unlocked.
 
 ```sh
-[offline]$ ./build/bin/connectcoin-cli -signet -rpcwallet="offline_wallet" walletpassphrase "** enter passphrase **" 60
+[offline]$ ./build/bin/connectcoin-cli -signet -rpcwallet="offline_wallet" -stdinwalletpassphrase walletpassphrase 60
 ```
 
-2. Process, sign and finalize the PSBT on the `offline_wallet` using the `walletprocesspsbt` command, saving the output to a file `final_psbt.txt`.
+Enter the passphrase at the prompt. This input mode hides it from the terminal
+and does not place it in the command line.
 
- ```sh
-[offline]$ ./build/bin/connectcoin-cli -signet -rpcwallet="offline_wallet" walletprocesspsbt \
-                $(cat /path/to/funded_psbt.txt) \
-                | jq -r .hex \
-                >> /path/to/final_psbt.txt
- ```
-
-### Broadcast the Signed and Finalized PSBT
-Broadcast the funded, signed and finalized PSBT `final_psbt.txt` using `sendrawtransaction` with an online node:
+2. Process and sign the PSBT with the `offline_wallet`, then lock the wallet:
 
 ```sh
-[online]$ ./build/bin/connectcoin-cli -signet sendrawtransaction $(cat /path/to/final_psbt.txt)
+[offline]$ ./build/bin/connectcoin-cli -signet -rpcwallet="offline_wallet" walletprocesspsbt \
+                "$(cat /path/to/funded_psbt.txt)" > /path/to/signed_psbt.json
+[offline]$ ./build/bin/connectcoin-cli -signet -rpcwallet="offline_wallet" walletlock
+```
 
-c2430a0e46df472b04b0ca887bbcd5c4abf7b2ce2eb71de981444a80e2b96d52
+The default signing mode uses ConnectCoin's required `SIGHASH_DEFAULT` and a
+single 64-byte Schnorr witness per type-1 input. Extract the finalized raw
+transaction only when the response reports `complete: true`:
+
+```sh
+[offline]$ jq -er 'if .complete then .hex else error("Transaction is not complete") end' \
+                /path/to/signed_psbt.json > /path/to/signed_tx.hex
+```
+
+If signing fails, lock the wallet and resolve the error before proceeding.
+Transfer `signed_tx.hex` to the online host only after successful extraction.
+
+### Broadcast the Signed Transaction
+
+The extracted file contains a raw transaction, not a PSBT. Decode it on the
+online host to check the transaction being submitted, then broadcast it:
+
+```sh
+[online]$ ./build/bin/connectcoin-cli -signet decoderawtransaction "$(cat /path/to/signed_tx.hex)"
+[online]$ ./build/bin/connectcoin-cli -signet sendrawtransaction "$(cat /path/to/signed_tx.hex)"
 ```
 
 ### Confirm Wallet Balance
@@ -186,27 +191,10 @@ Confirm the updated balance of the offline wallet using the `watch_only_wallet`.
 
 ```sh
 [online]$ ./build/bin/connectcoin-cli -signet -rpcwallet="watch_only_wallet" getbalances
-
-{
-  "mine": {
-    "trusted": 0.00085900,
-    "untrusted_pending": 0.00000000,
-    "immature": 0.00000000
-  },
-  "lastprocessedblock": {
-    "hash": "0000003065c0669fff27edb4a71928cb48e5a6cfcdf06f491a83fd86822d18a6",
-    "height": 159592
-  }
-}
 ```
-
 
 You can also show transactions related to the wallet using `listtransactions`
 
 ```sh
 [online]$ ./build/bin/connectcoin-cli -signet -rpcwallet="watch_only_wallet" listtransactions
-
-[
-    ...
-]
 ```

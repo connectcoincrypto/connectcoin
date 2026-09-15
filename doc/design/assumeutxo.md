@@ -98,8 +98,10 @@ sequentially.
 
 Once the tip of the background chainstate hits the base block of the snapshot
 chainstate, we hash the
-background chainstate's UTXO set contents and ensure it matches the compiled value in
-`CMainParams::m_assumeutxo_data`.
+background chainstate's UTXO set contents and ensure it matches the compiled
+commitment for the selected network, retrieved through
+`CChainParams::AssumeutxoForHeight()`. If no commitment exists for that height,
+snapshot validation fails.
 
 |    |    |
 | ---------- | ----------- |

@@ -4,28 +4,52 @@ This directory contains scripts for each build step in each build stage.
 
 ## Running a Stage Locally
 
-Be aware that the tests will be built and run in-place, so please run at your own risk.
-If the repository is not a fresh git clone, you might have to clean files from previous builds or test runs first.
+By default, the test stage mounts the source checkout read-only, copies it into
+a container, and builds and runs tests there. Dependency and compiler caches
+use Docker volumes. The wrapper creates containers, images, networks, and
+volumes on the host.
 
-The ci needs to perform various sysadmin tasks such as installing packages or writing to the user's home directory.
-While it should be fine to run
-the ci system locally on your development box, the ci scripts can generally be assumed to have received less review and
-testing compared to other parts of the codebase. If you want to keep the work tree clean, you might want to run the ci
-system in a virtual machine with a Linux operating system of your choice.
+`DANGER_RUN_CI_ON_HOST` bypasses the container wrapper. Host folder overrides
+such as `DANGER_CI_ON_HOST_FOLDERS` also expose host paths to writes. These modes
+can install packages and modify home-directory or build data; use a disposable
+environment for them. The CI scripts should not be run directly against a
+machine's normal wallet data or a checkout containing valuable uncommitted work.
 
 To allow for a wide range of tested environments, but also ensure reproducibility to some extent, the test stage
-requires `bash`, `docker`, and `python3` to be installed. To run on different architectures than the host `qemu` is also required. To install all requirements on Ubuntu, run
+requires `bash`, Docker with the Buildx plugin, and `python3` to be installed.
+To run on different architectures than the host, `qemu` is also required.
+On Ubuntu, install the base tools with:
 
 ```
 sudo apt install bash docker.io python3 qemu-user-static
 ```
 
-For some sanitizer builds, the kernel's address-space layout randomization
-(ASLR) entropy can cause sanitizer shadow memory mappings to fail. When running
-the CI locally you may need to reduce that entropy by running:
+Install the Buildx plugin for your Docker installation and verify it before
+starting a stage:
 
 ```
+docker buildx version
+```
+
+The CI uses the `retry` script included in `ci/retry/`; the container images
+copy it during their build. No separate download or system installation of
+`retry` is needed for this workflow.
+
+For some sanitizer builds, the kernel's address-space layout randomization
+(ASLR) entropy can cause sanitizer shadow memory mappings to fail. When running
+the CI locally you may need to reduce that entropy. This changes the host's
+ASLR setting, including when tests run in containers. Prefer a disposable VM;
+otherwise record the current value before changing it:
+
+```sh
+ci_previous_mmap_rnd_bits=$(sysctl -n vm.mmap_rnd_bits)
 sudo sysctl -w vm.mmap_rnd_bits=28
+```
+
+After testing, restore the recorded value from the same shell:
+
+```sh
+sudo sysctl -w "vm.mmap_rnd_bits=${ci_previous_mmap_rnd_bits}"
 ```
 
 To run a test that requires emulating a CPU architecture different from the
@@ -65,8 +89,9 @@ file. For example,
 env -i HOME="$HOME" PATH="$PATH" USER="$USER" MAKEJOBS="-j1" FILE_ENV="./ci/test/00_setup_env_arm.sh" ./ci/test_run_all.sh
 ```
 
-The files starting with `0n` (`n` greater than 0) are the scripts that are run
-in order.
+`test_run_all.sh` loads `00_setup_env.sh` and invokes `02_run_container.py`.
+The wrapper prepares the environment and runs `01_base_install.sh` followed
+by `03_test_script.sh` inside it.
 
 ## Cache
 

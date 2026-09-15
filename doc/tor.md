@@ -5,7 +5,7 @@ It is possible to run ConnectCoin Core as a Tor onion service, and connect to su
 The following directions assume you have a Tor proxy running on port 9050. Many distributions default to having a SOCKS proxy listening on port 9050, but others may not. In particular, the Tor Browser Bundle defaults to listening on port 9150.
 ## Compatibility
 
-- Starting with version 22.0, ConnectCoin Core only supports Tor version 3 hidden
+- ConnectCoin Core only supports Tor version 3 hidden
   services (Tor v3). Tor v2 addresses are ignored by ConnectCoin Core and neither
   relayed nor stored.
 
@@ -31,15 +31,16 @@ You can use the `getnodeaddresses` RPC to fetch a number of onion peers known to
 
 ## 1. Run ConnectCoin Core behind a Tor proxy
 
-The first step is running ConnectCoin Core behind a Tor proxy. This will already anonymize all
-outgoing connections, but more is possible.
+The generic `-proxy` option routes outgoing IPv4, IPv6, onion, and CJDNS P2P
+connections through the configured proxy. It is not a system-wide VPN, and
+network-specific proxy options apply only to their selected networks.
 
     -proxy=ip[:port]
         Set the proxy server. It will be used to try to reach .onion addresses
         as well. You need to use -noonion or -onion=0 to explicitly disable
         outbound access to onion services.
 
-    -proxy=ip[:port]=tor
+    -proxy=ip[:port]=onion
     or
     -onion=ip[:port]
         Set the proxy server for reaching .onion addresses. You do not need to
@@ -51,7 +52,7 @@ outgoing connections, but more is possible.
         -proxy=addr:port=ipv4 or
         -proxy=addr:port=ipv6
         (last one if multiple options are given). It is not taken from
-        -proxy=addr:port=tor or
+        -proxy=addr:port=onion or
         -onion=addr:port.
         If no proxy for DNS requests is configured, then they will be done using
         the functions provided by the operating system, most likely resulting in
@@ -85,6 +86,17 @@ with the prefix `unix:` (e.g. `-onion=unix:/home/me/torsocket`).
 In a typical situation, this suffices to run behind a Tor proxy:
 
     connectcoind -proxy=127.0.0.1:9050
+
+### P2C HTTPS connections
+
+P2C probes and automatic claims currently require direct HTTPS to public
+websites. A configured name, IPv4, or IPv6 proxy blocks this path rather than
+being bypassed. Setting only `-onion`, `-proxy=ip:port=onion`, or
+`-onlynet=onion` does not block or route P2C HTTPS through Tor. If you require
+Tor-only traffic, avoid both automatic claims and the **Review P2C** action
+unless a name, IPv4, or IPv6 proxy is configured to block the direct path.
+Reviewing a bounty starts an HTTPS probe even when automatic claims are off. See
+[P2C connection settings](p2c-wallet.md#native-automatic-claims).
 
 `connectcoin node` or `connectcoin gui` can also be substituted for `connectcoind`.
 
@@ -177,18 +189,20 @@ details).
 ## 3. Manually create a ConnectCoin Core onion service
 
 You can also manually configure your node to be reachable from the Tor network.
-Add these lines to your `/etc/tor/torrc` (or equivalent config file):
+For the default testnet4 beta, add these lines to your `/etc/tor/torrc` (or
+equivalent config file):
 
     HiddenServiceDir /var/lib/tor/connectcoin-service/
-    HiddenServicePort 48173 127.0.0.1:48174
+    HiddenServicePort 48179 127.0.0.1:48180
     # If `tor --list-modules` shows "pow: yes", then enable PoW protection.
     # It is available in tor-0.4.8.1-alpha and newer when configured with
     # `./configure --enable-gpl`.
     HiddenServicePoWDefensesEnabled 1
 
 The directory can be different of course, but virtual port numbers should be equal to
-your connectcoind's P2P listen port (48173 by default), and target addresses and ports
-should be equal to binding address and port for inbound Tor connections (127.0.0.1:48174 by default).
+your connectcoind's P2P listen port (48179 on testnet4), and target addresses and ports
+should be equal to binding address and port for inbound Tor connections (127.0.0.1:48180 by default on testnet4).
+When selecting another test network, update both ports to match that network.
 
     -externalip=X   You can tell ConnectCoin about its publicly reachable addresses using
                     this option, and this can be an onion address. Given the above
@@ -221,14 +235,14 @@ In a typical situation, where you're only reachable via Tor, this should suffice
 listen on all devices and another node could establish a clearnet connection, when knowing
 your address. To mitigate this, additionally bind the address of your Tor proxy:
 
-    connectcoind ... -bind=127.0.0.1:48174=onion
+    connectcoind ... -bind=127.0.0.1:48180=onion
 
 If you don't care too much about hiding your node, and want to be reachable on IPv4
 as well, use `discover` instead:
 
     connectcoind ... -discover
 
-and open port 48173 on your firewall (or use port mapping, i.e., `-natpmp`).
+and open testnet4's P2P port 48179 on your firewall (or use port mapping, i.e., `-natpmp`).
 
 If you only want to use Tor to reach .onion addresses, but not use it as a proxy
 for normal IPv4/IPv6 communication, use:

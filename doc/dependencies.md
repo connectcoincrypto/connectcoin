@@ -29,7 +29,7 @@ ConnectCoin Core requires one of the following compilers.
 
 | Dependency | Releases | Minimum required |
 | --- | --- | --- |
-| glibc | [link](https://www.gnu.org/software/libc/) | [2.31](https://github.com/bitcoin/bitcoin/pull/29987)
+| glibc (GNU/Linux Guix binaries) | [link](https://www.gnu.org/software/libc/) | [2.31](https://github.com/bitcoin/bitcoin/pull/29987)
 
 ## Optional
 
@@ -46,7 +46,16 @@ ConnectCoin Core requires one of the following compilers.
 | [systemtap](../depends/packages/systemtap.mk) ([tracing](tracing.md)) | [link](https://sourceware.org/systemtap/) | N/A |
 | [ZeroMQ](../depends/packages/zeromq.mk) (notifications) | [link](https://github.com/zeromq/libzmq/releases) | 4.0.0 |
 
+The bundled libmultiprocess [CMake compatibility checks](../src/ipc/libmultiprocess/CMakeLists.txt)
+add restrictions beyond the Cap'n Proto minimum: versions 0.7.0, 0.8.0, 0.9.0,
+0.9.1, 0.10.0, 0.10.1, and 0.10.2 are rejected. Cap'n Proto 0.9.x and 0.10.x
+are also rejected when building with Clang 16 or newer in C++20 mode.
+
 ### Runtime
+
+The GUI runtime requirements below describe the GNU/Linux Guix binaries.
+Builds with system-provided Qt or different configurations may have additional
+runtime dependencies; see [the Linux runtime notes](INSTALL_linux.md).
 
 | Dependency | Releases | Minimum required |
 | --- | --- | --- |
