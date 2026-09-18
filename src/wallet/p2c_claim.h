@@ -9,8 +9,8 @@
 #include <consensus/p2c.h>
 #include <primitives/transaction.h>
 #include <util/result.h>
+#include <wallet/p2c_claim_priority.h>
 
-#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <optional>
@@ -21,14 +21,6 @@ class CFeeRate;
 namespace wallet {
 class CCoinControl;
 class CWallet;
-
-/** Exact expected-return numerator (target + 1) * net_reward, most-significant
- * word first. All claims share the denominator 2^256, so array ordering gives
- * their expected-value ordering without division or floating-point rounding.
- * Non-positive/out-of-range payouts have zero priority.
- */
-using P2CClaimPriority = std::array<uint32_t, 10>;
-P2CClaimPriority GetP2CClaimPriority(const uint256& target, CAmount net_reward);
 
 /** Wallet search policy: successful TLS captures > 2 / Pr(hash <= target),
  * calculated exactly. A capture counts regardless of whether its hash wins.

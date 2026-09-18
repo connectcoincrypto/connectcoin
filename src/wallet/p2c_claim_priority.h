@@ -5,14 +5,27 @@
 #ifndef CONNECTCOIN_WALLET_P2C_CLAIM_PRIORITY_H
 #define CONNECTCOIN_WALLET_P2C_CLAIM_PRIORITY_H
 
-#include <wallet/p2c_claim.h>
+#include <consensus/amount.h>
+#include <primitives/transaction.h>
+#include <uint256.h>
 
+#include <array>
+#include <cstddef>
+#include <cstdint>
 #include <functional>
 #include <map>
 #include <stdexcept>
 #include <utility>
 
 namespace wallet {
+/** Exact expected-return numerator (target + 1) * net_reward, most-significant
+ * word first. All claims share the denominator 2^256, so array ordering gives
+ * their expected-value ordering without division or floating-point rounding.
+ * Non-positive/out-of-range payouts have zero priority.
+ */
+using P2CClaimPriority = std::array<uint32_t, 10>;
+P2CClaimPriority GetP2CClaimPriority(const uint256& target, CAmount net_reward);
+
 inline constexpr uint32_t P2C_CLAIM_FACTOR_SCALE{1'000'000};
 inline constexpr uint32_t P2C_CLAIM_FACTOR_MAX{1'100'000};
 

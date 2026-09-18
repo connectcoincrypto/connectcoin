@@ -1095,8 +1095,28 @@ BOOST_FIXTURE_TEST_CASE(worker_success_budget_ignores_failures_and_is_per_bounty
     // More than five failed attempts per bounty must not exhaust that budget.
     // The TLS fixture is deliberately untrusted by Core: captures count even
     // when subsequent certificate/claim validation cannot submit the reward.
+    const auto wait_for_budget = [&](unsigned expected_attempts) {
+        // Failed connections and rejected certificates each pause for one real
+        // second. The first run needs 22 pauses plus instrumented TLS work, so
+        // a single 30-second deadline can expire while MSan is making progress.
+        // Bound each expected attempt and the terminal transition separately;
+        // never advance the mock schedule clock or allow an unbounded retry.
+        for (unsigned next{sockets.load() + 1}; next <= expected_attempts; ++next) {
+            BOOST_REQUIRE_MESSAGE(wait_until([&] { return sockets >= next; }),
+                "Timed out waiting for attempt " << next << " of " << expected_attempts <<
+                "; sockets=" << sockets.load() << "; status=" << worker->Status().write());
+        }
+        BOOST_REQUIRE_MESSAGE(wait_until([&] {
+            return sockets > expected_attempts || worker->Status()["state"].get_str() == "waiting for eligible bounties";
+        }),
+            "Timed out waiting for exhausted budgets; expected attempts=" << expected_attempts <<
+            "; sockets=" << sockets.load() << "; status=" << worker->Status().write());
+        BOOST_REQUIRE_MESSAGE(sockets <= expected_attempts,
+            "Exceeded expected attempts=" << expected_attempts <<
+            "; sockets=" << sockets.load() << "; status=" << worker->Status().write());
+    };
     BOOST_REQUIRE(worker->Configure(-1, 1));
-    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
+    wait_for_budget(FAILED_CONNECTIONS + 10U);
     BOOST_CHECK_EQUAL(sockets.load(), FAILED_CONNECTIONS + 10U);
     BOOST_CHECK_EQUAL(worker->Status()["attempts"].getInt<uint64_t>(), FAILED_CONNECTIONS + 10U);
     BOOST_CHECK_EQUAL(worker->Status()["submitted"].getInt<uint64_t>(), 0U);
@@ -1131,7 +1151,7 @@ BOOST_FIXTURE_TEST_CASE(worker_success_budget_ignores_failures_and_is_per_bounty
     auto* tip{WITH_LOCK(cs_main, return m_node.chainman->ActiveChain().Tip())};
     BOOST_REQUIRE(m_node.chainman->ActiveChainstate().InvalidateBlock(state, tip));
     BOOST_REQUIRE(worker->Configure(-1, 1, {}, {}, 1));
-    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
+    wait_for_budget(FAILED_CONNECTIONS + 20U);
     worker->Stop();
     BOOST_CHECK_EQUAL(sockets.load(), FAILED_CONNECTIONS + 20U);
     // A newly loaded worker has no persisted per-bounty budget. The aggregate
@@ -1139,7 +1159,7 @@ BOOST_FIXTURE_TEST_CASE(worker_success_budget_ignores_failures_and_is_per_bounty
     worker.reset();
     worker = MakeP2CClaimWorker(*wallet);
     BOOST_REQUIRE(worker->Configure(-1, 1));
-    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
+    wait_for_budget(FAILED_CONNECTIONS + 30U);
     worker->Stop();
     BOOST_CHECK_EQUAL(sockets.load(), FAILED_CONNECTIONS + 30U);
 }
