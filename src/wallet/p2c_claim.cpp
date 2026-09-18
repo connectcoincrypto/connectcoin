@@ -3,6 +3,7 @@
 // file COPYING or https://opensource.org/license/mit/.
 
 #include <wallet/p2c_claim.h>
+#include <wallet/p2c_claim_priority.h>
 
 #include <coins.h>
 #include <consensus/consensus.h>
@@ -10,6 +11,7 @@
 #include <interfaces/chain.h>
 #include <policy/feerate.h>
 #include <policy/policy.h>
+#include <random.h>
 #include <script/solver.h>
 #include <sync.h>
 #include <util/strencodings.h>
@@ -96,6 +98,20 @@ P2CClaimPriority GetP2CClaimPriority(const uint256& target, CAmount net_reward)
 {
     if (net_reward <= 0 || !MoneyRange(net_reward)) return {};
     return MultiplyP2CTarget(target, static_cast<uint64_t>(net_reward));
+}
+
+uint32_t RandomP2CClaimFactor()
+{
+    constexpr uint32_t RANGE{P2C_CLAIM_FACTOR_MAX - P2C_CLAIM_FACTOR_SCALE + 1};
+    // Accept an exact multiple of RANGE, avoiding modulo bias. GetStrongRandBytes
+    // mixes fresh operating-system entropy; this is not a time-based seed.
+    constexpr uint32_t LIMIT{std::numeric_limits<uint32_t>::max() - std::numeric_limits<uint32_t>::max() % RANGE};
+    std::array<unsigned char, 4> bytes{};
+    for (;;) {
+        GetStrongRandBytes(bytes);
+        const uint32_t sample{ReadLE32(bytes.data())};
+        if (sample < LIMIT) return P2C_CLAIM_FACTOR_SCALE + sample % RANGE;
+    }
 }
 
 bool IsP2CClaimConnectionLimitExceeded(const uint256& target, uint64_t successful_connections)

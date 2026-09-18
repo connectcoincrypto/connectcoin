@@ -6,6 +6,7 @@
 #define CONNECTCOIN_WALLET_P2C_DOMAIN_STATS_H
 
 #include <wallet/p2c_claim.h>
+#include <wallet/p2c_claim_priority.h>
 
 #include <cmath>
 #include <cstddef>
@@ -65,6 +66,16 @@ inline double GetP2CDomainPriority(const P2CClaimPriority& economic_priority, do
     double numerator{0};
     for (const auto word : economic_priority) numerator = std::ldexp(numerator, 32) + word;
     return std::ldexp(numerator, -256) * connection_rate;
+}
+
+/** The domain ranking uses the same stable local factor as bounty ordering.
+ * Normalize only here; the exact integer ranking key retains all precision.
+ */
+inline double GetP2CDomainSelectionPriority(const P2CClaimSelectionPriority& selection_priority, double connection_rate)
+{
+    double numerator{0};
+    for (const auto word : selection_priority) numerator = std::ldexp(numerator, 32) + word;
+    return std::ldexp(numerator, -256) * connection_rate / P2C_CLAIM_FACTOR_SCALE;
 }
 
 /** Local automatic-search policy, in connects per second of TCP/TLS effort.

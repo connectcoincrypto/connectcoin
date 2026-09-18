@@ -20,6 +20,7 @@
 #include <wallet/coincontrol.h>
 #include <wallet/fees.h>
 #include <wallet/p2c_claim.h>
+#include <wallet/p2c_claim_priority.h>
 #include <wallet/p2c_domain_stats.h>
 #include <wallet/p2c_tls.h>
 #include <wallet/p2c_worker_threads.h>
@@ -109,7 +110,7 @@ struct P2CClaimWorkerImpl::Impl {
     Clock::time_point next_connection{};
     std::map<COutPoint, CTransactionRef> proposals;
     struct PriorityKey {
-        P2CClaimPriority priority;
+        P2CClaimSelectionPriority priority;
         COutPoint outpoint;
         bool operator<(const PriorityKey& other) const
         {
@@ -161,6 +162,9 @@ struct P2CClaimWorkerImpl::Impl {
     // Survives proposal-cache eviction, payout changes and stop/start, but is
     // deliberately not saved to the wallet database.
     std::map<COutPoint, uint64_t> bounty_successful_connections;
+    // Local ranking jitter is sampled once per tracked outpoint, never per
+    // connection/refresh. Preserve it through retries and stop/start as well.
+    P2CClaimFactorCache ranking_factors;
     // Negative weighted score sorts best first; the exact bounty key breaks
     // floating-point ties. Store immutable snapshots, not a mutable comparator.
     std::set<std::pair<std::pair<double, PriorityKey>, std::string>> economic_order;
@@ -372,7 +376,7 @@ struct P2CClaimWorkerImpl::Impl {
         for (const auto& mask : group.masks) {
             if (mask.bounties.empty()) continue;
             const auto& best{*mask.bounties.begin()};
-            const auto key{std::pair{-GetP2CDomainPriority(best.priority, mask.connection_rate), best}};
+            const auto key{std::pair{-GetP2CDomainSelectionPriority(best.priority, mask.connection_rate), best}};
             if (!group.economic_key || key < *group.economic_key) group.economic_key = key;
         }
         if (group.economic_key) {
@@ -427,6 +431,9 @@ struct P2CClaimWorkerImpl::Impl {
         // from the recent catalog and therefore cannot reset their counters.
         std::erase_if(bounty_successful_connections, [&](const auto& entry) {
             return !recent_outpoints.contains(entry.first) && !claim_cache.contains(entry.first) && !HasCompleted(entry.first);
+        });
+        ranking_factors.Retain([&](const COutPoint& outpoint) {
+            return recent_outpoints.contains(outpoint) || claim_cache.contains(outpoint) || HasCompleted(outpoint);
         });
         // One batched availability check for cached/in-flight challenges. A
         // competitor may waste up to one refresh interval, never redeem twice.
@@ -490,7 +497,7 @@ struct P2CClaimWorkerImpl::Impl {
             }
             auto& statistics{domain_statistics[domain_mask]};
             if (!statistics) statistics = std::make_shared<P2CDomainStats>();
-            const PriorityKey key{priority, outpoint};
+            const PriorityKey key{GetP2CClaimSelectionPriority(priority, ranking_factors.Get(outpoint)), outpoint};
             group->bounties.emplace(key, output);
             auto& mask{group->masks[bounty.signature_algorithms_mask]};
             mask.bounties.insert(key);

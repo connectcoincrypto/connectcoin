@@ -239,6 +239,15 @@ This balances economic preference with exploration; it is not proportional
 allocation. The economic winner uses its best eligible bounty, not the sum or
 count of its outputs. Unusable bounties do not earn extra economic assignments.
 
+Each tracked bounty receives one local, cryptographically random ranking factor
+from **1.000000 through 1.100000**, inclusive. Within a domain, bounties rotate
+through the order of `(reward - claim_fee) * (target + 1) * factor`, using exact
+352-bit integer keys and the outpoint to break ties. The factor is not redrawn
+per connection or refresh: it survives retries and stop/start in the same loaded
+wallet, while the bounty or its live claim work remains tracked. It is not saved
+to disk. This modest preference variation is not a shuffle and does not change
+fees, profitability eligibility or the successful-connection budget below.
+
 Each `(domain, signature_algorithms_mask)` pair keeps a rolling
 `deque<pair<bool, double>>` of the **last 100 completed TCP/TLS attempts**,
 shared across its bounties and resolved IPs with the same mask. An unsupported
@@ -258,7 +267,8 @@ At each five-second refresh the multiplier for each domain/mask pair is:
 `(0.1 + successful_captures) / (0.02 + total_attempt_seconds)`.
 An untried pair therefore starts at **5 captures/second of effort**. The score
 for extra assignments is the highest eligible bounty score after multiplying
-each mask's expected net return by its own rate. This favors reliable, fast connections while retaining guaranteed
+each mask's expected net return by its own rate and the bounty's local ranking
+factor. This favors reliable, fast connections while retaining guaranteed
 round-robin exploration. Timing scores use floating point; exact economic keys
 break rounded ties. Durations of simultaneous attempts are summed individually,
 not measured as a shared wall-clock interval, so raising concurrency alone does
@@ -270,7 +280,8 @@ Automatic search ignores each bounty whose expected net return is **less than
 As a fast rejection, a target whose most significant 64 bits are all zero is
 ignored immediately: even MAX_MONEY at the maximum smoothed rate of 5005/s
 cannot reach this floor. This includes targets requiring 256 zero bits.
-The threshold uses the domain/mask pair's last-100 history or the initial 5/s prior, not
+The threshold uses the unmodified expected return, without the local ranking
+factor, and the domain/mask pair's last-100 history or the initial 5/s prior, not
 the user-configured connection limit or aggregate concurrency. The measured
 score uses the same floating-point precision as domain ranking.
 

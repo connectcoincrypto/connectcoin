@@ -22,6 +22,7 @@
 #include <validation.h>
 #include <wallet/coincontrol.h>
 #include <wallet/p2c_claim.h>
+#include <wallet/p2c_claim_priority.h>
 #include <wallet/p2c_domain_stats.h>
 #include <wallet/p2c_tls.h>
 #include <wallet/p2c_tls_lifecycle.h>
@@ -313,6 +314,104 @@ BOOST_AUTO_TEST_CASE(domain_priority_rewards_success_and_low_latency)
     for (size_t i = 0; i < 100; ++i) fast.Record(true, 0.0);
     BOOST_CHECK_EQUAL(fast.ConnectionRate(), 5005.0);
     BOOST_CHECK(std::isfinite(GetP2CDomainPriority(GetP2CClaimPriority(maximum, MAX_MONEY), fast.ConnectionRate())));
+}
+
+BOOST_AUTO_TEST_CASE(selection_factor_preserves_full_priority_precision)
+{
+    const auto maximum{uint256::FromHex(std::string(64, 'f')).value()};
+    const auto verify = [](const P2CClaimPriority& priority, uint32_t factor) {
+        // Independent 44-byte little-endian shift/add oracle, no limb multiply.
+        std::array<unsigned char, 44> term{}, expected{};
+        for (size_t i = 0; i < 40; ++i) term[i] = static_cast<unsigned char>(priority[9 - i / 4] >> (8 * (i % 4)));
+        for (uint32_t bits = factor; bits; bits >>= 1) {
+            unsigned carry{0};
+            if (bits & 1) {
+                for (size_t i = 0; i < expected.size(); ++i) {
+                    const unsigned sum{expected[i] + term[i] + carry};
+                    expected[i] = static_cast<unsigned char>(sum);
+                    carry = sum >> 8;
+                }
+                BOOST_CHECK_EQUAL(carry, 0U);
+            }
+            carry = 0;
+            for (auto& byte : term) {
+                const unsigned shifted{2U * byte + carry};
+                byte = static_cast<unsigned char>(shifted);
+                carry = shifted >> 8;
+            }
+        }
+        const auto actual{GetP2CClaimSelectionPriority(priority, factor)};
+        for (size_t i = 0; i < expected.size(); ++i) {
+            BOOST_CHECK_EQUAL((actual[10 - i / 4] >> (8 * (i % 4))) & 255, expected[i]);
+        }
+    };
+    for (const auto factor : {P2C_CLAIM_FACTOR_SCALE, P2C_CLAIM_FACTOR_MAX}) {
+        for (const auto payout : {CAmount{0}, CAmount{1}, MAX_MONEY - 1, MAX_MONEY}) {
+            verify(GetP2CClaimPriority(maximum, payout), factor);
+            verify(GetP2CClaimPriority(uint256{}, payout), factor);
+        }
+        P2CClaimPriority all_bits;
+        all_bits.fill(std::numeric_limits<uint32_t>::max());
+        verify(all_bits, factor);
+    }
+    for (unsigned trial = 0; trial < 128; ++trial) {
+        verify(GetP2CClaimPriority(m_rng.rand256(), m_rng.randrange(MAX_MONEY) + 1),
+               P2C_CLAIM_FACTOR_SCALE + m_rng.randrange(P2C_CLAIM_FACTOR_MAX - P2C_CLAIM_FACTOR_SCALE + 1));
+    }
+    const auto raw{GetP2CClaimPriority(maximum, MAX_MONEY)};
+    BOOST_CHECK(GetP2CClaimSelectionPriority(raw, P2C_CLAIM_FACTOR_SCALE) >
+                GetP2CClaimSelectionPriority(GetP2CClaimPriority(maximum, MAX_MONEY - 1), P2C_CLAIM_FACTOR_SCALE));
+    BOOST_CHECK_THROW(GetP2CClaimSelectionPriority(raw, P2C_CLAIM_FACTOR_SCALE - 1), std::invalid_argument);
+    BOOST_CHECK_THROW(GetP2CClaimSelectionPriority(raw, P2C_CLAIM_FACTOR_MAX + 1), std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(selection_factor_only_changes_rank_within_ten_percent)
+{
+    const auto maximum{uint256::FromHex(std::string(64, 'f')).value()};
+    const auto boosted{GetP2CClaimSelectionPriority(GetP2CClaimPriority(maximum, 1000), P2C_CLAIM_FACTOR_MAX)};
+    BOOST_CHECK(boosted > GetP2CClaimSelectionPriority(GetP2CClaimPriority(maximum, 1099), P2C_CLAIM_FACTOR_SCALE));
+    BOOST_CHECK(boosted == GetP2CClaimSelectionPriority(GetP2CClaimPriority(maximum, 1100), P2C_CLAIM_FACTOR_SCALE));
+    BOOST_CHECK(boosted < GetP2CClaimSelectionPriority(GetP2CClaimPriority(maximum, 1101), P2C_CLAIM_FACTOR_SCALE));
+    const auto raw{GetP2CClaimPriority(maximum, MAX_MONEY)};
+    const auto unscaled{GetP2CDomainPriority(raw, 5005.0)};
+    BOOST_CHECK_CLOSE(GetP2CDomainSelectionPriority(GetP2CClaimSelectionPriority(raw, P2C_CLAIM_FACTOR_SCALE), 5005.0), unscaled, 1e-10);
+    BOOST_CHECK_CLOSE(GetP2CDomainSelectionPriority(GetP2CClaimSelectionPriority(raw, P2C_CLAIM_FACTOR_MAX), 5005.0), unscaled * 1.1, 1e-10);
+    BOOST_CHECK(std::isfinite(GetP2CDomainSelectionPriority(GetP2CClaimSelectionPriority(raw, P2C_CLAIM_FACTOR_MAX), 5005.0)));
+    // The raw eligibility floor cannot be bypassed by a favorable local factor.
+    const auto below_floor{GetP2CClaimPriority(maximum, 199)};
+    BOOST_CHECK(GetP2CDomainSelectionPriority(GetP2CClaimSelectionPriority(below_floor, P2C_CLAIM_FACTOR_MAX), 5.0) > MIN_P2C_EXPECTED_RETURN);
+    BOOST_CHECK(!IsP2CClaimWorthAttempting(below_floor, 5.0));
+}
+
+BOOST_AUTO_TEST_CASE(selection_factor_cache_is_stable_and_bounded_by_retained_work)
+{
+    unsigned generated{0};
+    P2CClaimFactorCache factors{[&] { return P2C_CLAIM_FACTOR_SCALE + generated++; }};
+    const COutPoint first{Txid::FromUint256(uint256::ONE), 0}, second{Txid::FromUint256(uint256::ONE), 1};
+    BOOST_CHECK_EQUAL(factors.Get(first), P2C_CLAIM_FACTOR_SCALE);
+    BOOST_CHECK_EQUAL(factors.Get(second), P2C_CLAIM_FACTOR_SCALE + 1);
+    for (unsigned refresh = 0; refresh < 100; ++refresh) {
+        // Retaining the catalog/live-work set models refresh, retries and restart
+        // of the worker thread without reconstructing the wallet worker object.
+        factors.Retain([&](const COutPoint& outpoint) { return outpoint == first || outpoint == second; });
+        BOOST_CHECK_EQUAL(factors.Get(first), P2C_CLAIM_FACTOR_SCALE);
+        BOOST_CHECK_EQUAL(factors.Get(second), P2C_CLAIM_FACTOR_SCALE + 1);
+    }
+    BOOST_CHECK_EQUAL(generated, 2U);
+    factors.Retain([&](const COutPoint& outpoint) { return outpoint == second; });
+    BOOST_CHECK_EQUAL(factors.Size(), 1U);
+    BOOST_CHECK_EQUAL(factors.Get(second), P2C_CLAIM_FACTOR_SCALE + 1);
+    BOOST_CHECK_EQUAL(factors.Get(first), P2C_CLAIM_FACTOR_SCALE + 2);
+    factors.Retain([](const COutPoint&) { return false; });
+    BOOST_CHECK_EQUAL(factors.Size(), 0U);
+    P2CClaimFactorCache invalid{[] { return P2C_CLAIM_FACTOR_MAX + 1; }};
+    BOOST_CHECK_THROW(invalid.Get(first), std::invalid_argument);
+    BOOST_CHECK_EQUAL(invalid.Size(), 0U);
+    for (unsigned sample = 0; sample < 128; ++sample) {
+        const auto factor{RandomP2CClaimFactor()};
+        BOOST_CHECK_GE(factor, P2C_CLAIM_FACTOR_SCALE);
+        BOOST_CHECK_LE(factor, P2C_CLAIM_FACTOR_MAX);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(expected_return_priority_is_exact)
