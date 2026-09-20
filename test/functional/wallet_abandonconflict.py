@@ -76,7 +76,7 @@ class AbandonConflictTest(BitcoinTestFramework):
         signed = alice.signrawtransactionwithwallet(alice.createrawtransaction(inputs, outputs))
         txAB1 = self.nodes[0].sendrawtransaction(signed["hex"])
 
-        # Identify the 14.9999998 CC output
+        # Identify the 14.9999998 CONN output
         nAB = next(tx_out["vout"] for tx_out in alice.gettransaction(txAB1)["details"] if tx_out["amount"] == Decimal("14.9999998"))
 
         #Create a child tx spending AB1 and C

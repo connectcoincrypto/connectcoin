@@ -1242,7 +1242,7 @@ BOOST_AUTO_TEST_CASE(check_max_selection_weight)
     int max_weight = MAX_STANDARD_TX_WEIGHT - WITNESS_SCALE_FACTOR * (cs_params.tx_noinputs_size + cs_params.change_output_size);
     {
         // Scenario 1:
-        // The actor starts with 1x 50.0 CC and 1800x 0.027775 CC (~100.0 CC total) unspent outputs
+        // The actor starts with 1x 50.0 CONN and 1800x 0.027775 CONN (~100.0 CONN total) unspent outputs
         // Then tries to spend 49.5 BTC
         // The 50.0 BTC output should be selected, because the transaction would otherwise be too large
 
@@ -1269,8 +1269,8 @@ BOOST_AUTO_TEST_CASE(check_max_selection_weight)
     {
         // Scenario 2:
 
-        // The actor starts with 400x 0.0625 CC and 2000x 0.025 CC (75.0 CC total) unspent outputs
-        // Then tries to spend 49.5 CC
+        // The actor starts with 400x 0.0625 CONN and 2000x 0.025 CONN (75.0 CONN total) unspent outputs
+        // Then tries to spend 49.5 CONN
         // A combination of coins should be selected, such that the created transaction is not too large
 
         // Perform selection
@@ -1295,7 +1295,7 @@ BOOST_AUTO_TEST_CASE(check_max_selection_weight)
     {
         // Scenario 3:
 
-        // The actor starts with 1800x 0.027775 CC (49.995 CC total) unspent outputs
+        // The actor starts with 1800x 0.027775 CONN (49.995 CONN total) unspent outputs
         // No results should be returned, because the transaction would be too large
 
         // Perform selection

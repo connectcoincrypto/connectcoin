@@ -330,7 +330,7 @@ void MinerTestingSetup::TestPackageSelection(const CScript& scriptPubKey, const 
     tx.vin[0].prevout.hash = txFirst[2]->GetHash();
     tx.vout.resize(2);
     tx.vout[0].nValue = 15 * COIN - COIN;
-    tx.vout[1].nValue = COIN; // 1 CC output
+    tx.vout[1].nValue = COIN; // 1 CONN output
     // Increase size to avoid rounding errors: when the feerate is extremely small (i.e. 1 con/kvB), evaluating the fee
     // at smaller sizes gives us rounded values that are equal to each other, which means we incorrectly include
     // hashFreeTx2 + hashLowFeeTx2.

@@ -78,7 +78,7 @@ don't have test cases for.
   Cached rewards are split between the first three nodes' deterministic keys
   and a separate deterministic address. Tests that enable wallet use import
   the corresponding node keys, giving each of the first three wallets 25
-  mature block subsidies (25x15=375 CC). Do not assume additional nodes have
+  mature block subsidies (25x15=375 CONN). Do not assume additional nodes have
   funded wallets. Reusing the cache avoids mining the full chain in each test.
 - When calling RPCs with lots of arguments, consider using named keyword
   arguments instead of positional arguments to make the intent of the call

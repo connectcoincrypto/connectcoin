@@ -62,11 +62,11 @@ def assert_fee_amount(fee, tx_size, feerate_cc_kvb):
     assert isinstance(tx_size, int)
     target_fee = get_fee(tx_size, feerate_cc_kvb)
     if fee < target_fee:
-        raise AssertionError("Fee of %s CC too low! (Should be %s CC)" % (str(fee), str(target_fee)))
+        raise AssertionError("Fee of %s CONN too low! (Should be %s CONN)" % (str(fee), str(target_fee)))
     # allow the wallet's estimation to be at most 2 bytes off
     high_fee = get_fee(tx_size + 2, feerate_cc_kvb)
     if fee > high_fee:
-        raise AssertionError("Fee of %s CC too high! (Should be %s CC)" % (str(fee), str(target_fee)))
+        raise AssertionError("Fee of %s CONN too high! (Should be %s CONN)" % (str(fee), str(target_fee)))
 
 
 def summarise_dict_differences(thing1, thing2):
@@ -244,7 +244,7 @@ def assert_array_result(object_array, to_match, expected, should_not_find=False)
 
 
 def check_json_precision():
-    """Make sure json library does not lose precision for a representative CC value."""
+    """Make sure json library does not lose precision for a representative CONN value."""
     # At 10 decimal places, larger values must be passed as Decimal/string rather
     # than binary floats. Keep this float smoke test within its exact range.
     n = Decimal("200000.0000000003")
@@ -400,7 +400,7 @@ def random_bitflip(data):
 
 
 def get_fee(tx_size, feerate_cc_kvb):
-    """Calculate a CC fee from a CC/kvB rate. Reflects CFeeRate::GetFee."""
+    """Calculate a CONN fee from a CONN/kvB rate. Reflects CFeeRate::GetFee."""
     feerate_connects_kvb = int(feerate_cc_kvb * Decimal(10_000_000_000))
     target_fee_connects = ceildiv(feerate_connects_kvb * tx_size, 1000)
     return target_fee_connects / Decimal(10_000_000_000)
@@ -545,10 +545,10 @@ def write_config(config_path, *, n, chain, extra_config="", disable_autoconnect=
         f.write("rpcservertimeout=99000\n")
         f.write("rpcdoccheck=1\n")
         f.write("rpcthreads=2\n")
-        # 20 connects/vB expressed in CC/kvB.
+        # 20 connects/vB expressed in CONN/kvB.
         # Routine wallet transactions must outbid the subsidy destroyed when
-        # their weight is added to a block (about 0.00012 CC/kvB at the
-        # initial 15 CC subsidy and 50,000,000 WU limit).
+        # their weight is added to a block (about 0.00012 CONN/kvB at the
+        # initial 15 CONN subsidy and 50,000,000 WU limit).
         f.write("fallbackfee=0.00020000\n")
         f.write("server=1\n")
         f.write("keypool=1\n")

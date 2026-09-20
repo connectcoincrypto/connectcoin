@@ -115,7 +115,7 @@ RPCMethod preparep2cclaim()
         {
             {"txid", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "Transaction containing the bounty."},
             {"vout", RPCArg::Type::NUM, RPCArg::Optional::NO, "Output index of the bounty."},
-            {"fee_rate", RPCArg::Type::AMOUNT, RPCArg::DefaultHint{"wallet fee estimation"}, "Fee rate in " + CURRENCY_ATOM + "/vB (not CC/kvB)."},
+            {"fee_rate", RPCArg::Type::AMOUNT, RPCArg::DefaultHint{"wallet fee estimation"}, "Fee rate in " + CURRENCY_ATOM + "/vB (not CONN/kvB)."},
             {"proof_size", RPCArg::Type::NUM, RPCArg::Default{MAX_P2C_PROOF_SIZE}, "Proof bytes to budget for fees (1-65536). Defaults to the full consensus limit. Unused budget is still paid as a fee; it cannot be refunded without changing the challenge."},
             {"address", RPCArg::Type::STR, RPCArg::DefaultHint{"this wallet"}, "Optional type-1 P2PK payout. Specify the same address in submitp2cclaim to authorize an external payout."},
         },
@@ -131,9 +131,9 @@ RPCMethod preparep2cclaim()
             {RPCResult::Type::NUM, "signature_algorithms_mask", "Allowed CertificateVerify schemes: 1=ECDSA, 2=RSA-PSS-RSAE, 4=RSA-PSS-PSS."},
             {RPCResult::Type::NUM_TIME, "validation_time", "Chain median time past when prepared; checked again on submission."},
             {RPCResult::Type::NUM, "proof_size", "Proof bytes budgeted for fees."},
-            {RPCResult::Type::STR_AMOUNT, "bounty_amount", "Gross bounty in CC."},
-            {RPCResult::Type::STR_AMOUNT, "fee", "Fixed fee in CC."},
-            {RPCResult::Type::STR_AMOUNT, "receive_amount", "Net payout in CC."},
+            {RPCResult::Type::STR_AMOUNT, "bounty_amount", "Gross bounty in CONN."},
+            {RPCResult::Type::STR_AMOUNT, "fee", "Fixed fee in CONN."},
+            {RPCResult::Type::STR_AMOUNT, "receive_amount", "Net payout in CONN."},
         }},
         RPCExamples{HelpExampleCli("preparep2cclaim", "\"txid\" 0")},
         [](const RPCMethod&, const JSONRPCRequest& request) -> UniValue {

@@ -73,7 +73,7 @@ class CreateTxWalletTest(BitcoinTestFramework):
         # Hit maxtxfee with explicit fee rate
         self.log.info('Check maxtxfee in combination with explicit fee_rate=100000 con/vB')
 
-        fee_rate_sats_per_vb = Decimal('0.01') * COIN / 1000  # Convert 0.01 CC/kvB to con/vB
+        fee_rate_sats_per_vb = Decimal('0.01') * COIN / 1000  # Convert 0.01 CONN/kvB to con/vB
 
         assert_raises_rpc_error(
             -6,

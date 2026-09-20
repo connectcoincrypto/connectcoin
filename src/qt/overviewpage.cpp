@@ -239,7 +239,7 @@ void OverviewPage::setWalletModel(WalletModel *model)
         connect(model->getOptionsModel(), &OptionsModel::displayUnitChanged, this, &OverviewPage::updateDisplayUnit);
     }
 
-    // Update the display unit instead of using the default ("CC").
+    // Update the display unit instead of using the default ("CONN").
     updateDisplayUnit();
 }
 

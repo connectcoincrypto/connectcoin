@@ -149,7 +149,7 @@ JSON numbers:
    "utxos" : [
       {
          "height" : <output-height>,
-         "value" : <amount-in-CC>,
+         "value" : <amount-in-CONN>,
          "scriptPubKey" : {
             "asm" : "1 <32-byte-x-only-public-key-hex>",
             "desc" : "rawtr(<32-byte-x-only-public-key-hex>)#<checksum>",

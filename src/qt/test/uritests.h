@@ -13,6 +13,7 @@ class URITests : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
+    void currencyUnits();
     void uriTests();
 };
 

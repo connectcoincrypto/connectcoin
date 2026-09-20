@@ -60,7 +60,7 @@ MAX_FUTURE_BLOCK_TIME = 2 * 60 * 60
 # Coinbase transaction outputs can only be spent after this number of new blocks (network rule)
 COINBASE_MATURITY = 100
 
-# Initial non-genesis block subsidy, in whole CC.
+# Initial non-genesis block subsidy, in whole CONN.
 INITIAL_BLOCK_REWARD = 15
 
 # A full block withholds one tenth of its scheduled subsidy. Intermediate

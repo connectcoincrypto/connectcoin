@@ -629,7 +629,7 @@ void CBlockPolicyEstimator::processTransaction(const NewMempoolTransactionInfo& 
     }
     trackedTxs++;
 
-    // Fee rates are stored and reported as CC per kB:
+    // Fee rates are stored and reported as CONN per kB:
     const CFeeRate feeRate(tx.info.m_fee, tx.info.m_virtual_transaction_size);
 
     mapMemPoolTxs[hash].blockHeight = txHeight;
@@ -660,7 +660,7 @@ bool CBlockPolicyEstimator::processBlockTx(unsigned int nBlockHeight, const Remo
         return false;
     }
 
-    // Fee rates are stored and reported as CC per kB:
+    // Fee rates are stored and reported as CONN per kB:
     CFeeRate feeRate(tx.info.m_fee, tx.info.m_virtual_transaction_size);
 
     feeStats->Record(blocksToConfirm, static_cast<double>(feeRate.GetFeePerK()));

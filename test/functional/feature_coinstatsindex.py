@@ -157,7 +157,7 @@ class CoinStatsIndexTest(BitcoinTestFramework):
             fee=tx1_fee,
         )
 
-        # Find the right position of the 11 CC output.
+        # Find the right position of the 11 CONN output.
         tx1_out_11 = self.wallet.get_utxo(txid=tx1["txid"], vout=tx1["sent_vout"])
 
         # Generate and send another type-1 transaction with a 0.01 fee.

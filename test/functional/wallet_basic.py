@@ -111,7 +111,7 @@ class WalletTest(BitcoinTestFramework):
         txout = self.nodes[0].gettxout(txid=confirmed_txid, n=confirmed_index, include_mempool=True)
         assert_equal(txout['value'], 15)
 
-        # Send 7 CC from 0 to 2 using two sendtoaddress calls.
+        # Send 7 CONN from 0 to 2 using two sendtoaddress calls.
         self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 4)
         mempool_txid = self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 3)
 
@@ -261,7 +261,7 @@ class WalletTest(BitcoinTestFramework):
         spent_0 = {"txid": node0utxos[0]["txid"], "vout": node0utxos[0]["vout"]}
         assert_raises_rpc_error(-8, "Invalid parameter, expected unspent output", self.nodes[0].lockunspent, False, [spent_0])
 
-        # Send 2 CC normally.
+        # Send 2 CONN normally.
         address = self.nodes[0].getnewaddress("test")
         fee_per_byte = Decimal('0.001') / 1000
         fee_rate_sat_vb = fee_per_byte * COIN
@@ -270,7 +270,7 @@ class WalletTest(BitcoinTestFramework):
         node_2_bal = self.check_fee_amount(self.nodes[2].getbalance(), node_2_bal - Decimal('2'), fee_per_byte, self.get_vsize(self.nodes[2].gettransaction(txid)['hex']))
         assert_equal(self.nodes[0].getbalance(), Decimal('2'))
 
-        # Send 2 CC with the fee subtracted from the amount.
+        # Send 2 CONN with the fee subtracted from the amount.
         txid = self.nodes[2].sendtoaddress(address, 2, "", "", True, fee_rate=fee_rate_sat_vb)
         self.generate(self.nodes[2], 1, sync_fun=lambda: self.sync_all(self.nodes[0:3]))
         node_2_bal -= Decimal('2')
@@ -279,21 +279,21 @@ class WalletTest(BitcoinTestFramework):
 
         self.log.info("Test sendmany")
 
-        # Sendmany 2 CC.
+        # Sendmany 2 CONN.
         txid = self.nodes[2].sendmany('', {address: 2}, 0, "", [], fee_rate=fee_rate_sat_vb)
         self.generate(self.nodes[2], 1, sync_fun=lambda: self.sync_all(self.nodes[0:3]))
         node_0_bal += Decimal('2')
         node_2_bal = self.check_fee_amount(self.nodes[2].getbalance(), node_2_bal - Decimal('2'), fee_per_byte, self.get_vsize(self.nodes[2].gettransaction(txid)['hex']))
         assert_equal(self.nodes[0].getbalance(), node_0_bal)
 
-        # Sendmany 2 CC with the fee subtracted from the amount.
+        # Sendmany 2 CONN with the fee subtracted from the amount.
         txid = self.nodes[2].sendmany('', {address: 2}, 0, "", [address], fee_rate=fee_rate_sat_vb)
         self.generate(self.nodes[2], 1, sync_fun=lambda: self.sync_all(self.nodes[0:3]))
         node_2_bal -= Decimal('2')
         assert_equal(self.nodes[2].getbalance(), node_2_bal)
         node_0_bal = self.check_fee_amount(self.nodes[0].getbalance(), node_0_bal + Decimal('2'), fee_per_byte, self.get_vsize(self.nodes[2].gettransaction(txid)['hex']))
 
-        # Send 1 CC to each of two addresses, subtracting the fee from both.
+        # Send 1 CONN to each of two addresses, subtracting the fee from both.
         a0 = self.nodes[0].getnewaddress()
         a1 = self.nodes[0].getnewaddress()
         txid = self.nodes[2].sendmany(dummy='', amounts={a0: 1, a1: 1}, subtractfeefrom=[a0, a1], fee_rate=fee_rate_sat_vb)

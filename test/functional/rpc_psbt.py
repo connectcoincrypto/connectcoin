@@ -793,7 +793,7 @@ class PSBTTest(BitcoinTestFramework):
         assert_equal(walletprocesspsbt_out['complete'], True)
         self.nodes[1].sendrawtransaction(walletprocesspsbt_out['hex'])
 
-        self.log.info("Test equivalent fee rates expressed in con/vB and CC/kvB")
+        self.log.info("Test equivalent fee rates expressed in con/vB and CONN/kvB")
         res1 = self.nodes[1].walletcreatefundedpsbt(inputs, outputs, 0, {"fee_rate": 10000, "add_inputs": True})
         assert_approx(res1["fee"], 0.0004, 0.0001)
         res2 = self.nodes[1].walletcreatefundedpsbt(inputs, outputs, 0, {"feeRate": "0.001", "add_inputs": True})
@@ -830,7 +830,7 @@ class PSBTTest(BitcoinTestFramework):
                 self.nodes[1].walletcreatefundedpsbt, inputs, outputs, 0, {"fee_rate": invalid_value, "add_inputs": True})
 
         self.log.info("- raises RPC error if both feeRate and fee_rate are passed")
-        assert_raises_rpc_error(-8, "Cannot specify both fee_rate (con/vB) and feeRate (CC/kvB)",
+        assert_raises_rpc_error(-8, "Cannot specify both fee_rate (con/vB) and feeRate (CONN/kvB)",
             self.nodes[1].walletcreatefundedpsbt, inputs, outputs, 0, {"fee_rate": 0.1, "feeRate": 0.1, "add_inputs": True})
 
         self.log.info("- raises RPC error if both feeRate and estimate_mode passed")

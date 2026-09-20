@@ -17,11 +17,11 @@
 // amounts 0.01 .. 100.00
 #define NUM_MULTIPLES_CENT 10000
 
-// amounts 1 .. 10000 CC
-#define NUM_MULTIPLES_1CC 10000
+// amounts 1 .. 10000 CONN
+#define NUM_MULTIPLES_1CONN 10000
 
-// amounts 100 .. 100000000 CC
-#define NUM_MULTIPLES_100CC 1000000
+// amounts 100 .. 100000000 CONN
+#define NUM_MULTIPLES_100CONN 1000000
 
 BOOST_FIXTURE_TEST_SUITE(compress_tests, BasicTestingSetup)
 
@@ -54,10 +54,10 @@ BOOST_AUTO_TEST_CASE(compress_amounts)
     for (uint64_t i = 1; i <= NUM_MULTIPLES_CENT; i++)
         BOOST_CHECK(TestEncode(i * CENT));
 
-    for (uint64_t i = 1; i <= NUM_MULTIPLES_1CC; i++)
+    for (uint64_t i = 1; i <= NUM_MULTIPLES_1CONN; i++)
         BOOST_CHECK(TestEncode(i * COIN));
 
-    for (uint64_t i = 1; i <= NUM_MULTIPLES_100CC; i++)
+    for (uint64_t i = 1; i <= NUM_MULTIPLES_100CONN; i++)
         BOOST_CHECK(TestEncode(i * 100 * COIN));
 
     for (uint64_t i = 0; i < 100000; i++)

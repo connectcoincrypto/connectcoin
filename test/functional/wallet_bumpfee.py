@@ -170,7 +170,7 @@ class BumpFeeTest(BitcoinTestFramework):
             for k, v in {"number": 42, "object": {"foo": "bar"}}.items():
                 assert_raises_rpc_error(-3, f"JSON value of type {k} for field estimate_mode is not of expected type string",
                     rbf_node.bumpfee, rbfid, estimate_mode=v)
-        for mode in ["foo", Decimal("3.1415"), "sat/B", "CC/kB"]:
+        for mode in ["foo", Decimal("3.1415"), "sat/B", "CONN/kB"]:
             assert_raises_rpc_error(-8, 'Invalid estimate_mode parameter, must be one of: "unset", "economical", "conservative"',
                 rbf_node.bumpfee, rbfid, estimate_mode=mode)
 
@@ -535,7 +535,7 @@ def test_dust_to_fee(self, rbf_node, dest_address):
 def test_maxtxfee_fails(self, rbf_node, dest_address):
     self.log.info('Test that bumpfee fails when it hits -maxtxfee')
     # size of bumped transaction (p2wpkh, 1 input, 2 outputs): 141 vbytes
-    # Expected bump fee at the configured rate exceeds 0.00000025 CC.
+    # Expected bump fee at the configured rate exceeds 0.00000025 CONN.
     # which exceeds maxtxfee and is expected to raise
     self.restart_node(1, ['-maxtxfee=0.00000025'] + self.extra_args[1])
     rbf_node.walletpassphrase(WALLET_PASSPHRASE, WALLET_PASSPHRASE_TIMEOUT)

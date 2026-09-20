@@ -1231,8 +1231,8 @@ BOOST_FIXTURE_TEST_CASE(worker_filters_each_bounty_before_network_and_rechecks_e
     auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
     wallet->SetBroadcastTransactions(true);
     wallet->m_default_max_tx_fee = MAX_MONEY;
-    // Probability 2^-26: 1 CC net at the 5/s prior is below 1000 connects/s,
-    // whereas 2 CC net is above it. Gross rewards alone would admit both.
+    // Probability 2^-26: 1 CONN net at the 5/s prior is below 1000 connects/s,
+    // whereas 2 CONN net is above it. Gross rewards alone would admit both.
     const auto target{uint256::FromHex(std::string(6, '0') + "3" + std::string(57, 'f')).value()};
     const std::array<uint256, 4> targets{uint256{},
         uint256::FromHex(std::string(16, '0') + std::string(48, 'f')).value(), target, target};

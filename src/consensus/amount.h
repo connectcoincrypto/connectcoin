@@ -11,7 +11,7 @@
 /** Amount in connects (can be negative). */
 typedef int64_t CAmount;
 
-/** The amount of connects in one CC. */
+/** The amount of connects in one CONN. */
 inline constexpr CAmount COIN{10'000'000'000};
 
 /** No amount larger than this (in connects) is valid.

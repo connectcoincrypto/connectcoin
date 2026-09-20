@@ -216,7 +216,7 @@ class MiningTest(BitcoinTestFramework):
 
             # The rational inclusion floor follows the subsidy (and therefore
             # regtest halvings). Compare the same integer fee/weight ratios as
-            # the block assembler instead of approximating a CC/kvB value.
+            # the block assembler instead of approximating a CONN/kvB value.
             tx_fee = int(tx_with_min_feerate['fee'] * COIN)
             economic_denominator = MAX_BLOCK_WEIGHT * BLOCK_SUBSIDY_PENALTY_DIVISOR
             economically_profitable = (

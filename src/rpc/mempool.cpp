@@ -72,7 +72,7 @@ static RPCMethod sendrawtransaction()
             {"hexstring", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The hex string of the raw transaction"},
             {"maxfeerate", RPCArg::Type::AMOUNT, RPCArg::Default{FormatMoney(DEFAULT_MAX_RAW_TX_FEE_RATE.GetFeePerK())},
              "Reject transactions whose fee rate is higher than the specified value, expressed in " + CURRENCY_UNIT +
-                 "/kvB.\nFee rates larger than 1CC/kvB are rejected.\nSet to 0 to accept any fee rate."},
+                 "/kvB.\nFee rates larger than 1CONN/kvB are rejected.\nSet to 0 to accept any fee rate."},
             {"maxburnamount", RPCArg::Type::AMOUNT, RPCArg::Default{FormatMoney(DEFAULT_MAX_BURN_AMOUNT)},
              "Compatibility argument, expressed in " + CURRENCY_UNIT + ". The amount is validated but has no effect.\n"
              "ConnectCoin supports only typed P2PK and P2C outputs, not Script/OP_RETURN outputs.\n"
@@ -290,7 +290,7 @@ static RPCMethod testmempoolaccept()
             },
             {"maxfeerate", RPCArg::Type::AMOUNT, RPCArg::Default{FormatMoney(DEFAULT_MAX_RAW_TX_FEE_RATE.GetFeePerK())},
              "Reject transactions whose fee rate is higher than the specified value, expressed in " + CURRENCY_UNIT +
-                 "/kvB.\nFee rates larger than 1CC/kvB are rejected.\nSet to 0 to accept any fee rate."},
+                 "/kvB.\nFee rates larger than 1CONN/kvB are rejected.\nSet to 0 to accept any fee rate."},
         },
         RPCResult{
             RPCResult::Type::ARR, "", "The result of the mempool acceptance test for each raw transaction in the input array.\n"
@@ -1355,7 +1355,7 @@ static RPCMethod submitpackage()
             },
             {"maxfeerate", RPCArg::Type::AMOUNT, RPCArg::Default{FormatMoney(DEFAULT_MAX_RAW_TX_FEE_RATE.GetFeePerK())},
              "Reject transactions whose fee rate is higher than the specified value, expressed in " + CURRENCY_UNIT +
-                 "/kvB.\nFee rates larger than 1CC/kvB are rejected.\nSet to 0 to accept any fee rate."},
+                 "/kvB.\nFee rates larger than 1CONN/kvB are rejected.\nSet to 0 to accept any fee rate."},
             {"maxburnamount", RPCArg::Type::AMOUNT, RPCArg::Default{FormatMoney(DEFAULT_MAX_BURN_AMOUNT)},
              "Compatibility argument, expressed in " + CURRENCY_UNIT + ". The amount is validated but has no effect.\n"
              "ConnectCoin supports only typed P2PK and P2C outputs, not Script/OP_RETURN outputs.\n"

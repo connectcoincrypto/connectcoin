@@ -21,8 +21,9 @@ public launch**:
 - `COIN CONNECT` is a registered US mark owned by DraftKings for online casino
   and games-of-chance services. Its scope is different, but it is another close
   mark that a professional search must evaluate.
-- `CC` is already assigned to Canton Coin in SLIP-0044 and is actively used as
-  that network's exchange ticker.
+- The earlier development ticker `CC` is already assigned to Canton Coin in
+  SLIP-0044 and is actively used as that network's exchange ticker. Adopting
+  `CONN` does not establish an exclusive claim to the new ticker.
 - `connectcoin.com` was already registered and resolving when checked. GitHub
   accounts using `Connectcoin` and `Connectcoinnode` also already existed.
 - The project uses `connectcoincrypto/connectcoin` on GitHub
@@ -54,18 +55,20 @@ substitute for legal review.
 | Data directory | `ConnectCoin` on Windows/macOS, `.connectcoin` on Unix |
 | Configuration | `connectcoin.conf` |
 | Payment URI | `connectcoin:` |
-| Display unit | `CC` |
+| Display unit | `CONN` |
 | Atomic unit | `connect` (`con`) |
 | Signed-message header | `ConnectCoin Signed Message:\n` |
 | P2P user agent | `/ConnectCoin:<version>/` |
 
-`CC` is a development ticker, not a claim of global uniqueness. The SLIP-0044
-registry already uses the symbol `CC` for Canton Coin at coin type 6767, and
-Canton's own current whitepaper identifies `CC` as its abbreviation.
-ConnectCoin has no registered BIP44/SLIP-0044 coin type yet. A unique ticker and
-coin type must be selected or registered before public wallet interoperability
-is advertised. The atomic-unit labels `connect` and `con` are project-specific
-display names and have no standards registration.
+`CONN` is ConnectCoin's development ticker, not a claim of global uniqueness.
+The separate Connects Health USA project listed above has also used `CONN`.
+ConnectCoin previously used `CC`; the SLIP-0044 registry uses that symbol for
+Canton Coin at coin type 6767, and Canton's own whitepaper identifies `CC` as its
+abbreviation. This ConnectCoin display change does not change Canton's ticker.
+ConnectCoin has no registered BIP44/SLIP-0044 coin type yet. The ticker still
+requires clearance and a coin type must be registered before public wallet
+interoperability is advertised. The atomic-unit labels `connect` and `con` are
+project-specific display names and have no standards registration.
 
 ## Address and key encodings
 
@@ -99,14 +102,14 @@ external applications must not assume global ownership of it.
 ## Network separation
 
 The development monetary policy caps individual monetary values at
-`100,000,000 CC`. On mainnet, testnet3, testnet4, and signet, the recurring
-block subsidy begins at `15 CC` and halves every 3,000,000 blocks. Public-network
+`100,000,000 CONN`. On mainnet, testnet3, testnet4, and signet, the recurring
+block subsidy begins at `15 CONN` and halves every 3,000,000 blocks. Public-network
 blocks target a 10-second interval. The existing public test networks have a
-separate spendable genesis output of `10,000,000 CC`. Mainnet is unlaunched and
+separate spendable genesis output of `10,000,000 CONN`. Mainnet is unlaunched and
 has no operational genesis; the planned allocation remains covered by a
 test-only fixture. With that allocation and every available subsidy
 claimed by empty blocks, integer rounding produces a maximum planned issuance of
-`99,999,984.9955000000 CC`. One CC is subdivided into `10,000,000,000`
+`99,999,984.9955000000 CONN`. One CONN is subdivided into `10,000,000,000`
 connects, so wallet and RPC amounts use up to ten decimal places. Regtest keeps
 its 150-block halving interval.
 

@@ -84,7 +84,7 @@ each startup, and does not require a loaded wallet when given a reward address.
 
 ## P2C mask v1 genesis reset (September 9, 2026)
 
-The testnet4 beta genesis allocates `10,000,000 CC` to the same wallet-owned
+The testnet4 beta genesis allocates `10,000,000 CONN` to the same wallet-owned
 type-1 public key generated on September 7. No new private key is needed:
 
 - Public key: `2ef316afd6177619f68ecfc6521fc3fcbf7faa2b25273f6ddea7971fae0de144`
@@ -100,7 +100,7 @@ the September 7 setup; this reset reuses its public key without accessing or
 regenerating the private key.
 The allocation remains subject to the 100-block coinbase maturity rule.
 
-The other reset genesis parameters (all with the same 10,000,000 CC allocation
+The other reset genesis parameters (all with the same 10,000,000 CONN allocation
 and their previous public keys) are:
 
 | Chain | Header time | Nonce | Bits | Genesis hash |

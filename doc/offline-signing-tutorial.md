@@ -102,7 +102,7 @@ Use the returned `tcc1p...` address; it is generated from this wallet's keys.
 ```
 
 Check the actual received amounts and confirmations. For the example payment
-below, wait for a confirmed balance greater than `0.009` CC plus the fee.
+below, wait for a confirmed balance greater than `0.009` CONN plus the fee.
 
 ### Create and Export an Unsigned PSBT
 
@@ -111,7 +111,7 @@ you control. Enter that actual destination below; do not use an address copied
 from documentation.
 
 2. Create a funded, unsigned PSBT with the online `watch_only_wallet`. The
-example sends `0.009` CC and lets the wallet select a fee using its configured
+example sends `0.009` CONN and lets the wallet select a fee using its configured
 policy and current network conditions. `psbt=true` requests a PSBT without
 broadcasting. Review the actual fee on the offline host before signing.
 

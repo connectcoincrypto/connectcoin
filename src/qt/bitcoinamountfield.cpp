@@ -151,7 +151,7 @@ public:
 
 private:
     BitcoinUnit currentUnit{BitcoinUnit::BTC};
-    // Keep the default arrow-key step at 0.001 CC even if the number of
+    // Keep the default arrow-key step at 0.001 CONN even if the number of
     // decimal places in one coin changes.
     CAmount singleStep{COIN / 1000};
     mutable QSize cachedMinimumSizeHint;

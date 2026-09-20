@@ -482,7 +482,7 @@ class SendallTest(BitcoinTestFramework):
         self.wallet = self.nodes[0].get_wallet_rpc("activewallet")
         self.def_wallet = self.nodes[0].get_wallet_rpc(self.default_wallet_name)
         # Keep enough mature funds for the fixture amounts after reducing the
-        # initial subsidy from 50 CC to 15 CC.
+        # initial subsidy from 50 CONN to 15 CONN.
         self.generate(self.nodes[0], COINBASE_MATURITY + 3)
         self.recipient = self.def_wallet.getnewaddress() # payee for a specific amount
         self.remainder_target = self.def_wallet.getnewaddress() # address that receives everything left after payments and fees

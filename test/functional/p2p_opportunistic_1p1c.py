@@ -51,7 +51,7 @@ from test_framework.wallet import (
     MiniWalletMode,
 )
 
-# 1con/vB feerate denominated in CC/KvB
+# 1con/vB feerate denominated in CONN/KvB
 FEERATE_1CON_VB = Decimal("0.00000010")
 # Number of seconds to wait to ensure no getdata is received
 GETDATA_WAIT = 60

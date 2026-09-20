@@ -90,7 +90,7 @@ void SendCoinsEntry::clear()
     ui->messageTextLabel->hide();
     ui->messageLabel->hide();
 
-    // Update the display unit instead of using the default ("CC").
+    // Update the display unit instead of using the default ("CONN").
     updateDisplayUnit();
 }
 

@@ -50,7 +50,7 @@ other consensus and policy rules, each of the following conditions are met:
 
 The incremental relay feerate used to calculate the additional fee is distinct
 from `-minrelaytxfee` and configurable using `-incrementalrelayfee`. Its default
-is 0.1 connect/vB; `getmempoolinfo` reports the active value in CC/kvB.
+is 0.1 connect/vB; `getmempoolinfo` reports the active value in CONN/kvB.
 
 For P2C claims, changing the transaction ID also changes the TLS claim challenge.
 A fee replacement that changes that ID therefore needs a new connection proof;

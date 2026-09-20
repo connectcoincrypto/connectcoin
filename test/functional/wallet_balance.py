@@ -88,7 +88,7 @@ class WalletTest(BitcoinTestFramework):
         assert_equal(self.nodes[0].getbalance("*", 1, True), 15)
         assert_equal(self.nodes[1].getbalance(minconf=0), 15)
 
-        # Send 12 CC from 0 to 1 and 18 CC from 1 to 0. The second payment
+        # Send 12 CONN from 0 to 1 and 18 CONN from 1 to 0. The second payment
         # deliberately needs both node 1's confirmed coin and the incoming one.
         txs = create_transactions(self.nodes[0], self.nodes[1].getnewaddress(), 12, [Decimal('0.01')])
         self.nodes[0].sendrawtransaction(txs[0]['hex'])
@@ -139,7 +139,7 @@ class WalletTest(BitcoinTestFramework):
         # 2) Sent 3 from node B to node A with fee 0.01
         #
         # Then our node would report a confirmed balance of 12 + 15 - 3 = 24
-        # CC, which is more than would be available if transaction 1 were
+        # CONN, which is more than would be available if transaction 1 were
         # replaced.
 
 

@@ -14,7 +14,7 @@ outputs**, not Bitcoin's compressed-script payloads. The table remains:
 utxos(txid TEXT, vout INT, value INT, coinbase INT, height INT, scriptpubkey TEXT)
 ```
 
-`value` is an integer number of connects (10,000,000,000 per CC). The
+`value` is an integer number of connects (10,000,000,000 per CONN). The
 `scriptpubkey` column contains Core's deterministic compatibility representation:
 
 - Type 1 (P2PK): `51 20` followed by the 32-byte x-only public key.

@@ -82,8 +82,8 @@ class TransactionTimeRescanTest(BitcoinTestFramework):
         self.sync_all()
         set_node_times(self.nodes, cur_time + ten_days)
         # At cached height 200, regtest has crossed its short test-only halving
-        # interval, so only 7.5 CC is mature after the initial mining batch.
-        self.log.info('Send 5 CC to user')
+        # interval, so only 7.5 CONN is mature after the initial mining batch.
+        self.log.info('Send 5 CONN to user')
         miner_wallet.sendtoaddress(wo1, 5)
 
         # generate blocks and check blockcount
@@ -93,8 +93,8 @@ class TransactionTimeRescanTest(BitcoinTestFramework):
         # synchronize nodes and time
         self.sync_all()
         set_node_times(self.nodes, cur_time + ten_days + ten_days)
-        # send 2 CC to our second watch-only address
-        self.log.info('Send 2 CC to user')
+        # send 2 CONN to our second watch-only address
+        self.log.info('Send 2 CONN to user')
         miner_wallet.sendtoaddress(wo2, 2)
 
         # generate blocks and check blockcount
@@ -104,8 +104,8 @@ class TransactionTimeRescanTest(BitcoinTestFramework):
         # synchronize nodes and time
         self.sync_all()
         set_node_times(self.nodes, cur_time + ten_days + ten_days + ten_days)
-        # send 1 CC to our third watch-only address
-        self.log.info('Send 1 CC to user')
+        # send 1 CONN to our third watch-only address
+        self.log.info('Send 1 CONN to user')
         miner_wallet.sendtoaddress(wo3, 1)
 
         # generate more blocks and check blockcount

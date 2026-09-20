@@ -2,12 +2,15 @@
 # Copyright (c) 2026 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-"""Check that getopenrpcinfo RPC is callable and serializable as valid json."""
+"""Check RPC schema metadata and user-facing currency labels."""
 
 import json
 
 from test_framework.test_framework import BitcoinTestFramework
-from test_framework.util import assert_equal
+from test_framework.util import (
+    assert_equal,
+    assert_raises_rpc_error,
+)
 
 
 def find_method(openrpc, name):
@@ -21,6 +24,7 @@ def find_param(method, name):
 class OpenRPCDocTest(BitcoinTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
+        self.setup_clean_chain = True
 
     def run_test(self):
         self.log.info("Calling getopenrpcinfo")
@@ -30,6 +34,20 @@ class OpenRPCDocTest(BitcoinTestFramework):
         assert_equal(type(openrpc["openrpc"]).__name__, "str")
         assert_equal(type(openrpc["info"]).__name__, "dict")
         assert_equal(type(openrpc["methods"]).__name__, "list")
+
+        self.log.info("Checking currency labels in RPC help and errors")
+        for method in ("sendrawtransaction", "testmempoolaccept", "submitpackage"):
+            assert "1CONN/kvB" in self.nodes[0].help(method)
+        # The fee limit is checked before transaction decoding, so this does
+        # not require an actual payment or any particular mempool fee floor.
+        assert_raises_rpc_error(
+            -8, "Fee rates larger than or equal to 1CONN/kvB are not accepted",
+            self.nodes[0].testmempoolaccept, ["00"], 1,
+        )
+        if "preparep2cclaim" in [method["name"] for method in openrpc["methods"]]:
+            claim_help = self.nodes[0].help("preparep2cclaim")
+            for label in ("con/vB (not CONN/kvB)", "Gross bounty in CONN.", "Fixed fee in CONN.", "Net payout in CONN."):
+                assert label in claim_help
 
         self.log.info("Calling rpc.discover")
         if self.options.usecli:
@@ -75,7 +93,7 @@ class OpenRPCDocTest(BitcoinTestFramework):
         self.log.info("Checking relaxed schemas for unchecked RPC types")
         createrawtransaction = find_method(openrpc, "createrawtransaction")
         outputs = find_param(createrawtransaction, "outputs")
-        address_description = "A key-value pair. The key (string) is the ConnectCoin address, the value (float or string) is the amount in CC"
+        address_description = "A key-value pair. The key (string) is the ConnectCoin address, the value (float or string) is the amount in CONN"
         address_obj = {"type": "object", "additionalProperties": {"oneOf": [{"type": "number"},{"type": "string"}]}, "description": address_description}
         p2c_schema = {
             "type": "object",

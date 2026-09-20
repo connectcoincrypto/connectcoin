@@ -35,7 +35,7 @@ class TxnMallTest(BitcoinTestFramework):
         return self.nodes[0].sendrawtransaction(tx['hex'])
 
     def run_test(self):
-        # All nodes should start with 375 CC (25 mature 15 CC subsidies).
+        # All nodes should start with 375 CONN (25 mature 15 CONN subsidies).
         starting_balance = 375
 
         # All nodes should be out of IBD.
@@ -64,7 +64,7 @@ class TxnMallTest(BitcoinTestFramework):
         # Coins are sent to node1_address
         node1_address = self.nodes[1].getnewaddress()
 
-        # First: use the raw transaction API to send 370 CC to node1_address,
+        # First: use the raw transaction API to send 370 CONN to node1_address,
         # but don't broadcast:
         doublespend_fee = Decimal('-.02')
         inputs = [fund_foo_utxo, fund_bar_utxo]
@@ -87,7 +87,7 @@ class TxnMallTest(BitcoinTestFramework):
         tx1 = self.nodes[0].gettransaction(txid1)
         tx2 = self.nodes[0].gettransaction(txid2)
 
-        # Node0's balance should be starting balance, plus 15 CC for another
+        # Node0's balance should be starting balance, plus 15 CONN for another
         # matured block, minus 10, minus 5, and minus transaction fees:
         expected = starting_balance + fund_foo_tx["fee"] + fund_bar_tx["fee"]
         if self.options.mine_block:
@@ -125,13 +125,13 @@ class TxnMallTest(BitcoinTestFramework):
         assert_equal(tx1["confirmations"], -2)
         assert_equal(tx2["confirmations"], -2)
 
-        # Node0's total balance should be starting balance, plus 30 CC for
+        # Node0's total balance should be starting balance, plus 30 CONN for
         # two more matured blocks, minus 370 for the double-spend, plus fees (which are
         # negative):
         expected = starting_balance + 30 - 370 + fund_foo_tx["fee"] + fund_bar_tx["fee"] + doublespend_fee
         assert_equal(self.nodes[0].getbalance(), expected)
 
-        # Node1's balance should be its initial 375 CC plus the double-spend.
+        # Node1's balance should be its initial 375 CONN plus the double-spend.
         assert_equal(self.nodes[1].getbalance(), 375 + 370)
 
 

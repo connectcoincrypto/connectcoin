@@ -151,8 +151,8 @@ BOOST_AUTO_TEST_CASE(maximum_network_supply_test)
         const auto& consensus = chain_params->GetConsensus();
         const CAmount total{MaximumSupply(*chain_params)};
 
-        // Height 0 is the 10 million CC genesis output, not a regular 15 CC
-        // subsidy. The remaining blocks and integer rounding leave 15.0045 CC
+        // Height 0 is the 10 million CONN genesis output, not a regular 15 CONN
+        // subsidy. The remaining blocks and integer rounding leave 15.0045 CONN
         // below MAX_MONEY on every public network.
         BOOST_CHECK_EQUAL(chain_params->GenesisBlock().vtx.front()->GetValueOut(), 10'000'000 * COIN);
         BOOST_CHECK_EQUAL(GetBlockSubsidy(1, consensus), 15 * COIN);

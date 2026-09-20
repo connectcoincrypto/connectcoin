@@ -564,7 +564,7 @@ static RPCMethod getmininginfo()
 }
 
 
-// NOTE: Unlike wallet RPC (which use CC values), mining RPCs follow GBT (BIP 22) in using base-unit amounts (connects).
+// NOTE: Unlike wallet RPC (which use CONN values), mining RPCs follow GBT (BIP 22) in using base-unit amounts (connects).
 static RPCMethod prioritisetransaction()
 {
     return RPCMethod{"prioritisetransaction",

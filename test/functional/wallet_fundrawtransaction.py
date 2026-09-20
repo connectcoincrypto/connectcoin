@@ -725,7 +725,7 @@ class RawTransactionsTest(BitcoinTestFramework):
         fundedAndSignedTx = self.nodes[1].signrawtransactionwithwallet(fundedTx['hex'])
         self.nodes[1].sendrawtransaction(fundedAndSignedTx['hex'])
         self.generate(self.nodes[1], 1)
-        assert_equal(oldBalance+Decimal('15.1900000000'), self.nodes[0].getbalance()) # 0.19 CC + block reward
+        assert_equal(oldBalance+Decimal('15.1900000000'), self.nodes[0].getbalance()) # 0.19 CONN + block reward
 
     def test_op_return(self):
         self.log.info("Test fundrawtxn with OP_RETURN and no vin")
@@ -802,7 +802,7 @@ class RawTransactionsTest(BitcoinTestFramework):
         wwatch.unloadwallet()
 
     def test_option_feerate(self):
-        self.log.info("Test fundrawtxn with explicit fee rates (fee_rate con/vB and feeRate CC/kvB)")
+        self.log.info("Test fundrawtxn with explicit fee rates (fee_rate con/vB and feeRate CONN/kvB)")
         node = self.nodes[3]
         # Make sure there is exactly one input so coin selection can't skew the result.
         assert_equal(len(self.nodes[3].listunspent(1)), 1)
@@ -874,7 +874,7 @@ class RawTransactionsTest(BitcoinTestFramework):
         node.fundrawtransaction(rawtx, feeRate=0.0000000999, add_inputs=True)
 
         self.log.info("- raises RPC error if both feeRate and fee_rate are passed")
-        assert_raises_rpc_error(-8, "Cannot specify both fee_rate (con/vB) and feeRate (CC/kvB)",
+        assert_raises_rpc_error(-8, "Cannot specify both fee_rate (con/vB) and feeRate (CONN/kvB)",
             node.fundrawtransaction, rawtx, fee_rate=0.1, feeRate=0.1, add_inputs=True)
 
         self.log.info("- raises RPC error if both feeRate and estimate_mode passed")
@@ -917,7 +917,7 @@ class RawTransactionsTest(BitcoinTestFramework):
         outputs = {self.nodes[2].getnewaddress(): 1}
         rawtx = self.nodes[3].createrawtransaction(inputs, outputs)
 
-        # Test subtract fee from outputs with feeRate (CC/kvB)
+        # Test subtract fee from outputs with feeRate (CONN/kvB)
         result = [self.nodes[3].fundrawtransaction(rawtx, fee_rate=self.fee_rate_sats_per_vb),
             self.nodes[3].fundrawtransaction(rawtx, subtractFeeFromOutputs=[], fee_rate=self.fee_rate_sats_per_vb),  # empty subtraction list
             self.nodes[3].fundrawtransaction(rawtx, subtractFeeFromOutputs=[0], fee_rate=self.fee_rate_sats_per_vb), # uses self.min_relay_tx_fee (set by fee_rate in con/vB)
@@ -1387,7 +1387,7 @@ class RawTransactionsTest(BitcoinTestFramework):
         # However at normal feerates, the difference between the effective value and the real value
         # that this bug is not detected because the transaction fee must be at least 0.01 BTC (the minimum change value).
         # Otherwise the targeted minimum change value will be enough to cover the transaction fees that were not
-        # being accounted for. So the minimum relay fee is set to 0.1 CC/kvB in this test.
+        # being accounted for. So the minimum relay fee is set to 0.1 CONN/kvB in this test.
         self.log.info("Test issue 22670 ApproximateBestSubset bug")
         # Make sure the default wallet will not be loaded when restarted with a high minrelaytxfee
         self.nodes[0].unloadwallet(self.default_wallet_name, False)
@@ -1426,7 +1426,7 @@ class RawTransactionsTest(BitcoinTestFramework):
 
         # We want to choose more value than is available in 2 inputs when considering the fee,
         # but not enough to need 3 inputs when not considering the fee.
-        # So the target value must be at least one connect above 2 CC minus the fee.
+        # So the target value must be at least one connect above 2 CONN minus the fee.
         lower_bound = Decimal("2.0000000001") - fees
         # The target value must be at most 2 - cost_of_change - not_input_fees - min_change (these are all
         # included in the target before ApproximateBestSubset).
