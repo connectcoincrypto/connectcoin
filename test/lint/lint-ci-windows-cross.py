@@ -127,7 +127,12 @@ class WindowsCrossWorkflowTests(unittest.TestCase):
     def test_environment_runners_timeouts_and_branch_gate(self):
         call = job(CALLER, "windows-cross")
         self.assertEqual(value(call, "if", 4), "${{ vars.SKIP_BRANCH_PUSH != 'true' || github.event_name == 'pull_request' }}")
-        self.assertEqual(section(REUSABLE, "env", 0).strip(), section(CALLER, "env", 0).split("#", 1)[0].strip())
+        # Strip comments per line: a comment on the first setting must not
+        # discard the following settings from this explicit scalar env block.
+        def settings(source):
+            lines = [line.split("#", 1)[0].strip() for line in section(source, "env", 0).splitlines()]
+            return [line for line in lines if line]
+        self.assertEqual(settings(REUSABLE), settings(CALLER))
         self.assertEqual(value(section(section(REUSABLE, "defaults", 0), "run", 2), "shell", 4), "bash")
         for name, runner in (("windows-cross", "ubuntu-latest"), ("windows-native-test", "windows-2022")):
             block = job(REUSABLE, name)

@@ -26,6 +26,8 @@ on:
 # Caller workflow env/defaults are not inherited by a reusable workflow.
 env:
   CI_FAILFAST_TEST_LEAVE_DANGLING: 1
+  # Reusable workflows do not inherit the caller's GHA cache budget.
+  CCACHE_MAXSIZE: '384M'
 
 defaults:
   run:

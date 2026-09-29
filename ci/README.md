@@ -99,17 +99,29 @@ In order to avoid rebuilding all dependencies for each build, the binaries are
 cached and reused when possible. Changes in the dependency-generator will
 trigger cache-invalidation and rebuilds as necessary.
 
+The GitHub Actions workflows limit each ccache to `384M` (384 MB), while local
+CI retains its `2G` default. GHA caches vcpkg binaries but not its downloaded
+source/tool archives, prioritizing compiled dependencies over repeated compiler
+snapshots and downloads. Smaller compiler caches can require more recompilation,
+and missing vcpkg binaries require fresh downloads. This reduces storage pressure
+but does not guarantee that all Docker images and cache generations fit the
+repository quota, or that total CI time improves.
+
 ## Fuzz replay scheduling
 
 The Linux ASan and MSan fuzz jobs use `ci/fuzz-timings.json` to balance targets
 between shards and start expensive targets first. These are summed process
-seconds from a completed CI run, not whole-job wall times. They only change
-scheduling: every selected target and corpus input still runs, with the same
-corpus partitions, worker limit, replay arguments, and empty-corpus mutation
-budget. Targets added after a measurement are retained and estimated from their
-corpus size and file count.
+seconds per target from completed CI runs, not whole-job wall times. When a
+configuration lists multiple source runs, its timings are the arithmetic mean
+of those per-run totals. Averaging reduces the influence of a single unusually
+fast or slow runner; it does not normalize differences between CPU models.
+These hints only change scheduling: every selected target and corpus input still
+runs, with the same corpus partitions, worker limit, replay arguments, and
+empty-corpus mutation budget. Targets added after a measurement are retained and
+estimated from their corpus size and file count.
 
-Each profile records its source run, exact QA-assets commit, fuzz engine, and
+Each configuration records its source runs and shares the profile's aggregation
+method and exact QA-assets commit. It also records its fuzz engine and
 SHA256 of the corresponding setup script (UTF-8 with normalized LF line endings).
 The runner checks the actual corpus checkout and detected engine before using it.
 A run without a profile uses the corpus-work estimator. An invalid profile may
@@ -118,11 +130,13 @@ validated in a multi-shard run is a fatal error. Otherwise, a transient failure
 on just one runner could select a different partition and silently miss targets.
 
 To refresh a profile, sum all successful `Finished TARGET in ...s` measurements
-for each target, including every corpus partition, from the same completed run
-and configuration. A value below the log clock's resolution is recorded as
-0.1 seconds, not used to reduce execution. Update its provenance and configuration
-hash, and run `python3 test/lint/lint-fuzz-corpus.py`. When changing the pinned
-corpus or setup flags, either collect fresh timings or remove both timing
+for each target, including every corpus partition, separately for each completed
+run and configuration. Only combine runs with the same corpus, setup flags, and
+complete target coverage; average their per-target totals with equal weight.
+Record the mean to two decimal places and floor values below the log clock's
+resolution at 0.1 seconds, without reducing execution. Update the configuration's
+source runs and hash, and run `python3 test/lint/lint-fuzz-corpus.py`. When changing
+the pinned corpus or setup flags, either collect fresh timings or remove both timing
 arguments from that configuration so that **all** its shards use the original
 estimator together. Do not bypass a mismatched profile on just one shard.
 

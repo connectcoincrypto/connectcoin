@@ -26,8 +26,9 @@ GUEST_SOURCE = (ROOT / 'ci/test/03_test_script.sh').read_text(encoding='utf-8')
 SAVE_SOURCE = (ROOT / '.github/actions/cache/save/action.yml').read_text(encoding='utf-8')
 RESTORE_SOURCE = (ROOT / '.github/actions/cache/restore/action.yml').read_text(encoding='utf-8')
 INTERNAL_SOURCE = (ROOT / '.github/actions/cache/save/internal/action.yml').read_text(encoding='utf-8')
-WORKFLOWS = '\n'.join((ROOT / '.github/workflows' / name).read_text(encoding='utf-8')
-                      for name in ('ci.yml', 'ci-windows-cross.yml'))
+WORKFLOW_SOURCES = {name: (ROOT / '.github/workflows' / name).read_text(encoding='utf-8')
+                    for name in ('ci.yml', 'ci-windows-cross.yml')}
+WORKFLOWS = '\n'.join(WORKFLOW_SOURCES.values())
 HOST_PREFIX = HOST_SOURCE.split('source ./ci/test/00_setup_env.sh', 1)[0]
 GUEST_PREFIX = GUEST_SOURCE.split('cd "${BASE_ROOT_DIR}"', 1)[0]
 DEPENDS_BLOCK = GUEST_SOURCE[GUEST_SOURCE.index('if [ -z "$NO_DEPENDS" ]; then'):].split('CONNECTCOIN_CONFIG_ALL=', 1)[0]
@@ -53,7 +54,7 @@ VALIDATION = textwrap.dedent(SAVE_STEPS['Check completed dependency build'].spli
 
 def evaluate(expression, context, status):
     # Lex strings first so their contents are not rewritten as identifiers.
-    matches = list(re.finditer(r"'[^']*'|\b(?:github|env|inputs|steps)\.[A-Za-z0-9_.-]+|&&|\|\||!=|==|[()]|[A-Za-z_]+", expression))
+    matches = list(re.finditer(r"'[^']*'|\b(?:github|env|inputs|steps|matrix)\.[A-Za-z0-9_.-]+|&&|\|\||!=|==|[()]|[A-Za-z_]+", expression))
     end = 0
     for match in matches:
         assert not expression[end:match.start()].strip(), expression[end:match.start()]
@@ -62,7 +63,7 @@ def evaluate(expression, context, status):
     pieces = [match.group() for match in matches]
     transformed = []
     for token in pieces:
-        if re.match(r'^(github|env|inputs|steps)\.', token):
+        if re.match(r'^(github|env|inputs|steps|matrix)\.', token):
             assert token in context, token
             transformed.append(repr(context[token]))
         else:
@@ -277,6 +278,42 @@ check-packages:
         for name in ('Restore Ccache cache', 'Restore built depends cache'):
             self.assertNotRegex(RESTORE_STEPS[name], re.compile(r'^\s+if:', re.M), name)
             self.assertIn('uses: ./.github/actions/cache/restore/internal', RESTORE_STEPS[name])
+
+    def test_gha_ccache_budget_preserves_local_default(self):
+        for name, source in WORKFLOW_SOURCES.items():
+            with self.subTest(workflow=name):
+                # Inspect only the existing top-level env block, not arbitrary YAML.
+                env = re.search(r'^env:\n((?:[ \t].*\n|\n)*)', source, re.M)
+                self.assertIsNotNone(env)
+                self.assertIn("  CCACHE_MAXSIZE: '384M'\n", env.group(1))
+                self.assertEqual(len(re.findall(r'^[ \t]+CCACHE_MAXSIZE:', source, re.M)), 1)
+        setup = (ROOT / 'ci/test/00_setup_env.sh').read_text(encoding='utf-8')
+        setting = re.search(r'^export CCACHE_MAXSIZE=.+$', setup, re.M)
+        self.assertIsNotNone(setting)
+        self.assertEqual(setting.group(), 'export CCACHE_MAXSIZE=${CCACHE_MAXSIZE:-2G}')
+        for initial, expected in (('unset CCACHE_MAXSIZE', '2G'), ('export CCACHE_MAXSIZE=384M', '384M')):
+            with self.subTest(expected=expected):
+                result = self.run_shell(initial + '\n' + setting.group() + '\nprintf "%s" "$CCACHE_MAXSIZE"\n')
+                self.assertEqual(result.stdout, expected)
+
+    def test_vcpkg_binary_cache_is_preserved_without_download_cache(self):
+        self.assertNotIn('vcpkg-downloads', WORKFLOWS)
+        self.assertNotIn('vcpkg/downloads', WORKFLOWS)
+        steps = dict(step_blocks(WORKFLOW_SOURCES['ci.yml']))
+        restore = steps['Restore vcpkg binary cache']
+        save = steps['Save vcpkg binary cache']
+        self.assertIn('uses: actions/cache/restore@', restore)
+        self.assertNotRegex(restore, re.compile(r'^\s+if:', re.M))
+        self.assertIn('uses: actions/cache/save@', save)
+        for block in (restore, save):
+            self.assertIn('path: ~/AppData/Local/vcpkg/archives', block)
+        self.assertIn('key: ${{ steps.vcpkg-binary-cache.outputs.cache-primary-key }}', save)
+        gate = re.search(r'^\s+if: (.+)$', save, re.M)
+        self.assertIsNotNone(gate)
+        for event, hit, job in itertools.product(('push', 'pull_request', 'workflow_dispatch'), ('true', 'false'), ('standard', 'fuzz')):
+            context = {'github.event_name': event, 'steps.vcpkg-binary-cache.outputs.cache-hit': hit, 'matrix.job-type': job}
+            self.assertEqual(evaluate(gate.group(1), context, 'success'),
+                             event == 'push' and hit != 'true' and job == 'standard', (event, hit, job))
 
     def test_real_yaml_gates(self):
         checks = 0
