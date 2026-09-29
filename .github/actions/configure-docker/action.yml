@@ -38,18 +38,31 @@ runs:
       env:
         CI_DOCKER_CACHE_WRITE: ${{ github.event_name == 'push' && (inputs.provider == 'gha' || github.ref_name == github.event.repository.default_branch) && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') }}
       run: |
-        cache_options="scope=${CI_CACHE_NAME:-$CONTAINER_NAME}"
+        cache_scope="${CI_CACHE_NAME:-$CONTAINER_NAME}"
+        cache_options="scope=${cache_scope}"
+        use_cache=true
         if [[ "${{ inputs.provider }}" == "warp" ]]; then
           cache_options="url=http://127.0.0.1:49160/,version=1,${cache_options}"
+        else
+          # GHA images compete with compiler and dependency caches for storage.
+          # Retain images that compile entire toolchains; inexpensive package
+          # installs cost less than repeatedly rebuilding evicted dependencies.
+          # Skip imports too, so obsolete image caches can age out naturally.
+          case "${cache_scope}" in
+            ci_native_riscv_bare|ci_win64|ci_win64_msvcrt) ;;
+            *) use_cache=false ;;
+          esac
         fi
 
         # Configure docker build cache backend
-        # Always optimistically --cache‑from in case a cache blob exists
-        args=(--cache-from "type=gha,${cache_options}")
+        args=()
+        if [[ "$use_cache" == "true" ]]; then
+          args+=(--cache-from "type=gha,${cache_options}")
+        fi
 
         # GitHub isolates branch caches. Export once per image on branch pushes;
         # PRs stay read-only and other providers retain the default-branch rule.
-        if [[ "$CI_DOCKER_CACHE_WRITE" == "true" ]]; then
+        if [[ "$use_cache" == "true" && "$CI_DOCKER_CACHE_WRITE" == "true" ]]; then
           args+=(--cache-to "type=gha,mode=max,ignore-error=true,${cache_options}")
         fi
 

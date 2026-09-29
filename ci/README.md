@@ -107,6 +107,20 @@ and missing vcpkg binaries require fresh downloads. This reduces storage pressur
 but does not guarantee that all Docker images and cache generations fit the
 repository quota, or that total CI time improves.
 
+GHA Docker caching is limited to `ci_native_riscv_bare`, `ci_win64`, and
+`ci_win64_msvcrt`, whose images compile toolchains. In runs
+[36590100974](https://github.com/connectcoincrypto/connectcoin/actions/runs/36590100974)
+and [36615012836](https://github.com/connectcoincrypto/connectcoin/actions/runs/36615012836),
+the cold RISC-V and MinGW setup layers took about 38 and 21 minutes; other
+observed cold setup layers took 15 seconds to 4.2 minutes. Docker cache blobs
+occupied about 8.6 GiB during the latter run, while the preceding macOS compiler
+cache was already missing. Prioritizing the expensive images leaves more room
+for compiled dependencies and compiler caches. Other GHA images are still built
+and loaded normally, but neither import nor export Docker caches, allowing old
+entries to expire or be evicted naturally. Warp caching is unchanged. These
+measurements explain the policy; runner and network variation still affect timing,
+and storage quotas can still evict caches.
+
 The build explicitly runs `ccache --cleanup` after compilation, before cache
 statistics and upload, to enforce that budget even when a restored cache was
 created with a larger limit. Automatic cleanup only visits part of the cache

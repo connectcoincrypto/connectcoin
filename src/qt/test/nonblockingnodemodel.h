@@ -82,16 +82,18 @@ inline void CheckNonblockingNodeSnapshots(ClientModel& source, interfaces::Node&
     const bool rendered = !window.grab().isNull();
     window.showMinimized();
     window.showNormal();
-    QTest::qWait(150);
+    // Timer overruns are coalesced if a loaded CI runner is descheduled.
+    // Wait for delivered GUI events while the chain lock is still held.
+    const bool responsive = QTest::qWaitFor([&] { return heartbeats >= 3; }, 1000);
     const bool snapshot_pending = !model->hasNodeState();
     release.set_value();
     const bool timed_out = holder.get();
     heartbeat.stop();
 
-    QVERIFY(!timed_out);
+    QVERIFY2(!timed_out, "Node snapshot work exhausted the 3-second cs_main lock watchdog");
     QVERIFY(rendered);
     QVERIFY(snapshot_pending);
-    QVERIFY(heartbeats >= 3);
+    QVERIFY2(responsive, qPrintable(QString("Node snapshot GUI delivered %1 of 3 required heartbeats within 1 second").arg(heartbeats)));
     QTRY_VERIFY(model->hasNodeState());
     // Unchanged periodic snapshots must not reload icons or reformat hidden
     // node-window metadata. Statistics still publish through their signals.

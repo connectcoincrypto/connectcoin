@@ -26,6 +26,7 @@ GUEST_SOURCE = (ROOT / 'ci/test/03_test_script.sh').read_text(encoding='utf-8')
 SAVE_SOURCE = (ROOT / '.github/actions/cache/save/action.yml').read_text(encoding='utf-8')
 RESTORE_SOURCE = (ROOT / '.github/actions/cache/restore/action.yml').read_text(encoding='utf-8')
 INTERNAL_SOURCE = (ROOT / '.github/actions/cache/save/internal/action.yml').read_text(encoding='utf-8')
+DOCKER_SOURCE = (ROOT / '.github/actions/configure-docker/action.yml').read_text(encoding='utf-8')
 WORKFLOW_SOURCES = {name: (ROOT / '.github/workflows' / name).read_text(encoding='utf-8')
                     for name in ('ci.yml', 'ci-windows-cross.yml')}
 WORKFLOWS = '\n'.join(WORKFLOW_SOURCES.values())
@@ -51,6 +52,8 @@ def predicate(block):
 
 SAVE_STEPS = dict(step_blocks(SAVE_SOURCE))
 RESTORE_STEPS = dict(step_blocks(RESTORE_SOURCE))
+DOCKER_STEP = dict(step_blocks(DOCKER_SOURCE))['Construct docker build cache args']
+DOCKER_ARGS = textwrap.dedent(DOCKER_STEP.split('run: |\n', 1)[1])
 VALIDATION = textwrap.dedent(SAVE_STEPS['Check completed dependency build'].split('run: |\n', 1)[1])
 
 
@@ -324,7 +327,7 @@ ccache() {
 
     def test_ccache_cleanup_runs_after_compile_before_stats(self):
         start = GUEST_SOURCE.index(CCACHE_SETUP)
-        build = GUEST_SOURCE.index('cmake --build "${BASE_BUILD_DIR}" "$MAKEJOBS" --target $GOAL --verbose')
+        build = GUEST_SOURCE.index('cmake --build "${BASE_BUILD_DIR}" "$MAKEJOBS" --target $BUILD_GOALS --verbose')
         finish = GUEST_SOURCE.index(CCACHE_FINISH)
         stats = GUEST_SOURCE.index('ccache --version')
         self.assertLess(start, build)
@@ -352,6 +355,39 @@ ccache() {
             context = {'github.event_name': event, 'steps.vcpkg-binary-cache.outputs.cache-hit': hit, 'matrix.job-type': job}
             self.assertEqual(evaluate(gate.group(1), context, 'success'),
                              event == 'push' and hit != 'true' and job == 'standard', (event, hit, job))
+
+    def test_docker_cache_prioritizes_expensive_toolchains_on_gha(self):
+        expensive = ('ci_native_riscv_bare', 'ci_win64', 'ci_win64_msvcrt')
+        for provider, scope, write in itertools.product(
+                ('gha', 'warp'), (*expensive, 'ci_native_fuzz', 'ci_native_msan', ''), ('true', 'false')):
+            with self.subTest(provider=provider, scope=scope, write=write):
+                self.output.unlink(missing_ok=True)
+                body = DOCKER_ARGS.replace('${{ inputs.provider }}', provider)
+                self.run_shell(body, GITHUB_ENV=self.output.as_posix(), CI_CACHE_NAME=scope,
+                               CONTAINER_NAME='ci_native_nowallet', CI_DOCKER_CACHE_WRITE=write)
+                actual = self.output.read_text(encoding='utf-8').strip()
+                expected = 'DOCKER_BUILD_CACHE_ARG='
+                if provider == 'warp' or scope in expensive:
+                    options = f'scope={scope or "ci_native_nowallet"}'
+                    if provider == 'warp':
+                        options = 'url=http://127.0.0.1:49160/,version=1,' + options
+                    expected += f'--cache-from type=gha,{options} '
+                    if write == 'true':
+                        expected += f'--cache-to type=gha,mode=max,ignore-error=true,{options} '
+                self.assertEqual(actual, expected + '--load')
+
+    def test_docker_cache_writes_preserve_event_branch_and_shard_gates(self):
+        expression = re.search(r'CI_DOCKER_CACHE_WRITE: \$\{\{ (.+) \}\}', DOCKER_STEP).group(1)
+        for event, provider, branch, shard in itertools.product(
+                ('push', 'pull_request', 'workflow_dispatch'), ('gha', 'warp'),
+                ('main', 'feature'), ('', '0', '1')):
+            context = {
+                'github.event_name': event, 'inputs.provider': provider,
+                'github.ref_name': branch, 'github.event.repository.default_branch': 'main',
+                'env.FUZZ_SHARD_COUNT': '' if shard == '' else '4', 'env.FUZZ_SHARD_INDEX': shard,
+            }
+            expected = event == 'push' and (provider == 'gha' or branch == 'main') and shard != '1'
+            self.assertEqual(evaluate(expression, context, 'success'), expected, context)
 
     def test_real_yaml_gates(self):
         checks = 0

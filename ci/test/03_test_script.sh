@@ -144,14 +144,16 @@ cmake -S "$BASE_ROOT_DIR" -B "$BASE_BUILD_DIR" "${CMAKE_ARGS[@]}" || (
   false
 )
 
+# Preserve GOAL for the deployment checks after the build.
+BUILD_GOALS="${GOAL}"
 if [[ "${GOAL}" != all && "${GOAL}" != codegen ]]; then
-  GOAL="all ${GOAL}"
+  BUILD_GOALS="all ${GOAL}"
 fi
 
 # Keep compiler commands in the original log. A serial diagnostic rebuild can
 # spend many minutes building unrelated targets before reaching the same error.
 # shellcheck disable=SC2086
-cmake --build "${BASE_BUILD_DIR}" "$MAKEJOBS" --target $GOAL --verbose
+cmake --build "${BASE_BUILD_DIR}" "$MAKEJOBS" --target $BUILD_GOALS --verbose
 
 if [[ "${RUN_IWYU}" == true ]]; then
   # CMake's codegen target does not include the custom Cap'n Proto/mpgen

@@ -92,6 +92,7 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QPixmap>
+#include <QSignalSpy>
 #include <QSpinBox>
 #include <QScrollArea>
 #include <QStackedWidget>
@@ -378,6 +379,9 @@ void CheckNonblockingKeypoolNotification(WalletModel& model, const std::shared_p
     // Repeated signals must coalesce while the background query is blocked.
     for (int i = 0; i < 100; ++i) wallet.NotifyCanGetAddressesChanged();
     QTest::qWait(350);
+    // Keep the polling window above, but do not infer delivered heartbeats
+    // from elapsed time when a loaded CI runner can coalesce timer overruns.
+    const bool responsive = QTest::qWaitFor([&] { return heartbeats >= 3; }, 1000);
     {
         // Attaching/detaching/destroying another receive view also reads only
         // cached state, even with the capability query still outstanding.
@@ -389,7 +393,7 @@ void CheckNonblockingKeypoolNotification(WalletModel& model, const std::shared_p
     release.set_value();
     const bool lock_timed_out = blocker.get();
     QVERIFY2(!lock_timed_out, "The mined-block keypool notification blocked the GUI on cs_wallet");
-    QVERIFY(heartbeats >= 3);
+    QVERIFY2(responsive, qPrintable(QString("Keypool notification GUI delivered %1 of 3 required heartbeats").arg(heartbeats)));
     QTest::qWait(350);
     QVERIFY(!button->isEnabled()); // no late result re-enables an unbound page
     receive.setModel(&model);
@@ -522,11 +526,11 @@ void CheckNonblockingTransactionViews(WalletModel& model, CWallet& wallet, const
     disposable->updateTransaction(first_hash, CT_DELETED, true);
     disposable->updateTransaction(first_hash, CT_NEW, true);
     disposable.reset();
-    QTest::qWait(150);
+    const bool responsive = QTest::qWaitFor([&] { return heartbeats >= 3; }, 1000);
     release.set_value();
     const bool lock_timed_out = blocker.get();
-    QVERIFY(!lock_timed_out);
-    QVERIFY(heartbeats >= 3);
+    QVERIFY2(!lock_timed_out, "Transaction views exhausted the 3-second wallet lock watchdog");
+    QVERIFY2(responsive, qPrintable(QString("Transaction views delivered %1 of 3 required heartbeats within 1 second").arg(heartbeats)));
     QVERIFY(rendered);
     QCOMPARE(matched_rows, 1);
 
@@ -717,20 +721,29 @@ void TestGUI(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet)
         QTimer heartbeat;
         QObject::connect(&heartbeat, &QTimer::timeout, [&] { ++heartbeats; });
         heartbeat.start(10);
+        bool responsive{false};
+        qsizetype page_refreshes{0};
         {
             P2CClaimDialog claims;
             claims.setModel(&walletModel);
             claims.show();
             walletModel.updateTransaction();
             walletModel.pollBalanceChanged();
-            QTest::qWait(650);
+            // Observe the page's real 500 ms refresh as well as GUI turns;
+            // elapsed wall time alone does not guarantee either was delivered.
+            if (auto* refresh_timer = claims.findChild<QTimer*>("p2cClaimRefreshTimer")) {
+                QSignalSpy refreshes{refresh_timer, &QTimer::timeout};
+                responsive = QTest::qWaitFor([&] { return heartbeats >= 5 && !refreshes.empty(); }, 1000);
+                page_refreshes = refreshes.count();
+            }
             walletModel.pollBalanceChanged();
             // The page's future must not join its blocked worker here.
         }
         release.set_value();
         const bool lock_timed_out = blocker.get();
-        QVERIFY(!lock_timed_out);
-        QVERIFY(heartbeats >= 5);
+        QVERIFY2(!lock_timed_out, "Claim page exhausted the 3-second wallet lock watchdog");
+        QVERIFY2(responsive, qPrintable(QString("Claim page delivered %1 heartbeats and %2 refreshes within 1 second (need 5 and 1)")
+            .arg(heartbeats).arg(page_refreshes)));
         // The model owns/drains orphaned work, and remains usable afterwards.
         auto completed = walletModel.requestWalletData([](interfaces::Wallet&) { return true; });
         QTRY_VERIFY(completed.wait_for(std::chrono::seconds{0}) == std::future_status::ready);
