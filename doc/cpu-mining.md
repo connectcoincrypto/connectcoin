@@ -61,17 +61,26 @@ rules as blocks mined externally. Accepted block counts are not a balance:
 blocks can become stale after acceptance.
 
 Stopping is asynchronous: workers finish their current hash, and an in-flight
-block submission can finish. Initial RandomX dataset construction also must
-finish before its waiting workers exit. Wait for `running: false` before
+block submission can finish. Background RandomX dataset construction may
+continue after mining stops; hashing does not wait for that construction.
+Wait for `running: false` before
 starting another session. Errors and progress are in `getcpumininginfo`.
 Session counters reset at each start. Hashrate is a recent measurement, not a
 network estimate; it includes initialization overhead.
 
 ## Resource use and chain changes
 
-The miner uses the same key-specific RandomX context cache as validation:
-FAST by default (roughly 2 GiB per dataset), with separate VMs for concurrent
-hashes. Epoch transitions can retain the old and next datasets. Configuring
+The miner shares ready key-specific RandomX contexts with validation. With
+FAST enabled (the default on 64-bit builds), only active-chain preparation or
+explicit local mining requests can initialize a full dataset (roughly 2 GiB).
+At most two FAST cache entries/builds are admitted, for epoch transitions.
+Hash requests never initiate FAST construction, wait for a pending dataset,
+or change FAST eviction order. Unprepared historical/alternative-chain keys
+and keys whose datasets are still building use consensus-equivalent LIGHT,
+with no automatic promotion based on incoming headers or claimed chainwork.
+Cold LIGHT initialization is serialized in a separate, single-entry cache
+(256 MiB); concurrent hashes can retain an evicted context until they finish.
+Long forks may therefore take longer to verify. Configuring
 `-randomxfast=0` also applies to mining; LIGHT saves memory but is slower.
 Memory/JIT initialization failures are reported or follow the existing
 consensus-equivalent fallback to LIGHT.

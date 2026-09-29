@@ -7,7 +7,7 @@
 
 #include <QObject>
 
-/** macOS-specific Dock icon handler.
+/** Application-wide macOS Dock icon handler, shared by all windows.
  */
 class MacDockIconHandler : public QObject
 {
@@ -15,6 +15,7 @@ class MacDockIconHandler : public QObject
 
 public:
     static MacDockIconHandler *instance();
+    /** Release the shared handler at application shutdown, not window close. */
     static void cleanup();
 
 Q_SIGNALS:

@@ -32,6 +32,8 @@ WORKFLOWS = '\n'.join(WORKFLOW_SOURCES.values())
 HOST_PREFIX = HOST_SOURCE.split('source ./ci/test/00_setup_env.sh', 1)[0]
 GUEST_PREFIX = GUEST_SOURCE.split('cd "${BASE_ROOT_DIR}"', 1)[0]
 DEPENDS_BLOCK = GUEST_SOURCE[GUEST_SOURCE.index('if [ -z "$NO_DEPENDS" ]; then'):].split('CONNECTCOIN_CONFIG_ALL=', 1)[0]
+CCACHE_SETUP = GUEST_SOURCE[GUEST_SOURCE.index('ci_cleanup_ccache() {'):GUEST_SOURCE.index('ccache --zero-stats')]
+CCACHE_FINISH = re.search(r'^ci_cleanup_ccache\ntrap - EXIT$', GUEST_SOURCE, re.M).group()
 assert '.ci-depends-complete' in HOST_PREFIX and '.ci-depends-complete' in GUEST_PREFIX
 assert 'make $MAKEJOBS' in DEPENDS_BLOCK and 'CI_DEPENDS_CACHE_RUN' in DEPENDS_BLOCK
 
@@ -295,6 +297,42 @@ check-packages:
             with self.subTest(expected=expected):
                 result = self.run_shell(initial + '\n' + setting.group() + '\nprintf "%s" "$CCACHE_MAXSIZE"\n')
                 self.assertEqual(result.stdout, expected)
+
+    def test_ccache_cleanup_preserves_success_and_failure(self):
+        cache_log = self.directory / 'ccache calls'
+        mock_ccache = '''
+ccache() {
+  printf '%s|%s|%s\\n' "$*" "$CCACHE_DIR" "$CCACHE_MAXSIZE" >> "$MOCK_CCACHE_LOG"
+  return "$MOCK_CCACHE_EXIT"
+}
+'''
+        cache_dir = (self.directory / 'isolated compiler cache').as_posix()
+        for cleanup_status, build_status, explicit in itertools.product((0, 75), (0, 43), (False, True)):
+            with self.subTest(cleanup_status=cleanup_status, build_status=build_status, explicit=explicit):
+                cache_log.unlink(missing_ok=True)
+                body = 'set -e\n' + mock_ccache + CCACHE_SETUP
+                if explicit:
+                    body += '\n' + CCACHE_FINISH + '\n'
+                # A nonzero command exercises errexit, not just an explicit exit.
+                body += f'\n(exit {build_status})\n'
+                result = self.run_shell(body, expected=build_status,
+                                        MOCK_CCACHE_LOG=cache_log.as_posix(), MOCK_CCACHE_EXIT=str(cleanup_status),
+                                        CCACHE_DIR=cache_dir, CCACHE_MAXSIZE='384M')
+                self.assertEqual(cache_log.read_text(encoding='utf-8').splitlines(),
+                                 [f'--cleanup|{cache_dir}|384M'])
+                self.assertEqual('preserving the CI result' in result.stderr, cleanup_status != 0)
+
+    def test_ccache_cleanup_runs_after_compile_before_stats(self):
+        start = GUEST_SOURCE.index(CCACHE_SETUP)
+        build = GUEST_SOURCE.index('cmake --build "${BASE_BUILD_DIR}" "$MAKEJOBS" --target $GOAL --verbose')
+        finish = GUEST_SOURCE.index(CCACHE_FINISH)
+        stats = GUEST_SOURCE.index('ccache --version')
+        self.assertLess(start, build)
+        self.assertLess(build, finish)
+        self.assertLess(finish, stats)
+        self.assertEqual(GUEST_SOURCE.count('trap ci_cleanup_ccache EXIT'), 1)
+        self.assertEqual(GUEST_SOURCE.count('trap - EXIT'), 1)
+        self.assertNotIn('--clear', CCACHE_SETUP)
 
     def test_vcpkg_binary_cache_is_preserved_without_download_cache(self):
         self.assertNotIn('vcpkg-downloads', WORKFLOWS)

@@ -32,6 +32,9 @@
 #include <qt/splashscreen.h>
 #include <qt/utilitydialog.h>
 #include <qt/winshutdownmonitor.h>
+#ifdef Q_OS_MACOS
+#include <qt/macdockiconhandler.h>
+#endif
 #include <uint256.h>
 #include <util/btcsignals.h>
 #include <util/exception.h>
@@ -121,6 +124,7 @@ static bool ErrorSettingsRead(const bilingual_str& error, const std::vector<std:
         return true;
     default:
         assert(false);
+        return true;
     }
 }
 
@@ -176,6 +180,10 @@ BitcoinApplication::~BitcoinApplication()
     m_splash = nullptr;
     delete window;
     window = nullptr;
+#ifdef Q_OS_MACOS
+    // The Dock handler is shared by all windows and must outlive them.
+    MacDockIconHandler::cleanup();
+#endif
     m_translations.reset();
     m_gui_preferences.reset();
     delete platformStyle;

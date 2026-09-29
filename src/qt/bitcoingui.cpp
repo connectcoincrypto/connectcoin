@@ -271,7 +271,6 @@ BitcoinGUI::~BitcoinGUI()
         trayIcon->hide();
 #ifdef Q_OS_MACOS
     delete m_app_nap_inhibitor;
-    MacDockIconHandler::cleanup();
 #endif
 
     delete rpcConsole;
@@ -1034,7 +1033,7 @@ void BitcoinGUI::createTrayIconMenu()
 #else
     // Note: On macOS, the Dock icon is used to provide the tray's functionality.
     MacDockIconHandler* dockIconHandler = MacDockIconHandler::instance();
-    connect(dockIconHandler, &MacDockIconHandler::dockIconClicked, [this] {
+    connect(dockIconHandler, &MacDockIconHandler::dockIconClicked, this, [this] {
         if (m_node.shutdownRequested()) return; // nothing to show, node is shutting down.
         show();
         activateWindow();

@@ -87,6 +87,7 @@ add_executable(connectcoin-test
   private_broadcast_tests.cpp
   psbt_tests.cpp
   random_tests.cpp
+  randomx_cache_tests.cpp
   randomx_tests.cpp
   rbf_tests.cpp
   rest_tests.cpp

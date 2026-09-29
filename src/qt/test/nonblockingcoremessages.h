@@ -19,6 +19,11 @@
 #include <QTest>
 #include <QTimer>
 
+#ifdef Q_OS_MACOS
+#include <qt/macdockiconhandler.h>
+#include <QPointer>
+#endif
+
 #include <chrono>
 #include <future>
 #include <memory>
@@ -36,6 +41,9 @@ inline void CheckCoreMessageLifetime(interfaces::Node& node)
     } calls;
     const std::unique_ptr<const NetworkStyle> network_style{NetworkStyle::instantiate(ChainType::REGTEST)};
     const std::unique_ptr<const PlatformStyle> platform_style{PlatformStyle::instantiate("other")};
+#ifdef Q_OS_MACOS
+    const QPointer<MacDockIconHandler> dock_handler{MacDockIconHandler::instance()};
+#endif
     auto window = std::make_unique<BitcoinGUI>(node, platform_style.get(), network_style.get());
     window->installEventFilter(&calls);
     auto gate = window->m_core_signal_gate;
@@ -150,6 +158,12 @@ inline void CheckCoreMessageLifetime(interfaces::Node& node)
     // Destruction must cancel a pending modal reply and discard the queued
     // notification without requiring another GUI event-loop turn.
     window.reset();
+#ifdef Q_OS_MACOS
+    // Closing a temporary window must not destroy the main window's Dock
+    // handler or leave a dangling singleton for application teardown.
+    QVERIFY(dock_handler);
+    QCOMPARE(MacDockIconHandler::instance(), dock_handler.data());
+#endif
     const bool released_by_deletion = destroyed.wait_for(std::chrono::seconds{1}) == std::future_status::ready;
     const bool destroyed_answer = destroyed.get();
     QVERIFY(pending_before_deletion);

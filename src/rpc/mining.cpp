@@ -185,6 +185,8 @@ static bool GenerateBlock(ChainstateManager& chainman, CBlock&& block, uint64_t&
     }
     const uint256 randomx_key{GetRandomXKey(pindex_prev, chainman.GetConsensus())};
     const int block_height{pindex_prev->nHeight + 1};
+    // Explicit local block generation may prepare FAST; validation never does.
+    PrepareRandomXKey(randomx_key, chainman.GetConsensus());
 
     while (max_tries > 0 && block.nNonce < std::numeric_limits<uint32_t>::max() &&
            !CheckProofOfWork(block, randomx_key, block_height, chainman.GetConsensus(), /*secure_jit=*/false) && !chainman.m_interrupt) {

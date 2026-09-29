@@ -15,7 +15,7 @@ from pathlib import Path
 
 from test_framework.address import byte_to_base58
 from test_framework.key import compute_xonly_pubkey, verify_schnorr
-from test_framework.messages import COIN, COutPoint, CTransaction, CTxIn, CTxInWitness, CTxOut
+from test_framework.messages import COIN, CBlockHeader, COutPoint, CTransaction, CTxIn, CTxInWitness, CTxOut
 from test_framework.script import SIGHASH_DEFAULT, TaprootSignatureHash
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import assert_equal
@@ -46,6 +46,21 @@ class ToolUtils(BitcoinTestFramework):
             self.test_one(test_obj)
         self.log.info(f"Passed {len(input_data)} utility fixtures; checking typed-output semantics")
         self.test_typed_outputs()
+        self.test_invalid_grind_targets()
+
+    def test_invalid_grind_targets(self):
+        # Zero, negative, overflowing, and above-mainnet-limit targets must
+        # fail immediately, not start an impossible RandomX nonce search.
+        for nbits in (0, 0x1d800001, 0x23000001, 0x1f010000):
+            header = CBlockHeader()
+            header.nBits = nbits
+            result = subprocess.run(
+                self.bins.util_argv() + ["-chain=main", "grind", header.serialize().hex()],
+                capture_output=True, text=True, timeout=60,
+            )
+            assert_equal(result.returncode, 1)
+            assert_equal(result.stdout, "")
+            assert "Could not satisfy difficulty target" in result.stderr
 
     def assert_model(self, args, tx):
         """Compare CLI output to Python serialization, not another CLI snapshot."""

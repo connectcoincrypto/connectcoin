@@ -4,7 +4,9 @@
 
 #include <chain.h>
 #include <chainparams.h>
+#include <crypto/randomx_util.h>
 #include <pow.h>
+#include <streams.h>
 #include <test/util/chainparams.h>
 #include <test/util/common.h>
 #include <test/util/random.h>
@@ -250,6 +252,28 @@ BOOST_AUTO_TEST_CASE(randomx_secure_jit_policy_equivalence)
     BOOST_CHECK(CheckProofOfWork(header, key, 0, consensus, true));
     BOOST_CHECK(CheckProofOfWork(header, key, 0, consensus));
     BOOST_CHECK(CheckProofOfWork(header, nullptr, consensus));
+}
+
+BOOST_AUTO_TEST_CASE(randomx_unprepared_key_matches_light)
+{
+    const auto params{CreateChainParams(ArgsManager{}, ChainType::REGTEST)};
+    auto consensus{params->GetConsensus()};
+    consensus.randomx_mock_pow = false;
+    consensus.randomx_fast_mode = true;
+    // Never prepared by startup or any other test. Hashing with FAST enabled
+    // must still work in LIGHT, without changing the hash or JIT policy.
+    const uint256 key{0xcd};
+    const CBlockHeader& header{params->GenesisBlock()};
+    DataStream stream;
+    stream << header;
+    const RandomXContext reference{RandomXAlgorithm::V2, MakeByteSpan(key), RandomXMemoryMode::LIGHT};
+    const auto reference_hash{reference.Calculate(MakeByteSpan(stream))};
+    const uint256 expected{MakeUCharSpan(reference_hash)};
+    BOOST_CHECK(GetPoWHash(header, key, consensus) == expected);
+    BOOST_CHECK(GetPoWHash(header, key, consensus, false) == expected);
+    BOOST_CHECK_EQUAL(CheckProofOfWork(header, key, 1, consensus), CheckProofOfWorkImpl(expected, header.nBits, consensus));
+    consensus.randomx_fast_mode = false;
+    BOOST_CHECK(GetPoWHash(header, key, consensus) == expected);
 }
 
 BOOST_AUTO_TEST_CASE(GetBlockProofEquivalentTime_test)

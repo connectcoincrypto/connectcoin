@@ -114,6 +114,17 @@ if [ -z "$NO_DEPENDS" ]; then
   CONNECTCOIN_CONFIG_ALL="${CONNECTCOIN_CONFIG_ALL} -DCMAKE_TOOLCHAIN_FILE=$DEPENDS_DIR/$HOST/toolchain.cmake"
 fi
 
+# Restoring a cache created with a larger budget can leave untouched buckets
+# above CCACHE_MAXSIZE: automatic cleanup only visits buckets receiving writes.
+# Trim after compilation so restored entries remain available during the build.
+# The EXIT fallback also covers a configure/build failure; cache maintenance
+# must not replace that failure's status or turn a successful build into a failure.
+ci_cleanup_ccache() {
+  if ! ccache --cleanup; then
+    echo "Warning: ccache cleanup failed; preserving the CI result" >&2
+  fi
+}
+trap ci_cleanup_ccache EXIT
 ccache --zero-stats
 
 # Folder where the build is done.
@@ -154,6 +165,8 @@ if [[ "${RUN_IWYU}" == true ]]; then
     connectcoin_ipc_fuzz_headers
 fi
 
+ci_cleanup_ccache
+trap - EXIT
 ccache --version | head -n 1 && ccache --show-stats --verbose
 ccache --print-stats | python3 "${BASE_ROOT_DIR}/ci/test/ccache_stats.py"
 du -sh "${DEPENDS_DIR}"/*/

@@ -146,8 +146,17 @@ static int Grind(const std::vector<std::string>& args, std::string& strPrint)
     }
 
     uint32_t nBits = header.nBits;
+    // Invalid targets can never succeed. Reject them before allocating a
+    // RandomX context or launching workers, including targets above powLimit.
+    if (!DeriveTarget(nBits, consensus.powLimit)) {
+        strPrint = "Could not satisfy difficulty target";
+        return EXIT_FAILURE;
+    }
     std::atomic<bool> found{false};
     uint32_t proposed_nonce{};
+
+    // Grinding is an explicit local mining request, unlike PoW verification.
+    PrepareRandomXKey(randomx_key, consensus);
 
     std::vector<std::thread> threads;
     int n_tasks = std::max(1u, std::thread::hardware_concurrency());

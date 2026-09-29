@@ -7,6 +7,7 @@
 
 #include <arith_uint256.h>
 #include <chain.h>
+#include <crypto/randomx_cache.h>
 #include <crypto/randomx_util.h>
 #include <primitives/block.h>
 #include <span.h>
@@ -16,21 +17,10 @@
 #include <util/log.h>
 
 #include <algorithm>
-#include <chrono>
-#include <future>
 #include <limits>
 #include <memory>
-#include <mutex>
-#include <vector>
 
 namespace {
-
-struct RandomXCacheEntry {
-    uint256 key;
-    RandomXMemoryMode mode;
-    uint64_t last_use;
-    std::shared_future<std::shared_ptr<const RandomXContext>> context;
-};
 
 std::shared_ptr<const RandomXContext> MakeRandomXContext(const uint256& key, RandomXMemoryMode mode)
 {
@@ -43,95 +33,9 @@ std::shared_ptr<const RandomXContext> MakeRandomXContext(const uint256& key, Ran
     }
 }
 
-class RandomXContextCache
+RandomXContextCache<RandomXContext>& GetRandomXContextCache()
 {
-public:
-    std::shared_ptr<const RandomXContext> Get(const uint256& key, RandomXMemoryMode mode)
-    {
-        std::shared_future<std::shared_ptr<const RandomXContext>> future;
-        {
-            std::lock_guard lock{m_mutex};
-            CleanupRetired();
-            auto it{Find(key, mode)};
-            if (it == m_entries.end()) {
-                it = Insert(key, mode);
-            } else {
-                it->last_use = ++m_clock;
-            }
-            future = it->context;
-        }
-
-        try {
-            return future.get();
-        } catch (...) {
-            std::lock_guard lock{m_mutex};
-            const auto it{Find(key, mode)};
-            if (it != m_entries.end()) m_entries.erase(it);
-            throw;
-        }
-    }
-
-    void Prepare(const uint256& key, RandomXMemoryMode mode)
-    {
-        std::lock_guard lock{m_mutex};
-        CleanupRetired();
-        auto it{Find(key, mode)};
-        if (it == m_entries.end()) {
-            Insert(key, mode);
-        } else {
-            it->last_use = ++m_clock;
-        }
-    }
-
-private:
-    static constexpr size_t MAX_CONTEXTS{2};
-    using EntryIterator = std::vector<RandomXCacheEntry>::iterator;
-
-    std::mutex m_mutex;
-    uint64_t m_clock{0};
-    std::vector<RandomXCacheEntry> m_entries;
-    std::vector<std::shared_future<std::shared_ptr<const RandomXContext>>> m_retired;
-
-    EntryIterator Find(const uint256& key, RandomXMemoryMode mode)
-    {
-        return std::find_if(m_entries.begin(), m_entries.end(), [&](const auto& entry) {
-            return entry.key == key && entry.mode == mode;
-        });
-    }
-
-    void CleanupRetired()
-    {
-        std::erase_if(m_retired, [](const auto& future) {
-            return future.wait_for(std::chrono::seconds{0}) == std::future_status::ready;
-        });
-    }
-
-    EntryIterator Insert(const uint256& key, RandomXMemoryMode mode)
-    {
-        // Destroying the last shared_future returned by std::async may wait for
-        // the task. Keep evicted builds alive until they are ready so callers
-        // (notably UpdateTip while holding cs_main) never block on eviction.
-        auto future{std::async(std::launch::async, [key, mode] {
-            return MakeRandomXContext(key, mode);
-        }).share()};
-        m_entries.push_back(RandomXCacheEntry{key, mode, ++m_clock, std::move(future)});
-
-        if (m_entries.size() > MAX_CONTEXTS) {
-            const auto oldest{std::min_element(m_entries.begin(), m_entries.end(), [](const auto& a, const auto& b) {
-                return a.last_use < b.last_use;
-            })};
-            if (oldest->context.wait_for(std::chrono::seconds{0}) != std::future_status::ready) {
-                m_retired.push_back(std::move(oldest->context));
-            }
-            m_entries.erase(oldest);
-        }
-        return Find(key, mode);
-    }
-};
-
-RandomXContextCache& GetRandomXContextCache()
-{
-    static RandomXContextCache cache;
+    static RandomXContextCache<RandomXContext> cache{MakeRandomXContext};
     return cache;
 }
 
@@ -348,7 +252,7 @@ uint256 GetPoWHash(const CBlockHeader& header, const uint256& key, const Consens
     stream << header;
     assert(stream.size() == 80);
 
-    const auto context{GetRandomXContextCache().Get(key, GetRandomXMemoryMode(params))};
+    const auto context{GetRandomXContextCache().Get(key, params.randomx_fast_mode)};
     const auto hash{context->Calculate(MakeByteSpan(stream), secure_jit)};
     return uint256{MakeUCharSpan(hash)};
 }

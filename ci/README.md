@@ -107,6 +107,14 @@ and missing vcpkg binaries require fresh downloads. This reduces storage pressur
 but does not guarantee that all Docker images and cache generations fit the
 repository quota, or that total CI time improves.
 
+The build explicitly runs `ccache --cleanup` after compilation, before cache
+statistics and upload, to enforce that budget even when a restored cache was
+created with a larger limit. Automatic cleanup only visits part of the cache
+after a cache write and can leave mostly-hit caches over budget. An exit trap
+also trims after a configure/build failure without replacing the original result.
+This evicts compiler-cache entries only, not dependencies, build outputs, or
+test inputs.
+
 ## Fuzz replay scheduling
 
 The Linux ASan and MSan fuzz jobs use `ci/fuzz-timings.json` to balance targets

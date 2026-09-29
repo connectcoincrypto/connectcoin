@@ -40,6 +40,8 @@ int RandomXSeedHeight(int block_height, const Consensus::Params& params);
 uint256 GetRandomXKey(const CBlockIndex* pindexPrev, const Consensus::Params& params);
 
 /** Calculate the RandomX v2 proof-of-work hash of an 80-byte block header.
+ * Reuses a ready, explicitly prepared FAST context when enabled; otherwise
+ * uses LIGHT. Hash requests never start FAST preparation or wait for it.
  * Validation defaults to Secure JIT. Mining may opt out where permitted by the
  * platform; neither policy changes the hash.
  */
@@ -49,7 +51,10 @@ uint256 GetPoWHash(const CBlockHeader& header, const uint256& key, const Consens
 bool CheckProofOfWork(const CBlockHeader& header, const CBlockIndex* pindexPrev, const Consensus::Params& params);
 bool CheckProofOfWork(const CBlockHeader& header, const uint256& key, int block_height, const Consensus::Params& params, bool secure_jit = true);
 
-/** Begin initializing a key-specific dataset without waiting for completion. */
+/** Request FAST preparation without waiting. Only for active-chain keys or
+ * explicitly requested local mining, never untrusted header/side-chain input.
+ * A busy preparation cache may defer the request; hashing still works in LIGHT.
+ */
 void PrepareRandomXKey(const uint256& key, const Consensus::Params& params);
 
 /** Prepare the current and, during the lag window, next active-chain key. */

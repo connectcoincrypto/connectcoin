@@ -23,7 +23,8 @@ enum class RandomXAlgorithm : uint8_t {
 /** RandomX memory mode.
  *
  * LIGHT and FAST produce identical hashes. FAST initializes the full shared
- * dataset and is the default for both mining and block verification.
+ * dataset. The PoW cache only prepares FAST for trusted active-chain/local
+ * mining keys; unprepared keys use LIGHT even when FAST is enabled.
  */
 enum class RandomXMemoryMode : uint8_t {
     LIGHT,

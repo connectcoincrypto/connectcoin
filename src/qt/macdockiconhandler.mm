@@ -13,6 +13,9 @@ bool dockClickHandler(id self, SEL _cmd, ...) {
     Q_UNUSED(self)
     Q_UNUSED(_cmd)
 
+    // The native application delegate can outlive BitcoinApplication's
+    // windows and Dock handler during shutdown.
+    if (!s_instance) return true;
     Q_EMIT s_instance->dockIconClicked();
 
     // Return NO (false) to suppress the default macOS actions
@@ -40,7 +43,9 @@ MacDockIconHandler *MacDockIconHandler::instance()
 
 void MacDockIconHandler::cleanup()
 {
-    delete s_instance;
+    auto* instance = s_instance;
+    s_instance = nullptr;
+    delete instance;
 }
 
 /**

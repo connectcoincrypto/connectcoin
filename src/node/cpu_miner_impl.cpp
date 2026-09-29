@@ -155,6 +155,7 @@ void CpuMiner::Run(CScript payout, int threads)
                 key = GetRandomXKey(prev, consensus);
                 height = prev->nHeight + 1;
             }
+            PrepareRandomXKey(key, consensus);
 
             std::atomic<bool> done{false};
             std::atomic<int> finished{0};
