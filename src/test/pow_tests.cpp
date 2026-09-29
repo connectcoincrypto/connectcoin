@@ -145,6 +145,34 @@ BOOST_AUTO_TEST_CASE(CheckProofOfWork_test_zero_target)
     BOOST_CHECK(!CheckProofOfWork(hash, nBits, consensus));
 }
 
+BOOST_AUTO_TEST_CASE(randomx_header_rejects_invalid_targets)
+{
+    auto consensus{CreateChainParams(*m_node.args, ChainType::MAIN)->GetConsensus()};
+    consensus.randomx_mock_pow = false;
+    // Keep the test bounded even if early target rejection regresses.
+    consensus.randomx_fast_mode = false;
+    const auto pow_limit{UintToArith256(consensus.powLimit)};
+    auto too_easy{pow_limit};
+    too_easy *= 2;
+
+    CBlockHeader header;
+    for (const unsigned int nbits : {
+             0U,                          // Zero target.
+             0x01003456U,                  // Nonzero encoding that decodes to zero.
+             pow_limit.GetCompact(true),  // Negative target.
+             0x23000001U,                  // Overflow beyond 256 bits.
+             too_easy.GetCompact(),       // Target above the consensus limit.
+         }) {
+        BOOST_TEST_CONTEXT("nBits=" << nbits) {
+            header.nBits = nbits;
+            BOOST_REQUIRE(!DeriveTarget(nbits, consensus.powLimit));
+            BOOST_CHECK(!CheckProofOfWork(header, consensus.randomx_bootstrap_key, 1, consensus, true));
+            BOOST_CHECK(!CheckProofOfWork(header, consensus.randomx_bootstrap_key, 1, consensus, false));
+            BOOST_CHECK(!CheckProofOfWork(header, nullptr, consensus));
+        }
+    }
+}
+
 BOOST_AUTO_TEST_CASE(randomx_epoch_schedule)
 {
     const auto main_params{CreateChainParams(*m_node.args, ChainType::MAIN)};
@@ -205,6 +233,23 @@ BOOST_AUTO_TEST_CASE(randomx_mock_pow)
     BOOST_CHECK_EQUAL(
         CheckProofOfWork(next, uint256{}, 1, consensus),
         CheckProofOfWork(next.GetHash(), next.nBits, consensus));
+}
+
+BOOST_AUTO_TEST_CASE(randomx_secure_jit_policy_equivalence)
+{
+    const auto params{CreateChainParams(ArgsManager{}, ChainType::REGTEST)};
+    auto consensus{params->GetConsensus()};
+    consensus.randomx_mock_pow = false;
+    consensus.randomx_fast_mode = false;
+    const auto& header{params->GenesisBlock()};
+    const auto key{GetRandomXKey(nullptr, consensus)};
+    const auto default_hash{GetPoWHash(header, key, consensus)};
+    BOOST_CHECK(default_hash == GetPoWHash(header, key, consensus, false));
+    BOOST_CHECK(default_hash == GetPoWHash(header, key, consensus, true));
+    BOOST_CHECK(CheckProofOfWork(header, key, 0, consensus, false));
+    BOOST_CHECK(CheckProofOfWork(header, key, 0, consensus, true));
+    BOOST_CHECK(CheckProofOfWork(header, key, 0, consensus));
+    BOOST_CHECK(CheckProofOfWork(header, nullptr, consensus));
 }
 
 BOOST_AUTO_TEST_CASE(GetBlockProofEquivalentTime_test)

@@ -39,12 +39,15 @@ int RandomXSeedHeight(int block_height, const Consensus::Params& params);
 /** Derive the RandomX key for the block following pindexPrev. */
 uint256 GetRandomXKey(const CBlockIndex* pindexPrev, const Consensus::Params& params);
 
-/** Calculate the RandomX v2 proof-of-work hash of an 80-byte block header. */
-uint256 GetPoWHash(const CBlockHeader& header, const uint256& key, const Consensus::Params& params);
+/** Calculate the RandomX v2 proof-of-work hash of an 80-byte block header.
+ * Validation defaults to Secure JIT. Mining may opt out where permitted by the
+ * platform; neither policy changes the hash.
+ */
+uint256 GetPoWHash(const CBlockHeader& header, const uint256& key, const Consensus::Params& params, bool secure_jit = true);
 
 /** Check RandomX proof of work using chain context or an already-derived key. */
 bool CheckProofOfWork(const CBlockHeader& header, const CBlockIndex* pindexPrev, const Consensus::Params& params);
-bool CheckProofOfWork(const CBlockHeader& header, const uint256& key, int block_height, const Consensus::Params& params);
+bool CheckProofOfWork(const CBlockHeader& header, const uint256& key, int block_height, const Consensus::Params& params, bool secure_jit = true);
 
 /** Begin initializing a key-specific dataset without waiting for completion. */
 void PrepareRandomXKey(const uint256& key, const Consensus::Params& params);

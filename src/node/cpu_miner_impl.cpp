@@ -197,7 +197,7 @@ void CpuMiner::Run(CScript payout, int threads)
                         for (uint64_t nonce{static_cast<uint64_t>(worker)}; nonce <= std::numeric_limits<uint32_t>::max(); nonce += static_cast<uint64_t>(threads)) {
                             if (done || m_stop || chainman.m_interrupt) break;
                             header.nNonce = static_cast<uint32_t>(nonce);
-                            const bool valid{CheckProofOfWork(header, key, height, consensus)};
+                            const bool valid{CheckProofOfWork(header, key, height, consensus, /*secure_jit=*/false)};
                             m_hashes.fetch_add(1, std::memory_order_relaxed);
                             if (valid) {
                                 std::lock_guard lock{result_mutex};

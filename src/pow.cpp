@@ -342,14 +342,14 @@ uint256 GetRandomXKey(const CBlockIndex* pindexPrev, const Consensus::Params& pa
     return seed_block->GetBlockHash();
 }
 
-uint256 GetPoWHash(const CBlockHeader& header, const uint256& key, const Consensus::Params& params)
+uint256 GetPoWHash(const CBlockHeader& header, const uint256& key, const Consensus::Params& params, bool secure_jit)
 {
     DataStream stream;
     stream << header;
     assert(stream.size() == 80);
 
     const auto context{GetRandomXContextCache().Get(key, GetRandomXMemoryMode(params))};
-    const auto hash{context->Calculate(MakeByteSpan(stream))};
+    const auto hash{context->Calculate(MakeByteSpan(stream), secure_jit)};
     return uint256{MakeUCharSpan(hash)};
 }
 
@@ -359,7 +359,7 @@ bool CheckProofOfWork(const CBlockHeader& header, const CBlockIndex* pindexPrev,
     return CheckProofOfWork(header, GetRandomXKey(pindexPrev, params), block_height, params);
 }
 
-bool CheckProofOfWork(const CBlockHeader& header, const uint256& key, int block_height, const Consensus::Params& params)
+bool CheckProofOfWork(const CBlockHeader& header, const uint256& key, int block_height, const Consensus::Params& params, bool secure_jit)
 {
     if (params.randomx_mock_pow) {
         // The hardcoded genesis was mined with RandomX. Test harnesses that
@@ -369,7 +369,10 @@ bool CheckProofOfWork(const CBlockHeader& header, const uint256& key, int block_
         return CheckProofOfWorkImpl(header.GetHash(), header.nBits, params);
     }
     if (EnableFuzzDeterminism()) return (header.GetHash().data()[31] & 0x80) == 0;
-    return CheckProofOfWorkImpl(GetPoWHash(header, key, params), header.nBits, params);
+    // Reject invalid targets before hashing or initializing a RandomX context.
+    const auto target{DeriveTarget(header.nBits, params.powLimit)};
+    if (!target) return false;
+    return UintToArith256(GetPoWHash(header, key, params, secure_jit)) <= *target;
 }
 
 void PrepareRandomXKey(const uint256& key, const Consensus::Params& params)

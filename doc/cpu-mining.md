@@ -76,6 +76,16 @@ hashes. Epoch transitions can retain the old and next datasets. Configuring
 Memory/JIT initialization failures are reported or follow the existing
 consensus-equivalent fallback to LIGHT.
 
+JIT remains enabled when supported. Validation uses Secure JIT by default.
+The CPU miner, RPC block generation and `connectcoin-util grind` request Secure
+JIT off; the backend's mandatory protection still wins on macOS ARM64, OpenBSD
+and NetBSD. Hashing threads use separate policy-specific VM pools while sharing
+the dataset. Disabling Secure JIT allows writable/executable hash-VM code pages
+where permitted, trading W^X hardening for performance without changing hashes
+or consensus. Those pages still share the node process with validation and any
+loaded wallets; separate VM pools are not process isolation. These are code
+defaults, not a new command-line or configuration-file option.
+
 Workers have disjoint nonce sequences. A fresh coinbase extraNonce changes
 the merkle root after a template refresh or nonce exhaustion, without removing
 the height or witness commitment. The full block is not copied per thread.

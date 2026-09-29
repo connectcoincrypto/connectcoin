@@ -75,6 +75,7 @@ using VMPtr = std::unique_ptr<randomx_vm, VMDeleter>;
 randomx_flags MakeBaseFlags(RandomXAlgorithm algorithm, RandomXMemoryMode memory_mode, const RandomXOptions& options)
 {
     randomx_flags flags{randomx_get_flags()};
+    const bool require_secure_jit{HasFlag(flags, RANDOMX_FLAG_SECURE)};
     flags = RemoveFlag(flags, RANDOMX_FLAG_V2);
     flags = RemoveFlag(flags, RANDOMX_FLAG_FULL_MEM);
     flags = RemoveFlag(flags, RANDOMX_FLAG_LARGE_PAGES);
@@ -106,7 +107,7 @@ randomx_flags MakeBaseFlags(RandomXAlgorithm algorithm, RandomXMemoryMode memory
         throw std::invalid_argument("Unknown RandomX memory mode");
     }
 
-    if (options.secure_jit && HasFlag(flags, RANDOMX_FLAG_JIT)) {
+    if ((options.secure_jit || require_secure_jit) && HasFlag(flags, RANDOMX_FLAG_JIT)) {
         flags = AddFlag(flags, RANDOMX_FLAG_SECURE);
     }
     return flags;
@@ -118,10 +119,11 @@ struct RandomXContext::Impl {
     const RandomXMemoryMode m_memory_mode;
     const RandomXOptions m_options;
     const randomx_flags m_base_flags;
+    const bool m_require_secure_jit{HasFlag(randomx_get_flags(), RANDOMX_FLAG_SECURE)};
     CachePtr m_cache;
     DatasetPtr m_dataset;
     mutable std::mutex m_vm_mutex;
-    mutable std::vector<VMPtr> m_vm_pool;
+    mutable std::array<std::vector<VMPtr>, 2> m_vm_pools;
 
     Impl(RandomXAlgorithm algorithm,
          std::span<const std::byte> key,
@@ -208,7 +210,7 @@ struct RandomXContext::Impl {
         for (auto& worker : workers) worker.join();
     }
 
-    VMPtr CreateVM() const
+    VMPtr CreateVM(bool secure_jit) const
     {
         const auto create = [this](randomx_flags flags) {
             return VMPtr{randomx_create_vm(flags,
@@ -216,31 +218,38 @@ struct RandomXContext::Impl {
                                            m_memory_mode == RandomXMemoryMode::FAST ? m_dataset.get() : nullptr)};
         };
 
-        VMPtr vm{create(PreferredFlags())};
-        if (!vm && m_options.try_large_pages) vm = create(m_base_flags);
+        randomx_flags flags{RemoveFlag(m_base_flags, RANDOMX_FLAG_SECURE)};
+        if (secure_jit && HasFlag(flags, RANDOMX_FLAG_JIT)) {
+            flags = AddFlag(flags, RANDOMX_FLAG_SECURE);
+        }
+        VMPtr vm{create(m_options.try_large_pages ? AddFlag(flags, RANDOMX_FLAG_LARGE_PAGES) : flags)};
+        if (!vm && m_options.try_large_pages) vm = create(flags);
         if (!vm && HasFlag(m_base_flags, RANDOMX_FLAG_JIT)) vm = create(PortableFlags());
         if (!vm) throw std::runtime_error("RandomX virtual machine creation failed");
         return vm;
     }
 
-    RandomXContext::Hash Calculate(std::span<const std::byte> input) const
+    RandomXContext::Hash Calculate(std::span<const std::byte> input, bool secure_jit) const
     {
+        // Some supported platforms prohibit writable/executable JIT pages.
+        secure_jit = secure_jit || m_require_secure_jit;
+        auto& pool{m_vm_pools[secure_jit ? 1 : 0]};
         VMPtr vm;
         {
             std::lock_guard lock{m_vm_mutex};
-            if (!m_vm_pool.empty()) {
-                vm = std::move(m_vm_pool.back());
-                m_vm_pool.pop_back();
+            if (!pool.empty()) {
+                vm = std::move(pool.back());
+                pool.pop_back();
             }
         }
-        if (!vm) vm = CreateVM();
+        if (!vm) vm = CreateVM(secure_jit);
 
         RandomXContext::Hash result{};
         randomx_calculate_hash(vm.get(), input.data(), input.size(), result.data());
 
         {
             std::lock_guard lock{m_vm_mutex};
-            m_vm_pool.push_back(std::move(vm));
+            pool.push_back(std::move(vm));
         }
         return result;
     }
@@ -260,5 +269,10 @@ RandomXContext& RandomXContext::operator=(RandomXContext&&) noexcept = default;
 
 RandomXContext::Hash RandomXContext::Calculate(std::span<const std::byte> input) const
 {
-    return m_impl->Calculate(input);
+    return m_impl->Calculate(input, m_impl->m_options.secure_jit);
+}
+
+RandomXContext::Hash RandomXContext::Calculate(std::span<const std::byte> input, bool secure_jit) const
+{
+    return m_impl->Calculate(input, secure_jit);
 }

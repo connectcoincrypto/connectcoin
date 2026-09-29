@@ -37,7 +37,7 @@ struct RandomXOptions {
     /** Use the JIT backend when supported. The interpreter is hash-equivalent. */
     bool use_jit{true};
 
-    /** Enforce W^X for JIT pages when JIT is available. */
+    /** Request W^X for JIT pages. Mandatory platform protection overrides false. */
     bool secure_jit{true};
 
     /** Dataset initialization workers. Zero selects hardware concurrency. */
@@ -69,6 +69,12 @@ public:
 
     /** Calculate a 256-bit RandomX hash. Safe to call concurrently. */
     [[nodiscard]] Hash Calculate(std::span<const std::byte> input) const;
+
+    /** Select a separate JIT-policy VM pool while sharing the same dataset.
+     * Disabling secure JIT permits writable/executable code pages, except on
+     * platforms where the RandomX backend requires secure JIT.
+     */
+    [[nodiscard]] Hash Calculate(std::span<const std::byte> input, bool secure_jit) const;
 
 private:
     struct Impl;

@@ -10,6 +10,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdlib>
+#include <future>
 #include <span>
 #include <string_view>
 
@@ -71,6 +72,34 @@ BOOST_AUTO_TEST_CASE(v2_reference_vector_interpreter)
     BOOST_CHECK_EQUAL(HexStr(hash), "22ec6b861b3eb23686b2efbad69513c967ecfce80983df66c9c5b4fbfb4cdb6f");
 }
 
+BOOST_AUTO_TEST_CASE(v2_secure_and_nonsecure_jit_share_context)
+{
+    constexpr std::string_view key{"test key 000"};
+    constexpr std::string_view input{"This is a test"};
+    const auto bytes{std::as_bytes(std::span{input})};
+    const RandomXOptions options{
+        .try_large_pages = false,
+        .secure_jit = false,
+        .dataset_init_threads = 1,
+    };
+    // Validation keeps the secure default; miners opt out where permitted.
+    // Mandatory backend protection (e.g. Apple Silicon) still overrides false.
+    BOOST_CHECK(RandomXOptions{}.secure_jit);
+    BOOST_CHECK(options.use_jit);
+    BOOST_CHECK(!options.secure_jit);
+    const RandomXContext context{RandomXAlgorithm::V2, std::as_bytes(std::span{key}), RandomXMemoryMode::LIGHT, options};
+    const auto expected{context.Calculate(bytes)};
+    BOOST_CHECK_EQUAL(HexStr(expected), "22ec6b861b3eb23686b2efbad69513c967ecfce80983df66c9c5b4fbfb4cdb6f");
+    // Explicit opt-in/out policies remain hash-equivalent and may run together.
+    for (int i{0}; i < 2; ++i) {
+        auto nonsecure{std::async(std::launch::async, [&] { return context.Calculate(bytes, false); })};
+        auto secure{std::async(std::launch::async, [&] { return context.Calculate(bytes, true); })};
+        BOOST_CHECK(nonsecure.get() == expected);
+        BOOST_CHECK(secure.get() == expected);
+        BOOST_CHECK(context.Calculate(bytes) == expected);
+    }
+}
+
 #ifdef ENABLE_RANDOMX_FAST_TEST
 BOOST_AUTO_TEST_CASE(v2_reference_vector_fast_matches_light)
 {
@@ -78,10 +107,10 @@ BOOST_AUTO_TEST_CASE(v2_reference_vector_fast_matches_light)
     constexpr std::string_view input{"This is a test"};
     const RandomXOptions options{
         .try_large_pages = false,
-        .use_jit = true,
-        .secure_jit = true,
+        .secure_jit = false,
         .dataset_init_threads = 0,
     };
+    BOOST_CHECK(!options.secure_jit);
 
     RandomXContext::Hash light_hash;
     {
@@ -90,8 +119,11 @@ BOOST_AUTO_TEST_CASE(v2_reference_vector_fast_matches_light)
     }
     const RandomXContext fast{RandomXAlgorithm::V2, std::as_bytes(std::span{key}), RandomXMemoryMode::FAST, options};
     const auto fast_hash{fast.Calculate(std::as_bytes(std::span{input}))};
+    const auto nonsecure_hash{fast.Calculate(std::as_bytes(std::span{input}), false)};
 
     BOOST_CHECK(fast_hash == light_hash);
+    BOOST_CHECK(nonsecure_hash == fast_hash);
+    BOOST_CHECK(fast.Calculate(std::as_bytes(std::span{input}), true) == fast_hash);
     BOOST_CHECK_EQUAL(HexStr(fast_hash), "22ec6b861b3eb23686b2efbad69513c967ecfce80983df66c9c5b4fbfb4cdb6f");
 }
 #endif
