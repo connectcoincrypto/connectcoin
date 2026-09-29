@@ -19,8 +19,10 @@
 #include <QCursor>
 #include <QMessageBox>
 #include <QScrollBar>
-#include <QSettings>
+#include <qt/guipreferences.h>
 #include <QTextDocument>
+
+#include <algorithm>
 
 ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *_platformStyle, QWidget *parent) :
     QDialog(parent, GUIUtil::dialog_flags),
@@ -28,6 +30,7 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *_platformStyle, QWid
     platformStyle(_platformStyle)
 {
     ui->setupUi(this);
+    ui->receiveButton->setEnabled(false);
 
     if (!_platformStyle->getImagesOnButtons()) {
         ui->clearButton->setIcon(QIcon());
@@ -58,7 +61,7 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *_platformStyle, QWid
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableView->setSelectionMode(QAbstractItemView::ContiguousSelection);
 
-    QSettings settings;
+    GuiSettings settings;
     if (!tableView->horizontalHeader()->restoreState(settings.value("RecentRequestsViewHeaderState").toByteArray())) {
         tableView->setColumnWidth(RecentRequestsTableModel::Date, DATE_COLUMN_WIDTH);
         tableView->setColumnWidth(RecentRequestsTableModel::Label, LABEL_COLUMN_WIDTH);
@@ -70,35 +73,48 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *_platformStyle, QWid
 
 void ReceiveCoinsDialog::setModel(WalletModel *_model)
 {
+    for (const auto& connection : m_model_connections) disconnect(connection);
+    m_model_connections.clear();
+    ui->recentRequestsView->setModel(nullptr);
+    ui->receiveButton->setEnabled(false);
+    ui->showRequestButton->setEnabled(false);
+    ui->removeRequestButton->setEnabled(false);
     this->model = _model;
 
+    if (_model) {
+        m_model_connections.push_back(connect(_model, &QObject::destroyed, this, [this] { setModel(nullptr); }));
+    }
     if(_model && _model->getOptionsModel())
     {
         _model->getRecentRequestsTableModel()->sort(RecentRequestsTableModel::Date, Qt::DescendingOrder);
-        connect(_model->getOptionsModel(), &OptionsModel::displayUnitChanged, this, &ReceiveCoinsDialog::updateDisplayUnit);
+        m_model_connections.push_back(connect(_model->getOptionsModel(), &OptionsModel::displayUnitChanged, this, &ReceiveCoinsDialog::updateDisplayUnit));
         updateDisplayUnit();
 
         QTableView* tableView = ui->recentRequestsView;
         tableView->setModel(_model->getRecentRequestsTableModel());
         tableView->sortByColumn(RecentRequestsTableModel::Date, Qt::DescendingOrder);
 
-        connect(tableView->selectionModel(),
+        m_model_connections.push_back(connect(tableView->selectionModel(),
             &QItemSelectionModel::selectionChanged, this,
-            &ReceiveCoinsDialog::recentRequestsView_selectionChanged);
+            &ReceiveCoinsDialog::recentRequestsView_selectionChanged));
 
-        // Set the button to be enabled or disabled based on whether the wallet can give out new addresses.
-        ui->receiveButton->setEnabled(model->wallet().canGetAddresses());
+        // Keypool notifications can arrive while a block still holds wallet
+        // locks. Both initial state and later updates use the model's cache.
+        updateReceiveButton();
+        m_model_connections.push_back(connect(_model->getRecentRequestsTableModel(), &RecentRequestsTableModel::ready,
+            this, &ReceiveCoinsDialog::updateReceiveButton));
 
-        // Enable/disable the receive button if the wallet is now able/unable to give out new addresses.
-        connect(model, &WalletModel::canGetAddressesChanged, this, [this] {
-            ui->receiveButton->setEnabled(model->wallet().canGetAddresses());
-        });
+        const QPointer<WalletModel> bound_model{_model};
+        m_model_connections.push_back(connect(_model, &WalletModel::canGetAddressesChanged, this, [this, bound_model] {
+            if (model != bound_model || !bound_model) return;
+            updateReceiveButton();
+        }));
     }
 }
 
 ReceiveCoinsDialog::~ReceiveCoinsDialog()
 {
-    QSettings settings;
+    GuiSettings settings;
     settings.setValue("RecentRequestsViewHeaderState", ui->recentRequestsView->horizontalHeader()->saveState());
     delete ui;
 }
@@ -131,21 +147,26 @@ void ReceiveCoinsDialog::updateDisplayUnit()
 
 void ReceiveCoinsDialog::on_receiveButton_clicked()
 {
+    GUIUtil::BackendOperationGuard operation;
     if(!model || !model->getOptionsModel() || !model->getAddressTableModel() || !model->getRecentRequestsTableModel())
         return;
+    const QPointer<ReceiveCoinsDialog> guard{this};
+    const QPointer<WalletModel> bound_model{model};
 
     QString address;
     QString label = ui->reqLabel->text();
+    const auto amount = ui->reqAmount->value();
+    const auto message = ui->reqMessage->text();
     // ConnectCoin receiving addresses encode type-1 P2PK keys in Bech32m.
     constexpr OutputType address_type{OutputType::BECH32M};
     address = model->getAddressTableModel()->addRow(AddressTableModel::Receive, label, "", address_type);
+    if (!guard || !bound_model || model != bound_model) return;
 
     switch(model->getAddressTableModel()->getEditStatus())
     {
     case AddressTableModel::EditStatus::OK: {
         // Success
-        SendCoinsRecipient info(address, label,
-            ui->reqAmount->value(), ui->reqMessage->text());
+        SendCoinsRecipient info(address, label, amount, message);
         ReceiveRequestDialog *dialog = new ReceiveRequestDialog(this);
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->setModel(model);
@@ -172,7 +193,12 @@ void ReceiveCoinsDialog::on_receiveButton_clicked()
     case AddressTableModel::EditStatus::NO_CHANGES:
         assert(false);
     }
-    clear();
+    if (guard && model == bound_model) clear();
+}
+
+void ReceiveCoinsDialog::updateReceiveButton()
+{
+    ui->receiveButton->setEnabled(model && model->getCachedCanGetAddresses() && model->getRecentRequestsTableModel()->isReady());
 }
 
 void ReceiveCoinsDialog::on_recentRequestsView_doubleClicked(const QModelIndex &index)
@@ -188,7 +214,7 @@ void ReceiveCoinsDialog::on_recentRequestsView_doubleClicked(const QModelIndex &
 void ReceiveCoinsDialog::recentRequestsView_selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
     // Enable Show/Remove buttons only if anything is selected.
-    bool enable = !ui->recentRequestsView->selectionModel()->selectedRows().isEmpty();
+    const bool enable = GUIUtil::firstSelectedRow(ui->recentRequestsView).isValid();
     ui->showRequestButton->setEnabled(enable);
     ui->removeRequestButton->setEnabled(enable);
 }
@@ -206,26 +232,24 @@ void ReceiveCoinsDialog::on_showRequestButton_clicked()
 
 void ReceiveCoinsDialog::on_removeRequestButton_clicked()
 {
+    GUIUtil::BackendOperationGuard operation;
     if(!model || !model->getRecentRequestsTableModel() || !ui->recentRequestsView->selectionModel())
         return;
-    QModelIndexList selection = ui->recentRequestsView->selectionModel()->selectedRows();
-    if(selection.empty())
-        return;
-    // correct for selection mode ContiguousSelection
-    QModelIndex firstIndex = selection.at(0);
-    model->getRecentRequestsTableModel()->removeRows(firstIndex.row(), selection.length(), firstIndex.parent());
+    const auto firstIndex = GUIUtil::firstSelectedRow(ui->recentRequestsView);
+    if (!firstIndex.isValid()) return;
+    const auto selection = ui->recentRequestsView->selectionModel()->selection();
+    // Row selection is contiguous here: inspect range endpoints instead of
+    // materializing a QModelIndex for every selected request just to count it.
+    int last_row = firstIndex.row();
+    for (const auto& range : selection) last_row = std::max(last_row, range.bottom());
+    model->getRecentRequestsTableModel()->removeRows(firstIndex.row(), last_row - firstIndex.row() + 1, firstIndex.parent());
 }
 
 QModelIndex ReceiveCoinsDialog::selectedRow()
 {
     if(!model || !model->getRecentRequestsTableModel() || !ui->recentRequestsView->selectionModel())
         return QModelIndex();
-    QModelIndexList selection = ui->recentRequestsView->selectionModel()->selectedRows();
-    if(selection.empty())
-        return QModelIndex();
-    // correct for selection mode ContiguousSelection
-    QModelIndex firstIndex = selection.at(0);
-    return firstIndex;
+    return GUIUtil::firstSelectedRow(ui->recentRequestsView);
 }
 
 // copy column of selected row to clipboard

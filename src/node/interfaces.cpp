@@ -626,6 +626,14 @@ public:
         WAIT_LOCK(cs_main, lock);
         return FillBlock(chainman().m_blockman.LookupBlockIndex(hash), block, lock, chainman().ActiveChain(), chainman().m_blockman);
     }
+    std::optional<int64_t> tryGetBlockTime(const uint256& hash) override
+    {
+        TRY_LOCK(cs_main, lock);
+        if (!lock) return std::nullopt;
+        const CBlockIndex* index{chainman().m_blockman.LookupBlockIndex(hash)};
+        if (!index) return std::nullopt;
+        return index->GetBlockTime();
+    }
     bool findFirstBlockWithTimeAndHeight(int64_t min_time, int min_height, const FoundBlock& block) override
     {
         WAIT_LOCK(cs_main, lock);

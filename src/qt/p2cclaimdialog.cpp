@@ -10,11 +10,13 @@
 
 #include <QCheckBox>
 #include <QFormLayout>
+#include <QHideEvent>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QShowEvent>
 #include <QSpinBox>
 #include <QStringList>
 #include <QTimer>
@@ -119,21 +121,86 @@ P2CClaimDialog::P2CClaimDialog(QWidget* parent) : QWidget(parent)
     layout->addStretch();
     connect(m_start, &QPushButton::clicked, this, [this] { Configure(false); });
     connect(m_stop, &QPushButton::clicked, this, [this] { Configure(true); });
-    auto* timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &P2CClaimDialog::Refresh);
-    timer->start(500);
+    m_refresh_timer = new QTimer(this);
+    m_refresh_timer->setObjectName("p2cClaimRefreshTimer");
+    m_refresh_timer->setInterval(500);
+    connect(m_refresh_timer, &QTimer::timeout, this, &P2CClaimDialog::Refresh);
     setModel(nullptr);
 }
 
 void P2CClaimDialog::setModel(WalletModel* model)
 {
     if (m_model) disconnect(m_model, nullptr, this, nullptr);
+    // Packaged-task futures do not wait on destruction. The old model owns
+    // the work; a result for another wallet must never reach this page.
+    m_status_query = {};
+    m_operation = {};
+    m_configuration_error.clear();
+    m_status->setText(model ? QString::fromUtf8("\xe2\x80\xa6") : StateText("disabled"));
+    m_reward_status->clear();
+    m_start->setEnabled(true);
+    m_stop->setEnabled(true);
     m_model = model;
     if (model) connect(model, &QObject::destroyed, this, [this] { setModel(nullptr); });
     m_active_high_load = false;
     UpdateLoadWarning();
     setEnabled(model != nullptr);
-    Refresh();
+    UpdateRefreshState();
+}
+
+bool P2CClaimDialog::IsStatusVisible() const
+{
+    return isVisible() && !window()->isMinimized();
+}
+
+void P2CClaimDialog::UpdateRefreshState()
+{
+    if (!m_refresh_timer) return;
+    const bool visible = IsStatusVisible();
+    // A wallet can keep claiming while another page/wallet is selected. Its
+    // invisible status labels need neither new snapshots nor GUI layout.
+    // Keep any already queued snapshot: dropping it on each hide/show would
+    // enqueue duplicates if its wallet worker were temporarily blocked.
+    if (!m_model || (!visible && !m_operation.valid())) {
+        m_refresh_timer->stop();
+        return;
+    }
+    if (!m_refresh_timer->isActive()) {
+        m_refresh_timer->start();
+        Refresh();
+    }
+}
+
+void P2CClaimDialog::showEvent(QShowEvent* event)
+{
+    QWidget::showEvent(event);
+    auto* top_level = window();
+    if (m_watched_window != top_level) {
+        if (m_watched_window) m_watched_window->removeEventFilter(this);
+        m_watched_window = top_level;
+        // A wallet page is a child widget; minimizing its window does not
+        // necessarily deliver WindowStateChange to the page itself.
+        if (top_level != this) top_level->installEventFilter(this);
+    }
+    UpdateRefreshState();
+}
+
+void P2CClaimDialog::hideEvent(QHideEvent* event)
+{
+    QWidget::hideEvent(event);
+    UpdateRefreshState();
+}
+
+void P2CClaimDialog::changeEvent(QEvent* event)
+{
+    QWidget::changeEvent(event);
+    if (event->type() == QEvent::WindowStateChange) UpdateRefreshState();
+}
+
+bool P2CClaimDialog::eventFilter(QObject* object, QEvent* event)
+{
+    if (object == m_watched_window && event->type() == QEvent::WindowStateChange) UpdateRefreshState();
+    return QWidget::eventFilter(object, event);
 }
 
 void P2CClaimDialog::UpdateLoadWarning()
@@ -151,8 +218,7 @@ void P2CClaimDialog::Configure(bool stop)
     const int concurrency{m_concurrency->value()};
     const int recent_blocks{m_unlimited_history->isChecked() ? 0 : m_recent_blocks->value()};
     const QString reward_address{stop ? QString{} : m_address->text().trimmed()};
-    std::vector<std::string> domains;
-    for (const auto& domain : m_domains->text().split(',', Qt::SkipEmptyParts)) domains.push_back(domain.trimmed().toStdString());
+    const QString domains_text = stop ? QString{} : m_domains->text();
     if (rate != 0) {
         const QPointer<P2CClaimDialog> guard{this};
         const QPointer<WalletModel> model{m_model};
@@ -173,8 +239,14 @@ void P2CClaimDialog::Configure(bool stop)
     }
     if (stop) { m_unlimited->setChecked(false); m_rate->setValue(0); }
     try {
-        m_operation = m_model->wallet().configureP2CClaiming(rate, concurrency, stop ? std::vector<std::string>{} : std::move(domains),
-                                                          reward_address.toStdString(), recent_blocks);
+        m_operation = m_model->requestWalletData([rate, concurrency, domains_text, reward_address, recent_blocks](interfaces::Wallet& wallet) {
+            // Snapshot widget text only; splitting/normalizing a potentially
+            // large allowlist belongs with the existing configuration work.
+            std::vector<std::string> domains;
+            for (const auto& domain : domains_text.split(',', Qt::SkipEmptyParts)) domains.push_back(domain.trimmed().toStdString());
+            return wallet.configureP2CClaiming(rate, concurrency, std::move(domains), reward_address.toStdString(), recent_blocks).get();
+        });
+        m_status_query = {}; // Discard a snapshot requested before configuration.
     } catch (const std::exception& error) {
         m_configuration_error = QString::fromUtf8(error.what());
         m_status->setText(m_configuration_error);
@@ -183,6 +255,7 @@ void P2CClaimDialog::Configure(bool stop)
     m_start->setEnabled(false);
     m_stop->setEnabled(false);
     m_status->setText(tr("Applying configuration…"));
+    UpdateRefreshState();
 }
 
 QString P2CClaimDialog::StateText(const std::string& state)
@@ -220,7 +293,18 @@ void P2CClaimDialog::Refresh()
                 m_configuration_error = QString::fromStdString(result);
             }
         }
-        const auto progress = m_model->wallet().getP2CClaimStatus();
+        if (!IsStatusVisible()) {
+            // Consume a submitted configuration even if the page was hidden
+            // meanwhile, but do not let that restart passive status polling.
+            UpdateRefreshState();
+            return;
+        }
+        if (!m_status_query.valid()) {
+            m_status_query = m_model->requestWalletData([](interfaces::Wallet& wallet) { return wallet.getP2CClaimStatus(); });
+            return;
+        }
+        if (m_status_query.wait_for(std::chrono::seconds{0}) != std::future_status::ready) return;
+        const auto progress = m_status_query.get();
         const int rate = progress["connections_per_second"].getInt<int>();
         m_active_high_load = rate != 0 && (rate < 0 || rate > 100 || progress["concurrency"].getInt<int>() > 100);
         UpdateLoadWarning();
@@ -236,7 +320,11 @@ void P2CClaimDialog::Refresh()
             .arg(static_cast<qulonglong>(progress["submitted"].getInt<uint64_t>()))
             .arg(QString::fromStdString(progress["last_txid"].get_str()))
             .arg(m_configuration_error.isEmpty() ? QString::fromStdString(progress["last_error"].get_str()) : m_configuration_error));
+        m_status_query = m_model->requestWalletData([](interfaces::Wallet& wallet) { return wallet.getP2CClaimStatus(); });
     } catch (const std::exception& error) {
+        m_start->setEnabled(true);
+        m_stop->setEnabled(true);
         m_status->setText(QString::fromUtf8(error.what()));
+        UpdateRefreshState();
     }
 }

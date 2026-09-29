@@ -5,6 +5,8 @@
 #ifndef CONNECTCOIN_QT_TEST_URITESTS_H
 #define CONNECTCOIN_QT_TEST_URITESTS_H
 
+#include <connectcoin-build-config.h> // IWYU pragma: keep
+
 #include <QObject>
 #include <QTest>
 
@@ -15,6 +17,12 @@ class URITests : public QObject
 private Q_SLOTS:
     void currencyUnits();
     void uriTests();
+    void firstSelectedRow();
+    void addressEntryValidation();
+#ifdef ENABLE_WALLET
+    void paymentServerStartup();
+    void partialIpcRequests();
+#endif
 };
 
 #endif // CONNECTCOIN_QT_TEST_URITESTS_H

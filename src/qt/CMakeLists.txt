@@ -132,6 +132,12 @@ add_library(connectcoin_qt STATIC EXCLUDE_FROM_ALL
   peertablesortproxy.h
   platformstyle.cpp
   platformstyle.h
+  qtlogforwarder.cpp
+  qtlogforwarder.h
+  guipreferences.cpp
+  guipreferences.h
+  guitranslations.cpp
+  guitranslations.h
   qvalidatedlineedit.cpp
   qvalidatedlineedit.h
   qvaluecombobox.cpp
@@ -172,7 +178,7 @@ target_link_libraries(connectcoin_qt
     Boost::headers
     $<TARGET_NAME_IF_EXISTS:QRencode::QRencode>
     $<$<PLATFORM_ID:Darwin>:-framework\ AppKit>
-    $<$<CXX_COMPILER_ID:MSVC>:shlwapi>
+    $<$<PLATFORM_ID:Windows>:shlwapi>
 )
 
 if(ENABLE_WALLET)

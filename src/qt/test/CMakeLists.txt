@@ -29,6 +29,8 @@ deploy_windows_qt_plugin(connectcoin-test-qt Qt6::QWindowsIntegrationPlugin plat
 deploy_windows_qt_plugin(connectcoin-test-qt Qt6::QModernWindowsStylePlugin styles)
 
 if(ENABLE_WALLET)
+  # The payment-server IPC tests create local sockets directly.
+  target_link_libraries(connectcoin-test-qt Qt6::Network)
   # Embed the source catalog only in tests, so full compiled-resource coverage
   # can also be checked when the test binary runs outside the source tree.
   qt6_add_resources(CONNECTCOIN_TRANSLATION_TEST_QRC translation_test.qrc)

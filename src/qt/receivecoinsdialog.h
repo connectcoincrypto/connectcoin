@@ -13,7 +13,10 @@
 #include <QKeyEvent>
 #include <QMenu>
 #include <QPoint>
+#include <QPointer>
 #include <QVariant>
+
+#include <vector>
 
 class PlatformStyle;
 class WalletModel;
@@ -51,7 +54,8 @@ public Q_SLOTS:
 
 private:
     Ui::ReceiveCoinsDialog *ui;
-    WalletModel* model{nullptr};
+    QPointer<WalletModel> model;
+    std::vector<QMetaObject::Connection> m_model_connections;
     QMenu *contextMenu;
     QAction* copyLabelAction;
     QAction* copyMessageAction;
@@ -68,6 +72,7 @@ private Q_SLOTS:
     void on_recentRequestsView_doubleClicked(const QModelIndex &index);
     void recentRequestsView_selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
     void updateDisplayUnit();
+    void updateReceiveButton();
     void showMenu(const QPoint &point);
     void copyURI();
     void copyAddress();

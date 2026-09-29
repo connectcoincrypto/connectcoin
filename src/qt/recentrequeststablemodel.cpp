@@ -16,19 +16,68 @@
 #include <util/string.h>
 
 #include <utility>
+#include <memory>
+#include <map>
+#include <set>
+#include <vector>
 
 #include <QLatin1Char>
 #include <QLatin1String>
+#include <QDebug>
+#include <QPointer>
+#include <QTimer>
 
 using util::ToString;
+
+namespace {
+using RemovalRanges = std::vector<std::pair<int, int>>;
+
+RemovalRanges FindRemovedRequestRanges(const QList<RecentRequestEntry>& entries, const std::set<int64_t>& ids)
+{
+    RemovalRanges ranges;
+    for (int row{0}; row < entries.size(); ++row) {
+        if (!ids.contains(entries[row].id)) continue;
+        if (!ranges.empty() && ranges.back().second + 1 == row) ranges.back().second = row;
+        else ranges.emplace_back(row, row);
+    }
+    return ranges;
+}
+} // namespace
 
 RecentRequestsTableModel::RecentRequestsTableModel(WalletModel *parent) :
     QAbstractTableModel(parent), walletModel(parent)
 {
-    // Load entries from wallet
-    for (const std::string& request : parent->wallet().getAddressReceiveRequests()) {
-        addNewRequest(request);
-    }
+    // Read and deserialize history without taking wallet/database locks on
+    // the GUI thread. Explicit writes wait for this snapshot's ID watermark.
+    m_snapshot = parent->requestWalletData([](interfaces::Wallet& wallet) {
+        Snapshot snapshot;
+        for (const auto& request : wallet.getAddressReceiveRequests()) {
+            SpanReader stream{MakeByteSpan(request)};
+            RecentRequestEntry entry;
+            stream >> entry;
+            if (entry.id == 0) continue;
+            snapshot.max_id = std::max(snapshot.max_id, entry.id);
+            snapshot.entries.append(std::move(entry));
+        }
+        std::sort(snapshot.entries.begin(), snapshot.entries.end(), RecentRequestEntryLessThan(Date, Qt::DescendingOrder));
+        return snapshot;
+    });
+    m_snapshot_timer = new QTimer(this);
+    m_snapshot_timer->setInterval(50);
+    connect(m_snapshot_timer, &QTimer::timeout, this, [this] {
+        if (!m_snapshot.valid() || m_snapshot.wait_for(std::chrono::seconds{0}) != std::future_status::ready) return;
+        m_snapshot_timer->stop();
+        try {
+            applySnapshot(m_snapshot.get());
+        } catch (const std::exception& error) {
+            qWarning() << "Receive request history failed:" << error.what();
+        }
+    });
+    QMetaObject::invokeMethod(m_snapshot_timer, [timer = m_snapshot_timer] { timer->start(); }, Qt::QueuedConnection);
+    m_sort_timer = new QTimer(this);
+    m_sort_timer->setObjectName("receiveRequestSortRetry");
+    m_sort_timer->setInterval(50);
+    connect(m_sort_timer, &QTimer::timeout, this, &RecentRequestsTableModel::pollDeferredSort);
 
     /* These columns must match the indices in the ColumnIndex enumeration */
     columns << tr("Date") << tr("Label") << tr("Message") << getAmountTitle();
@@ -37,6 +86,41 @@ RecentRequestsTableModel::RecentRequestsTableModel(WalletModel *parent) :
 }
 
 RecentRequestsTableModel::~RecentRequestsTableModel() = default;
+
+void RecentRequestsTableModel::applySnapshot(Snapshot snapshot)
+{
+    m_snapshot_timer->stop();
+    // A different header may have been selected while the initial read was
+    // running. Re-sort its value snapshot asynchronously too; a timer callback
+    // must not suddenly perform a full-history sort on the GUI thread.
+    if (m_sort_column != snapshot.sort_column || m_sort_order != snapshot.sort_order) {
+        m_snapshot = walletModel->requestWalletData(
+            [snapshot = std::move(snapshot), column = m_sort_column, order = m_sort_order](interfaces::Wallet&) mutable {
+                std::sort(snapshot.entries.begin(), snapshot.entries.end(), RecentRequestEntryLessThan(column, order));
+                snapshot.sort_column = column;
+                snapshot.sort_order = order;
+                return std::move(snapshot);
+            });
+        m_snapshot_timer->start();
+        return;
+    }
+    beginResetModel();
+    list = std::move(snapshot.entries);
+    ++m_revision;
+    nReceiveRequestsMaxId = snapshot.max_id;
+    m_ready = true;
+    endResetModel();
+    Q_EMIT ready();
+}
+
+void RecentRequestsTableModel::ensureReady()
+{
+    while (!m_ready) {
+        if (!m_snapshot.valid()) throw std::runtime_error("Receive request history is unavailable");
+        m_snapshot_timer->stop();
+        applySnapshot(GUIUtil::WaitForBackendTask(std::move(m_snapshot)));
+    }
+}
 
 int RecentRequestsTableModel::rowCount(const QModelIndex &parent) const
 {
@@ -144,21 +228,58 @@ QModelIndex RecentRequestsTableModel::index(int row, int column, const QModelInd
 
 bool RecentRequestsTableModel::removeRows(int row, int count, const QModelIndex &parent)
 {
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<RecentRequestsTableModel> guard{this};
     Q_UNUSED(parent);
 
-    if(count > 0 && row >= 0 && (row+count) <= list.size())
+    if (count > 0 && row >= 0 && row <= list.size() && count <= list.size() - row)
     {
-        for (int i = 0; i < count; ++i)
-        {
-            const RecentRequestEntry* rec = &list[row+i];
-            if (!walletModel->wallet().setAddressReceiveRequest(DecodeDestination(rec->recipient.address.toStdString()), ToString(rec->id), ""))
-                return false;
+        struct Removal {
+            std::shared_ptr<const std::set<int64_t>> ids;
+            RemovalRanges ranges;
+        };
+        auto revision = m_revision;
+        // Copying QList is constant-time. Selection extraction, persistence
+        // and matching all run on the worker, rather than doing a GUI scan
+        // (and shifting the list) once for every selected request.
+        auto removed = GUIUtil::WaitForBackendTask(walletModel->requestWalletData([entries = list, row, count](interfaces::Wallet& wallet) {
+            auto ids = std::make_shared<std::set<int64_t>>();
+            for (int index = row; index < row + count; ++index) {
+                const auto& request = entries[index];
+                if (!wallet.setAddressReceiveRequest(DecodeDestination(request.recipient.address.toStdString()), ToString(request.id), "")) break;
+                ids->insert(request.id);
+            }
+            auto ranges = FindRemovedRequestRanges(entries, *ids);
+            return Removal{std::move(ids), std::move(ranges)};
+        }));
+        if (!guard || removed.ids->empty()) return false;
+        // Sorting or another edit can run during a responsive wait. Rebase
+        // only the successfully persisted deletions onto the newest order,
+        // preserving newly added requests and partial database failures.
+        for (int retry{0}; revision != m_revision && retry < 3; ++retry) {
+            revision = m_revision;
+            removed.ranges = GUIUtil::WaitForBackendTask(walletModel->requestWalletData(
+                [entries = list, ids = removed.ids](interfaces::Wallet&) {
+                    return FindRemovedRequestRanges(entries, *ids);
+                }));
+            if (!guard) return false;
         }
-
-        beginRemoveRows(parent, row, row + count - 1);
-        list.erase(list.begin() + row, list.begin() + row + count);
-        endRemoveRows();
-        return true;
+        if (revision != m_revision) {
+            // Pathological edits during all three waits must not keep this
+            // action alive forever or leave already-erased database records
+            // displayed. One current-state scan is the GUI coherency fallback.
+            removed.ranges = FindRemovedRequestRanges(list, *removed.ids);
+        }
+        // The usual contiguous selection needs one model operation/list shift.
+        // Reverse order also preserves indexes of surviving requests when a
+        // sort during the wait has split the deleted IDs into several ranges.
+        for (auto range = removed.ranges.rbegin(); range != removed.ranges.rend(); ++range) {
+            beginRemoveRows({}, range->first, range->second);
+            list.remove(range->first, range->second - range->first + 1);
+            ++m_revision;
+            endRemoveRows();
+        }
+        return removed.ids->size() == static_cast<size_t>(count);
     } else {
         return false;
     }
@@ -172,15 +293,18 @@ Qt::ItemFlags RecentRequestsTableModel::flags(const QModelIndex &index) const
 // called when adding a request from the GUI
 void RecentRequestsTableModel::addNewRequest(const SendCoinsRecipient &recipient)
 {
+    GUIUtil::BackendOperationGuard operation;
+    ensureReady();
     RecentRequestEntry newEntry;
     newEntry.id = ++nReceiveRequestsMaxId;
     newEntry.date = QDateTime::currentDateTime();
     newEntry.recipient = recipient;
 
-    DataStream ss{};
-    ss << newEntry;
-
-    if (!walletModel->wallet().setAddressReceiveRequest(DecodeDestination(recipient.address.toStdString()), ToString(newEntry.id), ss.str()))
+    if (!GUIUtil::WaitForBackendTask(walletModel->requestWalletData([newEntry](interfaces::Wallet& wallet) {
+        DataStream stream{};
+        stream << newEntry;
+        return wallet.setAddressReceiveRequest(DecodeDestination(newEntry.recipient.address.toStdString()), ToString(newEntry.id), stream.str());
+    })))
         return;
 
     addNewRequest(newEntry);
@@ -208,13 +332,85 @@ void RecentRequestsTableModel::addNewRequest(RecentRequestEntry &recipient)
 {
     beginInsertRows(QModelIndex(), 0, 0);
     list.prepend(recipient);
+    ++m_revision;
     endInsertRows();
 }
 
 void RecentRequestsTableModel::sort(int column, Qt::SortOrder order)
 {
-    std::sort(list.begin(), list.end(), RecentRequestEntryLessThan(column, order));
-    Q_EMIT dataChanged(index(0, 0, QModelIndex()), index(list.size() - 1, NUMBER_OF_COLUMNS - 1, QModelIndex()));
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<RecentRequestsTableModel> guard{this};
+    m_sort_column = column;
+    m_sort_order = order;
+    const auto request = ++m_sort_request;
+    m_sort_timer->stop();
+    m_sort_query = {}; // Packaged-task futures never block when discarded.
+    if (list.size() < 2) return;
+    SortSnapshot sorted;
+    uint64_t revision{m_revision};
+    for (int retry{0}; retry < 3; ++retry) {
+        revision = m_revision;
+        sorted = GUIUtil::WaitForBackendTask(walletModel->requestWalletData(
+            [column, order, entries = list](interfaces::Wallet&) { return prepareSort(entries, column, order); }));
+        if (!guard || request != m_sort_request) return;
+        if (revision == m_revision) break;
+    }
+    // Continual edits should neither extend a modal wait forever nor move a
+    // full-history sort back to the GUI. Keep one asynchronous latest-state
+    // retry; the last selected header wins and stale snapshots are discarded.
+    if (revision != m_revision) {
+        startDeferredSort();
+        return;
+    }
+    applySort(std::move(sorted));
+}
+
+RecentRequestsTableModel::SortSnapshot RecentRequestsTableModel::prepareSort(QList<RecentRequestEntry> entries, int column, Qt::SortOrder order)
+{
+    std::sort(entries.begin(), entries.end(), RecentRequestEntryLessThan(column, order));
+    SortSnapshot sorted{std::move(entries), {}};
+    for (int row{0}; row < sorted.entries.size(); ++row) sorted.positions.emplace(sorted.entries[row].id, row);
+    return sorted;
+}
+
+void RecentRequestsTableModel::startDeferredSort()
+{
+    m_sort_revision = m_revision;
+    m_sort_query = walletModel->requestWalletData(
+        [entries = list, column = m_sort_column, order = m_sort_order](interfaces::Wallet&) {
+            return prepareSort(entries, column, order);
+        });
+    m_sort_timer->start();
+}
+
+void RecentRequestsTableModel::pollDeferredSort()
+{
+    if (!m_sort_query.valid()) { m_sort_timer->stop(); return; }
+    if (m_sort_query.wait_for(std::chrono::seconds{0}) != std::future_status::ready) return;
+    m_sort_timer->stop();
+    try {
+        auto sorted = m_sort_query.get();
+        if (m_sort_revision != m_revision) startDeferredSort();
+        else applySort(std::move(sorted));
+    } catch (const std::exception& error) {
+        qWarning() << "Receive request sorting failed:" << error.what();
+    }
+}
+
+void RecentRequestsTableModel::applySort(SortSnapshot sorted)
+{
+    Q_EMIT layoutAboutToBeChanged({}, QAbstractItemModel::VerticalSortHint);
+    const auto before = persistentIndexList();
+    QModelIndexList after;
+    after.reserve(before.size());
+    for (const auto& previous : before) {
+        const auto position = sorted.positions.find(list.at(previous.row()).id);
+        after.append(position == sorted.positions.end() ? QModelIndex{} : index(position->second, previous.column()));
+    }
+    list.swap(sorted.entries);
+    ++m_revision;
+    changePersistentIndexList(before, after);
+    Q_EMIT layoutChanged({}, QAbstractItemModel::VerticalSortHint);
 }
 
 void RecentRequestsTableModel::updateDisplayUnit()

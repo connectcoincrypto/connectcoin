@@ -7,6 +7,7 @@
 
 #include <net_processing.h>
 #include <net.h>
+#include <util/threadpool.h>
 
 #include <QAbstractTableModel>
 #include <QList>
@@ -44,6 +45,8 @@ public:
     ~PeerTableModel();
     void startAutoRefresh();
     void stopAutoRefresh();
+    void stop();
+    void interrupt();
 
     enum ColumnIndex {
         NetNodeId = 0,
@@ -76,9 +79,18 @@ public Q_SLOTS:
     void refresh();
 
 private:
+    friend void CheckBatchedPeerUpdates(interfaces::Node& node);
     //! Internal peer data structure.
     QList<CNodeCombinedStats> m_peers_data{};
     interfaces::Node& m_node;
+    ThreadPool m_worker{"qt-peers"};
+    std::future<QList<CNodeCombinedStats>> m_query;
+    QTimer* m_result_timer{nullptr};
+    bool m_refresh_requested{false};
+    bool m_stopped{false};
+    bool m_worker_stopped{false};
+    void pollRefresh();
+    void applyStats(QList<CNodeCombinedStats> new_peers_data);
     const QStringList columns{
         /*: Title of Peers Table column which contains a
             unique number used to identify a connection. */

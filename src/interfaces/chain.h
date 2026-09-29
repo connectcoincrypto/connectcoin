@@ -148,6 +148,10 @@ public:
     //! or contents.
     virtual bool findBlock(const uint256& hash, const FoundBlock& block={}) = 0;
 
+    //! Read a block's timestamp from memory without waiting for the chain lock.
+    //! Return nullopt if the chain is busy or the block is unknown.
+    virtual std::optional<int64_t> tryGetBlockTime(const uint256& hash) = 0;
+
     //! Find first block in the chain with timestamp >= the given time
     //! and height >= than the given height, return false if there is no block
     //! with a high enough timestamp and height. Optionally return block

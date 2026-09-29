@@ -23,16 +23,21 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <QDebug>
-#include <QFile>
+#include <QElapsedTimer>
 #include <QFileOpenEvent>
 #include <QHash>
 #include <QList>
 #include <QLocalServer>
 #include <QLocalSocket>
+#include <QPointer>
 #include <QStringList>
+#include <QTimer>
 #include <QUrlQuery>
 
 const int CONNECTCOIN_IPC_CONNECT_TIMEOUT = 1000; // milliseconds
+static constexpr int IPC_READ_TIMEOUT{10000};
+static constexpr qint64 MAX_IPC_REQUEST_BYTES{1024 * 1024};
+static constexpr unsigned int MAX_IPC_CONNECTIONS{32};
 const QString CONNECTCOIN_IPC_PREFIX("connectcoin:");
 
 //
@@ -91,38 +96,38 @@ void PaymentServer::ipcParseCommandLine(int argc, char* argv[])
 //
 bool PaymentServer::ipcSendCommandLine()
 {
-    bool fResult = false;
-    for (const QString& r : savedPaymentRequests)
-    {
-        QLocalSocket* socket = new QLocalSocket();
-        socket->connectToServer(ipcServerName(), QIODevice::WriteOnly);
-        if (!socket->waitForConnected(CONNECTCOIN_IPC_CONNECT_TIMEOUT))
-        {
-            delete socket;
-            socket = nullptr;
-            return false;
-        }
-
-        QByteArray block;
-        QDataStream out(&block, QIODevice::WriteOnly);
-        out.setVersion(QDataStream::Qt_4_0);
-        out << r;
-        out.device()->seek(0);
-
-        socket->write(block);
-        socket->flush();
-        socket->waitForBytesWritten(CONNECTCOIN_IPC_CONNECT_TIMEOUT);
-        socket->disconnectFromServer();
-
-        delete socket;
-        socket = nullptr;
-        fResult = true;
-    }
-
-    return fResult;
+    if (savedPaymentRequests.isEmpty()) return false;
+    return GUIUtil::WaitForBackendTask(std::async(std::launch::async,
+        [requests = savedPaymentRequests] {
+            // Capture initializers execute in the caller, not the worker.
+            // GetDataDirNet() takes cs_args and may inspect the filesystem.
+            const QString server_name = ipcServerName();
+            bool sent{false};
+            for (const QString& request : requests) {
+                QLocalSocket socket;
+                socket.connectToServer(server_name, QIODevice::WriteOnly);
+                if (!socket.waitForConnected(CONNECTCOIN_IPC_CONNECT_TIMEOUT)) return false;
+                QByteArray block;
+                QDataStream out(&block, QIODevice::WriteOnly);
+                out.setVersion(QDataStream::Qt_4_0);
+                out << request;
+                if (block.size() > MAX_IPC_REQUEST_BYTES + static_cast<qint64>(sizeof(quint32))) return false;
+                if (socket.write(block) != block.size()) return false;
+                socket.flush();
+                QElapsedTimer deadline;
+                deadline.start();
+                while (socket.bytesToWrite() > 0) {
+                    const int remaining = CONNECTCOIN_IPC_CONNECT_TIMEOUT - static_cast<int>(deadline.elapsed());
+                    if (remaining <= 0 || !socket.waitForBytesWritten(remaining)) return false;
+                }
+                socket.disconnectFromServer();
+                sent = true;
+            }
+            return sent;
+        }));
 }
 
-PaymentServer::PaymentServer(QObject* parent, bool startLocalServer)
+PaymentServer::PaymentServer(QObject* parent)
     : QObject(parent)
 {
     // Install global event filter to catch QFileOpenEvents
@@ -130,28 +135,40 @@ PaymentServer::PaymentServer(QObject* parent, bool startLocalServer)
     // other OSes: helpful when dealing with payment request files
     if (parent)
         parent->installEventFilter(this);
-
-    QString name = ipcServerName();
-
-    // Clean up old socket leftover from a crash:
-    QLocalServer::removeServer(name);
-
-    if (startLocalServer)
-    {
-        uriServer = new QLocalServer(this);
-
-        if (!uriServer->listen(name)) {
-            // constructor is called early in init, so don't use "Q_EMIT message()" here
-            QMessageBox::critical(nullptr, tr("Payment request error"),
-                tr("Cannot start connectcoin: click-to-pay handler"));
-        }
-        else {
-            connect(uriServer, &QLocalServer::newConnection, this, &PaymentServer::handleURIConnection);
-        }
-    }
 }
 
 PaymentServer::~PaymentServer() = default;
+
+void PaymentServer::startLocalServer()
+{
+    if (uriServer || m_starting) return;
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<PaymentServer> guard{this};
+    m_starting = true;
+    QString name;
+    try {
+        name = GUIUtil::WaitForBackendTask(std::async(std::launch::async, [] {
+            const QString name = ipcServerName();
+            // This static cleanup touches a stale socket path on Unix. No
+            // GUI-owned QLocalServer or QLocalSocket is used by the worker.
+            QLocalServer::removeServer(name);
+            return name;
+        }));
+    } catch (...) {
+        if (guard) m_starting = false;
+        throw;
+    }
+    if (!guard) return;
+    m_starting = false;
+    uriServer = new QLocalServer(this);
+    if (!uriServer->listen(name)) {
+        // Startup precedes the main window's message-signal connection.
+        QMessageBox::critical(nullptr, tr("Payment request error"),
+            tr("Cannot start connectcoin: click-to-pay handler"));
+    } else {
+        connect(uriServer, &QLocalServer::newConnection, this, &PaymentServer::handleURIConnection);
+    }
+}
 
 //
 // OSX-specific way of handling connectcoin: URIs
@@ -183,6 +200,7 @@ void PaymentServer::uiReady()
 
 void PaymentServer::handleURIOrFile(const QString& s)
 {
+    GUIUtil::BackendOperationGuard operation;
     if (saveURIs)
     {
         savedPaymentRequests.insert(s);
@@ -193,6 +211,7 @@ void PaymentServer::handleURIOrFile(const QString& s)
     {
         Q_EMIT message(tr("URI handling"), tr("'connectcoin://' is not a valid URI. Use 'connectcoin:' instead."),
             CClientUIInterface::MSG_ERROR);
+        return;
     }
     else if (s.startsWith(CONNECTCOIN_IPC_PREFIX, Qt::CaseInsensitive)) // connectcoin: URI
     {
@@ -228,7 +247,9 @@ void PaymentServer::handleURIOrFile(const QString& s)
         }
     }
 
-    if (QFile::exists(s)) // payment request file
+    // Payment request files are unsupported, so probing their paths (possibly
+    // on a slow network share) cannot change the result.
+    if (!s.isEmpty())
     {
         Q_EMIT message(tr("Payment request file handling"),
             tr("Cannot process payment request because BIP70 is not supported.\n"
@@ -240,22 +261,65 @@ void PaymentServer::handleURIOrFile(const QString& s)
 
 void PaymentServer::handleURIConnection()
 {
-    QLocalSocket *clientConnection = uriServer->nextPendingConnection();
-
-    while (clientConnection->bytesAvailable() < (int)sizeof(quint32))
-        clientConnection->waitForReadyRead();
-
-    connect(clientConnection, &QLocalSocket::disconnected, clientConnection, &QLocalSocket::deleteLater);
-
-    QDataStream in(clientConnection);
-    in.setVersion(QDataStream::Qt_4_0);
-    if (clientConnection->bytesAvailable() < (int)sizeof(quint16)) {
-        return;
+    GUIUtil::BackendOperationGuard operation;
+    while (uriServer->hasPendingConnections()) {
+        QLocalSocket* socket = uriServer->nextPendingConnection();
+        if (!socket) break;
+        if (m_uri_connections >= MAX_IPC_CONNECTIONS) {
+            socket->abort();
+            socket->deleteLater();
+            continue;
+        }
+        ++m_uri_connections;
+        connect(socket, &QObject::destroyed, this, [this] { --m_uri_connections; });
+        socket->setReadBufferSize(MAX_IPC_REQUEST_BYTES + static_cast<qint64>(sizeof(quint32)));
+        auto* deadline = new QTimer(socket);
+        deadline->setSingleShot(true);
+        connect(deadline, &QTimer::timeout, socket, [socket] {
+            socket->deleteLater();
+            socket->abort();
+        });
+        auto processed = std::make_shared<bool>(false);
+        const auto receive = [this, socket, deadline, processed] {
+            if (*processed || socket->bytesAvailable() < static_cast<qint64>(sizeof(quint32))) return;
+            QDataStream header(socket->peek(sizeof(quint32)));
+            header.setVersion(QDataStream::Qt_4_0);
+            quint32 payload_bytes{0};
+            header >> payload_bytes;
+            // Qt_4_0 serializes QString as a byte length followed by UTF-16.
+            // Reject oversized, odd-length, and null/extended-length markers
+            // before allowing QDataStream to allocate the payload.
+            if (payload_bytes > MAX_IPC_REQUEST_BYTES || (payload_bytes & 1U) != 0 ||
+                socket->bytesAvailable() > MAX_IPC_REQUEST_BYTES + static_cast<qint64>(sizeof(quint32))) {
+                *processed = true;
+                deadline->stop();
+                socket->abort();
+                socket->deleteLater();
+                return;
+            }
+            const qint64 message_bytes = static_cast<qint64>(sizeof(quint32)) + payload_bytes;
+            if (socket->bytesAvailable() < message_bytes) return;
+            QDataStream input(socket->read(message_bytes));
+            input.setVersion(QDataStream::Qt_4_0);
+            QString message;
+            input >> message;
+            *processed = true;
+            deadline->stop();
+            socket->abort();
+            socket->deleteLater();
+            if (input.status() == QDataStream::Ok && !message.isEmpty()) handleURIOrFile(message);
+        };
+        connect(socket, &QLocalSocket::readyRead, socket, receive);
+        connect(socket, &QLocalSocket::disconnected, socket, [socket, receive] {
+            // A peer can close immediately after its final write.
+            socket->deleteLater();
+            receive();
+        });
+        deadline->start(IPC_READ_TIMEOUT);
+        if (socket->state() == QLocalSocket::UnconnectedState) socket->deleteLater();
+        // readyRead may already have fired before nextPendingConnection().
+        receive();
     }
-    QString msg;
-    in >> msg;
-
-    handleURIOrFile(msg);
 }
 
 void PaymentServer::setOptionsModel(OptionsModel *_optionsModel)

@@ -20,12 +20,15 @@
 #include <qt/bitcoingui.h>
 #include <qt/clientmodel.h>
 #include <qt/guiconstants.h>
+#include <qt/guipreferences.h>
+#include <qt/guitranslations.h>
 #include <qt/guiutil.h>
 #include <qt/initexecutor.h>
 #include <qt/intro.h>
 #include <qt/networkstyle.h>
 #include <qt/optionsmodel.h>
 #include <qt/platformstyle.h>
+#include <qt/qtlogforwarder.h>
 #include <qt/splashscreen.h>
 #include <qt/utilitydialog.h>
 #include <qt/winshutdownmonitor.h>
@@ -52,13 +55,10 @@
 #include <QApplication>
 #include <QDebug>
 #include <QLatin1String>
-#include <QLibraryInfo>
 #include <QLocale>
 #include <QMessageBox>
-#include <QSettings>
 #include <QThread>
 #include <QTimer>
-#include <QTranslator>
 #include <QWindow>
 
 // Declare meta types used for QMetaObject::invokeMethod
@@ -96,60 +96,13 @@ static void RegisterMetaTypes()
 
 static QString GetLangTerritory()
 {
-    QSettings settings;
-    // Get desired locale (e.g. "de_DE")
-    // 1) System default language
-    QString lang_territory = QLocale::system().name();
-    // 2) Language from QSettings
-    QString lang_territory_qsettings = settings.value("language", "").toString();
-    if(!lang_territory_qsettings.isEmpty())
-        lang_territory = lang_territory_qsettings;
-    // 3) -lang command line argument
-    lang_territory = QString::fromStdString(gArgs.GetArg("-lang", lang_territory.toStdString()));
-    return lang_territory;
-}
-
-/** Set up translations */
-static void initTranslations(QTranslator &qtTranslatorBase, QTranslator &qtTranslator, QTranslator &translatorBase, QTranslator &translator)
-{
-    // Remove old translators
-    QApplication::removeTranslator(&qtTranslatorBase);
-    QApplication::removeTranslator(&qtTranslator);
-    QApplication::removeTranslator(&translatorBase);
-    QApplication::removeTranslator(&translator);
-
-    // Get desired locale (e.g. "de_DE")
-    // 1) System default language
-    QString lang_territory = GetLangTerritory();
-
-    // Convert to "de" only by truncating "_DE"
-    QString lang = lang_territory;
-    lang.truncate(lang_territory.lastIndexOf('_'));
-
-    // Load language files for configured locale:
-    // - First load the translator for the base language, without territory
-    // - Then load the more specific locale translator
-
-    const QString translation_path{QLibraryInfo::path(QLibraryInfo::TranslationsPath)};
-    // Load e.g. qt_de.qm
-    if (qtTranslatorBase.load("qt_" + lang, translation_path)) {
-        QApplication::installTranslator(&qtTranslatorBase);
-    }
-
-    // Load e.g. qt_de_DE.qm
-    if (qtTranslator.load("qt_" + lang_territory, translation_path)) {
-        QApplication::installTranslator(&qtTranslator);
-    }
-
-    // Load e.g. bitcoin_de.qm (shortcut "de" needs to be defined in bitcoin.qrc)
-    if (translatorBase.load(lang, ":/translations/")) {
-        QApplication::installTranslator(&translatorBase);
-    }
-
-    // Load e.g. bitcoin_de_DE.qm (shortcut "de_DE" needs to be defined in bitcoin.qrc)
-    if (translator.load(lang_territory, ":/translations/")) {
-        QApplication::installTranslator(&translator);
-    }
+    // System locale < saved preference < command-line override.
+    QString locale = QLocale::system().name();
+    const QString saved = GuiSettings{}.value("language", "").toString();
+    if (!saved.isEmpty()) locale = saved;
+    return GUIUtil::WaitForBackendTask(std::async(std::launch::async, [locale] {
+        return QString::fromStdString(gArgs.GetArg("-lang", locale.toStdString()));
+    }));
 }
 
 static bool ErrorSettingsRead(const bilingual_str& error, const std::vector<std::string>& details)
@@ -184,17 +137,6 @@ static void ErrorSettingsWrite(const bilingual_str& error, const std::vector<std
     messagebox.exec();
 }
 
-/* qDebug() message handler --> debug.log */
-void DebugMessageHandler(QtMsgType type, const QMessageLogContext& context, const QString &msg)
-{
-    Q_UNUSED(context);
-    if (type == QtDebugMsg) {
-        LogDebug(BCLog::QT, "GUI: %s\n", msg.toStdString());
-    } else {
-        LogInfo("GUI: %s", msg.toStdString());
-    }
-}
-
 static int qt_argc = 1;
 static const char* qt_argv = "connectcoin-qt";
 
@@ -204,6 +146,7 @@ BitcoinApplication::BitcoinApplication()
     // Qt runs setlocale(LC_ALL, "") on initialization.
     RegisterMetaTypes();
     setQuitOnLastWindowClosed(false);
+    m_gui_preferences = std::make_unique<GuiPreferences>();
 }
 
 void BitcoinApplication::setupPlatformStyle()
@@ -221,21 +164,54 @@ void BitcoinApplication::setupPlatformStyle()
 
 BitcoinApplication::~BitcoinApplication()
 {
+    // Fallback for owners that exit without running the normal shutdown flow.
+    // Never leave the interrupt worker accessing a destroyed node.
+    if (m_shutdown_interrupt.valid()) m_shutdown_interrupt.wait();
 #ifdef ENABLE_WALLET
     wallet::ShutdownP2CRsaProbes();
 #endif
     m_executor.reset();
 
+    delete m_splash;
+    m_splash = nullptr;
     delete window;
     window = nullptr;
+    m_translations.reset();
+    m_gui_preferences.reset();
     delete platformStyle;
     platformStyle = nullptr;
+    if (m_qt_log_forwarder) {
+        // Synchronous fallback only; normal shutdown already drained this on
+        // a worker before core logging/process state can disappear.
+        m_qt_log_forwarder->stop();
+        qInstallMessageHandler(m_previous_message_handler);
+        m_qt_log_forwarder.reset();
+    }
+}
+
+void BitcoinApplication::startQtLogging()
+{
+    assert(!m_qt_log_forwarder);
+    m_qt_log_forwarder = std::make_unique<QtLogForwarder>();
+    m_previous_message_handler = InstallQtLogForwarder(*m_qt_log_forwarder);
+}
+
+void BitcoinApplication::loadGuiPreferences()
+{
+    GUIUtil::WaitForBackendTask(GuiSettings{}.load());
+}
+
+void BitcoinApplication::loadTranslations()
+{
+    if (!m_translations) m_translations = std::make_unique<GuiTranslations>();
+    m_translations->loadLocale(GetLangTerritory());
 }
 
 #ifdef ENABLE_WALLET
 void BitcoinApplication::createPaymentServer()
 {
     paymentServer = new PaymentServer(this);
+    paymentServer->startLocalServer();
 }
 #endif
 
@@ -278,6 +254,7 @@ void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
 {
     assert(!m_splash);
     m_splash = new SplashScreen(networkStyle);
+    connect(m_splash, &SplashScreen::shutdownRequested, this, &BitcoinApplication::requestShutdown);
     m_splash->show();
 }
 
@@ -290,7 +267,27 @@ void BitcoinApplication::createNode(interfaces::Init& init)
 
 bool BitcoinApplication::baseInitialize()
 {
-    return node().baseInitialize();
+    GUIUtil::BackendOperationGuard operation;
+    // Directory probes/locks, network setup and cryptographic sanity checks can
+    // block. Core error/question callbacks still run on the responsive GUI.
+    struct Result {
+        bool initialized{false};
+        bool start_minimized{false};
+        bool wallet_enabled{false};
+    };
+    const auto result = GUIUtil::WaitForBackendTask(std::async(std::launch::async, [node_ptr = &node()] {
+        Result result;
+        result.initialized = node_ptr->baseInitialize();
+        result.start_minimized = gArgs.GetBoolArg("-min", false);
+#ifdef ENABLE_WALLET
+        WalletModel::refreshWalletEnabled();
+        result.wallet_enabled = WalletModel::isWalletEnabled();
+#endif
+        return result;
+    }));
+    m_start_minimized = result.start_minimized;
+    m_wallet_enabled = result.wallet_enabled;
+    return result.initialized;
 }
 
 void BitcoinApplication::startThread()
@@ -300,7 +297,10 @@ void BitcoinApplication::startThread()
 
     /*  communication to and from thread */
     connect(&m_executor.value(), &InitExecutor::initializeResult, this, &BitcoinApplication::initializeResult);
-    connect(&m_executor.value(), &InitExecutor::shutdownResult, this, [] {
+    connect(&m_executor.value(), &InitExecutor::shutdownResult, this, [this] {
+        // Keep translations available to Core throughout shutdown, then
+        // destroy all catalog/dependency objects on their own worker.
+        if (m_translations) m_translations->stop();
         QCoreApplication::exit(0);
     });
     connect(&m_executor.value(), &InitExecutor::runawayException, this, &BitcoinApplication::handleRunawayException);
@@ -310,12 +310,14 @@ void BitcoinApplication::startThread()
 
 void BitcoinApplication::parameterSetup()
 {
-    // Default printtoconsole to false for the GUI. GUI programs should not
-    // print to the console unnecessarily.
-    gArgs.SoftSetBoolArg("-printtoconsole", false);
-
-    InitLogging(gArgs);
-    InitParameterInteraction(gArgs);
+    // Logging configuration resolves paths and parameter interactions share
+    // cs_args with settings writes. Neither needs access to Qt widgets.
+    GUIUtil::WaitForBackendTask(std::async(std::launch::async, [] {
+        // GUI programs should not print to the console unnecessarily.
+        gArgs.SoftSetBoolArg("-printtoconsole", false);
+        InitLogging(gArgs);
+        InitParameterInteraction(gArgs);
+    }));
 }
 
 void BitcoinApplication::InitPruneSetting(int64_t prune_MiB)
@@ -332,10 +334,49 @@ void BitcoinApplication::requestInitialize()
 
 void BitcoinApplication::requestShutdown()
 {
+    if (m_shutdown_started) return;
+    m_shutdown_requested = true;
+    // startShutdown also joins mining threads and user -shutdownnotify commands.
+    // Submit it once, independently of the model pools that are being drained.
+    // Before the init executor exists, base initialization can still be changing
+    // the node's interfaces; remember the request without racing those changes.
+    if (m_executor && !m_shutdown_interrupt.valid()) {
+        m_shutdown_interrupt = std::async(std::launch::async,
+            [node_ptr = &node()] {
+                node_ptr->startShutdown();
+#ifdef ENABLE_WALLET
+                // Drain probe phases touching process state before models/node
+                // are torn down. This can wait and must not run on the GUI.
+                wallet::ShutdownP2CRsaProbes();
+#endif
+            });
+    }
+    if (!m_initialization_finished || !m_shutdown_interrupt.valid() ||
+        m_shutdown_interrupt.wait_for(std::chrono::seconds{0}) != std::future_status::ready ||
+        GUIUtil::HasActiveBackendOperation()
+#ifdef ENABLE_WALLET
+        || (m_wallet_controller && m_wallet_controller->hasActiveActivities())
+#endif
+    ) {
+        // Keep callbacks and their GUI callers alive until initialization,
+        // interruption and explicit actions (including unlock contexts) unwind.
+        if (!m_shutdown_retry_pending) {
+            m_shutdown_retry_pending = true;
+            QTimer::singleShot(25, this, [this] {
+                m_shutdown_retry_pending = false;
+                requestShutdown();
+            });
+        }
+        return;
+    }
+    m_shutdown_started = true;
+    m_shutdown_interrupt.get();
+
     for (const auto w : QGuiApplication::topLevelWindows()) {
         w->hide();
     }
 
+    if (m_splash) m_splash->stop();
     delete m_splash;
     m_splash = nullptr;
 
@@ -349,17 +390,9 @@ void BitcoinApplication::requestShutdown()
     // Must disconnect node signals otherwise current thread can deadlock since
     // no event loop is running.
     window->unsubscribeFromCoreSignals();
-    // Request node shutdown, which can interrupt long operations, like
-    // rescanning a wallet.
-    node().startShutdown();
-#ifdef ENABLE_WALLET
-    // Drain only probe phases touching process state. A blocked resolver keeps
-    // its own callback copy and cannot re-enter after this gate closes.
-    wallet::ShutdownP2CRsaProbes();
-#endif
     // Prior to unsetting the client model, stop listening backend signals
     if (clientModel) {
-        clientModel->stop();
+        clientModel->stopWorkers();
     }
 
     // Unsetting the client model can cause the current thread to wait for node
@@ -374,6 +407,7 @@ void BitcoinApplication::requestShutdown()
     // are unloaded, which can simplify wallet implementations. It also avoids
     // these notifications having to be handled while GUI objects are being
     // destroyed, making GUI code less fragile as well.
+    if (m_wallet_controller) m_wallet_controller->stop();
     delete m_wallet_controller;
     m_wallet_controller = nullptr;
 #endif // ENABLE_WALLET
@@ -381,19 +415,33 @@ void BitcoinApplication::requestShutdown()
     delete clientModel;
     clientModel = nullptr;
 
+    // All wallet views have detached and saved their state. Capture the two
+    // surviving windows before flushing; their destructors will be no-ops for
+    // preferences and cannot introduce a late disk wait.
+    window->saveSettings();
+    GUIUtil::WaitForBackendTask(GuiPreferences::Flush());
+
+    if (m_qt_log_forwarder) {
+        GUIUtil::WaitForBackendTask(std::async(std::launch::async,
+            [forwarder = m_qt_log_forwarder.get()] { forwarder->stop(); }));
+    }
+
     // Request shutdown from core thread
     Q_EMIT requestedShutdown();
 }
 
 void BitcoinApplication::initializeResult(bool success, interfaces::BlockAndHeaderTipInfo tip_info)
 {
+    GUIUtil::BackendOperationGuard operation;
     qDebug() << __func__ << ": Initialization result: " << success;
+    m_initialization_finished = true;
 
-    if (!success || m_node->shutdownRequested()) {
+    if (!success || m_shutdown_requested || m_node->shutdownRequested()) {
         requestShutdown();
         return;
     }
 
+    if (m_splash) m_splash->stop();
     delete m_splash;
     m_splash = nullptr;
 
@@ -403,9 +451,9 @@ void BitcoinApplication::initializeResult(bool success, interfaces::BlockAndHead
     window->setClientModel(clientModel, &tip_info);
 
     // If '-min' option passed, start window minimized (iconified) or minimized to tray
-    bool start_minimized = gArgs.GetBoolArg("-min", false);
+    const bool start_minimized = m_start_minimized;
 #ifdef ENABLE_WALLET
-    if (WalletModel::isWalletEnabled()) {
+    if (m_wallet_enabled) {
         m_wallet_controller = new WalletController(*clientModel, platformStyle, this);
         window->setWalletController(m_wallet_controller, /*show_loading_minimized=*/start_minimized);
         if (paymentServer) {
@@ -570,16 +618,18 @@ int GuiMain(int argc, char* argv[])
     QApplication::setOrganizationName(QAPP_ORG_NAME);
     QApplication::setOrganizationDomain(QAPP_ORG_DOMAIN);
     QApplication::setApplicationName(QAPP_APP_NAME_DEFAULT);
+    app.loadGuiPreferences();
 
     /// 4. Initialization of translations, so that intro dialog is in user's language
     // Now that QSettings are accessible, initialize translations
-    QTranslator qtTranslatorBase, qtTranslator, translatorBase, translator;
-    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
+    app.loadTranslations();
 
     // Show help message immediately after parsing command-line options (for "-lang") and setting locale,
     // but before showing splash screen.
     if (HelpRequested(gArgs) || gArgs.GetBoolArg("-version", false)) {
-        HelpMessageDialog help(nullptr, gArgs.GetBoolArg("-version", false));
+        const bool about = gArgs.GetBoolArg("-version", false);
+        const auto options = about ? QString{} : HelpMessageDialog::loadHelpOptions();
+        HelpMessageDialog help(nullptr, about, options);
         help.showOrPrint();
         return EXIT_SUCCESS;
     }
@@ -600,7 +650,24 @@ int GuiMain(int argc, char* argv[])
     // - Do not call Params() before this step
     // - QSettings() will use the new application name after this, resulting in network-specific settings
     // - Needs to be done before createOptionsModel
-    if (auto error = common::InitConfig(gArgs, ErrorSettingsRead)) {
+    auto config_error = GUIUtil::WaitForBackendTask(std::async(std::launch::async, [] {
+        auto error = common::InitConfig(gArgs, [](const bilingual_str& message, const std::vector<std::string>& details) {
+            // Settings I/O runs on the worker, but its reset/abort decision is
+            // still made by the user on the GUI. The blocking dispatch keeps
+            // the local result alive until the dialog has returned.
+            bool abort{true};
+            const bool invoked = QMetaObject::invokeMethod(qApp, [&abort, message, details] {
+                abort = ErrorSettingsRead(message, details);
+            }, Qt::BlockingQueuedConnection);
+            assert(invoked);
+            return abort;
+        });
+#ifdef ENABLE_WALLET
+        if (!error) WalletModel::refreshWalletEnabled();
+#endif
+        return error;
+    }));
+    if (auto& error = config_error) {
         InitError(error->message, error->details);
         if (error->status == common::ConfigStatus::FAILED_WRITE) {
             // Show a custom error message to provide more information in the
@@ -622,8 +689,9 @@ int GuiMain(int argc, char* argv[])
     assert(!networkStyle.isNull());
     // Allow for separate UI settings for testnets
     QApplication::setApplicationName(networkStyle->getAppName());
+    app.loadGuiPreferences();
     // Re-initialize translations after changing application name (language in network-specific settings can be different)
-    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
+    app.loadTranslations();
 
 #ifdef ENABLE_WALLET
     /// 8. URI IPC sending
@@ -633,7 +701,7 @@ int GuiMain(int argc, char* argv[])
     // - Do this after creating app and setting up translations, so errors are
     // translated properly.
     if (PaymentServer::ipcSendCommandLine())
-        exit(EXIT_SUCCESS);
+        return EXIT_SUCCESS;
 
     // Start up the payment server early, too, so impatient users that click on
     // connectcoin: links repeatedly have their payment requests routed to this process:
@@ -647,13 +715,12 @@ int GuiMain(int argc, char* argv[])
     app.installEventFilter(new GUIUtil::LabelOutOfFocusEventFilter(&app));
 #if defined(Q_OS_WIN)
     // Install global event filter for processing Windows session related Windows messages (WM_QUERYENDSESSION and WM_ENDSESSION)
-    // Note: it is safe to call app.node() in the lambda below despite the fact
-    // that app.createNode() hasn't been called yet, because native events will
-    // not be processed until the Qt event loop is executed.
-    qApp->installNativeEventFilter(new WinShutdownMonitor([&app] { app.node().startShutdown(); }));
+    // Early requests are remembered until the node/executor is ready. The
+    // native callback must never synchronously join backend threads.
+    qApp->installNativeEventFilter(new WinShutdownMonitor([&app] { app.requestShutdown(); }));
 #endif
     // Install qDebug() message handler to route to debug.log
-    qInstallMessageHandler(DebugMessageHandler);
+    app.startQtLogging();
     // Allow parameter interaction before we create the options model
     app.parameterSetup();
     GUIUtil::LogQtInfo();
@@ -676,9 +743,8 @@ int GuiMain(int argc, char* argv[])
     try
     {
         app.createWindow(networkStyle.data());
-        // Perform base initialization before spinning up initialization/shutdown thread
-        // This is acceptable because this function only contains steps that are quick to execute,
-        // so the GUI thread won't be held up.
+        // Complete base initialization responsively before starting the
+        // long-running initialization/shutdown executor.
         if (app.baseInitialize()) {
             app.requestInitialize();
 #if defined(Q_OS_WIN)

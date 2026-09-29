@@ -7,6 +7,7 @@
 
 #include <addrdb.h>
 #include <net.h>
+#include <util/threadpool.h>
 
 #include <memory>
 
@@ -14,6 +15,7 @@
 #include <QStringList>
 
 class BanTablePriv;
+class QTimer;
 
 namespace interfaces {
     class Node;
@@ -49,6 +51,8 @@ public:
     ~BanTableModel();
     void startAutoRefresh();
     void stopAutoRefresh();
+    void stop();
+    void interrupt();
 
     enum ColumnIndex {
         Address = 0,
@@ -68,6 +72,7 @@ public:
 
     bool shouldShow();
 
+    //! Queue an unban operation, returning whether the request was accepted.
     bool unban(const QModelIndex& index);
 
 public Q_SLOTS:
@@ -77,6 +82,14 @@ private:
     interfaces::Node& m_node;
     QStringList columns;
     std::unique_ptr<BanTablePriv> priv;
+    ThreadPool m_worker{"qt-banlist"};
+    std::future<QList<CCombinedBan>> m_query;
+    std::vector<std::future<bool>> m_unban_queries;
+    QTimer* m_result_timer{nullptr};
+    bool m_refresh_requested{false};
+    bool m_stopped{false};
+    bool m_worker_stopped{false};
+    void pollRefresh();
 };
 
 #endif // CONNECTCOIN_QT_BANTABLEMODEL_H

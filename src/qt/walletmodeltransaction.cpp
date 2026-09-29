@@ -16,7 +16,7 @@ QList<SendCoinsRecipient> WalletModelTransaction::getRecipients() const
     return recipients;
 }
 
-CTransactionRef& WalletModelTransaction::getWtx()
+const CTransactionRef& WalletModelTransaction::getWtx() const
 {
     return wtx;
 }
@@ -24,11 +24,12 @@ CTransactionRef& WalletModelTransaction::getWtx()
 void WalletModelTransaction::setWtx(const CTransactionRef& newTx)
 {
     wtx = newTx;
+    transaction_size = wtx ? GetVirtualTransactionSize(*wtx) : 0;
 }
 
-unsigned int WalletModelTransaction::getTransactionSize()
+unsigned int WalletModelTransaction::getTransactionSize() const
 {
-    return wtx ? GetVirtualTransactionSize(*wtx) : 0;
+    return transaction_size;
 }
 
 CAmount WalletModelTransaction::getTransactionFee() const

@@ -8,7 +8,6 @@
 #include <qt/freespacechecker.h>
 
 #include <QDialog>
-#include <QMutex>
 #include <QThread>
 
 inline constexpr bool DEFAULT_CHOOSE_DATADIR = false;
@@ -25,13 +24,14 @@ namespace Ui {
   Allows the user to choose a data directory,
   in which the wallet and block chain will be stored.
  */
-class Intro : public QDialog, public FreespaceChecker::PathQuery
+class Intro : public QDialog
 {
     Q_OBJECT
 
 public:
     explicit Intro(QWidget *parent = nullptr,
-                   int64_t blockchain_size_gb = 0, int64_t chain_state_size_gb = 0);
+                   int64_t blockchain_size_gb = 0, int64_t chain_state_size_gb = 0,
+                   QString default_data_directory = {});
     ~Intro();
 
     QString getDataDirectory();
@@ -51,10 +51,14 @@ public:
     static bool showIfNeeded(bool& did_show_intro, int64_t& prune_MiB);
 
 Q_SIGNALS:
-    void requestCheck();
+    void requestCheck(const QString& path);
 
 public Q_SLOTS:
     void setStatus(int status, const QString &message, quint64 bytesAvailable);
+    void done(int result) override;
+
+protected:
+    void showEvent(QShowEvent* event) override;
 
 private Q_SLOTS:
     void on_dataDirectory_textChanged(const QString &arg1);
@@ -66,9 +70,11 @@ private:
     Ui::Intro *ui;
     bool m_prune_checkbox_is_default{true};
     QThread* thread{nullptr};
-    QMutex mutex;
-    bool signalled{false};
+    bool m_check_running{false};
+    bool m_closing{false};
+    int m_close_result{QDialog::Rejected};
     QString pathToCheck;
+    QString m_default_data_directory;
     const int64_t m_blockchain_size_gb;
     const int64_t m_chain_state_size_gb;
     //! Total required space (in GB) depending on user choice (prune or not prune).
@@ -78,11 +84,9 @@ private:
 
     void startThread();
     void checkPath(const QString &dataDir);
-    QString getPathToCheck() override;
+    QString defaultDataDirectory();
     void UpdatePruneLabels(bool prune_checked);
     void UpdateFreeSpaceLabel();
-
-    friend class FreespaceChecker;
 };
 
 #endif // CONNECTCOIN_QT_INTRO_H

@@ -4,8 +4,10 @@
 
 #include <wallet/wallet.h>
 
+#include <chrono>
 #include <cstdint>
 #include <future>
+#include <limits>
 #include <map>
 #include <memory>
 #include <vector>
@@ -13,6 +15,8 @@
 #include <addresstype.h>
 #include <coins.h>
 #include <interfaces/chain.h>
+#include <interfaces/wallet.h>
+#include <kernel/types.h>
 #include <key_io.h>
 #include <node/blockstorage.h>
 #include <node/types.h>
@@ -52,6 +56,138 @@ static_assert(DEFAULT_TRANSACTION_MINFEE == ECONOMIC_RELAY_FEE_MARGIN, "wallet m
 static_assert(WALLET_INCREMENTAL_RELAY_FEE >= DEFAULT_INCREMENTAL_RELAY_FEE, "wallet incremental fee is smaller than default incremental relay fee");
 
 BOOST_FIXTURE_TEST_SUITE(wallet_tests, WalletTestingSetup)
+
+BOOST_AUTO_TEST_CASE(transaction_status_does_not_wait_for_chain)
+{
+    auto wallet{std::make_shared<CWallet>(m_node.chain.get(), "status-poll", CreateMockableWalletDatabase())};
+    WalletContext context;
+    auto wallet_interface{interfaces::MakeWallet(context, wallet)};
+    const auto* tip{WITH_LOCK(cs_main, return m_node.chainman->ActiveChain().Tip())};
+    CMutableTransaction tx;
+    tx.vin.emplace_back(Txid::FromUint256(uint256::ONE), 0);
+    tx.vout.emplace_back(COIN, XOnlyPubKey{GenerateRandomKey().GetPubKey()});
+    tx.nLockTime = 17;
+    {
+        LOCK(wallet->cs_wallet);
+        wallet->SetLastBlockProcessed(tip->nHeight, tip->GetBlockHash());
+        BOOST_REQUIRE(wallet->AddToWallet(MakeTransactionRef(tx), TxStateConfirmed{tip->GetBlockHash(), tip->nHeight, 0}));
+    }
+
+    interfaces::WalletTxStatus status{};
+    status.lock_time = 99;
+    int height{-7};
+    int64_t time{-9};
+    const auto poll = [&] { return wallet_interface->tryGetTxStatus(tx.GetHash(), status, height, time); };
+    std::future<bool> result;
+    bool completed_while_locked;
+    {
+        LOCK(cs_main);
+        result = std::async(std::launch::async, poll);
+        completed_while_locked = result.wait_for(std::chrono::seconds{1}) == std::future_status::ready;
+    }
+    // Release the chain lock before joining/asserting so a blocking regression
+    // fails the test instead of hanging the test process.
+    const bool updated{result.get()};
+    BOOST_CHECK(completed_while_locked);
+    BOOST_CHECK(!updated);
+    BOOST_CHECK_EQUAL(status.lock_time, 99U);
+    BOOST_CHECK_EQUAL(height, -7);
+    BOOST_CHECK_EQUAL(time, -9);
+
+    BOOST_REQUIRE(poll());
+    BOOST_CHECK_EQUAL(status.lock_time, tx.nLockTime);
+    BOOST_CHECK_EQUAL(status.depth_in_main_chain, 1);
+    BOOST_CHECK_EQUAL(height, tip->nHeight);
+    BOOST_CHECK_EQUAL(time, tip->GetBlockTime());
+
+    // The existing nonblocking wallet-lock behavior must also be preserved.
+    {
+        LOCK(wallet->cs_wallet);
+        result = std::async(std::launch::async, poll);
+        completed_while_locked = result.wait_for(std::chrono::seconds{1}) == std::future_status::ready;
+    }
+    const bool wallet_updated{result.get()};
+    BOOST_CHECK(completed_while_locked);
+    BOOST_CHECK(!wallet_updated);
+    BOOST_CHECK_EQUAL(status.lock_time, tx.nLockTime);
+    BOOST_CHECK_EQUAL(height, tip->nHeight);
+    BOOST_CHECK_EQUAL(time, tip->GetBlockTime());
+
+    BOOST_CHECK(!m_node.chain->tryGetBlockTime(uint256{}));
+    WITH_LOCK(wallet->cs_wallet, wallet->SetLastBlockProcessed(tip->nHeight, uint256{}));
+    BOOST_CHECK(!poll());
+    BOOST_CHECK_EQUAL(status.lock_time, tx.nLockTime);
+    BOOST_CHECK_EQUAL(height, tip->nHeight);
+    BOOST_CHECK_EQUAL(time, tip->GetBlockTime());
+}
+
+BOOST_AUTO_TEST_CASE(conflict_and_disconnect_notify_descendants)
+{
+    CWallet wallet{m_node.chain.get(), "conflict-notifications", CreateMockableWalletDatabase()};
+    const auto previous{GetRandHash()}, block_hash{GetRandHash()};
+    CMutableTransaction parent;
+    parent.vin.emplace_back(Txid::FromUint256(uint256::ONE), 0);
+    parent.vout.emplace_back(COIN, XOnlyPubKey{GenerateRandomKey().GetPubKey()});
+    CMutableTransaction child;
+    child.vin.emplace_back(parent.GetHash(), 0);
+    child.vout.emplace_back(COIN / 2, XOnlyPubKey{GenerateRandomKey().GetPubKey()});
+    CMutableTransaction competing{parent};
+    competing.nLockTime = 1;
+    CMutableTransaction coinbase;
+    coinbase.vin.emplace_back();
+    coinbase.vout.emplace_back(COIN, XOnlyPubKey{GenerateRandomKey().GetPubKey()});
+    {
+        LOCK(wallet.cs_wallet);
+        wallet.SetLastBlockProcessed(0, previous);
+        BOOST_REQUIRE(wallet.AddToWallet(MakeTransactionRef(parent), TxStateInactive{}));
+        BOOST_REQUIRE(wallet.AddToWallet(MakeTransactionRef(child), TxStateInactive{}));
+        BOOST_REQUIRE(wallet.AddToWallet(MakeTransactionRef(coinbase), TxStateInactive{/*abandoned=*/true}));
+    }
+    CBlock block;
+    block.vtx = {MakeTransactionRef(coinbase), MakeTransactionRef(competing)};
+    interfaces::BlockInfo info{block_hash};
+    info.prev_hash = &previous;
+    info.height = 1;
+    info.chain_time_max = std::numeric_limits<unsigned>::max();
+    info.data = &block;
+    std::map<Txid, int> updates;
+    auto connection = wallet.NotifyTransactionChanged.connect([&](const Txid& hash, ChangeType change) {
+        BOOST_CHECK(change == CT_UPDATED);
+        ++updates[hash];
+    });
+
+    wallet.blockConnected(kernel::ChainstateRole{}, info);
+    BOOST_CHECK_EQUAL(updates[parent.GetHash()], 1);
+    BOOST_CHECK_EQUAL(updates[child.GetHash()], 1);
+    BOOST_CHECK_EQUAL(updates[coinbase.GetHash()], 1);
+    BOOST_CHECK_EQUAL(updates.size(), 3U);
+    {
+        LOCK(wallet.cs_wallet);
+        BOOST_CHECK(wallet.GetWalletTx(parent.GetHash())->isBlockConflicted());
+        BOOST_CHECK(wallet.GetWalletTx(child.GetHash())->isBlockConflicted());
+        BOOST_CHECK(wallet.GetWalletTx(coinbase.GetHash())->isConfirmed());
+    }
+    // Repeating a conflict at the same depth must not send another update for
+    // that transaction or recursively notify all its descendants again.
+    wallet.blockConnected(kernel::ChainstateRole{}, info);
+    BOOST_CHECK_EQUAL(updates[parent.GetHash()], 1);
+    BOOST_CHECK_EQUAL(updates[child.GetHash()], 1);
+    updates.clear();
+
+    wallet.blockDisconnected(info);
+    BOOST_CHECK_EQUAL(updates[parent.GetHash()], 1);
+    BOOST_CHECK_EQUAL(updates[child.GetHash()], 1);
+    BOOST_CHECK_EQUAL(updates[coinbase.GetHash()], 1);
+    BOOST_CHECK_EQUAL(updates.size(), 3U);
+    {
+        LOCK(wallet.cs_wallet);
+        BOOST_CHECK(!wallet.GetWalletTx(parent.GetHash())->isBlockConflicted());
+        BOOST_CHECK(!wallet.GetWalletTx(child.GetHash())->isBlockConflicted());
+        BOOST_CHECK(!wallet.GetWalletTx(coinbase.GetHash())->isConfirmed());
+        BOOST_CHECK(wallet.GetWalletTx(coinbase.GetHash())->isAbandoned());
+    }
+    connection.disconnect();
+}
 
 BOOST_AUTO_TEST_CASE(automatic_fee_without_fallback)
 {

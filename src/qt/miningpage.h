@@ -6,6 +6,7 @@
 #define CONNECTCOIN_QT_MININGPAGE_H
 
 #include <QWidget>
+#include <QPointer>
 
 class ClientModel;
 class WalletModel;
@@ -28,7 +29,8 @@ private:
     QString walletAddress();
     void updateThreadWarning();
     WalletModel* m_wallet;
-    ClientModel* m_client{nullptr};
+    QPointer<ClientModel> m_client;
+    bool m_mining_command_requested{false};
     QLineEdit* m_address;
     QSpinBox* m_threads;
     QLabel* m_thread_warning;

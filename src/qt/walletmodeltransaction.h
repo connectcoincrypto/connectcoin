@@ -26,10 +26,12 @@ public:
 
     QList<SendCoinsRecipient> getRecipients() const;
 
-    CTransactionRef& getWtx();
+    const CTransactionRef& getWtx() const;
+    // Set on the preparation/signing worker: computes the size once, never
+    // while the confirmation dialog is formatting or repainting its fields.
     void setWtx(const CTransactionRef&);
 
-    unsigned int getTransactionSize();
+    unsigned int getTransactionSize() const;
 
     void setTransactionFee(const CAmount& newFee);
     CAmount getTransactionFee() const;
@@ -41,6 +43,7 @@ public:
 private:
     QList<SendCoinsRecipient> recipients;
     CTransactionRef wtx;
+    unsigned int transaction_size{0};
     CAmount fee{0};
 };
 

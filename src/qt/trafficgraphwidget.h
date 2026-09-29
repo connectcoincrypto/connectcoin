@@ -44,6 +44,7 @@ private:
     QQueue<float> vSamplesOut;
     quint64 nLastBytesIn{0};
     quint64 nLastBytesOut{0};
+    bool m_have_baseline{false};
     ClientModel* clientModel{nullptr};
 };
 

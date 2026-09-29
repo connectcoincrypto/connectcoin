@@ -7,6 +7,7 @@
 
 #include <QPointer>
 #include <QWidget>
+#include <univalue.h>
 #include <future>
 #include <string>
 
@@ -17,6 +18,9 @@ class QLabel;
 class QLineEdit;
 class QPushButton;
 class QSpinBox;
+class QTimer;
+class QHideEvent;
+class QShowEvent;
 QT_END_NAMESPACE
 
 class P2CClaimDialog : public QWidget
@@ -25,10 +29,17 @@ class P2CClaimDialog : public QWidget
 public:
     explicit P2CClaimDialog(QWidget* parent = nullptr);
     void setModel(WalletModel* model);
+protected:
+    void showEvent(QShowEvent* event) override;
+    void hideEvent(QHideEvent* event) override;
+    void changeEvent(QEvent* event) override;
+    bool eventFilter(QObject* object, QEvent* event) override;
 private:
     static QString StateText(const std::string& state);
     void Configure(bool stop);
     void Refresh();
+    void UpdateRefreshState();
+    bool IsStatusVisible() const;
     void UpdateLoadWarning();
     QPointer<WalletModel> m_model;
     QSpinBox* m_rate;
@@ -44,7 +55,10 @@ private:
     QPushButton* m_start;
     QPushButton* m_stop;
     QLabel* m_status;
+    QTimer* m_refresh_timer{nullptr};
+    QPointer<QWidget> m_watched_window;
     std::future<std::string> m_operation;
+    std::future<UniValue> m_status_query;
     QString m_configuration_error;
 };
 #endif // CONNECTCOIN_QT_P2CCLAIMDIALOG_H

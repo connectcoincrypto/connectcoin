@@ -41,12 +41,17 @@ Notificator::Notificator(const QString &_programName, QSystemTrayIcon *_trayIcon
         mode = QSystemTray;
     }
 #ifdef USE_DBUS
-    interface = new QDBusInterface("org.freedesktop.Notifications",
-        "/org/freedesktop/Notifications", "org.freedesktop.Notifications");
-    if(interface->isValid())
-    {
-        mode = Freedesktop;
-    }
+    // QDBusInterface introspects the remote object synchronously in its
+    // constructor. A stalled desktop notification service must not stall the
+    // GUI at startup. Keep the platform fallback until the async probe succeeds.
+    const auto probe = QDBusMessage::createMethodCall("org.freedesktop.Notifications",
+        "/org/freedesktop/Notifications", "org.freedesktop.Notifications", "GetServerInformation");
+    auto* watcher = new QDBusPendingCallWatcher(QDBusConnection::sessionBus().asyncCall(probe), this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher* finished) {
+        const QDBusPendingReply<QString, QString, QString, QString> reply = *finished;
+        if (!reply.isError()) mode = Freedesktop;
+        finished->deleteLater();
+    });
 #endif
 #ifdef Q_OS_MACOS
     // check if users OS has support for NSUserNotification
@@ -56,12 +61,7 @@ Notificator::Notificator(const QString &_programName, QSystemTrayIcon *_trayIcon
 #endif
 }
 
-Notificator::~Notificator()
-{
-#ifdef USE_DBUS
-    delete interface;
-#endif
-}
+Notificator::~Notificator() = default;
 
 #ifdef USE_DBUS
 
@@ -190,7 +190,10 @@ void Notificator::notifyDBus(Class cls, const QString &title, const QString &tex
     args.append(millisTimeout);
 
     // "Fire and forget"
-    interface->callWithArgumentList(QDBus::NoBlock, "Notify", args);
+    auto message = QDBusMessage::createMethodCall("org.freedesktop.Notifications",
+        "/org/freedesktop/Notifications", "org.freedesktop.Notifications", "Notify");
+    message.setArguments(args);
+    QDBusConnection::sessionBus().call(message, QDBus::NoBlock);
 }
 #endif
 

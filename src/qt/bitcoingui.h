@@ -39,6 +39,7 @@ class WalletFrame;
 class WalletModel;
 class HelpMessageDialog;
 class ModalOverlay;
+struct bilingual_str;
 enum class SynchronizationState;
 
 namespace interfaces {
@@ -73,6 +74,8 @@ public:
 
     explicit BitcoinGUI(interfaces::Node& node, const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent = nullptr);
     ~BitcoinGUI();
+    /** Capture final widget state before the application preferences flush. */
+    void saveSettings();
 
     /** Set the client model.
         The client model represents the part of the core that communicates with the P2P network, and is wallet-agnostic.
@@ -113,6 +116,11 @@ protected:
     bool eventFilter(QObject *object, QEvent *event) override;
 
 private:
+    struct CoreSignalGate;
+    std::shared_ptr<CoreSignalGate> m_core_signal_gate;
+    static bool ThreadSafeMessageBox(const std::shared_ptr<CoreSignalGate>& gate, const bilingual_str& message, unsigned int style);
+    friend void CheckCoreMessageLifetime(interfaces::Node& node);
+    bool m_settings_saved{false};
     interfaces::Node& m_node;
 #ifdef ENABLE_WALLET
     WalletController* m_wallet_controller{nullptr};

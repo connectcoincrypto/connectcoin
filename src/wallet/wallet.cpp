@@ -1368,7 +1368,7 @@ void CWallet::MarkConflicted(const uint256& hashBlock, int conflicting_height, c
             // Block is 'more conflicted' than current confirm; update.
             // Mark transaction as conflicted with this block.
             wtx.m_state = TxStateBlockConflicted{hashBlock, conflicting_height};
-            return TxUpdate::CHANGED;
+            return TxUpdate::NOTIFY_CHANGED;
         }
         return TxUpdate::UNCHANGED;
     };
@@ -1608,7 +1608,7 @@ void CWallet::blockDisconnected(const interfaces::BlockInfo& block)
                     if (!tx.isBlockConflicted()) return TxUpdate::UNCHANGED;
                     if (tx.state<TxStateBlockConflicted>()->conflicting_block_height >= disconnect_height) {
                         tx.m_state = TxStateInactive{};
-                        return TxUpdate::CHANGED;
+                        return TxUpdate::NOTIFY_CHANGED;
                     }
                     return TxUpdate::UNCHANGED;
                 };

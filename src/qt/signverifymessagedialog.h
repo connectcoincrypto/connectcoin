@@ -6,6 +6,7 @@
 #define CONNECTCOIN_QT_SIGNVERIFYMESSAGEDIALOG_H
 
 #include <QDialog>
+#include <QPointer>
 
 class PlatformStyle;
 class WalletModel;
@@ -35,7 +36,7 @@ protected:
 
 private:
     Ui::SignVerifyMessageDialog *ui;
-    WalletModel* model{nullptr};
+    QPointer<WalletModel> model;
     const PlatformStyle *platformStyle;
 
 private Q_SLOTS:

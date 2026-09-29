@@ -7,17 +7,21 @@
 
 #include <consensus/amount.h>
 
+#include <memory>
+
 #include <QAbstractButton>
 #include <QAction>
 #include <QDialog>
 #include <QList>
 #include <QMenu>
 #include <QPoint>
+#include <QPointer>
 #include <QString>
 #include <QTreeWidgetItem>
 
 class PlatformStyle;
 class WalletModel;
+class CoinControlViewState;
 
 namespace wallet {
 class CCoinControl;
@@ -59,20 +63,24 @@ protected:
 private:
     Ui::CoinControlDialog *ui;
     wallet::CCoinControl& m_coin_control;
-    WalletModel *model;
+    QPointer<WalletModel> model;
     int sortColumn;
     Qt::SortOrder sortOrder;
 
     QMenu *contextMenu;
-    QTreeWidgetItem *contextMenuItem;
+    QTreeWidgetItem *contextMenuItem{nullptr};
     QAction* m_copy_transaction_outpoint_action;
     QAction *lockAction;
     QAction *unlockAction;
 
     const PlatformStyle *platformStyle;
+    std::unique_ptr<CoinControlViewState> m_view;
+    bool m_labels_queued{false};
 
     void sortView(int, Qt::SortOrder);
     void updateView();
+    void pollView();
+    void renderView();
 
     enum
     {
@@ -113,6 +121,7 @@ private Q_SLOTS:
     void buttonBoxClicked(QAbstractButton*);
     void buttonSelectAllClicked();
     void updateLabelLocked();
+    void coinControlUpdateLabels();
 };
 
 #endif // CONNECTCOIN_QT_COINCONTROLDIALOG_H

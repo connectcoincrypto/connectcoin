@@ -12,7 +12,9 @@
 #include <interfaces/wallet.h>
 #include <primitives/transaction_identifier.h>
 #include <support/allocators/secure.h>
+#include <util/threadpool.h>
 
+#include <memory>
 #include <vector>
 
 #include <QObject>
@@ -26,6 +28,7 @@ class PlatformStyle;
 class RecentRequestsTableModel;
 class SendCoinsRecipient;
 class TransactionTableModel;
+class WalletModelNotificationState;
 class WalletModelTransaction;
 
 class CKeyID;
@@ -129,13 +132,33 @@ public:
 
     UnlockContext requestUnlock();
 
+    // Normal GUI owners detach views, then use this to release the last backend
+    // reference (claim-worker/database cleanup) without blocking the GUI thread.
+    static void destroy(WalletModel* model);
+
     bool bumpFee(Txid hash, Txid& new_hash);
-    void displayAddress(std::string sAddress) const;
+    void displayAddress(std::string sAddress);
 
     static bool isWalletEnabled();
+    //! Populate the immutable startup flag from the config/base-init worker.
+    static void refreshWalletEnabled();
 
     interfaces::Node& node() const { return m_node; }
     interfaces::Wallet& wallet() const { return *m_wallet; }
+    //! Run backend work off the GUI thread. Capture values, never widgets/model
+    //! pointers. Polling callers keep at most one outstanding query of each
+    //! kind and poll its future without waiting. Explicit configuration tasks
+    //! can use the same worker. Discarding a future does not wait; the model
+    //! drains its worker before destroying the wallet.
+    template <typename Fn>
+    auto requestWalletData(Fn&& query)
+    {
+        auto result = m_refresh_worker.Submit([wallet = m_wallet.get(), query = std::forward<Fn>(query)]() mutable {
+            return query(*wallet);
+        });
+        if (!result) throw std::runtime_error("Wallet refresh worker is unavailable");
+        return std::move(*result);
+    }
     ClientModel& clientModel() const { return *m_client_model; }
     void setClientModel(ClientModel* client_model);
 
@@ -151,12 +174,39 @@ public:
     // Retrieve the cached wallet balance
     interfaces::WalletBalances getCachedBalance() const;
 
+    // False until the first asynchronous capability query has completed.
+    bool getCachedCanGetAddresses() const { return m_cached_can_get_addresses; }
+    bool getCachedHDEnabled() const { return m_cached_hd_enabled; }
+
     // If coin control has selected outputs, searches the total amount inside the wallet.
     // Otherwise, uses the wallet's cached available balance.
     CAmount getAvailableBalance(const wallet::CCoinControl* control);
 
 private:
     std::unique_ptr<interfaces::Wallet> m_wallet;
+    ThreadPool m_refresh_worker{"qt-wallet-refresh"};
+    bool m_stopping{false};
+    // Backend callbacks retain this gate, not the model. Disconnecting a core
+    // signal does not wait for callbacks which have already started running.
+    std::shared_ptr<WalletModelNotificationState> m_notifications;
+    struct BalanceSnapshot {
+        interfaces::WalletBalances balances;
+        uint256 block_hash;
+    };
+    std::future<std::optional<BalanceSnapshot>> m_balance_query;
+    struct WalletStatusSnapshot {
+        bool can_get_addresses;
+        EncryptionStatus encryption;
+        bool hd_enabled;
+    };
+    static WalletStatusSnapshot readWalletStatus(interfaces::Wallet& wallet);
+    void applyWalletStatus(const WalletStatusSnapshot& snapshot);
+    void refreshWalletStatusForAction();
+    std::future<WalletStatusSnapshot> m_can_get_addresses_query;
+    bool m_cached_can_get_addresses{false};
+    bool m_cached_hd_enabled{false};
+    bool m_can_get_addresses_dirty{true};
+    QTimer* m_can_get_addresses_timer{nullptr};
     std::unique_ptr<interfaces::Handler> m_handler_unload;
     std::unique_ptr<interfaces::Handler> m_handler_status_changed;
     std::unique_ptr<interfaces::Handler> m_handler_address_book_changed;
@@ -178,7 +228,7 @@ private:
 
     // Cache some values to be able to detect changes
     interfaces::WalletBalances m_cached_balances;
-    EncryptionStatus cachedEncryptionStatus{Unencrypted};
+    EncryptionStatus cachedEncryptionStatus{Locked};
     QTimer* timer;
 
     // Block hash denoting when the last balance update was done.
@@ -187,6 +237,7 @@ private:
     void subscribeToCoreSignals();
     void unsubscribeFromCoreSignals();
     void checkBalanceChanged(const interfaces::WalletBalances& new_balances);
+    void pollCanGetAddresses();
 
 Q_SIGNALS:
     // Signal that balance in wallet changed
@@ -212,14 +263,19 @@ Q_SIGNALS:
     // Signal that wallet is about to be removed
     void unload();
 
-    // Notify that there are now keys in the keypool
+    // The cached ability to generate receiving addresses changed.
     void canGetAddressesChanged();
+
+    // Label changes from any surviving address-book cache; empty means all labels.
+    void addressBookLabelsChanged(const QString& address);
 
     void timerTimeout();
 
 public Q_SLOTS:
     /* Starts a timer to periodically update the balance */
     void startPollBalance();
+    // Quiesce while the owner/controller is still alive, before deletion.
+    void stopWorker();
 
     /* Wallet status might have changed */
     void updateStatus();
@@ -229,6 +285,8 @@ public Q_SLOTS:
     void updateAddressBook(const QString &address, const QString &label, bool isMine, wallet::AddressPurpose purpose, int status);
     /* Current, immature or unconfirmed balance might have changed - emit 'balanceChanged' if so */
     void pollBalanceChanged();
+    /* Coalesce keypool notifications into an asynchronous capability refresh. */
+    void requestCanGetAddressesUpdate();
 };
 
 #endif // CONNECTCOIN_QT_WALLETMODEL_H

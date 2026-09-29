@@ -26,7 +26,6 @@
 #include <map>
 
 #define DECORATION_SIZE 54
-#define NUM_ITEMS 5
 
 Q_DECLARE_METATYPE(interfaces::WalletBalances)
 
@@ -145,7 +144,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     // Recent transactions
     ui->listTransactions->setItemDelegate(txdelegate);
     ui->listTransactions->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
-    ui->listTransactions->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
+    ui->listTransactions->setMinimumHeight(TransactionOverviewModel::ROW_LIMIT * (DECORATION_SIZE + 2));
     ui->listTransactions->setAttribute(Qt::WA_MacShowFocusRect, false);
 
     connect(ui->listTransactions, &TransactionOverviewWidget::clicked, this, &OverviewPage::handleTransactionClicked);
@@ -158,8 +157,8 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
 
 void OverviewPage::handleTransactionClicked(const QModelIndex &index)
 {
-    if(filter)
-        Q_EMIT transactionClicked(filter->mapToSource(index));
+    if(filter && m_recent_transactions)
+        Q_EMIT transactionClicked(filter->mapToSource(m_recent_transactions->mapToSource(index)));
 }
 
 void OverviewPage::setPrivacy(bool privacy)
@@ -225,13 +224,12 @@ void OverviewPage::setWalletModel(WalletModel *model)
         filter->setShowInactive(false);
         filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
 
-        ui->listTransactions->setModel(filter.get());
+        m_recent_transactions = std::make_unique<TransactionOverviewModel>();
+        m_recent_transactions->setSourceModel(filter.get());
+        ui->listTransactions->setModel(m_recent_transactions.get());
         ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
-
-        connect(filter.get(), &TransactionFilterProxy::rowsInserted, this, &OverviewPage::LimitTransactionRows);
-        connect(filter.get(), &TransactionFilterProxy::rowsRemoved, this, &OverviewPage::LimitTransactionRows);
-        connect(filter.get(), &TransactionFilterProxy::rowsMoved, this, &OverviewPage::LimitTransactionRows);
-        LimitTransactionRows();
+        connect(model->getTransactionTableModel(), &TransactionTableModel::confirmationsChanged,
+                ui->listTransactions->viewport(), QOverload<>::of(&QWidget::update));
         // Keep up to date with wallet
         setBalance(model->getCachedBalance());
         connect(model, &WalletModel::balanceChanged, this, &OverviewPage::setBalance);
@@ -252,16 +250,6 @@ void OverviewPage::changeEvent(QEvent* e)
     }
 
     QWidget::changeEvent(e);
-}
-
-// Only show most recent NUM_ITEMS rows
-void OverviewPage::LimitTransactionRows()
-{
-    if (filter && ui->listTransactions && ui->listTransactions->model() && filter.get() == ui->listTransactions->model()) {
-        for (int i = 0; i < filter->rowCount(); ++i) {
-            ui->listTransactions->setRowHidden(i, i >= NUM_ITEMS);
-        }
-    }
 }
 
 void OverviewPage::updateDisplayUnit()

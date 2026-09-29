@@ -102,6 +102,7 @@ QString TransactionDesc::toHTML(interfaces::Node& node, interfaces::Wallet& wall
     std::vector<std::string> messages;
     std::vector<std::string> payment_requests;
     interfaces::WalletTx wtx = wallet.getWalletTxDetails(rec->hash, status, messages, payment_requests, inMempool, numBlocks);
+    if (!wtx.tx) return tr("This transaction is no longer available in the wallet.");
 
     QString strHTML;
 

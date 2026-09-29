@@ -23,11 +23,13 @@
 #include <validation.h>
 
 #include <QFileDialog>
-#include <QSettings>
+#include <qt/guipreferences.h>
 #include <QMessageBox>
+#include <QPointer>
 
 #include <cmath>
 #include <cstdlib>
+#include <utility>
 
 namespace {
 //! Return pruning size that will be used if automatic pruning is enabled.
@@ -39,9 +41,10 @@ int GetPruneTargetGB()
 }
 } // namespace
 
-Intro::Intro(QWidget *parent, int64_t blockchain_size_gb, int64_t chain_state_size_gb) :
+Intro::Intro(QWidget *parent, int64_t blockchain_size_gb, int64_t chain_state_size_gb, QString default_data_directory) :
     QDialog(parent, GUIUtil::dialog_flags),
     ui(new Ui::Intro),
+    m_default_data_directory(std::move(default_data_directory)),
     m_blockchain_size_gb(blockchain_size_gb),
     m_chain_state_size_gb(chain_state_size_gb),
     m_prune_target_gb{GetPruneTargetGB()}
@@ -86,10 +89,36 @@ Intro::Intro(QWidget *parent, int64_t blockchain_size_gb, int64_t chain_state_si
 
 Intro::~Intro()
 {
-    delete ui;
-    /* Ensure thread is finished before it is deleted */
+    // Normal dialog completion waits asynchronously in done(). Keep a safe
+    // non-reentrant fallback for direct deletion/exceptional ownership paths.
     thread->quit();
     thread->wait();
+    delete ui;
+}
+
+void Intro::done(int result)
+{
+    if (m_closing) return;
+    if (!thread->isRunning()) {
+        QDialog::done(result);
+        return;
+    }
+    // A filesystem probe cannot necessarily be interrupted. Keep dispatching
+    // events until it finishes, with the fully constructed dialog still alive.
+    m_closing = true;
+    m_close_result = result;
+    setEnabled(false);
+    thread->quit();
+}
+
+void Intro::showEvent(QShowEvent* event)
+{
+    // Directory creation can fail after acceptance, reopening this dialog.
+    if (!thread->isRunning()) {
+        startThread();
+        checkPath(ui->dataDirectory->text());
+    }
+    QDialog::showEvent(event);
 }
 
 QString Intro::getDataDirectory()
@@ -99,8 +128,12 @@ QString Intro::getDataDirectory()
 
 void Intro::setDataDirectory(const QString &dataDir)
 {
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<Intro> guard{this};
+    const auto default_directory = defaultDataDirectory();
+    if (!guard) return;
     ui->dataDirectory->setText(dataDir);
-    if(dataDir == GUIUtil::getDefaultDataDirectory())
+    if(dataDir == default_directory)
     {
         ui->dataDirDefault->setChecked(true);
         ui->dataDirectory->setEnabled(false);
@@ -110,6 +143,20 @@ void Intro::setDataDirectory(const QString &dataDir)
         ui->dataDirectory->setEnabled(true);
         ui->ellipsisButton->setEnabled(true);
     }
+}
+
+QString Intro::defaultDataDirectory()
+{
+    if (!m_default_data_directory.isNull()) return m_default_data_directory;
+    // Direct users/tests may construct Intro without the startup snapshot.
+    // Resolve the shell path only at this fully constructed, explicit action
+    // boundary; neither construction nor later edits perform filesystem work.
+    const QPointer<Intro> guard{this};
+    auto path = GUIUtil::WaitForBackendTask(std::async(std::launch::async, [] {
+        return GUIUtil::getDefaultDataDirectory();
+    }), this);
+    if (guard) m_default_data_directory = path;
+    return path;
 }
 
 int64_t Intro::getPruneMiB() const
@@ -126,17 +173,22 @@ bool Intro::showIfNeeded(bool& did_show_intro, int64_t& prune_MiB)
 {
     did_show_intro = false;
 
-    QSettings settings;
+    GuiSettings settings;
     /* If data directory provided on command line, no need to look at settings
        or show a picking dialog */
     if(!gArgs.GetArg("-datadir", "").empty())
         return true;
     /* 1) Default data directory for operating system */
-    QString dataDir = GUIUtil::getDefaultDataDirectory();
+    const auto default_directory = GUIUtil::WaitForBackendTask(std::async(std::launch::async, [] {
+        return GUIUtil::getDefaultDataDirectory();
+    }));
+    QString dataDir = default_directory;
     /* 2) Allow QSettings to override default dir */
     dataDir = settings.value("strDataDir", dataDir).toString();
 
-    if(!fs::exists(GUIUtil::QStringToPath(dataDir)) || gArgs.GetBoolArg("-choosedatadir", DEFAULT_CHOOSE_DATADIR) || settings.value("fReset", false).toBool() || gArgs.GetBoolArg("-resetguisettings", false))
+    const bool directory_exists = GUIUtil::WaitForBackendTask(std::async(std::launch::async,
+        [path = GUIUtil::QStringToPath(dataDir)] { return fs::exists(path); }));
+    if(!directory_exists || gArgs.GetBoolArg("-choosedatadir", DEFAULT_CHOOSE_DATADIR) || settings.value("fReset", false).toBool() || gArgs.GetBoolArg("-resetguisettings", false))
     {
         /* Use selectParams here to guarantee Params() can be used by node interface */
         try {
@@ -148,7 +200,7 @@ bool Intro::showIfNeeded(bool& did_show_intro, int64_t& prune_MiB)
         }
 
         /* If current default data directory does not exist, let the user choose one */
-        Intro intro(nullptr, Params().AssumedBlockchainSize(), Params().AssumedChainStateSize());
+        Intro intro(nullptr, Params().AssumedBlockchainSize(), Params().AssumedChainStateSize(), default_directory);
         intro.setDataDirectory(dataDir);
         intro.setWindowIcon(QIcon(":icons/bitcoin"));
         did_show_intro = true;
@@ -162,10 +214,10 @@ bool Intro::showIfNeeded(bool& did_show_intro, int64_t& prune_MiB)
             }
             dataDir = intro.getDataDirectory();
             try {
-                if (TryCreateDirectories(GUIUtil::QStringToPath(dataDir))) {
-                    // If a new data directory has been created, make wallets subdirectory too
-                    TryCreateDirectories(GUIUtil::QStringToPath(dataDir) / "wallets");
-                }
+                GUIUtil::WaitForBackendTask(std::async(std::launch::async,
+                    [path = GUIUtil::QStringToPath(dataDir)] {
+                        if (TryCreateDirectories(path)) TryCreateDirectories(path / "wallets");
+                    }));
                 break;
             } catch (const fs::filesystem_error&) {
                 QMessageBox::critical(nullptr, CLIENT_NAME,
@@ -179,12 +231,13 @@ bool Intro::showIfNeeded(bool& did_show_intro, int64_t& prune_MiB)
 
         settings.setValue("strDataDir", dataDir);
         settings.setValue("fReset", false);
+        GUIUtil::WaitForBackendTask(GuiPreferences::Flush());
     }
     /* Only override -datadir if different from the default, to make it possible to
      * override -datadir in the connectcoin.conf file in the default data directory
      * (to be consistent with connectcoind behavior)
      */
-    if(dataDir != GUIUtil::getDefaultDataDirectory()) {
+    if(dataDir != default_directory) {
         gArgs.SoftSetArg("-datadir", fs::PathToString(GUIUtil::QStringToPath(dataDir))); // use OS locale for path setting
     }
     return true;
@@ -249,7 +302,10 @@ void Intro::on_ellipsisButton_clicked()
 
 void Intro::on_dataDirDefault_clicked()
 {
-    setDataDirectory(GUIUtil::getDefaultDataDirectory());
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<Intro> guard{this};
+    const auto path = defaultDataDirectory();
+    if (guard) setDataDirectory(path);
 }
 
 void Intro::on_dataDirCustom_clicked()
@@ -260,38 +316,42 @@ void Intro::on_dataDirCustom_clicked()
 
 void Intro::startThread()
 {
+    delete thread; // Only called for an absent or already finished thread.
     thread = new QThread(this);
-    FreespaceChecker *executor = new FreespaceChecker(this);
+    FreespaceChecker* executor = new FreespaceChecker;
     executor->moveToThread(thread);
 
-    connect(executor, &FreespaceChecker::reply, this, &Intro::setStatus);
+    m_check_running = false;
+    connect(executor, &FreespaceChecker::reply, this, [this](const QString& path, int status, const QString& message, quint64 available) {
+        m_check_running = false;
+        if (m_closing) return;
+        if (path != pathToCheck) {
+            checkPath(pathToCheck);
+            return;
+        }
+        setStatus(status, message, available);
+    });
     connect(this, &Intro::requestCheck, executor, &FreespaceChecker::check);
     /*  make sure executor object is deleted in its own thread */
     connect(thread, &QThread::finished, executor, &QObject::deleteLater);
+    connect(thread, &QThread::finished, this, [this] {
+        if (!m_closing) return;
+        m_closing = false;
+        setEnabled(true);
+        QDialog::done(m_close_result);
+    });
 
     thread->start();
 }
 
 void Intro::checkPath(const QString &dataDir)
 {
-    mutex.lock();
+    if (m_closing) return;
     pathToCheck = dataDir;
-    if(!signalled)
-    {
-        signalled = true;
-        Q_EMIT requestCheck();
+    if (!m_check_running) {
+        m_check_running = true;
+        Q_EMIT requestCheck(dataDir);
     }
-    mutex.unlock();
-}
-
-QString Intro::getPathToCheck()
-{
-    QString retval;
-    mutex.lock();
-    retval = pathToCheck;
-    signalled = false; /* new request can be queued now */
-    mutex.unlock();
-    return retval;
 }
 
 void Intro::UpdatePruneLabels(bool prune_checked)

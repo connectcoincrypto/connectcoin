@@ -26,6 +26,11 @@ public:
     void addColumn(const QString &title, int column, int role=Qt::EditRole);
 
     /** Perform export of the model to CSV.
+        Model cells are captured in bounded GUI turns and handed to one worker
+        through a bounded queue. Snapshot growth/reclamation and file IO run
+        on that worker. A concurrent model
+        change restarts capture (up to three retries). If it never stabilizes,
+        return false without opening or modifying the destination file.
         @returns true on success, false otherwise
     */
     bool write();

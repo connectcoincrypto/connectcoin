@@ -17,13 +17,121 @@
 #include <qt/walletmodel.h>
 #include <util/translation.h>
 
-#include <functional>
+#include <condition_variable>
+#include <list>
+#include <mutex>
 
 #include <QApplication>
 #include <QCloseEvent>
 #include <QPainter>
+#include <QPointer>
 #include <QRadialGradient>
 #include <QScreen>
+#include <qscopeguard.h>
+
+// Core disconnection does not join already-entered callbacks. No callback
+// owns/accesses the widget; backend registration and cleanup share this state.
+struct SplashScreenNotificationState {
+    std::mutex mutex;
+    std::condition_variable idle;
+    SplashScreen* target{nullptr};
+    size_t active_registrations{0};
+    bool wallet_subscription_started{false};
+    bool message_queued{false};
+    QString latest_message;
+    std::list<std::unique_ptr<interfaces::Handler>> core_handlers;
+    std::unique_ptr<interfaces::Handler> load_wallet_handler;
+    std::list<std::unique_ptr<interfaces::Wallet>> wallets;
+    std::list<std::unique_ptr<interfaces::Handler>> wallet_handlers;
+
+    bool beginRegistration(bool init_wallet = false)
+    {
+        std::lock_guard lock{mutex};
+        if (!target || (init_wallet && wallet_subscription_started)) return false;
+        if (init_wallet) wallet_subscription_started = true;
+        ++active_registrations;
+        return true;
+    }
+
+    void endRegistration()
+    {
+        std::lock_guard lock{mutex};
+        --active_registrations;
+        idle.notify_all();
+    }
+};
+
+namespace {
+void DisconnectSplash(const std::shared_ptr<SplashScreenNotificationState>& state)
+{
+    std::list<std::unique_ptr<interfaces::Handler>> core_handlers, wallet_handlers;
+    std::unique_ptr<interfaces::Handler> load_wallet_handler;
+    std::list<std::unique_ptr<interfaces::Wallet>> wallets;
+    {
+        std::unique_lock lock{state->mutex};
+        state->idle.wait(lock, [&] { return state->active_registrations == 0; });
+        core_handlers.swap(state->core_handlers);
+        wallet_handlers.swap(state->wallet_handlers);
+        wallets.swap(state->wallets);
+        load_wallet_handler.swap(state->load_wallet_handler);
+    }
+    // Never hold the shared-state mutex while taking a wallet/loader lock.
+    // Normal stop runs here off-GUI, including final interface/DB releases.
+    if (load_wallet_handler) load_wallet_handler->disconnect();
+    for (const auto& handler : core_handlers) handler->disconnect();
+    for (const auto& handler : wallet_handlers) handler->disconnect();
+    wallet_handlers.clear();
+    wallets.clear();
+}
+
+void QueueSplashMessage(const std::shared_ptr<SplashScreenNotificationState>& state, QString message)
+{
+    std::lock_guard lock{state->mutex};
+    auto* target = state->target;
+    if (!target) return;
+    state->latest_message = std::move(message);
+    if (state->message_queued) return;
+    state->message_queued = true;
+    QMetaObject::invokeMethod(target, [state, target] {
+        QString message;
+        {
+            std::lock_guard lock{state->mutex};
+            state->message_queued = false;
+            if (state->target != target) return;
+            message.swap(state->latest_message);
+        }
+        target->showMessage(message, Qt::AlignBottom | Qt::AlignHCenter, QColor(55, 55, 55));
+    }, Qt::QueuedConnection);
+}
+
+void ShowSplashProgress(const std::shared_ptr<SplashScreenNotificationState>& state, const std::string& title, int progress, bool resume_possible)
+{
+    QueueSplashMessage(state, QString::fromStdString(title) + "\n" +
+        (resume_possible ? SplashScreen::tr("(press q to shutdown and continue later)") : SplashScreen::tr("press q to shutdown")) +
+        QString("\n%1%").arg(progress));
+}
+
+void SubscribeWalletProgress(const std::shared_ptr<SplashScreenNotificationState>& state, interfaces::Node* node)
+{
+#ifdef ENABLE_WALLET
+    if (!state->beginRegistration(/*init_wallet=*/true)) return;
+    const auto done = qScopeGuard([state] { state->endRegistration(); });
+    if (!WalletModel::isWalletEnabled()) return;
+    auto handler = node->walletLoader().handleLoadWallet([state](std::unique_ptr<interfaces::Wallet> wallet) {
+        if (!state->beginRegistration()) return;
+        const auto done = qScopeGuard([state] { state->endRegistration(); });
+        auto progress_handler = wallet->handleShowProgress([state](const std::string& title, int progress) {
+            ShowSplashProgress(state, title, progress, /*resume_possible=*/false);
+        });
+        std::lock_guard lock{state->mutex};
+        state->wallet_handlers.emplace_back(std::move(progress_handler));
+        state->wallets.emplace_back(std::move(wallet));
+    });
+    std::lock_guard lock{state->mutex};
+    state->load_wallet_handler = std::move(handler);
+#endif
+}
+} // namespace
 
 
 SplashScreen::SplashScreen(const NetworkStyle* networkStyle)
@@ -133,7 +241,31 @@ SplashScreen::SplashScreen(const NetworkStyle* networkStyle)
 
 SplashScreen::~SplashScreen()
 {
-    if (m_node) unsubscribeFromCoreSignals();
+    if (!m_notifications) return;
+    {
+        std::lock_guard lock{m_notifications->mutex};
+        m_notifications->target = nullptr;
+    }
+    // Non-reentrant safety fallback; normal stop already drained this state.
+    DisconnectSplash(m_notifications);
+}
+
+void SplashScreen::stop()
+{
+    if (m_stopping) return;
+    m_stopping = true;
+    if (!m_notifications) return;
+    const auto state = m_notifications;
+    {
+        std::lock_guard lock{state->mutex};
+        state->target = nullptr;
+    }
+    // Loader disconnection can wait for a wallet load, and releasing the last
+    // wallet interface may flush its database. Keep the splash alive while both
+    // finish, with no backend list access from painting/message callbacks.
+    const QPointer<SplashScreen> guard{this};
+    GUIUtil::WaitForBackendTask(std::async(std::launch::async, [state] { DisconnectSplash(state); }), this);
+    if (guard) QCoreApplication::removePostedEvents(this, QEvent::MetaCall);
 }
 
 void SplashScreen::setNode(interfaces::Node& node)
@@ -141,13 +273,13 @@ void SplashScreen::setNode(interfaces::Node& node)
     assert(!m_node);
     m_node = &node;
     subscribeToCoreSignals();
-    if (m_shutdown) m_node->startShutdown();
+    if (m_shutdown) Q_EMIT shutdownRequested();
 }
 
 void SplashScreen::shutdown()
 {
     m_shutdown = true;
-    if (m_node) m_node->startShutdown();
+    Q_EMIT shutdownRequested();
 }
 
 bool SplashScreen::eventFilter(QObject * obj, QEvent * ev) {
@@ -160,63 +292,23 @@ bool SplashScreen::eventFilter(QObject * obj, QEvent * ev) {
     return QObject::eventFilter(obj, ev);
 }
 
-static void InitMessage(SplashScreen *splash, const std::string &message)
-{
-    bool invoked = QMetaObject::invokeMethod(splash, "showMessage",
-        Qt::QueuedConnection,
-        Q_ARG(QString, QString::fromStdString(message)),
-        Q_ARG(int, Qt::AlignBottom|Qt::AlignHCenter),
-        Q_ARG(QColor, QColor(55,55,55)));
-    assert(invoked);
-}
-
-static void ShowProgress(SplashScreen *splash, const std::string &title, int nProgress, bool resume_possible)
-{
-    InitMessage(splash, title + std::string("\n") +
-            (resume_possible ? SplashScreen::tr("(press q to shutdown and continue later)").toStdString()
-                                : SplashScreen::tr("press q to shutdown").toStdString()) +
-            strprintf("\n%d", nProgress) + "%");
-}
-
 void SplashScreen::subscribeToCoreSignals()
 {
-    // Connect signals to client
-    m_handler_init_message = m_node->handleInitMessage([this](const std::string& message) {
-        InitMessage(this, message);
-    });
-    m_handler_show_progress = m_node->handleShowProgress([this](const std::string& title, int nProgress, bool resume_possible) {
-        ShowProgress(this, title, nProgress, resume_possible);
-    });
-    m_handler_init_wallet = m_node->handleInitWallet([this]() { handleLoadWallet(); });
-}
-
-void SplashScreen::handleLoadWallet()
-{
-#ifdef ENABLE_WALLET
-    if (!WalletModel::isWalletEnabled()) return;
-    m_handler_load_wallet = m_node->walletLoader().handleLoadWallet([this](std::unique_ptr<interfaces::Wallet> wallet) {
-        m_connected_wallet_handlers.emplace_back(wallet->handleShowProgress([this](const std::string& title, int nProgress) {
-            ShowProgress(this, title, nProgress, /*resume_possible=*/false);
-        }));
-        m_connected_wallets.emplace_back(std::move(wallet));
-    });
-#endif
-}
-
-void SplashScreen::unsubscribeFromCoreSignals()
-{
-    // Disconnect signals from client
-    m_handler_init_message->disconnect();
-    m_handler_show_progress->disconnect();
-    for (const auto& handler : m_connected_wallet_handlers) {
-        handler->disconnect();
-    }
-    m_connected_wallet_handlers.clear();
-    m_connected_wallets.clear();
+    m_notifications = std::make_shared<SplashScreenNotificationState>();
+    const auto state = m_notifications;
+    state->target = this;
+    state->core_handlers.emplace_back(m_node->handleInitMessage([state](const std::string& message) {
+        QueueSplashMessage(state, QString::fromStdString(message));
+    }));
+    state->core_handlers.emplace_back(m_node->handleShowProgress([state](const std::string& title, int progress, bool resume_possible) {
+        ShowSplashProgress(state, title, progress, resume_possible);
+    }));
+    state->core_handlers.emplace_back(m_node->handleInitWallet([state, node = m_node] { SubscribeWalletProgress(state, node); }));
 }
 
 void SplashScreen::showMessage(const QString &message, int alignment, const QColor &color)
 {
+    if (m_stopping) return;
     curMessage = message;
     curAlignment = alignment;
     curColor = color;

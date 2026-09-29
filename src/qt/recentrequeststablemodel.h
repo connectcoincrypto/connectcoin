@@ -8,12 +8,16 @@
 #include <qt/sendcoinsrecipient.h>
 
 #include <string>
+#include <future>
+#include <cstdint>
+#include <map>
 
 #include <QAbstractTableModel>
 #include <QStringList>
 #include <QDateTime>
 
 class WalletModel;
+class QTimer;
 
 class RecentRequestEntry
 {
@@ -82,6 +86,10 @@ public:
     void addNewRequest(const SendCoinsRecipient &recipient);
     void addNewRequest(const std::string &recipient);
     void addNewRequest(RecentRequestEntry &recipient);
+    bool isReady() const { return m_ready; }
+
+Q_SIGNALS:
+    void ready();
 
 public Q_SLOTS:
     void updateDisplayUnit();
@@ -91,6 +99,32 @@ private:
     QStringList columns;
     QList<RecentRequestEntry> list;
     int64_t nReceiveRequestsMaxId{0};
+    struct Snapshot {
+        QList<RecentRequestEntry> entries;
+        int64_t max_id{0};
+        int sort_column{Date};
+        Qt::SortOrder sort_order{Qt::DescendingOrder};
+    };
+    std::future<Snapshot> m_snapshot;
+    QTimer* m_snapshot_timer{nullptr};
+    bool m_ready{false};
+    uint64_t m_revision{0};
+    uint64_t m_sort_request{0};
+    struct SortSnapshot {
+        QList<RecentRequestEntry> entries;
+        std::map<int64_t, int> positions;
+    };
+    std::future<SortSnapshot> m_sort_query;
+    QTimer* m_sort_timer{nullptr};
+    uint64_t m_sort_revision{0};
+    int m_sort_column{Date};
+    Qt::SortOrder m_sort_order{Qt::DescendingOrder};
+    void applySnapshot(Snapshot snapshot);
+    void ensureReady();
+    static SortSnapshot prepareSort(QList<RecentRequestEntry> entries, int column, Qt::SortOrder order);
+    void applySort(SortSnapshot sorted);
+    void startDeferredSort();
+    void pollDeferredSort();
 
     /** Updates the column title to "Amount (DisplayUnit)" and emits headerDataChanged() signal for table headers to react. */
     void updateAmountColumnTitle();

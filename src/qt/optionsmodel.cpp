@@ -8,6 +8,7 @@
 
 #include <qt/bitcoinunits.h>
 #include <qt/guiconstants.h>
+#include <qt/guipreferences.h>
 #include <qt/guiutil.h>
 
 #include <common/args.h>
@@ -31,6 +32,19 @@
 const char *DEFAULT_GUI_PROXY_HOST = "127.0.0.1";
 
 static QString GetDefaultProxyAddress();
+
+template <typename Fn>
+static auto RunOptionsTask(ThreadPool& worker, Fn&& task)
+{
+    auto future = worker.Submit(std::forward<Fn>(task));
+    if (!future) throw std::runtime_error("Options worker is unavailable");
+    return GUIUtil::WaitForBackendTask(std::move(*future));
+}
+
+static void UpdateGUISetting(ThreadPool&, const QString& key, const QVariant& value)
+{
+    GuiSettings{}.setValue(key, value);
+}
 
 /** Map GUI option ID to node setting name. */
 static const char* SettingName(OptionsModel::OptionID option)
@@ -58,26 +72,32 @@ static const char* SettingName(OptionsModel::OptionID option)
 
 /** Call node.updateRwSetting() with an upstream Bitcoin Core 22.x
  * compatibility workaround. */
-static void UpdateRwSetting(interfaces::Node& node, OptionsModel::OptionID option, const std::string& suffix, const common::SettingsValue& value)
+static void UpdateRwSetting(ThreadPool& worker, interfaces::Node& node, std::map<std::string, common::SettingsValue>& cache, OptionsModel::OptionID option, const std::string& suffix, const common::SettingsValue& value)
 {
-    if (value.isNum() &&
-        (option == OptionsModel::DatabaseCache ||
-         option == OptionsModel::ThreadsScriptVerif ||
-         option == OptionsModel::Prune ||
-         option == OptionsModel::PruneSize)) {
-        // Write certain old settings as strings, even though they are numbers,
-        // because upstream Bitcoin Core 22.x releases try to read these
-        // specific settings as
-        // strings in addOverriddenOption() calls at startup, triggering
-        // uncaught exceptions in UniValue::get_str(). These errors were fixed
-        // in later releases by https://github.com/bitcoin/bitcoin/pull/24498.
-        // If new numeric settings are added, they can be written as numbers
-        // instead of strings, because upstream Bitcoin Core 22.x will not try
-        // to read these.
-        node.updateRwSetting(SettingName(option) + suffix, value.getValStr());
-    } else {
-        node.updateRwSetting(SettingName(option) + suffix, value);
-    }
+    auto updated = RunOptionsTask(worker, [node_ptr = &node, option, suffix, value] {
+        if (value.isNum() &&
+            (option == OptionsModel::DatabaseCache ||
+             option == OptionsModel::ThreadsScriptVerif ||
+             option == OptionsModel::Prune ||
+             option == OptionsModel::PruneSize)) {
+            // Write certain old settings as strings, even though they are numbers,
+            // because upstream Bitcoin Core 22.x releases try to read these
+            // specific settings as
+            // strings in addOverriddenOption() calls at startup, triggering
+            // uncaught exceptions in UniValue::get_str(). These errors were fixed
+            // in later releases by https://github.com/bitcoin/bitcoin/pull/24498.
+            // If new numeric settings are added, they can be written as numbers
+            // instead of strings, because upstream Bitcoin Core 22.x will not try
+            // to read these.
+            node_ptr->updateRwSetting(SettingName(option) + suffix, value.getValStr());
+        } else {
+            node_ptr->updateRwSetting(SettingName(option) + suffix, value);
+        }
+        // Removing an entry can reveal a config-file value, so cache the resulting
+        // persistent setting rather than just the value passed to the write.
+        return node_ptr->getPersistentSetting(SettingName(option) + suffix);
+    });
+    cache[SettingName(option) + suffix] = std::move(updated);
 }
 
 //! Convert enabled/size values to the ConnectCoin -prune setting.
@@ -152,69 +172,100 @@ OptionsModel::FontChoice OptionsModel::FontChoiceFromString(const QString& s)
 OptionsModel::OptionsModel(interfaces::Node& node, QObject *parent) :
     QAbstractListModel(parent), m_node{node}
 {
+    m_worker.Start(1);
 }
 
 void OptionsModel::addOverriddenOption(const std::string &option)
 {
-    strOverriddenByCommandLine += QString::fromStdString(option) + "=" + QString::fromStdString(gArgs.GetArg(option, "")) + " ";
+    const auto it = m_overridden_values.find(option);
+    if (it != m_overridden_values.end()) {
+        strOverriddenByCommandLine += QString::fromStdString(option) + "=" + QString::fromStdString(it->second) + " ";
+    }
 }
 
 // Writes all missing QSettings with their default values
 bool OptionsModel::Init(bilingual_str& error)
 {
+    GUIUtil::BackendOperationGuard operation;
+    GUIUtil::WaitForBackendTask(GuiSettings{}.load(/*reload=*/true));
+    struct SettingsSnapshot {
+        std::map<std::string, common::SettingsValue> settings;
+        std::map<std::string, std::string> overridden_values;
+        bool popup_overridden{false};
+        bool popup_value{false};
+        bool has_signer{false};
+        bool start_at_startup{false};
+    };
+    auto snapshot = RunOptionsTask(m_worker, [node_ptr = &node()] {
+        SettingsSnapshot result;
+        for (const std::string setting : {"dbcache", "par", "spendzeroconfchange", "signer", "natpmp", "listen", "server", "prune", "proxy", "onion", "lang"}) {
+            result.settings.emplace(setting, node_ptr->getPersistentSetting(setting));
+            result.settings.emplace(setting + "-prev", node_ptr->getPersistentSetting(setting + "-prev"));
+            if (node_ptr->isSettingIgnored(setting)) result.overridden_values.emplace("-" + setting, gArgs.GetArg("-" + setting, ""));
+        }
+        result.popup_overridden = gArgs.IsArgSet("-popupnotifications");
+        result.popup_value = gArgs.GetBoolArg("-popupnotifications", false);
+        if (result.popup_overridden) result.overridden_values.emplace("-popupnotifications", gArgs.GetArg("-popupnotifications", ""));
+        result.has_signer = !gArgs.GetArg("-signer", "").empty();
+        result.start_at_startup = GUIUtil::GetStartOnSystemStartup();
+        return result;
+    });
+    m_cached_settings = std::move(snapshot.settings);
+    m_overridden_values = std::move(snapshot.overridden_values);
+    m_popup_notifications_overridden = snapshot.popup_overridden;
+    m_popup_override_value = snapshot.popup_value;
+    m_has_signer = snapshot.has_signer;
+    m_start_at_startup = snapshot.start_at_startup;
+    strOverriddenByCommandLine.clear();
     // Initialize display settings from stored settings.
-    language = QString::fromStdString(SettingToString(node().getPersistentSetting("lang"), ""));
+    language = QString::fromStdString(SettingToString(m_cached_settings.at("lang"), ""));
 
     checkAndMigrate();
 
-    QSettings settings;
-
-    // Ensure restart flag is unset on client startup
-    setRestartRequired(false);
+    const QVariantMap settings = RunOptionsTask(m_worker, [persisted = GuiSettings{}]() mutable {
+        const QVariantMap defaults{
+            {"fHideTrayIcon", false}, {"fMinimizeToTray", false},
+            {"fMinimizeOnClose", false}, {"strThirdPartyTxUrls", QString{}},
+            {"fCoinControlFeatures", false}, {"enable_psbt_controls", false},
+            {"strDataDir", GUIUtil::getDefaultDataDirectory()},
+#ifdef ENABLE_WALLET
+            {"SubFeeFromAmount", false},
+#endif
+        };
+        for (auto it = defaults.cbegin(); it != defaults.cend(); ++it) {
+            if (!persisted.contains(it.key())) persisted.setValue(it.key(), it.value());
+        }
+        if (!persisted.value("DisplayConnectCoinUnit").canConvert<BitcoinUnit>()) {
+            persisted.setValue("DisplayConnectCoinUnit", QVariant::fromValue(BitcoinUnit::BTC));
+        }
+        persisted.setValue("fRestartRequired", false);
+        QVariantMap result;
+        for (const auto& key : persisted.allKeys()) result.insert(key, persisted.value(key));
+        persisted.sync();
+        return result;
+    });
+    m_restart_required = false;
 
     // These are Qt-only settings:
 
     // Window
-    if (!settings.contains("fHideTrayIcon")) {
-        settings.setValue("fHideTrayIcon", false);
-    }
     m_show_tray_icon = !settings.value("fHideTrayIcon").toBool();
     Q_EMIT showTrayIconChanged(m_show_tray_icon);
 
     m_popup_notifications = settings.value("fPopupNotifications", false).toBool();
     if (isPopupNotificationsOverridden()) addOverriddenOption("-popupnotifications");
 
-    if (!settings.contains("fMinimizeToTray"))
-        settings.setValue("fMinimizeToTray", false);
     fMinimizeToTray = settings.value("fMinimizeToTray").toBool() && m_show_tray_icon;
 
-    if (!settings.contains("fMinimizeOnClose"))
-        settings.setValue("fMinimizeOnClose", false);
     fMinimizeOnClose = settings.value("fMinimizeOnClose").toBool();
 
     // Display
-    if (!settings.contains("DisplayConnectCoinUnit")) {
-        settings.setValue("DisplayConnectCoinUnit", QVariant::fromValue(BitcoinUnit::BTC));
-    }
-    QVariant unit = settings.value("DisplayConnectCoinUnit");
-    if (unit.canConvert<BitcoinUnit>()) {
-        m_display_bitcoin_unit = unit.value<BitcoinUnit>();
-    } else {
-        m_display_bitcoin_unit = BitcoinUnit::BTC;
-        settings.setValue("DisplayConnectCoinUnit", QVariant::fromValue(m_display_bitcoin_unit));
-    }
+    m_display_bitcoin_unit = settings.value("DisplayConnectCoinUnit").value<BitcoinUnit>();
 
-    if (!settings.contains("strThirdPartyTxUrls"))
-        settings.setValue("strThirdPartyTxUrls", "");
     strThirdPartyTxUrls = settings.value("strThirdPartyTxUrls", "").toString();
 
-    if (!settings.contains("fCoinControlFeatures"))
-        settings.setValue("fCoinControlFeatures", false);
     fCoinControlFeatures = settings.value("fCoinControlFeatures", false).toBool();
 
-    if (!settings.contains("enable_psbt_controls")) {
-        settings.setValue("enable_psbt_controls", false);
-    }
     m_enable_psbt_controls = settings.value("enable_psbt_controls", false).toBool();
 
     // These are shared with the core or have a command-line parameter
@@ -222,7 +273,7 @@ bool OptionsModel::Init(bilingual_str& error)
     for (OptionID option : {DatabaseCache, ThreadsScriptVerif, SpendZeroConfChange, ExternalSignerPath,
                             MapPortNatpmp, Listen, Server, Prune, ProxyUse, ProxyUseTor, Language}) {
         std::string setting = SettingName(option);
-        if (node().isSettingIgnored(setting)) addOverriddenOption("-" + setting);
+        if (m_overridden_values.count("-" + setting)) addOverriddenOption("-" + setting);
         try {
             getOption(option);
         } catch (const std::exception& e) {
@@ -234,17 +285,8 @@ bool OptionsModel::Init(bilingual_str& error)
         }
     }
 
-    // If setting doesn't exist create it with defaults.
-
-    // Main
-    if (!settings.contains("strDataDir"))
-        settings.setValue("strDataDir", GUIUtil::getDefaultDataDirectory());
-
     // Wallet
 #ifdef ENABLE_WALLET
-    if (!settings.contains("SubFeeFromAmount")) {
-        settings.setValue("SubFeeFromAmount", false);
-    }
     m_sub_fee_from_amount = settings.value("SubFeeFromAmount", false).toBool();
 #endif
 
@@ -268,7 +310,7 @@ bool OptionsModel::Init(bilingual_str& error)
 /** Helper function to copy contents from one QSettings to another.
  * By using allKeys this also covers nested settings in a hierarchy.
  */
-static void CopySettings(QSettings& dst, const QSettings& src)
+static void CopySettings(QSettings& dst, const GuiSettings& src)
 {
     for (const QString& key : src.allKeys()) {
         dst.setValue(key, src.value(key));
@@ -276,7 +318,7 @@ static void CopySettings(QSettings& dst, const QSettings& src)
 }
 
 /** Back up a QSettings to an ini-formatted file. */
-static void BackupSettings(const fs::path& filename, const QSettings& src)
+static void BackupSettings(const fs::path& filename, const GuiSettings& src)
 {
     qInfo() << "Backing up GUI settings to" << GUIUtil::PathToQString(filename);
     QSettings dst(GUIUtil::PathToQString(filename), QSettings::IniFormat);
@@ -286,30 +328,34 @@ static void BackupSettings(const fs::path& filename, const QSettings& src)
 
 void OptionsModel::Reset()
 {
-    // Backup and reset settings.json
-    node().resetSettings();
+    GUIUtil::BackendOperationGuard operation;
+    GUIUtil::WaitForBackendTask(GuiSettings{}.load());
+    RunOptionsTask(m_worker, [node_ptr = &node(), settings = GuiSettings{}]() mutable {
+        // Backup and reset settings.json
+        node_ptr->resetSettings();
 
-    QSettings settings;
+        // Backup old settings to chain-specific datadir for troubleshooting
+        BackupSettings(gArgs.GetDataDirNet() / "guisettings.ini.bak", settings);
 
-    // Backup old settings to chain-specific datadir for troubleshooting
-    BackupSettings(gArgs.GetDataDirNet() / "guisettings.ini.bak", settings);
+        // Save the strDataDir setting
+        QString dataDir = GUIUtil::getDefaultDataDirectory();
+        dataDir = settings.value("strDataDir", dataDir).toString();
 
-    // Save the strDataDir setting
-    QString dataDir = GUIUtil::getDefaultDataDirectory();
-    dataDir = settings.value("strDataDir", dataDir).toString();
+        // Remove all entries from our QSettings object
+        settings.clear();
 
-    // Remove all entries from our QSettings object
-    settings.clear();
+        // Set strDataDir
+        settings.setValue("strDataDir", dataDir);
 
-    // Set strDataDir
-    settings.setValue("strDataDir", dataDir);
+        // Set that this was reset
+        settings.setValue("fReset", true);
 
-    // Set that this was reset
-    settings.setValue("fReset", true);
-
-    // default setting for OptionsModel::StartAtStartup - disabled
-    if (GUIUtil::GetStartOnSystemStartup())
-        GUIUtil::SetStartOnSystemStartup(false);
+        // default setting for OptionsModel::StartAtStartup - disabled
+        if (GUIUtil::GetStartOnSystemStartup())
+            GUIUtil::SetStartOnSystemStartup(false);
+        settings.sync();
+    });
+    m_start_at_startup = false;
 }
 
 int OptionsModel::rowCount(const QModelIndex & parent) const
@@ -355,13 +401,14 @@ static QString GetDefaultProxyAddress()
 
 void OptionsModel::SetPruneTargetGB(int prune_target_gb)
 {
-    const common::SettingsValue cur_value = node().getPersistentSetting("prune");
+    GUIUtil::BackendOperationGuard operation;
+    const common::SettingsValue cur_value = m_cached_settings.at("prune");
     const common::SettingsValue new_value = PruneSetting(prune_target_gb > 0, prune_target_gb);
 
     // Force setting to take effect. It is still safe to change the value at
     // this point because this function is only called after the intro screen is
     // shown, before the node starts.
-    node().forceSetting("prune", new_value);
+    RunOptionsTask(m_worker, [node_ptr = &node(), new_value] { node_ptr->forceSetting("prune", new_value); });
 
     // Update settings.json if value configured in intro screen is different
     // from saved value. Avoid writing settings.json if connectcoin.conf value
@@ -370,12 +417,12 @@ void OptionsModel::SetPruneTargetGB(int prune_target_gb)
         PruneSizeGB(cur_value) != PruneSizeGB(new_value)) {
         // Call UpdateRwSetting() instead of setOption() to avoid setting
         // RestartRequired flag
-        UpdateRwSetting(node(), Prune, "", new_value);
+        UpdateRwSetting(m_worker, node(), m_cached_settings, Prune, "", new_value);
     }
 
     // Keep previous pruning size, if pruning was disabled.
     if (PruneEnabled(cur_value)) {
-        UpdateRwSetting(node(), Prune, "-prev", PruneEnabled(new_value) ? common::SettingsValue{} : cur_value);
+        UpdateRwSetting(m_worker, node(), m_cached_settings, Prune, "-prev", PruneEnabled(new_value) ? common::SettingsValue{} : cur_value);
     }
 }
 
@@ -406,12 +453,14 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
 // NOLINTNEXTLINE(misc-no-recursion)
 QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) const
 {
-    auto setting = [&]{ return node().getPersistentSetting(SettingName(option) + suffix); };
+    auto setting = [&] {
+        const auto it = m_cached_settings.find(SettingName(option) + suffix);
+        return it == m_cached_settings.end() ? common::SettingsValue{} : it->second;
+    };
 
-    QSettings settings;
     switch (option) {
     case StartAtStartup:
-        return GUIUtil::GetStartOnSystemStartup();
+        return m_start_at_startup;
     case ShowTrayIcon:
         return m_show_tray_icon;
     case PopupNotifications:
@@ -469,7 +518,7 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
     case CoinControlFeatures:
         return fCoinControlFeatures;
     case EnablePSBTControls:
-        return settings.value("enable_psbt_controls");
+        return m_enable_psbt_controls;
     case Prune:
         return PruneEnabled(setting());
     case PruneSize:
@@ -493,12 +542,12 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
 
 bool OptionsModel::getPopupNotifications() const
 {
-    return gArgs.GetBoolArg("-popupnotifications", m_popup_notifications);
+    return m_popup_notifications_overridden ? m_popup_override_value : m_popup_notifications;
 }
 
 bool OptionsModel::isPopupNotificationsOverridden() const
 {
-    return gArgs.IsArgSet("-popupnotifications");
+    return m_popup_notifications_overridden;
 }
 
 QFont OptionsModel::getFontForChoice(const FontChoice& fc)
@@ -521,41 +570,44 @@ QFont OptionsModel::getFontForMoney() const
 // NOLINTNEXTLINE(misc-no-recursion)
 bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::string& suffix)
 {
+    GUIUtil::BackendOperationGuard operation;
     auto changed = [&] { return value.isValid() && value != getOption(option, suffix); };
-    auto update = [&](const common::SettingsValue& value) { return UpdateRwSetting(node(), option, suffix, value); };
+    auto update = [&](const common::SettingsValue& value) { return UpdateRwSetting(m_worker, node(), m_cached_settings, option, suffix, value); };
 
     bool successful = true; /* set to false on parse error */
-    QSettings settings;
 
     switch (option) {
     case StartAtStartup:
-        successful = GUIUtil::SetStartOnSystemStartup(value.toBool());
+        if (value.toBool() != m_start_at_startup) {
+            successful = RunOptionsTask(m_worker, [enabled = value.toBool()] { return GUIUtil::SetStartOnSystemStartup(enabled); });
+            if (successful) m_start_at_startup = value.toBool();
+        }
         break;
     case ShowTrayIcon:
         m_show_tray_icon = value.toBool();
-        settings.setValue("fHideTrayIcon", !m_show_tray_icon);
+        UpdateGUISetting(m_worker, "fHideTrayIcon", !m_show_tray_icon);
         Q_EMIT showTrayIconChanged(m_show_tray_icon);
         break;
     case MinimizeToTray:
         fMinimizeToTray = value.toBool();
-        settings.setValue("fMinimizeToTray", fMinimizeToTray);
+        UpdateGUISetting(m_worker, "fMinimizeToTray", fMinimizeToTray);
         break;
     case PopupNotifications:
         // Explicit config/command-line settings override the GUI preference.
         if (!isPopupNotificationsOverridden()) {
             m_popup_notifications = value.toBool();
-            settings.setValue("fPopupNotifications", m_popup_notifications);
+            UpdateGUISetting(m_worker, "fPopupNotifications", m_popup_notifications);
         }
         break;
     case MapPortNatpmp: // core option - can be changed on-the-fly
         if (changed()) {
             update(value.toBool());
-            node().mapPort(value.toBool());
+            RunOptionsTask(m_worker, [node_ptr = &node(), enabled = value.toBool()] { node_ptr->mapPort(enabled); });
         }
         break;
     case MinimizeOnClose:
         fMinimizeOnClose = value.toBool();
-        settings.setValue("fMinimizeOnClose", fMinimizeOnClose);
+        UpdateGUISetting(m_worker, "fMinimizeOnClose", fMinimizeOnClose);
         break;
 
     // default proxy
@@ -563,7 +615,7 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
         if (changed()) {
             if (suffix.empty() && !value.toBool()) setOption(option, true, "-prev");
             update(ProxyString(value.toBool(), getOption(ProxyIP).toString(), getOption(ProxyPort).toString()));
-            if (suffix.empty() && value.toBool()) UpdateRwSetting(node(), option, "-prev", {});
+            if (suffix.empty() && value.toBool()) UpdateRwSetting(m_worker, node(), m_cached_settings, option, "-prev", {});
             if (suffix.empty()) setRestartRequired(true);
         }
         break;
@@ -593,7 +645,7 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
         if (changed()) {
             if (suffix.empty() && !value.toBool()) setOption(option, true, "-prev");
             update(ProxyString(value.toBool(), getOption(ProxyIPTor).toString(), getOption(ProxyPortTor).toString()));
-            if (suffix.empty() && value.toBool()) UpdateRwSetting(node(), option, "-prev", {});
+            if (suffix.empty() && value.toBool()) UpdateRwSetting(m_worker, node(), m_cached_settings, option, "-prev", {});
             if (suffix.empty()) setRestartRequired(true);
         }
         break;
@@ -628,12 +680,13 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
     case ExternalSignerPath:
         if (changed()) {
             update(value.toString().toStdString());
+            m_has_signer = RunOptionsTask(m_worker, [] { return !gArgs.GetArg("-signer", "").empty(); });
             setRestartRequired(true);
         }
         break;
     case SubFeeFromAmount:
         m_sub_fee_from_amount = value.toBool();
-        settings.setValue("SubFeeFromAmount", m_sub_fee_from_amount);
+        UpdateGUISetting(m_worker, "SubFeeFromAmount", m_sub_fee_from_amount);
         break;
 #endif
     case DisplayUnit:
@@ -642,7 +695,7 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
     case ThirdPartyTxUrls:
         if (strThirdPartyTxUrls != value.toString()) {
             strThirdPartyTxUrls = value.toString();
-            settings.setValue("strThirdPartyTxUrls", strThirdPartyTxUrls);
+            UpdateGUISetting(m_worker, "strThirdPartyTxUrls", strThirdPartyTxUrls);
             setRestartRequired(true);
         }
         break;
@@ -656,25 +709,25 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
     {
         const auto& new_font = value.value<FontChoice>();
         if (m_font_money == new_font) break;
-        settings.setValue("FontForMoney", FontChoiceToString(new_font));
+        UpdateGUISetting(m_worker, "FontForMoney", FontChoiceToString(new_font));
         m_font_money = new_font;
         Q_EMIT fontForMoneyChanged(getFontForMoney());
         break;
     }
     case CoinControlFeatures:
         fCoinControlFeatures = value.toBool();
-        settings.setValue("fCoinControlFeatures", fCoinControlFeatures);
+        UpdateGUISetting(m_worker, "fCoinControlFeatures", fCoinControlFeatures);
         Q_EMIT coinControlFeaturesChanged(fCoinControlFeatures);
         break;
     case EnablePSBTControls:
         m_enable_psbt_controls = value.toBool();
-        settings.setValue("enable_psbt_controls", m_enable_psbt_controls);
+        UpdateGUISetting(m_worker, "enable_psbt_controls", m_enable_psbt_controls);
         break;
     case Prune:
         if (changed()) {
             if (suffix.empty() && !value.toBool()) setOption(option, true, "-prev");
             update(PruneSetting(value.toBool(), getOption(PruneSize).toInt()));
-            if (suffix.empty() && value.toBool()) UpdateRwSetting(node(), option, "-prev", {});
+            if (suffix.empty() && value.toBool()) UpdateRwSetting(m_worker, node(), m_cached_settings, option, "-prev", {});
             if (suffix.empty()) setRestartRequired(true);
         }
         break;
@@ -709,7 +762,7 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
         break;
     case MaskValues:
         m_mask_values = value.toBool();
-        settings.setValue("mask_values", m_mask_values);
+        UpdateGUISetting(m_worker, "mask_values", m_mask_values);
         break;
     default:
         break;
@@ -720,65 +773,59 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
 
 void OptionsModel::setDisplayUnit(const QVariant& new_unit)
 {
+    GUIUtil::BackendOperationGuard operation;
     if (new_unit.isNull() || new_unit.value<BitcoinUnit>() == m_display_bitcoin_unit) return;
     m_display_bitcoin_unit = new_unit.value<BitcoinUnit>();
-    QSettings settings;
-    settings.setValue("DisplayConnectCoinUnit", QVariant::fromValue(m_display_bitcoin_unit));
+    UpdateGUISetting(m_worker, "DisplayConnectCoinUnit", QVariant::fromValue(m_display_bitcoin_unit));
     Q_EMIT displayUnitChanged(m_display_bitcoin_unit);
 }
 
 void OptionsModel::setRestartRequired(bool fRequired)
 {
-    QSettings settings;
-    return settings.setValue("fRestartRequired", fRequired);
+    UpdateGUISetting(m_worker, "fRestartRequired", fRequired);
+    m_restart_required = fRequired;
 }
 
 bool OptionsModel::isRestartRequired() const
 {
-    QSettings settings;
-    return settings.value("fRestartRequired", false).toBool();
+    return m_restart_required;
 }
 
 bool OptionsModel::hasSigner()
 {
-    return gArgs.GetArg("-signer", "") != "";
+    return m_has_signer;
 }
 
 void OptionsModel::checkAndMigrate()
 {
     // Migration of default values
     // Check if the QSettings container was already loaded with this client version
-    QSettings settings;
-    static const char strSettingsVersionKey[] = "nSettingsVersion";
-    int settingsVersion = settings.contains(strSettingsVersionKey) ? settings.value(strSettingsVersionKey).toInt() : 0;
-    if (settingsVersion < CLIENT_VERSION)
-    {
-        // -dbcache was bumped from 100 to 300 in 0.13
-        // see https://github.com/bitcoin/bitcoin/pull/8273
-        // force people to upgrade to the new value if they are using 100MB
-        if (settingsVersion < 130000 && settings.contains("nDatabaseCache") && settings.value("nDatabaseCache").toLongLong() == 100)
-            settings.setValue("nDatabaseCache", qint64(DEFAULT_KERNEL_CACHE / 1_MiB));
-
-        settings.setValue(strSettingsVersionKey, CLIENT_VERSION);
-    }
-
-    // Overwrite the 'addrProxy' setting in case it has been set to an illegal
-    // default value (see issue #12623; PR #12650).
-    if (settings.contains("addrProxy") && settings.value("addrProxy").toString().endsWith("%2")) {
-        settings.setValue("addrProxy", GetDefaultProxyAddress());
-    }
-
-    // Overwrite the 'addrSeparateProxyTor' setting in case it has been set to an illegal
-    // default value (see issue #12623; PR #12650).
-    if (settings.contains("addrSeparateProxyTor") && settings.value("addrSeparateProxyTor").toString().endsWith("%2")) {
-        settings.setValue("addrSeparateProxyTor", GetDefaultProxyAddress());
-    }
+    const QVariantMap settings = RunOptionsTask(m_worker, [persisted = GuiSettings{}]() mutable {
+        static const char version_key[] = "nSettingsVersion";
+        const int version = persisted.value(version_key, 0).toInt();
+        if (version < CLIENT_VERSION) {
+            // -dbcache was bumped from 100 to 300 in 0.13 (upstream #8273).
+            if (version < 130000 && persisted.contains("nDatabaseCache") && persisted.value("nDatabaseCache").toLongLong() == 100) {
+                persisted.setValue("nDatabaseCache", qint64(DEFAULT_KERNEL_CACHE / 1_MiB));
+            }
+            persisted.setValue(version_key, CLIENT_VERSION);
+        }
+        // Repair illegal proxy defaults (upstream #12623/#12650).
+        for (const QString& key : {QStringLiteral("addrProxy"), QStringLiteral("addrSeparateProxyTor")}) {
+            if (persisted.value(key).toString().endsWith("%2")) persisted.setValue(key, GetDefaultProxyAddress());
+        }
+        QVariantMap result;
+        for (const auto& key : persisted.allKeys()) result.insert(key, persisted.value(key));
+        persisted.sync();
+        return result;
+    });
+    QStringList migrated;
 
     // Migrate and delete legacy GUI settings that have now moved to <datadir>/settings.json.
     auto migrate_setting = [&](OptionID option, const QString& qt_name) {
         if (!settings.contains(qt_name)) return;
         QVariant value = settings.value(qt_name);
-        if (node().getPersistentSetting(SettingName(option)).isNull()) {
+        if (m_cached_settings.at(SettingName(option)).isNull()) {
             if (option == ProxyIP) {
                 ProxySetting parsed = ParseProxyString(value.toString());
                 setOption(ProxyIP, parsed.ip);
@@ -791,7 +838,7 @@ void OptionsModel::checkAndMigrate()
                 setOption(option, value);
             }
         }
-        settings.remove(qt_name);
+        migrated.push_back(qt_name);
     };
 
     migrate_setting(DatabaseCache, "nDatabaseCache");
@@ -811,10 +858,15 @@ void OptionsModel::checkAndMigrate()
     migrate_setting(ProxyUseTor, "fUseSeparateProxyTor");
     migrate_setting(Language, "language");
 
+    RunOptionsTask(m_worker, [migrated, persisted = GuiSettings{}]() mutable {
+        for (const auto& key : migrated) persisted.remove(key);
+        persisted.sync();
+    });
+
     // In case migrating QSettings caused any settings value to change, rerun
     // parameter interaction code to update other settings. This is particularly
     // important for the -listen setting, which should cause -listenonion
     // and other settings to default to false if it was set to false.
     // (https://github.com/bitcoin-core/gui/issues/567).
-    node().initParameterInteraction();
+    RunOptionsTask(m_worker, [node_ptr = &node()] { node_ptr->initParameterInteraction(); });
 }

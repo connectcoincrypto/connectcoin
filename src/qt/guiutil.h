@@ -25,6 +25,9 @@
 
 #include <cassert>
 #include <chrono>
+#include <functional>
+#include <future>
+#include <stdexcept>
 #include <utility>
 
 class PlatformStyle;
@@ -88,6 +91,10 @@ namespace GUIUtil
     // HTML escaping for rich text controls
     QString HtmlEscape(const QString& str, bool fMultiLine=false);
     QString HtmlEscape(const std::string& str, bool fMultiLine=false);
+
+    /** Return the first fully selected row in selection-range order without
+     * constructing indexes for the entire selection. GUI thread only. */
+    QModelIndex firstSelectedRow(const QAbstractItemView* view, int column = 0);
 
     /** Copy a field of the currently selected entry of a view to the clipboard. Does nothing if nothing
         is selected.
@@ -324,7 +331,8 @@ namespace GUIUtil
     int TextWidth(const QFontMetrics& fm, const QString& text);
 
     /**
-     * Writes to debug.log short info about the used Qt and the host system.
+     * Snapshot Qt-owned presentation values and write Qt/system diagnostics
+     * on a worker, keeping events responsive if the log sink stalls.
      */
     void LogQtInfo();
 
@@ -436,6 +444,51 @@ namespace GUIUtil
      * Shows a QDialog instance asynchronously, and deletes it on close.
      */
     void ShowModalDialogAsynchronously(QDialog* dialog);
+
+    /**
+     * Keep models and the application alive while an explicit GUI action is
+     * running backend work. Put a guard in the outer action when it continues
+     * through other modal dialogs after WaitForBackendTask returns. GUI thread
+     * only; this is not a lock and must never be used from a worker.
+     */
+    class BackendOperationGuard
+    {
+    public:
+        BackendOperationGuard();
+        ~BackendOperationGuard();
+        BackendOperationGuard(const BackendOperationGuard&) = delete;
+        BackendOperationGuard& operator=(const BackendOperationGuard&) = delete;
+    };
+
+    //! Includes the queued turn needed to unwind a just-completed action.
+    bool HasActiveBackendOperation();
+
+    //! Implementation detail for WaitForBackendTask. The predicate must not block.
+    void WaitForBackendTaskReady(const std::function<bool()>& ready, QWidget* parent);
+
+    /**
+     * Wait responsively for an explicit user operation already submitted to a
+     * model-owned worker. The noncancellable modal dialog keeps the GUI event
+     * loop running, while the operation guard defers unload and shutdown.
+     *
+     * Never use from painting, data(), timer refreshes, or model construction:
+     * those paths need asynchronous snapshots. The task must capture backend
+     * inputs by value, not widgets, model state, or stack output references.
+     * Apply the returned result to the GUI after this function returns.
+     * Exceptions stored in the future are rethrown on the calling GUI thread.
+     */
+    template <typename Result>
+    Result WaitForBackendTask(std::future<Result> task, QWidget* parent = nullptr)
+    {
+        BackendOperationGuard guard;
+        if (task.wait_for(std::chrono::seconds{0}) == std::future_status::deferred) {
+            throw std::logic_error("Backend tasks must already be submitted to a worker");
+        }
+        WaitForBackendTaskReady([&task] {
+            return task.wait_for(std::chrono::seconds{0}) == std::future_status::ready;
+        }, parent);
+        return task.get();
+    }
 
     inline bool IsEscapeOrBack(int key)
     {

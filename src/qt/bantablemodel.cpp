@@ -3,6 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <qt/bantablemodel.h>
+#include <qt/guiutil.h>
 
 #include <interfaces/node.h>
 #include <net_types.h>
@@ -10,10 +11,12 @@
 #include <utility>
 
 #include <QDateTime>
+#include <QDebug>
 #include <QList>
 #include <QLocale>
 #include <QModelIndex>
 #include <QVariant>
+#include <QTimer>
 
 bool BannedNodeLessThan::operator()(const CCombinedBan& left, const CCombinedBan& right) const
 {
@@ -41,28 +44,7 @@ public:
     /** Column to sort nodes by (default to unsorted) */
     int sortColumn{-1};
     /** Order (ascending or descending) to sort nodes by */
-    Qt::SortOrder sortOrder;
-
-    /** Pull a full list of banned nodes from interfaces::Node into our cache */
-    void refreshBanlist(interfaces::Node& node)
-    {
-        banmap_t banMap;
-        node.getBanned(banMap);
-
-        cachedBanlist.clear();
-        cachedBanlist.reserve(banMap.size());
-        for (const auto& entry : banMap)
-        {
-            CCombinedBan banEntry;
-            banEntry.subnet = entry.first;
-            banEntry.banEntry = entry.second;
-            cachedBanlist.append(banEntry);
-        }
-
-        if (sortColumn >= 0)
-            // sort cachedBanlist (use stable sort to prevent rows jumping around unnecessarily)
-            std::stable_sort(cachedBanlist.begin(), cachedBanlist.end(), BannedNodeLessThan(sortColumn, sortOrder));
-    }
+    Qt::SortOrder sortOrder{Qt::AscendingOrder};
 
     int size() const
     {
@@ -85,11 +67,35 @@ BanTableModel::BanTableModel(interfaces::Node& node, QObject* parent) :
     columns << tr("IP/Netmask") << tr("Banned Until");
     priv.reset(new BanTablePriv());
 
+    m_worker.Start(1);
+    m_result_timer = new QTimer(this);
+    m_result_timer->setInterval(50);
+    connect(m_result_timer, &QTimer::timeout, this, &BanTableModel::pollRefresh);
+
     // load initial data
     refresh();
 }
 
-BanTableModel::~BanTableModel() = default;
+BanTableModel::~BanTableModel()
+{
+    interrupt();
+    m_worker.Stop();
+}
+
+void BanTableModel::stop()
+{
+    if (m_worker_stopped) return;
+    interrupt();
+    m_worker_stopped = true;
+    GUIUtil::WaitForBackendTask(std::async(std::launch::async, [worker = &m_worker] { worker->Stop(); }));
+}
+
+void BanTableModel::interrupt()
+{
+    m_stopped = true;
+    m_result_timer->stop();
+    m_worker.Interrupt();
+}
 
 int BanTableModel::rowCount(const QModelIndex &parent) const
 {
@@ -162,9 +168,56 @@ QModelIndex BanTableModel::index(int row, int column, const QModelIndex &parent)
 
 void BanTableModel::refresh()
 {
-    Q_EMIT layoutAboutToBeChanged();
-    priv->refreshBanlist(m_node);
-    Q_EMIT layoutChanged();
+    if (m_stopped) return;
+    m_refresh_requested = true;
+    pollRefresh();
+}
+
+void BanTableModel::pollRefresh()
+{
+    if (m_stopped) return;
+    for (auto query = m_unban_queries.begin(); query != m_unban_queries.end();) {
+        if (query->wait_for(std::chrono::seconds{0}) != std::future_status::ready) {
+            ++query;
+            continue;
+        }
+        try {
+            if (query->get()) m_refresh_requested = true;
+        } catch (const std::exception& error) {
+            qWarning() << "Unban failed:" << error.what();
+        }
+        query = m_unban_queries.erase(query);
+    }
+    if (m_query.valid()) {
+        if (m_query.wait_for(std::chrono::seconds{0}) != std::future_status::ready) return;
+        try {
+            auto bans = m_query.get();
+            // A newer sort/unban request invalidates the old snapshot.
+            if (!m_refresh_requested) {
+                beginResetModel();
+                priv->cachedBanlist = std::move(bans);
+                endResetModel();
+            }
+        } catch (const std::exception& error) {
+            qWarning() << "Ban list refresh failed:" << error.what();
+        }
+    }
+    if (m_stopped || m_query.valid()) return;
+    if (m_refresh_requested) {
+        m_refresh_requested = false;
+        auto result = m_worker.Submit([node = &m_node, column = priv->sortColumn, order = priv->sortOrder] {
+            banmap_t bans;
+            node->getBanned(bans);
+            QList<CCombinedBan> rows;
+            rows.reserve(bans.size());
+            for (const auto& [subnet, entry] : bans) rows.append(CCombinedBan{subnet, entry});
+            if (column >= 0) std::stable_sort(rows.begin(), rows.end(), BannedNodeLessThan(column, order));
+            return rows;
+        });
+        if (result) m_query = std::move(*result);
+    }
+    if (m_query.valid() || !m_unban_queries.empty()) m_result_timer->start();
+    else m_result_timer->stop();
 }
 
 void BanTableModel::sort(int column, Qt::SortOrder order)
@@ -181,6 +234,12 @@ bool BanTableModel::shouldShow()
 
 bool BanTableModel::unban(const QModelIndex& index)
 {
+    if (m_stopped || !index.isValid() || index.model() != this) return false;
     CCombinedBan* ban{static_cast<CCombinedBan*>(index.internalPointer())};
-    return ban != nullptr && m_node.unban(ban->subnet);
+    if (!ban) return false;
+    auto result = m_worker.Submit([node = &m_node, subnet = ban->subnet] { return node->unban(subnet); });
+    if (!result) return false;
+    m_unban_queries.push_back(std::move(*result));
+    m_result_timer->start();
+    return true;
 }

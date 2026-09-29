@@ -5,11 +5,15 @@
 #include <qt/networkstyle.h>
 
 #include <qt/guiconstants.h>
+#include <qt/guiutil.h>
 
 #include <tinyformat.h>
 #include <util/chaintype.h>
 
 #include <QApplication>
+
+#include <future>
+#include <utility>
 
 static const struct {
     const ChainType networkId;
@@ -24,19 +28,17 @@ static const struct {
     {ChainType::REGTEST, QAPP_APP_NAME_REGTEST, 160, 30},
 };
 
-// titleAddText needs to be const char* for tr()
-NetworkStyle::NetworkStyle(const QString &_appName, const int iconColorHueShift, const int iconColorSaturationReduction, const char *_titleAddText):
-    appName(_appName),
-    titleAddText(qApp->translate("SplashScreen", _titleAddText))
+namespace {
+std::pair<QImage, QImage> PrepareNetworkImages(int iconColorHueShift, int iconColorSaturationReduction)
 {
-    // load pixmap
-    QPixmap pixmap(":/icons/bitcoin");
+    // Decode/recolor/resize the raster resource without any GUI-owned objects.
+    // Match the premultiplied storage previously supplied by QPixmap::toImage
+    // so the existing network colors and alpha edges remain unchanged.
+    QImage img{QStringLiteral(":/icons/bitcoin")};
+    img = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
 
     if(iconColorHueShift != 0 && iconColorSaturationReduction != 0)
     {
-        // generate QImage from QPixmap
-        QImage img = pixmap.toImage();
-
         int h,s,l,a;
 
         // traverse though lines
@@ -70,12 +72,18 @@ NetworkStyle::NetworkStyle(const QString &_appName, const int iconColorHueShift,
             }
         }
 
-        //convert back to QPixmap
-        pixmap.convertFromImage(img);
     }
+    auto tray = img.scaled(QSize(256, 256));
+    return {std::move(img), std::move(tray)};
+}
+} // namespace
 
-    appIcon             = QIcon(pixmap);
-    trayAndWindowIcon   = QIcon(pixmap.scaled(QSize(256,256)));
+NetworkStyle::NetworkStyle(const QString& _appName, const QString& _titleAddText, QImage appImage, QImage trayImage) :
+    appName(_appName),
+    appIcon(QPixmap::fromImage(std::move(appImage))),
+    trayAndWindowIcon(QPixmap::fromImage(std::move(trayImage))),
+    titleAddText(_titleAddText)
+{
 }
 
 const NetworkStyle* NetworkStyle::instantiate(const ChainType networkId)
@@ -83,11 +91,16 @@ const NetworkStyle* NetworkStyle::instantiate(const ChainType networkId)
     std::string titleAddText = networkId == ChainType::MAIN ? "" : strprintf("[%s]", ChainTypeToString(networkId));
     for (const auto& network_style : network_styles) {
         if (networkId == network_style.networkId) {
+            // Wait at the explicit startup factory boundary, before creating
+            // the style. Only QPixmap/QIcon construction stays on the GUI.
+            auto images = GUIUtil::WaitForBackendTask(std::async(std::launch::async,
+                [hue = network_style.iconColorHueShift, saturation = network_style.iconColorSaturationReduction] {
+                    return PrepareNetworkImages(hue, saturation);
+                }));
             return new NetworkStyle(
                     network_style.appName,
-                    network_style.iconColorHueShift,
-                    network_style.iconColorSaturationReduction,
-                    titleAddText.c_str());
+                    qApp->translate("SplashScreen", titleAddText.c_str()),
+                    std::move(images.first), std::move(images.second));
         }
     }
     return nullptr;

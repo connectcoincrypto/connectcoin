@@ -13,7 +13,9 @@
 #include <QMenu>
 #include <QMimeData>
 #include <QMouseEvent>
+#include <QMessageBox>
 #include <QPainter>
+#include <QPointer>
 
 #include <connectcoin-build-config.h> // IWYU pragma: keep
 
@@ -116,16 +118,21 @@ void QRImageWidget::mousePressEvent(QMouseEvent *event)
 
 void QRImageWidget::saveImage()
 {
+    GUIUtil::BackendOperationGuard operation;
     if (!GUIUtil::HasPixmap(this))
         return;
+    const QPointer<QRImageWidget> guard{this};
+    const auto image = exportImage();
     QString fn = GUIUtil::getSaveFileName(
         this, tr("Save QR Code"), QString(),
         /*: Expanded name of the PNG file format.
             See: https://en.wikipedia.org/wiki/Portable_Network_Graphics. */
         tr("PNG Image") + QLatin1String(" (*.png)"), nullptr);
-    if (!fn.isEmpty())
+    if (guard && !fn.isEmpty())
     {
-        exportImage().save(fn);
+        const bool saved = GUIUtil::WaitForBackendTask(std::async(std::launch::async,
+            [image, filename = fn] { return image.save(filename); }), this);
+        if (guard && !saved) QMessageBox::warning(this, tr("Save QR Code"), tr("The QR code image could not be saved."));
     }
 }
 

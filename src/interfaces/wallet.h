@@ -419,6 +419,8 @@ struct WalletTx
 //! Updated transaction status.
 struct WalletTxStatus
 {
+    //! Wallet-processed tip used for this snapshot (may lag the node tip).
+    uint256 block_hash;
     int block_height;
     int blocks_to_maturity;
     int depth_in_main_chain;

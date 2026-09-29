@@ -29,12 +29,14 @@
 #include <QDoubleValidator>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <QItemSelectionModel>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
 #include <QPoint>
+#include <QPointer>
 #include <QScrollBar>
-#include <QSettings>
+#include <qt/guipreferences.h>
 #include <QTableView>
 #include <QTimer>
 #include <QUrl>
@@ -145,7 +147,7 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
     transactionView->setSortingEnabled(true);
     transactionView->verticalHeader()->hide();
 
-    QSettings settings;
+    GuiSettings settings;
     if (!transactionView->horizontalHeader()->restoreState(settings.value("TransactionViewHeaderState-2025").toByteArray())) {
         transactionView->setColumnWidth(TransactionTableModel::Status, STATUS_COLUMN_WIDTH);
         transactionView->setColumnWidth(TransactionTableModel::Date, DATE_COLUMN_WIDTH);
@@ -191,7 +193,8 @@ TransactionView::TransactionView(const PlatformStyle *platformStyle, QWidget *pa
 
 TransactionView::~TransactionView()
 {
-    QSettings settings;
+    closeOpenedDialogs();
+    GuiSettings settings;
     // Rename this cache when adding or removing columns.
     settings.setValue("TransactionViewHeaderState-2025", transactionView->horizontalHeader()->saveState());
 }
@@ -209,6 +212,8 @@ void TransactionView::setModel(WalletModel *_model)
         transactionProxyModel->setSortRole(Qt::EditRole);
         transactionView->setModel(transactionProxyModel);
         transactionView->sortByColumn(TransactionTableModel::Date, Qt::DescendingOrder);
+        connect(_model->getTransactionTableModel(), &TransactionTableModel::confirmationsChanged,
+                transactionView->viewport(), QOverload<>::of(&QWidget::update));
 
         if (_model->getOptionsModel())
         {
@@ -322,6 +327,8 @@ void TransactionView::exportClicked()
         return;
     }
 
+    const QPointer<TransactionView> guard{this};
+    GUIUtil::BackendOperationGuard operation;
     // CSV is currently the only supported format
     QString filename = GUIUtil::getSaveFileName(this,
         tr("Export Transaction History"), QString(),
@@ -329,7 +336,7 @@ void TransactionView::exportClicked()
             See: https://en.wikipedia.org/wiki/Comma-separated_values. */
         tr("Comma separated file") + QLatin1String(" (*.csv)"), nullptr);
 
-    if (filename.isNull())
+    if (!guard || filename.isNull())
         return;
 
     CSVModelWriter writer(filename);
@@ -344,7 +351,9 @@ void TransactionView::exportClicked()
     writer.addColumn(BitcoinUnits::getAmountColumnTitle(model->getOptionsModel()->getDisplayUnit()), 0, TransactionTableModel::FormattedAmountRole);
     writer.addColumn(tr("ID"), 0, TransactionTableModel::TxHashRole);
 
-    if(!writer.write()) {
+    const bool written = writer.write();
+    if (!guard) return;
+    if (!written) {
         Q_EMIT message(tr("Exporting Failed"), tr("There was an error trying to save the transaction history to %1.").arg(filename),
             CClientUIInterface::MSG_ERROR);
     }
@@ -356,60 +365,76 @@ void TransactionView::exportClicked()
 
 void TransactionView::contextualMenu(const QPoint &point)
 {
-    QModelIndex index = transactionView->indexAt(point);
-    QModelIndexList selection = transactionView->selectionModel()->selectedRows(0);
-    if (selection.empty())
+    if (!model || !transactionView->selectionModel() || !transactionView->indexAt(point).isValid()) return;
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<TransactionView> guard{this};
+    auto selection = GUIUtil::firstSelectedRow(transactionView);
+    if (!selection.isValid())
         return;
 
     // If the hash from the TxHashRole (QVariant / QString) is invalid, exit
-    QString hashQStr = selection.at(0).data(TransactionTableModel::TxHashRole).toString();
+    QString hashQStr = selection.data(TransactionTableModel::TxHashRole).toString();
     std::optional<Txid> maybeHash = Txid::FromHex(hashQStr.toStdString());
     if (!maybeHash)
         return;
 
     Txid hash = *maybeHash;
-    abandonAction->setEnabled(model->wallet().transactionCanBeAbandoned(hash));
-    bumpFeeAction->setEnabled(model->wallet().transactionCanBeBumped(hash));
+    const auto capabilities = GUIUtil::WaitForBackendTask(model->requestWalletData([hash](interfaces::Wallet& wallet) {
+        return std::pair{wallet.transactionCanBeAbandoned(hash), wallet.transactionCanBeBumped(hash)};
+    }), this);
+    // The event loop remained live while querying. Do not attach capabilities
+    // for a removed/replaced transaction to a different current selection.
+    if (!guard) return;
+    selection = GUIUtil::firstSelectedRow(transactionView);
+    if (!selection.isValid() || selection.data(TransactionTableModel::TxHashRole).toString() != hashQStr) return;
+    abandonAction->setEnabled(capabilities.first);
+    bumpFeeAction->setEnabled(capabilities.second);
     copyAddressAction->setEnabled(GUIUtil::hasEntryData(transactionView, 0, TransactionTableModel::AddressRole));
     copyLabelAction->setEnabled(GUIUtil::hasEntryData(transactionView, 0, TransactionTableModel::LabelRole));
 
-    if (index.isValid()) {
-        GUIUtil::PopupMenu(contextMenu, transactionView->viewport()->mapToGlobal(point));
-    }
+    GUIUtil::PopupMenu(contextMenu, transactionView->viewport()->mapToGlobal(point));
 }
 
 void TransactionView::abandonTx()
 {
-    if(!transactionView || !transactionView->selectionModel())
+    if(!model || !transactionView || !transactionView->selectionModel())
         return;
-    QModelIndexList selection = transactionView->selectionModel()->selectedRows(0);
+    GUIUtil::BackendOperationGuard operation;
+    const auto selection = GUIUtil::firstSelectedRow(transactionView);
+    if (!selection.isValid()) return;
 
     // get the hash from the TxHashRole (QVariant / QString)
-    QString hashQStr = selection.at(0).data(TransactionTableModel::TxHashRole).toString();
+    QString hashQStr = selection.data(TransactionTableModel::TxHashRole).toString();
     Txid hash = Txid::FromHex(hashQStr.toStdString()).value();
 
     // Abandon the wallet transaction over the walletModel
-    model->wallet().abandonTransaction(hash);
+    GUIUtil::WaitForBackendTask(model->requestWalletData([hash](interfaces::Wallet& wallet) {
+        return wallet.abandonTransaction(hash);
+    }), this);
 }
 
 void TransactionView::bumpFee([[maybe_unused]] bool checked)
 {
-    if(!transactionView || !transactionView->selectionModel())
+    if(!model || !transactionView || !transactionView->selectionModel())
         return;
-    QModelIndexList selection = transactionView->selectionModel()->selectedRows(0);
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<TransactionView> guard{this};
+    const auto selection = GUIUtil::firstSelectedRow(transactionView);
+    if (!selection.isValid()) return;
 
     // get the hash from the TxHashRole (QVariant / QString)
-    QString hashQStr = selection.at(0).data(TransactionTableModel::TxHashRole).toString();
+    QString hashQStr = selection.data(TransactionTableModel::TxHashRole).toString();
     Txid hash = Txid::FromHex(hashQStr.toStdString()).value();
 
     // Bump tx fee over the walletModel
     Txid newHash;
-    if (model->bumpFee(hash, newHash)) {
+    if (model->bumpFee(hash, newHash) && guard) {
         // Update the table
         transactionView->selectionModel()->clearSelection();
         model->getTransactionTableModel()->updateTransaction(hashQStr, CT_UPDATED, true);
 
         qApp->processEvents();
+        if (!guard) return;
         Q_EMIT bumpedFee(newHash);
     }
 }
@@ -436,7 +461,12 @@ void TransactionView::copyTxID()
 
 void TransactionView::copyTxHex()
 {
-    GUIUtil::copyEntryData(transactionView, 0, TransactionTableModel::TxHexRole);
+    GUIUtil::BackendOperationGuard operation;
+    if (!model || !transactionView->selectionModel()) return;
+    const auto selection = GUIUtil::firstSelectedRow(transactionView);
+    if (!selection.isValid()) return;
+    auto query = model->getTransactionTableModel()->requestTxHex(transactionProxyModel->mapToSource(selection));
+    GUIUtil::setClipboard(GUIUtil::WaitForBackendTask(std::move(query), this));
 }
 
 void TransactionView::copyTxPlainText()
@@ -448,13 +478,13 @@ void TransactionView::editLabel()
 {
     if(!transactionView->selectionModel() ||!model)
         return;
-    QModelIndexList selection = transactionView->selectionModel()->selectedRows();
-    if(!selection.isEmpty())
+    const auto selection = GUIUtil::firstSelectedRow(transactionView);
+    if (selection.isValid())
     {
         AddressTableModel *addressBook = model->getAddressTableModel();
         if(!addressBook)
             return;
-        QString address = selection.at(0).data(TransactionTableModel::AddressRole).toString();
+        QString address = selection.data(TransactionTableModel::AddressRole).toString();
         if(address.isEmpty())
         {
             // If this transaction has no associated address, exit
@@ -492,15 +522,21 @@ void TransactionView::editLabel()
 
 void TransactionView::showDetails()
 {
-    if(!transactionView->selectionModel())
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<TransactionView> guard{this};
+    if(!model || !transactionView->selectionModel())
         return;
-    QModelIndexList selection = transactionView->selectionModel()->selectedRows();
-    if(!selection.isEmpty())
+    const auto selection = GUIUtil::firstSelectedRow(transactionView);
+    if (selection.isValid())
     {
-        TransactionDescDialog *dlg = new TransactionDescDialog(selection.at(0));
+        const auto txid = selection.data(TransactionTableModel::TxHashRole).toString();
+        auto query = model->getTransactionTableModel()->requestTxDescription(transactionProxyModel->mapToSource(selection));
+        const auto description = GUIUtil::WaitForBackendTask(std::move(query), this);
+        if (!guard) return;
+        TransactionDescDialog *dlg = new TransactionDescDialog(txid, description, this);
         dlg->setAttribute(Qt::WA_DeleteOnClose);
         m_opened_dialogs.append(dlg);
-        connect(dlg, &QObject::destroyed, [this, dlg] {
+        connect(dlg, &QObject::destroyed, this, [this, dlg] {
             m_opened_dialogs.removeOne(dlg);
         });
         dlg->show();
@@ -511,9 +547,9 @@ void TransactionView::openThirdPartyTxUrl(QString url)
 {
     if(!transactionView || !transactionView->selectionModel())
         return;
-    QModelIndexList selection = transactionView->selectionModel()->selectedRows(0);
-    if(!selection.isEmpty())
-         QDesktopServices::openUrl(QUrl::fromUserInput(url.replace("%s", selection.at(0).data(TransactionTableModel::TxHashRole).toString())));
+    const auto selection = GUIUtil::firstSelectedRow(transactionView);
+    if (selection.isValid())
+         QDesktopServices::openUrl(QUrl::fromUserInput(url.replace("%s", selection.data(TransactionTableModel::TxHashRole).toString())));
 }
 
 QWidget *TransactionView::createDateRangeWidget()
@@ -576,24 +612,41 @@ void TransactionView::focusTransaction(const Txid& txid)
     if (!transactionProxyModel)
         return;
 
-    const QModelIndexList results = this->model->getTransactionTableModel()->match(
-        this->model->getTransactionTableModel()->index(0,0),
-        TransactionTableModel::TxHashRole,
-        QString::fromStdString(txid.ToString()), -1);
-
-    transactionView->setFocus();
-    transactionView->selectionModel()->clearSelection();
+    const QModelIndexList results = model->getTransactionTableModel()->indexesForTransaction(txid);
+    QList<int> rows;
+    rows.reserve(results.size());
+    QModelIndex first_target;
+    QModelIndex last_target;
     for (const QModelIndex& index : results) {
         const QModelIndex targetIndex = transactionProxyModel->mapFromSource(index);
-        transactionView->selectionModel()->select(
-            targetIndex,
-            QItemSelectionModel::Rows | QItemSelectionModel::Select);
-        // Called once per destination to ensure all results are in view, unless
-        // transactions are not ordered by (ascending or descending) date.
-        transactionView->scrollTo(targetIndex);
-        // scrollTo() does not scroll far enough the first time when transactions
-        // are ordered by ascending date.
-        if (index == results[0]) transactionView->scrollTo(targetIndex);
+        if (!targetIndex.isValid()) continue; // An output can be filtered out.
+        if (!first_target.isValid()) first_target = targetIndex;
+        last_target = targetIndex;
+        rows.append(targetIndex.row());
+    }
+
+    // One transaction can have thousands of output rows. Select once instead of
+    // repeatedly merging a growing selection and relaying one signal per row.
+    // Proxy ordering can interleave unrelated transactions, so merge only
+    // increasing adjacent rows, retaining the original selection order for
+    // first-row copy actions instead of sorting or spanning unrelated rows.
+    QItemSelection selection;
+    for (qsizetype begin{0}; begin < rows.size();) {
+        qsizetype end = begin + 1;
+        while (end < rows.size() && rows[end] == rows[end - 1] + 1) ++end;
+        selection.select(transactionProxyModel->index(rows[begin], 0),
+                         transactionProxyModel->index(rows[end - 1], 0));
+        begin = end;
+    }
+    transactionView->setFocus();
+    transactionView->selectionModel()->select(selection,
+        QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect);
+    if (first_target.isValid()) {
+        // Scroll to the original endpoint rows, not once per destination.
+        // The first scroll needs repeating for ascending date ordering.
+        transactionView->scrollTo(first_target);
+        transactionView->scrollTo(first_target);
+        if (last_target != first_target) transactionView->scrollTo(last_target);
     }
 }
 
@@ -620,8 +673,9 @@ bool TransactionView::eventFilter(QObject *obj, QEvent *event)
 void TransactionView::closeOpenedDialogs()
 {
     // close all dialogs opened from this view
-    for (QDialog* dlg : m_opened_dialogs) {
+    const auto dialogs = m_opened_dialogs;
+    m_opened_dialogs.clear();
+    for (QDialog* dlg : dialogs) {
         dlg->close();
     }
-    m_opened_dialogs.clear();
 }

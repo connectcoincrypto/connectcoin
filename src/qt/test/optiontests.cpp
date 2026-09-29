@@ -7,20 +7,67 @@
 #include <common/args.h>
 #include <init.h>
 #include <qt/bitcoin.h>
+#include <qt/guipreferences.h>
 #include <qt/guiutil.h>
 #include <qt/optionsdialog.h>
 #include <qt/test/optiontests.h>
 #include <test/util/setup_common.h>
 
 #include <QCheckBox>
+#include <QCoreApplication>
+#include <QDataStream>
 #include <QDataWidgetMapper>
 #include <QSettings>
+#include <QTemporaryDir>
 #include <QTabWidget>
 #include <QTest>
+#include <QThread>
+#include <QTimer>
 
 #include <univalue.h>
 
+#include <atomic>
 #include <fstream>
+#include <future>
+
+namespace {
+std::atomic<bool> settings_io_seen{false};
+std::atomic<bool> settings_io_on_gui{false};
+std::atomic<bool> block_settings_write{false};
+std::atomic<bool> settings_write_entered{false};
+std::atomic<bool> settings_write_timed_out{false};
+std::atomic<size_t> settings_write_count{0};
+std::atomic<bool> reject_settings_write{false};
+std::shared_future<void> settings_write_release;
+
+void RecordSettingsIoThread()
+{
+    settings_io_seen = true;
+    if (QThread::currentThread() == QCoreApplication::instance()->thread()) settings_io_on_gui = true;
+}
+
+bool ReadTestSettings(QIODevice& device, QSettings::SettingsMap& values)
+{
+    RecordSettingsIoThread();
+    QDataStream stream(&device);
+    stream >> values;
+    return stream.status() == QDataStream::Ok;
+}
+
+bool WriteTestSettings(QIODevice& device, const QSettings::SettingsMap& values)
+{
+    RecordSettingsIoThread();
+    ++settings_write_count;
+    if (block_settings_write.exchange(false)) {
+        settings_write_entered = true;
+        settings_write_timed_out = settings_write_release.wait_for(std::chrono::seconds{2}) != std::future_status::ready;
+    }
+    if (reject_settings_write.load()) return false;
+    QDataStream stream(&device);
+    stream << values;
+    return stream.status() == QDataStream::Ok;
+}
+} // namespace
 
 OptionTests::OptionTests(interfaces::Node& node) : m_node(node)
 {
@@ -184,6 +231,7 @@ void OptionTests::popupNotifications()
         checkbox->setChecked(true);
         QVERIFY(QMetaObject::invokeMethod(&dialog, "on_okButton_clicked"));
         QVERIFY(options.getPopupNotifications());
+        GUIUtil::WaitForBackendTask(GuiPreferences::Flush());
         QVERIFY(settings.value("fPopupNotifications").toBool());
         QVERIFY(!options.isRestartRequired());
     }
@@ -193,6 +241,7 @@ void OptionTests::popupNotifications()
     QVERIFY(reloaded.getPopupNotifications());
     QVERIFY(reloaded.setOption(OptionsModel::PopupNotifications, false));
     QVERIFY(!reloaded.getPopupNotifications());
+    GUIUtil::WaitForBackendTask(GuiPreferences::Flush());
     QVERIFY(!settings.value("fPopupNotifications").toBool());
 
     // Config opts in even with a saved false preference; CLI overrides config.
@@ -202,6 +251,34 @@ void OptionTests::popupNotifications()
     QVERIFY(configured.getPopupNotifications());
     QVERIFY(configured.isPopupNotificationsOverridden());
     QVERIFY(configured.getOverriddenByCommandLine().contains("-popupnotifications=1"));
+    {
+        // Passive reads must not wait for the settings mutex held by a slow
+        // settings.json write. Bound the worker wait so regressions fail rather
+        // than deadlocking the test process.
+        std::promise<void> locked;
+        auto acquired = locked.get_future();
+        std::promise<void> release;
+        auto released = release.get_future();
+        std::atomic<bool> timed_out{false};
+        auto writer = std::async(std::launch::async, [&] {
+            gArgs.LockSettings([&](common::Settings&) {
+                locked.set_value();
+                timed_out = released.wait_for(std::chrono::seconds{2}) != std::future_status::ready;
+            });
+        });
+        acquired.wait();
+        const auto popup = configured.getPopupNotifications();
+        const auto overridden = configured.isPopupNotificationsOverridden();
+        const auto database_cache = configured.getOption(OptionsModel::DatabaseCache);
+        const auto signer = configured.hasSigner();
+        release.set_value();
+        writer.get();
+        QVERIFY(!timed_out);
+        QVERIFY(popup);
+        QVERIFY(overridden);
+        QVERIFY(database_cache.isValid());
+        QCOMPARE(signer, configured.hasSigner());
+    }
     {
         OptionsDialog dialog{nullptr, false};
         dialog.setModel(&configured);
@@ -213,8 +290,13 @@ void OptionTests::popupNotifications()
     QVERIFY(configured.setOption(OptionsModel::PopupNotifications, false));
     QVERIFY(configured.getPopupNotifications());
     gArgs.LockSettings([](common::Settings& s) { s.command_line_options["popupnotifications"] = {false}; });
-    QVERIFY(!configured.getPopupNotifications());
-    QVERIFY(!configured.getOption(OptionsModel::PopupNotifications).toBool());
+    // Command-line/config overrides are startup state. Notification callbacks
+    // keep the snapshot and never take the settings-file writer's lock.
+    QVERIFY(configured.getPopupNotifications());
+    OptionsModel command_line{m_node};
+    QVERIFY(command_line.Init(error));
+    QVERIFY(!command_line.getPopupNotifications());
+    QVERIFY(!command_line.getOption(OptionsModel::PopupNotifications).toBool());
     // An explicit 0 must also override an existing GUI opt-in.
     settings.setValue("fPopupNotifications", true);
     OptionsModel disabled{m_node};
@@ -231,4 +313,126 @@ void OptionTests::extractFilter()
 
     filter = QString("Image (*.png *.jpg)");
     QCOMPARE(GUIUtil::ExtractFirstSuffixFromFilter(filter), "png");
+}
+
+void OptionTests::settingsIoOffGui()
+{
+    QTemporaryDir directory;
+    QVERIFY(directory.isValid());
+    const auto format = QSettings::registerFormat("qt-options-worker-test", ReadTestSettings, WriteTestSettings);
+    QVERIFY(format != QSettings::InvalidFormat);
+    QSettings::setPath(format, QSettings::UserScope, directory.path());
+    struct RestoreFormat {
+        QSettings::Format previous{QSettings::defaultFormat()};
+        ~RestoreFormat() { QSettings::setDefaultFormat(previous); }
+    } restore;
+    QSettings::setDefaultFormat(format);
+    settings_io_seen = false;
+    settings_io_on_gui = false;
+
+    bilingual_str error;
+    OptionsModel options{m_node};
+    QVERIFY(options.Init(error));
+    QVERIFY(options.setOption(OptionsModel::PopupNotifications, true));
+    QVERIFY(options.setOption(OptionsModel::MaskValues, true));
+    options.setRestartRequired(true);
+    QVERIFY(options.isRestartRequired());
+    GUIUtil::WaitForBackendTask(GuiPreferences::Flush());
+    QVERIFY(settings_io_seen.load());
+    QVERIFY2(!settings_io_on_gui.load(), "Options initialization or persistence accessed QSettings storage on the GUI thread");
+}
+
+void OptionTests::cachedGuiPreferences()
+{
+    GUIUtil::WaitForBackendTask(GuiPreferences::Flush());
+    QTemporaryDir directory;
+    QVERIFY(directory.isValid());
+    const auto format = QSettings::registerFormat("qt-gui-preferences-test", ReadTestSettings, WriteTestSettings);
+    QVERIFY(format != QSettings::InvalidFormat);
+    QSettings::setPath(format, QSettings::UserScope, directory.path());
+    struct RestoreIdentity {
+        QSettings::Format format{QSettings::defaultFormat()};
+        QString application{QCoreApplication::applicationName()};
+        ~RestoreIdentity()
+        {
+            QSettings::setDefaultFormat(format);
+            QCoreApplication::setApplicationName(application);
+        }
+    } restore;
+    QSettings::setDefaultFormat(format);
+    QCoreApplication::setApplicationName("gui-preferences-main");
+    GuiSettings main;
+    GUIUtil::WaitForBackendTask(main.load());
+    settings_io_seen = false;
+    settings_io_on_gui = false;
+    settings_write_entered = false;
+    settings_write_timed_out = false;
+    settings_write_count = 0;
+    std::promise<void> release;
+    settings_write_release = release.get_future().share();
+    block_settings_write = true;
+    main.setValue("held", true);
+    QTRY_VERIFY(settings_write_entered.load());
+    auto reload_during_edits = main.load(/*reload=*/true);
+
+    // A stalled QSettings callback must not hold the cache lock. Reads, writes
+    // and destruction of the widget-facing facade all finish before release.
+    {
+        GuiSettings widget_preferences;
+        QVERIFY(widget_preferences.value("held").toBool());
+        for (int value = 0; value < 1000; ++value) widget_preferences.setValue("geometry", value);
+        QCOMPARE(widget_preferences.value("geometry").toInt(), 999);
+        widget_preferences.setValue("discard/child", 7);
+        widget_preferences.remove("discard");
+        QVERIFY(!widget_preferences.contains("discard/child"));
+    }
+    QCOMPARE(settings_write_count.load(), size_t{1});
+    QVERIFY(!settings_write_timed_out.load());
+
+    // Loading a second network is an explicit responsive startup operation.
+    // Previously queued writes retain their original application identity.
+    QCoreApplication::setApplicationName("gui-preferences-testnet");
+    GuiSettings testnet;
+    bool heartbeat_fired{false};
+    QTimer heartbeat;
+    heartbeat.setSingleShot(true);
+    QObject::connect(&heartbeat, &QTimer::timeout, &heartbeat, [&] {
+        heartbeat_fired = true;
+        release.set_value();
+    });
+    heartbeat.start(25);
+    GUIUtil::WaitForBackendTask(testnet.load());
+    GUIUtil::WaitForBackendTask(std::move(reload_during_edits));
+    heartbeat.stop();
+    if (!heartbeat_fired) release.set_value();
+    QVERIFY(heartbeat_fired);
+    QVERIFY(!settings_write_timed_out.load());
+    QVERIFY(!testnet.contains("geometry"));
+    QCOMPARE(main.value("geometry").toInt(), 999);
+    // 1000 updates of one key must coalesce into a single pending write batch.
+    QCOMPARE(settings_write_count.load(), size_t{2});
+    testnet.setValue("geometry", 42);
+    main.setValue("geometry", 1001);
+    GUIUtil::WaitForBackendTask(GuiPreferences::Flush());
+    GUIUtil::WaitForBackendTask(main.load(/*reload=*/true));
+    GUIUtil::WaitForBackendTask(testnet.load(/*reload=*/true));
+    QCOMPARE(main.value("geometry").toInt(), 1001);
+    QCOMPARE(testnet.value("geometry").toInt(), 42);
+    QVERIFY(!main.contains("discard/child"));
+    reject_settings_write = true;
+    main.setValue("retry", 15);
+    GUIUtil::WaitForBackendTask(GuiPreferences::Flush());
+    const auto failed_writes = settings_write_count.load();
+    QCOMPARE(main.value("retry").toInt(), 15);
+    reject_settings_write = false;
+    GUIUtil::WaitForBackendTask(GuiPreferences::Flush());
+    QVERIFY(settings_write_count.load() > failed_writes);
+    GUIUtil::WaitForBackendTask(main.load(/*reload=*/true));
+    QCOMPARE(main.value("retry").toInt(), 15);
+    QVERIFY(settings_io_seen.load());
+    QVERIFY2(!settings_io_on_gui.load(), "GUI preferences touched persistent storage on the GUI thread");
+
+    main.clear();
+    testnet.clear();
+    GUIUtil::WaitForBackendTask(GuiPreferences::Flush());
 }

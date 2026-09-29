@@ -28,35 +28,13 @@ QValidator::State BitcoinAddressEntryValidator::validate(QString &input, int &po
     if (input.isEmpty())
         return QValidator::Intermediate;
 
-    // Correction
-    for (int idx = 0; idx < input.size();)
-    {
-        bool removeChar = false;
-        QChar ch = input.at(idx);
-        // Corrections made are very conservative on purpose, to avoid
-        // users unexpectedly getting away with typos that would normally
-        // be detected, and thus sending to the wrong address.
-        switch(ch.unicode())
-        {
-        // Qt categorizes these as "Other_Format" not "Separator_Space"
-        case 0x200B: // ZERO WIDTH SPACE
-        case 0xFEFF: // ZERO WIDTH NO-BREAK SPACE
-            removeChar = true;
-            break;
-        default:
-            break;
-        }
-
-        // Remove whitespace
-        if (ch.isSpace())
-            removeChar = true;
-
-        // To next character
-        if (removeChar)
-            input.remove(idx, 1);
-        else
-            ++idx;
-    }
+    // Validation belongs to the widget thread, but repeatedly removing one
+    // character shifts the remaining pasted text on every iteration. Compact
+    // in one linear pass, with exactly the same conservative corrections.
+    input.removeIf([](QChar ch) {
+        // Qt categorizes these as Other_Format, not Separator_Space.
+        return ch.isSpace() || ch.unicode() == 0x200B || ch.unicode() == 0xFEFF;
+    });
 
     // Validation
     QValidator::State state = QValidator::Acceptable;

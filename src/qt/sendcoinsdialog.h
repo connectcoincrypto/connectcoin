@@ -8,9 +8,16 @@
 #include <primitives/transaction_identifier.h>
 #include <qt/clientmodel.h>
 #include <qt/walletmodel.h>
+#include <util/fees.h>
+
+#include <cstdint>
+#include <future>
+#include <optional>
+#include <vector>
 
 #include <QDialog>
 #include <QMessageBox>
+#include <QPointer>
 #include <QString>
 #include <QTimer>
 
@@ -27,6 +34,7 @@ namespace Ui {
 }
 
 QT_BEGIN_NAMESPACE
+class QShowEvent;
 class QUrl;
 QT_END_NAMESPACE
 
@@ -64,18 +72,53 @@ public Q_SLOTS:
 Q_SIGNALS:
     void coinsSent(const Txid& txid);
 
+protected:
+    void showEvent(QShowEvent* event) override;
+    void changeEvent(QEvent* event) override;
+    bool eventFilter(QObject* watched, QEvent* event) override;
+
 private:
     Ui::SendCoinsDialog *ui;
-    ClientModel* clientModel{nullptr};
-    WalletModel* model{nullptr};
+    QPointer<ClientModel> clientModel;
+    QPointer<WalletModel> model;
     std::unique_ptr<wallet::CCoinControl> m_coin_control;
     std::unique_ptr<WalletModelTransaction> m_current_transaction;
     bool fNewRecipientAllowed{true};
     bool fFeeMinimized{true};
     const PlatformStyle *platformStyle;
 
+    struct FeeEstimate {
+        CAmount fee;
+        std::optional<int> returned_target;
+        FeeReason reason;
+        int requested_target;
+    };
+    // Futures from the model's worker do not wait on destruction. Only copied
+    // fee inputs/results cross threads; no worker captures this dialog.
+    std::future<FeeEstimate> m_fee_estimate;
+    std::optional<FeeEstimate> m_cached_fee_estimate;
+    QTimer m_fee_refresh_timer;
+    uint64_t m_fee_generation{0};
+    uint64_t m_pending_fee_generation{0};
+    bool m_fee_refresh_requested{false};
+    bool m_fee_refresh_enabled{true};
+    bool m_fee_block_refresh_pending{false};
+    QPointer<QWidget> m_watched_window;
+    std::vector<QMetaObject::Connection> m_model_connections;
+    std::future<bool> m_change_query;
+    QTimer m_change_debounce;
+    QTimer m_change_poll;
+    uint64_t m_change_generation{0};
+    uint64_t m_pending_change_generation{0};
+    QString m_pending_change_text;
+    QPointer<WalletModel> m_pending_change_model;
+    QPointer<QMessageBox> m_change_confirmation;
+    bool m_change_requested{false};
+    bool m_change_pending{false};
+    bool m_send_in_progress{false};
+
     // Copy PSBT to clipboard and offer to save it.
-    void presentPSBT(PartiallySignedTransaction& psbt);
+    void presentPSBT(PartiallySignedTransaction psbt, const QList<SendCoinsRecipient>& recipients);
     // Process WalletModel::SendCoinsReturn and generate a pair consisting
     // of a message and message flags for use in Q_EMIT message().
     // Additional parameter msgArg can be used via .arg(msgArg).
@@ -86,14 +129,21 @@ private:
     /* Sign PSBT using external signer.
      *
      * @param[in,out] psbtx the PSBT to sign
-     * @param[in,out] mtx needed to attempt to finalize
+     * @param[out] transaction the finalized transaction, when complete
      * @param[in,out] complete whether the PSBT is complete (a successfully signed multisig transaction may not be complete)
      *
      * @returns false if any failure occurred, which may include the user rejection of a transaction on the device.
      */
-    bool signWithExternalSigner(PartiallySignedTransaction& psbt, CMutableTransaction& mtx, bool& complete);
+    bool signWithExternalSigner(PartiallySignedTransaction& psbt, WalletModelTransaction& transaction, bool& complete);
     void updateFeeMinimizedLabel();
     void updateCoinControlState();
+    void startFeeEstimate();
+    void pollFeeEstimate();
+    void renderSmartFeeLabel();
+    void refreshVisibleBlockFee();
+    void startChangeCheck();
+    void pollChangeCheck();
+    void updateSendButton();
 
 private Q_SLOTS:
     void sendButtonClicked(bool checked);

@@ -6,14 +6,18 @@
 #define CONNECTCOIN_QT_OPTIONSMODEL_H
 
 #include <cstdint>
+#include <common/settings.h>
 #include <qt/bitcoinunits.h>
 #include <qt/guiconstants.h>
 #include <util/byte_units.h>
+#include <util/threadpool.h>
+#include <univalue.h>
 
 #include <QAbstractListModel>
 #include <QFont>
 
 #include <cassert>
+#include <map>
 #include <variant>
 
 struct bilingual_str;
@@ -126,7 +130,16 @@ public:
 
 private:
     interfaces::Node& m_node;
+    ThreadPool m_worker{"qt-options"};
+    // Reads from Qt delegates/notifications must not contend with settings-file writes.
+    std::map<std::string, common::SettingsValue> m_cached_settings;
+    std::map<std::string, std::string> m_overridden_values;
+    bool m_popup_notifications_overridden{false};
+    bool m_popup_override_value{false};
+    bool m_has_signer{false};
+    bool m_restart_required{false};
     /* Qt-only settings */
+    bool m_start_at_startup{false};
     bool m_show_tray_icon;
     bool m_popup_notifications{false};
     bool fMinimizeToTray;

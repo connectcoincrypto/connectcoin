@@ -37,6 +37,7 @@ QT_BEGIN_NAMESPACE
 class QDateTime;
 class QMenu;
 class QItemSelection;
+class QLabel;
 QT_END_NAMESPACE
 
 /** Local ConnectCoin RPC console. */
@@ -47,6 +48,8 @@ class RPCConsole: public QWidget
 public:
     explicit RPCConsole(interfaces::Node& node, const PlatformStyle *platformStyle, QWidget *parent);
     ~RPCConsole();
+    /** Capture final widget state without touching storage. */
+    void saveSettings();
 
     static bool RPCParseCommandLine(interfaces::Node* node, std::string& strResult, const std::string& strCommand, bool fExecute, std::string* pstrFilteredOut = nullptr, const QString& wallet_name = {});
     static bool RPCExecuteCommandLine(interfaces::Node& node, std::string &strResult, const std::string &strCommand, std::string * const pstrFilteredOut = nullptr, const QString& wallet_name = {}) {
@@ -142,6 +145,7 @@ public Q_SLOTS:
 #endif // ENABLE_WALLET
 
 private:
+    bool m_settings_saved{false};
     struct TranslatedStrings {
         const QString yes{tr("Yes")}, no{tr("No")}, to{tr("To")}, from{tr("From")},
             ban_for{tr("Ban for")}, na{tr("N/A")}, unknown{tr("Unknown")};
@@ -149,6 +153,8 @@ private:
 
     void startExecutor();
     void setTrafficGraphRange(int mins);
+    void updateConsoleStyle();
+    void updatePeerRefreshState();
 
     enum ColumnWidths
     {
@@ -176,6 +182,8 @@ private:
     RPCExecutor* m_executor{nullptr};
     WalletModel* m_last_wallet_model{nullptr};
     bool m_is_executing{false};
+    bool m_is_preparing_command{false};
+    QLabel* m_executing_label{nullptr};
     QByteArray m_peer_widget_header_state;
     QByteArray m_banlist_widget_header_state;
 

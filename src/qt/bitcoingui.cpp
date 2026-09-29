@@ -57,19 +57,47 @@
 #include <QMessageBox>
 #include <QMimeData>
 #include <QProgressDialog>
+#include <QPointer>
 #include <QScreen>
-#include <QSettings>
+#include <qt/guipreferences.h>
 #include <QShortcut>
 #include <QStackedWidget>
 #include <QStatusBar>
 #include <QStyle>
 #include <QSystemTrayIcon>
+#include <QThread>
 #include <QTimer>
 #include <QToolBar>
 #include <QUrlQuery>
 #include <QVBoxLayout>
 #include <QWindow>
 
+#include <future>
+#include <list>
+#include <mutex>
+
+// A disconnected Core signal can still have an entered callback. The gate
+// outlives the window and protects only target checks/enqueueing, never dialog
+// execution or waiting for a modal answer.
+struct BitcoinGUI::CoreSignalGate {
+    struct Reply {
+        std::promise<bool> promise;
+        bool done{false}; // Protected by the gate mutex.
+    };
+    std::mutex mutex;
+    BitcoinGUI* target{nullptr};
+    std::list<std::shared_ptr<Reply>> pending;
+
+    void finish(const std::shared_ptr<Reply>& reply, bool accepted)
+    {
+        std::lock_guard lock{mutex};
+        if (!reply->done) {
+            reply->done = true;
+            reply->promise.set_value(accepted);
+        }
+        pending.remove(reply);
+    }
+};
 
 /**
  * Maximum gap between node time and block time used
@@ -96,7 +124,7 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
     platformStyle(_platformStyle),
     m_network_style(networkStyle)
 {
-    QSettings settings;
+    GuiSettings settings;
     if (!restoreGeometry(settings.value("MainWindowGeometry").toByteArray())) {
         // Restore failed (perhaps missing setting), center the window
         move(QGuiApplication::primaryScreen()->availableGeometry().center() - frameGeometry().center());
@@ -112,7 +140,6 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
     updateWindowTitle();
 
     rpcConsole = new RPCConsole(node, _platformStyle, nullptr);
-    helpMessageDialog = new HelpMessageDialog(this, false);
 #ifdef ENABLE_WALLET
     if(enableWallet)
     {
@@ -239,8 +266,7 @@ BitcoinGUI::~BitcoinGUI()
     // Unsubscribe from notifications from core
     unsubscribeFromCoreSignals();
 
-    QSettings settings;
-    settings.setValue("MainWindowGeometry", saveGeometry());
+    saveSettings();
     if(trayIcon) // Hide tray icon, as deleting will let it linger until quit (on Ubuntu)
         trayIcon->hide();
 #ifdef Q_OS_MACOS
@@ -249,6 +275,15 @@ BitcoinGUI::~BitcoinGUI()
 #endif
 
     delete rpcConsole;
+}
+
+void BitcoinGUI::saveSettings()
+{
+    if (m_settings_saved) return;
+    m_settings_saved = true;
+    GuiSettings settings;
+    settings.setValue("MainWindowGeometry", saveGeometry());
+    rpcConsole->saveSettings();
 }
 
 void BitcoinGUI::createActions()
@@ -465,7 +500,7 @@ void BitcoinGUI::createActions()
                 });
             }
             if (m_open_wallet_menu->isEmpty()) {
-                QAction* action = m_open_wallet_menu->addAction(tr("No wallets available"));
+                QAction* action = m_open_wallet_menu->addAction(m_wallet_controller->hasWalletDirSnapshot() ? tr("No wallets available") : tr("Loading wallets…"));
                 action->setEnabled(false);
             }
         });
@@ -528,7 +563,7 @@ void BitcoinGUI::createActions()
                 });
             }
             if (m_migrate_wallet_menu->isEmpty()) {
-                QAction* action = m_migrate_wallet_menu->addAction(tr("No wallets available"));
+                QAction* action = m_migrate_wallet_menu->addAction(m_wallet_controller->hasWalletDirSnapshot() ? tr("No wallets available") : tr("Loading wallets…"));
                 action->setEnabled(false);
             }
             m_migrate_wallet_menu->addSeparator();
@@ -561,6 +596,7 @@ void BitcoinGUI::createActions()
         connect(m_mask_values_action, &QAction::toggled, this, &BitcoinGUI::setPrivacy);
         connect(m_mask_values_action, &QAction::toggled, this, &BitcoinGUI::enableHistoryAction);
         GUIUtil::ExceptionSafeConnect(m_export_watchonly_action, &QAction::triggered, [this](bool) {
+            GUIUtil::BackendOperationGuard operation;
             QString destination = GUIUtil::getSaveFileName(this,
                 tr("Save Watch-only Wallet Export"), QString(),
                 //: Name of the wallet data file format.
@@ -569,11 +605,15 @@ void BitcoinGUI::createActions()
             if (destination.isEmpty()) return;
             WalletModel* model = walletFrame->currentWalletModel();
             if (!Assume(model)) return;
-            util::Result<std::string> export_res = model->wallet().exportWatchOnlyWallet(GUIUtil::QStringToPath(destination));
-            if (export_res) {
-                QMessageBox::information(nullptr, tr("Export Successful"), tr("The wallet has been exported to ") + QString::fromStdString(*export_res));
+            const auto [exported, result_message] = GUIUtil::WaitForBackendTask(model->requestWalletData(
+                [path = GUIUtil::QStringToPath(destination)](interfaces::Wallet& wallet) {
+                    auto result = wallet.exportWatchOnlyWallet(path);
+                    return std::make_pair(static_cast<bool>(result), result ? *result : util::ErrorString(result).translated);
+                }), this);
+            if (exported) {
+                QMessageBox::information(nullptr, tr("Export Successful"), tr("The wallet has been exported to ") + QString::fromStdString(result_message));
             } else {
-                QMessageBox::critical(nullptr, tr("Export Error"), QString::fromStdString(util::ErrorString(export_res).translated));
+                QMessageBox::critical(nullptr, tr("Export Error"), QString::fromStdString(result_message));
             }
         });
     }
@@ -728,12 +768,13 @@ void BitcoinGUI::setClientModel(ClientModel *_clientModel, interfaces::BlockAndH
         createTrayIconMenu();
 
         // Keep up to date with client
-        setNetworkActive(m_node.getNetworkActive());
+        setNetworkActive(_clientModel->getNetworkActive());
         connect(connectionsControl, &GUIUtil::ClickableLabel::clicked, [this] {
             GUIUtil::PopupMenu(m_network_context_menu, QCursor::pos());
         });
         connect(_clientModel, &ClientModel::numConnectionsChanged, this, &BitcoinGUI::setNumConnections);
         connect(_clientModel, &ClientModel::networkActiveChanged, this, &BitcoinGUI::setNetworkActive);
+        connect(_clientModel, &ClientModel::nodeStateChanged, this, &BitcoinGUI::updateProxyIcon);
 
         modalOverlay->setKnownBestHeight(tip_info->header_height, QDateTime::fromSecsSinceEpoch(tip_info->header_time), /*presync=*/false);
         setNumBlocks(tip_info->block_height, QDateTime::fromSecsSinceEpoch(tip_info->block_time), tip_info->verification_progress, SyncType::BLOCK_SYNC, SynchronizationState::INIT_DOWNLOAD);
@@ -805,6 +846,11 @@ void BitcoinGUI::setWalletController(WalletController* wallet_controller, bool s
     assert(wallet_controller);
 
     m_wallet_controller = wallet_controller;
+    connect(m_wallet_controller, &WalletController::walletDirectoryChanged, this, [this] {
+        // Rebuild an already open menu when its asynchronous scan completes.
+        if (m_open_wallet_menu->isVisible()) QMetaObject::invokeMethod(m_open_wallet_menu, "aboutToShow", Qt::QueuedConnection);
+        if (m_migrate_wallet_menu->isVisible()) QMetaObject::invokeMethod(m_migrate_wallet_menu, "aboutToShow", Qt::QueuedConnection);
+    });
 
     m_create_wallet_action->setEnabled(true);
     m_open_wallet_action->setEnabled(true);
@@ -1054,6 +1100,13 @@ void BitcoinGUI::showDebugWindowActivateConsole()
 
 void BitcoinGUI::showHelpMessageClicked()
 {
+    GUIUtil::BackendOperationGuard operation;
+    if (!helpMessageDialog) {
+        const QPointer<BitcoinGUI> guard{this};
+        const auto options = HelpMessageDialog::loadHelpOptions();
+        if (!guard) return;
+        helpMessageDialog = new HelpMessageDialog(this, false, options);
+    }
     GUIUtil::bringToFront(helpMessageDialog);
 }
 
@@ -1140,7 +1193,7 @@ void BitcoinGUI::updateNetworkState()
 
     QString tooltip;
 
-    if (m_node.getNetworkActive()) {
+    if (clientModel->getNetworkActive()) {
         //: A substring of the tooltip.
         tooltip = tr("%n active connection(s) to the ConnectCoin network.", "", count);
     } else {
@@ -1180,7 +1233,12 @@ void BitcoinGUI::setNetworkActive(bool network_active)
             tr("Disable network activity") :
             //: A context menu item. The network activity was disabled previously.
             tr("Enable network activity"),
-        [this, new_state = !network_active] { m_node.setNetworkActive(new_state); });
+        [this, new_state = !network_active] {
+            if (!clientModel) return;
+            GUIUtil::WaitForBackendTask(clientModel->requestNodeData([new_state](interfaces::Node& node) {
+                node.setNetworkActive(new_state);
+            }), this);
+        });
 }
 
 void BitcoinGUI::updateHeadersSyncProgressLabel()
@@ -1383,6 +1441,7 @@ void BitcoinGUI::message(const QString& title, QString message, unsigned int sty
     }
 
     if (style & CClientUIInterface::MODAL) {
+        GUIUtil::BackendOperationGuard operation;
         // Check for buttons, use OK as default, if none was supplied
         QMessageBox::StandardButton buttons;
         if (!(buttons = (QMessageBox::StandardButton)(style & CClientUIInterface::BTN_MASK)))
@@ -1474,7 +1533,7 @@ void BitcoinGUI::incomingTransaction(const QString& date, BitcoinUnit unit, cons
     // On new transaction, make an info balloon
     QString msg = tr("Date: %1\n").arg(date) +
                   tr("Amount: %1\n").arg(BitcoinUnits::formatWithUnit(unit, amount, true));
-    if (m_node.walletLoader().getWallets().size() > 1 && !walletName.isEmpty()) {
+    if (m_wallet_selector && m_wallet_selector->count() > 1 && !walletName.isEmpty()) {
         msg += tr("Wallet: %1\n").arg(walletName);
     }
     msg += tr("Type: %1\n").arg(type);
@@ -1583,7 +1642,7 @@ void BitcoinGUI::updateWalletStatus()
     }
     WalletModel * const walletModel = walletView->getWalletModel();
     setEncryptionStatus(walletModel->getEncryptionStatus());
-    setHDStatus(walletModel->wallet().privateKeysDisabled(), walletModel->wallet().hdEnabled());
+    setHDStatus(walletModel->wallet().privateKeysDisabled(), walletModel->getCachedHDEnabled());
 }
 #endif // ENABLE_WALLET
 
@@ -1674,50 +1733,78 @@ void BitcoinGUI::showModalOverlay()
         modalOverlay->toggleVisibility();
 }
 
-[[nodiscard]] static bool ThreadSafeMessageBox(BitcoinGUI* gui, const bilingual_str& message, unsigned int style)
+bool BitcoinGUI::ThreadSafeMessageBox(const std::shared_ptr<CoreSignalGate>& gate, const bilingual_str& message, unsigned int style)
 {
-    bool modal = (style & CClientUIInterface::MODAL);
+    const bool modal = (style & CClientUIInterface::MODAL);
     // The SECURE flag has no effect in the Qt GUI.
     // bool secure = (style & CClientUIInterface::SECURE);
     style &= ~CClientUIInterface::SECURE;
-    bool ret = false;
-
     QString detailed_message; // This is original message, in English, for googling and referencing.
     if (message.original != message.translated) {
         detailed_message = BitcoinGUI::tr("Original message:") + "\n" + QString::fromStdString(message.original);
     }
-    // The title is empty for node messages. The fallback title is usually set
-    // by `style`.
-    const QString title{};
+    const auto reply = modal ? std::make_shared<CoreSignalGate::Reply>() : nullptr;
+    auto answer = reply ? reply->promise.get_future() : std::future<bool>{};
+    auto deliver = [gate, reply, text = QString::fromStdString(message.translated), style, detailed_message] {
+        BitcoinGUI* target;
+        {
+            std::lock_guard lock{gate->mutex};
+            target = gate->target;
+        }
+        // This runs on the GUI thread, so target cannot be deleted between
+        // releasing the gate and entering message() without an event-loop turn.
+        if (!target) return;
+        bool accepted{false};
+        target->message({}, text, style, reply ? &accepted : nullptr, detailed_message);
+        if (reply) gate->finish(reply, accepted);
+    };
 
-    // In case of modal message, use blocking connection to wait for user to click a button
-    bool invoked = QMetaObject::invokeMethod(gui, "message",
-                               modal ? GUIUtil::blockingGUIThreadConnection() : Qt::QueuedConnection,
-                               Q_ARG(QString, title),
-                               Q_ARG(QString, QString::fromStdString(message.translated)),
-                               Q_ARG(unsigned int, style),
-                               Q_ARG(bool*, &ret),
-                               Q_ARG(QString, detailed_message));
-    assert(invoked);
-    return ret;
+    std::unique_lock lock{gate->mutex};
+    auto* target = gate->target;
+    if (!target) return false;
+    if (reply) gate->pending.push_back(reply);
+    if (modal && QThread::currentThread() == target->thread()) {
+        // Preserve GUI-origin modal calls without a self-blocking queued call.
+        lock.unlock();
+        deliver();
+    } else {
+        const bool invoked = QMetaObject::invokeMethod(target, std::move(deliver), Qt::QueuedConnection);
+        lock.unlock();
+        if (!invoked && reply) gate->finish(reply, false);
+    }
+    // Unlike BlockingQueuedConnection, this wait is cancelled on unsubscribe
+    // even when the GUI event has not been dispatched. No caller stack pointer
+    // escapes into a queued nonmodal notification or a cancelled modal dialog.
+    return reply ? answer.get() : false;
 }
 
 void BitcoinGUI::subscribeToCoreSignals()
 {
-    // Connect signals to client
-    m_handler_message_box = m_node.handleMessageBox([this](const bilingual_str& message, unsigned int style) {
-        (void)ThreadSafeMessageBox(this, message, style);
+    m_core_signal_gate = std::make_shared<CoreSignalGate>();
+    m_core_signal_gate->target = this;
+    // Handlers retain only the shared gate, never the window's lifetime.
+    m_handler_message_box = m_node.handleMessageBox([gate = m_core_signal_gate](const bilingual_str& message, unsigned int style) {
+        (void)ThreadSafeMessageBox(gate, message, style);
     });
-    m_handler_question = m_node.handleQuestion([this](const bilingual_str& message, const std::string& /*non_interactive_message*/, unsigned int style) {
-        return ThreadSafeMessageBox(this, message, style);
+    m_handler_question = m_node.handleQuestion([gate = m_core_signal_gate](const bilingual_str& message, const std::string& /*non_interactive_message*/, unsigned int style) {
+        return ThreadSafeMessageBox(gate, message, style);
     });
 }
 
 void BitcoinGUI::unsubscribeFromCoreSignals()
 {
-    // Disconnect signals from client
-    m_handler_message_box->disconnect();
-    m_handler_question->disconnect();
+    if (m_core_signal_gate) {
+        std::lock_guard lock{m_core_signal_gate->mutex};
+        m_core_signal_gate->target = nullptr;
+        for (const auto& reply : m_core_signal_gate->pending) {
+            reply->done = true;
+            reply->promise.set_value(false);
+        }
+        m_core_signal_gate->pending.clear();
+    }
+    // Null the target/cancel waiters before disconnecting entered callbacks.
+    if (m_handler_message_box) m_handler_message_box->disconnect();
+    if (m_handler_question) m_handler_question->disconnect();
 }
 
 bool BitcoinGUI::isPrivacyModeActivated() const

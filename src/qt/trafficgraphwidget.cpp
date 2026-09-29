@@ -2,7 +2,6 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <interfaces/node.h>
 #include <qt/trafficgraphwidget.h>
 #include <qt/clientmodel.h>
 
@@ -31,9 +30,10 @@ TrafficGraphWidget::TrafficGraphWidget(QWidget* parent)
 void TrafficGraphWidget::setClientModel(ClientModel *model)
 {
     clientModel = model;
+    m_have_baseline = model && model->hasNodeState();
     if(model) {
-        nLastBytesIn = model->node().getTotalBytesRecv();
-        nLastBytesOut = model->node().getTotalBytesSent();
+        nLastBytesIn = model->getTotalBytesRecv();
+        nLastBytesOut = model->getTotalBytesSent();
     }
 }
 
@@ -116,10 +116,16 @@ void TrafficGraphWidget::paintEvent(QPaintEvent *)
 
 void TrafficGraphWidget::updateRates()
 {
-    if(!clientModel) return;
+    if (!clientModel || !clientModel->hasNodeState() || timer->interval() <= 0) return;
 
-    quint64 bytesIn = clientModel->node().getTotalBytesRecv(),
-            bytesOut = clientModel->node().getTotalBytesSent();
+    quint64 bytesIn = clientModel->getTotalBytesRecv(),
+            bytesOut = clientModel->getTotalBytesSent();
+    if (!m_have_baseline || bytesIn < nLastBytesIn || bytesOut < nLastBytesOut) {
+        nLastBytesIn = bytesIn;
+        nLastBytesOut = bytesOut;
+        m_have_baseline = true;
+        return;
+    }
     float in_rate_kilobytes_per_sec = static_cast<float>(bytesIn - nLastBytesIn) / timer->interval();
     float out_rate_kilobytes_per_sec = static_cast<float>(bytesOut - nLastBytesOut) / timer->interval();
     vSamplesIn.push_front(in_rate_kilobytes_per_sec);
@@ -162,10 +168,11 @@ void TrafficGraphWidget::clear()
     vSamplesOut.clear();
     vSamplesIn.clear();
     fMax = 0.0f;
+    m_have_baseline = clientModel && clientModel->hasNodeState();
 
     if(clientModel) {
-        nLastBytesIn = clientModel->node().getTotalBytesRecv();
-        nLastBytesOut = clientModel->node().getTotalBytesSent();
+        nLastBytesIn = clientModel->getTotalBytesRecv();
+        nLastBytesOut = clientModel->getTotalBytesSent();
     }
     timer->start();
 }

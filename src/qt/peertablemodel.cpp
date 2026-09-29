@@ -12,6 +12,7 @@
 #include <utility>
 
 #include <QList>
+#include <QDebug>
 #include <QTimer>
 
 PeerTableModel::PeerTableModel(interfaces::Node& node, QObject* parent)
@@ -20,23 +21,56 @@ PeerTableModel::PeerTableModel(interfaces::Node& node, QObject* parent)
 {
     // set up timer for auto refresh
     timer = new QTimer(this);
+    timer->setObjectName("peerRefreshTimer");
     connect(timer, &QTimer::timeout, this, &PeerTableModel::refresh);
     timer->setInterval(MODEL_UPDATE_DELAY);
+
+    m_worker.Start(1);
+    m_result_timer = new QTimer(this);
+    m_result_timer->setObjectName("peerRefreshResultTimer");
+    m_result_timer->setInterval(50);
+    connect(m_result_timer, &QTimer::timeout, this, &PeerTableModel::pollRefresh);
 
     // load initial data
     refresh();
 }
 
-PeerTableModel::~PeerTableModel() = default;
+PeerTableModel::~PeerTableModel()
+{
+    interrupt();
+    m_worker.Stop();
+}
+
+void PeerTableModel::stop()
+{
+    if (m_worker_stopped) return;
+    interrupt();
+    m_worker_stopped = true;
+    GUIUtil::WaitForBackendTask(std::async(std::launch::async, [worker = &m_worker] { worker->Stop(); }));
+}
+
+void PeerTableModel::interrupt()
+{
+    m_stopped = true;
+    timer->stop();
+    m_result_timer->stop();
+    m_worker.Interrupt();
+}
 
 void PeerTableModel::startAutoRefresh()
 {
+    if (m_stopped || timer->isActive()) return;
     timer->start();
+    refresh();
 }
 
 void PeerTableModel::stopAutoRefresh()
 {
     timer->stop();
+    m_refresh_requested = false;
+    // Keep an in-flight snapshot for the next show, but do not publish/sort it
+    // or schedule replacement work while the peer table is not visible.
+    m_result_timer->stop();
 }
 
 int PeerTableModel::rowCount(const QModelIndex& parent) const
@@ -57,10 +91,12 @@ int PeerTableModel::columnCount(const QModelIndex& parent) const
 
 QVariant PeerTableModel::data(const QModelIndex& index, int role) const
 {
-    if(!index.isValid())
+    if (!index.isValid() || index.model() != this || index.row() < 0 || index.row() >= m_peers_data.size())
         return QVariant();
 
-    CNodeCombinedStats *rec = static_cast<CNodeCombinedStats*>(index.internalPointer());
+    // Snapshots replace the backing QList, and removals move its elements.
+    // A persistent model index follows its row, not an address in the old list.
+    const auto* rec = &m_peers_data.at(index.row());
 
     const auto column = static_cast<ColumnIndex>(index.column());
     if (role == Qt::DisplayRole) {
@@ -111,7 +147,7 @@ QVariant PeerTableModel::data(const QModelIndex& index, int role) const
         } // no default case, so the compiler can warn about missing cases
         assert(false);
     } else if (role == StatsRole) {
-        return QVariant::fromValue(rec);
+        return QVariant::fromValue(const_cast<CNodeCombinedStats*>(rec));
     }
 
     return QVariant();
@@ -139,10 +175,10 @@ Qt::ItemFlags PeerTableModel::flags(const QModelIndex &index) const
 
 QModelIndex PeerTableModel::index(int row, int column, const QModelIndex& parent) const
 {
-    Q_UNUSED(parent);
+    if (parent.isValid()) return {};
 
     if (0 <= row && row < rowCount() && 0 <= column && column < columnCount()) {
-        return createIndex(row, column, const_cast<CNodeCombinedStats*>(&m_peers_data[row]));
+        return createIndex(row, column);
     }
 
     return QModelIndex();
@@ -150,15 +186,47 @@ QModelIndex PeerTableModel::index(int row, int column, const QModelIndex& parent
 
 void PeerTableModel::refresh()
 {
-    interfaces::Node::NodesStats nodes_stats;
-    m_node.getNodesStats(nodes_stats);
-    decltype(m_peers_data) new_peers_data;
-    new_peers_data.reserve(nodes_stats.size());
-    for (const auto& node_stats : nodes_stats) {
-        const CNodeCombinedStats stats{std::get<0>(node_stats), std::get<2>(node_stats), std::get<1>(node_stats)};
-        new_peers_data.append(stats);
-    }
+    if (m_stopped) return;
+    m_refresh_requested = true;
+    m_result_timer->start();
+    pollRefresh();
+}
 
+void PeerTableModel::pollRefresh()
+{
+    if (m_stopped) return;
+    if (m_query.valid()) {
+        if (m_query.wait_for(std::chrono::seconds{0}) != std::future_status::ready) return;
+        try {
+            applyStats(m_query.get());
+        } catch (const std::exception& error) {
+            qWarning() << "Peer statistics refresh failed:" << error.what();
+        }
+    }
+    if (m_stopped || m_query.valid()) return;
+    if (!m_refresh_requested) {
+        m_result_timer->stop();
+        return;
+    }
+    m_refresh_requested = false;
+    auto result = m_worker.Submit([node = &m_node] {
+        interfaces::Node::NodesStats nodes_stats;
+        node->getNodesStats(nodes_stats);
+        QList<CNodeCombinedStats> peers;
+        peers.reserve(nodes_stats.size());
+        for (auto& stats : nodes_stats) {
+            peers.append(CNodeCombinedStats{std::move(std::get<0>(stats)), std::move(std::get<2>(stats)), std::get<1>(stats)});
+        }
+        return peers;
+    });
+    if (result) {
+        m_query = std::move(*result);
+        m_result_timer->start();
+    }
+}
+
+void PeerTableModel::applyStats(QList<CNodeCombinedStats> new_peers_data)
+{
     // Handle peer addition or removal as suggested in Qt Docs. See:
     // - https://doc.qt.io/qt-5/model-view-programming.html#inserting-and-removing-rows
     // - https://doc.qt.io/qt-5/model-view-programming.html#resizable-models
@@ -169,9 +237,17 @@ void PeerTableModel::refresh()
             ++i;
             continue;
         }
-        // A peer has been removed from the table.
-        beginRemoveRows(QModelIndex(), i, i);
-        m_peers_data.erase(m_peers_data.begin() + i);
+        // IDs are monotonic, so new peers can only be appended. Remove the
+        // entire departed run in one model notification: disconnecting all
+        // peers must not repeatedly shift the list and rebuild proxy mappings
+        // once per peer on the GUI thread.
+        int end = i + 1;
+        while (end < m_peers_data.size() &&
+               (i >= new_peers_data.size() || m_peers_data.at(end).nodeStats.nodeid != new_peers_data.at(i).nodeStats.nodeid)) {
+            ++end;
+        }
+        beginRemoveRows(QModelIndex(), i, end - 1);
+        m_peers_data.erase(m_peers_data.begin() + i, m_peers_data.begin() + end);
         endRemoveRows();
     }
 
@@ -186,5 +262,5 @@ void PeerTableModel::refresh()
 
     const auto top_left = index(0, 0);
     const auto bottom_right = index(rowCount() - 1, columnCount() - 1);
-    Q_EMIT dataChanged(top_left, bottom_right);
+    if (!m_peers_data.empty()) Q_EMIT dataChanged(top_left, bottom_right);
 }

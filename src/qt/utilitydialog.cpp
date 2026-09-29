@@ -17,6 +17,7 @@
 #include <util/strencodings.h>
 
 #include <cstdio>
+#include <future>
 
 #include <QCloseEvent>
 #include <QLabel>
@@ -28,7 +29,7 @@
 #include <QVBoxLayout>
 
 /** "Help message" or "About" dialog box */
-HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
+HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about, const QString& coreOptions) :
     QDialog(parent, GUIUtil::dialog_flags),
     ui(new Ui::HelpMessageDialog)
 {
@@ -63,13 +64,13 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
                          "You can optionally specify a payment [URI], in e.g. the BIP21 URI format.\n\n"
                          "Usage: connectcoin-qt [options] [URI]\n\n";
         QTextCursor cursor(ui->helpMessage->document());
+        // One document edit avoids repeated relayout for every option/row.
+        cursor.beginEditBlock();
         cursor.insertText(version);
         cursor.insertBlock();
         cursor.insertText(header);
         cursor.insertBlock();
 
-        std::string strUsage = gArgs.GetHelpMessage();
-        QString coreOptions = QString::fromStdString(strUsage);
         text = version + "\n\n" + header + "\n" + coreOptions;
 
         QTextTableFormat tf;
@@ -83,26 +84,31 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
         QTextCharFormat bold;
         bold.setFontWeight(QFont::Bold);
 
+        QTextTable* table{nullptr};
+        int option_row{0};
+        const QTextCharFormat normal;
         for (const QString &line : coreOptions.split("\n")) {
             if (line.startsWith("  -"))
             {
-                cursor.currentTable()->appendRows(1);
-                cursor.movePosition(QTextCursor::PreviousCell);
-                cursor.movePosition(QTextCursor::NextRow);
-                cursor.insertText(line.trimmed());
-                cursor.movePosition(QTextCursor::NextCell);
+                if (!table) table = cursor.insertTable(1, 2, tf);
+                if (option_row >= table->rows()) table->appendRows(1);
+                cursor = table->cellAt(option_row, 0).firstCursorPosition();
+                cursor.insertText(line.trimmed(), normal);
+                cursor = table->cellAt(option_row++, 1).firstCursorPosition();
             } else if (line.startsWith("   ")) {
-                cursor.insertText(line.trimmed()+' ');
+                cursor.insertText(line.trimmed()+' ', normal);
             } else if (line.size() > 0) {
-                //Title of a group
-                if (cursor.currentTable())
-                    cursor.currentTable()->appendRows(1);
-                cursor.movePosition(QTextCursor::Down);
+                // Address document positions/cells directly. Visual cursor
+                // movement depends on layout, deferred by beginEditBlock().
+                if (table) cursor.setPosition(table->lastPosition() + 1);
                 cursor.insertText(line.trimmed(), bold);
-                cursor.insertTable(1, 2, tf);
+                cursor.insertBlock();
+                table = cursor.insertTable(1, 2, tf);
+                option_row = 0;
             }
         }
 
+        cursor.endEditBlock();
         ui->helpMessage->moveCursor(QTextCursor::Start);
         ui->scrollArea->setVisible(false);
         ui->aboutLogo->setVisible(false);
@@ -114,6 +120,15 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
 HelpMessageDialog::~HelpMessageDialog()
 {
     delete ui;
+}
+
+QString HelpMessageDialog::loadHelpOptions()
+{
+    // GetHelpMessage takes cs_args and formats the complete option list. A
+    // settings-file writer may hold that same lock for an arbitrarily long IO.
+    return GUIUtil::WaitForBackendTask(std::async(std::launch::async, [] {
+        return QString::fromStdString(gArgs.GetHelpMessage());
+    }));
 }
 
 void HelpMessageDialog::printToConsole()

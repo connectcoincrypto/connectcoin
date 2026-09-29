@@ -72,10 +72,10 @@ public:
      */
     QString addRow(const QString& type, const QString& label, const QString& address, OutputType address_type);
 
-    /** Look up label for address in address book, if not found return empty string. */
+    /** Look up label in the GUI cache, including addresses hidden by display filters. */
     QString labelForAddress(const QString &address) const;
 
-    /** Look up purpose for address in address book, if not found return empty string. */
+    /** Look up purpose in the GUI cache, if not found return std::nullopt. */
     std::optional<wallet::AddressPurpose> purposeForAddress(const QString &address) const;
 
     /* Look up row index of an address in the model.
@@ -87,7 +87,14 @@ public:
 
     OutputType GetDefaultAddressType() const;
 
+    //! The row filter is immutable; a selector can reuse this live cache.
+    bool isPkHashOnly() const;
+
     QString GetWalletDisplayName() const;
+
+Q_SIGNALS:
+    //! A cached label changed; an empty address invalidates the whole cache.
+    void labelsChanged(const QString& address);
 
 private:
     WalletModel* const walletModel;
@@ -95,8 +102,8 @@ private:
     QStringList columns;
     EditStatus editStatus = OK;
 
-    /** Look up address book data given an address string. */
-    bool getAddressData(const QString &address, std::string* name, wallet::AddressPurpose* purpose) const;
+    /** Look up cached address book data without acquiring backend locks. */
+    bool getAddressData(const QString &address, QString* name, wallet::AddressPurpose* purpose) const;
 
     /** Notify listeners that data changed. */
     void emitDataChanged(int index);

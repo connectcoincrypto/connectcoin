@@ -15,13 +15,20 @@
 
 void ConfirmMessage(QString* text, std::chrono::milliseconds msec)
 {
-    QTimer::singleShot(msec, [text]() {
+    auto* timer = new QTimer(qApp);
+    timer->setInterval(10);
+    QTimer::singleShot(std::chrono::seconds{30}, timer, &QObject::deleteLater);
+    QObject::connect(timer, &QTimer::timeout, [timer, text]() {
         for (QWidget* widget : QApplication::topLevelWidgets()) {
-            if (widget->inherits("QMessageBox")) {
+            if (widget->isVisible() && widget->inherits("QMessageBox")) {
+                timer->stop();
+                timer->deleteLater();
                 QMessageBox* messageBox = qobject_cast<QMessageBox*>(widget);
                 if (text) *text = messageBox->text();
                 messageBox->defaultButton()->click();
+                return;
             }
         }
     });
+    QTimer::singleShot(msec, timer, [timer] { timer->start(); });
 }

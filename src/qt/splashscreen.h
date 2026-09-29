@@ -10,6 +10,7 @@
 #include <memory>
 
 class NetworkStyle;
+struct SplashScreenNotificationState;
 
 namespace interfaces {
 class Handler;
@@ -31,6 +32,8 @@ public:
     explicit SplashScreen(const NetworkStyle *networkStyle);
     ~SplashScreen();
     void setNode(interfaces::Node& node);
+    //! Disconnect and release backend subscriptions responsively before deletion.
+    void stop();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -40,8 +43,8 @@ public Q_SLOTS:
     /** Show message and progress */
     void showMessage(const QString &message, int alignment, const QColor &color);
 
-    /** Handle wallet load notifications. */
-    void handleLoadWallet();
+Q_SIGNALS:
+    void shutdownRequested();
 
 protected:
     bool eventFilter(QObject * obj, QEvent * ev) override;
@@ -49,8 +52,6 @@ protected:
 private:
     /** Connect core signals to splash screen */
     void subscribeToCoreSignals();
-    /** Disconnect core signals to splash screen */
-    void unsubscribeFromCoreSignals();
     /** Initiate shutdown */
     void shutdown();
 
@@ -61,12 +62,8 @@ private:
 
     interfaces::Node* m_node = nullptr;
     bool m_shutdown = false;
-    std::unique_ptr<interfaces::Handler> m_handler_init_message;
-    std::unique_ptr<interfaces::Handler> m_handler_show_progress;
-    std::unique_ptr<interfaces::Handler> m_handler_init_wallet;
-    std::unique_ptr<interfaces::Handler> m_handler_load_wallet;
-    std::list<std::unique_ptr<interfaces::Wallet>> m_connected_wallets;
-    std::list<std::unique_ptr<interfaces::Handler>> m_connected_wallet_handlers;
+    bool m_stopping{false};
+    std::shared_ptr<SplashScreenNotificationState> m_notifications;
 };
 
 #endif // CONNECTCOIN_QT_SPLASHSCREEN_H

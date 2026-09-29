@@ -12,6 +12,7 @@
 
 class ClientModel;
 class TransactionFilterProxy;
+class TransactionOverviewModel;
 class TxViewDelegate;
 class PlatformStyle;
 class WalletModel;
@@ -58,9 +59,9 @@ private:
 
     TxViewDelegate *txdelegate;
     std::unique_ptr<TransactionFilterProxy> filter;
+    std::unique_ptr<TransactionOverviewModel> m_recent_transactions;
 
 private Q_SLOTS:
-    void LimitTransactionRows();
     void updateDisplayUnit();
     void handleTransactionClicked(const QModelIndex &index);
     void updateAlerts(const QString &warnings);

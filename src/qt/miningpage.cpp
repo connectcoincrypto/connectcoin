@@ -4,7 +4,6 @@
 
 #include <qt/miningpage.h>
 
-#include <interfaces/node.h>
 #include <outputtype.h>
 #include <qt/addresstablemodel.h>
 #include <qt/clientmodel.h>
@@ -19,7 +18,6 @@
 #include <QPointer>
 #include <QPushButton>
 #include <QSpinBox>
-#include <QTimer>
 #include <QVBoxLayout>
 
 #include <exception>
@@ -71,25 +69,36 @@ MiningPage::MiningPage(WalletModel* wallet_model, QWidget* parent)
     layout->addStretch();
     connect(m_start, &QPushButton::clicked, this, &MiningPage::start);
     connect(m_stop, &QPushButton::clicked, this, [this] {
-        if (m_client) m_client->node().stopCpuMining();
+        if (m_client) m_mining_command_requested = m_client->stopCpuMining();
         refresh();
     });
     connect(m_new_address, &QPushButton::clicked, this, &MiningPage::newAddress);
     connect(m_threads, &QSpinBox::valueChanged, this, &MiningPage::updateThreadWarning);
-    auto* timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &MiningPage::refresh);
-    timer->start(1000);
     refresh();
 }
 
 void MiningPage::setClientModel(ClientModel* model)
 {
+    if (m_client) disconnect(m_client, nullptr, this, nullptr);
     m_client = model;
+    m_mining_command_requested = false;
+    if (m_client) {
+        connect(m_client, &ClientModel::cpuMiningStatusChanged, this, &MiningPage::refresh);
+        connect(m_client, &ClientModel::cpuMiningCommandFinished, this, [this](const QString& error) {
+            if (!m_mining_command_requested) return;
+            m_mining_command_requested = false;
+            if (!error.isEmpty()) {
+                GUIUtil::ShowModalDialogAsynchronously(new QMessageBox(QMessageBox::Warning, tr("Mining"), error, QMessageBox::Ok, this));
+            }
+            refresh();
+        });
+    }
     refresh();
 }
 
 void MiningPage::newAddress()
 {
+    GUIUtil::BackendOperationGuard operation;
     const QPointer<MiningPage> guard{this};
     const auto address{walletAddress()};
     if (guard && !address.isEmpty()) m_address->setText(address);
@@ -97,6 +106,7 @@ void MiningPage::newAddress()
 
 QString MiningPage::walletAddress()
 {
+    GUIUtil::BackendOperationGuard operation;
     if (!m_wallet) return {};
     const QPointer<MiningPage> guard{this};
     QString address{m_wallet->getAddressTableModel()->addRow(AddressTableModel::Receive, tr("Mining"), QString{}, OutputType::BECH32M)};
@@ -111,6 +121,7 @@ QString MiningPage::walletAddress()
 
 void MiningPage::start()
 {
+    GUIUtil::BackendOperationGuard operation;
     if (!m_client) return;
     const QPointer<MiningPage> guard{this};
     try {
@@ -119,7 +130,7 @@ void MiningPage::start()
             address = walletAddress();
             if (!guard || !m_client || address.isEmpty()) return;
         }
-        m_client->node().startCpuMining(address.toStdString(), m_threads->value());
+        m_mining_command_requested = m_client->startCpuMining(address.toStdString(), m_threads->value());
     } catch (const std::exception& e) {
         if (!guard) return;
         GUIUtil::ShowModalDialogAsynchronously(new QMessageBox(QMessageBox::Warning, tr("Mining"), QString::fromUtf8(e.what()), QMessageBox::Ok, this));
@@ -136,14 +147,15 @@ void MiningPage::updateThreadWarning()
 
 void MiningPage::refresh()
 {
-    const auto info{m_client ? m_client->node().getCpuMiningStatus() : node::CpuMiningStatus{}};
+    const auto info{m_client ? m_client->getCpuMiningStatus() : node::CpuMiningStatus{}};
+    const bool pending = m_client && m_client->cpuMiningCommandPending();
     m_logical_cpus = info.logical_cpus;
     m_threads->setMaximum(info.max_threads);
-    m_start->setEnabled(m_client && !info.running);
-    m_stop->setEnabled(m_client && info.running && !info.stopping);
-    m_address->setEnabled(!info.running);
-    m_threads->setEnabled(!info.running);
-    m_new_address->setEnabled(m_client && m_wallet && !info.running);
+    m_start->setEnabled(m_client && !pending && !info.running);
+    m_stop->setEnabled(m_client && !pending && info.running && !info.stopping);
+    m_address->setEnabled(!pending && !info.running);
+    m_threads->setEnabled(!pending && !info.running);
+    m_new_address->setEnabled(m_client && m_wallet && !pending && !info.running);
     if (info.running) {
         // Keep the empty/default choice across starts; the active address is
         // displayed below, including mining started by another wallet or RPC.

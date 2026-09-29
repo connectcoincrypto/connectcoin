@@ -29,6 +29,7 @@
 #include <QFileDialog>
 #include <QHBoxLayout>
 #include <QProgressDialog>
+#include <QPointer>
 #include <QPushButton>
 #include <QVBoxLayout>
 
@@ -142,7 +143,7 @@ void WalletView::setClientModel(ClientModel *_clientModel)
 void WalletView::processNewTransaction(const QModelIndex& parent, int start, int /*end*/)
 {
     // Prevent balloon-spam when initial block download is in progress
-    if (!clientModel || clientModel->node().isInitialBlockDownload()) {
+    if (!clientModel || clientModel->isInitialBlockDownload()) {
         return;
     }
 
@@ -242,15 +243,20 @@ void WalletView::encryptWallet()
 
 void WalletView::backupWallet()
 {
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<WalletView> guard{this};
     QString filename = GUIUtil::getSaveFileName(this,
         tr("Backup Wallet"), QString(),
         //: Name of the wallet data file format.
         tr("Wallet Data") + QLatin1String(" (*.dat)"), nullptr);
 
-    if (filename.isEmpty())
+    if (!guard || filename.isEmpty())
         return;
 
-    if (!walletModel->wallet().backupWallet(filename.toLocal8Bit().data())) {
+    const bool backed_up = GUIUtil::WaitForBackendTask(walletModel->requestWalletData(
+        [path = filename.toLocal8Bit().toStdString()](interfaces::Wallet& wallet) { return wallet.backupWallet(path); }), this);
+    if (!guard) return;
+    if (!backed_up) {
         Q_EMIT message(tr("Backup Failed"), tr("There was an error trying to save the wallet data to %1.").arg(filename),
             CClientUIInterface::MSG_ERROR);
         }

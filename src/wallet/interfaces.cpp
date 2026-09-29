@@ -37,7 +37,6 @@
 
 using common::PSBTError;
 using interfaces::Chain;
-using interfaces::FoundBlock;
 using interfaces::Handler;
 using interfaces::MakeSignalHandler;
 using interfaces::Wallet;
@@ -93,6 +92,7 @@ WalletTxStatus MakeWalletTxStatus(const CWallet& wallet, const CWalletTx& wtx)
     AssertLockHeld(wallet.cs_wallet);
 
     WalletTxStatus result;
+    result.block_hash = wallet.GetLastBlockHash();
     result.block_height =
         wtx.state<TxStateConfirmed>() ? wtx.state<TxStateConfirmed>()->confirmed_block_height :
         wtx.state<TxStateBlockConflicted>() ? wtx.state<TxStateBlockConflicted>()->conflicting_block_height :
@@ -161,6 +161,7 @@ public:
     }
     bool getPubKey(const CScript& script, const CKeyID& address, CPubKey& pub_key) override
     {
+        LOCK(m_wallet->cs_wallet);
         std::unique_ptr<SigningProvider> provider = m_wallet->GetSolvingProvider(script);
         if (provider) {
             return provider->GetPubKey(address, pub_key);
@@ -361,9 +362,11 @@ public:
         if (mi == m_wallet->mapWallet.end()) {
             return false;
         }
+        const auto tip_time{m_wallet->chain().tryGetBlockTime(m_wallet->GetLastBlockHash())};
+        if (!tip_time) return false;
+        // Keep the caller's cached status intact when either lock is busy.
         num_blocks = m_wallet->GetLastBlockHeight();
-        block_time = -1;
-        CHECK_NONFATAL(m_wallet->chain().findBlock(m_wallet->GetLastBlockHash(), FoundBlock().time(block_time)));
+        block_time = *tip_time;
         tx_status = MakeWalletTxStatus(*m_wallet, mi->second);
         return true;
     }

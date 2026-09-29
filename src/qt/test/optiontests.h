@@ -23,6 +23,8 @@ private Q_SLOTS:
     void integerGetArgBug();
     void parametersInteraction();
     void popupNotifications();
+    void settingsIoOffGui();
+    void cachedGuiPreferences();
     void extractFilter();
 
 private:

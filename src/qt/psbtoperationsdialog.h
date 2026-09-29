@@ -6,11 +6,16 @@
 #define CONNECTCOIN_QT_PSBTOPERATIONSDIALOG_H
 
 #include <QDialog>
+#include <QPointer>
 #include <QString>
 
+#include <node/psbt.h>
 #include <psbt.h>
+#include <qt/bitcoinunits.h>
 #include <qt/clientmodel.h>
 #include <qt/walletmodel.h>
+
+#include <memory>
 
 namespace Ui {
 class PSBTOperationsDialog;
@@ -35,9 +40,11 @@ public Q_SLOTS:
 
 private:
     Ui::PSBTOperationsDialog* m_ui;
-    std::optional<PartiallySignedTransaction> m_transaction_data;
-    WalletModel* m_wallet_model;
-    ClientModel* m_client_model;
+    // Immutable shared input keeps submitting a large PSBT cheap on the GUI.
+    // Mutable copies are created by the backend task, never by a Qt action.
+    std::shared_ptr<const PartiallySignedTransaction> m_transaction_data;
+    QPointer<WalletModel> m_wallet_model;
+    QPointer<ClientModel> m_client_model;
 
     enum class StatusLevel {
         Info,
@@ -45,11 +52,19 @@ private:
         Error
     };
 
-    size_t couldSignInputs(const PartiallySignedTransaction &psbtx);
+    struct TransactionDisplayData {
+        PartiallySignedTransaction transaction;
+        node::PSBTAnalysis analysis{};
+        std::vector<bool> own_outputs{};
+        size_t unsigned_inputs{0};
+        size_t could_sign{0};
+        bool private_keys_disabled{false};
+        QString description{};
+    };
     void updateTransactionDisplay();
-    QString renderTransaction(const PartiallySignedTransaction &psbtx);
+    static QString renderTransaction(const TransactionDisplayData& data, BitcoinUnit display_unit);
     void showStatus(const QString &msg, StatusLevel level);
-    void showTransactionStatus(const PartiallySignedTransaction &psbtx);
+    void showTransactionStatus(const TransactionDisplayData& data);
 };
 
 #endif // CONNECTCOIN_QT_PSBTOPERATIONSDIALOG_H

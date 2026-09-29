@@ -26,6 +26,7 @@
 #include <QAbstractButton>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QDebug>
 #include <QFormLayout>
 #include <QFont>
 #include <QLabel>
@@ -44,6 +45,35 @@
 #include <thread>
 #include <utility>
 #include <vector>
+
+namespace {
+// Batch destruction releases wallet coin reservations and can wait for
+// cs_wallet. The batch itself keeps the underlying wallet alive even if its
+// Qt model has already been removed.
+void ReleaseBatch(std::unique_ptr<wallet::P2CTransactionBatch> batch, WalletModel* model = nullptr)
+{
+    if (!batch) return;
+    if (model) {
+        GUIUtil::WaitForBackendTask(model->requestWalletData([batch = std::move(batch)](interfaces::Wallet&) mutable { batch.reset(); }));
+    } else {
+        // Nonstandard destruction ordering: never enter an event loop while
+        // a parent/model may be partly destroyed. Normal teardown detaches
+        // pages before draining the wallet worker.
+        batch.reset();
+    }
+}
+
+struct PreparedBatch {
+    std::unique_ptr<wallet::P2CTransactionBatch> batch;
+    QString error;
+};
+
+struct CommittedBatch {
+    QString error;
+    std::vector<Txid> submitted;
+    QString receipt;
+};
+} // namespace
 
 struct P2CCreateDialog::RsaProbeState
 {
@@ -135,6 +165,22 @@ P2CCreateDialog::P2CCreateDialog(QWidget* parent) : QWidget(parent), m_rsa_probe
 P2CCreateDialog::~P2CCreateDialog()
 {
     cancelRsaProbe();
+    if (m_model) disconnect(m_model, nullptr, this, nullptr);
+    if (m_confirmation) {
+        disconnect(m_confirmation, nullptr, this, nullptr);
+        m_confirmation->hide();
+    }
+    if (m_batch && m_model) {
+        // A packaged-task future does not wait on destruction. WalletModel
+        // drains this task after view detachment, while the backend is alive.
+        // No GUI events are processed during widget destruction.
+        try {
+            [[maybe_unused]] auto release = m_model->requestWalletData([batch = std::move(m_batch)](interfaces::Wallet&) mutable { batch.reset(); });
+        } catch (const std::exception& error) {
+            qWarning() << "Unable to queue P2C reservation cleanup:" << error.what();
+        }
+    }
+    m_batch.reset();
 }
 
 void P2CCreateDialog::setRsaProbeForTest(RsaProbe probe)
@@ -194,9 +240,10 @@ void P2CCreateDialog::freezeSignatureAlgorithms(const std::shared_ptr<RsaProbeSt
     cancelRsaProbe();
     auto selected = m_batch->SelectSignatureAlgorithmsMask(mask);
     if (!selected) {
+        const QPointer<P2CCreateDialog> guard{this};
         const auto error = QString::fromStdString(util::ErrorString(selected).translated);
         m_confirmation->reject();
-        showError(error);
+        if (guard) showError(error);
         return;
     }
     const QString algorithms = mask == PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA
@@ -212,10 +259,16 @@ void P2CCreateDialog::freezeSignatureAlgorithms(const std::shared_ptr<RsaProbeSt
 
 void P2CCreateDialog::setModel(WalletModel* model)
 {
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<P2CCreateDialog> guard{this};
+    const QPointer<WalletModel> next_model{model};
     if (m_model) disconnect(m_model, nullptr, this, nullptr);
     cancelRsaProbe();
     if (m_confirmation) m_confirmation->reject();
-    m_batch.reset();
+    if (!guard) return;
+    ReleaseBatch(std::move(m_batch), m_model);
+    if (!guard) return;
+    model = next_model;
     m_model = model;
     m_form->setEnabled(model != nullptr);
     if (!model) return;
@@ -249,6 +302,7 @@ void P2CCreateDialog::showError(const QString& text)
 
 void P2CCreateDialog::prepare(bool)
 {
+    GUIUtil::BackendOperationGuard operation;
     if (!m_model || m_batch) return;
     const std::string domain{m_domain->text().toStdString()};
     if (!IsCanonicalP2CDomain(domain)) {
@@ -292,21 +346,30 @@ void P2CCreateDialog::prepare(bool)
         // deleted page or a different wallet after that callback returns.
         if (!guard || !model || m_model != model || !unlock.isValid()) return;
         try {
-            auto prepared{model->wallet().prepareP2CTransactions(recipient, count, control)};
-            if (!prepared) {
-                preparation_error = QString::fromStdString(util::ErrorString(prepared).translated);
-            } else {
-                auto alternative = (*prepared)->PrepareSignatureAlgorithmsAlternative(PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA);
-                if (!alternative) {
-                    preparation_error = QString::fromStdString(util::ErrorString(alternative).translated);
-                } else {
-                    m_batch = std::move(*prepared);
+            auto prepared = GUIUtil::WaitForBackendTask(model->requestWalletData([recipient, count, control](interfaces::Wallet& wallet) {
+                PreparedBatch result;
+                auto batch = wallet.prepareP2CTransactions(recipient, count, control);
+                if (!batch) {
+                    result.error = QString::fromStdString(util::ErrorString(batch).translated);
+                    return result;
                 }
+                auto alternative = (*batch)->PrepareSignatureAlgorithmsAlternative(PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA);
+                if (!alternative) result.error = QString::fromStdString(util::ErrorString(alternative).translated);
+                else result.batch = std::move(*batch);
+                return result;
+            }), this);
+            if (!guard || !model || m_model != model) {
+                ReleaseBatch(std::move(prepared.batch), model);
+                return;
             }
+            preparation_error = std::move(prepared.error);
+            m_batch = std::move(prepared.batch);
         } catch (const std::exception& e) {
+            if (!guard) return;
             preparation_error = tr("Unable to prepare P2C transactions: %1").arg(QString::fromUtf8(e.what()));
         }
     }
+    if (!guard) return;
     if (!m_batch) {
         // Relock the wallet before an error popup can enter a nested event loop.
         showError(preparation_error);
@@ -314,7 +377,8 @@ void P2CCreateDialog::prepare(bool)
     }
     const CAmount reward_total{amount * count};
     if (m_batch->GetFee() > MAX_MONEY - reward_total) {
-        m_batch.reset();
+        ReleaseBatch(std::move(m_batch), m_model);
+        if (!guard) return;
         showError(tr("The reward total plus fees exceeds the money limit."));
         return;
     }
@@ -352,6 +416,9 @@ void P2CCreateDialog::prepare(bool)
 
 void P2CCreateDialog::finishConfirmation(int result)
 {
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<P2CCreateDialog> guard(this);
+    const QPointer<WalletModel> model(m_model);
     cancelRsaProbe();
     if (!m_batch) return;
     const bool approved = result == QMessageBox::Yes && m_ready_to_send;
@@ -361,30 +428,39 @@ void P2CCreateDialog::finishConfirmation(int result)
     QString error;
     std::vector<Txid> submitted;
     if (approved && m_model) {
-        auto committed{batch->Commit()};
-        QStringList txids;
-        size_t index{0};
-        for (const auto& [created, count] : batch->GetTransactions()) {
-            if (index++ >= batch->GetCommittedCount()) break;
-            txids.append(QString::fromStdString(created.tx->GetHash().GetHex()));
-            submitted.push_back(created.tx->GetHash());
-        }
-        m_receipt->setPlainText(txids.join('\n'));
-        m_receipt->setVisible(!txids.isEmpty());
-        if (committed) {
-            m_status->setText(tr("P2C transactions submitted to the wallet (%1). Transaction IDs:").arg(txids.size()));
+        auto committed = GUIUtil::WaitForBackendTask(model->requestWalletData([batch = std::move(batch)](interfaces::Wallet&) mutable {
+            CommittedBatch result;
+            auto committed = batch->Commit();
+            size_t index{0};
+            QStringList txids;
+            for (const auto& [created, count] : batch->GetTransactions()) {
+                if (index++ >= batch->GetCommittedCount()) break;
+                result.submitted.push_back(created.tx->GetHash());
+                txids.append(QString::fromStdString(result.submitted.back().GetHex()));
+            }
+            result.receipt = txids.join('\n');
+            if (!committed) result.error = QString::fromStdString(util::ErrorString(committed).translated);
+            batch.reset();
+            return result;
+        }), this);
+        if (!guard || !model || m_model != model) return;
+        submitted = std::move(committed.submitted);
+        m_receipt->setPlainText(committed.receipt);
+        m_receipt->setVisible(!submitted.empty());
+        if (committed.error.isEmpty()) {
+            m_status->setText(tr("P2C transactions submitted to the wallet (%1). Transaction IDs:").arg(submitted.size()));
             m_amount->clear();
         } else {
-            error = QString::fromStdString(util::ErrorString(committed).translated);
+            error = committed.error;
         }
     } else {
         m_status->setText(tr("Cancelled. No P2C transactions were sent."));
     }
-    batch.reset();
+    ReleaseBatch(std::move(batch), model);
+    if (!guard) return;
     m_form->setEnabled(m_model != nullptr);
     // Release reservations and finalize state before callbacks can enter a
     // nested event loop (for example an error popup) or unload this wallet.
-    QPointer<P2CCreateDialog> guard(this);
     for (const auto& txid : submitted) {
         Q_EMIT coinsSent(txid);
         if (!guard) return;

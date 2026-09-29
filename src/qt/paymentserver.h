@@ -69,8 +69,12 @@ public:
     static bool ipcSendCommandLine();
 
     // parent should be QApplication object
-    explicit PaymentServer(QObject* parent, bool startLocalServer = true);
+    explicit PaymentServer(QObject* parent);
     ~PaymentServer();
+
+    // Explicit startup step: resolve the IPC name off-GUI before listening.
+    // Never enter a responsive backend wait from the QObject constructor.
+    void startLocalServer();
 
     // OptionsModel is used for getting proxy settings and display unit
     void setOptionsModel(OptionsModel *optionsModel);
@@ -102,6 +106,8 @@ private:
     bool saveURIs{true}; // true during startup
     QLocalServer* uriServer{nullptr};
     OptionsModel* optionsModel{nullptr};
+    unsigned int m_uri_connections{0};
+    bool m_starting{false};
 };
 
 #endif // CONNECTCOIN_QT_PAYMENTSERVER_H

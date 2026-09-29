@@ -12,29 +12,23 @@
 
 #include <cstdint>
 
-void FreespaceChecker::check()
+void FreespaceChecker::check(const QString& dataDirStr)
 {
-    QString dataDirStr = intro->getPathToCheck();
     fs::path dataDir = GUIUtil::QStringToPath(dataDirStr);
     uint64_t freeBytesAvailable = 0;
     int replyStatus = ST_OK;
     QString replyMessage = tr("A new data directory will be created.");
 
-    /* Find first parent that exists, so that fs::space does not fail */
-    fs::path parentDir = dataDir;
-    fs::path parentDirOld = fs::path();
-    while(parentDir.has_parent_path() && !fs::exists(parentDir))
-    {
-        parentDir = parentDir.parent_path();
-
-        /* Check if we make any progress, break if not to prevent an infinite loop here */
-        if (parentDirOld == parentDir)
-            break;
-
-        parentDirOld = parentDir;
-    }
-
     try {
+        /* Find first parent that exists, so that fs::space does not fail.
+           These probes can throw too (for example on inaccessible shares). */
+        fs::path parentDir = dataDir;
+        fs::path parentDirOld;
+        while (parentDir.has_parent_path() && !fs::exists(parentDir)) {
+            parentDir = parentDir.parent_path();
+            if (parentDirOld == parentDir) break;
+            parentDirOld = parentDir;
+        }
         freeBytesAvailable = fs::space(parentDir).available;
         if(fs::exists(dataDir))
         {
@@ -54,5 +48,5 @@ void FreespaceChecker::check()
         replyStatus = ST_ERROR;
         replyMessage = tr("Cannot create data directory here.");
     }
-    Q_EMIT reply(replyStatus, replyMessage, freeBytesAvailable);
+    Q_EMIT reply(dataDirStr, replyStatus, replyMessage, freeBytesAvailable);
 }

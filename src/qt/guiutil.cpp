@@ -37,6 +37,7 @@
 #include <QAbstractItemView>
 #include <QApplication>
 #include <QClipboard>
+#include <QCloseEvent>
 #include <QDateTime>
 #include <QDesktopServices>
 #include <QDialog>
@@ -59,14 +60,16 @@
 #include <QProgressDialog>
 #include <QRegularExpression>
 #include <QScreen>
-#include <QSettings>
 #include <QShortcut>
 #include <QSize>
 #include <QStandardPaths>
 #include <QString>
 #include <QTextDocument>
 #include <QThread>
+#include <QTimer>
 #include <QUrlQuery>
+#include <QVBoxLayout>
+#include <QWindow>
 #include <QtGlobal>
 
 #include <cassert>
@@ -263,17 +266,27 @@ QString HtmlEscape(const std::string& str, bool fMultiLine)
     return HtmlEscape(QString::fromStdString(str), fMultiLine);
 }
 
+QModelIndex firstSelectedRow(const QAbstractItemView* view, int column)
+{
+    if (!view || !view->selectionModel() || !view->model()) return {};
+    // These actions use one row only. selectedRows() would materialize every
+    // selected index first, even for a history with hundreds of thousands of
+    // selected rows. Keep its full-row semantics and range order, but stop as
+    // soon as the first fully selected row is found.
+    const auto* selection = view->selectionModel();
+    for (const auto& range : selection->selection()) {
+        const auto parent = range.parent();
+        for (int row = range.top(); row <= range.bottom(); ++row) {
+            if (selection->isRowSelected(row, parent)) return view->model()->index(row, column, parent);
+        }
+    }
+    return {};
+}
+
 void copyEntryData(const QAbstractItemView *view, int column, int role)
 {
-    if(!view || !view->selectionModel())
-        return;
-    QModelIndexList selection = view->selectionModel()->selectedRows(column);
-
-    if(!selection.isEmpty())
-    {
-        // Copy first item
-        setClipboard(selection.at(0).data(role).toString());
-    }
+    const auto selected = firstSelectedRow(view, column);
+    if (selected.isValid()) setClipboard(selected.data(role).toString());
 }
 
 QList<QModelIndex> getEntryData(const QAbstractItemView *view, int column)
@@ -285,9 +298,8 @@ QList<QModelIndex> getEntryData(const QAbstractItemView *view, int column)
 
 bool hasEntryData(const QAbstractItemView *view, int column, int role)
 {
-    QModelIndexList selection = getEntryData(view, column);
-    if (selection.isEmpty()) return false;
-    return !selection.at(0).data(role).toString().isEmpty();
+    const auto selected = firstSelectedRow(view, column);
+    return selected.isValid() && !selected.data(role).toString().isEmpty();
 }
 
 void LoadFont(const QString& file_name)
@@ -432,24 +444,26 @@ void handleCloseWindowShortcut(QWidget* w)
 
 void openDebugLogfile()
 {
+    BackendOperationGuard operation;
     fs::path pathDebug = LogInstance().m_file_path;
 
     /* Open debug.log with the associated application */
-    if (fs::exists(pathDebug))
+    if (WaitForBackendTask(std::async(std::launch::async, [pathDebug] { return fs::exists(pathDebug); })))
         QDesktopServices::openUrl(QUrl::fromLocalFile(PathToQString(pathDebug)));
 }
 
 bool openBitcoinConf()
 {
-    fs::path pathConfig = gArgs.GetConfigFilePath();
+    BackendOperationGuard operation;
 
     /* Create the file */
-    std::ofstream configFile{pathConfig.std_path(), std::ios_base::app};
-
-    if (!configFile.good())
-        return false;
-
-    configFile.close();
+    const auto [created, pathConfig] = WaitForBackendTask(std::async(std::launch::async, [] {
+        const fs::path pathConfig = gArgs.GetConfigFilePath();
+        std::ofstream configFile{pathConfig.std_path(), std::ios_base::app};
+        configFile.close();
+        return std::make_pair(!configFile.fail(), pathConfig);
+    }));
+    if (!created) return false;
 
     /* Open connectcoin.conf with the associated application */
     bool res = QDesktopServices::openUrl(QUrl::fromLocalFile(PathToQString(pathConfig)));
@@ -954,30 +968,39 @@ int TextWidth(const QFontMetrics& fm, const QString& text)
 
 void LogQtInfo()
 {
+    // Snapshot Qt-owned presentation objects on their owning thread. System
+    // discovery and core logging may perform IO or wait for the log mutex;
+    // neither belongs on the GUI thread, even during startup.
+    std::vector<std::string> lines;
 #ifdef QT_STATIC
     const std::string qt_link{"static"};
 #else
     const std::string qt_link{"dynamic"};
 #endif
-    LogInfo("Qt %s (%s), plugin=%s\n", qVersion(), qt_link, QGuiApplication::platformName().toStdString());
+    lines.push_back(strprintf("Qt %s (%s), plugin=%s\n", qVersion(), qt_link, QGuiApplication::platformName().toStdString()));
     const auto static_plugins = QPluginLoader::staticPlugins();
     if (static_plugins.empty()) {
-        LogInfo("No static plugins.\n");
+        lines.emplace_back("No static plugins.\n");
     } else {
-        LogInfo("Static plugins:\n");
+        lines.emplace_back("Static plugins:\n");
         for (const QStaticPlugin& p : static_plugins) {
             QJsonObject meta_data = p.metaData();
             const std::string plugin_class = meta_data.take(QString("className")).toString().toStdString();
             const int plugin_version = meta_data.take(QString("version")).toInt();
-            LogInfo(" %s, version %d\n", plugin_class, plugin_version);
+            lines.push_back(strprintf(" %s, version %d\n", plugin_class, plugin_version));
         }
     }
 
-    LogInfo("Style: %s / %s\n", QApplication::style()->objectName().toStdString(), QApplication::style()->metaObject()->className());
-    LogInfo("System: %s, %s\n", QSysInfo::prettyProductName().toStdString(), QSysInfo::buildAbi().toStdString());
+    lines.push_back(strprintf("Style: %s / %s\n", QApplication::style()->objectName().toStdString(), QApplication::style()->metaObject()->className()));
+    std::vector<std::string> screens;
     for (const QScreen* s : QGuiApplication::screens()) {
-        LogInfo("Screen: %s %dx%d, pixel ratio=%.1f\n", s->name().toStdString(), s->size().width(), s->size().height(), s->devicePixelRatio());
+        screens.push_back(strprintf("Screen: %s %dx%d, pixel ratio=%.1f\n", s->name().toStdString(), s->size().width(), s->size().height(), s->devicePixelRatio()));
     }
+    WaitForBackendTask(std::async(std::launch::async, [lines = std::move(lines), screens = std::move(screens)] {
+        for (const auto& line : lines) LogInfo("%s", line);
+        LogInfo("System: %s, %s\n", QSysInfo::prettyProductName().toStdString(), QSysInfo::buildAbi().toStdString());
+        for (const auto& line : screens) LogInfo("%s", line);
+    }));
 }
 
 void PopupMenu(QMenu* menu, const QPoint& point, QAction* at_action)
@@ -1024,6 +1047,90 @@ void ShowModalDialogAsynchronously(QDialog* dialog)
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setWindowModality(Qt::ApplicationModal);
     dialog->show();
+}
+
+namespace {
+// Accessed exclusively from the GUI thread. Pending unwinds prevent a queued
+// unload/shutdown from deleting an action's caller as its wait dialog closes.
+size_t g_backend_operations{0};
+size_t g_backend_operation_unwinds{0};
+
+class BackendTaskDialog final : public QDialog
+{
+public:
+    explicit BackendTaskDialog(QWidget* parent)
+        : QDialog(nullptr, Qt::Dialog | Qt::WindowTitleHint | Qt::CustomizeWindowHint)
+    {
+        // This dialog lives on the waiting stack, not in its caller's QObject
+        // tree. A queued deleteLater() of that caller must not delete the
+        // stack object or end the wait before the backend result is ready.
+        // A native transient relationship still keeps it with the window.
+        if (parent && parent->window()->windowHandle()) {
+            winId();
+            windowHandle()->setTransientParent(parent->window()->windowHandle());
+        }
+        setWindowTitle(QObject::tr("Working…"));
+        setWindowModality(Qt::ApplicationModal);
+        auto* layout = new QVBoxLayout(this);
+        layout->addWidget(new QLabel(QObject::tr("Please wait while the operation completes."), this));
+        auto* progress = new QProgressBar(this);
+        progress->setRange(0, 0);
+        layout->addWidget(progress);
+    }
+
+    void finish() { QDialog::done(QDialog::Accepted); }
+
+    // Closing the UI cannot cancel the submitted backend task. In particular,
+    // never let Escape unwind stack data before its future is ready.
+    void done(int) override {}
+    void accept() override {}
+    void reject() override {}
+
+protected:
+    void closeEvent(QCloseEvent* event) override { event->ignore(); }
+};
+} // namespace
+
+BackendOperationGuard::BackendOperationGuard()
+{
+    assert(qApp && QThread::currentThread() == qApp->thread());
+    ++g_backend_operations;
+}
+
+BackendOperationGuard::~BackendOperationGuard()
+{
+    assert(qApp && QThread::currentThread() == qApp->thread());
+    assert(g_backend_operations > 0);
+    --g_backend_operations;
+    ++g_backend_operation_unwinds;
+    QTimer::singleShot(0, qApp, [] {
+        assert(g_backend_operation_unwinds > 0);
+        --g_backend_operation_unwinds;
+    });
+}
+
+bool HasActiveBackendOperation()
+{
+    assert(qApp && QThread::currentThread() == qApp->thread());
+    return g_backend_operations != 0 || g_backend_operation_unwinds != 0;
+}
+
+void WaitForBackendTaskReady(const std::function<bool()>& ready, QWidget* parent)
+{
+    assert(qApp && QThread::currentThread() == qApp->thread());
+    if (ready()) return;
+
+    BackendTaskDialog dialog(parent);
+    QTimer poll;
+    poll.setInterval(10);
+    QObject::connect(&poll, &QTimer::timeout, &dialog, [&] {
+        if (ready()) dialog.finish();
+    });
+    poll.start();
+    // The dialog deliberately ignores reject/close. Only a ready future can
+    // finish it, and unload/shutdown must honor the operation guard above.
+    dialog.exec();
+    assert(ready());
 }
 
 QString WalletDisplayName(const QString& name)

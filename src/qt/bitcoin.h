@@ -11,6 +11,7 @@
 #include <qt/initexecutor.h>
 
 #include <cassert>
+#include <future>
 #include <memory>
 #include <optional>
 
@@ -18,10 +19,13 @@
 
 class BitcoinGUI;
 class ClientModel;
+class GuiPreferences;
+class GuiTranslations;
 class NetworkStyle;
 class OptionsModel;
 class PaymentServer;
 class PlatformStyle;
+class QtLogForwarder;
 class SplashScreen;
 class WalletController;
 class WalletModel;
@@ -65,6 +69,12 @@ public:
 
     /// Setup platform style
     void setupPlatformStyle();
+    /// Forward Qt diagnostics through an application-owned bounded worker.
+    void startQtLogging();
+    /// Explicit startup boundary, after selecting the application/network name.
+    void loadGuiPreferences();
+    /// Load catalogs/dependencies off-GUI after selecting the language profile.
+    void loadTranslations();
 
     interfaces::Node& node() const { assert(m_node); return *m_node; }
 
@@ -95,6 +105,17 @@ private:
     ClientModel* clientModel{nullptr};
     BitcoinGUI* window{nullptr};
     QTimer* pollShutdownTimer{nullptr};
+    bool m_initialization_finished{false};
+    bool m_start_minimized{false};
+    bool m_wallet_enabled{false};
+    bool m_shutdown_requested{false};
+    bool m_shutdown_started{false};
+    bool m_shutdown_retry_pending{false};
+    std::future<void> m_shutdown_interrupt;
+    std::unique_ptr<QtLogForwarder> m_qt_log_forwarder;
+    std::unique_ptr<GuiPreferences> m_gui_preferences;
+    std::unique_ptr<GuiTranslations> m_translations;
+    QtMessageHandler m_previous_message_handler{nullptr};
 #ifdef ENABLE_WALLET
     PaymentServer* paymentServer{nullptr};
     WalletController* m_wallet_controller{nullptr};

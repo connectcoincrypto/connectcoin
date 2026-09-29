@@ -20,6 +20,7 @@
 #include <vector>
 
 #include <QClipboard>
+#include <QPointer>
 
 SignVerifyMessageDialog::SignVerifyMessageDialog(const PlatformStyle *_platformStyle, QWidget *parent) :
     QDialog(parent, GUIUtil::dialog_flags),
@@ -110,6 +111,8 @@ void SignVerifyMessageDialog::on_pasteButton_SM_clicked()
 
 void SignVerifyMessageDialog::on_signMessageButton_SM_clicked()
 {
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<SignVerifyMessageDialog> guard{this};
     if (!model)
         return;
 
@@ -131,6 +134,7 @@ void SignVerifyMessageDialog::on_signMessageButton_SM_clicked()
     }
 
     WalletModel::UnlockContext ctx(model->requestUnlock());
+    if (!guard) return;
     if (!ctx.isValid())
     {
         ui->statusLabel_SM->setStyleSheet("QLabel { color: red; }");
@@ -138,9 +142,14 @@ void SignVerifyMessageDialog::on_signMessageButton_SM_clicked()
         return;
     }
 
-    const std::string& message = ui->messageIn_SM->document()->toPlainText().toStdString();
-    std::string signature;
-    SigningResult res = model->wallet().signMessage(message, *pkhash, signature);
+    const QString message = ui->messageIn_SM->document()->toPlainText();
+    auto [res, signature] = GUIUtil::WaitForBackendTask(model->requestWalletData(
+        [message, key = *pkhash](interfaces::Wallet& wallet) {
+            std::string signature;
+            auto result = wallet.signMessage(message.toStdString(), key, signature);
+            return std::make_pair(result, std::move(signature));
+        }), this);
+    if (!guard) return;
 
     QString error;
     switch (res) {
@@ -197,11 +206,17 @@ void SignVerifyMessageDialog::on_addressBookButton_VM_clicked()
 
 void SignVerifyMessageDialog::on_verifyMessageButton_VM_clicked()
 {
-    const std::string& address = ui->addressIn_VM->text().toStdString();
-    const std::string& signature = ui->signatureIn_VM->text().toStdString();
-    const std::string& message = ui->messageIn_VM->document()->toPlainText().toStdString();
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<SignVerifyMessageDialog> guard{this};
+    const QString address = ui->addressIn_VM->text();
+    const QString signature = ui->signatureIn_VM->text();
+    const QString message = ui->messageIn_VM->document()->toPlainText();
 
-    const auto result = MessageVerify(address, signature, message);
+    // Verification is a public-key operation and also works without a wallet.
+    // This explicit action owns and waits for the task before it can close.
+    const auto result = GUIUtil::WaitForBackendTask(std::async(std::launch::async,
+        [address, signature, message] { return MessageVerify(address.toStdString(), signature.toStdString(), message.toStdString()); }), this);
+    if (!guard) return;
 
     if (result == MessageVerificationResult::OK) {
         ui->statusLabel_VM->setStyleSheet("QLabel { color: green; }");

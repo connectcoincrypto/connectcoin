@@ -22,8 +22,12 @@ class HelpMessageDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit HelpMessageDialog(QWidget *parent, bool about);
+    //! core_options is a snapshot fetched before construction, never while
+    //! constructing a widget or processing a paint/layout event.
+    explicit HelpMessageDialog(QWidget *parent, bool about, const QString& core_options = {});
     ~HelpMessageDialog();
+
+    static QString loadHelpOptions();
 
     void printToConsole();
     void showOrPrint();

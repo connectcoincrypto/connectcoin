@@ -36,18 +36,22 @@
 #include <QKeyEvent>
 #include <QKeySequence>
 #include <QLatin1String>
+#include <QLabel>
 #include <QLocale>
 #include <QMenu>
 #include <QMessageBox>
+#include <QPointer>
 #include <QScreen>
 #include <QScrollBar>
-#include <QSettings>
+#include <qt/guipreferences.h>
 #include <QString>
 #include <QStringList>
+#include <QStringListModel>
 #include <QStyledItemDelegate>
 #include <QTime>
 #include <QTimer>
 #include <QVariant>
+#include <qscopeguard.h>
 
 #include <chrono>
 
@@ -82,6 +86,30 @@ const QStringList historyFilter = QStringList()
     << "walletpassphrasechange"
     << "encryptwallet";
 
+QString categoryClass(int category)
+{
+    switch (category) {
+    case RPCConsole::CMD_REQUEST: return QStringLiteral("cmd-request");
+    case RPCConsole::CMD_REPLY: return QStringLiteral("cmd-reply");
+    case RPCConsole::CMD_ERROR: return QStringLiteral("cmd-error");
+    default: return QStringLiteral("misc");
+    }
+}
+
+// Pure string preparation: large command/reply payloads call this on their
+// existing worker. Escaping alone is not enough if the GUI then copies the
+// whole result again to wrap it in a table.
+QString FormatConsoleMessage(int category, const QString& message, bool html = false)
+{
+    const auto category_class = categoryClass(category);
+    QString out = QStringLiteral("<table><tr><td class=\"time\" width=\"65\">") + QTime::currentTime().toString() + QStringLiteral("</td>");
+    out += QStringLiteral("<td class=\"icon\" width=\"32\"><img src=\"") + category_class + QStringLiteral("\"></td>");
+    out += QStringLiteral("<td class=\"message ") + category_class + QStringLiteral("\" valign=\"middle\">");
+    out += html ? message : GUIUtil::HtmlEscape(message, false);
+    out += QStringLiteral("</td></tr></table>");
+    return out;
+}
+
 }
 
 /* Object for executing console RPC commands in a separate thread.
@@ -94,12 +122,29 @@ public:
 
 public Q_SLOTS:
     void request(const QString &command, const QString& wallet_name);
+    void initialize()
+    {
+        QStringList commands;
+        for (const auto& name : m_node.listRpcCommands()) {
+            commands << QString::fromStdString(name) << QString::fromStdString("help " + name);
+        }
+        commands << "help-console";
+        commands.sort();
+        Q_EMIT commandsReady(commands);
+    }
 
 Q_SIGNALS:
-    void reply(int category, const QString &command);
+    void reply(const QString& formatted_message);
+    void commandsReady(const QStringList& commands);
 
 private:
     interfaces::Node& m_node;
+    void sendReply(int category, const QString& text)
+    {
+        // RPC replies may be many megabytes. Prepare the complete message
+        // here, leaving only QTextDocument insertion/layout on the GUI thread.
+        Q_EMIT reply(FormatConsoleMessage(category, text));
+    }
 };
 
 class PeerIdViewDelegate : public QStyledItemDelegate
@@ -393,7 +438,7 @@ void RPCExecutor::request(const QString &command, const QString& wallet_name)
 
         // Catch the console-only-help command before RPC call is executed and reply with help text as-if a RPC reply.
         if(executableCommand == "help-console\n") {
-            Q_EMIT reply(RPCConsole::CMD_REPLY, QString(("\n"
+            sendReply(RPCConsole::CMD_REPLY, QString(("\n"
                 "This console accepts RPC commands using the standard syntax.\n"
                 "   example:    getblockhash 0\n\n"
 
@@ -415,11 +460,11 @@ void RPCExecutor::request(const QString &command, const QString& wallet_name)
             return;
         }
         if (!RPCConsole::RPCExecuteCommandLine(m_node, result, executableCommand, nullptr, wallet_name)) {
-            Q_EMIT reply(RPCConsole::CMD_ERROR, QString("Parse error: unbalanced ' or \""));
+            sendReply(RPCConsole::CMD_ERROR, QString("Parse error: unbalanced ' or \""));
             return;
         }
 
-        Q_EMIT reply(RPCConsole::CMD_REPLY, QString::fromStdString(result));
+        sendReply(RPCConsole::CMD_REPLY, QString::fromStdString(result));
     }
     catch (UniValue& objError)
     {
@@ -427,16 +472,16 @@ void RPCExecutor::request(const QString &command, const QString& wallet_name)
         {
             int code = objError.find_value("code").getInt<int>();
             std::string message = objError.find_value("message").get_str();
-            Q_EMIT reply(RPCConsole::CMD_ERROR, QString::fromStdString(message) + " (code " + QString::number(code) + ")");
+            sendReply(RPCConsole::CMD_ERROR, QString::fromStdString(message) + " (code " + QString::number(code) + ")");
         }
         catch (const std::runtime_error&) // raised when converting to invalid type, i.e. missing code or message
         {   // Show raw JSON object
-            Q_EMIT reply(RPCConsole::CMD_ERROR, QString::fromStdString(objError.write()));
+            sendReply(RPCConsole::CMD_ERROR, QString::fromStdString(objError.write()));
         }
     }
     catch (const std::exception& e)
     {
-        Q_EMIT reply(RPCConsole::CMD_ERROR, QString("Error: ") + QString::fromStdString(e.what()));
+        sendReply(RPCConsole::CMD_ERROR, QString("Error: ") + QString::fromStdString(e.what()));
     }
 }
 
@@ -447,7 +492,7 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
     platformStyle(_platformStyle)
 {
     ui->setupUi(this);
-    QSettings settings;
+    GuiSettings settings;
 #ifdef ENABLE_WALLET
     if (WalletModel::isWalletEnabled()) {
         // RPCConsole widget is a window.
@@ -518,6 +563,7 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
         ui->openDebugLogfileButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
     }
     ui->clearButton->setIcon(platformStyle->SingleColorIcon(":/icons/remove"));
+    ui->hidePeersDetailButton->setIcon(platformStyle->SingleColorIcon(":/icons/remove"));
 
     ui->fontBiggerButton->setIcon(platformStyle->SingleColorIcon(":/icons/fontbigger"));
     //: Main shortcut to increase the RPC console font size.
@@ -537,6 +583,15 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
     ui->lineEdit->installEventFilter(this);
     ui->lineEdit->setMaxLength(16_MiB);
     ui->messagesWidget->installEventFilter(this);
+    // Output is read-only; do not retain a second, unbounded copy in undo.
+    ui->messagesWidget->setUndoRedoEnabled(false);
+    // Keep execution state outside the document. Font changes, selection and
+    // clearing the log must never remove an unrelated message through undo().
+    //: A console message indicating an entered command is currently being executed.
+    m_executing_label = new QLabel(tr("Executing…"), this);
+    m_executing_label->setObjectName("executingLabel");
+    m_executing_label->hide();
+    ui->horizontalLayoutPrompt->addWidget(m_executing_label);
 
     connect(ui->hidePeersDetailButton, &QAbstractButton::clicked, this, &RPCConsole::clearSelectedNode);
     connect(ui->clearButton, &QAbstractButton::clicked, [this] { clear(); });
@@ -561,7 +616,20 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
 
 RPCConsole::~RPCConsole()
 {
-    QSettings settings;
+    // Normal teardown drains in setClientModel(nullptr) while the widget is
+    // intact. Direct deletion must not destroy a running QThread or reenter a
+    // partially destroyed parent through a nested event loop.
+    thread.quit();
+    thread.wait();
+    saveSettings();
+    delete ui;
+}
+
+void RPCConsole::saveSettings()
+{
+    if (m_settings_saved) return;
+    m_settings_saved = true;
+    GuiSettings settings;
 #ifdef ENABLE_WALLET
     if (WalletModel::isWalletEnabled()) {
         // RPCConsole widget is a window.
@@ -576,12 +644,15 @@ RPCConsole::~RPCConsole()
 
     settings.setValue("PeersTabPeerHeaderState", m_peer_widget_header_state);
     settings.setValue("PeersTabBanlistHeaderState", m_banlist_widget_header_state);
-
-    delete ui;
 }
 
 bool RPCConsole::eventFilter(QObject* obj, QEvent *event)
 {
+    // With the wallet disabled this widget is embedded in the main window;
+    // window-state changes are delivered to that parent, not to this widget.
+    if (obj == window() && event->type() == QEvent::WindowStateChange) {
+        updatePeerRefreshState();
+    }
     if(event->type() == QEvent::KeyPress) // Special key handling
     {
         QKeyEvent *keyevt = static_cast<QKeyEvent*>(event);
@@ -601,7 +672,7 @@ bool RPCConsole::eventFilter(QObject* obj, QEvent *event)
         case Qt::Key_Return:
         case Qt::Key_Enter:
             // forward these events to lineEdit
-            if (obj == autoCompleter->popup()) {
+            if (autoCompleter && obj == autoCompleter->popup()) {
                 QApplication::sendEvent(ui->lineEdit, keyevt);
                 autoCompleter->popup()->hide();
                 return true;
@@ -626,6 +697,12 @@ bool RPCConsole::eventFilter(QObject* obj, QEvent *event)
 
 void RPCConsole::setClientModel(ClientModel *model, int bestblock_height, int64_t bestblock_date, double verification_progress)
 {
+    if (clientModel) {
+        disconnect(clientModel, nullptr, this, nullptr);
+        disconnect(clientModel->getPeerTableModel(), nullptr, this, nullptr);
+        disconnect(clientModel->getBanTableModel(), nullptr, this, nullptr);
+        clientModel->getPeerTableModel()->stopAutoRefresh();
+    }
     clientModel = model;
 
     bool wallet_enabled{false};
@@ -650,9 +727,13 @@ void RPCConsole::setClientModel(ClientModel *model, int bestblock_height, int64_
         updateNetworkState();
         connect(model, &ClientModel::networkActiveChanged, this, &RPCConsole::setNetworkActive);
 
-        interfaces::Node& node = clientModel->node();
-        updateTrafficStats(node.getTotalBytesRecv(), node.getTotalBytesSent());
+        updateTrafficStats(model->getTotalBytesRecv(), model->getTotalBytesSent());
         connect(model, &ClientModel::bytesChanged, this, &RPCConsole::updateTrafficStats);
+        connect(model, &ClientModel::nodeStateChanged, this, [this, model] {
+            ui->dataDir->setText(model->dataDir());
+            ui->blocksDir->setText(model->blocksDir());
+            updateNetworkState();
+        });
 
         connect(model, &ClientModel::mempoolSizeChanged, this, &RPCConsole::setMempoolSize);
 
@@ -688,7 +769,7 @@ void RPCConsole::setClientModel(ClientModel *model, int bestblock_height, int64_
 
         // peer table signal handling - update peer details when selecting new node
         connect(ui->peerWidget->selectionModel(), &QItemSelectionModel::selectionChanged, this, &RPCConsole::updateDetailWidget);
-        connect(model->getPeerTableModel(), &QAbstractItemModel::dataChanged, [this] { updateDetailWidget(); });
+        connect(model->getPeerTableModel(), &QAbstractItemModel::dataChanged, this, [this] { updateDetailWidget(); });
 
         // set up ban table
         ui->banlistWidget->setModel(model->getBanTableModel());
@@ -719,7 +800,7 @@ void RPCConsole::setClientModel(ClientModel *model, int bestblock_height, int64_
         // ban table signal handling - clear peer details when clicking a peer in the ban table
         connect(ui->banlistWidget, &QTableView::clicked, this, &RPCConsole::clearSelectedNode);
         // ban table signal handling - ensure ban table is shown or hidden (if empty)
-        connect(model->getBanTableModel(), &BanTableModel::layoutChanged, this, &RPCConsole::showOrHideBanTableIfRequired);
+        connect(model->getBanTableModel(), &BanTableModel::modelReset, this, &RPCConsole::showOrHideBanTableIfRequired);
         showOrHideBanTableIfRequired();
 
         // Provide initial values
@@ -730,18 +811,8 @@ void RPCConsole::setClientModel(ClientModel *model, int bestblock_height, int64_
         ui->startupTime->setText(model->formatClientStartupTime());
         ui->networkName->setText(QString::fromStdString(Params().GetChainTypeString()));
 
-        //Setup autocomplete and attach it
-        QStringList wordList;
-        std::vector<std::string> commandList = m_node.listRpcCommands();
-        for (size_t i = 0; i < commandList.size(); ++i)
-        {
-            wordList << commandList[i].c_str();
-            wordList << ("help " + commandList[i]).c_str();
-        }
-
-        wordList << "help-console";
-        wordList.sort();
-        autoCompleter = new QCompleter(wordList, this);
+        // The executor prepares the immutable command list in the background.
+        autoCompleter = new QCompleter(this);
         autoCompleter->setModelSorting(QCompleter::CaseSensitivelySortedModel);
         // ui->lineEdit is initially disabled because running commands is only
         // possible from now on.
@@ -750,11 +821,14 @@ void RPCConsole::setClientModel(ClientModel *model, int bestblock_height, int64_
         autoCompleter->popup()->installEventFilter(this);
         // Start thread to execute RPC commands.
         startExecutor();
+        updatePeerRefreshState();
     }
     if (!model) {
         // Client model is being set to 0, this means shutdown() is about to be called.
+        ui->lineEdit->setEnabled(false);
         thread.quit();
-        thread.wait();
+        GUIUtil::WaitForBackendTask(std::async(std::launch::async, [worker = &thread] { worker->wait(); }));
+        m_executor = nullptr;
     }
 }
 
@@ -789,17 +863,6 @@ void RPCConsole::setCurrentWallet(WalletModel* const wallet_model)
 }
 #endif
 
-static QString categoryClass(int category)
-{
-    switch(category)
-    {
-    case RPCConsole::CMD_REQUEST:  return "cmd-request"; break;
-    case RPCConsole::CMD_REPLY:    return "cmd-reply"; break;
-    case RPCConsole::CMD_ERROR:    return "cmd-error"; break;
-    default:                       return "misc";
-    }
-}
-
 void RPCConsole::fontBigger()
 {
     setFontSize(consoleFontSize+1);
@@ -812,35 +875,28 @@ void RPCConsole::fontSmaller()
 
 void RPCConsole::setFontSize(int newSize)
 {
-    QSettings settings;
+    GuiSettings settings;
 
     //don't allow an insane font size
-    if (newSize < FONT_RANGE.width() || newSize > FONT_RANGE.height())
+    if (newSize < FONT_RANGE.width() || newSize > FONT_RANGE.height() || newSize == consoleFontSize)
         return;
 
-    // temp. store the console content
-    QString str = ui->messagesWidget->toHtml();
-
-    // replace font tags size in current content
-    str.replace(QString("font-size:%1pt").arg(consoleFontSize), QString("font-size:%1pt").arg(newSize));
+    const int old_max = ui->messagesWidget->verticalScrollBar()->maximum();
+    const double scroll_fraction = old_max > 0 ? double(ui->messagesWidget->verticalScrollBar()->value()) / old_max : 1.0;
 
     // store the new font size
     consoleFontSize = newSize;
     settings.setValue(fontSizeSettingsKey, consoleFontSize);
 
-    // clear console (reset icon sizes, default stylesheet) and re-add the content
-    float oldPosFactor = 1.0 / ui->messagesWidget->verticalScrollBar()->maximum() * ui->messagesWidget->verticalScrollBar()->value();
-    clear(/*keep_prompt=*/true);
-    ui->messagesWidget->setHtml(str);
-    ui->messagesWidget->verticalScrollBar()->setValue(oldPosFactor * ui->messagesWidget->verticalScrollBar()->maximum());
+    // All log text inherits the document font size. Changing it preserves the
+    // document/selection and performs only the required Qt relayout, without
+    // serializing, copying, reparsing and replacing the complete history.
+    updateConsoleStyle();
+    ui->messagesWidget->verticalScrollBar()->setValue(qRound(scroll_fraction * ui->messagesWidget->verticalScrollBar()->maximum()));
 }
 
-void RPCConsole::clear(bool keep_prompt)
+void RPCConsole::updateConsoleStyle()
 {
-    ui->messagesWidget->clear();
-    if (!keep_prompt) ui->lineEdit->clear();
-    ui->lineEdit->setFocus();
-
     // Add smoothly scaled icon images.
     // (when using width/height on an img, Qt uses nearest instead of linear interpolation)
     for(int i=0; ICON_MAPPING[i].url; ++i)
@@ -860,14 +916,25 @@ void RPCConsole::clear(bool keep_prompt)
     ui->messagesWidget->document()->setDefaultStyleSheet(
         QString(
                 "table { }"
-                "td.time { color: #808080; font-size: %2; padding-top: 3px; } "
-                "td.message { font-family: %1; font-size: %2; white-space:pre-wrap; } "
+                "td.time { color: #808080; padding-top: 3px; } "
+                "td.message { font-family: %1; white-space:pre-wrap; } "
                 "td.cmd-request { color: #006060; } "
                 "td.cmd-error { color: red; } "
                 ".secwarning { color: red; }"
                 "b { color: #006060; } "
-            ).arg(fixedFontInfo.family(), QString("%1pt").arg(consoleFontSize))
+            ).arg(fixedFontInfo.family())
         );
+    QFont font = ui->messagesWidget->document()->defaultFont();
+    font.setPointSize(consoleFontSize);
+    ui->messagesWidget->document()->setDefaultFont(font);
+}
+
+void RPCConsole::clear(bool keep_prompt)
+{
+    ui->messagesWidget->clear();
+    if (!keep_prompt) ui->lineEdit->clear();
+    ui->lineEdit->setFocus();
+    updateConsoleStyle();
 
     static const QString welcome_message =
         /*: RPC console welcome message.
@@ -905,6 +972,7 @@ void RPCConsole::changeEvent(QEvent* e)
 {
     if (e->type() == QEvent::PaletteChange) {
         ui->clearButton->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/remove")));
+        ui->hidePeersDetailButton->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/remove")));
         ui->fontBiggerButton->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/fontbigger")));
         ui->fontSmallerButton->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/fontsmaller")));
         ui->promptIcon->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/prompticon")));
@@ -917,23 +985,15 @@ void RPCConsole::changeEvent(QEvent* e)
         }
     }
 
+    if (e->type() == QEvent::WindowStateChange) updatePeerRefreshState();
     QWidget::changeEvent(e);
 }
 
 void RPCConsole::message(int category, const QString &message, bool html)
 {
-    QTime time = QTime::currentTime();
-    QString timeString = time.toString();
-    QString out;
-    out += "<table><tr><td class=\"time\" width=\"65\">" + timeString + "</td>";
-    out += "<td class=\"icon\" width=\"32\"><img src=\"" + categoryClass(category) + "\"></td>";
-    out += "<td class=\"message " + categoryClass(category) + "\" valign=\"middle\">";
-    if(html)
-        out += message;
-    else
-        out += GUIUtil::HtmlEscape(message, false);
-    out += "</td></tr></table>";
-    ui->messagesWidget->append(out);
+    // Local notices/welcome text are small. Commands and RPC results bypass
+    // this path, carrying already wrapped HTML from their workers.
+    ui->messagesWidget->append(FormatConsoleMessage(category, message, html));
 }
 
 void RPCConsole::updateNetworkState()
@@ -943,20 +1003,13 @@ void RPCConsole::updateNetworkState()
     connections += tr("In:") + " " + QString::number(clientModel->getNumConnections(CONNECTIONS_IN)) + " / ";
     connections += tr("Out:") + " " + QString::number(clientModel->getNumConnections(CONNECTIONS_OUT)) + ")";
 
-    if(!clientModel->node().getNetworkActive()) {
+    if(!clientModel->getNetworkActive()) {
         connections += " (" + tr("Network activity disabled") + ")";
     }
 
     ui->numberOfConnections->setText(connections);
 
-    QString local_addresses;
-    std::map<CNetAddr, LocalServiceInfo> hosts = clientModel->getNetLocalAddresses();
-    for (const auto& [addr, info] : hosts) {
-        local_addresses += QString::fromStdString(addr.ToStringAddr());
-        if (!addr.IsI2P()) local_addresses += ":" + QString::number(info.nPort);
-        local_addresses += ", ";
-    }
-    local_addresses.chop(2); // remove last ", "
+    QString local_addresses = clientModel->getNetLocalAddressString();
     if (local_addresses.isEmpty()) local_addresses = tr("None");
 
     ui->localAddresses->setText(local_addresses);
@@ -997,28 +1050,61 @@ void RPCConsole::setMempoolSize(long numberOfTxs, size_t dynUsage, size_t maxUsa
 
 void RPCConsole::on_lineEdit_returnPressed()
 {
-    QString cmd = ui->lineEdit->text().trimmed();
+    if (!clientModel || !m_executor || m_is_preparing_command) return;
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<RPCConsole> guard{this};
+    QString cmd = ui->lineEdit->text();
 
     if (cmd.isEmpty()) {
         return;
     }
+    m_is_preparing_command = true;
+    const auto preparing_guard = qScopeGuard([this, guard] {
+        if (guard) m_is_preparing_command = false;
+    });
 
-    std::string strFilteredCmd;
+    // Parsing/filtering is linear in the command size (up to 16 MiB). It must
+    // finish before displaying/history-saving anything that may contain keys.
+    struct PreparedCommand {
+        QString command;
+        QString filtered;
+        QString html;
+        QStringList history;
+    } prepared;
     try {
-        std::string dummy;
-        if (!RPCParseCommandLine(nullptr, dummy, cmd.toStdString(), false, &strFilteredCmd)) {
-            // Failed to parse command, so we cannot even filter it for the history
-            throw std::runtime_error("Invalid command line");
-        }
+        prepared = GUIUtil::WaitForBackendTask(std::async(std::launch::async, [cmd, history = history] {
+            PreparedCommand result;
+            result.command = cmd.trimmed();
+            if (result.command.isEmpty()) return result;
+            std::string dummy, filtered_command;
+            if (!RPCParseCommandLine(nullptr, dummy, result.command.toStdString(), false, &filtered_command)) {
+                throw std::runtime_error("Invalid command line");
+            }
+            result.filtered = QString::fromStdString(filtered_command);
+            result.html = FormatConsoleMessage(CMD_REQUEST, result.filtered);
+            // Even a bounded history may hold fifty 16 MiB commands. Compare
+            // their contents on the worker, alongside parsing and filtering.
+            result.history = history;
+            result.history.removeOne(result.filtered);
+            result.history.append(result.filtered);
+            while (result.history.size() > CONSOLE_HISTORY) result.history.removeFirst();
+            return result;
+        }), this);
     } catch (const std::exception& e) {
+        if (!guard) return;
         QMessageBox::critical(this, "Error", QString("Error: ") + QString::fromStdString(e.what()));
         return;
     }
+    if (!guard || !clientModel || !m_executor) return;
+    cmd = prepared.command;
+    if (cmd.isEmpty()) return;
 
     // A special case allows to request shutdown even a long-running command is executed.
     if (cmd == QLatin1String("stop")) {
-        std::string dummy;
-        RPCExecuteCommandLine(m_node, dummy, cmd.toStdString());
+        GUIUtil::WaitForBackendTask(std::async(std::launch::async, [node = &m_node] {
+            std::string dummy;
+            RPCExecuteCommandLine(*node, dummy, "stop");
+        }), this);
         return;
     }
 
@@ -1042,25 +1128,15 @@ void RPCConsole::on_lineEdit_returnPressed()
     }
 #endif // ENABLE_WALLET
 
-    message(CMD_REQUEST, QString::fromStdString(strFilteredCmd));
-    //: A console message indicating an entered command is currently being executed.
-    message(CMD_REPLY, tr("Executing…"));
+    ui->messagesWidget->append(prepared.html);
+    m_executing_label->show();
     m_is_executing = true;
 
-    QMetaObject::invokeMethod(m_executor, [this, cmd, in_use_wallet_name] {
-        m_executor->request(cmd, in_use_wallet_name);
+    QMetaObject::invokeMethod(m_executor, [executor = m_executor, cmd, in_use_wallet_name] {
+        executor->request(cmd, in_use_wallet_name);
     });
 
-    cmd = QString::fromStdString(strFilteredCmd);
-
-    // Remove command, if already in history
-    history.removeOne(cmd);
-    // Append command to history
-    history.append(cmd);
-    // Enforce maximum history size
-    while (history.size() > CONSOLE_HISTORY) {
-        history.removeFirst();
-    }
+    history = std::move(prepared.history);
     // Set pointer to end of history
     historyPtr = history.size();
 
@@ -1093,12 +1169,15 @@ void RPCConsole::startExecutor()
 {
     m_executor = new RPCExecutor(m_node);
     m_executor->moveToThread(&thread);
+    connect(m_executor, &RPCExecutor::commandsReady, this, [this](const QStringList& commands) {
+        if (!clientModel || !autoCompleter) return;
+        autoCompleter->setModel(new QStringListModel(commands, autoCompleter));
+    });
 
     // Replies from executor object must go to this object
-    connect(m_executor, &RPCExecutor::reply, this, [this](int category, const QString& command) {
-        // Remove "Executing…" message.
-        ui->messagesWidget->undo();
-        message(category, command);
+    connect(m_executor, &RPCExecutor::reply, this, [this](const QString& formatted_message) {
+        m_executing_label->hide();
+        ui->messagesWidget->append(formatted_message);
         scrollToEnd();
         m_is_executing = false;
     });
@@ -1109,8 +1188,9 @@ void RPCConsole::startExecutor()
     // Default implementation of QThread::run() simply spins up an event loop in the thread,
     // which is what we want.
     thread.start();
-    QTimer::singleShot(0, m_executor, []() {
+    QTimer::singleShot(0, m_executor, [executor = m_executor] {
         util::ThreadRename("qt-rpcconsole");
+        executor->initialize();
     });
 }
 
@@ -1119,6 +1199,7 @@ void RPCConsole::on_tabWidget_currentChanged(int index)
     if (ui->tabWidget->widget(index) == ui->tab_console) {
         ui->lineEdit->setFocus();
     }
+    updatePeerRefreshState();
 }
 
 void RPCConsole::on_openDebugLogfileButton_clicked()
@@ -1230,7 +1311,6 @@ void RPCConsole::updateDetailWidget()
         ui->peerRelayTxes->setText(stats->nodeStateStats.m_relay_txs ? ts.yes : ts.no);
     }
 
-    ui->hidePeersDetailButton->setIcon(platformStyle->SingleColorIcon(QStringLiteral(":/icons/remove")));
     ui->peersTabRightPanel->show();
 }
 
@@ -1242,12 +1322,20 @@ void RPCConsole::resizeEvent(QResizeEvent *event)
 void RPCConsole::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
+    if (window() != this) window()->installEventFilter(this);
+    updatePeerRefreshState();
+}
 
-    if (!clientModel || !clientModel->getPeerTableModel())
-        return;
-
-    // start PeerTableModel auto refresh
-    clientModel->getPeerTableModel()->startAutoRefresh();
+void RPCConsole::updatePeerRefreshState()
+{
+    if (!clientModel || !clientModel->getPeerTableModel()) return;
+    // Peer snapshots drive table sorting, column sizing and detail formatting.
+    // None of that is needed on another tab or in a hidden/minimized window.
+    if (isVisible() && !window()->isMinimized() && ui->tabWidget->currentIndex() == int(TabTypes::PEERS)) {
+        clientModel->getPeerTableModel()->startAutoRefresh();
+    } else {
+        clientModel->getPeerTableModel()->stopAutoRefresh();
+    }
 }
 
 void RPCConsole::hideEvent(QHideEvent *event)
@@ -1282,16 +1370,19 @@ void RPCConsole::showBanTableContextMenu(const QPoint& point)
 
 void RPCConsole::disconnectSelectedNode()
 {
+    if (!clientModel) return;
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<RPCConsole> guard{this};
     // Get selected peer addresses
     QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->peerWidget, PeerTableModel::NetNodeId);
-    for(int i = 0; i < nodes.count(); i++)
-    {
-        // Get currently selected peer address
-        NodeId id = nodes.at(i).data().toLongLong();
-        // Find the node, disconnect it and clear the selected node
-        if(m_node.disconnectById(id))
-            clearSelectedNode();
-    }
+    std::vector<NodeId> ids;
+    for (const auto& index : nodes) ids.push_back(index.data().toLongLong());
+    const bool disconnected = GUIUtil::WaitForBackendTask(clientModel->requestNodeData([ids](interfaces::Node& node) {
+        bool changed{false};
+        for (auto id : ids) changed |= node.disconnectById(id);
+        return changed;
+    }), this);
+    if (guard && disconnected) clearSelectedNode();
 }
 
 void RPCConsole::banSelectedNode(int bantime)
@@ -1299,14 +1390,23 @@ void RPCConsole::banSelectedNode(int bantime)
     if (!clientModel)
         return;
 
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<RPCConsole> guard{this};
+    std::vector<CNetAddr> addresses;
     for (const QModelIndex& peer : GUIUtil::getEntryData(ui->peerWidget, PeerTableModel::NetNodeId)) {
         // Find possible nodes, ban it and clear the selected node
         const auto stats = peer.data(PeerTableModel::StatsRole).value<CNodeCombinedStats*>();
         if (stats) {
-            m_node.ban(stats->nodeStats.addr, bantime);
-            m_node.disconnectByAddress(stats->nodeStats.addr);
+            addresses.push_back(stats->nodeStats.addr);
         }
     }
+    GUIUtil::WaitForBackendTask(clientModel->requestNodeData([addresses, bantime](interfaces::Node& node) {
+        for (const auto& address : addresses) {
+            node.ban(address, bantime);
+            node.disconnectByAddress(address);
+        }
+    }), this);
+    if (!guard || !clientModel) return;
     clearSelectedNode();
     clientModel->getBanTableModel()->refresh();
 }

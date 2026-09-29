@@ -18,38 +18,42 @@ TransactionFilterProxy::TransactionFilterProxy(QObject* parent)
 
 bool TransactionFilterProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
+    if (showInactive && typeFilter == ALL_TYPES && !dateFrom && !dateTo && m_search_string.isEmpty() && minAmount == 0) return true;
     QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
 
-    int status = index.data(TransactionTableModel::StatusRole).toInt();
-    if (!showInactive && status == TransactionStatus::Conflicted)
+    if (!showInactive && index.data(TransactionTableModel::StatusRole).toInt() == TransactionStatus::Conflicted)
         return false;
 
-    int type = index.data(TransactionTableModel::TypeRole).toInt();
-    if (!(TYPE(type) & typeFilter))
-        return false;
-
-    QDateTime datetime = index.data(TransactionTableModel::DateRole).toDateTime();
-    if (dateFrom && datetime < *dateFrom) return false;
-    if (dateTo && datetime > *dateTo) return false;
-
-    QString address = index.data(TransactionTableModel::AddressRole).toString();
-    QString label = index.data(TransactionTableModel::LabelRole).toString();
-    QString txid = index.data(TransactionTableModel::TxHashRole).toString();
-    if (!address.contains(m_search_string, Qt::CaseInsensitive) &&
-        !  label.contains(m_search_string, Qt::CaseInsensitive) &&
-        !   txid.contains(m_search_string, Qt::CaseInsensitive)) {
-        return false;
+    if (typeFilter != ALL_TYPES) {
+        int type = index.data(TransactionTableModel::TypeRole).toInt();
+        if (!(TYPE(type) & typeFilter)) return false;
     }
 
-    qint64 amount = llabs(index.data(TransactionTableModel::AmountRole).toLongLong());
-    if (amount < minAmount)
-        return false;
+    if (dateFrom || dateTo) {
+        QDateTime datetime = index.data(TransactionTableModel::DateRole).toDateTime();
+        if (dateFrom && datetime < *dateFrom) return false;
+        if (dateTo && datetime > *dateTo) return false;
+    }
+
+    if (!m_search_string.isEmpty()) {
+        if (!index.data(TransactionTableModel::AddressRole).toString().contains(m_search_string, Qt::CaseInsensitive) &&
+            !index.data(TransactionTableModel::LabelRole).toString().contains(m_search_string, Qt::CaseInsensitive) &&
+            !index.data(TransactionTableModel::TxHashRole).toString().contains(m_search_string, Qt::CaseInsensitive)) {
+            return false;
+        }
+    }
+
+    if (minAmount > 0) {
+        qint64 amount = llabs(index.data(TransactionTableModel::AmountRole).toLongLong());
+        if (amount < minAmount) return false;
+    }
 
     return true;
 }
 
 void TransactionFilterProxy::setDateRange(const std::optional<QDateTime>& from, const std::optional<QDateTime>& to)
 {
+    if (dateFrom == from && dateTo == to) return;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
     beginFilterChange();
 #endif
@@ -83,6 +87,7 @@ void TransactionFilterProxy::setSearchString(const QString &search_string)
 
 void TransactionFilterProxy::setTypeFilter(quint32 modes)
 {
+    if (typeFilter == modes) return;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
     beginFilterChange();
 #endif
@@ -98,6 +103,7 @@ void TransactionFilterProxy::setTypeFilter(quint32 modes)
 
 void TransactionFilterProxy::setMinAmount(const CAmount& minimum)
 {
+    if (minAmount == minimum) return;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
     beginFilterChange();
 #endif
@@ -113,6 +119,7 @@ void TransactionFilterProxy::setMinAmount(const CAmount& minimum)
 
 void TransactionFilterProxy::setShowInactive(bool _showInactive)
 {
+    if (showInactive == _showInactive) return;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
     beginFilterChange();
 #endif

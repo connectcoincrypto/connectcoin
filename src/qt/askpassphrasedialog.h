@@ -6,6 +6,7 @@
 #define CONNECTCOIN_QT_ASKPASSPHRASEDIALOG_H
 
 #include <QDialog>
+#include <QPointer>
 
 #include <support/allocators/secure.h>
 
@@ -39,7 +40,7 @@ public:
 private:
     Ui::AskPassphraseDialog *ui;
     Mode mode;
-    WalletModel* model{nullptr};
+    QPointer<WalletModel> model;
     bool fCapsLock{false};
     SecureString* m_passphrase_out;
 

@@ -8,6 +8,7 @@
 #include <util/chaintype.h>
 
 #include <QIcon>
+#include <QImage>
 #include <QPixmap>
 #include <QString>
 
@@ -24,7 +25,7 @@ public:
     const QString &getTitleAddText() const { return titleAddText; }
 
 private:
-    NetworkStyle(const QString& appName, int iconColorHueShift, int iconColorSaturationReduction, const char* titleAddText);
+    NetworkStyle(const QString& appName, const QString& titleAddText, QImage appImage, QImage trayImage);
 
     QString appName;
     QIcon appIcon;

@@ -14,6 +14,7 @@
 #include <QKeyEvent>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QPointer>
 
 AskPassphraseDialog::AskPassphraseDialog(Mode _mode, QWidget *parent, SecureString* passphrase_out) :
     QDialog(parent, GUIUtil::dialog_flags),
@@ -80,6 +81,8 @@ void AskPassphraseDialog::setModel(WalletModel *_model)
 
 void AskPassphraseDialog::accept()
 {
+    GUIUtil::BackendOperationGuard operation;
+    const QPointer<AskPassphraseDialog> guard{this};
     SecureString oldpass, newpass1, newpass2;
     if (!model && mode != Encrypt && mode != UnlockMigration)
         return;
@@ -109,6 +112,7 @@ void AskPassphraseDialog::accept()
         msgBoxConfirm.button(QMessageBox::Cancel)->setText(tr("Back"));
         msgBoxConfirm.setDefaultButton(QMessageBox::Cancel);
         QMessageBox::StandardButton retval = (QMessageBox::StandardButton)msgBoxConfirm.exec();
+        if (!guard) return;
         if(retval == QMessageBox::Yes)
         {
             if(newpass1 == newpass2)
@@ -126,13 +130,16 @@ void AskPassphraseDialog::accept()
                                               QMessageBox::Cancel | QMessageBox::Yes, this);
                     msgBoxWarning.setDefaultButton(QMessageBox::Cancel);
                     QMessageBox::StandardButton retval = (QMessageBox::StandardButton)msgBoxWarning.exec();
+                    if (!guard) return;
                     if (retval == QMessageBox::Cancel) {
                         QDialog::reject();
                         return;
                     }
                 } else {
                     assert(model != nullptr);
-                    if (model->setWalletEncrypted(newpass1)) {
+                    const bool encrypted = model->setWalletEncrypted(newpass1);
+                    if (!guard) return;
+                    if (encrypted) {
                         QMessageBox::warning(this, tr("Wallet encrypted"),
                                              "<qt>" +
                                              tr("Your wallet is now encrypted. ") + encryption_reminder +
@@ -147,7 +154,7 @@ void AskPassphraseDialog::accept()
                                              tr("Wallet encryption failed due to an internal error. Your wallet was not encrypted."));
                     }
                 }
-                QDialog::accept(); // Success
+                if (guard) QDialog::accept(); // Success
             }
             else
             {
@@ -158,7 +165,9 @@ void AskPassphraseDialog::accept()
     } break;
     case Unlock:
         try {
-            if (!model->setWalletLocked(false, oldpass)) {
+            const bool unlocked = model->setWalletLocked(false, oldpass);
+            if (!guard) return;
+            if (!unlocked) {
                 // Check if the passphrase has a null character (see #27067 for details)
                 if (oldpass.find('\0') == std::string::npos) {
                     QMessageBox::critical(this, tr("Wallet unlock failed"),
@@ -179,6 +188,7 @@ void AskPassphraseDialog::accept()
                 QDialog::accept(); // Success
             }
         } catch (const std::runtime_error& e) {
+            if (!guard) return;
             QMessageBox::critical(this, tr("Wallet unlock failed"), e.what());
         }
         break;
@@ -189,11 +199,13 @@ void AskPassphraseDialog::accept()
     case ChangePass:
         if(newpass1 == newpass2)
         {
-            if(model->changePassphrase(oldpass, newpass1))
+            const bool changed = model->changePassphrase(oldpass, newpass1);
+            if (!guard) return;
+            if(changed)
             {
                 QMessageBox::information(this, tr("Wallet encrypted"),
                                      tr("Wallet passphrase was successfully changed."));
-                QDialog::accept(); // Success
+                if (guard) QDialog::accept(); // Success
             }
             else
             {
