@@ -14,6 +14,12 @@
 
 void FreespaceChecker::check(const QString& dataDirStr)
 {
+    // An empty edit is not a directory. Some standard libraries try to make
+    // it absolute inside space()'s noexcept implementation and terminate.
+    if (dataDirStr.isEmpty()) {
+        Q_EMIT reply(dataDirStr, ST_ERROR, tr("Cannot create data directory here."), 0);
+        return;
+    }
     fs::path dataDir = GUIUtil::QStringToPath(dataDirStr);
     uint64_t freeBytesAvailable = 0;
     int replyStatus = ST_OK;
@@ -29,7 +35,9 @@ void FreespaceChecker::check(const QString& dataDirStr)
             if (parentDirOld == parentDir) break;
             parentDirOld = parentDir;
         }
-        freeBytesAvailable = fs::space(parentDir).available;
+        // Resolve invalid paths in this try block, not inside an implementation
+        // of space(path, error_code&) that may be noexcept (notably MinGW).
+        freeBytesAvailable = fs::space(fs::absolute(parentDir)).available;
         if(fs::exists(dataDir))
         {
             if(fs::is_directory(dataDir))

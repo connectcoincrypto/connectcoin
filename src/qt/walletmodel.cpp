@@ -502,8 +502,7 @@ void WalletModel::sendCoins(WalletModelTransaction& transaction)
 {
     GUIUtil::BackendOperationGuard operation;
     const auto recipients = transaction.getRecipients();
-    const auto new_tx = transaction.getWtx();
-    const auto completed = GUIUtil::WaitForBackendTask(requestWalletData([recipients, new_tx](interfaces::Wallet& wallet) {
+    const auto completed = GUIUtil::WaitForBackendTask(requestWalletData([recipients, new_tx = transaction.getWtx()](interfaces::Wallet& wallet) {
         std::vector<std::string> messages;
         for (const SendCoinsRecipient &rcp : recipients)
         {

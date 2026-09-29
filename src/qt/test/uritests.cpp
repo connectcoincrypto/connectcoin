@@ -338,8 +338,10 @@ void URITests::partialIpcRequests()
     // Rebind the test-owned server so no other process can send requests into
     // the fixture. No access to PaymentServer's private naming helper is needed.
     server->close();
-    const QString name = QStringLiteral("ConnectCoinQt-uri-test-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
-    QVERIFY(server->listen(name));
+    // macOS prepends its long per-user temporary directory to this name;
+    // leave room within sockaddr_un::sun_path while retaining the full UUID.
+    const QString name = QStringLiteral("ccqt-") + QUuid::createUuid().toString(QUuid::Id128);
+    QVERIFY2(server->listen(name), qPrintable(server->errorString()));
     payment_server.uiReady();
     std::vector<SendCoinsRecipient> received;
     connect(&payment_server, &PaymentServer::receivedPaymentRequest, &payment_server,

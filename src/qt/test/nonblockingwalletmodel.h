@@ -88,7 +88,9 @@ inline void CheckNonblockingCoinControlAndStartup(WalletModel& model, wallet::CW
     QPointer<CoinControlDialog> owned_coins = owned_sender->findChild<CoinControlDialog*>();
     if (!owned_coins) owned_coins = qobject_cast<CoinControlDialog*>(QApplication::activeModalWidget());
     const bool owned_dialog_parented = owned_coins && owned_coins->parentWidget() == owned_sender.get();
-    QTest::qWait(150);
+    // Count delivered event-loop turns, not elapsed wall time: timer overruns
+    // are coalesced when a CI runner is briefly descheduled.
+    const bool responsive = QTest::qWaitFor([&] { return heartbeats >= 3; }, 1000);
     const int rows_while_locked{initial->rowCount({})};
     initial.reset();
     disposable.reset();
@@ -107,7 +109,7 @@ inline void CheckNonblockingCoinControlAndStartup(WalletModel& model, wallet::CW
     QVERIFY(owned_dialog_parented);
     QVERIFY(owned_dialog_destroyed);
     QVERIFY(rendered);
-    QVERIFY(heartbeats >= 3);
+    QVERIFY(responsive);
     QCOMPARE(rows_while_locked, 0);
     auto* quantity = coins->findChild<QLabel*>("labelCoinControlQuantity");
     auto* amount = coins->findChild<QLabel*>("labelCoinControlAmount");

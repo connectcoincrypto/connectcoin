@@ -418,7 +418,7 @@ void TransactionTableModel::updateTransaction(const QString &hash, int status, b
     // Treat a pending insertion like an existing row: duplicate additions and
     // status updates do not replace it or lose its rescan notification flag.
     // Its status will be fetched lazily after insertion, just like cached rows.
-    if (priv->pending_transactions.count(updated) &&
+    if (priv->pending_transactions.contains(updated) &&
         (status == CT_NEW || (status == CT_UPDATED && showTransaction))) return;
 
     // Deletions (including updates that hide a transaction) invalidate an

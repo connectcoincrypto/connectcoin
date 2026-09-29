@@ -238,7 +238,7 @@ std::map<std::string, std::pair<bool, std::string>> WalletController::listWallet
     }
     std::map<std::string, std::pair<bool, std::string>> wallets;
     for (const auto& [name, format] : m_cached_wallet_dir) {
-        wallets[name] = std::make_pair(m_loaded_wallet_names.count(name) != 0, format);
+        wallets[name] = std::make_pair(m_loaded_wallet_names.contains(name), format);
     }
     return wallets;
 }
@@ -349,7 +349,7 @@ WalletModel* WalletController::registerWalletOnGUI(std::unique_ptr<interfaces::W
 
 void WalletController::removeWalletWhenReady(WalletModel* wallet_model)
 {
-    if (m_stopping || m_wallets_pending_removal.count(wallet_model) == 0) return;
+    if (m_stopping || !m_wallets_pending_removal.contains(wallet_model)) return;
     // A modal backend wait still runs queued unload notifications. Do not
     // destroy either the wallet or its caller until that whole action returns.
     // Retain the existing protection for other synchronous modal dialogs.

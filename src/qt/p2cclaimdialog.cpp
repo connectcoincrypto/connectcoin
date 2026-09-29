@@ -155,7 +155,12 @@ bool P2CClaimDialog::IsStatusVisible() const
 
 void P2CClaimDialog::UpdateRefreshState()
 {
-    if (!m_refresh_timer) return;
+    if (UpdateRefreshTimer()) Refresh();
+}
+
+bool P2CClaimDialog::UpdateRefreshTimer()
+{
+    if (!m_refresh_timer) return false;
     const bool visible = IsStatusVisible();
     // A wallet can keep claiming while another page/wallet is selected. Its
     // invisible status labels need neither new snapshots nor GUI layout.
@@ -163,12 +168,13 @@ void P2CClaimDialog::UpdateRefreshState()
     // enqueue duplicates if its wallet worker were temporarily blocked.
     if (!m_model || (!visible && !m_operation.valid())) {
         m_refresh_timer->stop();
-        return;
+        return false;
     }
     if (!m_refresh_timer->isActive()) {
         m_refresh_timer->start();
-        Refresh();
+        return true;
     }
+    return false;
 }
 
 void P2CClaimDialog::showEvent(QShowEvent* event)
@@ -296,7 +302,7 @@ void P2CClaimDialog::Refresh()
         if (!IsStatusVisible()) {
             // Consume a submitted configuration even if the page was hidden
             // meanwhile, but do not let that restart passive status polling.
-            UpdateRefreshState();
+            UpdateRefreshTimer();
             return;
         }
         if (!m_status_query.valid()) {
@@ -325,6 +331,6 @@ void P2CClaimDialog::Refresh()
         m_start->setEnabled(true);
         m_stop->setEnabled(true);
         m_status->setText(QString::fromUtf8(error.what()));
-        UpdateRefreshState();
+        UpdateRefreshTimer();
     }
 }

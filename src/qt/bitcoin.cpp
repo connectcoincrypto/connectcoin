@@ -565,6 +565,10 @@ int GuiMain(int argc, char* argv[])
 #endif
 
     BitcoinApplication app;
+    // Responsive startup waits can show Qt dialogs before settings/configuration
+    // are loaded. Route their diagnostics through the buffered core logger too,
+    // rather than leaking platform-plugin warnings directly to stderr.
+    app.startQtLogging();
     GUIUtil::LoadFont(QStringLiteral(":/fonts/monospace"));
 
     /// 2. Parse command-line options. We do this after qt in order to show an error if there are problems parsing these
@@ -719,8 +723,6 @@ int GuiMain(int argc, char* argv[])
     // native callback must never synchronously join backend threads.
     qApp->installNativeEventFilter(new WinShutdownMonitor([&app] { app.requestShutdown(); }));
 #endif
-    // Install qDebug() message handler to route to debug.log
-    app.startQtLogging();
     // Allow parameter interaction before we create the options model
     app.parameterSetup();
     GUIUtil::LogQtInfo();

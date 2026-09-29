@@ -39,6 +39,8 @@ private:
     void Configure(bool stop);
     void Refresh();
     void UpdateRefreshState();
+    //! Update passive polling and report whether the timer was just started.
+    bool UpdateRefreshTimer();
     bool IsStatusVisible() const;
     void UpdateLoadWarning();
     QPointer<WalletModel> m_model;

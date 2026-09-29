@@ -5,6 +5,7 @@
 #ifndef CONNECTCOIN_QT_TEST_NONBLOCKINGINTRO_H
 #define CONNECTCOIN_QT_TEST_NONBLOCKINGINTRO_H
 
+#include <qt/freespacechecker.h>
 #include <qt/intro.h>
 
 #include <QDialogButtonBox>
@@ -21,6 +22,16 @@
 
 inline void CheckNonblockingIntro()
 {
+    // Editing/reopening the dialog can enqueue an empty path. Do not pass it
+    // to fs::space: the MinGW implementation can terminate instead of throwing.
+    FreespaceChecker checker;
+    QSignalSpy checked(&checker, &FreespaceChecker::reply);
+    checker.check({});
+    QCOMPARE(checked.count(), 1);
+    QCOMPARE(checked.first().at(0).toString(), QString{});
+    QCOMPARE(checked.first().at(1).toInt(), int(FreespaceChecker::ST_ERROR));
+    QCOMPARE(checked.first().at(3).toULongLong(), qulonglong{0});
+
     QTemporaryDir directory;
     QVERIFY(directory.isValid());
     Intro intro{nullptr, 0, 0, directory.path()};

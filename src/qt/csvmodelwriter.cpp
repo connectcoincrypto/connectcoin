@@ -152,7 +152,20 @@ bool CSVModelWriter::write()
     timer.setInterval(0);
     const auto invalidate = [&] { changed = true; };
     if (source) {
-        connect(source, &QAbstractItemModel::dataChanged, &timer, invalidate);
+        connect(source, &QAbstractItemModel::dataChanged, &timer,
+            [&](const QModelIndex& first, const QModelIndex& last, const QList<int>& roles) {
+                // Status hydration can keep emitting unrelated roles while a
+                // large history export is captured. Only values included in
+                // this export invalidate its snapshot; structural changes are
+                // still handled separately below.
+                for (const auto& column : export_columns) {
+                    if (column.column >= first.column() && column.column <= last.column() &&
+                        (roles.isEmpty() || roles.contains(column.role))) {
+                        invalidate();
+                        break;
+                    }
+                }
+            });
         connect(source, &QAbstractItemModel::headerDataChanged, &timer, invalidate);
         connect(source, &QAbstractItemModel::rowsInserted, &timer, invalidate);
         connect(source, &QAbstractItemModel::rowsRemoved, &timer, invalidate);

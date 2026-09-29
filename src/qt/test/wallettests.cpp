@@ -595,7 +595,10 @@ void CheckResponsiveBackendWaitAndStop(WalletModel& source, const std::shared_pt
     auto ready = locked.get_future();
     std::promise<void> release;
     auto released = release.get_future();
-    auto holder = std::async(std::launch::async, [&] {
+    // The blocked operation must belong to this worker. A separate lock
+    // holder can race its startup queries, letting stopWorker finish before
+    // any pending operation needs the lock or processes heartbeat events.
+    auto holder = model->requestWalletData([&](interfaces::Wallet&) {
         LOCK(wallet->cs_wallet);
         locked.set_value();
         return released.wait_for(std::chrono::seconds{3}) == std::future_status::timeout;
@@ -680,6 +683,7 @@ void TestGUI(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet)
     CheckCSVRestartAndLifetime();
     CheckNonblockingTransactionPreparation(walletModel, *wallet);
     CheckNonblockingCoinControlAndStartup(walletModel, *wallet, platformStyle.get());
+    if (QTest::currentTestFailed()) return;
     CheckCoinControlActionDelivery(walletModel, platformStyle.get());
     if (QTest::currentTestFailed()) return;
     CheckCoalescedWalletNotifications(walletModel, *wallet);
@@ -690,6 +694,7 @@ void TestGUI(interfaces::Node& node, const std::shared_ptr<CWallet>& wallet)
     CheckNonblockingWalletController(walletModel, platformStyle.get());
     CheckWalletActionLifetime(walletModel, platformStyle.get());
     CheckResponsiveBackendWaitAndStop(walletModel, wallet, platformStyle.get());
+    if (QTest::currentTestFailed()) return;
     CheckNonblockingNodeSnapshots(walletModel.clientModel(), node);
     CheckBatchedPeerUpdates(node);
     if (QTest::currentTestFailed()) return;
@@ -1025,6 +1030,7 @@ void TestGUI(interfaces::Node& node)
     // "Full" GUI tests, use descriptor wallet
     const std::shared_ptr<CWallet>& desc_wallet = SetupDescriptorsWallet(node, test);
     TestGUI(node, desc_wallet);
+    if (QTest::currentTestFailed()) return;
 
     // Legacy watch-only wallet test
     // Verify PSBT creation.
@@ -1781,11 +1787,13 @@ void TestP2CGUI(interfaces::Node& node)
     }
     qApp->processEvents();
     CheckP2CHistory(*gui.walletModel->getTransactionTableModel(), "example.com", 2);
+    if (QTest::currentTestFailed()) return;
     {
         // Reopening history reconstructs labels from existing outputs, without
         // needing any address-book entries or GUI-specific transaction metadata.
         TransactionTableModel reloaded(style.get(), gui.walletModel.get());
         CheckP2CHistory(reloaded, "example.com", 2);
+        if (QTest::currentTestFailed()) return;
     }
     {
         auto varied_wtx = gui.walletModel->wallet().getWalletTx(sent.front());
@@ -1900,6 +1908,7 @@ void TestP2CGUI(interfaces::Node& node)
     QCOMPARE(p2c_count, 1000);
     qApp->processEvents();
     CheckP2CHistory(*gui.walletModel->getTransactionTableModel(), QString::fromStdString(long_domain), 1000);
+    if (QTest::currentTestFailed()) return;
     locks.clear();
     gui.walletModel->wallet().listLockedCoins(locks);
     QVERIFY(locks.empty());

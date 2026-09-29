@@ -184,7 +184,7 @@ public:
 
 private:
     std::unique_ptr<interfaces::Wallet> m_wallet;
-    ThreadPool m_refresh_worker{"qt-wallet-refresh"};
+    ThreadPool m_refresh_worker{"qt-wallet"};
     bool m_stopping{false};
     // Backend callbacks retain this gate, not the model. Disconnecting a core
     // signal does not wait for callbacks which have already started running.

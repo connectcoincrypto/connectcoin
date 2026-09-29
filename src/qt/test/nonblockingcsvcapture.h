@@ -23,7 +23,7 @@ inline void CheckCSVRestartAndLifetime()
     class CaptureModel final : public QAbstractTableModel {
     public:
         int generation{0}, reads{0};
-        bool unstable{false}, throw_on_read{false}, gui_only{true};
+        bool unstable{false}, unrelated_changes{false}, throw_on_read{false}, gui_only{true};
         std::function<void()> during_capture;
         int rowCount(const QModelIndex& parent = {}) const override { return parent.isValid() ? 0 : 4096; }
         int columnCount(const QModelIndex& parent = {}) const override { return parent.isValid() ? 0 : 1; }
@@ -33,6 +33,9 @@ inline void CheckCSVRestartAndLifetime()
             auto& self = *const_cast<CaptureModel*>(this);
             ++self.reads;
             self.gui_only &= QThread::currentThread() == thread();
+            if (unrelated_changes && item.row() % 128 == 0) {
+                Q_EMIT self.dataChanged(index(0, 0), index(rowCount() - 1, 0), {Qt::ToolTipRole});
+            }
             if (item.row() == 3071 && (generation < 2 || unstable)) {
                 ++self.generation;
                 Q_EMIT self.dataChanged(index(0, 0), index(rowCount() - 1, 0));
@@ -62,6 +65,17 @@ inline void CheckCSVRestartAndLifetime()
     QByteArray expected{"\"value\"\n"};
     for (int row{0}; row < model->rowCount(); ++row) expected += QString("\"2:%1\"\n").arg(row).toUtf8();
     QCOMPARE(contents, expected);
+
+    // Background hydration of roles not exported must not exhaust the retry
+    // budget, even when every capture chunk triggers another notification.
+    model->unrelated_changes = true;
+    const int reads_before_unrelated_changes = model->reads;
+    QVERIFY(writer.write());
+    QCOMPARE(model->reads - reads_before_unrelated_changes, model->rowCount());
+    model->unrelated_changes = false;
+    QVERIFY(file.open(QIODevice::ReadOnly | QIODevice::Text));
+    QCOMPARE(file.readAll(), contents);
+    file.close();
 
     // Each failed revision has already built thousands of rows on the worker.
     // Retry exhaustion and exceptions must reclaim them there, never open the

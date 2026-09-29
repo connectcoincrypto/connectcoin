@@ -72,6 +72,10 @@ int main(int argc, char* argv[])
     // Dynamic Qt builds provided by vcpkg cannot use the minimal plugin on
     // Windows, so use the native Windows plugin for that configuration.
 #if defined(WIN32)
+    // Cross-built tests are also launched directly, without CTest's environment.
+    // Preserve QtTest diagnostics even when the binary has no Windows console.
+    if (getenv("QT_FORCE_STDERR_LOGGING") == nullptr) _putenv_s("QT_FORCE_STDERR_LOGGING", "1");
+    if (getenv("QT_ASSUME_STDERR_HAS_CONSOLE") == nullptr) _putenv_s("QT_ASSUME_STDERR_HAS_CONSOLE", "1");
 #if defined(CONNECTCOIN_QT_TEST_USE_WINDOWS_PLATFORM)
     if (getenv("QT_QPA_PLATFORM") == nullptr) _putenv_s("QT_QPA_PLATFORM", "windows");
 #else

@@ -273,7 +273,7 @@ bool OptionsModel::Init(bilingual_str& error)
     for (OptionID option : {DatabaseCache, ThreadsScriptVerif, SpendZeroConfChange, ExternalSignerPath,
                             MapPortNatpmp, Listen, Server, Prune, ProxyUse, ProxyUseTor, Language}) {
         std::string setting = SettingName(option);
-        if (m_overridden_values.count("-" + setting)) addOverriddenOption("-" + setting);
+        if (m_overridden_values.contains("-" + setting)) addOverriddenOption("-" + setting);
         try {
             getOption(option);
         } catch (const std::exception& e) {

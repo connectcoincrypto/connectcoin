@@ -229,7 +229,7 @@ std::future<void> GuiSettings::load(bool reload) const
                 }
             }
             for (const auto& [key, changed] : profile->revisions) {
-                if (changed <= revision && profile->failed.count(key) == 0) continue;
+                if (changed <= revision && !profile->failed.contains(key)) continue;
                 if (profile->values.contains(key)) values.insert(key, profile->values.value(key));
                 else values.remove(key);
             }
