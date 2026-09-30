@@ -1757,12 +1757,32 @@ void TestP2CGUI(interfaces::Node& node)
     closing_page->findChild<QPushButton*>("p2cCreateButton")->click();
     QVERIFY(closing_page->findChild<QMessageBox*>("p2cConfirmation"));
     QTRY_COMPARE(probe->started.load(), closing_started + 1);
+    // Destruction queues reservation cleanup on the wallet worker, independently
+    // of the detached TLS probe. Hold that worker to make the ordering explicit:
+    // destroying the page must return without waiting or releasing coins here.
+    // The moved future owns its state; an early return breaks the promise and
+    // releases the worker, with a watchdog also bounding a blocking destructor.
+    std::promise<void> release_cleanup;
+    auto cleanup_blocker = gui.walletModel->requestWalletData([released = release_cleanup.get_future()](interfaces::Wallet&) {
+        return released.wait_for(std::chrono::seconds{3}) == std::future_status::timeout;
+    });
     closing_page.reset();
-    QTRY_COMPARE(probe->cancelled.load(), closing_cancelled + 1);
-    QTRY_COMPARE(probe->started.load(), probe->finished.load());
     locks.clear();
     gui.walletModel->wallet().listLockedCoins(locks);
-    QVERIFY(locks.empty());
+    const bool cleanup_was_pending = !locks.empty();
+    release_cleanup.set_value();
+    QTRY_VERIFY(cleanup_blocker.wait_for(std::chrono::seconds{0}) == std::future_status::ready);
+    QVERIFY(!cleanup_blocker.get());
+    QVERIFY(cleanup_was_pending);
+    QTRY_COMPARE(probe->cancelled.load(), closing_cancelled + 1);
+    QTRY_COMPARE(probe->started.load(), probe->finished.load());
+    auto cleanup_locks = gui.walletModel->requestWalletData([](interfaces::Wallet& wallet) {
+        std::vector<COutPoint> locked;
+        wallet.listLockedCoins(locked);
+        return locked;
+    });
+    QTRY_VERIFY(cleanup_locks.wait_for(std::chrono::seconds{0}) == std::future_status::ready);
+    QVERIFY(cleanup_locks.get().empty());
     QVERIFY(sent.empty());
 
     // Submit exactly the reviewed output after a timely verified RSA probe,

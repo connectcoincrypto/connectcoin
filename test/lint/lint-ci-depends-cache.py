@@ -349,12 +349,40 @@ ccache() {
         for block in (restore, save):
             self.assertIn('path: ~/AppData/Local/vcpkg/archives', block)
         self.assertIn('key: ${{ steps.vcpkg-binary-cache.outputs.cache-primary-key }}', save)
+        self.assertIn('-${{ github.run_id }}-${{ github.run_attempt }}', restore)
+        self.assertIn('restore-keys: |', restore)
         gate = re.search(r'^\s+if: (.+)$', save, re.M)
         self.assertIsNotNone(gate)
-        for event, hit, job in itertools.product(('push', 'pull_request', 'workflow_dispatch'), ('true', 'false'), ('standard', 'fuzz')):
-            context = {'github.event_name': event, 'steps.vcpkg-binary-cache.outputs.cache-hit': hit, 'matrix.job-type': job}
-            self.assertEqual(evaluate(gate.group(1), context, 'success'),
-                             event == 'push' and hit != 'true' and job == 'standard', (event, hit, job))
+        self.assertNotRegex(gate.group(1), r'\b(?:success|failure|cancelled|always)\(')
+        # GitHub adds success() when an if expression has no explicit status
+        # check. Keep failed/cancelled Generate or fingerprint steps fail-closed.
+        expression = f'success() && ({gate.group(1)})'
+        checks = 0
+        for status, event, hit, job, before, after in itertools.product(
+                ('success', 'failure', 'cancelled'), ('push', 'pull_request', 'workflow_dispatch'),
+                ('true', 'false', ''), ('standard', 'fuzz'), ('', 'a' * 64, 'b' * 64), ('', 'a' * 64, 'b' * 64)):
+            context = {
+                'github.event_name': event, 'steps.vcpkg-binary-cache.outputs.cache-hit': hit, 'matrix.job-type': job,
+                'steps.vcpkg-cache-before.outputs.fingerprint': before,
+                'steps.vcpkg-cache-after.outputs.fingerprint': after,
+            }
+            expected = status == 'success' and event == 'push' and job == 'standard' and before != after
+            self.assertEqual(evaluate(expression, context, status), expected,
+                             (status, event, hit, job, before, after))
+            checks += 1
+        print(f'Validated {checks} vcpkg refresh predicate combinations', flush=True)
+
+        for name in ('Record restored vcpkg cache state', 'Record updated vcpkg cache state'):
+            block = steps[name]
+            self.assertIn('run: py -3 .github/ci-windows.py standard vcpkg_cache_state', block)
+            state_gate = re.search(r'^\s+if: (.+)$', block, re.M)
+            self.assertIsNotNone(state_gate)
+            self.assertNotRegex(state_gate.group(1), r'\b(?:success|failure|cancelled|always)\(')
+            for status, event, job in itertools.product(
+                    ('success', 'failure', 'cancelled'), ('push', 'pull_request', 'workflow_dispatch'), ('standard', 'fuzz')):
+                context = {'github.event_name': event, 'matrix.job-type': job}
+                self.assertEqual(evaluate(f'success() && ({state_gate.group(1)})', context, status),
+                                 status == 'success' and event == 'push' and job == 'standard', (name, status, event, job))
 
     def test_docker_cache_prioritizes_expensive_toolchains_on_gha(self):
         expensive = ('ci_native_riscv_bare', 'ci_win64', 'ci_win64_msvcrt')

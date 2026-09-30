@@ -4,6 +4,7 @@
 # file COPYING or https://opensource.org/license/mit/.
 
 import argparse
+import hashlib
 import os
 import shlex
 import subprocess
@@ -34,6 +35,24 @@ GENERATE_OPTIONS = {
         "-DCMAKE_COMPILE_WARNING_AS_ERROR=ON",
     ],
 }
+
+
+def vcpkg_cache_fingerprint(archives):
+    """Hash completed binary archives, ignoring transient vcpkg files."""
+    digest = hashlib.sha256()
+    for archive in sorted(archives.rglob("*.zip")):
+        digest.update(archive.relative_to(archives).as_posix().encode("utf8"))
+        digest.update(b"\0")
+        with archive.open("rb") as archive_file:
+            digest.update(hashlib.file_digest(archive_file, "sha256").digest())
+    return digest.hexdigest()
+
+
+def vcpkg_cache_state(_ci_type):
+    archives = Path(os.environ["LOCALAPPDATA"]) / "vcpkg" / "archives"
+    fingerprint = vcpkg_cache_fingerprint(archives)
+    with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf8") as output:
+        output.write(f"fingerprint={fingerprint}\n")
 
 
 def github_import_vs_env(_ci_type):
@@ -223,6 +242,7 @@ def main():
     parser.add_argument("ci_type", choices=GENERATE_OPTIONS, help="CI type to run.")
     steps = list(map(lambda f: f.__name__, [
         github_import_vs_env,
+        vcpkg_cache_state,
         generate,
         build,
         check_manifests,

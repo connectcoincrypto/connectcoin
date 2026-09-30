@@ -12,6 +12,7 @@
 #include <random.h>
 #include <test/util/setup_common.h>
 #include <util/strencodings.h>
+#include <util/string.h>
 
 #include <mbedtls/bignum.h>
 #include <mbedtls/oid.h>
@@ -657,8 +658,8 @@ BOOST_AUTO_TEST_CASE(root_first_preserves_certificate_chain_capacity_boundaries)
     const auto make_chain = [&](size_t count) {
         std::vector<Bytes> supplied;
         for (size_t index{0}; index < count; ++index) {
-            const std::string subject{index == 0 ? "CN=localhost" : "CN=P2C Long " + std::to_string(index)};
-            const std::string issuer{index + 1 == count ? "CN=P2C Long Root" : "CN=P2C Long " + std::to_string(index + 1)};
+            const std::string subject{index == 0 ? "CN=localhost" : "CN=P2C Long " + util::ToString(index)};
+            const std::string issuer{index + 1 == count ? "CN=P2C Long Root" : "CN=P2C Long " + util::ToString(index + 1)};
             supplied.push_back(fixture.MakeCertificate(index != 0, subject.c_str(), issuer.c_str(), static_cast<int>(count)));
         }
         return supplied;

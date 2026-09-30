@@ -178,7 +178,7 @@ bool VerifyDomainPath(mbedtls_x509_crt& chain, std::string_view domain,
         result = connectcoin_mbedtls_x509_crt_verify_root_first(
             &chain, const_cast<mbedtls_x509_crt*>(&roots),
             &mbedtls_x509_crt_profile_default, domain_string.c_str(), &flags,
-            /*observer=*/nullptr, /*observer_ctx=*/nullptr);
+            /*observer=*/nullptr, /*observer_context=*/nullptr);
     }
     if (result != 0 || flags != 0) return SetError(error, "P2C certificate path or domain validation failed");
     return true;

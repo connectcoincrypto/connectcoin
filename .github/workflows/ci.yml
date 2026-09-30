@@ -223,6 +223,10 @@ jobs:
 
       - *CHECKOUT
 
+      - name: Test vcpkg cache refresh policy
+        if: matrix.job-type == 'standard'
+        run: py -3 ci/test/test_vcpkg_cache.py
+
       - name: Import Visual Studio env vars
         run: py -3 .github/ci-windows.py "standard" github_import_vs_env
 
@@ -242,21 +246,35 @@ jobs:
         id: vcpkg-binary-cache
         with:
           path: ~/AppData/Local/vcpkg/archives
-          key: ${{ github.job }}-vcpkg-binary-release-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}
+          key: ${{ github.job }}-vcpkg-binary-release-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}-${{ github.run_id }}-${{ github.run_attempt }}
           # vcpkg still checks each package's ABI; retain compatible packages
           # when a manifest/tool update changes only part of the dependency graph.
           restore-keys: |
+            ${{ github.job }}-vcpkg-binary-release-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}
             ${{ github.job }}-vcpkg-binary-release-
+
+      - name: Record restored vcpkg cache state
+        id: vcpkg-cache-before
+        if: github.event_name == 'push' && matrix.job-type == 'standard'
+        run: py -3 .github/ci-windows.py standard vcpkg_cache_state
 
       - name: Generate build system
         run: |
           py -3 .github/ci-windows.py ${{ matrix.job-type }} generate
 
+      - name: Record updated vcpkg cache state
+        id: vcpkg-cache-after
+        if: github.event_name == 'push' && matrix.job-type == 'standard'
+        run: py -3 .github/ci-windows.py standard vcpkg_cache_state
+
       - name: Save vcpkg binary cache
         uses: actions/cache/save@v5
         # GitHub scopes saved caches to the branch. Repeated branch pushes
         # should not rebuild Qt until merge; never populate this cache from PRs.
-        if: github.event_name == 'push' && steps.vcpkg-binary-cache.outputs.cache-hit != 'true' && matrix.job-type == 'standard'
+        # An Actions cache hit does not guarantee a vcpkg ABI hit. Refresh an
+        # immutable snapshot after new packages appear, but avoid one duplicate
+        # snapshot per run when all binary archives were already reusable.
+        if: github.event_name == 'push' && matrix.job-type == 'standard' && steps.vcpkg-cache-before.outputs.fingerprint != steps.vcpkg-cache-after.outputs.fingerprint
         with:
           path: ~/AppData/Local/vcpkg/archives
           key: ${{ steps.vcpkg-binary-cache.outputs.cache-primary-key }}
