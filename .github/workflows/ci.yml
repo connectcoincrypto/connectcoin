@@ -19,6 +19,10 @@ concurrency:
 
 env:
   CI_FAILFAST_TEST_LEAVE_DANGLING: 1  # GHA does not care about dangling processes and setting this variable avoids killing the CI script itself on error
+  # Keep restored entries available while compiling, then trim before export.
+  CI_CCACHE_BUILD_MAXSIZE: '2G'
+  # Reserve space for stats and tags not counted by ccache's cleanup budget.
+  CI_CCACHE_CLEANUP_MAXSIZE: '376M'
   # Leave room for built dependencies in GHA's shared cache quota; local CI keeps 2G.
   CCACHE_MAXSIZE: '384M'
 
@@ -187,11 +191,16 @@ jobs:
         env:
           FILE_ENV: ${{ matrix.file-env }}
 
+      - name: Check Ccache export size
+        id: ccache_export
+        if: ${{ (success() || failure()) && github.event_name == 'push' }}
+        run: python3 ci/test/ccache_export.py
+
       - name: Save Ccache cache
         uses: actions/cache/save@v5
         # Reuse successful compilation units on the same branch, even when a
         # later compilation or test fails. Never write caches from PRs.
-        if: ${{ always() && github.event_name == 'push' && steps.ccache-cache.outputs.cache-hit != 'true' }}
+        if: ${{ (success() || failure()) && github.event_name == 'push' && steps.ccache-cache.outputs.cache-hit != 'true' && steps.ccache_export.outputs.ready == 'true' }}
         with:
           path: ${{ env.CCACHE_DIR }}
           # https://github.com/actions/cache/blob/main/tips-and-workarounds.md#update-a-cache

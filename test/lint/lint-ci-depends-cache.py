@@ -12,11 +12,13 @@ import itertools
 import os
 from pathlib import Path
 import re
+import runpy
 import shutil
 import subprocess
 import tempfile
 import textwrap
 import unittest
+from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[2]
 BASH = shutil.which('bash')
@@ -33,7 +35,7 @@ WORKFLOWS = '\n'.join(WORKFLOW_SOURCES.values())
 HOST_PREFIX = HOST_SOURCE.split('source ./ci/test/00_setup_env.sh', 1)[0]
 GUEST_PREFIX = GUEST_SOURCE.split('cd "${BASE_ROOT_DIR}"', 1)[0]
 DEPENDS_BLOCK = GUEST_SOURCE[GUEST_SOURCE.index('if [ -z "$NO_DEPENDS" ]; then'):].split('CONNECTCOIN_CONFIG_ALL=', 1)[0]
-CCACHE_SETUP = GUEST_SOURCE[GUEST_SOURCE.index('ci_cleanup_ccache() {'):GUEST_SOURCE.index('ccache --zero-stats')]
+CCACHE_SETUP = GUEST_SOURCE[GUEST_SOURCE.index('CI_CCACHE_EXPORT_MAXSIZE='):GUEST_SOURCE.index('ccache --zero-stats')]
 CCACHE_FINISH = re.search(r'^ci_cleanup_ccache\ntrap - EXIT$', GUEST_SOURCE, re.M).group()
 assert '.ci-depends-complete' in HOST_PREFIX and '.ci-depends-complete' in GUEST_PREFIX
 assert 'make $MAKEJOBS' in DEPENDS_BLOCK and 'CI_DEPENDS_CACHE_RUN' in DEPENDS_BLOCK
@@ -291,6 +293,8 @@ check-packages:
                 env = re.search(r'^env:\n((?:[ \t].*\n|\n)*)', source, re.M)
                 self.assertIsNotNone(env)
                 self.assertIn("  CCACHE_MAXSIZE: '384M'\n", env.group(1))
+                self.assertIn("  CI_CCACHE_BUILD_MAXSIZE: '2G'\n", env.group(1))
+                self.assertIn("  CI_CCACHE_CLEANUP_MAXSIZE: '376M'\n", env.group(1))
                 self.assertEqual(len(re.findall(r'^[ \t]+CCACHE_MAXSIZE:', source, re.M)), 1)
         setup = (ROOT / 'ci/test/00_setup_env.sh').read_text(encoding='utf-8')
         setting = re.search(r'^export CCACHE_MAXSIZE=.+$', setup, re.M)
@@ -299,6 +303,18 @@ check-packages:
         for initial, expected in (('unset CCACHE_MAXSIZE', '2G'), ('export CCACHE_MAXSIZE=384M', '384M')):
             with self.subTest(expected=expected):
                 result = self.run_shell(initial + '\n' + setting.group() + '\nprintf "%s" "$CCACHE_MAXSIZE"\n')
+                self.assertEqual(result.stdout, expected)
+        cleanup_setting = re.search(r'^export CI_CCACHE_CLEANUP_MAXSIZE=.+$', setup, re.M).group()
+        for export_budget, override, expected in (('2G', '', '2G'), ('128M', '', '128M'), ('384M', '376M', '376M')):
+            with self.subTest(export_budget=export_budget, cleanup_override=override):
+                result = self.run_shell(cleanup_setting + '\nprintf "%s" "$CI_CCACHE_CLEANUP_MAXSIZE"\n',
+                                        CCACHE_MAXSIZE=export_budget, CI_CCACHE_CLEANUP_MAXSIZE=override)
+                self.assertEqual(result.stdout, expected)
+        build_setting = re.search(r'^export CI_CCACHE_BUILD_MAXSIZE=.+$', setup, re.M).group()
+        for export_budget, override, expected in (('2G', '', '2G'), ('128M', '', '128M'), ('384M', '2G', '2G')):
+            with self.subTest(export_budget=export_budget, override=override):
+                result = self.run_shell(build_setting + '\nprintf "%s" "$CI_CCACHE_BUILD_MAXSIZE"\n',
+                                        CCACHE_MAXSIZE=export_budget, CI_CCACHE_BUILD_MAXSIZE=override)
                 self.assertEqual(result.stdout, expected)
 
     def test_ccache_cleanup_preserves_success_and_failure(self):
@@ -310,19 +326,23 @@ ccache() {
 }
 '''
         cache_dir = (self.directory / 'isolated compiler cache').as_posix()
-        for cleanup_status, build_status, explicit in itertools.product((0, 75), (0, 43), (False, True)):
-            with self.subTest(cleanup_status=cleanup_status, build_status=build_status, explicit=explicit):
+        budgets = (('384M', '2G', '376M'), ('384M', '', ''), ('128M', '', ''), ('2G', '', ''))
+        for cleanup_status, build_status, explicit, (export_budget, working_budget, cleanup_budget) in itertools.product((0, 75), (0, 43), (False, True), budgets):
+            with self.subTest(cleanup_status=cleanup_status, build_status=build_status, explicit=explicit, budgets=(export_budget, working_budget, cleanup_budget)):
                 cache_log.unlink(missing_ok=True)
                 body = 'set -e\n' + mock_ccache + CCACHE_SETUP
+                body += f'\ntest "$CCACHE_MAXSIZE" = "{working_budget or export_budget}"\n'
                 if explicit:
                     body += '\n' + CCACHE_FINISH + '\n'
+                    body += f'test "$CCACHE_MAXSIZE" = "{export_budget}"\n'
                 # A nonzero command exercises errexit, not just an explicit exit.
                 body += f'\n(exit {build_status})\n'
                 result = self.run_shell(body, expected=build_status,
                                         MOCK_CCACHE_LOG=cache_log.as_posix(), MOCK_CCACHE_EXIT=str(cleanup_status),
-                                        CCACHE_DIR=cache_dir, CCACHE_MAXSIZE='384M')
+                                        CCACHE_DIR=cache_dir, CCACHE_MAXSIZE=export_budget,
+                                        CI_CCACHE_BUILD_MAXSIZE=working_budget, CI_CCACHE_CLEANUP_MAXSIZE=cleanup_budget)
                 self.assertEqual(cache_log.read_text(encoding='utf-8').splitlines(),
-                                 [f'--cleanup|{cache_dir}|384M'])
+                                 [f'--cleanup|{cache_dir}|{cleanup_budget or export_budget}'])
                 self.assertEqual('preserving the CI result' in result.stderr, cleanup_status != 0)
 
     def test_ccache_cleanup_runs_after_compile_before_stats(self):
@@ -336,6 +356,116 @@ ccache() {
         self.assertEqual(GUEST_SOURCE.count('trap ci_cleanup_ccache EXIT'), 1)
         self.assertEqual(GUEST_SOURCE.count('trap - EXIT'), 1)
         self.assertNotIn('--clear', CCACHE_SETUP)
+
+    def test_ccache_export_guard_counts_all_files_and_allocation(self):
+        helper = runpy.run_path(str(ROOT / 'ci/test/ccache_export.py'))
+        bounded = helper['cache_is_bounded']
+        cache = self.directory / 'cache'
+        cache.mkdir()
+        payload = cache / 'object'
+        payload.write_bytes(b'x')
+        status = payload.stat()
+        allocated = max(status.st_size, getattr(status, 'st_blocks', 0) * 512)
+        self.assertFalse(bounded(cache, allocated - 1))
+        self.assertTrue(bounded(cache, allocated))
+        metadata = cache / 'metadata'
+        metadata.mkdir()
+        (metadata / 'stats').write_bytes(b'counter')
+        self.assertFalse(bounded(cache, allocated))
+        self.assertFalse(bounded(cache / 'missing', allocated))
+        self.assertFalse(bounded(payload, allocated))
+        with patch.object(Path, 'is_symlink', return_value=True):
+            self.assertFalse(bounded(cache, allocated))
+        with patch('os.scandir', side_effect=OSError('unreadable cache')):
+            with self.assertRaises(OSError):
+                bounded(cache, allocated)
+
+    def test_ccache_cleanup_budget_reserves_metadata_space(self):
+        helper = runpy.run_path(str(ROOT / 'ci/test/ccache_export.py'))
+        export_limit = helper['export_limit_bytes']('384M')
+        cleanup_limit = helper['export_limit_bytes']('376M')
+
+        def file_entry(name, size, block_size):
+            entry = Mock(name=name)
+            entry.is_symlink.return_value = False
+            entry.is_dir.return_value = False
+            entry.is_file.return_value = True
+            blocks = (size + block_size - 1) // block_size * (block_size // 512)
+            entry.stat.return_value = Mock(st_size=size, st_blocks=blocks)
+            return entry
+
+        # ccache excludes these files from cleanup accounting. Mock allocation
+        # to cover near-full caches without allocating hundreds of megabytes.
+        for block_size in (4096, 16384):
+            metadata = [file_entry(f'stats-{index}', 1000, block_size) for index in range(272)]
+            metadata += [file_entry(f'CACHEDIR.TAG-{index}', 43, block_size) for index in range(16)]
+            for payload, expected in ((export_limit - 153_600, False), (cleanup_limit, True)):
+                with self.subTest(block_size=block_size, payload=payload), patch('os.scandir') as scan:
+                    scan.return_value.__enter__.return_value = [file_entry('payload', payload, block_size)] + metadata
+                    self.assertEqual(helper['cache_is_bounded'](self.directory, export_limit), expected)
+
+    def test_ccache_export_size_units(self):
+        parse = runpy.run_path(str(ROOT / 'ci/test/ccache_export.py'))['export_limit_bytes']
+        for value, expected in (('384M', 384_000_000), ('2G', 2_000_000_000), ('384MiB', 384 * 1024**2), ('2Gi', 2 * 1024**3)):
+            self.assertEqual(parse(value), expected)
+        for value in ('', '0', '0G', '-1G', '2', '1.5G', '2G arbitrary'):
+            with self.assertRaises(ValueError):
+                parse(value)
+
+    def test_ccache_export_guard_rejects_links_and_special_files(self):
+        bounded = runpy.run_path(str(ROOT / 'ci/test/ccache_export.py'))['cache_is_bounded']
+        entry = Mock()
+        entry.is_symlink.return_value = False
+        entry.is_dir.return_value = False
+        entry.is_file.return_value = True
+        with patch('os.scandir') as scan:
+            scan.return_value.__enter__.return_value = [entry]
+            for logical, blocks in ((1, 8), (8192, 1)):
+                entry.stat.return_value = Mock(st_size=logical, st_blocks=blocks)
+                size = max(logical, blocks * 512)
+                self.assertFalse(bounded(self.directory, size - 1))
+                self.assertTrue(bounded(self.directory, size))
+            entry.is_symlink.return_value = True
+            self.assertFalse(bounded(self.directory, 384_000_000))
+            entry.is_symlink.return_value = False
+            entry.is_file.return_value = False
+            self.assertFalse(bounded(self.directory, 384_000_000))
+
+    def test_ccache_export_guard_reports_failures_without_failing_job(self):
+        helper = runpy.run_path(str(ROOT / 'ci/test/ccache_export.py'))
+        cache = self.directory / 'cache'
+        cache.mkdir()
+        for path, budget, readable, expected in ((str(cache), '384M', True, 'true'),
+                                               (str(cache / 'missing'), '384M', True, 'false'),
+                                               (str(cache), '', True, 'false'),
+                                               ('', '384M', True, 'false'),
+                                               (str(cache), '384M', False, 'false')):
+            with self.subTest(path=path, budget=budget, readable=readable):
+                self.output.unlink(missing_ok=True)
+                with patch.dict(os.environ, CCACHE_DIR=path, CCACHE_MAXSIZE=budget, GITHUB_OUTPUT=str(self.output)):
+                    if readable:
+                        helper['main']()
+                    else:
+                        with patch('os.scandir', side_effect=OSError('unreadable')):
+                            helper['main']()
+                self.assertEqual(self.output.read_text(encoding='utf-8'), f'ready={expected}\n')
+        with patch.dict(os.environ, CCACHE_DIR=str(cache), CCACHE_MAXSIZE='384M', GITHUB_OUTPUT=str(self.directory)):
+            helper['main']()  # An unwritable output leaves the upload gate closed.
+
+    def test_ccache_export_guards_both_workflow_save_paths(self):
+        mac_steps = dict(step_blocks(WORKFLOW_SOURCES['ci.yml']))
+        self.assertIn('run: python3 ci/test/ccache_export.py', mac_steps['Check Ccache export size'])
+        self.assertIn("steps.ccache_export.outputs.ready == 'true'", mac_steps['Save Ccache cache'])
+        self.assertIn('run: python3 ci/test/ccache_export.py', SAVE_STEPS['Check Ccache export size'])
+        expression = predicate(SAVE_STEPS['Save Ccache cache'])
+        for provider, ready in itertools.product(('gha', 'warp'), ('', 'false', 'true')):
+            context = {
+                'github.event_name': 'push', 'github.ref_name': 'main',
+                'github.event.repository.default_branch': 'main', 'inputs.provider': provider,
+                'env.FUZZ_SHARD_COUNT': '', 'env.FUZZ_SHARD_INDEX': '',
+                'steps.ccache_export.outputs.ready': ready,
+            }
+            self.assertEqual(evaluate(expression, context, 'failure'), provider != 'gha' or ready == 'true')
 
     def test_vcpkg_binary_cache_is_preserved_without_download_cache(self):
         self.assertNotIn('vcpkg-downloads', WORKFLOWS)
@@ -427,6 +557,7 @@ ccache() {
                 'github.event.repository.default_branch': 'main', 'inputs.provider': provider,
                 'env.FUZZ_SHARD_COUNT': '' if shard == '' else '4', 'env.FUZZ_SHARD_INDEX': shard,
                 'steps.depends-status.outputs.complete': complete,
+                'steps.ccache_export.outputs.ready': 'true',
                 'env.depends-sources-cache-hit': sources_hit, 'env.depends-built-cache-hit': built_hit,
             }
             allowed = status != 'cancelled' and event == 'push' and (provider == 'gha' or branch == 'main') and shard != '1'

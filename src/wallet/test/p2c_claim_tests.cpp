@@ -1549,6 +1549,8 @@ BOOST_FIXTURE_TEST_CASE(worker_rotates_each_connection_and_reaches_large_domain_
     std::vector<std::pair<std::string, uint32_t>> events;
     std::set<uint32_t> alpha_outputs;
     bool unknown_challenge{false};
+    std::mutex decoded_mutex;
+    std::map<std::string, std::pair<uint256, uint32_t>> decoded;
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
         auto sent{std::make_shared<std::vector<unsigned char>>()};
         return std::make_unique<ClientHelloSocket>(*sent, 16384, [&, sent] {
@@ -1561,11 +1563,23 @@ BOOST_FIXTURE_TEST_CASE(worker_rotates_each_connection_and_reaches_large_domain_
             UniValue saved;
             uint32_t index{9999};
             if (wallet->GetDatabase().MakeBatch()->Read(std::string{"p2c_claim_worker_v1"}, encoded) && saved.read(encoded)) {
+                // The callback runs under the TLS crypto mutex. Decode/hash a
+                // proposal only once, while still checking that each observed
+                // challenge is present in the current persisted pending set.
+                std::lock_guard decoded_lock{decoded_mutex};
                 for (const auto& item : saved["pending"].getValues()) {
-                    CMutableTransaction tx;
-                    if (!DecodeHexTx(tx, item.get_str())) continue;
-                    const auto challenge{P2CClaimChallenge(CTransaction{tx}, 0)};
-                    if (std::equal(challenge.begin(), challenge.end(), sent->begin() + 11)) index = tx.vin[0].prevout.n;
+                    const auto& encoded_tx{item.get_str()};
+                    auto found{decoded.find(encoded_tx)};
+                    if (found == decoded.end()) {
+                        CMutableTransaction tx;
+                        if (!DecodeHexTx(tx, encoded_tx)) continue;
+                        found = decoded.emplace(encoded_tx, std::pair{P2CClaimChallenge(CTransaction{tx}, 0), tx.vin[0].prevout.n}).first;
+                    }
+                    const auto& [challenge, output_index]{found->second};
+                    if (std::equal(challenge.begin(), challenge.end(), sent->begin() + 11)) {
+                        index = output_index;
+                        break;
+                    }
                 }
             }
             std::lock_guard lock{events_mutex};
@@ -1576,15 +1590,27 @@ BOOST_FIXTURE_TEST_CASE(worker_rotates_each_connection_and_reaches_large_domain_
     };
     auto worker{MakeP2CClaimWorker(*wallet)};
     BOOST_REQUIRE(worker->Configure(-1, 32));
-    const auto deadline{std::chrono::steady_clock::now() + 45s};
-    bool reached{false};
-    while (std::chrono::steady_clock::now() < deadline) {
-        { std::lock_guard lock{events_mutex}; reached = alpha_outputs.size() == 260; }
-        if (reached) break;
+    // Instrumented TLS can exceed one short deadline while rotating normally.
+    // Only a new distinct alpha output resets the stall watchdog; repeated
+    // connections cannot hide starvation. Also bound total test work.
+    const auto deadline{std::chrono::steady_clock::now() + 5min};
+    auto progress_deadline{std::chrono::steady_clock::now() + 30s};
+    size_t reached{0};
+    while (std::chrono::steady_clock::now() < deadline && std::chrono::steady_clock::now() < progress_deadline) {
+        size_t observed{0};
+        {
+            std::lock_guard lock{events_mutex};
+            observed = alpha_outputs.size();
+        }
+        if (observed > reached) {
+            reached = observed;
+            progress_deadline = std::chrono::steady_clock::now() + 30s;
+        }
+        if (reached == 260) break;
         std::this_thread::sleep_for(10ms);
     }
     worker->Stop();
-    BOOST_REQUIRE(reached);
+    BOOST_REQUIRE_MESSAGE(reached == 260, "Timed out waiting for distinct alpha outputs; reached=" << reached << "; connections=" << events.size() << "; status=" << worker->Status().write());
     BOOST_CHECK(!unknown_challenge);
     BOOST_CHECK_EQUAL(lookups.load(), 3U);
     BOOST_REQUIRE(events.size() > 300);

@@ -114,17 +114,21 @@ if [ -z "$NO_DEPENDS" ]; then
   CONNECTCOIN_CONFIG_ALL="${CONNECTCOIN_CONFIG_ALL} -DCMAKE_TOOLCHAIN_FILE=$DEPENDS_DIR/$HOST/toolchain.cmake"
 fi
 
-# Restoring a cache created with a larger budget can leave untouched buckets
-# above CCACHE_MAXSIZE: automatic cleanup only visits buckets receiving writes.
-# Trim after compilation so restored entries remain available during the build.
+# A small export budget can evict restored entries before their compilation
+# units are reached. Use a bounded working budget, then trim every bucket.
+# GHA's cleanup budget reserves export space for metadata not counted by ccache.
 # The EXIT fallback also covers a configure/build failure; cache maintenance
 # must not replace that failure's status or turn a successful build into a failure.
+CI_CCACHE_EXPORT_MAXSIZE="${CCACHE_MAXSIZE}"
 ci_cleanup_ccache() {
+  export CCACHE_MAXSIZE="${CI_CCACHE_CLEANUP_MAXSIZE:-$CI_CCACHE_EXPORT_MAXSIZE}"
   if ! ccache --cleanup; then
     echo "Warning: ccache cleanup failed; preserving the CI result" >&2
   fi
+  export CCACHE_MAXSIZE="${CI_CCACHE_EXPORT_MAXSIZE}"
 }
 trap ci_cleanup_ccache EXIT
+export CCACHE_MAXSIZE="${CI_CCACHE_BUILD_MAXSIZE:-$CCACHE_MAXSIZE}"
 ccache --zero-stats
 
 # Folder where the build is done.

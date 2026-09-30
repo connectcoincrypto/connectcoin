@@ -27,6 +27,8 @@ on:
 env:
   CI_FAILFAST_TEST_LEAVE_DANGLING: 1
   # Reusable workflows do not inherit the caller's GHA cache budget.
+  CI_CCACHE_BUILD_MAXSIZE: '2G'
+  CI_CCACHE_CLEANUP_MAXSIZE: '376M'
   CCACHE_MAXSIZE: '384M'
 
 defaults:

@@ -38,8 +38,9 @@ def check_shared_cache_writer(root):
         if isinstance(node, ast.BoolOp):
             operation = {ast.And: all, ast.Or: any}[type(node.op)]
             return operation(evaluate(child, values) for child in node.values)
-        if isinstance(node, ast.Compare) and len(node.ops) == 1 and isinstance(node.ops[0], ast.Eq):
-            return evaluate(node.left, values) == evaluate(node.comparators[0], values)
+        if isinstance(node, ast.Compare) and len(node.ops) == 1 and isinstance(node.ops[0], (ast.Eq, ast.NotEq)):
+            equal = evaluate(node.left, values) == evaluate(node.comparators[0], values)
+            return equal if isinstance(node.ops[0], ast.Eq) else not equal
         raise AssertionError(f'Review new cache predicate syntax: {ast.dump(node)}')
 
     for event in ('push', 'pull_request', 'workflow_dispatch'):
@@ -53,9 +54,13 @@ def check_shared_cache_writer(root):
                             'env.FUZZ_SHARD_COUNT': count, 'env.FUZZ_SHARD_INDEX': index,
                         }
                         for status in ('success', 'failure', 'cancelled'):
-                            values['status'] = status
-                            expected = status != 'cancelled' and event == 'push' and (provider == 'gha' or branch == 'main') and (count == '' or index == '0')
-                            assert evaluate(tree, values) == expected, values
+                            for ready in ('', 'false', 'true'):
+                                values['status'] = status
+                                values['steps.ccache_export.outputs.ready'] = ready
+                                expected = (status != 'cancelled' and event == 'push'
+                                            and (provider != 'gha' or ready == 'true')
+                                            and (provider == 'gha' or branch == 'main') and (count == '' or index == '0'))
+                                assert evaluate(tree, values) == expected, values
 
 
 def check_engine_detection(runner, root):

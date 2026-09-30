@@ -50,6 +50,10 @@ export BOOST_TEST_RANDOM=${BOOST_TEST_RANDOM:-1}
 # See man 7 debconf
 export DEBIAN_FRONTEND=noninteractive
 export CCACHE_MAXSIZE=${CCACHE_MAXSIZE:-2G}
+# Normally keep the caller's budget; GHA permits a larger temporary working set.
+export CI_CCACHE_BUILD_MAXSIZE=${CI_CCACHE_BUILD_MAXSIZE:-$CCACHE_MAXSIZE}
+# GHA reserves export space for metadata that ccache does not count.
+export CI_CCACHE_CLEANUP_MAXSIZE=${CI_CCACHE_CLEANUP_MAXSIZE:-$CCACHE_MAXSIZE}
 export CCACHE_TEMPDIR=${CCACHE_TEMPDIR:-/tmp/.ccache-temp}
 export CCACHE_COMPRESS=${CCACHE_COMPRESS:-1}
 # The cache dir.
