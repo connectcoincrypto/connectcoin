@@ -25,8 +25,9 @@ bool P2CRootStoreAvailable();
 
 /**
  * Check public-exponent limits before verifying the domain path against the
- * versioned root bundle, certificate validity at validation_time, server-auth
- * key usage, and the TLS 1.3 CertificateVerify signature over the parsed transcript.
+ * versioned root bundle (root-to-leaf, fail-fast), certificate validity at
+ * validation_time, server-auth key usage, and the TLS 1.3 CertificateVerify
+ * signature over the parsed transcript.
  */
 bool VerifyP2CCertificateProof(const CTxOut& spent_output,
                                const P2CTlsProofView& proof,

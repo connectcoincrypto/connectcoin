@@ -6,6 +6,7 @@
 #include <consensus/p2c_x509.h>
 #include <consensus/p2c_x509_mutex.h>
 #include <crypto/mbedtls_rsa_pss.h>
+#include <crypto/mbedtls_x509_root_first.h>
 #include <crypto/sha256.h>
 #include <primitives/transaction.h>
 #include <random.h>
@@ -34,6 +35,7 @@
 #include <string>
 #include <string_view>
 #include <thread>
+#include <utility>
 #include <vector>
 
 namespace {
@@ -236,7 +238,8 @@ lNgW44LomPeKsFSCCcqrVg==
         leaf = MakeCertificate(false);
     }
 
-    Bytes MakeCertificate(bool ca, const char* subject = nullptr, const char* issuer = "CN=P2C RSA Test CA")
+    Bytes MakeCertificate(bool ca, const char* subject = nullptr, const char* issuer = "CN=P2C RSA Test CA",
+                          int max_pathlen = 1, unsigned int key_usage = 0)
     {
         mbedtls_x509write_cert writer;
         mbedtls_x509write_crt_init(&writer);
@@ -249,9 +252,9 @@ lNgW44LomPeKsFSCCcqrVg==
         mbedtls_x509write_crt_set_subject_key(&writer, &key.value);
         mbedtls_x509write_crt_set_issuer_key(&writer, &key.value);
         mbedtls_x509write_crt_set_md_alg(&writer, MBEDTLS_MD_SHA256);
-        BOOST_REQUIRE_EQUAL(mbedtls_x509write_crt_set_basic_constraints(&writer, ca, ca ? 1 : -1), 0);
+        BOOST_REQUIRE_EQUAL(mbedtls_x509write_crt_set_basic_constraints(&writer, ca, ca ? max_pathlen : -1), 0);
         BOOST_REQUIRE_EQUAL(mbedtls_x509write_crt_set_key_usage(&writer,
-            ca ? MBEDTLS_X509_KU_KEY_CERT_SIGN : MBEDTLS_X509_KU_DIGITAL_SIGNATURE), 0);
+            key_usage != 0 ? key_usage : ca ? MBEDTLS_X509_KU_KEY_CERT_SIGN : MBEDTLS_X509_KU_DIGITAL_SIGNATURE), 0);
         Bytes buffer(4096);
         const int len{mbedtls_x509write_crt_der(&writer, buffer.data(), buffer.size(), Random, nullptr)};
         mbedtls_x509write_crt_free(&writer);
@@ -357,6 +360,75 @@ lNgW44LomPeKsFSCCcqrVg==
     }
 };
 
+using SignatureEdge = std::pair<int, int>;
+
+struct PathVerification {
+    bool valid{false};
+    std::vector<SignatureEdge> signatures;
+};
+
+/** Observer identities are the supplied-list index, or 100 + trust-list index.
+ * Count actual signature checks, not callbacks after a path has already been
+ * verified. No wall-clock threshold or production root participates here.
+ */
+struct SignatureTrace {
+    const mbedtls_x509_crt* supplied;
+    const mbedtls_x509_crt* roots;
+    std::vector<SignatureEdge> signatures;
+
+    int Index(const mbedtls_x509_crt* certificate) const
+    {
+        int index{0};
+        for (const auto* current{supplied}; current != nullptr; current = current->next, ++index) {
+            if (current == certificate) return index;
+        }
+        index = 100;
+        for (const auto* current{roots}; current != nullptr; current = current->next, ++index) {
+            if (current == certificate) return index;
+        }
+        return -1;
+    }
+
+    static void Observe(void* opaque, const mbedtls_x509_crt* child, const mbedtls_x509_crt* parent)
+    {
+        auto& trace{*static_cast<SignatureTrace*>(opaque)};
+        trace.signatures.emplace_back(trace.Index(child), trace.Index(parent));
+    }
+};
+
+PathVerification CompareRootFirstWithLegacy(const std::vector<Bytes>& supplied,
+                                          const std::vector<Bytes>& trusted,
+                                          const char* domain = "localhost",
+                                          const mbedtls_x509_crt_profile* profile = &mbedtls_x509_crt_profile_default)
+{
+    Certificate chain, roots, legacy_chain, legacy_roots;
+    for (const auto& certificate : supplied) {
+        BOOST_REQUIRE_EQUAL(mbedtls_x509_crt_parse_der(&chain.value, certificate.data(), certificate.size()), 0);
+        BOOST_REQUIRE_EQUAL(mbedtls_x509_crt_parse_der(&legacy_chain.value, certificate.data(), certificate.size()), 0);
+    }
+    for (const auto& certificate : trusted) {
+        BOOST_REQUIRE_EQUAL(mbedtls_x509_crt_parse_der(&roots.value, certificate.data(), certificate.size()), 0);
+        BOOST_REQUIRE_EQUAL(mbedtls_x509_crt_parse_der(&legacy_roots.value, certificate.data(), certificate.size()), 0);
+    }
+    SignatureTrace trace{&chain.value, &roots.value, {}};
+    uint32_t flags{0}, legacy_flags{0};
+    const int result{connectcoin_mbedtls_x509_crt_verify_root_first(
+        &chain.value, trusted.empty() ? nullptr : &roots.value, profile, domain, &flags, SignatureTrace::Observe, &trace)};
+    const int legacy_result{mbedtls_x509_crt_verify_with_profile(
+        &legacy_chain.value, trusted.empty() ? nullptr : &legacy_roots.value, nullptr, profile, domain,
+        &legacy_flags, nullptr, nullptr)};
+    const bool valid{result == 0 && flags == 0};
+    // Fail-fast may report fewer errors, but must not change acceptance.
+    BOOST_CHECK_EQUAL(valid, legacy_result == 0 && legacy_flags == 0);
+    return {valid, std::move(trace.signatures)};
+}
+
+void CheckSignatureOrder(const PathVerification& result, std::initializer_list<SignatureEdge> expected)
+{
+    BOOST_CHECK_EQUAL(result.signatures.size(), expected.size());
+    BOOST_CHECK(result.signatures == std::vector<SignatureEdge>(expected));
+}
+
 struct TlsPeer {
     mbedtls_ssl_config config;
     mbedtls_ssl_context ssl;
@@ -423,6 +495,245 @@ bool Handshake(RsaFixture& fixture, const Bytes& certificate, uint16_t scheme, B
 } // namespace
 
 BOOST_FIXTURE_TEST_SUITE(p2c_rsa_tests, BasicTestingSetup)
+
+BOOST_AUTO_TEST_CASE(root_first_path_signature_order_and_fail_fast)
+{
+    RsaFixture fixture;
+    const Bytes original_leaf{fixture.MakeCertificate(false, "CN=localhost", "CN=P2C Order I1")};
+    const Bytes original_i1{fixture.MakeCertificate(true, "CN=P2C Order I1", "CN=P2C Order I2")};
+    const Bytes original_i2{fixture.MakeCertificate(true, "CN=P2C Order I2", "CN=P2C Order Root", 2)};
+    const Bytes original_root{fixture.MakeCertificate(true, "CN=P2C Order Root", "CN=P2C Order Root", 3)};
+    const Bytes unrelated_root{fixture.MakeCertificate(true, "CN=P2C Unrelated Root", "CN=P2C Unrelated Root", 3)};
+    const Bytes cv_signature{fixture.PssSign(RsaFixture::SignedHash())};
+
+    for (bool pss : {false, true}) {
+        BOOST_TEST_CONTEXT("restricted PSS chain=" << pss) {
+            const auto encode = [&](const Bytes& certificate) {
+                return pss ? fixture.Rewrite(certificate, PssAlgorithm(PssParams()), true) : certificate;
+            };
+            const std::vector<Bytes> supplied{encode(original_leaf), encode(original_i1), encode(original_i2)};
+            const Bytes root{encode(original_root)};
+            const PathVerification valid{CompareRootFirstWithLegacy(supplied, {root})};
+            BOOST_REQUIRE(valid.valid);
+            CheckSignatureOrder(valid, {{2, 100}, {1, 2}, {0, 1}});
+
+            for (size_t invalid_index{0}; invalid_index < supplied.size(); ++invalid_index) {
+                BOOST_TEST_CONTEXT("invalid certificate index=" << invalid_index) {
+                    auto invalid{supplied};
+                    invalid[invalid_index].back() ^= 1; // Signature only; preserve valid DER and keys.
+                    const PathVerification rejected{CompareRootFirstWithLegacy(invalid, {root})};
+                    BOOST_CHECK(!rejected.valid);
+                    if (invalid_index == 2) CheckSignatureOrder(rejected, {{2, 100}});
+                    if (invalid_index == 1) CheckSignatureOrder(rejected, {{2, 100}, {1, 2}});
+                    if (invalid_index == 0) CheckSignatureOrder(rejected, {{2, 100}, {1, 2}, {0, 1}});
+                }
+            }
+
+            const PathVerification unanchored{CompareRootFirstWithLegacy(supplied, {unrelated_root})};
+            BOOST_CHECK(!unanchored.valid);
+            CheckSignatureOrder(unanchored, {});
+            const PathVerification empty_roots{CompareRootFirstWithLegacy(supplied, {})};
+            BOOST_CHECK(!empty_roots.valid);
+            CheckSignatureOrder(empty_roots, {});
+
+            auto with_root{supplied};
+            with_root.push_back(root);
+            const PathVerification root_included{CompareRootFirstWithLegacy(with_root, {root})};
+            BOOST_CHECK(root_included.valid);
+            CheckSignatureOrder(root_included, {{2, 100}, {1, 2}, {0, 1}});
+
+            Bytes invalid_self_signature{root};
+            invalid_self_signature.back() ^= 1;
+            const PathVerification root_self_signature{CompareRootFirstWithLegacy(supplied, {invalid_self_signature})};
+            BOOST_CHECK(root_self_signature.valid);
+            CheckSignatureOrder(root_self_signature, {{2, 100}, {1, 2}, {0, 1}});
+
+            // Exercise the production P2C path as well as the low-level adapter:
+            // a valid chain still requires the separate TLS CertificateVerify.
+            const uint16_t scheme{static_cast<uint16_t>(pss ? 0x0809 : 0x0804)};
+            std::string error;
+            BOOST_REQUIRE_MESSAGE(fixture.Verify(supplied[0], scheme, cv_signature, error,
+                "localhost", 1800000000, &root, PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL,
+                {supplied[1], supplied[2]}), error);
+            Bytes invalid_cv{cv_signature};
+            invalid_cv.back() ^= 1;
+            BOOST_CHECK(!fixture.Verify(supplied[0], scheme, invalid_cv, error,
+                "localhost", 1800000000, &root, PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL,
+                {supplied[1], supplied[2]}));
+            BOOST_CHECK_EQUAL(error, "invalid P2C TLS CertificateVerify signature");
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(root_first_preserves_trusted_and_untrusted_candidate_selection)
+{
+    RsaFixture fixture;
+    const Bytes leaf{fixture.MakeCertificate(false, "CN=localhost", "CN=P2C Selection I1")};
+    const Bytes i1{fixture.MakeCertificate(true, "CN=P2C Selection I1", "CN=P2C Selection Root")};
+    const Bytes root{fixture.MakeCertificate(true, "CN=P2C Selection Root", "CN=P2C Selection Root", 3)};
+    // Import a different public key without generating new RSA primes. Its
+    // exponent remains well inside the consensus cap and all DER is valid.
+    const Bytes wrong_root{WithRsaExponent(root, Bytes{3}, 2)};
+    const PathVerification second_root{CompareRootFirstWithLegacy({leaf, i1}, {wrong_root, root})};
+    BOOST_REQUIRE(second_root.valid);
+    CheckSignatureOrder(second_root, {{1, 100}, {1, 101}, {0, 1}});
+    const PathVerification only_wrong_root{CompareRootFirstWithLegacy({leaf, i1}, {wrong_root})};
+    BOOST_CHECK(!only_wrong_root.valid);
+    CheckSignatureOrder(only_wrong_root, {{1, 100}});
+
+    // Re-sign the wrong-key intermediate with the real CA key. Its own chain
+    // is valid, but it cannot verify the leaf. Legacy Mbed TLS selects the
+    // first structurally suitable untrusted intermediate without backtracking.
+    const Bytes wrong_i1{fixture.Rewrite(WithRsaExponent(i1, Bytes{3}, 2), std::nullopt)};
+    const PathVerification wrong_intermediate_first{CompareRootFirstWithLegacy({leaf, wrong_i1, i1}, {root})};
+    BOOST_CHECK(!wrong_intermediate_first.valid);
+    CheckSignatureOrder(wrong_intermediate_first, {{1, 100}, {0, 1}});
+    const PathVerification good_intermediate_first{CompareRootFirstWithLegacy({leaf, i1, wrong_i1}, {root})};
+    BOOST_CHECK(good_intermediate_first.valid);
+    CheckSignatureOrder(good_intermediate_first, {{1, 100}, {0, 1}});
+
+    // A matching trusted issuer takes precedence over the supplied chain.
+    const PathVerification directly_trusted_parent{CompareRootFirstWithLegacy({leaf, wrong_i1, i1}, {i1, root})};
+    BOOST_CHECK(directly_trusted_parent.valid);
+    CheckSignatureOrder(directly_trusted_parent, {{0, 100}});
+}
+
+BOOST_AUTO_TEST_CASE(root_first_preserves_path_policy_and_locally_trusted_leaf)
+{
+    RsaFixture fixture;
+    const Bytes leaf{fixture.MakeCertificate(false, "CN=localhost", "CN=P2C Policy I1")};
+    const Bytes i1{fixture.MakeCertificate(true, "CN=P2C Policy I1", "CN=P2C Policy I2")};
+    const Bytes i2{fixture.MakeCertificate(true, "CN=P2C Policy I2", "CN=P2C Policy Root", 2)};
+    const Bytes root{fixture.MakeCertificate(true, "CN=P2C Policy Root", "CN=P2C Policy Root", 3)};
+    BOOST_REQUIRE(CompareRootFirstWithLegacy({leaf, i1, i2}, {root}).valid);
+    BOOST_CHECK(!CompareRootFirstWithLegacy({leaf, i1, i2}, {root}, "other.example").valid);
+
+    mbedtls_x509_crt_profile no_hashes{mbedtls_x509_crt_profile_default};
+    no_hashes.allowed_mds = 0;
+    BOOST_CHECK(!CompareRootFirstWithLegacy({leaf, i1, i2}, {root}, "localhost", &no_hashes).valid);
+    mbedtls_x509_crt_profile stronger_rsa{mbedtls_x509_crt_profile_default};
+    stronger_rsa.rsa_min_bitlen = 4096;
+    BOOST_CHECK(!CompareRootFirstWithLegacy({leaf, i1, i2}, {root}, "localhost", &stronger_rsa).valid);
+
+    const Bytes constrained_i2{fixture.MakeCertificate(true, "CN=P2C Policy I2", "CN=P2C Policy Root", 0)};
+    BOOST_CHECK(!CompareRootFirstWithLegacy({leaf, i1, constrained_i2}, {root}).valid);
+    const Bytes non_ca_i1{fixture.MakeCertificate(false, "CN=P2C Policy I1", "CN=P2C Policy I2")};
+    BOOST_CHECK(!CompareRootFirstWithLegacy({leaf, non_ca_i1, i2}, {root}).valid);
+    const Bytes no_cert_sign_i1{fixture.MakeCertificate(true, "CN=P2C Policy I1", "CN=P2C Policy I2",
+        1, MBEDTLS_X509_KU_DIGITAL_SIGNATURE)};
+    BOOST_CHECK(!CompareRootFirstWithLegacy({leaf, no_cert_sign_i1, i2}, {root}).valid);
+
+    Bytes locally_trusted_leaf{fixture.MakeCertificate(false, "CN=localhost", "CN=localhost")};
+    locally_trusted_leaf.back() ^= 1;
+    const PathVerification direct{CompareRootFirstWithLegacy({locally_trusted_leaf}, {locally_trusted_leaf})};
+    BOOST_CHECK(direct.valid);
+    CheckSignatureOrder(direct, {});
+    BOOST_CHECK(!CompareRootFirstWithLegacy({locally_trusted_leaf}, {locally_trusted_leaf}, "other.example").valid);
+    BOOST_CHECK(!CompareRootFirstWithLegacy({locally_trusted_leaf}, {locally_trusted_leaf}, "localhost", &no_hashes).valid);
+    BOOST_CHECK(!CompareRootFirstWithLegacy({locally_trusted_leaf}, {locally_trusted_leaf}, "localhost", &stronger_rsa).valid);
+}
+
+BOOST_AUTO_TEST_CASE(root_first_preserves_self_issued_path_length_accounting)
+{
+    RsaFixture fixture;
+    const Bytes leaf{fixture.MakeCertificate(false, "CN=localhost", "CN=P2C Rollover")};
+    const Bytes self_issued{fixture.MakeCertificate(true, "CN=P2C Rollover", "CN=P2C Rollover")};
+    const Bytes parent{fixture.MakeCertificate(true, "CN=P2C Rollover", "CN=P2C Rollover Root")};
+    const Bytes root{fixture.MakeCertificate(true, "CN=P2C Rollover Root", "CN=P2C Rollover Root", 1)};
+    const PathVerification valid{CompareRootFirstWithLegacy({leaf, self_issued, parent}, {root})};
+    BOOST_REQUIRE(valid.valid);
+    CheckSignatureOrder(valid, {{2, 100}, {1, 2}, {0, 1}});
+
+    // With two non-self-issued intermediates the same root pathLen=1 is too
+    // short. Neither the order change nor early exit may relax this boundary.
+    const Bytes ordinary_i1{fixture.MakeCertificate(true, "CN=P2C Rollover", "CN=P2C Rollover I2")};
+    const Bytes ordinary_i2{fixture.MakeCertificate(true, "CN=P2C Rollover I2", "CN=P2C Rollover Root")};
+    BOOST_CHECK(!CompareRootFirstWithLegacy({leaf, ordinary_i1, ordinary_i2}, {root}).valid);
+}
+
+BOOST_AUTO_TEST_CASE(root_first_preserves_certificate_chain_capacity_boundaries)
+{
+    RsaFixture fixture;
+    const auto make_chain = [&](size_t count) {
+        std::vector<Bytes> supplied;
+        for (size_t index{0}; index < count; ++index) {
+            const std::string subject{index == 0 ? "CN=localhost" : "CN=P2C Long " + std::to_string(index)};
+            const std::string issuer{index + 1 == count ? "CN=P2C Long Root" : "CN=P2C Long " + std::to_string(index + 1)};
+            supplied.push_back(fixture.MakeCertificate(index != 0, subject.c_str(), issuer.c_str(), static_cast<int>(count)));
+        }
+        return supplied;
+    };
+    const Bytes root{fixture.MakeCertificate(true, "CN=P2C Long Root", "CN=P2C Long Root",
+        MBEDTLS_X509_MAX_INTERMEDIATE_CA + 2)};
+    const auto supplied{make_chain(8)};
+    const PathVerification valid{CompareRootFirstWithLegacy(supplied, {root})};
+    BOOST_REQUIRE(valid.valid);
+    CheckSignatureOrder(valid, {{7, 100}, {6, 7}, {5, 6}, {4, 5}, {3, 4}, {2, 3}, {1, 2}, {0, 1}});
+    const Bytes cv_signature{fixture.PssSign(RsaFixture::SignedHash())};
+    std::string error;
+    BOOST_REQUIRE_MESSAGE(fixture.Verify(supplied.front(), 0x0804, cv_signature, error,
+        "localhost", 1800000000, &root, PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL,
+        std::vector<Bytes>(supplied.begin() + 1, supplied.end())), error);
+
+    // These two are direct library tests, not P2C wire proofs: test the
+    // adapter's deferred-edge storage at Mbed TLS's own capacity and one above.
+    const auto at_limit{make_chain(MBEDTLS_X509_MAX_INTERMEDIATE_CA + 1)};
+    const PathVerification maximum{CompareRootFirstWithLegacy(at_limit, {root})};
+    BOOST_CHECK(maximum.valid);
+    BOOST_CHECK_EQUAL(maximum.signatures.size(), at_limit.size());
+    const auto above_limit{make_chain(MBEDTLS_X509_MAX_INTERMEDIATE_CA + 2)};
+    BOOST_CHECK(!CompareRootFirstWithLegacy(above_limit, {root}).valid);
+}
+
+BOOST_AUTO_TEST_CASE(root_first_differential_reordered_and_repeated_candidates)
+{
+    RsaFixture fixture;
+    const std::vector<Bytes> original{
+        fixture.MakeCertificate(false, "CN=localhost", "CN=P2C Differential I1"),
+        fixture.MakeCertificate(true, "CN=P2C Differential I1", "CN=P2C Differential I2"),
+        fixture.MakeCertificate(true, "CN=P2C Differential I2", "CN=P2C Differential Root", 2),
+        fixture.MakeCertificate(true, "CN=P2C Differential Root", "CN=P2C Differential Root", 3),
+    };
+    const Bytes wrong_root{WithRsaExponent(original[3], Bytes{3}, 2)};
+    const std::array<std::vector<Bytes>, 4> root_sets{{
+        {original[3]}, {wrong_root}, {wrong_root, original[3]}, {},
+    }};
+    const std::array<std::vector<size_t>, 8> layouts{{
+        {0, 1, 2},
+        {0, 2, 1},
+        {0, 1, 1, 2},
+        {0, 1, 2, 2},
+        {0, 1, 2, 3},
+        {0, 1, 2, 3, 3},
+        {0, 2, 1, 2, 3},
+        {0, 3, 2, 1, 3},
+    }};
+
+    size_t comparisons{0}, accepted{0};
+    // All certificates and signatures are created once. Mutation flips only
+    // signature bytes and keeps keys, names, profiles and DER structure intact.
+    // In particular, roots are candidates, not an implicit ordered chain.
+    for (unsigned invalid_mask{0}; invalid_mask < 8; ++invalid_mask) {
+        auto certificates{original};
+        for (unsigned index{0}; index < 3; ++index) {
+            if (invalid_mask & (1U << index)) certificates[index].back() ^= 1;
+        }
+        for (size_t layout_index{0}; layout_index < layouts.size(); ++layout_index) {
+            std::vector<Bytes> supplied;
+            for (const size_t index : layouts[layout_index]) supplied.push_back(certificates[index]);
+            for (size_t roots_index{0}; roots_index < root_sets.size(); ++roots_index) {
+                BOOST_TEST_CONTEXT("invalid mask=" << invalid_mask << ", layout=" << layout_index << ", roots=" << roots_index) {
+                    const PathVerification result{CompareRootFirstWithLegacy(supplied, root_sets[roots_index])};
+                    ++comparisons;
+                    if (result.valid) ++accepted;
+                }
+            }
+        }
+    }
+    BOOST_CHECK_EQUAL(comparisons, 256U);
+    BOOST_CHECK_GT(accepted, 0U);
+    BOOST_CHECK_LT(accepted, comparisons);
+}
 
 BOOST_AUTO_TEST_CASE(rsa_public_exponent_limit_is_inclusive_for_rsae_and_pss_leaves)
 {

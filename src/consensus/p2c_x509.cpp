@@ -8,6 +8,7 @@
 #include <consensus/p2c_roots_v1.pem.h>
 #include <consensus/p2c_x509_mutex.h>
 #include <crypto/mbedtls_rsa_pss.h>
+#include <crypto/mbedtls_x509_root_first.h>
 #include <crypto/sha256.h>
 #include <mbedtls/asn1.h>
 #include <mbedtls/bignum.h>
@@ -154,16 +155,6 @@ bool CheckSuppliedCertificateTimes(const mbedtls_x509_crt& chain, int64_t valida
     return true;
 }
 
-int IgnoreWallClockValidity(void*, mbedtls_x509_crt*, int, uint32_t* flags)
-{
-    constexpr uint32_t WALL_CLOCK_VALIDITY_FLAGS{
-        static_cast<uint32_t>(MBEDTLS_X509_BADCERT_EXPIRED) |
-        static_cast<uint32_t>(MBEDTLS_X509_BADCERT_FUTURE),
-    };
-    *flags &= ~WALL_CLOCK_VALIDITY_FLAGS;
-    return 0;
-}
-
 bool VerifyDomainPath(mbedtls_x509_crt& chain, std::string_view domain,
                       const mbedtls_x509_crt& roots, std::string& error)
 {
@@ -180,10 +171,14 @@ bool VerifyDomainPath(mbedtls_x509_crt& chain, std::string_view domain,
         // that finish during application shutdown. This retains no key data.
         static auto* const root_key_cache_mutex{new consensus::p2c::RootKeyCacheMutex};
         const std::lock_guard lock{*root_key_cache_mutex};
-        result = mbedtls_x509_crt_verify_with_profile(
-            &chain, const_cast<mbedtls_x509_crt*>(&roots), /*ca_crl=*/nullptr,
+        // Select the same pinned, clock-independent path, but authenticate it
+        // from the trust anchor towards the leaf. Stop at the first invalid
+        // selected edge and never verify unanchored intermediates. Generic TLS
+        // callers retain Mbed TLS's original callback/restartable semantics.
+        result = connectcoin_mbedtls_x509_crt_verify_root_first(
+            &chain, const_cast<mbedtls_x509_crt*>(&roots),
             &mbedtls_x509_crt_profile_default, domain_string.c_str(), &flags,
-            IgnoreWallClockValidity, /*p_vrfy=*/nullptr);
+            /*observer=*/nullptr, /*observer_ctx=*/nullptr);
     }
     if (result != 0 || flags != 0) return SetError(error, "P2C certificate path or domain validation failed");
     return true;

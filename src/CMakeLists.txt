@@ -59,6 +59,10 @@ FetchContent_MakeAvailable(connectcoin_mbedtls)
 # checked as well as clean FetchContent downloads.
 set(MBEDTLS_SOURCE_DIR "${connectcoin_mbedtls_SOURCE_DIR}")
 include("${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSP2CRSAPSS.cmake")
+# Add an opt-in, clock-independent P2C verifier that authenticates the selected
+# path from its trusted root towards the leaf and stops on the first bad edge.
+# Keep upstream TLS verification/callback/restartable entry points unchanged.
+include("${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSP2CX509.cmake")
 unset(MBEDTLS_SOURCE_DIR)
 set(p2c_mbedtls_targets)
 # Enabling both upstream variants creates separate *_static targets. Every
@@ -71,9 +75,7 @@ foreach(mbedtls_component IN ITEMS mbedcrypto mbedx509 mbedtls)
       if(mbedtls_component STREQUAL "mbedcrypto")
         target_sources(${mbedtls_target} PRIVATE crypto/mbedtls_rsa_pss.c)
       endif()
-      if(NOT mbedtls_component STREQUAL "mbedx509")
-        target_include_directories(${mbedtls_target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/crypto")
-      endif()
+      target_include_directories(${mbedtls_target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/crypto")
     endif()
   endforeach()
 endforeach()

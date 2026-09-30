@@ -262,3 +262,18 @@ f66dff1bdf8f96060b8177976f8b7d9254bc89bc4db933d769f7384d28480bc9
 
 The certificate data retains its Mozilla source notice. P2C certificate and
 CertificateVerify validation uses the hash-pinned Mbed TLS 3.6.7 dependency.
+
+For P2C, an opt-in verifier separates path selection from verification of the
+supplied intermediates. It preserves the pinned library's clock-independent
+issuer-selection rules, establishes a trusted anchor, then checks the selected
+certificate signatures from that anchor towards the leaf. It stops at the first
+invalid selected signature; an unanchored path does not trigger signature
+checks using the supplied intermediates. RSA exponent limits, supplied
+certificate validity at block median time, and leaf usage are checked first.
+TLS CertificateVerify is checked only after the certificate path succeeds.
+
+Selecting the trust anchor may require trying multiple trusted certificates
+with the same subject but different keys. A failed candidate does not prevent
+trying the next trusted candidate. This does not introduce backtracking among
+supplied intermediates or change the trust bundle, and the generic Mbed TLS
+verification entry points keep their original behavior.
