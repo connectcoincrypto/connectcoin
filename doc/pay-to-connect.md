@@ -126,6 +126,33 @@ The SHA-256 TLS transcript used for `CertificateVerify` is the concatenation of
 the first four raw handshake messages, through Certificate. Verification uses
 the TLS 1.3 server CertificateVerify context string and the leaf public key.
 
+### RSA public-exponent bound
+
+Every RSA certificate public key used by P2C must have a public exponent `e`
+whose unsigned mathematical bit length is at most 64: `bit_length(e) <= 64`,
+equivalently `e <= 2^64 - 1` for a valid positive RSA exponent. All other RSA
+key-validity requirements still apply. This bound applies independently of the
+RSA modulus size and to both `rsaEncryption` and `id-RSASSA-PSS` public keys.
+It is a limit on the exponent, not a 64-bit RSA key or modulus limit; the
+RSA leaf-key minimum of 2048 bits above is unchanged.
+
+The bound must be checked for every certificate in the supplied TLS
+`Certificate` message: the leaf, all intermediates, any supplied root, and
+any additional certificate that is not selected for the validated path.
+Every RSA certificate in the selected immutable trusted-root bundle must
+also satisfy the bound. These checks precede all certificate-path signature
+verification and TLS `CertificateVerify` signature verification. A supplied
+certificate exceeding the bound makes the proof invalid even if path building
+would not use it; a selected root bundle containing such a certificate cannot
+be used for verification.
+
+This is a tightening of P2C consensus acceptance, not merely wallet or relay
+policy and not a claim about general TLS, OpenSSL or Mbed TLS requirements.
+An otherwise valid proof containing a larger exponent is rejected by this rule.
+The bound does not change the witness encoding, proof version `2`, or the
+contents and identifier of immutable root bundle version `1`. Deployments
+must account for the acceptance-rule difference between old and updated nodes.
+
 ## Connection work
 
 The connection-work hash is:

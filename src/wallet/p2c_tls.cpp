@@ -243,6 +243,21 @@ util::Result<std::vector<unsigned char>> CaptureP2CTls(
             continue;
         }
         if (result != 0) return util::Error{Untranslated(TlsError(result))};
+        if (state == MBEDTLS_SSL_SERVER_CERTIFICATE) {
+            // VERIFY_NONE defers certificate trust to consensus, but TLS still
+            // verifies CertificateVerify itself in the next handshake step.
+            // Apply the same cheap public-key limits before that RSA operation.
+            // The current chain belongs to session_negotiate here; the public
+            // get_peer_cert accessor only reads the established session.
+            const auto* session{connection.ssl.session_negotiate};
+            if (!session || !session->peer_cert) {
+                return util::Error{Untranslated("TLS server certificate is unavailable")};
+            }
+            std::string error;
+            if (!CheckP2CCertificatePublicKeys(*session->peer_cert, error)) {
+                return util::Error{Untranslated(error)};
+            }
+        }
         const unsigned char* message{nullptr};
         size_t length{0};
         if (state == MBEDTLS_SSL_SERVER_HELLO || state == MBEDTLS_SSL_ENCRYPTED_EXTENSIONS ||

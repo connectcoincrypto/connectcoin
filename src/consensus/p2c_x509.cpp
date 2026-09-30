@@ -10,10 +10,12 @@
 #include <crypto/mbedtls_rsa_pss.h>
 #include <crypto/sha256.h>
 #include <mbedtls/asn1.h>
+#include <mbedtls/bignum.h>
 #include <mbedtls/ecp.h>
 #include <mbedtls/md.h>
 #include <mbedtls/oid.h>
 #include <mbedtls/pk.h>
+#include <mbedtls/rsa.h>
 #include <mbedtls/x509.h>
 #include <mbedtls/x509_crt.h>
 #include <primitives/transaction.h>
@@ -73,7 +75,9 @@ const mbedtls_x509_crt* RootStoreV1()
                 pem.push_back(std::to_integer<unsigned char>(value));
             }
             pem.push_back(0);
-            valid = mbedtls_x509_crt_parse(&chain.value, pem.data(), pem.size()) == 0;
+            std::string error;
+            valid = mbedtls_x509_crt_parse(&chain.value, pem.data(), pem.size()) == 0 &&
+                    CheckP2CCertificatePublicKeys(chain.value, error);
         }
     };
     // A cancelled detached GUI probe can still be finishing crypto when static
@@ -247,6 +251,7 @@ bool VerifyP2CCertificateProofImpl(const CTxOut& spent_output,
     error.clear();
     CertificateChain chain;
     if (!ParseCertificateChain(proof, chain, error) ||
+        !CheckP2CCertificatePublicKeys(chain.value, error) ||
         !CheckSuppliedCertificateTimes(chain.value, validation_time, error) ||
         !CheckLeafUsage(chain.value, error)) {
         return false;
@@ -262,6 +267,29 @@ bool VerifyP2CCertificateProofImpl(const CTxOut& spent_output,
 }
 
 } // namespace
+
+bool CheckP2CCertificatePublicKeys(const mbedtls_x509_crt& chain, std::string& error)
+{
+    // Check ALL supplied certificates, including unused path candidates, before
+    // Mbed TLS can perform any expensive signature verification. The pinned
+    // adapter represents both rsaEncryption and restricted RSA-PSS keys as RSA;
+    // pk_can_do(RSA) would incorrectly skip restricted RSA-PSS public keys.
+    for (const mbedtls_x509_crt* certificate{&chain}; certificate != nullptr; certificate = certificate->next) {
+        if (mbedtls_pk_get_type(&certificate->pk) != MBEDTLS_PK_RSA) continue;
+        const mbedtls_rsa_context* rsa{mbedtls_pk_rsa(certificate->pk)};
+        if (!rsa) return SetError(error, "P2C certificate RSA public key is unavailable");
+        mbedtls_mpi exponent;
+        mbedtls_mpi_init(&exponent);
+        const int result{mbedtls_rsa_export(rsa, nullptr, nullptr, nullptr, nullptr, &exponent)};
+        const size_t bits{mbedtls_mpi_bitlen(&exponent)};
+        mbedtls_mpi_free(&exponent);
+        if (result != 0) return SetError(error, "failed to read P2C certificate RSA public exponent");
+        if (bits > MAX_P2C_RSA_PUBLIC_EXPONENT_BITS) {
+            return SetError(error, "P2C certificate RSA public exponent exceeds 64 bits");
+        }
+    }
+    return true;
+}
 
 bool P2CRootStoreAvailable()
 {
@@ -294,5 +322,6 @@ bool VerifyP2CCertificateProofForTest(const CTxOut& spent_output,
     if (mbedtls_x509_crt_parse(&roots.value, nul_terminated.data(), nul_terminated.size()) != 0) {
         return SetError(error, "invalid P2C test root store");
     }
+    if (!CheckP2CCertificatePublicKeys(roots.value, error)) return false;
     return VerifyP2CCertificateProofImpl(spent_output, proof, validation_time, roots.value, error);
 }

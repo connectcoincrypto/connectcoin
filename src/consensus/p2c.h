@@ -23,6 +23,8 @@ inline constexpr size_t MAX_P2C_PROOF_SIZE{size_t{64} * 1024};
 inline constexpr size_t MAX_P2C_CERTIFICATE_MESSAGE_SIZE{size_t{48} * 1024};
 inline constexpr size_t MAX_P2C_CERTIFICATES{8};
 inline constexpr size_t MAX_P2C_CERTIFICATE_SIZE{size_t{16} * 1024};
+/** Public RSA exponent limit, independent of the RSA modulus/key size. */
+inline constexpr size_t MAX_P2C_RSA_PUBLIC_EXPONENT_BITS{64};
 
 /** Versions are consensus identifiers for immutable root bundles. */
 constexpr bool IsSupportedP2CRootCertificatesVersion(uint32_t version)

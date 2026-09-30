@@ -33,6 +33,8 @@
 #include <wallet/test/wallet_test_fixture.h>
 #include <wallet/wallet.h>
 
+#include <mbedtls/rsa.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include <algorithm>
@@ -240,6 +242,73 @@ BOOST_AUTO_TEST_CASE(tls_capture_v2_authenticates_but_does_not_hash_certificate_
     legacy.front() = 1;
     BOOST_CHECK(!ParseP2CTlsProof(legacy, "localhost", challenge, modified, error));
     BOOST_CHECK(error.find("unsupported P2C proof version") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(tls_capture_checks_all_certificate_rsa_exponents_before_certificate_verify)
+{
+    RestoreSocketFactory restore_sockets;
+    const auto endpoint{Lookup("8.8.8.8", 443, false)};
+    BOOST_REQUIRE(endpoint);
+    for (const unsigned exponent_bits : {64U, 65U}) {
+        BOOST_TEST_CONTEXT("RSA public exponent bits: " << exponent_bits) {
+            const auto config{std::make_shared<test::P2CTLSServer>()};
+            config->Setup();
+            struct PublicKey {
+                mbedtls_pk_context value;
+                PublicKey() { mbedtls_pk_init(&value); }
+                ~PublicKey() { mbedtls_pk_free(&value); }
+            } rsa_key;
+            struct Writer {
+                mbedtls_x509write_cert value;
+                Writer() { mbedtls_x509write_crt_init(&value); }
+                ~Writer() { mbedtls_x509write_crt_free(&value); }
+            } writer;
+            BOOST_REQUIRE_EQUAL(mbedtls_pk_setup(&rsa_key.value, mbedtls_pk_info_from_type(MBEDTLS_PK_RSA)), 0);
+            // Synthetic public-only parameters: no RSA signing or prime
+            // generation is needed for this extra, unused chain entry.
+            std::array<unsigned char, 256> modulus{};
+            modulus.front() = 0x80;
+            modulus.back() = 1;
+            std::vector<unsigned char> exponent((exponent_bits + 7) / 8);
+            exponent.front() = static_cast<unsigned char>(1U << ((exponent_bits - 1) % 8));
+            exponent.back() |= 1;
+            auto* rsa{mbedtls_pk_rsa(rsa_key.value)};
+            BOOST_REQUIRE_EQUAL(mbedtls_rsa_import_raw(rsa, modulus.data(), modulus.size(),
+                nullptr, 0, nullptr, 0, nullptr, 0, exponent.data(), exponent.size()), 0);
+            BOOST_REQUIRE_EQUAL(mbedtls_rsa_complete(rsa), 0);
+            BOOST_REQUIRE_EQUAL(mbedtls_rsa_check_pubkey(rsa), 0);
+            mbedtls_x509write_crt_set_version(&writer.value, MBEDTLS_X509_CRT_VERSION_3);
+            unsigned char serial{3};
+            BOOST_REQUIRE_EQUAL(mbedtls_x509write_crt_set_serial_raw(&writer.value, &serial, 1), 0);
+            BOOST_REQUIRE_EQUAL(mbedtls_x509write_crt_set_subject_name(&writer.value, "CN=P2C unused RSA test key"), 0);
+            BOOST_REQUIRE_EQUAL(mbedtls_x509write_crt_set_issuer_name(&writer.value, "CN=localhost"), 0);
+            BOOST_REQUIRE_EQUAL(mbedtls_x509write_crt_set_validity(&writer.value, "20200101000000", "20400101000000"), 0);
+            mbedtls_x509write_crt_set_subject_key(&writer.value, &rsa_key.value);
+            mbedtls_x509write_crt_set_issuer_key(&writer.value, &config->key);
+            mbedtls_x509write_crt_set_md_alg(&writer.value, MBEDTLS_MD_SHA256);
+            std::array<unsigned char, 2048> encoded{};
+            const int size{mbedtls_x509write_crt_der(&writer.value, encoded.data(), encoded.size(),
+                test::P2CTLSServer::Random, nullptr)};
+            BOOST_REQUIRE_GT(size, 0);
+            BOOST_REQUIRE_EQUAL(mbedtls_x509_crt_parse_der(&config->certificate,
+                encoded.data() + encoded.size() - size, size), 0);
+
+            // Every read/write uses this in-memory TLS server, not the IP.
+            // Its EC leaf still has a valid CertificateVerify. VERIFY_NONE
+            // alone would accept both chains, so the 65-bit rejection must
+            // come from the shared public-key preflight during capture.
+            CreateSock = [config](int, int, int) -> std::unique_ptr<Sock> {
+                return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+            };
+            const auto captured{CaptureP2CTls(*endpoint, "localhost", uint256::ONE, [] { return false; })};
+            if (exponent_bits == 64) {
+                BOOST_REQUIRE_MESSAGE(captured, util::ErrorString(captured).original);
+            } else {
+                BOOST_REQUIRE(!captured);
+                BOOST_CHECK_EQUAL(util::ErrorString(captured).original, "P2C certificate RSA public exponent exceeds 64 bits");
+            }
+        }
+    }
 }
 
 BOOST_AUTO_TEST_CASE(domain_connection_statistics_use_last_100_attempts)

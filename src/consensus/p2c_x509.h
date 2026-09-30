@@ -11,14 +11,22 @@
 
 class CTxOut;
 struct P2CTlsProofView;
+struct mbedtls_x509_crt;
 
-/** Return whether the immutable version-1 trust store parsed successfully. */
+/**
+ * Cheap preflight of every parsed certificate's RSA public exponent (at most
+ * 64 bits), including RSA-PSS keys. Does not verify signatures or trust.
+ * Also used by TLS capture before processing the server's CertificateVerify.
+ */
+bool CheckP2CCertificatePublicKeys(const mbedtls_x509_crt& chain, std::string& error);
+
+/** Return whether the immutable version-1 trust store parsed and passed key limits. */
 bool P2CRootStoreAvailable();
 
 /**
- * Verify the domain path against the versioned root bundle, certificate
- * validity at validation_time, server-auth key usage, and the TLS 1.3
- * CertificateVerify signature over the parsed transcript.
+ * Check public-exponent limits before verifying the domain path against the
+ * versioned root bundle, certificate validity at validation_time, server-auth
+ * key usage, and the TLS 1.3 CertificateVerify signature over the parsed transcript.
  */
 bool VerifyP2CCertificateProof(const CTxOut& spent_output,
                                const P2CTlsProofView& proof,

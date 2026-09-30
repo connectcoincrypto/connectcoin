@@ -59,6 +59,11 @@ Payloads that omit the required mask are rejected.
 The leaf certificate and every intermediate sent by the server appear in the
 redemption proof, where consensus validates the chain, domain, validity time, TLS
 CertificateVerify signature, claim challenge, and connection-work target.
+Before signature verification, every RSA public exponent in the supplied
+certificates (including unused entries) and selected trusted-root bundle must
+satisfy `bit_length(e) <= 64`, equivalently `e <= 2^64 - 1` for a valid positive
+exponent, regardless of RSA modulus size. This is a consensus acceptance rule;
+see the [RSA public-exponent bound](pay-to-connect.md#rsa-public-exponent-bound).
 
 A type-2 spend has an empty `scriptSig` and exactly one witness element: the
 versioned P2C proof, limited to 64 KiB. See [pay-to-connect.md](pay-to-connect.md)

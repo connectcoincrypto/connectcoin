@@ -12,6 +12,7 @@
 #include <test/util/setup_common.h>
 #include <util/strencodings.h>
 
+#include <mbedtls/bignum.h>
 #include <mbedtls/oid.h>
 #include <mbedtls/pk.h>
 #include <mbedtls/rsa.h>
@@ -129,6 +130,59 @@ Bytes PssAlgorithm(const Bytes& params)
     return Der(0x30, Join({Oid(MBEDTLS_OID_RSASSA_PSS, MBEDTLS_OID_SIZE(MBEDTLS_OID_RSASSA_PSS)), params}));
 }
 
+/** Replace only the public exponent in an RSA SubjectPublicKeyInfo. Keep the
+ * original certificate signature deliberately invalid, without generating a
+ * private key for unusual exponents or adding large binary test fixtures.
+ */
+Bytes WithRsaExponent(const Bytes& certificate, const Bytes& exponent, size_t expected_bits)
+{
+    std::span<const unsigned char> outer{certificate}, contents, tbs_contents;
+    TakeDer(outer, &contents);
+    BOOST_REQUIRE(outer.empty());
+    TakeDer(contents, &tbs_contents);
+    const Bytes signature_tail{contents.begin(), contents.end()};
+    Bytes tbs;
+    bool replaced{false};
+    for (unsigned field{0}; !tbs_contents.empty(); ++field) {
+        std::span<const unsigned char> field_contents;
+        const auto encoded{TakeDer(tbs_contents, &field_contents)};
+        Bytes replacement;
+        if (field == 6) {
+            const auto algorithm{TakeDer(field_contents)};
+            std::span<const unsigned char> bit_string;
+            TakeDer(field_contents, &bit_string);
+            BOOST_REQUIRE(field_contents.empty());
+            BOOST_REQUIRE(!bit_string.empty() && bit_string.front() == 0);
+            auto key_der{bit_string.subspan(1)};
+            std::span<const unsigned char> rsa_key;
+            TakeDer(key_der, &rsa_key);
+            BOOST_REQUIRE(key_der.empty());
+            const auto modulus{TakeDer(rsa_key)};
+            TakeDer(rsa_key); // Original public exponent.
+            BOOST_REQUIRE(rsa_key.empty());
+            const Bytes new_key{Der(0x30, Join({modulus, Der(0x02, exponent)}))};
+            replacement = Der(0x30, Join({algorithm, Der(0x03, Join({Bytes{0}, new_key}))}));
+            replaced = true;
+        } else {
+            replacement.assign(encoded.begin(), encoded.end());
+        }
+        tbs.insert(tbs.end(), replacement.begin(), replacement.end());
+    }
+    BOOST_REQUIRE(replaced);
+    const Bytes result{Der(0x30, Join({Der(0x30, tbs), signature_tail}))};
+    Certificate parsed;
+    BOOST_REQUIRE_EQUAL(mbedtls_x509_crt_parse_der(&parsed.value, result.data(), result.size()), 0);
+    BOOST_REQUIRE_EQUAL(mbedtls_pk_get_bitlen(&parsed.value.pk), 2048U);
+    mbedtls_mpi actual;
+    mbedtls_mpi_init(&actual);
+    const int exported{mbedtls_rsa_export(mbedtls_pk_rsa(parsed.value.pk), nullptr, nullptr, nullptr, nullptr, &actual)};
+    const size_t bits{mbedtls_mpi_bitlen(&actual)};
+    mbedtls_mpi_free(&actual);
+    BOOST_REQUIRE_EQUAL(exported, 0);
+    BOOST_REQUIRE_EQUAL(bits, expected_bits);
+    return result;
+}
+
 /** Use a deliberately public, test-only RSA-2048 key. Generating fresh primes
  * for every fixture dominated sanitizer runtime, but these tests exercise
  * certificate parsing, TLS and signature verification, not RSA key generation.
@@ -182,15 +236,15 @@ lNgW44LomPeKsFSCCcqrVg==
         leaf = MakeCertificate(false);
     }
 
-    Bytes MakeCertificate(bool ca)
+    Bytes MakeCertificate(bool ca, const char* subject = nullptr, const char* issuer = "CN=P2C RSA Test CA")
     {
         mbedtls_x509write_cert writer;
         mbedtls_x509write_crt_init(&writer);
         mbedtls_x509write_crt_set_version(&writer, MBEDTLS_X509_CRT_VERSION_3);
         unsigned char serial{static_cast<unsigned char>(ca ? 1 : 2)};
         BOOST_REQUIRE_EQUAL(mbedtls_x509write_crt_set_serial_raw(&writer, &serial, 1), 0);
-        BOOST_REQUIRE_EQUAL(mbedtls_x509write_crt_set_subject_name(&writer, ca ? "CN=P2C RSA Test CA" : "CN=localhost"), 0);
-        BOOST_REQUIRE_EQUAL(mbedtls_x509write_crt_set_issuer_name(&writer, "CN=P2C RSA Test CA"), 0);
+        BOOST_REQUIRE_EQUAL(mbedtls_x509write_crt_set_subject_name(&writer, subject ? subject : ca ? "CN=P2C RSA Test CA" : "CN=localhost"), 0);
+        BOOST_REQUIRE_EQUAL(mbedtls_x509write_crt_set_issuer_name(&writer, issuer), 0);
         BOOST_REQUIRE_EQUAL(mbedtls_x509write_crt_set_validity(&writer, "20200101000000", "20400101000000"), 0);
         mbedtls_x509write_crt_set_subject_key(&writer, &key.value);
         mbedtls_x509write_crt_set_issuer_key(&writer, &key.value);
@@ -278,7 +332,9 @@ lNgW44LomPeKsFSCCcqrVg==
     bool Verify(const Bytes& certificate, uint16_t scheme, const Bytes& signature,
                 std::string& error, std::string domain = "localhost", int64_t time = 1800000000,
                 const Bytes* trust_root = nullptr,
-                uint8_t mask = PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL)
+                uint8_t mask = PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL,
+                const std::vector<Bytes>& extra_certificates = {},
+                const std::vector<Bytes>& extra_trust_roots = {})
     {
         uint256 target;
         std::fill(target.begin(), target.end(), 0xff);
@@ -289,9 +345,15 @@ lNgW44LomPeKsFSCCcqrVg==
         }};
         P2CTlsProofView proof;
         proof.certificate_chain = {certificate};
+        for (const auto& extra : extra_certificates) proof.certificate_chain.emplace_back(extra);
         proof.certificate_verify_scheme = scheme;
         proof.certificate_verify_signature = signature;
-        return VerifyP2CCertificateProofForTest(spent, proof, time, Pem(trust_root ? *trust_root : root), error);
+        Bytes roots_pem{Pem(trust_root ? *trust_root : root)};
+        for (const auto& extra : extra_trust_roots) {
+            const Bytes pem{Pem(extra)};
+            roots_pem.insert(roots_pem.end(), pem.begin(), pem.end());
+        }
+        return VerifyP2CCertificateProofForTest(spent, proof, time, roots_pem, error);
     }
 };
 
@@ -361,6 +423,134 @@ bool Handshake(RsaFixture& fixture, const Bytes& certificate, uint16_t scheme, B
 } // namespace
 
 BOOST_FIXTURE_TEST_SUITE(p2c_rsa_tests, BasicTestingSetup)
+
+BOOST_AUTO_TEST_CASE(rsa_public_exponent_limit_is_inclusive_for_rsae_and_pss_leaves)
+{
+    RsaFixture fixture;
+    const Bytes signature{fixture.PssSign(RsaFixture::SignedHash())};
+    // A DER INTEGER sign byte is not part of the mathematical exponent size.
+    const Bytes maximum{0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}; // 2^64 - 1
+    const Bytes excessive{1, 0, 0, 0, 0, 0, 0, 0, 1}; // 2^64 + 1
+    for (bool pss : {false, true}) {
+        BOOST_TEST_CONTEXT("restricted PSS SPKI=" << pss) {
+            const Bytes leaf{pss ? fixture.Rewrite(fixture.leaf, PssAlgorithm(PssParams())) : fixture.leaf};
+            const uint16_t scheme{static_cast<uint16_t>(pss ? 0x0809 : 0x0804)};
+            std::string error;
+            BOOST_REQUIRE_MESSAGE(fixture.Verify(leaf, scheme, signature, error), error);
+            const Bytes boundary{WithRsaExponent(leaf, maximum, 64)};
+            BOOST_CHECK(!fixture.Verify(boundary, scheme, signature, error));
+            // The exponent is allowed, but changing SPKI invalidated the CA
+            // signature. Reaching path validation proves the inclusive bound.
+            BOOST_CHECK_EQUAL(error, "P2C certificate path or domain validation failed");
+            const Bytes rejected{WithRsaExponent(leaf, excessive, 65)};
+            BOOST_CHECK(!fixture.Verify(rejected, scheme, signature, error));
+            BOOST_CHECK_EQUAL(error, "P2C certificate RSA public exponent exceeds 64 bits");
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(rsa_public_exponent_limit_covers_intermediates_and_unused_certificates)
+{
+    RsaFixture fixture;
+    const Bytes signature{fixture.PssSign(RsaFixture::SignedHash())};
+    const Bytes maximum{0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+    const Bytes excessive{1, 0, 0, 0, 0, 0, 0, 0, 1};
+    const Bytes parent_root{fixture.MakeCertificate(true, "CN=P2C RSA Parent Root", "CN=P2C RSA Parent Root")};
+    const Bytes intermediate{fixture.MakeCertificate(true, nullptr, "CN=P2C RSA Parent Root")};
+    const Bytes unused{fixture.MakeCertificate(true, "CN=P2C Unlinked Certificate")};
+    std::string error;
+    BOOST_REQUIRE_MESSAGE(fixture.Verify(fixture.leaf, 0x0804, signature, error, "localhost", 1800000000,
+        &parent_root, PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL, {intermediate}), error);
+    for (bool pss : {false, true}) {
+        BOOST_TEST_CONTEXT("restricted PSS SPKI=" << pss) {
+            for (bool linked : {false, true}) {
+                BOOST_TEST_CONTEXT("intermediate in path=" << linked) {
+                    const Bytes original{linked ? intermediate : unused};
+                    const Bytes certificate{pss ? fixture.Rewrite(original, PssAlgorithm(PssParams())) : original};
+                    const Bytes* root{linked ? &parent_root : nullptr};
+                    const Bytes boundary{WithRsaExponent(certificate, maximum, 64)};
+                    const bool valid{fixture.Verify(fixture.leaf, 0x0804, signature, error, "localhost", 1800000000,
+                        root, PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL, {boundary})};
+                    if (linked) {
+                        BOOST_CHECK(!valid);
+                        BOOST_CHECK_EQUAL(error, "P2C certificate path or domain validation failed");
+                    } else {
+                        // The path deliberately ignores this certificate. It
+                        // must not bypass the all-supplied-certificates rule.
+                        BOOST_CHECK_MESSAGE(valid, error);
+                    }
+                    const Bytes rejected{WithRsaExponent(certificate, excessive, 65)};
+                    BOOST_CHECK(!fixture.Verify(fixture.leaf, 0x0804, signature, error, "localhost", 1800000000,
+                        root, PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL, {rejected}));
+                    BOOST_CHECK_EQUAL(error, "P2C certificate RSA public exponent exceeds 64 bits");
+                }
+            }
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(rsa_public_exponent_limit_covers_explicit_trust_roots)
+{
+    RsaFixture fixture;
+    const Bytes signature{fixture.PssSign(RsaFixture::SignedHash())};
+    const Bytes maximum{0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+    const Bytes excessive{1, 0, 0, 0, 0, 0, 0, 0, 1};
+    for (bool pss : {false, true}) {
+        BOOST_TEST_CONTEXT("restricted PSS SPKI=" << pss) {
+            const Bytes root{pss ? fixture.Rewrite(fixture.root, PssAlgorithm(PssParams())) : fixture.root};
+            const Bytes boundary{WithRsaExponent(root, maximum, 64)};
+            std::string error;
+            BOOST_CHECK(!fixture.Verify(fixture.leaf, 0x0804, signature, error, "localhost", 1800000000, &boundary));
+            BOOST_CHECK_EQUAL(error, "P2C certificate path or domain validation failed");
+            const Bytes rejected{WithRsaExponent(root, excessive, 65)};
+            BOOST_CHECK(!fixture.Verify(fixture.leaf, 0x0804, signature, error, "localhost", 1800000000, &rejected));
+            BOOST_CHECK_EQUAL(error, "P2C certificate RSA public exponent exceeds 64 bits");
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(rsa_public_exponent_limit_checks_unused_entries_in_a_trust_bundle)
+{
+    RsaFixture fixture;
+    const Bytes signature{fixture.PssSign(RsaFixture::SignedHash())};
+    const Bytes maximum{0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+    const Bytes excessive{1, 0, 0, 0, 0, 0, 0, 0, 1};
+    const Bytes unused_root{fixture.MakeCertificate(true, "CN=P2C Unused Root", "CN=P2C Unused Root")};
+    for (bool pss : {false, true}) {
+        BOOST_TEST_CONTEXT("restricted PSS SPKI=" << pss) {
+            const Bytes root{pss ? fixture.Rewrite(unused_root, PssAlgorithm(PssParams())) : unused_root};
+            std::string error;
+            const Bytes boundary{WithRsaExponent(root, maximum, 64)};
+            BOOST_REQUIRE_MESSAGE(fixture.Verify(fixture.leaf, 0x0804, signature, error, "localhost", 1800000000,
+                nullptr, PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL, {}, {boundary}), error);
+            const Bytes rejected{WithRsaExponent(root, excessive, 65)};
+            BOOST_CHECK(!fixture.Verify(fixture.leaf, 0x0804, signature, error, "localhost", 1800000000,
+                nullptr, PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL, {}, {rejected}));
+            BOOST_CHECK_EQUAL(error, "P2C certificate RSA public exponent exceeds 64 bits");
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(rsa_public_exponent_preflight_rejects_dense_values_before_path_validation)
+{
+    RsaFixture fixture;
+    const Bytes signature{fixture.PssSign(RsaFixture::SignedHash())};
+    Bytes dense(128, 0xff); // 2^1024 - 1, strictly below the fixture's 2048-bit modulus.
+    dense.insert(dense.begin(), 0); // Positive DER INTEGER sign byte.
+    for (bool pss : {false, true}) {
+        BOOST_TEST_CONTEXT("restricted PSS SPKI=" << pss) {
+            const Bytes leaf{pss ? fixture.Rewrite(fixture.leaf, PssAlgorithm(PssParams())) : fixture.leaf};
+            const Bytes rejected{WithRsaExponent(leaf, dense, 1024)};
+            std::string error;
+            // The modified SPKI also makes the CA signature invalid. The
+            // specific preflight error proves we do not reach expensive path
+            // verification; do not use wall-clock thresholds in this test.
+            BOOST_CHECK(!fixture.Verify(rejected, pss ? 0x0809 : 0x0804, signature, error));
+            BOOST_CHECK_EQUAL(error, "P2C certificate RSA public exponent exceeds 64 bits");
+        }
+    }
+    BOOST_CHECK(P2CRootStoreAvailable());
+}
 
 BOOST_AUTO_TEST_CASE(rsae_and_true_pss_require_their_original_spki_scheme)
 {
