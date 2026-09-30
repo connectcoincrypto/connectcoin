@@ -57,6 +57,7 @@
 
 #include <QApplication>
 #include <QDebug>
+#include <QIcon>
 #include <QLatin1String>
 #include <QLocale>
 #include <QMessageBox>
@@ -141,12 +142,29 @@ static void ErrorSettingsWrite(const bilingual_str& error, const std::vector<std
     messagebox.exec();
 }
 
+static char qt_program_name[] = "connectcoin-qt";
+#ifdef Q_OS_LINUX
+// Qt's XCB backend uses -name for the WM_CLASS instance. Keep it aligned with
+// StartupWMClass even when the per-network application/QSettings name changes.
+// Only Qt sees these arguments; Core's command line remains unchanged.
+static char qt_name_option[] = "-name";
+static char qt_desktop_name[] = QAPP_DESKTOP_FILE_NAME;
+static char* qt_argv[] = {qt_program_name, qt_name_option, qt_desktop_name, nullptr};
+static int qt_argc = 3;
+#else
+static char* qt_argv[] = {qt_program_name, nullptr};
 static int qt_argc = 1;
-static const char* qt_argv = "connectcoin-qt";
+#endif
 
 BitcoinApplication::BitcoinApplication()
-    : QApplication(qt_argc, const_cast<char**>(&qt_argv))
+    : QApplication(qt_argc, qt_argv)
 {
+#ifdef Q_OS_LINUX
+    // Wayland/app launchers use the desktop-file ID. Set it, and the embedded
+    // fallback icon, before any intro/splash window can be mapped by the shell.
+    setDesktopFileName(QStringLiteral(QAPP_DESKTOP_FILE_NAME));
+    setWindowIcon(QIcon(QStringLiteral(":/icons/bitcoin")));
+#endif
     // Qt runs setlocale(LC_ALL, "") on initialization.
     RegisterMetaTypes();
     setQuitOnLastWindowClosed(false);

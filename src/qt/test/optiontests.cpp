@@ -7,17 +7,22 @@
 #include <common/args.h>
 #include <init.h>
 #include <qt/bitcoin.h>
+#include <qt/guiconstants.h>
 #include <qt/guipreferences.h>
 #include <qt/guiutil.h>
 #include <qt/optionsdialog.h>
 #include <qt/test/optiontests.h>
 #include <test/util/setup_common.h>
 
+#include <QByteArray>
 #include <QCheckBox>
 #include <QCoreApplication>
 #include <QDataStream>
 #include <QDataWidgetMapper>
+#include <QDir>
+#include <QFile>
 #include <QSettings>
+#include <QStringList>
 #include <QTemporaryDir>
 #include <QTabWidget>
 #include <QTest>
@@ -313,6 +318,79 @@ void OptionTests::extractFilter()
 
     filter = QString("Image (*.png *.jpg)");
     QCOMPARE(GUIUtil::ExtractFirstSuffixFromFilter(filter), "png");
+}
+
+void OptionTests::linuxDesktopIntegration()
+{
+#ifndef Q_OS_LINUX
+    QSKIP("Desktop Entry autostart integration is Linux-specific.");
+#endif
+    // Keep the body compiled on other platforms too; only execution requires
+    // Linux. This catches Qt/API regressions in native non-Linux builds.
+    QTemporaryDir directory;
+    QVERIFY(directory.isValid());
+    struct RestoreEnvironmentAndSettings {
+        QByteArray config_home{qgetenv("XDG_CONFIG_HOME")};
+        bool had_config_home{qEnvironmentVariableIsSet("XDG_CONFIG_HOME")};
+        common::Settings previous_settings;
+        RestoreEnvironmentAndSettings()
+        {
+            gArgs.LockSettings([&](common::Settings& settings) { previous_settings = settings; });
+        }
+        ~RestoreEnvironmentAndSettings()
+        {
+            if (had_config_home) qputenv("XDG_CONFIG_HOME", config_home);
+            else qunsetenv("XDG_CONFIG_HOME");
+            gArgs.LockSettings([&](common::Settings& settings) { settings = previous_settings; });
+        }
+    } restore;
+    // Exercise the real writer, but never create or remove the user's login
+    // entries. Chain selection here only chooses filenames; no node is started.
+    QVERIFY(qputenv("XDG_CONFIG_HOME", directory.path().toUtf8()));
+    for (const auto* flag : {"-regtest", "-signet", "-testnet", "-testnet4"}) gArgs.ForceSetArg(flag, "0");
+    const QString autostart_dir{directory.path() + "/autostart"};
+    const QStringList chains{"main", "test", "testnet4", "signet", "regtest"};
+    QStringList created_files;
+    for (const auto& chain : chains) {
+        gArgs.ForceSetArg("-chain", chain.toStdString());
+        const QString filename{chain == "main" ? QStringLiteral("connectcoin.desktop") : QStringLiteral("connectcoin-%1.desktop").arg(chain)};
+        const QString filepath{autostart_dir + "/" + filename};
+        QVERIFY(!GUIUtil::GetStartOnSystemStartup());
+        QVERIFY(GUIUtil::SetStartOnSystemStartup(true));
+        QVERIFY(GUIUtil::GetStartOnSystemStartup());
+        QFile file{filepath};
+        QVERIFY(file.open(QIODevice::ReadOnly));
+        const auto lines{file.readAll().split('\n')};
+        QVERIFY(lines.contains("[Desktop Entry]"));
+        QVERIFY(lines.contains("Type=Application"));
+        QVERIFY(lines.contains("Icon=" QAPP_DESKTOP_ICON_NAME));
+        QVERIFY(lines.contains("StartupWMClass=" QAPP_DESKTOP_FILE_NAME));
+        QVERIFY(lines.contains("Terminal=false"));
+        QVERIFY(lines.contains("Hidden=false"));
+        const QByteArray expected_name{chain == "main" ? QByteArray{"Name=ConnectCoin"} : QStringLiteral("Name=ConnectCoin (%1)").arg(chain).toUtf8()};
+        QVERIFY(lines.contains(expected_name));
+        const QByteArray expected_exec_suffix{QStringLiteral("\" -min -chain=%1").arg(chain).toUtf8()};
+        qsizetype exec_lines{0};
+        for (const auto& line : lines) {
+            if (!line.startsWith("Exec=")) continue;
+            ++exec_lines;
+            QVERIFY(line.startsWith("Exec=\""));
+            QVERIFY(line.endsWith(expected_exec_suffix));
+        }
+        QCOMPARE(exec_lines, qsizetype{1});
+        created_files.append(filepath);
+        for (const auto& created : created_files) QVERIFY(QFile::exists(created));
+    }
+    // Disabling one network must not remove any other network's login entry.
+    for (const auto& chain : chains) {
+        gArgs.ForceSetArg("-chain", chain.toStdString());
+        QVERIFY(GUIUtil::GetStartOnSystemStartup());
+        QVERIFY(GUIUtil::SetStartOnSystemStartup(false));
+        QVERIFY(!GUIUtil::GetStartOnSystemStartup());
+        QVERIFY(!QFile::exists(created_files.takeFirst()));
+        for (const auto& created : created_files) QVERIFY(QFile::exists(created));
+    }
+    QCOMPARE(QDir{autostart_dir}.entryList(QDir::Files).size(), qsizetype{0});
 }
 
 void OptionTests::settingsIoOffGui()

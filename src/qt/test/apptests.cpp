@@ -13,6 +13,7 @@
 #include <node/interface_ui.h>
 #include <qt/bitcoin.h>
 #include <qt/bitcoingui.h>
+#include <qt/guiconstants.h>
 #include <qt/guiutil.h>
 #include <qt/networkstyle.h>
 #include <qt/platformstyle.h>
@@ -34,6 +35,7 @@
 #include <validation.h>
 
 #include <QAction>
+#include <QApplication>
 #include <QCoreApplication>
 #include <QEvent>
 #include <QIcon>
@@ -366,6 +368,13 @@ void TestMiningWithoutWallet(BitcoinGUI* window)
 //! Entry point for BitcoinApplication tests.
 void AppTests::appTests()
 {
+#ifdef Q_OS_LINUX
+    // The constructor sets identity and an embedded fallback before startup
+    // dialogs. Network-specific QSettings names must not become desktop IDs.
+    QCOMPARE(QApplication::desktopFileName(), QStringLiteral(QAPP_DESKTOP_FILE_NAME));
+    QVERIFY(!QIcon{QStringLiteral(":/icons/bitcoin")}.isNull());
+    QVERIFY(!QApplication::windowIcon().isNull());
+#endif
     qRegisterMetaType<interfaces::BlockAndHeaderTipInfo>("interfaces::BlockAndHeaderTipInfo");
     QVERIFY2(WithBlockedSettings([&] { m_app.parameterSetup(); }),
              "Initial logging/parameter setup blocked GUI events on cs_args");

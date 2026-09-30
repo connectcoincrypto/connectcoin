@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ConnectCoin Core
+Comment=ConnectCoin full node and wallet
+Exec=connectcoin-qt
+Icon=connectcoin
+Terminal=false
+Categories=Office;Finance;
+StartupNotify=true
+StartupWMClass=org.connectcoin.ConnectCoin

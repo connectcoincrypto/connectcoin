@@ -26,6 +26,7 @@ private Q_SLOTS:
     void settingsIoOffGui();
     void cachedGuiPreferences();
     void extractFilter();
+    void linuxDesktopIntegration();
 
 private:
     interfaces::Node& m_node;

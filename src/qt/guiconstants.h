@@ -54,6 +54,11 @@ inline constexpr int TOOLTIP_WRAP_THRESHOLD = 80;
 #define QAPP_APP_NAME_SIGNET "ConnectCoin-Qt-signet"
 #define QAPP_APP_NAME_REGTEST "ConnectCoin-Qt-regtest"
 
+// Stable desktop identity, independent of the per-network QSettings names.
+// Keep these in sync with share/applications/org.connectcoin.ConnectCoin.desktop.
+#define QAPP_DESKTOP_FILE_NAME "org.connectcoin.ConnectCoin"
+#define QAPP_DESKTOP_ICON_NAME "connectcoin"
+
 /* One gigabyte (GB) in bytes */
 inline constexpr uint64_t GB_BYTES{1'000'000'000};
 

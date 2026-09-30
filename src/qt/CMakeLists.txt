@@ -303,6 +303,22 @@ import_plugins(connectcoin-qt)
 deploy_windows_qt_plugin(connectcoin-qt Qt6::QWindowsIntegrationPlugin platforms)
 deploy_windows_qt_plugin(connectcoin-qt Qt6::QModernWindowsStylePlugin styles)
 install_binary_component(connectcoin-qt HAS_MANPAGE)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  install(FILES "${PROJECT_SOURCE_DIR}/share/applications/org.connectcoin.ConnectCoin.desktop"
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/applications"
+    COMPONENT connectcoin-qt
+  )
+  install(FILES res/icons/connectcoin.png
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/1024x1024/apps"
+    COMPONENT connectcoin-qt
+  )
+  # Older hicolor indexes may not include the 1024x1024 directory. Keep the
+  # unchanged source image available through the unthemed fallback as well.
+  install(FILES res/icons/connectcoin.png
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/pixmaps"
+    COMPONENT connectcoin-qt
+  )
+endif()
 if(WIN32 AND NOT qt_lib_type STREQUAL "STATIC_LIBRARY")
   install(FILES "$<TARGET_FILE:Qt6::QWindowsIntegrationPlugin>"
     DESTINATION "${CMAKE_INSTALL_BINDIR}/platforms"

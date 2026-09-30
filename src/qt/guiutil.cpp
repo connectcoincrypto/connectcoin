@@ -6,6 +6,7 @@
 
 #include <qt/bitcoinaddressvalidator.h>
 #include <qt/bitcoinunits.h>
+#include <qt/guiconstants.h>
 #include <qt/platformstyle.h>
 #include <qt/qvalidatedlineedit.h>
 #include <qt/sendcoinsrecipient.h>
@@ -697,6 +698,8 @@ bool SetStartOnSystemStartup(bool fAutoStart)
             optionFile << "Name=ConnectCoin\n";
         else
             optionFile << strprintf("Name=ConnectCoin (%s)\n", ChainTypeToString(chain));
+        optionFile << "Icon=" QAPP_DESKTOP_ICON_NAME "\n";
+        optionFile << "StartupWMClass=" QAPP_DESKTOP_FILE_NAME "\n";
         optionFile << "Exec=\"" << EscapeDesktopExecPath(exe_path)
                    << strprintf("\" -min -chain=%s\n", ChainTypeToString(chain));
         optionFile << "Terminal=false\n";
