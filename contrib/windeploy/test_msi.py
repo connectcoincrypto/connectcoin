@@ -9,6 +9,8 @@ Run pure validation regression tests on any platform with --self-test.
 # Copyright (c) 2026 The ConnectCoin Core developers. MIT license.
 import argparse
 import base64
+import ctypes
+from ctypes import wintypes
 import hashlib
 import json
 import os
@@ -24,6 +26,45 @@ REPO = Path(__file__).resolve().parents[2]
 TARGETS = {"connectcoin", "connectcoin-qt", "connectcoind", "connectcoin-cli",
            "connectcoin-tx", "connectcoin-wallet", "connectcoin-util"}
 UPGRADE_CODE = "{68B91A0E-90D2-4B52-B9F5-5DE859A401DB}"
+# Fail closed before administrative extraction. Standard MSI actions can write
+# registry values, move files, or change PATH without any CustomAction rows.
+# These are the tables emitted by core.wxs/WixUI_InstallDir, plus signing tables.
+ALLOWED_TABLES = set("""
+_Validation AdminExecuteSequence AdminUISequence AdvtExecuteSequence AppSearch
+Binary CheckBox Component Control ControlCondition ControlEvent CustomAction
+Dialog Directory EventMapping Feature FeatureComponents File Icon
+InstallExecuteSequence InstallUISequence LaunchCondition ListBox Media
+MsiDigitalCertificate MsiDigitalSignature MsiFileHash MsiShortcutProperty
+Property RadioButton Registry RegLocator RemoveFile Shortcut Signature
+TextStyle UIText Upgrade
+""".split())
+ADMIN_EXECUTE_ACTIONS = (
+    "CostInitialize", "FileCost", "CostFinalize", "InstallValidate",
+    "InstallInitialize", "InstallAdminPackage", "InstallFiles", "InstallFinalize",
+)
+ADMIN_UI_ACTIONS = ("CostInitialize", "FileCost", "CostFinalize", "ExecuteAction")
+INSTALL_EXECUTE_ACTIONS = (
+    "FindRelatedProducts", "AppSearch", "LaunchConditions", "ValidateProductID",
+    "CostInitialize", "FileCost", "CostFinalize", "MigrateFeatureStates",
+    "InstallValidate", "InstallInitialize", "RemoveExistingProducts",
+    "ProcessComponents", "UnpublishFeatures", "RemoveRegistryValues",
+    "RemoveShortcuts", "RemoveFiles", "RemoveFolders", "CreateFolders",
+    "InstallFiles", "CreateShortcuts", "WriteRegistryValues", "RegisterUser",
+    "RegisterProduct", "PublishFeatures", "PublishProduct", "InstallFinalize",
+)
+REGISTRY_VALUES = {
+    ("Software\\ConnectCoin Core\\Installer", "InstallDir", "[INSTALLFOLDER]", "InstallerRegistration"),
+    ("Software\\Classes\\ConnectCoinCore.PaymentLink", "", "URL:ConnectCoin payment", "PaymentLinkRegistration"),
+    ("Software\\Classes\\ConnectCoinCore.PaymentLink", "URL Protocol", "", "PaymentLinkRegistration"),
+    ("Software\\Classes\\ConnectCoinCore.PaymentLink", "AppUserModelID", "ConnectCoin.Core", "PaymentLinkRegistration"),
+    ("Software\\Classes\\ConnectCoinCore.PaymentLink\\DefaultIcon", "", '"[#GuiExe]",0', "PaymentLinkRegistration"),
+    ("Software\\Classes\\ConnectCoinCore.PaymentLink\\shell\\open\\command", "", '"[#GuiExe]" "%1"', "PaymentLinkRegistration"),
+    ("Software\\ConnectCoin Core\\Capabilities", "ApplicationName", "ConnectCoin Core", "PaymentLinkRegistration"),
+    ("Software\\ConnectCoin Core\\Capabilities", "ApplicationDescription", "ConnectCoin wallet and full node", "PaymentLinkRegistration"),
+    ("Software\\ConnectCoin Core\\Capabilities", "ApplicationIcon", '"[#GuiExe]",0', "PaymentLinkRegistration"),
+    ("Software\\ConnectCoin Core\\Capabilities\\URLAssociations", "connectcoin", "ConnectCoinCore.PaymentLink", "PaymentLinkRegistration"),
+    ("Software\\RegisteredApplications", "ConnectCoin Core", "Software\\ConnectCoin Core\\Capabilities", "PaymentLinkRegistration"),
+}
 # Deliberately do not treat every DLL in System32 or PATH as a Windows runtime.
 # In particular VC redistributables and Qt must be present in the payload.
 # Windows SDK ICU (icuuc/icuin) is built into Windows 10 1703 and later:
@@ -115,8 +156,8 @@ $view.Execute()
 while ($record = $view.Fetch()) { $tables[$record.StringData(1)] = $true }
 $view.Close()
 $result = [ordered]@{}
-foreach ($name in @('Property', 'Directory', 'Component', 'File', 'Registry',
-    'Shortcut', 'Upgrade', 'LaunchCondition', 'CustomAction', 'RemoveFile',
+foreach ($name in @('Property', 'Control', 'Directory', 'Component', 'File', 'Registry',
+    'Shortcut', 'MsiShortcutProperty', 'Upgrade', 'LaunchCondition', 'CustomAction', 'RemoveFile',
     'InstallExecuteSequence', 'AdminExecuteSequence', 'AdminUISequence',
     'ServiceInstall', 'ServiceControl', 'WixFirewallException', 'Wix4FirewallException')) {
     $rows = @()
@@ -135,6 +176,14 @@ foreach ($name in @('Property', 'Directory', 'Component', 'File', 'Registry',
     }
     $result[$name] = @($rows)
 }
+$icons = @()
+if ($tables.ContainsKey('Icon')) {
+    $view = $db.OpenView('SELECT `Name` FROM `Icon`')
+    $view.Execute()
+    while ($record = $view.Fetch()) { $icons += $record.StringData(1) }
+    $view.Close()
+}
+$result['IconNames'] = $icons
 $result['TableNames'] = @($tables.Keys)
 $summary = $db.SummaryInformation(0)
 $result['SummaryTemplate'] = $summary.Property(7)
@@ -142,8 +191,157 @@ $result | ConvertTo-Json -Depth 8 -Compress
 ''', environment)
 
 
+def validate_installer_language(properties, summary_template):
+    require(properties.get("ProductLanguage") == "1033", "Installer language must be English (en-US)")
+    require(summary_template == "x64;1033", "Installer summary must identify x64 English (en-US)")
+
+
+def validate_english_wizard(controls):
+    buttons = [row["Text"] for row in controls if row["Type"] == "PushButton"]
+    for label in ("Next", "Back", "Cancel", "Install", "Finish"):
+        require(any(re.search(rf"\b{label}\b", text) for text in buttons),
+                f"English wizard button missing: {label}")
+
+
+def validate_sequences(tables):
+    for name, required in (("AdminExecuteSequence", ADMIN_EXECUTE_ACTIONS),
+                           ("AdminUISequence", ADMIN_UI_ACTIONS),
+                           ("InstallExecuteSequence", INSTALL_EXECUTE_ACTIONS)):
+        rows = {row["Action"]: row for row in tables[name]}
+        require(len(rows) == len(tables[name]), f"Duplicate action in {name}")
+        dialogs = {"ExitDialog": -1, "UserExit": -2, "FatalError": -3} if name == "AdminUISequence" else {}
+        require(set(rows) == set(required) | dialogs.keys(), f"Unexpected or missing actions in {name}")
+        require(all(not row["Condition"] for row in rows.values()),
+                f"Required actions must be unconditional in {name}")
+        sequence = [int(rows[action]["Sequence"]) for action in required]
+        require(sequence[0] > 0 and all(left < right for left, right in zip(sequence, sequence[1:])),
+                f"Incorrect action order in {name}")
+        require(all(int(rows[action]["Sequence"]) == position for action, position in dialogs.items()),
+                f"Incorrect exit dialog sequence in {name}")
+
+
+def validate_schema(tables):
+    unexpected = set(tables["TableNames"]) - ALLOWED_TABLES
+    require(not unexpected, f"Unexpected MSI tables (not approved for extraction): {sorted(unexpected)}")
+    validate_sequences(tables)
+
+
+def validate_registry(registry):
+    require(all(row["Root"] == "2" for row in registry), "Unexpected registry root")
+    actual = {(row["Key"], row["Name"], row["Value"], row["Component_"]) for row in registry}
+    require(actual == REGISTRY_VALUES and len(registry) == len(REGISTRY_VALUES),
+            "Registry writes differ from the exact Core registration")
+
+
+def validate_shortcut_icons(tables, properties):
+    require(tables.get("IconNames") == ["CoreIcon.exe"],
+            "Shortcut icon must have an .exe identifier matching the GUI")
+    require(properties.get("ARPPRODUCTICON") == "CoreIcon.exe", "Installed-app icon missing")
+    for shortcut in tables["Shortcut"]:
+        require(shortcut["Icon_"] == "CoreIcon.exe" and shortcut["IconIndex"] == "0",
+                f"Invalid shortcut icon: {shortcut['Shortcut']}")
+    expected = {(row["Shortcut"], "System.AppUserModel.ID", "ConnectCoin.Core")
+                for row in tables["Shortcut"]}
+    actual = {(row["Shortcut_"], row["PropertyKey"], row["PropVariantValue"])
+              for row in tables.get("MsiShortcutProperty", [])}
+    require(actual == expected, "Shortcut AppUserModelID must match the GUI")
+
+
+def validate_upgrade_policy(tables, version):
+    # Keep all three ranges language-independent: older packages used pt-BR.
+    # Check the complete rows, including removal scope and failure behavior.
+    expected = {
+        (UPGRADE_CODE, "", version, "", "1", "", "WIX_UPGRADE_DETECTED"),
+        (UPGRADE_CODE, version, "", "", "2", "", "WIX_DOWNGRADE_DETECTED"),
+        (UPGRADE_CODE, version, version, "", "770", "", "SAMEVERSIONFOUND"),
+    }
+    actual = {(row["UpgradeCode"].upper(), row["VersionMin"], row["VersionMax"],
+               row["Language"], row["Attributes"], row["Remove"], row["ActionProperty"])
+              for row in tables["Upgrade"]}
+    require(actual == expected and len(tables["Upgrade"]) == len(expected),
+            "Upgrade policy must detect all languages and replace only older complete products")
+    conditions = {
+        "NOT WIX_DOWNGRADE_DETECTED",
+        "Installed OR NOT SAMEVERSIONFOUND",
+        "Installed OR (VersionNT64 AND WINDOWSBUILDNUMBER >= 17763)",
+    }
+    require({row["Condition"] for row in tables["LaunchCondition"]} == conditions and
+            len(tables["LaunchCondition"]) == len(conditions),
+            "Launch conditions must exactly enforce version and supported OS requirements")
+
+
+def extract_icon_stream(msi_path, destination):
+    """Read just the Icon stream through MSI APIs; never execute MSI actions."""
+    msi = ctypes.WinDLL("msi", use_last_error=True)
+    handle = wintypes.UINT
+    pointer = ctypes.POINTER(handle)
+    signatures = {
+        "MsiOpenDatabaseW": ([wintypes.LPCWSTR, wintypes.LPCWSTR, pointer], wintypes.UINT),
+        "MsiDatabaseOpenViewW": ([handle, wintypes.LPCWSTR, pointer], wintypes.UINT),
+        "MsiViewExecute": ([handle, handle], wintypes.UINT),
+        "MsiViewFetch": ([handle, pointer], wintypes.UINT),
+        "MsiRecordReadStream": ([handle, wintypes.UINT, ctypes.c_void_p,
+                                ctypes.POINTER(wintypes.DWORD)], wintypes.UINT),
+        "MsiCloseHandle": ([handle], wintypes.UINT),
+    }
+    for name, (arguments, result) in signatures.items():
+        getattr(msi, name).argtypes = arguments
+        getattr(msi, name).restype = result
+    database, view, record = handle(), handle(), handle()
+
+    def check(result):
+        require(result == 0, f"MSI icon stream read failed: {result}")
+
+    try:
+        check(msi.MsiOpenDatabaseW(str(msi_path), None, ctypes.byref(database)))
+        check(msi.MsiDatabaseOpenViewW(database,
+              "SELECT `Data` FROM `Icon` WHERE `Name` = 'CoreIcon.exe'", ctypes.byref(view)))
+        check(msi.MsiViewExecute(view, 0))
+        check(msi.MsiViewFetch(view, ctypes.byref(record)))
+        data = bytearray()
+        buffer = ctypes.create_string_buffer(65536)
+        while True:
+            length = wintypes.DWORD(len(buffer))
+            check(msi.MsiRecordReadStream(record, 1, buffer, ctypes.byref(length)))
+            if length.value == 0:
+                break
+            data.extend(buffer.raw[:length.value])
+            require(len(data) <= 1024 * 1024, "Shortcut icon PE must stay small (at most 1 MiB)")
+        require(data[:2] == b"MZ", "Shortcut icon stream is not a PE resource")
+        destination.write_bytes(data)
+    finally:
+        for value in (record, view, database):
+            if value.value:
+                msi.MsiCloseHandle(value)
+
+
+def inspect_shell_icons(path):
+    """Use the Windows Shell's real extractor at common taskbar/DPI sizes."""
+    user32 = ctypes.WinDLL("user32", use_last_error=True)
+    extract = user32.PrivateExtractIconsW
+    extract.argtypes = [wintypes.LPCWSTR, ctypes.c_int, ctypes.c_int, ctypes.c_int,
+                        ctypes.POINTER(wintypes.HICON), ctypes.POINTER(wintypes.UINT),
+                        wintypes.UINT, wintypes.UINT]
+    extract.restype = wintypes.UINT
+    user32.DestroyIcon.argtypes = [wintypes.HICON]
+    user32.DestroyIcon.restype = wintypes.BOOL
+    for size in (16, 24, 32, 48, 64, 128, 256):
+        icon, identifier = wintypes.HICON(), wintypes.UINT()
+        count = extract(str(path), 0, size, size, ctypes.byref(icon), ctypes.byref(identifier), 1, 0)
+        try:
+            require(count == 1 and icon.value, f"Cannot extract {size}px icon at index 0: {path}")
+        finally:
+            if icon.value:
+                user32.DestroyIcon(icon)
+    return {"path": str(path), "index": 0, "sizes": [16, 24, 32, 48, 64, 128, 256]}
+
+
 def validate_database(tables, manifest):
+    validate_schema(tables)
     properties = {row["Property"]: row["Value"] for row in tables["Property"]}
+    validate_installer_language(properties, tables["SummaryTemplate"])
+    validate_english_wizard(tables["Control"])
+    validate_shortcut_icons(tables, properties)
     require(properties.get("ProductName") == "ConnectCoin Core", "Wrong product name")
     require(properties.get("ProductVersion") == manifest["build"]["msi_version"], "Wrong MSI version")
     require(properties.get("UpgradeCode", "").upper() == UPGRADE_CODE, "Upgrade identity changed")
@@ -151,9 +349,6 @@ def validate_database(tables, manifest):
     require(properties.get("MSIRESTARTMANAGERCONTROL") == "Disable", "Restart Manager must be disabled")
     require(properties.get("REBOOT") == "ReallySuppress", "Installer may reboot unexpectedly")
     require(tables["SummaryTemplate"].startswith("x64;"), "MSI is not x64")
-    for name in tables["TableNames"]:
-        require("firewall" not in name.lower() and name not in {"ServiceInstall", "ServiceControl"},
-                f"Unexpected system integration table: {name}")
     directories = {row["Directory"]: row for row in tables["Directory"]}
     require(directories["INSTALLFOLDER"]["Directory_Parent"] == "ProgramFiles64Folder",
             "Install directory is not Program Files (x64)")
@@ -191,40 +386,9 @@ def validate_database(tables, manifest):
         require(shortcut["Directory_"] == directory and shortcut["Component_"] == gui["Component_"]
                 and shortcut["Target"] == "Core" and shortcut["WkDir"] == "BINFOLDER"
                 and not shortcut["Arguments"], f"Invalid GUI shortcut: {key}")
-    registry = tables["Registry"]
-    require(all(row["Root"] == "2" for row in registry), "Unexpected registry root")
-    require(all(row["Key"].startswith(("Software\\ConnectCoin Core\\", "Software\\Classes\\ConnectCoinCore.PaymentLink"))
-                or row["Key"] == "Software\\RegisteredApplications" for row in registry),
-            "Registry writes outside Core registration")
-    commands = [row for row in registry if row["Key"].endswith("\\shell\\open\\command")]
-    require(len(commands) == 1 and commands[0]["Value"] == '\"[#GuiExe]\" \"%1\"',
-            "Payment URI command must quote executable and URI")
-    require(any(row["Key"] == "Software\\ConnectCoin Core\\Capabilities\\URLAssociations"
-                and row["Name"] == "connectcoin" and row["Value"] == "ConnectCoinCore.PaymentLink"
-                for row in registry), "Missing payment handler capability")
-    require(not any("userchoice" in row["Key"].lower() or
-                    row["Key"].lower().startswith("software\\classes\\connectcoin\\")
-                    for row in registry), "Installer overrides an existing protocol default")
+    validate_registry(tables["Registry"])
 
-    version = properties["ProductVersion"]
-    upgrades = tables["Upgrade"]
-    require(all(row["UpgradeCode"].upper() == UPGRADE_CODE for row in upgrades), "Unexpected Upgrade row")
-    require(any(row["ActionProperty"] == "WIX_DOWNGRADE_DETECTED" and row["VersionMin"] == version
-                and int(row["Attributes"]) & 2 for row in upgrades), "Missing downgrade detection")
-    require(any(row["ActionProperty"] == "WIX_UPGRADE_DETECTED" and row["VersionMax"] == version
-                and not int(row["Attributes"]) & (2 | 512) for row in upgrades),
-            "Upgrade range must replace only older versions")
-    require(any(row["ActionProperty"] == "SAMEVERSIONFOUND" and row["VersionMin"] == version
-                and row["VersionMax"] == version and int(row["Attributes"]) & (2 | 256 | 512) == (2 | 256 | 512)
-                for row in upgrades), "Missing same-version rebuild detection")
-    conditions = {row["Condition"] for row in tables["LaunchCondition"]}
-    require(any("NOT WIX_DOWNGRADE_DETECTED" in condition for condition in conditions), "Downgrade is not blocked")
-    require("Installed OR NOT SAMEVERSIONFOUND" in conditions, "Same-version rebuild is not blocked")
-    require(any("VersionNT64" in condition and "WINDOWSBUILDNUMBER >= 17763" in condition
-                for condition in conditions), "Missing supported OS launch condition")
-    sequence = {row["Action"]: int(row["Sequence"]) for row in tables["InstallExecuteSequence"]}
-    require(sequence["InstallInitialize"] < sequence["RemoveExistingProducts"] < sequence["InstallFiles"],
-            "Upgrade replacement must be inside the install transaction")
+    validate_upgrade_policy(tables, properties["ProductVersion"])
     actions = tables["CustomAction"]
     for row in actions:
         require(int(row["Type"]) in {1, 65} and
@@ -238,6 +402,7 @@ def validate_database(tables, manifest):
         require(not row["FileName"] and row["DirProperty"] == "CoreMenuFolder" and row["InstallMode"] == "2",
                 f"Unexpected file deletion: {row}")
     return {"product_code": properties["ProductCode"], "upgrade_code": properties["UpgradeCode"],
+            "language": properties["ProductLanguage"],
             "file_count": len(actual), "shortcuts": sorted(shortcuts)}
 
 
@@ -332,6 +497,190 @@ def smoke_cli(payload, work, core_version):
 
 
 class RegressionTests(unittest.TestCase):
+    @staticmethod
+    def sequence_tables():
+        tables = {name: [{"Action": action, "Condition": "", "Sequence": str(index * 100)}
+                         for index, action in enumerate(actions, 1)]
+                  for name, actions in (("AdminExecuteSequence", ADMIN_EXECUTE_ACTIONS),
+                                        ("AdminUISequence", ADMIN_UI_ACTIONS),
+                                        ("InstallExecuteSequence", INSTALL_EXECUTE_ACTIONS))}
+        tables["AdminUISequence"] += [
+            {"Action": action, "Condition": "", "Sequence": str(sequence)}
+            for action, sequence in (("ExitDialog", -1), ("UserExit", -2), ("FatalError", -3))]
+        tables["TableNames"] = sorted(ALLOWED_TABLES)
+        return tables
+
+    def test_preflight_rejects_unapproved_tables(self):
+        validate_schema(self.sequence_tables())
+        for name in ("Environment", "MoveFile", "DuplicateFile", "IniFile", "RemoveIniFile",
+                     "RemoveRegistry", "ServiceInstall", "ServiceControl", "SelfReg", "Class",
+                     "Extension", "ProgId", "MIME", "ODBCDataSource", "Wix4FirewallException"):
+            with self.subTest(table=name):
+                tables = self.sequence_tables()
+                tables["TableNames"].append(name)
+                with self.assertRaisesRegex(ValueError, "Unexpected MSI tables"):
+                    validate_schema(tables)
+
+    def test_preflight_rejects_standard_admin_mutations(self):
+        for table in ("AdminExecuteSequence", "AdminUISequence"):
+            for action in ("WriteRegistryValues", "WriteEnvironmentStrings", "MoveFiles",
+                           "RemoveFiles", "RegisterProduct", "RemoveExistingProducts", "CustomCode"):
+                with self.subTest(table=table, action=action):
+                    tables = self.sequence_tables()
+                    tables[table].append({"Action": action, "Condition": "", "Sequence": "5000"})
+                    with self.assertRaisesRegex(ValueError, "Unexpected or missing actions"):
+                        validate_schema(tables)
+
+    def test_required_actions_cannot_be_missing_conditional_or_reordered(self):
+        for table in ("AdminExecuteSequence", "AdminUISequence", "InstallExecuteSequence"):
+            for index, row in enumerate(self.sequence_tables()[table]):
+                with self.subTest(table=table, action=row["Action"]):
+                    tables = self.sequence_tables()
+                    del tables[table][index]
+                    with self.assertRaisesRegex(ValueError, "Unexpected or missing actions"):
+                        validate_sequences(tables)
+                    tables = self.sequence_tables()
+                    tables[table][index]["Condition"] = "0"
+                    with self.assertRaisesRegex(ValueError, "unconditional"):
+                        validate_sequences(tables)
+            tables = self.sequence_tables()
+            tables[table][1]["Sequence"] = tables[table][0]["Sequence"]
+            with self.assertRaisesRegex(ValueError, "action order"):
+                validate_sequences(tables)
+            tables = self.sequence_tables()
+            tables[table].append(tables[table][0])
+            with self.assertRaisesRegex(ValueError, "Duplicate action"):
+                validate_sequences(tables)
+
+    def test_registry_scope_is_exact(self):
+        registry = [{"Root": "2", "Key": key, "Name": name, "Value": value, "Component_": component}
+                    for key, name, value, component in sorted(REGISTRY_VALUES)]
+        validate_registry(registry)
+        for field, value in (("Root", "1"), ("Key", "Software\\Classes\\connectcoin"),
+                             ("Name", "OtherWallet"), ("Value", "[BINFOLDER]"),
+                             ("Component_", "OtherComponent")):
+            with self.subTest(field=field):
+                changed = [dict(row) for row in registry]
+                changed[0][field] = value
+                with self.assertRaisesRegex(ValueError, "registry root|exact Core registration"):
+                    validate_registry(changed)
+        for changed in (registry[:-1], registry + [registry[0]], registry + [{
+                "Root": "2", "Key": "Software\\RegisteredApplications", "Name": "ConnectWallet",
+                "Value": "Software\\ConnectCoin Core\\Capabilities", "Component_": "PaymentLinkRegistration"}]):
+            with self.assertRaisesRegex(ValueError, "exact Core registration"):
+                validate_registry(changed)
+
+    @staticmethod
+    def upgrade_tables():
+        return {
+            "Upgrade": [
+                {"UpgradeCode": UPGRADE_CODE, "VersionMin": minimum, "VersionMax": maximum,
+                 "Language": "", "Attributes": attributes, "Remove": "", "ActionProperty": action}
+                for minimum, maximum, attributes, action in (
+                    ("", "1.0.0", "1", "WIX_UPGRADE_DETECTED"),
+                    ("1.0.0", "", "2", "WIX_DOWNGRADE_DETECTED"),
+                    ("1.0.0", "1.0.0", "770", "SAMEVERSIONFOUND"))
+            ],
+            "LaunchCondition": [{"Condition": condition} for condition in (
+                "NOT WIX_DOWNGRADE_DETECTED",
+                "Installed OR NOT SAMEVERSIONFOUND",
+                "Installed OR (VersionNT64 AND WINDOWSBUILDNUMBER >= 17763)",
+            )],
+        }
+
+    def test_upgrade_policy_requires_exact_ranges_and_full_removal(self):
+        validate_upgrade_policy(self.upgrade_tables(), "1.0.0")
+        for index, field, value in (
+            (0, "UpgradeCode", "{00000000-0000-0000-0000-000000000000}"),
+            (0, "VersionMin", "0.9.0"),
+            (0, "VersionMax", "2.0.0"),
+            (0, "Attributes", "5"),  # IgnoreRemoveFailure must remain disabled.
+            (0, "Attributes", "513"),  # Never remove another same-version package.
+            (0, "Remove", "NonexistentFeature"),
+            (0, "ActionProperty", "UNUSED_UPGRADE_PROPERTY"),
+            (1, "VersionMin", "2.0.0"),
+            (1, "VersionMax", "2.0.0"),
+            (1, "Attributes", "0"),  # Downgrade detection must never remove a product.
+            (2, "Attributes", "2"),  # Same-version bounds must both be inclusive.
+        ):
+            with self.subTest(index=index, field=field, value=value):
+                tables = self.upgrade_tables()
+                tables["Upgrade"][index][field] = value
+                with self.assertRaisesRegex(ValueError, "Upgrade policy"):
+                    validate_upgrade_policy(tables, "1.0.0")
+        # Switching the wizard from Portuguese to English must neither bypass
+        # a downgrade block nor leave an older Portuguese product installed.
+        for index in range(3):
+            for language in ("1033", "1046"):
+                with self.subTest(index=index, language=language):
+                    tables = self.upgrade_tables()
+                    tables["Upgrade"][index]["Language"] = language
+                    with self.assertRaisesRegex(ValueError, "Upgrade policy"):
+                        validate_upgrade_policy(tables, "1.0.0")
+
+    def test_launch_conditions_cannot_be_weakened_or_duplicated(self):
+        for index in range(3):
+            with self.subTest(index=index):
+                tables = self.upgrade_tables()
+                tables["LaunchCondition"][index]["Condition"] += " OR 1"
+                with self.assertRaisesRegex(ValueError, "Launch conditions"):
+                    validate_upgrade_policy(tables, "1.0.0")
+        for name in ("Upgrade", "LaunchCondition"):
+            for index in range(3):
+                with self.subTest(table=name, index=index):
+                    tables = self.upgrade_tables()
+                    del tables[name][index]
+                    with self.assertRaises(ValueError):
+                        validate_upgrade_policy(tables, "1.0.0")
+                    tables = self.upgrade_tables()
+                    tables[name].append(tables[name][index])
+                    with self.assertRaises(ValueError):
+                        validate_upgrade_policy(tables, "1.0.0")
+
+    def test_shortcut_icons_and_app_identity(self):
+        tables = {"IconNames": ["CoreIcon.exe"], "Shortcut": [
+            {"Shortcut": name, "Icon_": "CoreIcon.exe", "IconIndex": "0"}
+            for name in ("StartMenuShortcut", "DesktopShortcut")],
+            "MsiShortcutProperty": [
+                {"Shortcut_": name, "PropertyKey": "System.AppUserModel.ID",
+                 "PropVariantValue": "ConnectCoin.Core"}
+                for name in ("StartMenuShortcut", "DesktopShortcut")]}
+        properties = {"ARPPRODUCTICON": "CoreIcon.exe"}
+        validate_shortcut_icons(tables, properties)
+        for table, index, field, value in (
+            ("Shortcut", 0, "Icon_", "CoreIcon"),
+            ("Shortcut", 1, "IconIndex", ""),
+            ("MsiShortcutProperty", 0, "PropVariantValue", "Other.App"),
+            ("MsiShortcutProperty", 1, "Shortcut_", "MissingShortcut")):
+            changed = json.loads(json.dumps(tables))
+            changed[table][index][field] = value
+            with self.subTest(table=table, field=field):
+                with self.assertRaisesRegex(ValueError, "icon|AppUserModelID"):
+                    validate_shortcut_icons(changed, properties)
+        for names in (["CoreIcon"], ["CoreIcon.ico"], []):
+            with self.assertRaisesRegex(ValueError, "identifier"):
+                validate_shortcut_icons(dict(tables, IconNames=names), properties)
+        with self.assertRaisesRegex(ValueError, "Installed-app icon"):
+            validate_shortcut_icons(tables, {"ARPPRODUCTICON": "CoreIcon"})
+        with self.assertRaisesRegex(ValueError, "AppUserModelID"):
+            validate_shortcut_icons(dict(tables, MsiShortcutProperty=[]), properties)
+
+    def test_wizard_buttons_must_be_english(self):
+        controls = [{"Type": "PushButton", "Text": text}
+                    for text in ("&Next", "&Back", "Cancel", "&Install", "&Finish")]
+        validate_english_wizard(controls)
+        controls[0]["Text"] = "Avancar"
+        with self.assertRaisesRegex(ValueError, "English wizard button missing: Next"):
+            validate_english_wizard(controls)
+
+    def test_installer_language_must_be_english(self):
+        validate_installer_language({"ProductLanguage": "1033"}, "x64;1033")
+        for language, summary in (("1046", "x64;1046"), ("1033", "x64;1046"),
+                                  ("1046", "x64;1033"), ("1033", "Intel;1033")):
+            with self.subTest(language=language, summary=summary):
+                with self.assertRaisesRegex(ValueError, "English"):
+                    validate_installer_language({"ProductLanguage": language}, summary)
+
     def test_cli_versions_must_match_manifest(self):
         for version in ("1.0.0", "1.0.0-88360e0e5d05", "1.0.0-88360e0e5d05-dirty"):
             text = f"ConnectCoin Core daemon version v{version} connectcoind\n"
@@ -425,6 +774,10 @@ def main():
                             creationflags=subprocess.CREATE_NO_WINDOW)
     require(result.returncode == 0, f"Administrative extraction failed: {result.returncode}; see extract.log")
     payload = compare_extraction(extracted, manifest)
+    icon_resource = work / "CoreIcon.exe"
+    extract_icon_stream(msi, icon_resource)
+    icons = [inspect_shell_icons(path) for path in
+             (icon_resource, payload / "bin/connectcoin-qt.exe")]
     dependencies = inspect_pe(payload, options.objdump)
     smoke = smoke_cli(payload, work, core_version)
     metadata = powershell(r'''
@@ -438,7 +791,7 @@ $ErrorActionPreference = 'Stop'
     report = {"msi": str(msi), "sha256": sha256(msi), "payload": str(payload),
               "core_version": core_version,
               "database": database_report, "pe_imports": dependencies, "cli_smoke": smoke,
-              "gui_metadata": metadata, "limitations": [
+              "gui_metadata": metadata, "shell_icons": icons, "limitations": [
                   "GUI launch is not tested: Windows help/version opens a modal dialog.",
                   "Install, repair, upgrade and uninstall require a disposable clean Windows VM."]}
     report_path = work / "report.json"

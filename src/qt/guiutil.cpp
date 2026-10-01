@@ -29,6 +29,8 @@
 #include <util/time.h>
 
 #ifdef WIN32
+#include <propsys.h>
+#include <propkey.h>
 #include <shellapi.h>
 #include <shlobj.h>
 #include <shlwapi.h>
@@ -569,16 +571,31 @@ bool SetStartOnSystemStartup(bool fAutoStart)
             strArgs += QString::fromStdString(strprintf(" -chain=%s", gArgs.GetChainTypeString()));
 
             // Set the path to the shortcut target
-            psl->SetPath(pszExePath);
+            hres = psl->SetPath(pszExePath);
+            if (SUCCEEDED(hres)) hres = psl->SetIconLocation(pszExePath, 0);
             PathRemoveFileSpecW(pszExePath);
-            psl->SetWorkingDirectory(pszExePath);
-            psl->SetShowCmd(SW_SHOWMINNOACTIVE);
-            psl->SetArguments(strArgs.toStdWString().c_str());
+            if (SUCCEEDED(hres)) hres = psl->SetWorkingDirectory(pszExePath);
+            if (SUCCEEDED(hres)) hres = psl->SetShowCmd(SW_SHOWMINNOACTIVE);
+            if (SUCCEEDED(hres)) hres = psl->SetArguments(strArgs.toStdWString().c_str());
+
+            // A launch-at-login shortcut must share the installed shortcuts'
+            // identity so Windows can associate its windows with a taskbar pin.
+            IPropertyStore* properties = nullptr;
+            if (SUCCEEDED(hres)) hres = psl->QueryInterface(IID_IPropertyStore, reinterpret_cast<void**>(&properties));
+            if (SUCCEEDED(hres)) {
+                PROPVARIANT app_id{};
+                app_id.vt = VT_LPWSTR;
+                // SetValue copies this borrowed, static string.
+                app_id.pwszVal = const_cast<LPWSTR>(WINDOWS_APP_USER_MODEL_ID);
+                hres = properties->SetValue(PKEY_AppUserModel_ID, app_id);
+                if (SUCCEEDED(hres)) hres = properties->Commit();
+                properties->Release();
+            }
 
             // Query IShellLink for the IPersistFile interface for
             // saving the shortcut in persistent storage.
             IPersistFile* ppf = nullptr;
-            hres = psl->QueryInterface(IID_IPersistFile, reinterpret_cast<void**>(&ppf));
+            if (SUCCEEDED(hres)) hres = psl->QueryInterface(IID_IPersistFile, reinterpret_cast<void**>(&ppf));
             if (SUCCEEDED(hres))
             {
                 // Save the link by calling IPersistFile::Save.
@@ -586,7 +603,7 @@ bool SetStartOnSystemStartup(bool fAutoStart)
                 ppf->Release();
                 psl->Release();
                 CoUninitialize();
-                return true;
+                return SUCCEEDED(hres);
             }
             psl->Release();
         }

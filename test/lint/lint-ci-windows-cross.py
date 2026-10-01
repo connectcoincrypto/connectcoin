@@ -8,10 +8,12 @@ dependency. These focused helpers require the repository's explicit indentation;
 they are not a general YAML parser. Actionlint checks full workflow syntax.
 """
 
+import importlib.util
 import itertools
 from pathlib import Path
 import re
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 CALLER = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
@@ -69,6 +71,19 @@ def dependency_graph(caller, reusable):
 
 
 class WindowsCrossWorkflowTests(unittest.TestCase):
+    def test_native_runner_executes_desktop_icon_checks(self):
+        spec = importlib.util.spec_from_file_location("ci_windows_cross", ROOT / ".github/ci-windows-cross.py")
+        runner = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(runner)
+        # CTest registration cannot cover this runner: only its explicit
+        # command list executes the binaries downloaded from the Linux build.
+        with patch.object(runner, "run") as run:
+            runner.run_unit_tests()
+        commands = [call.args[0] for call in run.call_args_list]
+        self.assertEqual(commands.count(["./bin/connectcoin-test-desktop-icons.exe"]), 1)
+        self.assertIn(["./bin/connectcoin-test-qt.exe"], commands)
+        self.assertIn(["./bin/connectcoin-test.exe", "-l", "test_suite"], commands)
+
     def test_each_crt_can_test_without_waiting_for_other_build(self):
         graph = dependency_graph(CALLER, REUSABLE)
         for first, other in (("msvcrt", "ucrt"), ("ucrt", "msvcrt")):

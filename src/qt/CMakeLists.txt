@@ -293,6 +293,30 @@ add_executable(connectcoin-qt WIN32
 )
 add_windows_application_manifest(connectcoin-qt)
 
+# MSI shortcut icons require a PE file with the same extension as their target.
+# Keep this resource-only .exe separate from the installed GUI executable.
+if(MSVC)
+  add_library(connectcoin-msi-icon MODULE EXCLUDE_FROM_ALL
+    ${PROJECT_SOURCE_DIR}/contrib/windeploy/core-icon.rc
+  )
+  set_target_properties(connectcoin-msi-icon PROPERTIES
+    AUTOMOC OFF
+    AUTOUIC OFF
+    LINKER_LANGUAGE CXX
+    PREFIX ""
+    SUFFIX ".exe"
+    WINDOWS_EXPORT_ALL_SYMBOLS OFF
+    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/msi-resources/$<CONFIG>"
+    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/msi-resources/$<CONFIG>"
+    # Do not inherit a caller's per-configuration output override: the MSI
+    # packager must find its Release-only resource at this fixed location.
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PROJECT_BINARY_DIR}/msi-resources/Release"
+    LIBRARY_OUTPUT_DIRECTORY_RELEASE "${PROJECT_BINARY_DIR}/msi-resources/Release"
+  )
+  target_include_directories(connectcoin-msi-icon PRIVATE ${PROJECT_SOURCE_DIR}/share/pixmaps)
+  target_link_options(connectcoin-msi-icon PRIVATE /NOENTRY /NODEFAULTLIB /MANIFEST:NO)
+endif()
+
 target_link_libraries(connectcoin-qt
   core_interface
   connectcoin_qt

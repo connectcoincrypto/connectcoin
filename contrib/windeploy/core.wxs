@@ -3,14 +3,14 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
      xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
   <Package Name="ConnectCoin Core" Manufacturer="ConnectCoin Core developers"
-           Version="$(var.PackageVersion)" Language="1046" Codepage="1252"
+           Version="$(var.PackageVersion)" Language="1033" Codepage="1252"
            UpgradeCode="68B91A0E-90D2-4B52-B9F5-5DE859A401DB"
            Scope="perMachine" InstallerVersion="500" Compressed="yes">
     <SummaryInformation Description="ConnectCoin Core $(var.CoreVersion) - Windows x64"
                         Manufacturer="ConnectCoin Core developers" />
-    <MajorUpgrade DowngradeErrorMessage="Uma versão mais recente do ConnectCoin Core já está instalada."
-                  Schedule="afterInstallInitialize" />
-    <!-- A rebuilt MSI must increment its three-field version, not install a
+    <MajorUpgrade DowngradeErrorMessage="A newer version of ConnectCoin Core is already installed."
+                  Schedule="afterInstallInitialize" IgnoreLanguage="yes" />
+    <!-- An in-place upgrade must increment its three-field version, not install a
          second product with the same version and shared component identities. -->
     <Upgrade Id="68B91A0E-90D2-4B52-B9F5-5DE859A401DB">
       <UpgradeVersion Minimum="$(var.PackageVersion)" Maximum="$(var.PackageVersion)"
@@ -18,16 +18,16 @@
                       Property="SAMEVERSIONFOUND" />
     </Upgrade>
     <Launch Condition="Installed OR NOT SAMEVERSIONFOUND"
-            Message="Esta versão já está instalada. Use o pacote original para reparar ou desinstale a versão existente antes de instalar este pacote." />
+            Message="This version is already installed. Use the original package to repair it, or uninstall the existing version before installing this package." />
     <Property Id="WINDOWSBUILDNUMBER">
       <RegistrySearch Id="WindowsBuildSearch" Root="HKLM"
                       Key="SOFTWARE\Microsoft\Windows NT\CurrentVersion"
                       Name="CurrentBuildNumber" Type="raw" Bitness="always64" />
     </Property>
     <Launch Condition="Installed OR (VersionNT64 AND WINDOWSBUILDNUMBER &gt;= 17763)"
-            Message="Este instalador requer Windows 10 versão 1809 ou posterior, de 64 bits." />
+            Message="This installer requires Windows 10 version 1809 or later (64-bit)." />
     <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
-    <Property Id="ARPPRODUCTICON" Value="CoreIcon" />
+    <Property Id="ARPPRODUCTICON" Value="CoreIcon.exe" />
     <Property Id="ARPURLINFOABOUT" Value="https://connectcoincrypto.com/" />
     <Property Id="ARPHELPLINK" Value="https://github.com/connectcoincrypto/connectcoin/issues" />
     <!-- Never terminate/restart a running wallet or node automatically. -->
@@ -38,7 +38,7 @@
                       Key="Software\ConnectCoin Core\Installer" Name="InstallDir"
                       Type="raw" Bitness="always64" />
     </Property>
-    <Icon Id="CoreIcon" SourceFile="$(var.RepoDir)\share\pixmaps\connectcoin.ico" />
+    <Icon Id="CoreIcon.exe" SourceFile="$(var.ShortcutIcon)" />
     <StandardDirectory Id="ProgramFiles64Folder">
       <Directory Id="INSTALLFOLDER" Name="ConnectCoin Core">
         <Directory Id="BINFOLDER" Name="bin" />
@@ -61,6 +61,8 @@
                        Value="URL:ConnectCoin payment" Type="string" KeyPath="yes" />
         <RegistryValue Root="HKLM" Key="Software\Classes\ConnectCoinCore.PaymentLink"
                        Name="URL Protocol" Value="" Type="string" />
+        <RegistryValue Root="HKLM" Key="Software\Classes\ConnectCoinCore.PaymentLink"
+                       Name="AppUserModelID" Value="ConnectCoin.Core" Type="string" />
         <RegistryValue Root="HKLM" Key="Software\Classes\ConnectCoinCore.PaymentLink\DefaultIcon"
                        Value="&quot;[#GuiExe]&quot;,0" Type="string" />
         <RegistryValue Root="HKLM" Key="Software\Classes\ConnectCoinCore.PaymentLink\shell\open\command"
@@ -68,7 +70,7 @@
         <RegistryValue Root="HKLM" Key="Software\ConnectCoin Core\Capabilities"
                        Name="ApplicationName" Value="ConnectCoin Core" Type="string" />
         <RegistryValue Root="HKLM" Key="Software\ConnectCoin Core\Capabilities"
-                       Name="ApplicationDescription" Value="Carteira e nó completo ConnectCoin" Type="string" />
+                       Name="ApplicationDescription" Value="ConnectCoin wallet and full node" Type="string" />
         <RegistryValue Root="HKLM" Key="Software\ConnectCoin Core\Capabilities"
                        Name="ApplicationIcon" Value="&quot;[#GuiExe]&quot;,0" Type="string" />
         <RegistryValue Root="HKLM" Key="Software\ConnectCoin Core\Capabilities\URLAssociations"

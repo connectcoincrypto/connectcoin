@@ -65,6 +65,10 @@
 #include <QTimer>
 #include <QWindow>
 
+#ifdef WIN32
+#include <shobjidl.h>
+#endif
+
 // Declare meta types used for QMetaObject::invokeMethod
 Q_DECLARE_METATYPE(bool*)
 Q_DECLARE_METATYPE(CAmount)
@@ -159,12 +163,20 @@ static int qt_argc = 1;
 BitcoinApplication::BitcoinApplication()
     : QApplication(qt_argc, qt_argv)
 {
-#ifdef Q_OS_LINUX
-    // Wayland/app launchers use the desktop-file ID. Set it, and the embedded
-    // fallback icon, before any intro/splash window can be mapped by the shell.
-    setDesktopFileName(QStringLiteral(QAPP_DESKTOP_FILE_NAME));
-    setWindowIcon(QIcon(QStringLiteral(":/icons/bitcoin")));
+#ifdef WIN32
+    // Associate every window, including early startup dialogs, with the same
+    // identity as the installed shortcuts and taskbar pin.
+    if (FAILED(SetCurrentProcessExplicitAppUserModelID(WINDOWS_APP_USER_MODEL_ID))) {
+        qWarning("Could not set the Windows taskbar application identity.");
+    }
 #endif
+#ifdef Q_OS_LINUX
+    // Wayland/app launchers use the desktop-file ID.
+    setDesktopFileName(QStringLiteral(QAPP_DESKTOP_FILE_NAME));
+#endif
+    // Startup/help/error windows appear before the network-specific main
+    // window. Give them the embedded icon on every desktop platform too.
+    setWindowIcon(QIcon(QStringLiteral(":/icons/bitcoin")));
     // Qt runs setlocale(LC_ALL, "") on initialization.
     RegisterMetaTypes();
     setQuitOnLastWindowClosed(false);

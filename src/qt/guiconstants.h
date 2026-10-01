@@ -59,6 +59,9 @@ inline constexpr int TOOLTIP_WRAP_THRESHOLD = 80;
 #define QAPP_DESKTOP_FILE_NAME "org.connectcoin.ConnectCoin"
 #define QAPP_DESKTOP_ICON_NAME "connectcoin"
 
+// Match System.AppUserModel.ID on the MSI's desktop and Start menu shortcuts.
+inline constexpr wchar_t WINDOWS_APP_USER_MODEL_ID[] = L"ConnectCoin.Core";
+
 /* One gigabyte (GB) in bytes */
 inline constexpr uint64_t GB_BYTES{1'000'000'000};
 

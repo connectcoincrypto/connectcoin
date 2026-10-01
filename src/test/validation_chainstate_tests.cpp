@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(mainnet_genesis_allocations_require_coinbase_maturity)
     const auto params{CreateChainParams(m_args, ChainType::MAIN)};
     const auto& genesis_tx{*params->GenesisBlock().vtx.front()};
     CCoinsViewCache inputs{&CoinsViewEmpty::Get()};
-    AddCoins(inputs, genesis_tx, /*nHeight=*/0, /*check_for_overwrite=*/false);
+    AddCoins(inputs, genesis_tx, /*nHeight=*/0, /*check=*/false);
     BOOST_REQUIRE_EQUAL(genesis_tx.vout.size(), 2U);
     for (uint32_t index{0}; index < genesis_tx.vout.size(); ++index) {
         CMutableTransaction spend;

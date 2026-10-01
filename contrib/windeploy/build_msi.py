@@ -68,9 +68,11 @@ def payload_fragment(stage, output):
         if gui:
             for shortcut_id, directory in (("StartMenuShortcut", "CoreMenuFolder"),
                                            ("DesktopShortcut", "DesktopFolder")):
-                node(element, "Shortcut", Id=shortcut_id, Directory=directory,
-                     Name="ConnectCoin Core", Advertise="yes", Icon="CoreIcon",
-                     WorkingDirectory="BINFOLDER")
+                shortcut = node(element, "Shortcut", Id=shortcut_id, Directory=directory,
+                                Name="ConnectCoin Core", Advertise="yes", Icon="CoreIcon.exe",
+                                IconIndex="0", WorkingDirectory="BINFOLDER")
+                node(shortcut, "ShortcutProperty", Key="System.AppUserModel.ID",
+                     Value="ConnectCoin.Core")
         node(group, "ComponentRef", Id=component_id)
         manifest.append({"path": relative, "size": file.stat().st_size,
                          "sha256": hashlib.sha256(file.read_bytes()).hexdigest()})
@@ -125,6 +127,14 @@ def main():
     if not options.skip_build:
         run("cmake", "--build", build, "--config", "Release", "--target", *TARGETS,
             "--parallel", options.jobs)
+    # Advertised shortcut icons must be PE resources, with an .exe identifier
+    # matching the target's extension. A tiny resource-only PE avoids duplicating
+    # the entire GUI executable in the MSI's uncompressed Icon table.
+    run("cmake", "--build", build, "--config", "Release", "--target", "connectcoin-msi-icon",
+        "--parallel", options.jobs)
+    shortcut_icon = build / "msi-resources/Release/connectcoin-msi-icon.exe"
+    if not shortcut_icon.is_file():
+        raise RuntimeError(f"Missing Windows shortcut icon resource: {shortcut_icon}")
     for target in TARGETS:
         run("cmake", "--install", build, "--config", "Release", "--component", target,
             "--prefix", stage)
@@ -176,6 +186,7 @@ def main():
         copy_file(license_file, stage / "licenses" / f"vcpkg-{license_file.parent.name}.txt")
     # Include provenance useful when redistributing/rebuilding the bundled LGPL Qt DLLs.
     provenance = {"core_version": core_version, "msi_version": version, "wix": wix_version,
+                  "installer_language": "en-US",
                   "git_commit": subprocess.check_output(["git", "-C", str(REPO), "rev-parse", "HEAD"], text=True).strip(),
                   "working_tree_dirty": bool(subprocess.check_output(
                       ["git", "-C", str(REPO), "status", "--porcelain"], text=True).strip()),
@@ -190,9 +201,9 @@ def main():
     fragment = work / "payload.wxs"
     manifest = payload_fragment(stage, fragment)
     run(wix, "build", REPO / "contrib/windeploy/core.wxs", fragment,
-        "-arch", "x64", "-culture", "pt-br", "-ext", extension,
+        "-arch", "x64", "-culture", "en-us", "-ext", extension,
         "-d", f"PackageVersion={version}", "-d", f"CoreVersion={core_version}",
-        "-d", f"RepoDir={REPO}", "-d", f"LicenseRtf={license_rtf}",
+        "-d", f"ShortcutIcon={shortcut_icon}", "-d", f"LicenseRtf={license_rtf}",
         "-intermediatefolder", work / "wix", "-o", msi)
     (output / f"{msi.stem}.manifest.json").write_text(json.dumps({"build": provenance, "files": manifest}, indent=2) + "\n", encoding="utf-8")
     (output / f"{msi.name}.sha256").write_text(f"{hashlib.sha256(msi.read_bytes()).hexdigest()}  {msi.name}\n", encoding="ascii")

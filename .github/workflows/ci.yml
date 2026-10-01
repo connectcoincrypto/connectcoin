@@ -273,9 +273,26 @@ jobs:
         if: github.event_name == 'push' && matrix.job-type == 'standard'
         run: py -3 .github/ci-windows.py standard vcpkg_cache_state
 
+      - name: Record restored vcpkg ABI inputs
+        run: py -3 ci/test/vcpkg_abi_diagnostics.py before
+
       - name: Generate build system
+        id: vcpkg-configure
         run: |
           py -3 .github/ci-windows.py ${{ matrix.job-type }} generate
+
+      - name: Compare vcpkg ABI inputs
+        if: ${{ (success() || failure()) && (steps.vcpkg-configure.outcome == 'success' || steps.vcpkg-configure.outcome == 'failure') }}
+        run: py -3 ci/test/vcpkg_abi_diagnostics.py after
+
+      - name: Upload vcpkg ABI diagnostics
+        if: ${{ success() || failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: vcpkg-abi-${{ matrix.job-type }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: build/ci-vcpkg-abi/*.json
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Record updated vcpkg cache state
         id: vcpkg-cache-after

@@ -3,6 +3,8 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
 
+#include <connectcoin-build-config.h> // IWYU pragma: keep
+
 #include <node/warnings.h>
 #include <util/translation.h>
 
@@ -11,6 +13,14 @@
 #include <boost/test/unit_test.hpp>
 
 BOOST_FIXTURE_TEST_SUITE(node_warnings_tests, BasicTestingSetup)
+
+BOOST_AUTO_TEST_CASE(release_build_warning)
+{
+    node::Warnings warnings;
+    BOOST_CHECK_EQUAL(warnings.GetMessages().size(), CLIENT_VERSION_IS_RELEASE ? 0U : 1U);
+    BOOST_CHECK_EQUAL(warnings.Unset(node::Warning::PRE_RELEASE_TEST_BUILD), !CLIENT_VERSION_IS_RELEASE);
+    BOOST_CHECK(warnings.GetMessages().empty());
+}
 
 BOOST_AUTO_TEST_CASE(warnings)
 {

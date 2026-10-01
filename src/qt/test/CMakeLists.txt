@@ -70,6 +70,27 @@ if(WIN32 AND VCPKG_TARGET_TRIPLET)
 endif()
 
 install_binary_component(connectcoin-test-qt INTERNAL)
+
+# A focused desktop-integration check uses only temporary data/settings and
+# never starts a node, resets a profile, or changes login/taskbar shortcuts.
+add_executable(connectcoin-test-desktop-icons
+  desktopicon_tests.cpp
+  ../../init/bitcoin-qt.cpp
+)
+add_windows_application_manifest(connectcoin-test-desktop-icons)
+target_link_libraries(connectcoin-test-desktop-icons
+  core_interface
+  connectcoin_qt
+  test_util
+  connectcoin_node
+  Boost::headers
+  Qt6::Test
+)
+import_plugins(connectcoin-test-desktop-icons)
+deploy_windows_qt_plugin(connectcoin-test-desktop-icons Qt6::QWindowsIntegrationPlugin platforms)
+deploy_windows_qt_plugin(connectcoin-test-desktop-icons Qt6::QModernWindowsStylePlugin styles)
+add_test(NAME connectcoin-test-desktop-icons COMMAND connectcoin-test-desktop-icons)
+
 if(WIN32 AND NOT qt_lib_type STREQUAL "STATIC_LIBRARY")
   install(FILES "$<TARGET_FILE:Qt6::QWindowsIntegrationPlugin>"
     DESTINATION "${CMAKE_INSTALL_LIBEXECDIR}/platforms"

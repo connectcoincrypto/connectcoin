@@ -5,12 +5,21 @@ transaction utility, wallet utility, and general utility. Qt plugins, vcpkg
 runtime DLLs, and compiler-matching Visual C++ runtime DLLs accompany the
 executables. There are no installer-time dependency downloads.
 
-It installs per-machine (administrator approval) with a Portuguese-Brazilian
+It installs per-machine (administrator approval) with an English
 wizard, a configurable installation directory, Start Menu/desktop shortcuts,
 and Windows Installer repair/uninstall/major-upgrade support. It registers Core
 as a **candidate** for `connectcoin:` links in Windows Default Apps, without
 overriding another wallet's association. It does not modify `PATH`, start the
 application, install a service, enable mining/claims/RPC, or change the firewall.
+
+The MSI embeds a small icon-only Windows PE resource named `CoreIcon.exe` for
+advertised shortcuts and the installed-app listing. Both shortcuts use icon
+index 0 and `System.AppUserModel.ID=ConnectCoin.Core`, matching the GUI and
+payment-link registration. The GUI also sets its window icon before startup
+dialogs appear. The resource is built by the `connectcoin-msi-icon` target,
+including when packaging with `--skip-build`; it is not an installed executable.
+An old taskbar pin pointing at a portable/build-directory executable is not
+rewritten. Unpin it and pin the installed Start Menu shortcut instead.
 
 Application data, including `%LOCALAPPDATA%\ConnectCoin` and custom data
 directories, is not included in any MSI component. Uninstall does not remove it.
@@ -60,12 +69,15 @@ or `--skip-build` only when all Release targets are already up to date.
 The builder deliberately leaves compiler/ICE validation errors enabled.
 
 MSI uses **three version fields** (`major <= 255`, `minor <= 255`, `build <= 65535`).
-The default is the Core version. Every published replacement needs a larger MSI
-version, including repackaging the same Core version; use `--package-version`
-for this. Do not add a fourth revision (Windows Installer ignores it), reuse the
-same MSI version for changed packages, or change the fixed UpgradeCode.
+The default is the Core version. An in-place upgrade needs a larger MSI version,
+including repackaging the same Core version; use `--package-version` for this.
+Do not add a fourth revision (Windows Installer ignores it), reuse the same MSI
+version for in-place upgrades, or change the fixed UpgradeCode.
 Lower-version installs and different packages with the same version are blocked.
-The original MSI can still repair its own installation.
+The original MSI can still repair its own installation. To replace an installed
+MSI with a rebuilt package that keeps the same version (such as Core 1.0.0),
+uninstall the existing MSI first, then install the replacement. This preserves
+the wallet/data directory as described above.
 
 This MSI does not upgrade the old NSIS `.exe` installer. Uninstall an old NSIS
 installation first; preserve its wallet/data directory. Do not point MSI at an
@@ -86,6 +98,11 @@ clean disposable Windows VM before public distribution. Verify that preexisting
 wallet/data files and another wallet's default URL association survive. A local
 administrative extraction does **not** prove those full lifecycle scenarios.
 Do not run installation lifecycle tests on a machine holding real wallets.
+
+The verifier checks shortcut icon/AppUserModelID metadata and extracts the
+embedded PE icon and GUI executable icons using Windows at 16-256 pixel sizes.
+The isolated `connectcoin-test-desktop-icons` Qt test checks early and main-window
+icons and the runtime Windows application identity without starting a node.
 
 The script does **not** sign the result. For distribution, sign binaries and
 the finished MSI using the project's Authenticode certificate and a trusted

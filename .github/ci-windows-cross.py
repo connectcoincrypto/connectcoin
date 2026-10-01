@@ -120,6 +120,7 @@ def run_functional_tests():
 def run_unit_tests():
     # Can't use ctest here like other jobs as we don't have a CMake build tree.
     commands = [
+        ["./bin/connectcoin-test-desktop-icons.exe"],
         ["./bin/connectcoin-test-qt.exe"],
         # Intentionally run sequentially here, to catch test case failures caused by dirty global state from prior test cases:
         ["./bin/connectcoin-test.exe", "-l", "test_suite"],
