@@ -194,9 +194,9 @@ jobs:
         run: |
           if command -v apt-get >/dev/null; then
             apt-get update
-            apt-get install -y --no-install-recommends ca-certificates git python3 desktop-file-utils
+            apt-get install -y --no-install-recommends ca-certificates git python3 desktop-file-utils xvfb xauth
           else
-            dnf install -y ca-certificates git python3 desktop-file-utils tar gzip findutils
+            dnf install -y ca-certificates git python3 desktop-file-utils tar gzip findutils xorg-x11-server-Xvfb xorg-x11-xauth
           fi
       - uses: actions/checkout@v6
         with:
@@ -221,6 +221,7 @@ jobs:
           appdir=$(find portable -maxdepth 2 -name AppRun -printf '%h\n')
           test -n "$appdir"
           python3 contrib/linuxdeploy/smoke_test.py --portable --prefix "$appdir" --output portable-smoke.json
+          xvfb-run -a env QT_QPA_PLATFORM=xcb "$appdir/connectcoin-qt" -version
           images=(dist/*.AppImage)
           test "${#images[@]}" -eq 1
           chmod +x "${images[0]}"
@@ -240,6 +241,7 @@ jobs:
         run: |
           desktop-file-validate /usr/share/applications/org.connectcoin.ConnectCoin.desktop
           python3 contrib/linuxdeploy/smoke_test.py --prefix /usr --output installed-smoke.json
+          xvfb-run -a env QT_QPA_PLATFORM=xcb connectcoin-qt -version
       - name: Uninstall without removing user data
         if: matrix.platform != 'fedora43-portable'
         run: |
