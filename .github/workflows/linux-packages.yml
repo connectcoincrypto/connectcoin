@@ -1,0 +1,254 @@
+name: Linux installers
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['codex/linux-installers']
+    paths:
+      - '.github/workflows/linux-packages.yml'
+      - 'contrib/linuxdeploy/**'
+      - 'cmake/module/LinuxPackaging.cmake'
+      - 'CMakeLists.txt'
+      - 'src/CMakeLists.txt'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linux-packages-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: Build ${{ matrix.platform }} x86_64
+    runs-on: ubuntu-24.04
+    container: ${{ matrix.image }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: ubuntu22.04
+            image: ubuntu:22.04
+            generator: DEB
+            release: 1ubuntu22.04
+          - platform: fedora43
+            image: fedora:43
+            generator: RPM
+            release: 1.fc43
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      CMAKE_BUILD_PARALLEL_LEVEL: '2'
+      CCACHE_DIR: /tmp/connectcoin-ccache
+      CCACHE_MAXSIZE: 384M
+    steps:
+      - name: Install build dependencies
+        run: |
+          if command -v apt-get >/dev/null; then
+            apt-get update
+            apt-get install -y --no-install-recommends \
+              ca-certificates git g++-12 cmake ninja-build pkg-config ccache \
+              libboost-dev libsqlite3-dev libzmq3-dev libqrencode-dev \
+              qt6-base-dev qt6-base-dev-tools qt6-tools-dev qt6-tools-dev-tools \
+              qt6-l10n-tools qt6-qpa-plugins qt6-wayland qt6-translations-l10n \
+              python3 python3-zmq dpkg-dev file binutils curl patchelf \
+              desktop-file-utils xz-utils
+            echo 'CC=gcc-12' >> "$GITHUB_ENV"
+            echo 'CXX=g++-12' >> "$GITHUB_ENV"
+          else
+            dnf install -y \
+              ca-certificates git gcc-c++ cmake ninja-build pkgconf-pkg-config ccache \
+              boost-devel sqlite-devel zeromq-devel qrencode-devel \
+              qt6-qtbase-devel qt6-qttools-devel qt6-qtbase-gui \
+              python3 python3-zmq rpm-build file binutils desktop-file-utils xz
+          fi
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Restore compiler cache
+        id: compiler-cache
+        uses: actions/cache/restore@v5
+        with:
+          path: /tmp/connectcoin-ccache
+          key: linux-packages-${{ matrix.platform }}-${{ github.sha }}
+          restore-keys: linux-packages-${{ matrix.platform }}-
+      - name: Test packaging helpers
+        run: |
+          python3 contrib/linuxdeploy/smoke_test.py --self-test
+          bash contrib/linuxdeploy/test-apprun.sh
+          cmake -DREPO_SOURCE_DIR="$GITHUB_WORKSPACE" \
+            -DTEST_BINARY_DIR="$GITHUB_WORKSPACE/build-package-fixture" \
+            -P test/cmake/linux_packaging/run.cmake
+      - name: Configure release build
+        run: |
+          cmake -S . -B build-linux -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr \
+            -DBUILD_GUI=ON -DBUILD_TESTS=ON -DBUILD_GUI_TESTS=ON \
+            -DBUILD_TX=ON -DBUILD_UTIL=ON -DBUILD_WALLET_TOOL=ON \
+            -DENABLE_IPC=OFF -DWITH_ZMQ=ON -DWITH_CCACHE=ON \
+            -DENABLE_LINUX_PACKAGING=ON \
+            -DCPACK_GENERATOR=${{ matrix.generator }} \
+            -DCONNECTCOIN_PACKAGE_RELEASE=${{ matrix.release }}
+      - name: Compile applications and verification binaries
+        id: compile
+        run: |
+          cmake --build build-linux --target connectcoin connectcoind connectcoin-cli \
+            connectcoin-qt connectcoin-tx connectcoin-util connectcoin-wallet \
+            connectcoin-test connectcoin-test-desktop-icons
+      - name: Save compiler cache
+        if: ${{ (success() || failure()) && steps.compile.outcome != 'skipped' && steps.compiler-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v5
+        with:
+          path: /tmp/connectcoin-ccache
+          key: ${{ steps.compiler-cache.outputs.cache-primary-key }}
+      - name: Core unit tests
+        timeout-minutes: 20
+        run: TEST_RANDOMX_MOCK_POW=1 build-linux/bin/connectcoin-test --log_level=message
+      - name: Real RandomX and desktop icon tests
+        timeout-minutes: 10
+        run: |
+          ctest --test-dir build-linux --output-on-failure \
+            -R '^(pow_tests|randomx_tests|connectcoin-test-desktop-icons)$'
+      - name: Build native installer
+        run: |
+          mkdir -p dist
+          (cd build-linux && cpack --config CPackConfig.cmake -B "$GITHUB_WORKSPACE/dist")
+      - name: Stage portable files
+        if: matrix.generator == 'DEB'
+        run: |
+          for component in connectcoin connectcoind connectcoin-cli connectcoin-qt connectcoin-tx connectcoin-util connectcoin-wallet connectcoin-licenses; do
+            DESTDIR="$GITHUB_WORKSPACE/build-linux/stage" cmake --install build-linux --strip --component "$component"
+          done
+          python3 contrib/linuxdeploy/smoke_test.py --prefix build-linux/stage/usr --output dist/staged-smoke.json
+      - name: Build portable distribution
+        if: matrix.generator == 'DEB'
+        run: |
+          bash contrib/linuxdeploy/build-portable.sh \
+            --staging-prefix "$GITHUB_WORKSPACE/build-linux/stage/usr" \
+            --output-dir "$GITHUB_WORKSPACE/dist" \
+            --version 1.0.0
+      - name: Record checksums and provenance
+        run: |
+          python3 contrib/linuxdeploy/build_manifest.py --artifacts dist --build-dir build-linux
+      - name: Upload installers
+        uses: actions/upload-artifact@v7
+        with:
+          name: connectcoin-core-1.0.0-${{ matrix.platform }}-x86_64
+          path: |
+            dist/*.deb
+            dist/*.rpm
+            dist/*.AppImage
+            dist/*.tar.gz
+            dist/*.json
+            dist/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload build diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: linux-package-diagnostics-${{ matrix.platform }}
+          path: |
+            build-linux/CMakeFiles/CMakeConfigureLog.yaml
+            build-linux/Testing/Temporary/LastTest.log
+            dist/_CPack_Packages/**/rpmbuild.err
+            dist/_CPack_Packages/**/rpmbuild.out
+          if-no-files-found: ignore
+
+  verify:
+    name: Clean runtime ${{ matrix.platform }}
+    needs: build
+    if: ${{ always() && !cancelled() }}
+    runs-on: ubuntu-24.04
+    container: ${{ matrix.image }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: ubuntu22.04
+            image: ubuntu:22.04
+            artifact: ubuntu22.04
+          - platform: ubuntu24.04
+            image: ubuntu:24.04
+            artifact: ubuntu22.04
+          - platform: debian12
+            image: debian:12
+            artifact: ubuntu22.04
+          - platform: fedora43
+            image: fedora:43
+            artifact: fedora43
+          - platform: fedora43-portable
+            image: fedora:43
+            artifact: ubuntu22.04
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Install test harness dependencies
+        run: |
+          if command -v apt-get >/dev/null; then
+            apt-get update
+            apt-get install -y --no-install-recommends ca-certificates git python3 desktop-file-utils
+          else
+            dnf install -y ca-certificates git python3 desktop-file-utils
+          fi
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v8
+        with:
+          name: connectcoin-core-1.0.0-${{ matrix.artifact }}-x86_64
+          path: dist
+      - name: Verify download
+        run: |
+          (cd dist && sha256sum --check SHA256SUMS)
+      - name: Verify portable bundle and AppImage before installing native dependencies
+        if: matrix.artifact == 'ubuntu22.04'
+        run: |
+          if command -v apt-get >/dev/null; then
+            apt-get install -y --no-install-recommends libfontconfig1 libfreetype6 libgl1
+          else
+            dnf install -y fontconfig freetype mesa-libGL
+          fi
+          mkdir portable
+          tar -xzf dist/*.tar.gz -C portable
+          appdir=$(find portable -maxdepth 2 -name AppRun -printf '%h\n')
+          test -n "$appdir"
+          python3 contrib/linuxdeploy/smoke_test.py --portable --prefix "$appdir" --output portable-smoke.json
+          images=(dist/*.AppImage)
+          test "${#images[@]}" -eq 1
+          chmod +x "${images[0]}"
+          QT_QPA_PLATFORM=minimal APPIMAGE_EXTRACT_AND_RUN=1 "${images[0]}" -version
+      - name: Install native package
+        if: matrix.platform != 'fedora43-portable'
+        run: |
+          if command -v apt-get >/dev/null; then
+            apt-get install -y --no-install-recommends ./dist/*.deb
+            dpkg-query --listfiles connectcoin-core
+          else
+            dnf install -y ./dist/*.rpm
+            rpm -ql connectcoin-core
+          fi
+      - name: Verify installed applications
+        if: matrix.platform != 'fedora43-portable'
+        run: |
+          desktop-file-validate /usr/share/applications/org.connectcoin.ConnectCoin.desktop
+          python3 contrib/linuxdeploy/smoke_test.py --prefix /usr --output installed-smoke.json
+      - name: Uninstall without removing user data
+        if: matrix.platform != 'fedora43-portable'
+        run: |
+          if command -v apt-get >/dev/null; then
+            apt-get remove -y connectcoin-core
+          else
+            dnf remove -y connectcoin-core
+          fi
+          test ! -e /usr/bin/connectcoin-qt
+      - uses: actions/upload-artifact@v7
+        with:
+          name: linux-runtime-report-${{ matrix.platform }}
+          path: '*-smoke.json'
+          if-no-files-found: error

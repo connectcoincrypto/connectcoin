@@ -43,14 +43,21 @@ set(MBEDTLS_USER_CONFIG_FILE "${CMAKE_CURRENT_SOURCE_DIR}/crypto/mbedtls_user_co
 # requirement so CMake 3.31+ does not emit a fatal deprecation diagnostic. This
 # avoids changing the parent project's warning policy and works with both the
 # legacy variables and CMake 4.4's diagnostic framework.
+# CMake 3.22 preserves archive timestamps by default but does not recognize the
+# explicit DOWNLOAD_EXTRACT_TIMESTAMP option introduced in CMake 3.24.
+set(mbedtls_download_timestamp_args)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
+  list(APPEND mbedtls_download_timestamp_args DOWNLOAD_EXTRACT_TIMESTAMP TRUE)
+endif()
 FetchContent_Declare(connectcoin_mbedtls
   URL https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-3.6.7/mbedtls-3.6.7.tar.bz2
   URL_HASH SHA256=a7e8bcbec0e6f761b4af24f25677626b35f762f68eef79c08677a363212d11f6
-  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+  ${mbedtls_download_timestamp_args}
   PATCH_COMMAND ${CMAKE_COMMAND}
     "-DMBEDTLS_SOURCE_DIR=<SOURCE_DIR>"
     -P "${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSCMakePolicy.cmake"
 )
+unset(mbedtls_download_timestamp_args)
 FetchContent_MakeAvailable(connectcoin_mbedtls)
 
 # Preserve the RSA SubjectPublicKeyInfo identity and RFC 4055 restrictions,

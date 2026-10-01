@@ -37,6 +37,13 @@ endfunction()
 create_test_config()
 
 if(BUILD_TESTS)
+  add_test(NAME cmake_linux_packaging COMMAND "${CMAKE_COMMAND}"
+    "-DREPO_SOURCE_DIR=${PROJECT_SOURCE_DIR}"
+    "-DTEST_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}/cmake/linux_packaging"
+    -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/linux_packaging/run.cmake"
+  )
+  set_tests_properties(cmake_linux_packaging PROPERTIES LABELS "cmake" TIMEOUT 180)
+
   # Configure separately so the fixture does not inherit the module's GLOBAL
   # include guard or mutate flags in this project (or any of its dependencies).
   set(flag_probe_args
