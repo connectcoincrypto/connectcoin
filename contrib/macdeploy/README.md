@@ -1,4 +1,118 @@
-# MacOS Deployment
+# macOS Deployment
+
+## Native macOS 15+ DMG artifacts
+
+The native installer workflow builds separate Intel (`x86_64`) and Apple
+Silicon (`arm64`) disk images. Open the matching DMG and drag **ConnectCoin
+Core.app** to **Applications**. The disk image does not install a service,
+modify wallet/node data, or install command-line tools into a system directory.
+This DMG contains the complete graphical full node and wallet, not a separate
+set of command-line executables.
+
+These artifacts are **ad-hoc signed**, not signed with a project-owned Apple
+Developer ID and not notarized by Apple. Signature verification checks bundle
+integrity; it does not establish an identified publisher or Gatekeeper approval.
+macOS may block an Internet-downloaded application. Do not disable Gatekeeper
+globally. The `connectcoin-signing-disabled` marker remains in place until the
+project establishes its signing identity and release policy.
+
+The native build uses Xcode 16.2, a **15.0 deployment target**, and the repository's
+pinned static `depends` libraries, including Qt 6.8.4. The deployment target is
+not an SDK pin: the SDK comes from the selected Xcode and its actual version is
+recorded in the companion source archive. Apple SDKs are not redistributed.
+The native `depends/builders/darwin.mk` uses `xcrun`; the extracted SDK procedure
+below is for cross-compilation, not these native jobs.
+
+On the matching native architecture, the dependency build is:
+
+```bash
+brew install cmake make ninja pkgconf python coreutils
+native_host=$(./depends/config.sub "$(./depends/config.guess)")
+gmake -C depends -j2 NO_IPC=1 NO_USDT=1 XCODE_VERSION=16.2 \
+  OSX_MIN_VERSION=15.0 OSX_SDK="$(xcrun --show-sdk-path)" \
+  OSX_SDK_VERSION="$(xcrun --show-sdk-version)"
+cmake -S . -B build-macos -G Ninja \
+  --toolchain "depends/$native_host/toolchain.cmake" \
+  -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 \
+  -DCMAKE_OSX_ARCHITECTURES="$(uname -m)" \
+  -DBUILD_GUI=ON -DENABLE_IPC=OFF -DWITH_USDT=OFF
+cmake --build build-macos -j2 --target connectcoin-qt
+```
+
+Do not replace the native triple with a shortened `arm64-apple-darwin` or
+`x86_64-apple-darwin` value: `depends` compares the build and host triples
+literally when selecting its native Qt tools. A cold Qt build can take time;
+the pinned dependency cache is not a substitute for corresponding source.
+
+### Corresponding source and license notices
+
+Keep the companion `connectcoin-1.0.0-macos-<arch>-sources.tar.gz` available beside
+each DMG. The application is not an MIT-only redistribution: its Qt, QRencode,
+ZeroMQ, and other dependencies retain their respective upstream licenses.
+Statically linked libraries must remain modifiable and relinkable; the source
+artifact includes the inputs and instructions needed for rebuilding rather than
+only license identifiers. See [Qt's open-source obligations](https://www.qt.io/development/open-source-lgpl-obligations)
+and the actual upstream license texts included with the package.
+
+After a successful build from a clean committed checkout, collect sources
+**before** constructing the disk image:
+
+```bash
+gmake -C depends download-one NO_IPC=1 NO_USDT=1 XCODE_VERSION=16.2 \
+  OSX_MIN_VERSION=15.0 OSX_SDK="$(xcrun --show-sdk-path)" \
+  OSX_SDK_VERSION="$(xcrun --show-sdk-version)"
+python3 contrib/macdeploy/collect_sources.py \
+  --repo . --build-dir build-macos --output-dir build-macos/dist \
+  --version 1.0.0 --arch "$(uname -m)"
+python3 contrib/macdeploy/build_dmg.py \
+  --build-dir build-macos --output-dir build-macos/dist \
+  --version 1.0.0 --arch "$(uname -m)" --minimum-macos 15.0 \
+  --qt-translations "depends/$native_host/translations" \
+  --licenses-dir "build-macos/dist/licenses-$(uname -m)"
+python3 contrib/macdeploy/validate_dmg.py \
+  --dmg "build-macos/dist/connectcoin-core-1.0.0-macos-$(uname -m).dmg" \
+  --version 1.0.0 --arch "$(uname -m)" \
+  --output "build-macos/dist/verification-$(uname -m).json"
+```
+
+The helper prints JSON with `source_archive`, `licenses_dir`, and
+`source_commit`. Supply the reported directory to `build_dmg.py` through its
+`--licenses-dir` argument. It contains `COPYRIGHT.txt`, `THIRD-PARTY.txt`,
+`REBUILD.txt`, and individually preserved notices indexed by
+`LICENSE-MANIFEST.json`. The source archive contains:
+
+- `source/connectcoin/`: `git archive HEAD`, including dependency recipes,
+  local patches, and packaging tools;
+- `source/depends-sources/`: the exact source archives and Qt build-support
+  files, checked against their recipe SHA-256 hashes;
+- `source/mbedtls/`: the complete populated FetchContent source, including
+  ConnectCoin modifications but excluding `.git` metadata;
+- `licenses/`, `REBUILD.txt`, and `build-environment.json`: notices, original
+  commit, source hashes, selected build settings, and SDK/compiler information.
+
+The helper reads archive members without extracting them, rejects unsafe paths,
+links escaping their source root, special files, duplicate entries, and missing
+or mismatched inputs. License filenames are flattened with an origin hash to
+avoid archive-controlled filesystem paths. It does not download dependencies,
+run a build, include Apple SDKs, or execute dependency code. Existing output
+names are never overwritten; use a fresh output directory for another build.
+
+To rebuild from the source artifact, follow its `REBUILD.txt`; the supplied
+Mbed TLS source can be selected with CMake's
+`FETCHCONTENT_SOURCE_DIR_CONNECTCOIN_MBEDTLS` option. The archived repository
+does not include `.git`. If packaging a rebuilt or modified version with the
+Git-checking tools, initialize a new local repository, commit that source, and
+collect a **new** source artifact and licenses directory before packaging. Its
+new commit identifies that local rebuild, not the original release. The scripts
+do not claim bit-for-bit reproducibility across different SDKs or build tools.
+
+Collector regression tests run without macOS or a dependency build:
+
+```bash
+python3 contrib/macdeploy/collect_sources.py --self-test
+```
+
+## Legacy app archive target
 
 The `macdeployqtplus` script should not be run manually. Instead, after building as usual:
 

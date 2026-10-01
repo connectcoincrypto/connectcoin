@@ -10,9 +10,10 @@ on:
   push:
     branches:
       - '**'
-      # The dedicated packaging branch runs Linux installers and its own tests.
+      # Dedicated packaging branches run installers and their own tests.
       # main and pull requests still run the full cross-platform matrix.
       - '!codex/linux-installers'
+      - '!codex/macos-installers'
     tags-ignore:
       - '**'
 
