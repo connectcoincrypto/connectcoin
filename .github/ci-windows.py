@@ -5,7 +5,9 @@
 
 import argparse
 import hashlib
+import json
 import os
+import re
 import shlex
 import subprocess
 import sys
@@ -76,6 +78,28 @@ def github_import_vs_env(_ci_type):
                 continue
             name, value = line.split("=", 1)
             env_file.write(f"{name}={value}\n")
+
+
+def setup_vcpkg(_ci_type):
+    # The manifest pins ports, but not the tool and scripts provided by the
+    # runner image (or overwritten by VsDevCmd). Pin those inputs as well.
+    manifest = json.loads(Path("vcpkg.json").read_text(encoding="utf8"))
+    baseline = manifest["builtin-baseline"]
+    if not isinstance(baseline, str) or not re.fullmatch(r"[0-9a-f]{40}", baseline):
+        raise ValueError("vcpkg builtin-baseline must be a full commit hash")
+    vcpkg_root = Path(os.environ["RUNNER_TEMP"]) / "connectcoin-ci-vcpkg"
+    # A fresh, job-owned checkout avoids modifying any installed vcpkg tree.
+    vcpkg_root.mkdir()
+    run(["git", "init", str(vcpkg_root)])
+    run(["git", "-C", str(vcpkg_root), "fetch", "--depth=1",
+         "https://github.com/microsoft/vcpkg.git", baseline])
+    run(["git", "-C", str(vcpkg_root), "checkout", "--detach", baseline])
+    # Keep the batch-file name free of path quoting: cwd may contain spaces.
+    run([os.environ["COMSPEC"], "/d", "/c", "bootstrap-vcpkg.bat", "-disableMetrics"], cwd=vcpkg_root)
+    run([str(vcpkg_root / "vcpkg.exe"), "version"])
+    print(f"Pinned vcpkg scripts to manifest baseline {baseline}", flush=True)
+    with open(os.environ["GITHUB_ENV"], "a", encoding="utf8") as env_file:
+        env_file.write(f"VCPKG_ROOT={vcpkg_root}\n")
 
 
 def generate(ci_type):
@@ -242,6 +266,7 @@ def main():
     parser.add_argument("ci_type", choices=GENERATE_OPTIONS, help="CI type to run.")
     steps = list(map(lambda f: f.__name__, [
         github_import_vs_env,
+        setup_vcpkg,
         vcpkg_cache_state,
         generate,
         build,

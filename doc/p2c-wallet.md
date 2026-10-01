@@ -248,40 +248,45 @@ wallet, while the bounty or its live claim work remains tracked. It is not saved
 to disk. This modest preference variation is not a shuffle and does not change
 fees, profitability eligibility or the successful-connection budget below.
 
-Each `(domain, signature_algorithms_mask)` pair keeps a rolling
-`deque<pair<bool, double>>` of the **last 100 completed TCP/TLS attempts**,
-shared across its bounties and resolved IPs with the same mask. An unsupported
-RSA-only bounty therefore cannot poison the measured success rate of an
-ECDSA-capable bounty on that domain. Rotation and DNS are still grouped by
-domain, not by mask. The
-boolean records capture through **CertificateVerify**; seconds measure elapsed
-TCP/TLS effort with a monotonic clock. TCP failures, TLS errors and timeouts count
-as failures. A completed capture counts as a success regardless of whether its
+Each `(domain, signature_algorithms_mask)` pair keeps exponentially smoothed
+success and duration averages, shared across its bounties and resolved IPs with
+the same mask. An unsupported RSA-only bounty therefore cannot poison the
+measured success rate of an ECDSA-capable bounty on that domain. Rotation and DNS are still grouped by
+domain, not by mask. Each observation records whether capture completed through
+**CertificateVerify**; seconds measure elapsed TCP/TLS effort with a monotonic
+clock. TCP failures, TLS errors and timeouts count as failures. A completed
+capture counts as a success regardless of whether its
 hash meets the bounty target; certificate/claim acceptance is still verified
 separately. DNS resolution, rate-limit waits, scheduler waits, retry backoff and
 subsequent certificate verification are not part of this duration. Locally
 cancelled incomplete attempts (stop, spent bounty or duplicate proof) are excluded,
 since they do not establish whether the server could complete the handshake.
 
-At each five-second refresh the multiplier for each domain/mask pair is:
-`(0.1 + successful_captures) / (0.02 + total_attempt_seconds)`.
-An untried pair therefore starts at **5 captures/second of effort**. The score
-for extra assignments is the highest eligible bounty score after multiplying
-each mask's expected net return by its own rate and the bounty's local ranking
+Each pair starts with `a = 0.1` and `c = 0.02`. For every included observation,
+in completion order, it updates `a = 0.999 * a + 0.001 * b` and
+`c = 0.999 * c + 0.001 * d`, where `b` is 1 for a completed capture and 0 for a
+failure, and `d` is that attempt's elapsed seconds. The multiplier at each
+five-second refresh is `a / c`, initially **5 captures/second of effort**.
+The initial values decay along with older observations: no fixed prior is added
+back, and no observation is abruptly evicted after 100 attempts. A past
+observation's weight halves after about 693 further observations. Sustained
+failures with positive durations keep reducing the rate toward zero.
+Only finite, nonnegative durations are accepted. At floating-point extremes,
+the rate is limited to the positive finite range representable by a double, and
+overflowing priority scores saturate at its maximum finite value.
+The score for extra assignments is the highest eligible bounty score after
+multiplying each mask's expected net return by its own rate and the bounty's local ranking
 factor. This favors reliable, fast connections while retaining guaranteed
 round-robin exploration. Timing scores use floating point; exact economic keys
-break rounded ties. Durations of simultaneous attempts are summed individually,
-not measured as a shared wall-clock interval, so raising concurrency alone does
-not multiply the observed efficiency.
+break rounded ties. Each simultaneous attempt contributes its own duration,
+not a shared wall-clock interval, so raising concurrency alone does not multiply
+the observed efficiency.
 
 Automatic search ignores each bounty whose expected net return is **less than
 1000 connects per second of connection effort** (1000 exactly is eligible):
 `(reward - claim_fee) * (target + 1) / 2^256 * measured_capture_rate`.
-As a fast rejection, a target whose most significant 64 bits are all zero is
-ignored immediately: even MAX_MONEY at the maximum smoothed rate of 5005/s
-cannot reach this floor. This includes targets requiring 256 zero bits.
 The threshold uses the unmodified expected return, without the local ranking
-factor, and the domain/mask pair's last-100 history or the initial 5/s prior, not
+factor, and the domain/mask pair's exponential averages or the initial 5/s rate, not
 the user-configured connection limit or aggregate concurrency. The measured
 score uses the same floating-point precision as domain ranking.
 
@@ -305,7 +310,7 @@ Updates and start checks are serialized across workers. Connections already in
 flight may finish, so concurrent captures can exceed that count; completed
 proofs are retained and submitted even after the cutoff. The aggregate RPC
 `attempts` field still counts starts, and failed attempts still affect the
-domain/mask's last-100 performance history.
+domain/mask's exponential performance averages.
 Counters are per outpoint, not per domain or payout address, and survive
 five-second refreshes, proposal-cache eviction and stop/start while the wallet
 is loaded. They are **only in memory** and reset on wallet unload/restart.
@@ -318,11 +323,10 @@ For independent valid work candidates with small `p`, missing the target around 
 probability approximately 13.5%; this is a resource policy, not evidence that
 a domain is malicious.
 
-The oldest attempt is removed when the window exceeds 100. Histories survive
-priority refreshes, temporary bounty ineligibility and stop/start in the same
-loaded wallet. They are in-memory only: unloading the wallet resets them. A
-domain/mask pair with no remaining matching confirmed bounties is forgotten once its
-in-flight work drains. These measurements affect local scheduling only, never
+The two averages survive priority refreshes, temporary bounty ineligibility and
+stop/start in the same loaded wallet. They are in-memory only: unloading the
+wallet resets them. A domain/mask pair with no remaining matching confirmed
+bounties is forgotten once its in-flight work drains. These measurements affect local scheduling only, never
 consensus, the global connection limit or within-domain bounty ordering.
 
 There is **no per-domain connection quota or configurable per-domain limit**.

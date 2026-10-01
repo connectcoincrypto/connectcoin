@@ -152,8 +152,8 @@ struct P2CClaimWorkerImpl::Impl {
     std::mutex work_mutex;
     std::map<std::string, std::shared_ptr<DomainWork>> groups;
     // Exact masks can negotiate different server certificates and performance.
-    // Share the last-100 history only within a (domain, mask), while domain
-    // rotation and DNS stay shared. Preserve history through ineligibility.
+    // Share exponentially smoothed observations only within a (domain, mask),
+    // while rotation and DNS stay shared. Preserve history through ineligibility.
     using DomainMask = std::pair<std::string, uint8_t>;
     std::map<DomainMask, std::shared_ptr<P2CDomainStats>> domain_statistics;
     std::map<COutPoint, std::shared_ptr<ClaimWork>> claim_cache;
@@ -479,10 +479,6 @@ struct P2CClaimWorkerImpl::Impl {
                 MoneyRange(output.nValue) && output.nValue > *fresh_fee ? output.nValue - *fresh_fee : 0};
             if (payout <= 0) continue;
             const auto bounty{*output.GetPayToDomain()};
-            // GetUint64(3) is the MOST significant word of the little-endian
-            // uint256. Even MAX_MONEY at the maximum smoothed rate (5005/s)
-            // cannot reach 1000 connects/s when these 64 target bits are zero.
-            if (bounty.connection_work_target.GetUint64(3) == 0) continue;
             if (ConnectionLimitExceeded(outpoint, bounty.connection_work_target)) continue;
             const DomainMask domain_mask{bounty.domain, bounty.signature_algorithms_mask};
             const double connection_rate{connection_rates.try_emplace(domain_mask, 5.0).first->second};

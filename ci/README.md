@@ -107,6 +107,15 @@ and missing vcpkg binaries require fresh downloads. This reduces storage pressur
 but does not guarantee that all Docker images and cache generations fit the
 repository quota, or that total CI time improves.
 
+The native Windows jobs bootstrap vcpkg in a fresh checkout under `RUNNER_TEMP`,
+using the manifest's `builtin-baseline` commit for both ports and tool scripts.
+This runs after importing the Visual Studio environment, which can replace
+`VCPKG_ROOT` with Visual Studio's bundled copy. The tool version and scripts
+commit are logged and included in the binary-cache key. This prevents vcpkg
+updates in a runner image from silently changing build inputs; compiler and SDK
+updates can still require rebuilding packages through vcpkg's normal ABI checks.
+Installed vcpkg trees and local CMake presets are not modified.
+
 GHA Docker caching is limited to `ci_native_riscv_bare`, `ci_win64`, and
 `ci_win64_msvcrt`, whose images compile toolchains. In runs
 [36590100974](https://github.com/connectcoincrypto/connectcoin/actions/runs/36590100974)

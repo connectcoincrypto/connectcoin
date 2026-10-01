@@ -239,6 +239,10 @@ jobs:
       - name: Import Visual Studio env vars
         run: py -3 .github/ci-windows.py "standard" github_import_vs_env
 
+      - name: Set up pinned vcpkg
+        timeout-minutes: 5
+        run: py -3 .github/ci-windows.py "standard" setup_vcpkg
+
       - name: Get tool information
         run: |
           set -o errexit -o pipefail -o xtrace -o nounset
@@ -247,6 +251,8 @@ jobs:
           echo '---'
           msbuild.exe -version | tee msbuild_version
           echo "${VCToolsVersion-}" | tee toolset_version
+          "${VCPKG_ROOT}/vcpkg.exe" version | tee vcpkg_version
+          git -C "${VCPKG_ROOT}" rev-parse HEAD | tee vcpkg_commit
           py -3 --version
           bash --version
 
@@ -255,11 +261,11 @@ jobs:
         id: vcpkg-binary-cache
         with:
           path: ~/AppData/Local/vcpkg/archives
-          key: ${{ github.job }}-vcpkg-binary-release-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          key: ${{ github.job }}-vcpkg-binary-release-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg_version', 'vcpkg_commit', 'vcpkg.json') }}-${{ github.run_id }}-${{ github.run_attempt }}
           # vcpkg still checks each package's ABI; retain compatible packages
           # when a manifest/tool update changes only part of the dependency graph.
           restore-keys: |
-            ${{ github.job }}-vcpkg-binary-release-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}
+            ${{ github.job }}-vcpkg-binary-release-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg_version', 'vcpkg_commit', 'vcpkg.json') }}
             ${{ github.job }}-vcpkg-binary-release-
 
       - name: Record restored vcpkg cache state

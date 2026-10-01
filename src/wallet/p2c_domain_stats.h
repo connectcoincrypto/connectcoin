@@ -8,10 +8,9 @@
 #include <wallet/p2c_claim.h>
 #include <wallet/p2c_claim_priority.h>
 
+#include <algorithm>
 #include <cmath>
-#include <cstddef>
-#include <deque>
-#include <utility>
+#include <limits>
 
 namespace wallet {
 /** Wallet-local TCP/TLS observations, in completion order. Not consensus data.
@@ -19,45 +18,31 @@ namespace wallet {
  * The caller serializes access and excludes locally cancelled attempts.
  */
 class P2CDomainStats {
-    std::deque<std::pair<bool, double>> m_attempts;
+    double m_success_average{0.1};
+    double m_seconds_average{0.02};
 
 public:
-    static constexpr size_t WINDOW{100};
-
     void Record(bool success, double seconds)
     {
         // Keep NaN/negative durations out of the ordered scheduler, including
         // if a future caller supplies observations from outside steady_clock.
         if (!std::isfinite(seconds) || seconds < 0) return;
-        m_attempts.emplace_back(success, seconds);
-        if (m_attempts.size() > WINDOW) m_attempts.pop_front();
-    }
-
-    size_t Attempts() const { return m_attempts.size(); }
-
-    std::pair<size_t, double> Totals() const
-    {
-        size_t successes{0};
-        double seconds{0};
-        // Sum only at priority refresh, not on the connection hot path. A
-        // bounded recomputation avoids accumulated add/subtract roundoff when
-        // old slow attempts leave a window of much faster new attempts.
-        for (const auto& [success, elapsed] : m_attempts) {
-            successes += success;
-            seconds += elapsed;
-        }
-        return {successes, seconds};
+        m_success_average = 0.999 * m_success_average + 0.001 * success;
+        m_seconds_average = 0.999 * m_seconds_average + 0.001 * seconds;
     }
 
     double ConnectionRate() const
     {
-        const auto [successes, seconds]{Totals()};
-        return (0.1 + successes) / (0.02 + seconds);
+        // The positive initial values decay with observations; they are not
+        // added back on each refresh. Clamp only an unrepresentable quotient
+        // to double's positive finite range, with no policy rate floor or cap.
+        return std::clamp(m_success_average / m_seconds_average,
+                          std::numeric_limits<double>::denorm_min(), std::numeric_limits<double>::max());
     }
 };
 
 /** Expected net return per second of TCP/TLS effort. Economic numerators fit
- * in 320 bits and the smoothed rate is at most 5005, comfortably within double.
+ * in 320 bits. Saturate overflow from extreme measured rates to finite double.
  * This measured domain score is approximate; bounty ordering remains exact.
  * The scheduler uses the exact economic key to break rounded score ties.
  */
@@ -65,7 +50,7 @@ inline double GetP2CDomainPriority(const P2CClaimPriority& economic_priority, do
 {
     double numerator{0};
     for (const auto word : economic_priority) numerator = std::ldexp(numerator, 32) + word;
-    return std::ldexp(numerator, -256) * connection_rate;
+    return std::min(std::ldexp(numerator, -256) * connection_rate, std::numeric_limits<double>::max());
 }
 
 /** The domain ranking uses the same stable local factor as bounty ordering.
@@ -75,7 +60,13 @@ inline double GetP2CDomainSelectionPriority(const P2CClaimSelectionPriority& sel
 {
     double numerator{0};
     for (const auto word : selection_priority) numerator = std::ldexp(numerator, 32) + word;
-    return std::ldexp(numerator, -256) * connection_rate / P2C_CLAIM_FACTOR_SCALE;
+    const double expected_return{std::ldexp(numerator, -256)};
+    const double score{expected_return * connection_rate};
+    if (std::isfinite(score)) return score / P2C_CLAIM_FACTOR_SCALE;
+    // Preserve ordinary rounding, but avoid an overflowing intermediate when
+    // removing the integer factor's scale first makes the result representable.
+    return std::min((expected_return / P2C_CLAIM_FACTOR_SCALE) * connection_rate,
+                    std::numeric_limits<double>::max());
 }
 
 /** Local automatic-search policy, in connects per second of TCP/TLS effort.

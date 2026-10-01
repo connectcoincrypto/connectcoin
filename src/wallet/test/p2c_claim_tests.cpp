@@ -311,53 +311,101 @@ BOOST_AUTO_TEST_CASE(tls_capture_checks_all_certificate_rsa_exponents_before_cer
     }
 }
 
-BOOST_AUTO_TEST_CASE(domain_connection_statistics_use_last_100_attempts)
+BOOST_AUTO_TEST_CASE(domain_connection_statistics_use_exponential_averages)
 {
     P2CDomainStats stats;
-    BOOST_CHECK_EQUAL(stats.Attempts(), 0U);
     BOOST_CHECK_EQUAL(stats.ConnectionRate(), 5.0);
     stats.Record(true, 0.2);
     stats.Record(false, 0.8);
-    BOOST_CHECK_EQUAL(stats.Totals().first, 1U);
-    BOOST_CHECK_EQUAL(stats.Totals().second, 1.0);
-    BOOST_CHECK_CLOSE(stats.ConnectionRate(), 1.1 / 1.02, 1e-10);
-    for (size_t i = 0; i < 98; ++i) stats.Record(false, 0.0);
-    BOOST_CHECK_EQUAL(stats.Attempts(), 100U);
-    BOOST_CHECK_EQUAL(stats.Totals().first, 1U);
-    stats.Record(false, 0.0); // Evict the success, not the oldest failure.
-    BOOST_CHECK_EQUAL(stats.Totals().first, 0U);
-    BOOST_CHECK_CLOSE(stats.Totals().second, 0.8, 1e-10);
-    stats.Record(true, 0.1); // Evict the slow failure too.
-    BOOST_CHECK_EQUAL(stats.Attempts(), 100U);
-    BOOST_CHECK_EQUAL(stats.Totals().first, 1U);
-    BOOST_CHECK_CLOSE(stats.ConnectionRate(), 1.1 / 0.12, 1e-10);
-    for (const double invalid : {-1.0, std::numeric_limits<double>::infinity(), std::numeric_limits<double>::quiet_NaN()}) {
-        stats.Record(true, invalid);
-    }
-    BOOST_CHECK_EQUAL(stats.Attempts(), 100U);
-    BOOST_CHECK_EQUAL(stats.Totals().first, 1U);
+    BOOST_CHECK_CLOSE(stats.ConnectionRate(), (0.999 * 0.1009) / (0.999 * 0.02018 + 0.0008), 1e-10);
 
-    // Compare repeated rollover to an independent last-100 reference. No
-    // subtractive cancellation after a very old, very slow attempt expires.
-    stats.Record(false, 1e12);
-    std::vector<std::pair<bool, double>> reference;
-    for (size_t i = 0; i < 1000; ++i) {
-        const bool success{i % 3 == 0};
-        const double seconds{1e-6 * (i % 7 + 1)};
-        reference.emplace_back(success, seconds);
-        stats.Record(success, seconds);
-        if (reference.size() < 100) continue;
-        size_t successes{0};
-        double total{0};
-        for (auto it = reference.end() - 100; it != reference.end(); ++it) {
-            successes += it->first;
-            total += it->second;
-        }
-        BOOST_CHECK_EQUAL(stats.Attempts(), 100U);
-        BOOST_CHECK_EQUAL(stats.Totals().first, successes);
-        BOOST_CHECK_EQUAL(stats.Totals().second, total);
-        BOOST_CHECK_EQUAL(stats.ConnectionRate(), (0.1 + successes) / (0.02 + total));
+    // An independent closed form shows failures keep reducing the rate after
+    // 100 attempts, instead of reaching the old window's fixed-prior floor.
+    P2CDomainStats failing;
+    double previous{failing.ConnectionRate()};
+    for (size_t i = 1; i <= 10000; ++i) {
+        failing.Record(false, 0.2);
+        const double decay{std::pow(0.999, i)};
+        BOOST_CHECK_CLOSE(failing.ConnectionRate(), 0.1 * decay / (0.02 * decay + 0.2 * (1 - decay)), 1e-9);
+        BOOST_CHECK_GT(failing.ConnectionRate(), 0);
+        BOOST_CHECK_LT(failing.ConnectionRate(), previous);
+        previous = failing.ConnectionRate();
     }
+    BOOST_CHECK_LT(failing.ConnectionRate(), 0.1 / (0.02 + 100 * 0.2));
+
+    // Reliable captures converge to the observed reciprocal duration, and
+    // a previously failing pair can recover when captures resume.
+    P2CDomainStats reliable;
+    for (size_t i = 0; i < 50000; ++i) {
+        reliable.Record(true, 0.25);
+        failing.Record(true, 0.25);
+    }
+    BOOST_CHECK_CLOSE(reliable.ConnectionRate(), 4.0, 1e-9);
+    BOOST_CHECK_CLOSE(failing.ConnectionRate(), 4.0, 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(domain_connection_statistics_match_weighted_mixed_history)
+{
+    P2CDomainStats mixed, failed;
+    std::vector<std::pair<bool, double>> samples;
+    constexpr std::array<size_t, 5> checkpoints{1, 100, 101, 1001, 2048};
+    samples.reserve(checkpoints.back());
+    for (size_t i = 0; i < checkpoints.back(); ++i) {
+        const bool success{i % 7 == 0 || i % 11 == 4};
+        const double seconds{i % 13 == 0 ? 0.0 : 0.003 * (1 + (i * 37) % 113)};
+        samples.emplace_back(success, seconds);
+        mixed.Record(success, seconds);
+        failed.Record(false, seconds); // Identical timings isolate the success bit.
+        if (std::find(checkpoints.begin(), checkpoints.end(), samples.size()) == checkpoints.end()) continue;
+
+        // Expand the complete weighted history independently of Record's
+        // recurrence, including observations older than 100 and 1000 samples.
+        const double prior_weight{std::pow(0.999, samples.size())};
+        double successes{0.1 * prior_weight}, duration{0.02 * prior_weight};
+        for (size_t index = 0; index < samples.size(); ++index) {
+            const double weight{0.001 * std::pow(0.999, samples.size() - index - 1)};
+            successes += weight * samples[index].first;
+            duration += weight * samples[index].second;
+        }
+        BOOST_CHECK_CLOSE(mixed.ConnectionRate(), successes / duration, 1e-9);
+        BOOST_CHECK_CLOSE(failed.ConnectionRate(), 0.1 * prior_weight / duration, 1e-9);
+        BOOST_CHECK_GT(mixed.ConnectionRate(), failed.ConnectionRate());
+    }
+}
+
+BOOST_AUTO_TEST_CASE(domain_connection_statistics_handle_duration_boundaries)
+{
+    P2CDomainStats stats;
+    stats.Record(false, 0.2);
+    const double before{stats.ConnectionRate()};
+    for (const double invalid : {-1.0, -std::numeric_limits<double>::infinity(),
+                                 std::numeric_limits<double>::infinity(), std::numeric_limits<double>::quiet_NaN()}) {
+        stats.Record(true, invalid);
+        BOOST_CHECK_EQUAL(stats.ConnectionRate(), before);
+    }
+
+    for (const double seconds : {0.0, std::numeric_limits<double>::denorm_min(), std::numeric_limits<double>::max()}) {
+        P2CDomainStats boundary;
+        boundary.Record(true, seconds);
+        BOOST_CHECK(std::isfinite(boundary.ConnectionRate()));
+        BOOST_CHECK_GT(boundary.ConnectionRate(), 0);
+        BOOST_CHECK_CLOSE(boundary.ConnectionRate(), 0.1009 / (0.999 * 0.02 + 0.001 * seconds), 1e-10);
+    }
+
+    // Long runs of valid extreme durations can overflow/underflow a/c even
+    // though both averages remain finite. Keep scheduler rates representable.
+    P2CDomainStats instant, very_slow;
+    for (size_t i = 0; i < 1000000; ++i) {
+        instant.Record(true, 0.0);
+        very_slow.Record(false, std::numeric_limits<double>::max());
+    }
+    BOOST_CHECK_EQUAL(instant.ConnectionRate(), std::numeric_limits<double>::max());
+    BOOST_CHECK_EQUAL(very_slow.ConnectionRate(), std::numeric_limits<double>::denorm_min());
+    // A fresh observation can still recover from numerical extremes.
+    instant.Record(true, 0.2);
+    very_slow.Record(true, 0.2);
+    BOOST_CHECK(std::isfinite(instant.ConnectionRate()));
+    BOOST_CHECK_GT(very_slow.ConnectionRate(), std::numeric_limits<double>::denorm_min());
 }
 
 BOOST_AUTO_TEST_CASE(domain_priority_rewards_success_and_low_latency)
@@ -380,9 +428,19 @@ BOOST_AUTO_TEST_CASE(domain_priority_rewards_success_and_low_latency)
     BOOST_CHECK(GetP2CDomainPriority(economic, fast.ConnectionRate()) > GetP2CDomainPriority(economic, unreliable.ConnectionRate()));
     BOOST_CHECK(GetP2CDomainPriority(GetP2CClaimPriority(uint256{}, 1), slow.ConnectionRate()) > 0);
     BOOST_CHECK_EQUAL(GetP2CDomainPriority(GetP2CClaimPriority(maximum, 0), fast.ConnectionRate()), 0);
-    for (size_t i = 0; i < 100; ++i) fast.Record(true, 0.0);
-    BOOST_CHECK_EQUAL(fast.ConnectionRate(), 5005.0);
+    for (size_t i = 0; i < 20000; ++i) fast.Record(true, 0.0);
+    BOOST_CHECK_GT(fast.ConnectionRate(), 5005.0); // No fixed-prior rate ceiling.
     BOOST_CHECK(std::isfinite(GetP2CDomainPriority(GetP2CClaimPriority(maximum, MAX_MONEY), fast.ConnectionRate())));
+
+    // A representable extreme rate must remain profitable even when the
+    // product with the economic return needs finite saturation for ordering.
+    const double maximum_rate{std::numeric_limits<double>::max()};
+    BOOST_CHECK_EQUAL(GetP2CDomainPriority(richer, maximum_rate), maximum_rate);
+    BOOST_CHECK_EQUAL(GetP2CDomainPriority(GetP2CClaimPriority(maximum, 0), maximum_rate), 0);
+    BOOST_CHECK(IsP2CClaimWorthAttempting(richer, maximum_rate));
+    BOOST_CHECK_EQUAL(GetP2CDomainSelectionPriority(GetP2CClaimSelectionPriority(richer, P2C_CLAIM_FACTOR_MAX), maximum_rate), maximum_rate);
+    const auto half{uint256::FromHex("7" + std::string(63, 'f')).value()};
+    BOOST_CHECK_CLOSE(GetP2CDomainSelectionPriority(GetP2CClaimSelectionPriority(GetP2CClaimPriority(half, 1), P2C_CLAIM_FACTOR_SCALE), maximum_rate), maximum_rate / 2, 1e-10);
 }
 
 BOOST_AUTO_TEST_CASE(selection_factor_preserves_full_priority_precision)
@@ -558,12 +616,14 @@ BOOST_AUTO_TEST_CASE(expected_return_floor_uses_net_payout_and_domain_efficiency
     for (const double invalid : {0.0, -1.0, std::numeric_limits<double>::infinity(), std::numeric_limits<double>::quiet_NaN()}) {
         BOOST_CHECK(!IsP2CClaimWorthAttempting(GetP2CClaimPriority(maximum, MAX_MONEY), invalid));
     }
-    // Even the largest target with 64 leading zero bits and the largest payout
-    // at the maximum smoothed capture rate is below the floor (about 271/s).
+    // Tiny targets are ineligible at ordinary rates, but the EMA has no fixed
+    // upper rate bound that could justify rejecting them before measuring it.
     for (const auto& target : {uint256{}, uint256::FromHex(std::string(16, '0') + std::string(48, 'f')).value()}) {
         BOOST_CHECK_EQUAL(target.GetUint64(3), 0U);
         BOOST_CHECK(!IsP2CClaimWorthAttempting(GetP2CClaimPriority(target, MAX_MONEY), 5005.0));
     }
+    const auto leading_zero_target{uint256::FromHex(std::string(16, '0') + std::string(48, 'f')).value()};
+    BOOST_CHECK(IsP2CClaimWorthAttempting(GetP2CClaimPriority(leading_zero_target, MAX_MONEY), 20000.0));
     // A nonzero high word does not automatically make a bounty economical.
     const auto tiny{uint256::FromHex("0000000000000001" + std::string(48, 'f')).value()};
     BOOST_CHECK_NE(tiny.GetUint64(3), 0U);
@@ -1300,12 +1360,14 @@ BOOST_FIXTURE_TEST_CASE(worker_filters_each_bounty_before_network_and_rechecks_e
     auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
     wallet->SetBroadcastTransactions(true);
     wallet->m_default_max_tx_fee = MAX_MONEY;
-    // Probability 2^-26: 1 CONN net at the 5/s prior is below 1000 connects/s,
-    // whereas 2 CONN net is above it. Gross rewards alone would admit both.
+    // Probability 2^-26: 1 CONN net at the initial 5/s is below 1000 connects/s.
+    // The last payout is just above it, so two 100 ms failures lower the EMA
+    // enough to reject it. Gross rewards alone would admit both.
     const auto target{uint256::FromHex(std::string(6, '0') + "3" + std::string(57, 'f')).value()};
     const std::array<uint256, 4> targets{uint256{},
         uint256::FromHex(std::string(16, '0') + std::string(48, 'f')).value(), target, target};
-    const std::array<CAmount, 4> payouts{3 * COIN, 3 * COIN, COIN, 2 * COIN};
+    const CAmount just_profitable{1000 * (CAmount{1} << 26) / 5 + COIN / 1000};
+    const std::array<CAmount, 4> payouts{3 * COIN, 3 * COIN, COIN, just_profitable};
     std::vector<COutPoint> outpoints;
     UniValue saved{UniValue::VOBJ}, pending{UniValue::VARR};
     CCoinControl control;
@@ -1458,7 +1520,7 @@ BOOST_FIXTURE_TEST_CASE(worker_keeps_connection_history_separate_for_exact_signa
         const auto prepared{PrepareP2CClaim(*wallet, outpoints[i], control)};
         BOOST_REQUIRE(prepared);
         CMutableTransaction tx{*prepared->tx};
-        tx.vout[0].nValue = 2 * COIN;
+        tx.vout[0].nValue = 1000 * (CAmount{1} << 26) / 5 + COIN / 1000;
         challenges[i] = P2CClaimChallenge(CTransaction{tx}, 0);
         pending.push_back(EncodeHexTx(CTransaction{tx}));
     }
@@ -1793,7 +1855,7 @@ BOOST_FIXTURE_TEST_CASE(worker_extra_domain_turns_use_net_return_and_recheck_loc
     BOOST_CHECK(events[7] == "alpha.example" || events[7] == "beta.example");
 }
 
-BOOST_FIXTURE_TEST_CASE(worker_weights_domain_priority_by_complete_tls_per_second, TestChain100Setup)
+BOOST_FIXTURE_TEST_CASE(worker_weights_domain_priority_by_smoothed_tls_efficiency, TestChain100Setup)
 {
     using namespace std::chrono_literals;
     FakeSteadyClock clock;
@@ -1813,7 +1875,9 @@ BOOST_FIXTURE_TEST_CASE(worker_weights_domain_priority_by_complete_tls_per_secon
         const auto prepared{PrepareP2CClaim(*wallet, outpoint, control)};
         BOOST_REQUIRE(prepared);
         CMutableTransaction tx{*prepared->tx};
-        tx.vout[0].nValue = (2 - i) * COIN; // Alpha has exactly twice the net EV.
+        // Alpha's 11% higher net EV beats every initial random factor, while
+        // two slow failures can outweigh that advantage even with alpha=.001.
+        tx.vout[0].nValue = i == 0 ? 111 * COIN / 100 : COIN;
         pending.push_back(EncodeHexTx(CTransaction{tx}));
     }
     saved.pushKV("pending", std::move(pending));
@@ -1850,13 +1914,12 @@ BOOST_FIXTURE_TEST_CASE(worker_weights_domain_priority_by_complete_tls_per_secon
             if (events.size() == 4) release.wait(lock, [&] { return finish; });
         }
         if (domain == domains[0]) {
-            std::this_thread::sleep_for(1s);
+            std::this_thread::sleep_for(3s);
             return nullptr; // Slow TCP failure; never reached CertificateVerify.
         }
-        // Beta is slower per attempt, but delivers CertificateVerify. If its
-        // completed capture is mistakenly counted as a failure, its quality
-        // score cannot beat Alpha's: this tests success, not latency alone.
-        std::this_thread::sleep_for(2s);
+        // Beta delivers CertificateVerify quickly. The smoothed rate must
+        // outweigh Alpha's guaranteed initial economic preference on refresh.
+        std::this_thread::sleep_for(100ms);
         return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
     };
     const auto wait_until = [](const auto& predicate) {
