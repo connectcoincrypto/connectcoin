@@ -171,21 +171,7 @@ def prepare_tests(ci_type):
     if ci_type == "standard":
         run([sys.executable, "-m", "pip", "install", "pyzmq"])
     elif ci_type == "fuzz":
-        qa_assets_commit = (workspace / "ci" / "qa-assets-commit.txt").read_text(encoding="utf8").strip()
-        repo_dir = str(workspace / "qa-assets")
-        clone_cmd = [
-            "git",
-            "clone",
-            "--filter=blob:none",
-            "--no-checkout",
-            "https://github.com/bitcoin-core/qa-assets",
-            repo_dir,
-        ]
-        run(clone_cmd)
-        run(["git", "-C", repo_dir, "fetch", "--depth=1", "origin", qa_assets_commit])
-        run(["git", "-C", repo_dir, "checkout", "--detach", qa_assets_commit])
-        print("Using qa-assets repo from commit ...")
-        run(["git", "-C", repo_dir, "log", "-1"])
+        run([sys.executable, str(workspace / "ci" / "test" / "qa_assets.py"), str(workspace / "qa-assets")])
 
 
 def run_tests(ci_type):

@@ -68,24 +68,8 @@ if [[ "${RUN_IWYU}" == true ]]; then
 fi
 
 if [ "$RUN_FUZZ_TESTS" = "true" ]; then
-  QA_ASSETS_COMMIT="$(<"${BASE_ROOT_DIR}/ci/qa-assets-commit.txt")"
   export DIR_FUZZ_IN=${DIR_QA_ASSETS}/fuzz_corpora/
-  if [ ! -d "${DIR_QA_ASSETS}/.git" ]; then
-    if [ -e "${DIR_QA_ASSETS}" ]; then
-      echo "QA assets path exists but is not a git checkout: ${DIR_QA_ASSETS}"
-      exit 1
-    fi
-    ${CI_RETRY_EXE} git clone --filter=blob:none --no-checkout https://github.com/bitcoin-core/qa-assets "${DIR_QA_ASSETS}"
-  fi
-  if [ "$(git -C "${DIR_QA_ASSETS}" rev-parse HEAD 2>/dev/null || true)" != "${QA_ASSETS_COMMIT}" ]; then
-    ${CI_RETRY_EXE} git -C "${DIR_QA_ASSETS}" fetch --depth=1 origin "${QA_ASSETS_COMMIT}"
-    git -C "${DIR_QA_ASSETS}" checkout --detach "${QA_ASSETS_COMMIT}"
-  fi
-  (
-    cd "${DIR_QA_ASSETS}"
-    echo "Using qa-assets repo from commit ..."
-    git log -1
-  )
+  python3 "${BASE_ROOT_DIR}/ci/test/qa_assets.py" "${DIR_QA_ASSETS}"
 fi
 
 # Make sure default datadir does not exist and is never read by creating a dummy file
