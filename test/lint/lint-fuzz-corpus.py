@@ -3,7 +3,6 @@
 # file COPYING or https://opensource.org/license/mit/.
 """Check fuzz engine detection and corpus replay without running a node."""
 
-import ast
 import hashlib
 import json
 import math
@@ -19,29 +18,25 @@ from unittest.mock import patch
 
 def check_shared_cache_writer(root):
     """Evaluate the actual small workflow predicate over every relevant context."""
+    # Reuse the restricted lexer/interpreter, including hyphenated step IDs.
+    # run_path loads helpers without invoking the module's unittest.main guard.
+    evaluate = runpy.run_path(str(root / 'test/lint/lint-ci-depends-cache.py'))['evaluate']
     source = (root / '.github/actions/cache/save/action.yml').read_text(encoding='utf-8')
     step = source.split('- name: Save Ccache cache\n', 1)[1].split('\n    - name:', 1)[0]
     condition = next(line.strip().removeprefix('if: ${{ ').removesuffix(' }}')
                      for line in step.splitlines() if line.strip().startswith('if:'))
-    tree = ast.parse(condition.replace('&&', ' and ').replace('||', ' or '), mode='eval')
-
-    def evaluate(node, values):
-        if isinstance(node, ast.Expression):
-            return evaluate(node.body, values)
-        if isinstance(node, ast.Constant):
-            return node.value
-        if isinstance(node, ast.Attribute):
-            return values[ast.unparse(node)]
-        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and not node.args and not node.keywords:
-            assert node.func.id in ('success', 'failure')
-            return values['status'] == node.func.id
-        if isinstance(node, ast.BoolOp):
-            operation = {ast.And: all, ast.Or: any}[type(node.op)]
-            return operation(evaluate(child, values) for child in node.values)
-        if isinstance(node, ast.Compare) and len(node.ops) == 1 and isinstance(node.ops[0], (ast.Eq, ast.NotEq)):
-            equal = evaluate(node.left, values) == evaluate(node.comparators[0], values)
-            return equal if isinstance(node.ops[0], ast.Eq) else not equal
-        raise AssertionError(f'Review new cache predicate syntax: {ast.dump(node)}')
+    for status in ('success', 'failure', 'cancelled'):
+        assert evaluate('always()', {}, status)
+        assert evaluate('cancelled()', {}, status) == (status == 'cancelled')
+        assert evaluate('!cancelled()', {}, status) == (status != 'cancelled')
+        for complete in ('', 'false', 'true'):
+            # A missing GitHub output resolves to the empty string, not true.
+            values = {'steps.build-status.outputs.complete': complete}
+            assert evaluate("always() && (!cancelled() || steps.build-status.outputs.complete == 'true')", values, status) == (
+                status != 'cancelled' or complete == 'true')
+    for unsupported in ('unknown()', 'always(1)', "steps.build-status.outputs.complete[0] == 't'"):
+        with TestCase().assertRaises(AssertionError):
+            evaluate(unsupported, {'steps.build-status.outputs.complete': 'true'}, 'cancelled')
 
     for event in ('push', 'pull_request', 'workflow_dispatch'):
         for provider in ('gha', 'warp'):
@@ -55,12 +50,13 @@ def check_shared_cache_writer(root):
                         }
                         for status in ('success', 'failure', 'cancelled'):
                             for ready in ('', 'false', 'true'):
-                                values['status'] = status
                                 values['steps.ccache_export.outputs.ready'] = ready
-                                expected = (status != 'cancelled' and event == 'push'
-                                            and (provider != 'gha' or ready == 'true')
-                                            and (provider == 'gha' or branch == 'main') and (count == '' or index == '0'))
-                                assert evaluate(tree, values) == expected, values
+                                for complete in ('', 'false', 'true'):
+                                    values['steps.build-status.outputs.complete'] = complete
+                                    expected = ((status != 'cancelled' or complete == 'true') and event == 'push'
+                                                and (provider != 'gha' or ready == 'true')
+                                                and (provider == 'gha' or branch == 'main') and (count == '' or index == '0'))
+                                    assert evaluate(condition, values, status) == expected, (status, values)
 
 
 def check_engine_detection(runner, root):

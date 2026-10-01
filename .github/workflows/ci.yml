@@ -558,7 +558,11 @@ jobs:
 
       - name: Save caches
         uses: ./.github/actions/cache/save
-        if: ${{ (success() || failure()) && github.event_name == 'push' && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') }}
+        # Preserve completed work when a later test is canceled by a new push.
+        # The action checks run-bound completion markers and the export budget.
+        if: ${{ always() && github.event_name == 'push' && (env.FUZZ_SHARD_COUNT == '' || env.FUZZ_SHARD_INDEX == '0') }}
+        timeout-minutes: 3
+        continue-on-error: true
         with:
           provider: gha
 

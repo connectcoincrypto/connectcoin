@@ -145,6 +145,16 @@ or version checks. The GitHub workflow runs the real Linux build and smoke tests
 and run a temporary regtest daemon. Headless checks do not replace testing on
 a real X11/Wayland desktop.
 
+The packaging workflow sets `QT_RCC_SOURCE_DATE_OVERRIDE=1` to give embedded
+Qt resource metadata a stable timestamp, following the policy in
+`depends/patches/qt/rcc_hardcode_timestamp.patch`. This allows compiler-cache
+reuse when translation contents are unchanged but generated `.qm` file mtimes
+differ between builds. `test-rcc-timestamps.sh` exercises the installed Qt 6
+resource compiler with identical payloads and different mtimes, and checks that
+real content changes still alter its output. Compiler-cache statistics are
+reset immediately before compilation and reported afterward; all unit tests
+and runtime checks remain enabled.
+
 ## Download pins
 
 All executable downloads are SHA256 checked before execution. The official

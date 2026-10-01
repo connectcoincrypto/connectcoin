@@ -45,6 +45,9 @@ jobs:
       CMAKE_BUILD_PARALLEL_LEVEL: '2'
       CCACHE_DIR: /tmp/connectcoin-ccache
       CCACHE_MAXSIZE: 384M
+      # Generated translations otherwise embed fresh mtimes in the large RCC
+      # source and miss ccache on every clean build. Matches depends' policy.
+      QT_RCC_SOURCE_DATE_OVERRIDE: '1'
     steps:
       - name: Install build dependencies
         run: |
@@ -82,6 +85,7 @@ jobs:
         run: |
           python3 contrib/linuxdeploy/smoke_test.py --self-test
           bash contrib/linuxdeploy/test-apprun.sh
+          bash contrib/linuxdeploy/test-rcc-timestamps.sh
           cmake -DREPO_SOURCE_DIR="$GITHUB_WORKSPACE" \
             -DTEST_BINARY_DIR="$GITHUB_WORKSPACE/build-package-fixture" \
             -P test/cmake/linux_packaging/run.cmake
@@ -98,9 +102,13 @@ jobs:
       - name: Compile applications and verification binaries
         id: compile
         run: |
+          ccache --zero-stats
           cmake --build build-linux --target connectcoin connectcoind connectcoin-cli \
             connectcoin-qt connectcoin-tx connectcoin-util connectcoin-wallet \
             connectcoin-test connectcoin-test-desktop-icons linux-manpages
+      - name: Compiler cache statistics
+        if: ${{ (success() || failure()) && steps.compile.outcome != 'skipped' }}
+        run: ccache --show-stats
       - name: Save compiler cache
         if: ${{ (success() || failure()) && steps.compile.outcome != 'skipped' && steps.compiler-cache.outputs.cache-hit != 'true' }}
         uses: actions/cache/save@v5

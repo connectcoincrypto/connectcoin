@@ -10,7 +10,8 @@ set -o errexit -o xtrace -o pipefail
 
 # Also invalidate direct/container invocations before any early failure.
 if [ -n "${BASE_BUILD_DIR:-}" ]; then
-  rm -f -- "${BASE_BUILD_DIR}/.ci-depends-complete"
+  rm -f -- "${BASE_BUILD_DIR}/.ci-depends-complete" \
+    "${BASE_BUILD_DIR}/.ci-build-complete" "${BASE_BUILD_DIR}/.ci-build-complete.tmp"
 fi
 
 if [ "${DANGER_RUN_CI_ON_HOST}" != "1" ]; then
@@ -157,6 +158,15 @@ fi
 
 ci_cleanup_ccache
 trap - EXIT
+# Cancellation may leave a detached container alive. Only export its compiler
+# cache after compilation has stopped, never while the compiler may write it.
+# The host still validates the export size if cleanup reported a warning.
+if [ -n "${BASE_BUILD_DIR:-}" ] && [ -n "${CI_DEPENDS_CACHE_RUN:-}" ]; then
+  if ! { printf '%s\n' "${CI_DEPENDS_CACHE_RUN}" > "${BASE_BUILD_DIR}/.ci-build-complete.tmp" &&
+         mv -f -- "${BASE_BUILD_DIR}/.ci-build-complete.tmp" "${BASE_BUILD_DIR}/.ci-build-complete"; }; then
+    echo "Warning: cannot record completed build; skipping canceled compiler-cache export" >&2
+  fi
+fi
 ccache --version | head -n 1 && ccache --show-stats --verbose
 ccache --print-stats | python3 "${BASE_ROOT_DIR}/ci/test/ccache_stats.py"
 du -sh "${DEPENDS_DIR}"/*/

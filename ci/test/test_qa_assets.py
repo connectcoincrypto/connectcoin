@@ -189,10 +189,32 @@ class CheckoutTests(unittest.TestCase):
             try:
                 self.temporary.cleanup()
                 return
-            except PermissionError:
-                if time.monotonic() >= deadline:
+            except OSError as error:
+                # Python 3.10's TemporaryDirectory may retry unlinking an open
+                # Windows file as a directory, wrapping the sharing violation
+                # in NotADirectoryError. Preserve the same bounded retry for
+                # that wrapper, but do not hide unrelated cleanup errors.
+                sharing_error = isinstance(error, PermissionError) or (
+                    isinstance(error, NotADirectoryError) and isinstance(error.__context__, PermissionError)
+                )
+                if not sharing_error or time.monotonic() >= deadline:
                     raise
                 time.sleep(0.05)
+
+    def test_cleanup_retries_wrapped_permission_error_only(self):
+        wrapped = NotADirectoryError("TemporaryDirectory retried an open file as a directory")
+        wrapped.__context__ = PermissionError("Windows sharing violation")
+        with patch.object(self.temporary, "cleanup", side_effect=[wrapped, None]) as cleanup, patch.object(time, "sleep") as sleep:
+            self.cleanup_directory()
+        self.assertEqual(cleanup.call_count, 2)
+        sleep.assert_called_once_with(0.05)
+
+        unrelated = NotADirectoryError("unrelated fixture error")
+        with patch.object(self.temporary, "cleanup", side_effect=unrelated) as cleanup, patch.object(time, "sleep") as sleep:
+            with self.assertRaises(NotADirectoryError):
+                self.cleanup_directory()
+        cleanup.assert_called_once_with()
+        sleep.assert_not_called()
 
     @staticmethod
     def command(*arguments):

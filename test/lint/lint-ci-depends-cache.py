@@ -37,7 +37,9 @@ GUEST_PREFIX = GUEST_SOURCE.split('cd "${BASE_ROOT_DIR}"', 1)[0]
 DEPENDS_BLOCK = GUEST_SOURCE[GUEST_SOURCE.index('if [ -z "$NO_DEPENDS" ]; then'):].split('CONNECTCOIN_CONFIG_ALL=', 1)[0]
 CCACHE_SETUP = GUEST_SOURCE[GUEST_SOURCE.index('CI_CCACHE_EXPORT_MAXSIZE='):GUEST_SOURCE.index('ccache --zero-stats')]
 CCACHE_FINISH = re.search(r'^ci_cleanup_ccache\ntrap - EXIT$', GUEST_SOURCE, re.M).group()
+BUILD_FINISH = GUEST_SOURCE[GUEST_SOURCE.index(CCACHE_FINISH):GUEST_SOURCE.index('ccache --version')]
 assert '.ci-depends-complete' in HOST_PREFIX and '.ci-depends-complete' in GUEST_PREFIX
+assert '.ci-build-complete' in HOST_PREFIX and '.ci-build-complete' in GUEST_PREFIX
 assert 'make $MAKEJOBS' in DEPENDS_BLOCK and 'CI_DEPENDS_CACHE_RUN' in DEPENDS_BLOCK
 
 
@@ -57,11 +59,12 @@ RESTORE_STEPS = dict(step_blocks(RESTORE_SOURCE))
 DOCKER_STEP = dict(step_blocks(DOCKER_SOURCE))['Construct docker build cache args']
 DOCKER_ARGS = textwrap.dedent(DOCKER_STEP.split('run: |\n', 1)[1])
 VALIDATION = textwrap.dedent(SAVE_STEPS['Check completed dependency build'].split('run: |\n', 1)[1])
+BUILD_VALIDATION = textwrap.dedent(SAVE_STEPS['Check completed application build'].split('run: |\n', 1)[1])
 
 
 def evaluate(expression, context, status):
     # Lex strings first so their contents are not rewritten as identifiers.
-    matches = list(re.finditer(r"'[^']*'|\b(?:github|env|inputs|steps|matrix)\.[A-Za-z0-9_.-]+|&&|\|\||!=|==|[()]|[A-Za-z_]+", expression))
+    matches = list(re.finditer(r"'[^']*'|\b(?:github|env|inputs|steps|matrix)\.[A-Za-z0-9_.-]+|&&|\|\||!=|==|[()!]|[A-Za-z_]+", expression))
     end = 0
     for match in matches:
         assert not expression[end:match.start()].strip(), expression[end:match.start()]
@@ -74,7 +77,7 @@ def evaluate(expression, context, status):
             assert token in context, token
             transformed.append(repr(context[token]))
         else:
-            transformed.append({'&&': 'and', '||': 'or'}.get(token, token))
+            transformed.append({'&&': 'and', '||': 'or', '!': 'not'}.get(token, token))
     tree = ast.parse(' '.join(transformed), mode='eval')
 
     def walk(node):
@@ -85,14 +88,16 @@ def evaluate(expression, context, status):
         if isinstance(node, ast.BoolOp):
             values = [bool(walk(v)) for v in node.values]
             return all(values) if isinstance(node.op, ast.And) else any(values)
+        if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not):
+            return not walk(node.operand)
         if isinstance(node, ast.Compare):
             assert len(node.ops) == 1 and isinstance(node.ops[0], (ast.Eq, ast.NotEq))
             equal = walk(node.left) == walk(node.comparators[0])
             return equal if isinstance(node.ops[0], ast.Eq) else not equal
         if isinstance(node, ast.Call):
-            assert isinstance(node.func, ast.Name) and node.func.id in ('success', 'failure')
+            assert isinstance(node.func, ast.Name) and node.func.id in ('success', 'failure', 'cancelled', 'always')
             assert not node.args and not node.keywords
-            return node.func.id == status
+            return node.func.id == 'always' or node.func.id == status
         raise AssertionError(ast.dump(node))
 
     return bool(walk(tree))
@@ -106,6 +111,8 @@ class DependsCacheTests(unittest.TestCase):
         self.build = self.directory / 'build with spaces ₿🧪'
         self.build.mkdir()
         self.marker = self.build / '.ci-depends-complete'
+        self.build_marker = self.build / '.ci-build-complete'
+        self.build_marker_temporary = self.build / '.ci-build-complete.tmp'
         self.output = self.directory / 'github output'
         self.make_log = self.directory / 'make calls'
         self.token = '34400817435:2:ci-matrix:ci_native_fuzz_0'
@@ -139,21 +146,31 @@ export -f make
         self.run_shell(VALIDATION, **changes)
         return self.output.read_text(encoding='utf-8').splitlines()[-1] == 'complete=true'
 
+    def build_complete(self, **changes):
+        self.run_shell(BUILD_VALIDATION, **changes)
+        return self.output.read_text(encoding='utf-8').splitlines()[-1] == 'complete=true'
+
     def test_host_invalidates_before_setup_or_docker_failure(self):
-        self.marker.write_text(self.token)
+        for marker in (self.marker, self.build_marker, self.build_marker_temporary):
+            marker.write_text(self.token)
         self.run_shell(HOST_PREFIX + '\nexit 43\n', expected=43)
-        self.assertFalse(self.marker.exists())
+        for marker in (self.marker, self.build_marker, self.build_marker_temporary):
+            self.assertFalse(marker.exists())
         self.assertFalse(self.complete())
+        self.assertFalse(self.build_complete())
         result = self.run_shell(HOST_PREFIX + '\nprintf "%s" "$CI_DEPENDS_CACHE_RUN"\n', CI_DEPENDS_CACHE_RUN='older-invocation')
         self.assertEqual(result.stdout, self.token)
 
     def test_guest_invalidates_before_danger_guard_or_early_failure(self):
         for danger, expected in [('0', 1), ('1', 44)]:
             with self.subTest(danger=danger):
-                self.marker.write_text(self.token)
+                for marker in (self.marker, self.build_marker, self.build_marker_temporary):
+                    marker.write_text(self.token)
                 self.run_shell(GUEST_PREFIX + '\nexit 44\n', expected=expected, DANGER_RUN_CI_ON_HOST=danger)
-                self.assertFalse(self.marker.exists())
+                for marker in (self.marker, self.build_marker, self.build_marker_temporary):
+                    self.assertFalse(marker.exists())
                 self.assertFalse(self.complete())
+                self.assertFalse(self.build_complete())
 
     def test_depends_failure_never_publishes_even_with_stale_marker(self):
         self.marker.write_text(self.token)
@@ -190,6 +207,63 @@ export -f make
         self.assertTrue(self.complete())
         self.assertFalse(self.complete(BASE_BUILD_DIR=''))
         self.assertFalse(self.complete(CI_CACHE_RUN=''))
+        self.marker.write_text('')
+        self.assertFalse(self.complete(CI_CACHE_RUN=''))
+
+    def test_build_marker_requires_current_complete_nonsymlink_token(self):
+        self.assertFalse(self.build_complete())
+        self.build_marker_temporary.write_text(self.token)
+        self.assertFalse(self.build_complete())
+        for value in ('', 'older-run', self.token.replace(':2:', ':1:'), self.token + ':extra'):
+            self.build_marker.write_text(value)
+            self.assertFalse(self.build_complete())
+        self.build_marker.write_text('')
+        self.assertFalse(self.build_complete(CI_CACHE_RUN=''))
+        self.build_marker.write_text(self.token)
+        self.assertTrue(self.build_complete())
+        self.assertFalse(self.build_complete(BASE_BUILD_DIR=''))
+        self.assertFalse(self.build_complete(CI_CACHE_RUN=''))
+
+    def test_build_marker_symlink_rejected(self):
+        target = self.directory / 'build marker target'
+        target.write_text(self.token)
+        try:
+            self.build_marker.symlink_to(target)
+        except OSError as error:
+            if os.name == 'nt' and getattr(error, 'winerror', None) == 1314:
+                self.skipTest(f'Symlink privilege unavailable: {error}')
+            raise
+        self.assertFalse(self.build_complete())
+
+    def test_build_marker_published_after_build_and_cleanup_before_tests(self):
+        build_command = 'cmake --build "${BASE_BUILD_DIR}" "$MAKEJOBS" --target $BUILD_GOALS --verbose'
+        self.assertLess(GUEST_SOURCE.index(build_command), GUEST_SOURCE.index(BUILD_FINISH))
+        self.assertLess(GUEST_SOURCE.index(BUILD_FINISH), GUEST_SOURCE.index('if [ "$RUN_UNIT_TESTS" = "true" ]'))
+        self.assertLess(BUILD_FINISH.index('ci_cleanup_ccache'), BUILD_FINISH.index('.ci-build-complete.tmp'))
+        self.assertIn('mv -f -- "${BASE_BUILD_DIR}/.ci-build-complete.tmp" "${BASE_BUILD_DIR}/.ci-build-complete"', BUILD_FINISH)
+        for build_status, cleanup_status in itertools.product((0, 43), (0, 75)):
+            with self.subTest(build_status=build_status, cleanup_status=cleanup_status):
+                self.build_marker.write_text('older-run')
+                body = GUEST_PREFIX + f'\nccache() {{ return {cleanup_status}; }}\n' + CCACHE_SETUP
+                body += f'\n(exit {build_status})\n' + BUILD_FINISH
+                self.run_shell(body, expected=build_status, CCACHE_MAXSIZE='384M')
+                self.assertEqual(self.build_complete(), build_status == 0)
+                self.assertFalse(self.build_marker_temporary.exists())
+                # Cleanup failure still preserves compilation's result; the
+                # independent export-size guard remains mandatory in YAML.
+        for changes in ({'BASE_BUILD_DIR': ''}, {'CI_DEPENDS_CACHE_RUN': ''}):
+            self.build_marker.unlink(missing_ok=True)
+            self.run_shell('ci_cleanup_ccache() { :; }\n' + BUILD_FINISH, **changes)
+            self.assertFalse(self.build_complete())
+
+    def test_build_marker_failure_does_not_fail_successful_compilation(self):
+        for command in ('printf', 'mv'):
+            with self.subTest(command=command):
+                body = GUEST_PREFIX + f'\n{command}() {{ return 74; }}\n'
+                body += 'ci_cleanup_ccache() { :; }\n' + BUILD_FINISH
+                result = self.run_shell(body)
+                self.assertIn('cannot record completed build', result.stderr)
+                self.assertFalse(self.build_complete())
 
     def test_symlink_marker_rejected(self):
         target = self.directory / 'marker target'
@@ -464,8 +538,38 @@ ccache() {
                 'github.event.repository.default_branch': 'main', 'inputs.provider': provider,
                 'env.FUZZ_SHARD_COUNT': '', 'env.FUZZ_SHARD_INDEX': '',
                 'steps.ccache_export.outputs.ready': ready,
+                'steps.build-status.outputs.complete': 'false',
             }
             self.assertEqual(evaluate(expression, context, 'failure'), provider != 'gha' or ready == 'true')
+
+    def test_cancelled_ccache_requires_completed_build_and_bounded_cache(self):
+        helper = runpy.run_path(str(ROOT / 'ci/test/ccache_export.py'))
+        cache = self.directory / 'cache'
+        cache.mkdir()
+        payload = cache / 'object'
+        context = {
+            'github.event_name': 'push', 'github.ref_name': 'main',
+            'github.event.repository.default_branch': 'main', 'inputs.provider': 'gha',
+            'env.FUZZ_SHARD_COUNT': '', 'env.FUZZ_SHARD_INDEX': '',
+        }
+        for completed, state in itertools.product((False, True), ('valid', 'oversized', 'symlink', 'missing')):
+            with self.subTest(completed=completed, state=state):
+                self.build_marker.unlink(missing_ok=True)
+                if completed:
+                    self.build_marker.write_text(self.token)
+                context['steps.build-status.outputs.complete'] = str(self.build_complete()).lower()
+                payload.write_bytes(b'x' * (1_000_001 if state == 'oversized' else 1))
+                self.output.unlink(missing_ok=True)
+                path = cache / 'missing' if state == 'missing' else cache
+                with patch.dict(os.environ, CCACHE_DIR=str(path), CCACHE_MAXSIZE='1M', GITHUB_OUTPUT=str(self.output)):
+                    if state == 'symlink':
+                        with patch.object(Path, 'is_symlink', return_value=True):
+                            helper['main']()
+                    else:
+                        helper['main']()
+                context['steps.ccache_export.outputs.ready'] = self.output.read_text(encoding='utf-8').strip().split('=')[1]
+                self.assertEqual(evaluate(predicate(SAVE_STEPS['Save Ccache cache']), context, 'cancelled'),
+                                 completed and state == 'valid')
 
     def test_vcpkg_binary_cache_is_preserved_without_download_cache(self):
         self.assertNotIn('vcpkg-downloads', WORKFLOWS)
@@ -549,43 +653,75 @@ ccache() {
 
     def test_real_yaml_gates(self):
         checks = 0
-        for status, event, provider, branch, shard, complete, sources_hit, built_hit in itertools.product(
+        for status, event, provider, branch, shard, complete, build_complete, ready, sources_hit, built_hit in itertools.product(
                 ('success', 'failure', 'cancelled'), ('push', 'pull_request', 'workflow_dispatch'), ('gha', 'warp'),
-                ('main', 'feature'), ('', '0', '1'), ('false', 'true'), ('false', 'true'), ('false', 'true')):
+                ('main', 'feature'), ('', '0', '1'), ('false', 'true'), ('false', 'true'), ('', 'false', 'true'),
+                ('false', 'true'), ('false', 'true')):
             context = {
                 'github.event_name': event, 'github.ref_name': branch,
                 'github.event.repository.default_branch': 'main', 'inputs.provider': provider,
                 'env.FUZZ_SHARD_COUNT': '' if shard == '' else '4', 'env.FUZZ_SHARD_INDEX': shard,
                 'steps.depends-status.outputs.complete': complete,
-                'steps.ccache_export.outputs.ready': 'true',
+                'steps.build-status.outputs.complete': build_complete,
+                'steps.ccache_export.outputs.ready': ready,
                 'env.depends-sources-cache-hit': sources_hit, 'env.depends-built-cache-hit': built_hit,
             }
-            allowed = status != 'cancelled' and event == 'push' and (provider == 'gha' or branch == 'main') and shard != '1'
+            allowed = event == 'push' and (provider == 'gha' or branch == 'main') and shard != '1'
             for name in ('Save Ccache cache', 'Save depends sources cache', 'Save built depends cache'):
                 cache_hit = sources_hit if name == 'Save depends sources cache' else built_hit
                 expected = allowed and (name == 'Save Ccache cache' or (complete == 'true' and cache_hit != 'true'))
+                if name == 'Save Ccache cache':
+                    expected = expected and (status != 'cancelled' or build_complete == 'true') and (provider != 'gha' or ready == 'true')
                 if name == 'Save depends sources cache' and provider == 'gha':
                     expected = False
                 self.assertEqual(evaluate(predicate(SAVE_STEPS[name]), context, status), expected,
-                                 (name, status, event, provider, branch, shard, complete, sources_hit, built_hit))
+                                 (name, status, event, provider, branch, shard, complete, build_complete, ready, sources_hit, built_hit))
                 checks += 1
         print(f'Validated {checks} cache-export predicate combinations', flush=True)
 
     def test_workflow_and_internal_gates(self):
-        steps = [block for name, block in step_blocks(WORKFLOWS) if name == 'Save caches']
-        self.assertEqual(len(steps), 2)
         self.assertNotIn('name: Save Ccache cache after failure', WORKFLOWS)
-        for block in steps:
+        for workflow, source in WORKFLOW_SOURCES.items():
+            blocks = [block for name, block in step_blocks(source) if name == 'Save caches']
+            self.assertEqual(len(blocks), 1)
+            block = blocks[0]
             self.assertIn('uses: ./.github/actions/cache/save', block)
             expression = predicate(block)
+            if workflow == 'ci.yml':
+                self.assertRegex(block, r'\n\s+timeout-minutes: 3\n')
             for status, event, shard in itertools.product(('success', 'failure', 'cancelled'), ('push', 'pull_request'), ('', '0', '1')):
                 context = {'github.event_name': event, 'env.FUZZ_SHARD_COUNT': '' if shard == '' else '4', 'env.FUZZ_SHARD_INDEX': shard}
-                expected = status != 'cancelled' and event == 'push' and (shard != '1' or 'FUZZ_SHARD' not in expression)
+                expected = (status != 'cancelled' or workflow == 'ci.yml') and event == 'push' and (shard != '1' or 'FUZZ_SHARD' not in expression)
                 self.assertEqual(evaluate(expression, context, status), expected)
         for name, block in step_blocks(INTERNAL_SOURCE):
             for status, provider in itertools.product(('success', 'failure', 'cancelled'), ('gha', 'warp')):
-                expected = status != 'cancelled' and provider == ('warp' if 'WarpBuild' in name else 'gha')
+                expected = provider == ('warp' if 'WarpBuild' in name else 'gha')
                 self.assertEqual(evaluate(predicate(block), {'inputs.provider': provider}, status), expected)
+
+    def test_cancellation_reaches_completion_and_size_checks(self):
+        for name in ('Check completed dependency build', 'Check completed application build'):
+            for status in ('success', 'failure', 'cancelled'):
+                self.assertTrue(evaluate(predicate(SAVE_STEPS[name]), {}, status))
+        for status, provider, complete in itertools.product(('success', 'failure', 'cancelled'), ('gha', 'warp'), ('', 'false', 'true')):
+            context = {'inputs.provider': provider, 'steps.build-status.outputs.complete': complete}
+            self.assertEqual(evaluate(predicate(SAVE_STEPS['Check Ccache export size']), context, status),
+                             provider == 'gha' and (status != 'cancelled' or complete == 'true'))
+
+    def test_cache_timeout_is_best_effort_without_masking_ci_failures(self):
+        workflow = WORKFLOW_SOURCES['ci.yml']
+        job = re.search(r'^  ci-matrix:\n(.*?)(?=^  [a-zA-Z0-9_-]+:|\Z)', workflow, re.M | re.S)
+        self.assertIsNotNone(job)
+        header, steps_source = job.group(1).split('    steps:\n', 1)
+        # Tolerate cache upload/time-limit failures at this step only. The job
+        # and its compile/test command must still propagate ordinary failures.
+        self.assertNotRegex(header, re.compile(r'^\s+continue-on-error:', re.M))
+        steps = dict(step_blocks(steps_source))
+        self.assertIn('run: ./ci/test_run_all.sh', steps['CI script'])
+        self.assertNotRegex(steps['CI script'], re.compile(r'^\s+continue-on-error:', re.M))
+        self.assertRegex(steps['Save caches'], r'\n\s+continue-on-error: true\n')
+        self.assertRegex(steps['Save caches'], r'\n\s+timeout-minutes: 3\n')
+        self.assertIn('set -o errexit', HOST_PREFIX)
+        self.assertIn('set -o errexit', GUEST_PREFIX)
 
 
 if __name__ == '__main__':

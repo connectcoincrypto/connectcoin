@@ -21,6 +21,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 REPO = Path(__file__).resolve().parents[2]
 TARGETS = {"connectcoin", "connectcoin-qt", "connectcoind", "connectcoin-cli",
@@ -86,8 +87,13 @@ def require(condition, message):
 
 
 def sha256(path):
+    # Keep the validator compatible with the repository's Python 3.10 minimum.
+    # Stream large installer/payload files without loading them into memory.
+    digest = hashlib.sha256()
     with path.open("rb") as stream:
-        return hashlib.file_digest(stream, "sha256").hexdigest()
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def validate_manifest(manifest):
@@ -719,6 +725,16 @@ class RegressionTests(unittest.TestCase):
             with self.subTest(path=path):
                 with self.assertRaisesRegex(ValueError, "Unsafe|User data|Active user config|Qt test|Unexpected executable|Test or user-data|Development"):
                     validate_manifest({"files": [{"path": path, "size": 0, "sha256": "0" * 64}]})
+
+    def test_sha256_empty_small_and_multichunk_files(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "binary payload"
+            for data in (b"", b"abc", bytes(range(256)) * 4096 + b"tail"):
+                with self.subTest(size=len(data)):
+                    path.write_bytes(data)
+                    # Prevent a newer local Python from hiding a 3.10 regression.
+                    with patch.object(hashlib, "file_digest", None, create=True):
+                        self.assertEqual(sha256(path), hashlib.sha256(data).hexdigest())
 
     def test_extraction_detects_hash_changes_and_extra_files(self):
         with tempfile.TemporaryDirectory() as temporary:

@@ -7,10 +7,11 @@
 export LC_ALL=C.UTF-8
 
 set -o errexit
-# Invalidate completion before setup or Docker can fail. This file is outside
+# Invalidate completion before setup or Docker can fail. These files are outside
 # all restored cache paths and must describe only the current invocation.
 if [ -n "${BASE_BUILD_DIR:-}" ]; then
-  rm -f -- "${BASE_BUILD_DIR}/.ci-depends-complete"
+  rm -f -- "${BASE_BUILD_DIR}/.ci-depends-complete" \
+    "${BASE_BUILD_DIR}/.ci-build-complete" "${BASE_BUILD_DIR}/.ci-build-complete.tmp"
 fi
 export CI_DEPENDS_CACHE_RUN="${GITHUB_RUN_ID:-local}:${GITHUB_RUN_ATTEMPT:-0}:${GITHUB_JOB:-local}:${CONTAINER_NAME:-local}"
 source ./ci/test/00_setup_env.sh
