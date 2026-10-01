@@ -3,6 +3,7 @@
 # Distributed under the MIT software license, see the accompanying file COPYING.
 set -eu
 
+# This application launcher intentionally preserves the user's locale.
 # AppImage and the extracted tarball use the same relative directory layout.
 bundle_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 tool=${0##*/}

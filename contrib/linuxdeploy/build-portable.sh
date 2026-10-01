@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Copyright (c) 2026 The ConnectCoin developers
 # Distributed under the MIT software license, see the accompanying file COPYING.
-set -euo pipefail
 export LC_ALL=C
+set -euo pipefail
 
 usage() {
     printf '%s\n' \
@@ -128,7 +128,7 @@ for platform in libqoffscreen.so libqwayland-egl.so libqwayland-generic.so; do
         EXTRA_PLATFORM_PLUGINS+=";$platform"
     fi
 done
-deploy_args=(--appdir "$appdir" --desktop-file "$desktop_file" --icon-file "$icon_file" --custom-apprun "$script_dir/apprun.sh")
+deploy_args=(--appdir "$appdir" --desktop-file "$desktop_file" --icon-file "$icon_file" --custom-apprun "$script_dir/apprun")
 for binary in "${binaries[@]}"; do
     deploy_args+=(--executable "$appdir/usr/bin/$binary")
 done
@@ -136,7 +136,7 @@ done
 
 [[ -f "$appdir/usr/plugins/platforms/libqxcb.so" && -f "$appdir/usr/plugins/platforms/libqminimal.so" ]] || die 'Qt platform plugin deployment is incomplete'
 [[ -f "$appdir/usr/lib/libQt6Core.so.6" && -f "$appdir/usr/bin/qt.conf" ]] || die 'Qt 6 library or relative qt.conf was not deployed'
-install -m 755 "$script_dir/apprun.sh" "$appdir/AppRun"
+install -m 755 "$script_dir/apprun" "$appdir/AppRun"
 for binary in "${binaries[@]}"; do
     [[ ! -e "$appdir/$binary" ]] || die "Unexpected file at bundle root: $binary"
     ln -s AppRun "$appdir/$binary"
@@ -166,7 +166,7 @@ if [[ "$format" != tar ]]; then
     download_verified "$runtime_url" "$runtime_sha256" "$tools_dir/runtime-x86_64"
     export LDAI_RUNTIME_FILE="$tools_dir/runtime-x86_64" LDAI_OUTPUT="$work_dir/$appimage_name"
     export LDAI_VERSION="$version" LDAI_NO_APPSTREAM=1
-    "$tools_dir/linuxdeploy-x86_64.AppImage" --appdir "$appdir" --custom-apprun "$script_dir/apprun.sh" --output appimage
+    "$tools_dir/linuxdeploy-x86_64.AppImage" --appdir "$appdir" --custom-apprun "$script_dir/apprun" --output appimage
     [[ -s "$work_dir/$appimage_name" ]] || die 'AppImage output was not created'
     chmod 755 -- "$work_dir/$appimage_name"
 fi

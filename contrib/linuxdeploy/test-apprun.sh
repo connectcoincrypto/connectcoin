@@ -4,6 +4,7 @@
 # The generated fake tools and argument-preservation tests need literal dollars.
 # shellcheck disable=SC2016
 # Test launcher behavior without running Core, Qt, or any downloaded tools.
+export LC_ALL=C
 set -euo pipefail
 script_dir=$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 test_dir=$(mktemp -d)
@@ -15,9 +16,9 @@ fail() { printf 'FAIL: %s\n' "$*" >&2; exit 1; }
 
 bundle="$test_dir/original bundle"
 mkdir -p "$bundle/usr/bin" "$bundle/usr/lib" "$bundle/usr/plugins/platforms"
-cp "$script_dir/apprun.sh" "$bundle/AppRun"
+cp "$script_dir/apprun" "$bundle/AppRun"
 # Copies exercise argv[0] dispatch even on Windows filesystems without symlinks.
-cp "$script_dir/apprun.sh" "$bundle/connectcoin-cli"
+cp "$script_dir/apprun" "$bundle/connectcoin-cli"
 for tool in connectcoin-qt connectcoin-cli connectcoind; do
     printf '%s\n' \
         '#!/bin/sh' \

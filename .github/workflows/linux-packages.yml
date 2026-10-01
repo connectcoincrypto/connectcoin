@@ -52,7 +52,7 @@ jobs:
             apt-get update
             apt-get install -y --no-install-recommends \
               ca-certificates git g++-12 cmake ninja-build pkg-config ccache \
-              libboost-dev libsqlite3-dev libzmq3-dev libqrencode-dev \
+              libboost-dev libsqlite3-dev libzmq3-dev libqrencode-dev libgl-dev \
               qt6-base-dev qt6-base-dev-tools qt6-tools-dev qt6-tools-dev-tools \
               qt6-l10n-tools qt6-qpa-plugins qt6-wayland qt6-translations-l10n \
               python3 python3-zmq dpkg-dev file binutils curl patchelf \
@@ -154,6 +154,8 @@ jobs:
           name: linux-package-diagnostics-${{ matrix.platform }}
           path: |
             build-linux/CMakeFiles/CMakeConfigureLog.yaml
+            build-linux/CMakeFiles/CMakeOutput.log
+            build-linux/CMakeFiles/CMakeError.log
             build-linux/Testing/Temporary/LastTest.log
             dist/_CPack_Packages/**/rpmbuild.err
             dist/_CPack_Packages/**/rpmbuild.out
