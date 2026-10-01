@@ -19,21 +19,23 @@ change. Testnet4 wallets and chain data continue to use the `testnet4/`
 subdirectory. The Kernel API also defaults to mainnet.
 
 Testnet4 uses P2P port 48179 and RPC port 48178. RPC should remain private; expose
-only the P2P service to testers. The built-in testnet4 DNS/DDNS seeds are listed
-below; no public seed is added to mainnet, testnet3, signet or regtest. Fixed seed
-IP addresses remain empty. A public beta additionally needs reachable peers,
+only the P2P service to testers. Testnet4's only built-in DNS/DDNS bootstrap
+hostname is `connectcoin1.com`. Mainnet has separate bootstrap hostnames on
+its native P2P port 48173, listed in the
+[operator policy](dnsseed-policy.md#current-bootstrap-hostnames). No public
+seed is added to testnet3, signet or regtest. Fixed seed IP addresses remain
+empty on all networks. A public beta additionally needs reachable peers,
 operational DNS, ongoing RandomX mining, and distribution of test coins. Merely
 listing hostnames in the client does not deploy those services. No test
 balances are promised mainnet conversion.
 
 ## Testnet4 bootstrap DNS
 
-The built-in base hostnames are:
-
-- `connectcoin1.com`
-- `connectcoin2.com`
-- `connectcoin3.com`
-- `dememzea.tplinkdns.com`
+The only built-in base hostname is `connectcoin1.com`. Its bootstrap node must
+run testnet4 explicitly (`-testnet4` or `-chain=testnet4`) and listen on TCP
+48179. Mainnet's `connectcoin2.com`, `connectcoin3.com`, `connectcoin4.com` and
+`dememzea.tplinkdns.com` are not testnet4 seeds. Reassigning a hostname in
+source does not change the network running on the corresponding node.
 
 On a fresh start with no known peers, the client queries the seeds automatically.
 `-dnsseed=0` disables DNS seeding; `-connect` also disables it by default. Existing
@@ -59,13 +61,6 @@ falls back to connecting to `<seed>:48179` to request peer addresses.
 Thus the base hostname must also resolve to a reachable testnet4 P2P node, not
 just a DNS server. This fallback is an address-fetch connection, not a promise
 of a permanent connection to that node.
-
-A DDNS provider may not allow a nested record such as
-`x9.dememzea.tplinkdns.com`. The base-hostname fallback still works in that case,
-provided `dememzea.tplinkdns.com` resolves to a reachable testnet4 node on TCP
-48179. Keep its dynamic address updated and allow incoming P2P connections;
-DDNS alone does not bypass NAT or a firewall. Multiple names pointing to the
-same node do not provide independent bootstrap redundancy.
 
 Running the authoritative DNS service on the VPS itself is optional and is
 separate from running `connectcoind`. Provider-hosted DNS does not require
@@ -198,7 +193,8 @@ Before upgrading an existing node:
    If incompatible pre-mask P2C history prevents loading, use the offline-copy
    procedure above before attempting the load/rescan again.
 4. Upgrade all VPS/seed nodes and peers to the same build and fresh chain before
-   advertising them. DNS names and port 48179 stay the same; updating this code
+   advertising them. The September 9 reset preserved the DNS names and port
+   48179; the current seed assignments are listed above. Updating source code
    does not deploy anything to those machines.
 
 Normal startup refuses a loaded block index with the wrong genesis. Reindexing

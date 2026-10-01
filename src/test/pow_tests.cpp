@@ -310,13 +310,17 @@ void sanity_check_chainparams(const ArgsManager& args, ChainType chain_type, boo
     // can be relaxed only when project-owned fixed seeds have been reviewed.
     BOOST_CHECK(chainParams->FixedSeeds().empty());
 
-    // Public beta discovery must stay isolated from every other network.
+    // Mainnet and public beta discovery must remain isolated.
     const auto& seeds{chainParams->DNSSeeds()};
-    if (chain_type == ChainType::TESTNET4) {
+    if (chain_type == ChainType::MAIN) {
         const std::vector<std::string> expected_seeds{
-            "connectcoin1.com", "connectcoin2.com", "connectcoin3.com", "dememzea.tplinkdns.com",
+            "connectcoin2.com", "connectcoin3.com", "connectcoin4.com", "dememzea.tplinkdns.com",
         };
         BOOST_CHECK_EQUAL_COLLECTIONS(seeds.begin(), seeds.end(), expected_seeds.begin(), expected_seeds.end());
+        BOOST_CHECK_EQUAL(chainParams->GetDefaultPort(), 48173);
+    } else if (chain_type == ChainType::TESTNET4) {
+        BOOST_REQUIRE_EQUAL(seeds.size(), 1U);
+        BOOST_CHECK_EQUAL(seeds.front(), "connectcoin1.com");
         BOOST_CHECK_EQUAL(chainParams->GetDefaultPort(), 48179);
     } else if (chain_type == ChainType::REGTEST) {
         BOOST_REQUIRE_EQUAL(seeds.size(), 1U);

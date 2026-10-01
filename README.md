@@ -243,10 +243,14 @@ the node and CLI.
 
 Mainnet uses TCP **48173** for P2P and **48172** for RPC. Testnet4 uses **48179**
 for P2P and **48178** for RPC. Keep RPC private; it does not need to be exposed
-for ordinary wallet use. Mainnet currently requires a known peer configured
-with `-addnode=<host>:48173`; its DNS and fixed seed lists are empty. See the
-[testnet networking guide](doc/testnet-beta.md#testnet4-bootstrap-dns) for peer
-discovery and public-node setup.
+for ordinary wallet use. Mainnet's built-in DNS/DDNS bootstrap hostnames are
+`connectcoin2.com`, `connectcoin3.com`, `connectcoin4.com` and
+`dememzea.tplinkdns.com`; testnet4 uses only `connectcoin1.com`. These services
+must run the matching network on its native P2P port. Fixed seed lists remain
+empty on all networks. Configuring hostnames in source does not deploy nodes,
+DNS records or services. See the [DNS seed operator policy](doc/dnsseed-policy.md#current-bootstrap-hostnames)
+and [testnet networking guide](doc/testnet-beta.md#testnet4-bootstrap-dns) for
+peer discovery and public-node setup.
 
 Wallet data and backups
 ----------------------

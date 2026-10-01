@@ -18,10 +18,7 @@
     "default_port": 48179,
     "magic": "77d66cbc",
     "dns_seeds": [
-      "connectcoin1.com",
-      "connectcoin2.com",
-      "connectcoin3.com",
-      "dememzea.tplinkdns.com"
+      "connectcoin1.com"
     ]
   },
   "addresses": {

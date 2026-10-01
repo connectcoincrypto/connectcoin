@@ -59,7 +59,7 @@ class MainnetLaunchTest(BitcoinTestFramework):
         self.test_explicit_testnet4()
         self.test_wrong_genesis_database()
         self.test_chainstate_tool()
-        self.test_testnet4_seeds()
+        self.test_network_seeds()
         self.test_regtest_genesis_display()
 
     def check_mainnet_genesis(self, node):
@@ -269,43 +269,56 @@ class MainnetLaunchTest(BitcoinTestFramework):
             node.chain = previous_chain
             conf.write_text(previous_config, encoding="utf-8")
 
-    def test_testnet4_seeds(self):
-        self.log.info("Explicit testnet4 uses all its DNS seeds and respects -dnsseed=0")
-        seeds = ["connectcoin1.com", "connectcoin2.com", "connectcoin3.com", "dememzea.tplinkdns.com"]
+    def test_network_seeds(self):
+        self.log.info("Mainnet and testnet4 use separate bootstrap hosts/ports and respect -dnsseed=0")
         node = self.nodes[0]
         conf = node.datadir_path / "connectcoin.conf"
-        write_config(conf, n=0, chain="testnet4", disable_autoconnect=False)
-        node.replace_in_config([("dnsseed=0\n", "")])
-        # A fresh addrman makes bootstrap immediate. Only this test's peer cache
-        # is removed; no external DNS lookup or network connection is allowed.
-        (node.chain_path / "peers.dat").unlink()
-        for enabled in (True, False):
-            proxy = start_socks5_server(destinations_factory=None)
-            try:
-                args = [f"-proxy=127.0.0.1:{proxy.conf.addr[1]}", "-v2transport=0", "-randomxfast=0"]
-                if not enabled:
-                    args.append("-dnsseed=0")
-                with node.assert_debug_log(
-                    expected_msgs=[f"Loading addresses from DNS seed {seed}" for seed in seeds] if enabled else ["DNS seeding disabled"],
-                    unexpected_msgs=[] if enabled else ["Loading addresses from DNS seed"],
-                ):
-                    self.start_node(0, extra_args=args)
-                    if enabled:
-                        requested_seeds = []
-                        for _ in seeds:
-                            request = proxy.queue.get(timeout=self.rpc_timeout)
-                            assert isinstance(request, Socks5Command)
-                            assert_equal(request.atyp, AddressType.DOMAINNAME)
-                            assert_equal(request.port, 48179)
-                            requested_seeds.append(request.addr)
-                        # Seeds are shuffled; compare the complete list without
-                        # relying on order or allowing duplicate/missing names.
-                        assert_equal(sorted(requested_seeds), sorted(seed.encode("ascii") for seed in seeds))
-                    self.stop_node(0)
-                assert proxy.queue.empty()
-            finally:
-                self.stop_node(0)
-                proxy.stop()
+        previous_config = conf.read_text(encoding="utf-8")
+        previous_chain = node.chain
+        networks = (
+            ("", 48173, ["connectcoin2.com", "connectcoin3.com", "connectcoin4.com", "dememzea.tplinkdns.com"]),
+            ("testnet4", 48179, ["connectcoin1.com"]),
+        )
+        try:
+            for chain, port, seeds in networks:
+                node.chain = chain
+                write_config(conf, n=0, chain=chain, disable_autoconnect=False)
+                node.replace_in_config([("dnsseed=0\n", "")])
+                # A fresh addrman makes bootstrap immediate. Only this stopped
+                # test node's peer cache is removed; all requests use a local
+                # SOCKS proxy, never external DNS or the actual seed servers.
+                (node.chain_path / "peers.dat").unlink(missing_ok=True)
+                for enabled in (True, False):
+                    proxy = start_socks5_server(destinations_factory=None)
+                    try:
+                        args = [f"-proxy=127.0.0.1:{proxy.conf.addr[1]}", "-v2transport=0", "-randomxfast=0"]
+                        if not enabled:
+                            args.append("-dnsseed=0")
+                        with node.assert_debug_log(
+                            expected_msgs=[f"Loading addresses from DNS seed {seed}" for seed in seeds] if enabled else ["DNS seeding disabled"],
+                            unexpected_msgs=[] if enabled else ["Loading addresses from DNS seed"],
+                        ):
+                            self.start_node(0, extra_args=args)
+                            if enabled:
+                                requested_seeds = []
+                                for _ in seeds:
+                                    request = proxy.queue.get(timeout=self.rpc_timeout)
+                                    assert isinstance(request, Socks5Command)
+                                    assert_equal(request.atyp, AddressType.DOMAINNAME)
+                                    assert_equal(request.port, port)
+                                    requested_seeds.append(request.addr)
+                                # Exact membership rejects duplicates, missing
+                                # hosts, and seeds accidentally shared across networks.
+                                assert_equal(sorted(requested_seeds), sorted(seed.encode("ascii") for seed in seeds))
+                            self.stop_node(0)
+                        assert proxy.queue.empty()
+                    finally:
+                        self.stop_node(0)
+                        proxy.stop()
+        finally:
+            self.stop_node(0)
+            node.chain = previous_chain
+            conf.write_text(previous_config, encoding="utf-8")
 
 
 if __name__ == "__main__":

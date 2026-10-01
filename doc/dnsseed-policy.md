@@ -49,16 +49,39 @@ for non-sensitive operational reports. Do not post credentials or private keys.
 Behavior outside of these expectations may be reasonable in some
 situations but should be discussed in public in advance.
 
-Current beta seeds
-------------------
+Current bootstrap hostnames
+---------------------------
 
-`connectcoin1.com`, `connectcoin2.com`, `connectcoin3.com` and
-`dememzea.tplinkdns.com` are configured only for ConnectCoin testnet4. Operators must
-maintain the required DNS records and a reachable P2P bootstrap service on TCP
-48179; adding hostnames to the source does not establish service availability.
-See [testnet-beta.md](testnet-beta.md#testnet4-bootstrap-dns) for the filtered
-query and base-hostname fallback requirements. No mainnet seed or fixed peer
-snapshot is enabled by this configuration.
+| Network | Built-in DNS/DDNS hostnames | Native P2P port |
+| --- | --- | ---: |
+| Mainnet | `connectcoin2.com`, `connectcoin3.com`, `connectcoin4.com`, `dememzea.tplinkdns.com` | 48173 |
+| Testnet4 | `connectcoin1.com` | 48179 |
+
+Operators must maintain the required DNS records and reachable P2P bootstrap
+services running the matching ConnectCoin network. Mainnet nodes must use the
+[launch genesis](mainnet-genesis.md) and select mainnet (the default, or
+`-chain=main`); testnet4 nodes must explicitly select `-testnet4` or
+`-chain=testnet4`. Changing a hostname's source assignment does not switch the
+network running on a VPS. This configuration deploys no nodes, DNS records or
+services and does not establish their availability. Fixed seed arrays remain
+empty on every network; testnet3, signet and regtest have no public DNS seeds.
+
+The discovery code queries A/AAAA records for `x9.<seed>`. These filtered
+results must advertise reachable, non-pruned nodes with
+`NODE_NETWORK | NODE_WITNESS` and v2 transport support, on the selected
+network's native P2P port. If the filtered name has no addresses, or a name
+proxy is used, the client falls back to connecting to the base hostname on
+that same port to request peer addresses. Base hostnames therefore must also
+resolve to P2P nodes, not just DNS servers or website/CDN addresses. See
+[testnet-beta.md](testnet-beta.md#testnet4-bootstrap-dns) for a static DNS setup
+example using testnet4's hostname and port.
+
+A DDNS provider may not allow a nested record such as
+`x9.dememzea.tplinkdns.com`. The base-hostname fallback still works when
+`dememzea.tplinkdns.com` resolves to a reachable mainnet node on TCP 48173.
+Keep its dynamic address updated and allow incoming P2P connections; DDNS
+alone does not bypass NAT or a firewall. Multiple names pointing to the same
+node do not provide independent bootstrap redundancy.
 
 See also
 ----------

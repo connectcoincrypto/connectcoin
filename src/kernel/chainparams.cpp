@@ -181,8 +181,12 @@ public:
         // This is fine at runtime as we'll fall back to using them as an addrfetch if they don't support the
         // service bits we want, but we should get them updated to support all service bits wanted by any
         // release ASAP to avoid it where possible.
-        // ConnectCoin DNS and fixed seeds will be added when public seed nodes exist.
-        vSeeds.clear();
+        // Mainnet bootstrap hostnames; operators must serve mainnet on 48173.
+        // Testnet4 bootstrap remains isolated on connectcoin1.com.
+        vSeeds.emplace_back("connectcoin2.com");
+        vSeeds.emplace_back("connectcoin3.com");
+        vSeeds.emplace_back("connectcoin4.com");
+        vSeeds.emplace_back("dememzea.tplinkdns.com");
 
         // ConnectCoin-specific address, private-key, and BIP32 encodings.
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 28);  // C...
@@ -359,11 +363,8 @@ public:
         assert(genesis->hashMerkleRoot == uint256{"e09a12d2aca740a06be984897fa268d4f03317c2363748d4ab69768ed92ca555"});
 
         vFixedSeeds.clear();
-        // ConnectCoin public testnet4 bootstrap (base hostnames, including DDNS).
+        // Dedicated public testnet4 bootstrap, separate from mainnet hosts.
         vSeeds.emplace_back("connectcoin1.com");
-        vSeeds.emplace_back("connectcoin2.com");
-        vSeeds.emplace_back("connectcoin3.com");
-        vSeeds.emplace_back("dememzea.tplinkdns.com");
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 65);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 127);

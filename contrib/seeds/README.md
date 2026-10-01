@@ -7,14 +7,17 @@ the build until project-owned seed data is generated and reviewed.
 
 Until ConnectCoin operates project-owned crawlers and has enough independently
 operated nodes to produce trustworthy snapshots, keep fixed seeds out of the
-build. Testnet4 includes `connectcoin1.com`, `connectcoin2.com`, `connectcoin3.com`
-and `dememzea.tplinkdns.com` as DNS/DDNS bootstrap hostnames;
-their DNS records and P2P services must be operated separately as described in
-[testnet-beta.md](../../doc/testnet-beta.md#testnet4-bootstrap-dns). Other test
-deployments can bootstrap with explicit `-addnode` entries. Mainnet currently
-has no configured DNS or fixed seeds; use an independently verified mainnet
-peer with `-addnode=<host>:48173`. Enabling mainnet in the code does not deploy
-nodes, DNS records or seed infrastructure.
+build. Fixed seed arrays remain empty on every network. Testnet4 includes only
+`connectcoin1.com` as a DNS/DDNS bootstrap hostname. Mainnet includes
+`connectcoin2.com`, `connectcoin3.com`, `connectcoin4.com` and
+`dememzea.tplinkdns.com`. Their DNS records and P2P services must be operated
+separately, with nodes running the matching network on its native P2P port:
+48173 for mainnet and 48179 for testnet4. See the
+[DNS seed operator policy](../../doc/dnsseed-policy.md#current-bootstrap-hostnames)
+and [testnet-beta.md](../../doc/testnet-beta.md#testnet4-bootstrap-dns).
+Other test deployments can bootstrap with explicit `-addnode` entries.
+Configuring these hostnames in source does not deploy nodes, DNS records or
+seed infrastructure.
 Do not populate this directory from Bitcoin Core DNS seeds, crawlers, or AS-map
 snapshots and do not publish a release that implies those peers belong to
 ConnectCoin.

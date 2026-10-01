@@ -167,13 +167,18 @@ data and wallets and use a fresh `-datadir` for that chain; `-reindex` is not a
 genesis migration. The shared testnet address encodings do not permit reusing
 testnet wallets or balances as mainnet allocations.
 
-Fixed seeds are intentionally absent during development, and the generated seed
-header is not included by the chain parameters. Testnet4 includes the DNS/DDNS seeds
-`connectcoin1.com`, `connectcoin2.com`, `connectcoin3.com` and
-`dememzea.tplinkdns.com`; their operational requirements are documented in
-[testnet-beta.md](testnet-beta.md#testnet4-bootstrap-dns). No public DNS seed is
-configured for the other networks. Regtest retains only the non-resolving
-`dummySeed.invalid.` test-framework placeholder; it is not a bootstrap server.
+Fixed seed arrays are empty on every network, and the generated seed header
+is not included by the chain parameters. Testnet4 includes only
+`connectcoin1.com` as a DNS/DDNS bootstrap hostname. Mainnet includes
+`connectcoin2.com`, `connectcoin3.com`, `connectcoin4.com` and
+`dememzea.tplinkdns.com`. Bootstrap nodes must run the matching network on its
+native P2P port (48173 for mainnet, 48179 for testnet4); source configuration
+does not deploy or reconfigure nodes, DNS records or services. See the
+[operator policy](dnsseed-policy.md#current-bootstrap-hostnames) and
+[testnet-beta.md](testnet-beta.md#testnet4-bootstrap-dns) for operational
+requirements. No public DNS seed is configured for testnet3, signet or regtest.
+Regtest retains only the non-resolving `dummySeed.invalid.` test-framework
+placeholder; it is not a bootstrap server.
 
 All fifteen chosen RPC/P2P/onion-bind ports are in IANA's User Port range
 (1024–49151). No entry from 48172 through 48186 appeared in the registry checked on the date

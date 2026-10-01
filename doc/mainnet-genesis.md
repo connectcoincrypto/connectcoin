@@ -98,9 +98,14 @@ a separate LIGHT process and its SHA256d commitments independently decoded.
 - Public beta: explicit `-testnet4` or `-chain=testnet4`; P2P 48179,
   RPC 48178, addresses beginning with `tcc1`. Existing explicit testnet
   configurations continue selecting testnet; the application does not rewrite them.
-- Keep RPC private. Mainnet has no built-in DNS or fixed seeds until actual
-  mainnet peers are deployed. Testnet seed hostnames are not reused as mainnet
-  seeds. Operators must supply mainnet peers explicitly for initial bootstrap.
+- Keep RPC private. Mainnet's built-in DNS/DDNS bootstrap hostnames are
+  `connectcoin2.com`, `connectcoin3.com`, `connectcoin4.com` and
+  `dememzea.tplinkdns.com`; testnet4 uses only `connectcoin1.com`. Bootstrap
+  nodes must run the matching network on its native P2P port (48173 for
+  mainnet, 48179 for testnet4). Fixed seed arrays remain empty on all networks.
+  These source assignments do not deploy or reconfigure VPS nodes, DNS
+  records or services. See the
+  [operator policy](dnsseed-policy.md#current-bootstrap-hostnames).
 - Mining remains off at every startup. `startmining` and the GUI miner support
   mainnet, testnet4 and regtest. They may intentionally bootstrap without peers;
   operators must avoid creating isolated competing mainnet chains.
