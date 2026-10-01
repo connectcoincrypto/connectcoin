@@ -117,6 +117,9 @@ cmake -B build --preset vs2026-static -DVCPKG_INSTALLED_DIR="C:\path_without_spa
 
 ## Performance Notes
 
+For an offline Windows MSI containing the GUI, tools, and runtime dependencies,
+see [Windows MSI installer](windows-msi.md).
+
 ### vcpkg Manifest Default Features
 
 One can skip vcpkg manifest default features to speed up the configuration step.

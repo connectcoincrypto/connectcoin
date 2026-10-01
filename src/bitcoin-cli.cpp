@@ -516,8 +516,12 @@ public:
         if (!batch[ID_NETWORKINFO]["error"].isNull()) return batch[ID_NETWORKINFO];
 
         const UniValue& networkinfo{batch[ID_NETWORKINFO]["result"]};
-        if (networkinfo["version"].getInt<int>() < 209900) {
-            throw std::runtime_error("-netinfo requires connectcoind server to be running v0.21.0 and up");
+        // ConnectCoin's release numbers are independent of the inherited
+        // Bitcoin version scale: ConnectCoin 1.0.0 already has this RPC schema.
+        const bool connectcoin_server{networkinfo["subversion"].isStr() &&
+            networkinfo["subversion"].get_str().starts_with("/" + UA_NAME + ":")};
+        if (!connectcoin_server && networkinfo["version"].getInt<int>() < 209900) {
+            throw std::runtime_error("-netinfo requires a ConnectCoin server or a compatible server with the Bitcoin Core v0.21.0 RPC schema");
         }
         const int64_t time_now{TicksSinceEpoch<std::chrono::seconds>(CliClock::now())};
 
