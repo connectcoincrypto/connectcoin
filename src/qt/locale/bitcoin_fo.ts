@@ -5995,8 +5995,8 @@ Root certificates version: %2</source>
         <translation>FAST-støða deilir umleið 2 GiB av RandomX-minni við staðfestingina. Fleiri træðrir brúka meira CPU-orku og streym; lat orku vera eftir til knútin. Tað kann taka eina løtu at gera dátusavnið klárt.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Vinn blokkir á royndarnetinum við tíni CPU og RandomX. Námsvinna er sløkt, til tú byrjar hana. Allar mappur í hesum knúti deila sama námsvinnara, og hann heldur fram, tá tú skiftir flipa ella letur eina mappu aftur.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Námsvinna er sløkt, til tú byrjar hana. Allar mappur í hesum knúti deila sama námsvinnara, og hann heldur fram, tá tú skiftir flipa ella letur eina mappu aftur.</translation>
     </message>
     <message>
         <source>Mining</source>

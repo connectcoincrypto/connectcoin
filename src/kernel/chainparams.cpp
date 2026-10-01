@@ -28,18 +28,17 @@
 #include <span>
 #include <stdexcept>
 #include <utility>
+#include <vector>
 
 using namespace util::hex_literals;
 
-static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
+static CBlock CreateGenesisBlock(const char* pszTimestamp, std::vector<CTxOut> outputs, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion)
 {
     CMutableTransaction txNew;
     txNew.version = 1;
     txNew.vin.resize(1);
-    txNew.vout.resize(1);
+    txNew.vout = std::move(outputs);
     txNew.vin[0].scriptSig = CScript() << 486604799 << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
-    txNew.vout[0].nValue = genesisReward;
-    txNew.vout[0].SetScriptPubKey(genesisOutputScript);
 
     CBlock genesis;
     genesis.nTime    = nTime;
@@ -76,7 +75,7 @@ static const CScript& RegTestGenesisOutputScript()
 /** Build a reproducible ConnectCoin genesis block for the selected network. */
 static CBlock CreateConnectCoinGenesisBlock(const char* pszTimestamp, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward, const CScript& genesisOutputScript)
 {
-    return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
+    return CreateGenesisBlock(pszTimestamp, {CTxOut{genesisReward, genesisOutputScript}}, nTime, nNonce, nBits, nVersion);
 }
 
 void CChainParams::ApplyDeploymentOptions(const DeploymentOptions& opts)
@@ -163,11 +162,19 @@ public:
         m_assumed_blockchain_size = 0;
         m_assumed_chain_state_size = 0;
 
-        // Mainnet has not been launched. Do not embed a provisional genesis:
-        // nodes must refuse to initialize this chain until its launch genesis
-        // is defined. The retired development block lives only in test_util.
-        assert(!HasGenesisBlock());
-        assert(consensus.hashGenesisBlock.IsNull());
+        // Launch allocations: pers first, ment second. These are native P2PK
+        // MuSig2 aggregate keys, without a Taproot tweak. See mainnet-genesis.md.
+        // The initial target is exactly 1/5 of the testnet4 bootstrap target.
+        genesis = CreateGenesisBlock(
+            "Cloudflare 01/Oct/2026 Support for modern cryptographic algorithms in Workers",
+            {
+                CTxOut{5'000'000 * COIN, CScript() << OP_1 << "29a6b41260ed25e3019d18236192afecec9ea0b7312837bacf81a3c40d7b2034"_hex},
+                CTxOut{5'000'000 * COIN, CScript() << OP_1 << "2c83a568529b55cc93e2d20754f079f6072d77ac88266d9b054cb3e0e92a7845"_hex},
+            },
+            1790872995, 215364, 0x1e333300, 1);
+        consensus.hashGenesisBlock = genesis->GetHash();
+        assert(consensus.hashGenesisBlock == uint256{"30a3a7543f593b6343873a16aeb61005dce0fe3f4169ab34039316b2a9bb373e"});
+        assert(genesis->hashMerkleRoot == uint256{"2ff1604a1a6ed04110972a78c808d7b967f8f3d6ee754fcf33bded563edc2c8c"});
 
         // Note that of those which support the service bits prefix, most only support a subset of
         // possible options.
@@ -194,9 +201,9 @@ public:
         m_assumeutxo_data.clear();
 
         chainTxData = ChainTxData{
-            // No ConnectCoin mainnet chain statistics are available yet.
-            .nTime    = 0,
-            .tx_count = 0,
+            // Only the launch genesis is committed here.
+            .nTime    = 1790872995,
+            .tx_count = 1,
             .dTxRate  = 0,
         };
 

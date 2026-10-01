@@ -5958,8 +5958,8 @@ Root certificates version: %2</source>
         <translation>Режим FAST дели око 2 GiB RandomX меморије са валидацијом. Више нити користи више CPU ресурса и енергије; оставите капацитет за чвор. Иницијализација скупа података може потрајати.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Рударите блокове тестне мреже помоћу CPU-а и RandomX-а. Рударење је искључено док га не покренете. Рудар је заједнички за све новчанике у овом чвору и наставља да ради када промените картицу или затворите новчаник.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Рударење је искључено док га не покренете. Рудар је заједнички за све новчанике у овом чвору и наставља да ради када промените картицу или затворите новчаник.</translation>
     </message>
     <message>
         <source>Mining</source>

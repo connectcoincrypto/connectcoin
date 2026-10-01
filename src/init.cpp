@@ -496,12 +496,12 @@ void SetupServerArgs(ArgsManager& argsman, bool can_listen_ipc)
 
     init::AddLoggingArgs(argsman);
 
-    const auto defaultBaseParams = CreateBaseChainParams(ChainType::TESTNET4);
+    const auto defaultBaseParams = CreateBaseChainParams(ChainType::MAIN);
     const auto testnetBaseParams = CreateBaseChainParams(ChainType::TESTNET);
     const auto testnet4BaseParams = CreateBaseChainParams(ChainType::TESTNET4);
     const auto signetBaseParams = CreateBaseChainParams(ChainType::SIGNET);
     const auto regtestBaseParams = CreateBaseChainParams(ChainType::REGTEST);
-    const auto defaultChainParams = CreateChainParams(argsman, ChainType::TESTNET4);
+    const auto defaultChainParams = CreateChainParams(argsman, ChainType::MAIN);
     const auto testnetChainParams = CreateChainParams(argsman, ChainType::TESTNET);
     const auto testnet4ChainParams = CreateChainParams(argsman, ChainType::TESTNET4);
     const auto signetChainParams = CreateChainParams(argsman, ChainType::SIGNET);
@@ -1238,7 +1238,7 @@ bool AppInitParameterInteraction(const ArgsManager& args)
     }
 
     if (!chainparams.HasGenesisBlock()) {
-        return InitError(_("Mainnet has not been launched: no genesis block is defined. Use -testnet4 for public testing or -regtest for local testing."));
+        return InitError(_("Error initializing block database") + Untranslated(": no genesis block is defined for this network."));
     }
 
     return true;

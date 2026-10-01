@@ -3391,8 +3391,8 @@ Version ya ṱhanziela dza root: %2</translation>
         <translation>Moudu wa FAST u kovhana 2 GiB ya memori ya RandomX nga u angaredza na u khwaṱhisedza. Thiredi nnzhi dzi shumisa CPU na muḓagasi zwinzhi; kha vha sie vhuimo ha u shuma ha nodi. U lugisa tshigwada tsha data zwi nga dzhia tshifhinga.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Kha vha bwe buḽoko dza netiweke ya ndingo nga CPU yavho vha tshi shumisa RandomX. U bwa zwo dzimiwa u swika vha tshi zwi thoma. Tshipatshi tshiṅwe na tshiṅwe kha nodi iyi tshi kovhana mbekanyamushumo ya u bwa; i bvela phanḓa musi vha tshi shandula thebu kana u vala tshipatshi.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>U bwa zwo dzimiwa u swika vha tshi zwi thoma. Tshipatshi tshiṅwe na tshiṅwe kha nodi iyi tshi kovhana mbekanyamushumo ya u bwa; i bvela phanḓa musi vha tshi shandula thebu kana u vala tshipatshi.</translation>
     </message>
     <message>
         <source>Mining</source>

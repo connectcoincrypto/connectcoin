@@ -5661,8 +5661,8 @@ Root certificates version: %2</source>
         <translation>FAST ප්‍රකාරය ආසන්න වශයෙන් 2 GiB RandomX මතකය වලංගුකරණය සමඟ බෙදාගනී. වැඩි ත්‍රෙඩ් ගණනක් වැඩි CPU ධාරිතාවක් සහ විදුලියක් භාවිත කරයි; නෝඩය සඳහා ධාරිතාවක් ඉතිරි කරන්න. දත්ත කට්ටලය සූදානම් කිරීමට යම් කාලයක් ගත විය හැකිය.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX භාවිතයෙන් ඔබේ CPU මගින් පරීක්ෂණ ජාලයේ බ්ලොක් කැණීම සිදු කරන්න. ඔබ ආරම්භ කරන තෙක් කැණීම අක්‍රියයි. මෙම නෝඩයේ සියලු පසුම්බි කැණීම් වැඩසටහන බෙදාගන්නා අතර ඔබ ටැබ් මාරු කළත් පසුම්බියක් වැසුවත් එය දිගටම ක්‍රියා කරයි.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>ඔබ ආරම්භ කරන තෙක් කැණීම අක්‍රියයි. මෙම නෝඩයේ සියලු පසුම්බි කැණීම් වැඩසටහන බෙදාගන්නා අතර ඔබ ටැබ් මාරු කළත් පසුම්බියක් වැසුවත් එය දිගටම ක්‍රියා කරයි.</translation>
     </message>
     <message>
         <source>Mining</source>

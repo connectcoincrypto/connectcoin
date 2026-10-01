@@ -1,26 +1,22 @@
-# Testnet-only beta and unlaunched mainnet
+# Testnet4 beta and mainnet separation
 
-ConnectCoin mainnet has no operational genesis block. Its consensus and address
-parameters remain available to libraries and tests, but daemon and GUI startup
-reject explicit mainnet selection with a clear error. The chainstate constructor
-also rejects missing-genesis parameters, including through the Kernel API,
-before opening the block database. Existing mainnet data is not migrated,
-adopted, or erased; `-reindex` cannot enable the network.
+ConnectCoin mainnet has its own [launch genesis](mainnet-genesis.md), separate
+from every development and test chain. The daemon, GUI and command-line tools
+now default to mainnet. Existing testnet balances, wallets and chain data are
+not converted to mainnet. Use a fresh, explicitly selected data directory for
+mainnet if the base directory contains old development-chain data; do not use
+`-reindex` as a cross-chain migration.
 
 Use `-testnet4` for the public-test-network profile or `-regtest` for local
 tests. The name `testnet4` is an inherited internal identifier, not the fourth
 public ConnectCoin beta. All four test-chain genesis blocks and message starts
 were reset for P2C mask v1 on September 9, 2026, as described below.
 
-The daemon, GUI and command-line tools default to `testnet4` during beta testing,
-even without a `connectcoin.conf` file. An explicit network selection in the
-command line or configuration still takes precedence; `-chain=main` is still
-rejected at node startup. To choose another network, use `-chain=<chain>` or its
-positive selector such as `-regtest`, not just `-testnet4=0`. No configuration
-file is generated or rewritten by this default. Wallets and chain data use the
-existing `testnet4/` subdirectory; old mainnet files are not moved or loaded.
-The Kernel API's separate mainnet default and explicit chain parameters are
-unchanged.
+To continue using the beta, select `-testnet4` or `-chain=testnet4` explicitly.
+An explicit network selection in the command line or configuration still takes
+precedence. No configuration file is generated or rewritten by the default
+change. Testnet4 wallets and chain data continue to use the `testnet4/`
+subdirectory. The Kernel API also defaults to mainnet.
 
 Testnet4 uses P2P port 48179 and RPC port 48178. RPC should remain private; expose
 only the P2P service to testers. The built-in testnet4 DNS/DDNS seeds are listed
@@ -79,7 +75,7 @@ static records later, returning checked testnet4 peers. See the
 central dependency, not a substitute for independent seeds.
 
 An optional [CPU miner](cpu-mining.md) is available from the wallet's Mining
-tab or the `startmining` RPC. It supports testnet4 and regtest, is disabled at
+tab or the `startmining` RPC. It supports mainnet, testnet4 and regtest, is disabled at
 each startup, and does not require a loaded wallet when given a reward address.
 
 ## P2C mask v1 genesis reset (September 9, 2026)
@@ -148,7 +144,7 @@ work on a separate copy placed in the new data directory's wallet directory.
 Stop every process using that copy before running, for example:
 
 ```sh
-connectcoin-wallet -datadir=/absolute/new-data -wallet=recovery-copy \
+connectcoin-wallet -testnet4 -datadir=/absolute/new-data -wallet=recovery-copy \
   -backupdir=/absolute/new-backup-directory \
   -confirm=DELETE-TRANSACTION-HISTORY reset-tx-history
 ```
@@ -165,7 +161,7 @@ other records remain byte-for-byte unchanged. The saved block locator is
 preserved, so the separate cross-chain safeguard is not bypassed by this tool.
 
 After successful reset, load the recovery copy using the one-time
-`-walletcrosschain=1` override, unlock it if encrypted, and explicitly run
+`-walletcrosschain=1` override and explicit `-testnet4`, unlock it if encrypted, and run
 `rescanblockchain 0`. Then stop normally and restart without the override.
 Only funds on the new chain can be recovered; old-chain balances are not
 migrated. This is not a general repair for damaged keys or a way to make
@@ -184,10 +180,10 @@ Before upgrading an existing node:
 1. Stop it normally and back up its wallets outside Git, including an offline
    copy of the fund wallet. Never delete a wallet to reset a chain.
 2. Preserve the entire old data directory. Start the new binary using an
-   explicitly separate, newly created `-datadir=<new-directory>`; do not reuse
+   explicit `-testnet4` and a separate, newly created `-datadir=<new-directory>`; do not reuse
    an old block index, chainstate, mempool, settings or peer database.
 3. For this intentional reset only, start the new binary with
-   `-datadir=<new-directory> -walletcrosschain=1`, restore the desired wallet
+   `-testnet4 -datadir=<new-directory> -walletcrosschain=1`, restore the desired wallet
    backup and explicitly run `rescanblockchain 0` in that wallet's RPC console
    (unlock an encrypted wallet first). This scan includes the new genesis;
    do not assume that restoration at height zero scanned its allocation.
@@ -208,7 +204,7 @@ Before upgrading an existing node:
 Normal startup refuses a loaded block index with the wrong genesis. Reindexing
 is not a supported migration of the old chain. The reset performs no automatic
 data deletion or wallet conversion. This testnet key must not be reused for the
-future mainnet allocation.
+mainnet allocation.
 
 ## Wallet fees on a new network
 
@@ -226,17 +222,17 @@ fee rates retain their existing behavior. Fee estimation RPCs still report
 insufficient data when there is no estimate: the economic minimum is a wallet
 policy, not a fabricated estimate.
 
-## Tests without a production mainnet
+## Historical test fixtures
 
 `src/test/util/chainparams.cpp` supplies the retired development genesis only to
 the `test_util` library. It is a historical test vector, not a launch commitment,
 and is not linked into the daemon, GUI, or Kernel library. There is no runtime
 switch or configuration option to install it. Tests of storage, subsidy,
 retargeting, genesis spending and fuzzing retain mainnet rules with this fixture.
-Production-factory tests separately assert that mainnet has no genesis and that
-its chainstate cannot be initialized. The original 35 mainnet address RPC
+Production-factory tests separately verify the launch genesis and its two
+allocations, mainnet startup and explicit testnet selection. The original 35 mainnet address RPC
 vectors run in C++ against the fixture, including rejection of legacy output
 types. HTTP RPC coverage runs on regtest and is restored to the default suite.
 
-The eventual mainnet release must define and validate a new launch genesis.
-The retired development chain and all beta chains remain separate from it.
+The retired development chain and all beta chains remain separate from the
+production mainnet genesis; no runtime option installs the historical fixture.

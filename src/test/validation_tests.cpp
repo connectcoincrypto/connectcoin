@@ -20,7 +20,6 @@
 #include <array>
 #include <string>
 
-#include <test/util/chainparams.h>
 #include <test/util/setup_common.h>
 
 #include <boost/test/unit_test.hpp>
@@ -133,7 +132,7 @@ BOOST_AUTO_TEST_CASE(block_subsidy_weight_penalty_test)
 static CAmount MaximumSupply(const CChainParams& chain_params)
 {
     const auto& consensus = chain_params.GetConsensus();
-    CAmount total{chain_params.GenesisBlock().vtx.front()->vout.front().nValue};
+    CAmount total{chain_params.GenesisBlock().vtx.front()->GetValueOut()};
 
     for (int halving = 0; halving < 64; ++halving) {
         const int era_start = std::max(1, halving * consensus.nSubsidyHalvingInterval);
@@ -147,11 +146,11 @@ static CAmount MaximumSupply(const CChainParams& chain_params)
 BOOST_AUTO_TEST_CASE(maximum_network_supply_test)
 {
     for (const ChainType chain_type : {ChainType::MAIN, ChainType::TESTNET, ChainType::TESTNET4, ChainType::SIGNET}) {
-        const auto chain_params = CreateChainParamsForTest(*m_node.args, chain_type);
+        const auto chain_params = CreateChainParams(*m_node.args, chain_type);
         const auto& consensus = chain_params->GetConsensus();
         const CAmount total{MaximumSupply(*chain_params)};
 
-        // Height 0 is the 10 million CONN genesis output, not a regular 15 CONN
+        // Height 0 totals 10 million CONN across genesis outputs, not a 15 CONN
         // subsidy. The remaining blocks and integer rounding leave 15.0045 CONN
         // below MAX_MONEY on every public network.
         BOOST_CHECK_EQUAL(chain_params->GenesisBlock().vtx.front()->GetValueOut(), 10'000'000 * COIN);

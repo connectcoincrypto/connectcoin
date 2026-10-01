@@ -5793,8 +5793,8 @@ Saknes sertifikātu versija: %2</translation>
         <translation>FAST režīms koplieto aptuveni 2 GiB RandomX atmiņas ar validāciju. Vairāk pavedienu patērē vairāk CPU resursu un elektrības; atstājiet jaudu mezglam. Datu kopas inicializēšana var aizņemt laiku.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Rociet testa tīkla blokus ar CPU, izmantojot RandomX. Rakšana ir izslēgta, līdz to sākat. Visi šī mezgla maki koplieto racēju, un tas turpina darboties, mainot cilnes vai aizverot maku.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Rakšana ir izslēgta, līdz to sākat. Visi šī mezgla maki koplieto racēju, un tas turpina darboties, mainot cilnes vai aizverot maku.</translation>
     </message>
     <message>
         <source>Mining</source>

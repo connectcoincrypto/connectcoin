@@ -196,10 +196,10 @@ others that can be listed with `connectcoin help`.
 The first time you run `connectcoind` or `connectcoin-qt`, it will start downloading the blockchain.
 This process could take many hours, or even days on slower than average systems.
 
-By default, the beta uses testnet4 and stores blockchain and wallet data in:
+By default, the node uses mainnet and stores blockchain and wallet data in:
 
 ``` bash
-/Users/${USER}/Library/Application Support/ConnectCoin/testnet4/
+/Users/${USER}/Library/Application Support/ConnectCoin/
 ```
 
 Before running, you may create an empty configuration file:
@@ -215,7 +215,7 @@ chmod 600 "/Users/${USER}/Library/Application Support/ConnectCoin/connectcoin.co
 You can monitor the download process by looking at the debug.log file:
 
 ```shell
-tail -f $HOME/Library/Application\ Support/ConnectCoin/testnet4/debug.log
+tail -f $HOME/Library/Application\ Support/ConnectCoin/debug.log
 ```
 
 ## Other commands:

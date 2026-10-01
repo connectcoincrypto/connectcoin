@@ -11,7 +11,10 @@ build. Testnet4 includes `connectcoin1.com`, `connectcoin2.com`, `connectcoin3.c
 and `dememzea.tplinkdns.com` as DNS/DDNS bootstrap hostnames;
 their DNS records and P2P services must be operated separately as described in
 [testnet-beta.md](../../doc/testnet-beta.md#testnet4-bootstrap-dns). Other test
-deployments can bootstrap with explicit `-addnode` entries.
+deployments can bootstrap with explicit `-addnode` entries. Mainnet currently
+has no configured DNS or fixed seeds; use an independently verified mainnet
+peer with `-addnode=<host>:48173`. Enabling mainnet in the code does not deploy
+nodes, DNS records or seed infrastructure.
 Do not populate this directory from Bitcoin Core DNS seeds, crawlers, or AS-map
 snapshots and do not publish a release that implies those peers belong to
 ConnectCoin.
@@ -19,7 +22,8 @@ ConnectCoin.
 Before adding fixed seeds, the release process must:
 
 1. Collect separate crawler snapshots for each operational ConnectCoin network
-   being enabled. Mainnet is unavailable and must not be advertised as operational.
+   being enabled. Verify the launch genesis and network identity of every
+   eligible mainnet peer before including it.
 2. Review the eligible service flags, minimum chain heights, freshness, network
    diversity, and operator ownership.
 3. Run `makeseeds.py` against those ConnectCoin-only snapshots, supplying
@@ -45,8 +49,8 @@ Before adding fixed seeds, the release process must:
    Adding the header and connecting reviewed arrays to the intended networks
    requires a separate code review.
 5. After integration, test first-start peer discovery from a clean data directory
-   on each operational network being enabled. Do not attempt mainnet bootstrap
-   while mainnet has no launch genesis.
+   on each operational network being enabled. Use the committed launch genesis
+   when verifying mainnet peers; historical development peers are incompatible.
 
 `PATTERN_AGENT` in `makeseeds.py` must be reviewed for the ConnectCoin release
 being built. The minimum acceptable chain height has no baked-in default:

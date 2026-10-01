@@ -26,7 +26,7 @@
 
 BOOST_AUTO_TEST_SUITE(coinstatsindex_tests)
 
-BOOST_FIXTURE_TEST_CASE(coinstatsindex_counts_spendable_mainnet_genesis, TestingSetup)
+BOOST_FIXTURE_TEST_CASE(coinstatsindex_counts_spendable_retired_fixture_genesis, TestingSetup)
 {
     CoinStatsIndex coin_stats_index{interfaces::MakeChain(m_node), 1_MiB, true};
     BOOST_REQUIRE(coin_stats_index.Init());
@@ -41,8 +41,8 @@ BOOST_FIXTURE_TEST_CASE(coinstatsindex_counts_spendable_mainnet_genesis, Testing
     const auto stats{coin_stats_index.LookUpStats(*Assert(genesis_block_index))};
     BOOST_REQUIRE(stats);
     BOOST_REQUIRE(stats->total_amount);
-    BOOST_CHECK_EQUAL(*stats->total_amount, Params().GenesisBlock().vtx.front()->vout.front().nValue);
-    BOOST_CHECK_EQUAL(stats->nTransactionOutputs, 1U);
+    BOOST_CHECK_EQUAL(*stats->total_amount, Params().GenesisBlock().vtx.front()->GetValueOut());
+    BOOST_CHECK_EQUAL(stats->nTransactionOutputs, Params().GenesisBlock().vtx.front()->vout.size());
     BOOST_CHECK_EQUAL(stats->total_unspendables_genesis_block, 0);
 
     coin_stats_index.Stop();
@@ -77,8 +77,8 @@ BOOST_FIXTURE_TEST_CASE(coinstatsindex_initial_sync, TestChain100Setup)
     const auto genesis_stats{coin_stats_index.LookUpStats(*genesis_block_index)};
     BOOST_REQUIRE(genesis_stats);
     BOOST_REQUIRE(genesis_stats->total_amount);
-    BOOST_CHECK_EQUAL(*genesis_stats->total_amount, Params().GenesisBlock().vtx.front()->vout.front().nValue);
-    BOOST_CHECK_EQUAL(genesis_stats->nTransactionOutputs, 1U);
+    BOOST_CHECK_EQUAL(*genesis_stats->total_amount, Params().GenesisBlock().vtx.front()->GetValueOut());
+    BOOST_CHECK_EQUAL(genesis_stats->nTransactionOutputs, Params().GenesisBlock().vtx.front()->vout.size());
     BOOST_CHECK_EQUAL(genesis_stats->total_unspendables_genesis_block, 0);
 
     // Check that CoinStatsIndex updates with new blocks.

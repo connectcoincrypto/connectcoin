@@ -1288,7 +1288,7 @@ static RPCMethod startmining()
 {
     return RPCMethod{
         "startmining",
-        "Start continuous CPU RandomX mining on testnet4 or regtest. Disabled at startup.\n"
+        "Start continuous CPU RandomX mining on mainnet, testnet4 or regtest. Disabled at startup.\n"
         "One miner is shared by the entire node, not one per wallet. With no address, pay a new address from the selected wallet.\n"
         "Use /wallet/<name> (CLI -rpcwallet) when several wallets are loaded. An explicit address needs no wallet.\n"
         "Uses the validation RandomX dataset (FAST by default). Reserve CPU capacity for validation.\n"

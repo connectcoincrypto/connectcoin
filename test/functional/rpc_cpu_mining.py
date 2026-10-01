@@ -12,16 +12,21 @@ from test_framework.wallet import MiniWallet
 
 class CpuMiningTest(BitcoinTestFramework):
     def set_test_params(self):
-        self.num_nodes = 1 if self.options.testnet4 else 2
+        public_network = self.options.mainnet or self.options.testnet4
+        self.num_nodes = 1 if public_network else 2
         if self.options.testnet4:
             self.chain = "testnet4"
+        elif self.options.mainnet:
+            self.chain = ""
         self.wallet_names = []
         self.uses_wallet = None  # Exercise wallet defaults when compiled, without requiring wallet support.
-        self.setup_clean_chain = self.options.fresh or self.options.testnet4
+        self.setup_clean_chain = self.options.fresh or public_network
         self.extra_args = [[f"-randomxfast={int(self.options.fast)}"] for _ in range(self.num_nodes)]
 
     def add_options(self, parser):
-        parser.add_argument("--testnet4", action="store_true", help="Check public beta mining from genesis without peers")
+        network = parser.add_mutually_exclusive_group()
+        network.add_argument("--testnet4", action="store_true", help="Check public beta mining from genesis without peers")
+        network.add_argument("--mainnet", action="store_true", help="Check mainnet mining from genesis without peers")
         parser.add_argument("--fresh", action="store_true", help="Start at genesis without a cached mock-PoW chain (for real RandomX smoke tests)")
         parser.add_argument("--fast", action="store_true", help="Use FAST RandomX; requires memory for two node datasets")
 
@@ -37,13 +42,18 @@ class CpuMiningTest(BitcoinTestFramework):
 
     def run_test(self):
         node = self.nodes[0]
-        if self.options.testnet4:
-            self.log.info("An isolated testnet4 node can start mining with a testnet reward address")
-            address = encode_segwit_address("tcc", 1, bytes.fromhex("79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"))
+        if self.options.testnet4 or self.options.mainnet:
+            chain = "main" if self.options.mainnet else "testnet4"
+            hrp = "cc" if self.options.mainnet else "tcc"
+            self.log.info(f"An isolated {chain} node can start mining with its native reward address")
+            assert_equal(node.getblockchaininfo()["chain"], chain)
+            assert_equal(node.getconnectioncount(), 0)
+            address = encode_segwit_address(hrp, 1, bytes.fromhex("79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"))
             assert_equal(node.getcpumininginfo()["running"], False)
-            node.startmining(address)
+            node.startmining(address, 1)
             self.wait_until(lambda: node.getcpumininginfo()["hashes"] > 0)
             assert_equal(self.stop_miner()["address"], address)
+            assert_equal(node.getconnectioncount(), 0)
             return
         wallet = MiniWallet(node)
         address = wallet.get_address()

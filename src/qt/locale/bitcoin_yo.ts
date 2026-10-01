@@ -3775,8 +3775,8 @@ Root certificates version: %2</source>
         <translation>Ipò FAST pín bíi 2 GiB ìrántí RandomX pẹ̀lú ìmúdájú. Ọ̀pọ̀ tẹ́rẹ́dì máa ń lo CPU àti iná mànàmáná púpọ̀ sí i; fi agbára díẹ̀ sílẹ̀ fún nóòdù. Ṣíṣètò àkójọpọ̀ dátà lè gba àkókò díẹ̀.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Wa àwọn búlọ́ọ̀kù nẹ́tíwọ́ọ̀kì ìdánwò pẹ̀lú CPU rẹ ní lílo RandomX. Ìwakùsà wà ní pípa títí tí o fi bẹ̀rẹ̀ rẹ̀. Gbogbo àpamọ́wọ́ inú nóòdù yìí pín ètò ìwakùsà kan, ó sì ń tẹ̀síwájú nígbà tí o bá yí taabu padà tàbí pa àpamọ́wọ́ kan dé.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Ìwakùsà wà ní pípa títí tí o fi bẹ̀rẹ̀ rẹ̀. Gbogbo àpamọ́wọ́ inú nóòdù yìí pín ètò ìwakùsà kan, ó sì ń tẹ̀síwájú nígbà tí o bá yí taabu padà tàbí pa àpamọ́wọ́ kan dé.</translation>
     </message>
     <message>
         <source>Mining</source>

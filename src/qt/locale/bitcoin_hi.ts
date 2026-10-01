@@ -5649,8 +5649,8 @@ Root certificates version: %2</source>
         <translation>FAST मोड लगभग 2 GiB RandomX मेमोरी सत्यापन के साथ साझा करता है। अधिक थ्रेड अधिक CPU संसाधन और बिजली इस्तेमाल करते हैं; नोड के लिए क्षमता बचाकर रखें। डेटासेट तैयार होने में कुछ समय लग सकता है।</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX का उपयोग करके अपने CPU से टेस्टनेट ब्लॉक माइन करें। आपके शुरू करने तक माइनिंग बंद रहती है। इस नोड के सभी वॉलेट एक ही माइनर साझा करते हैं, और टैब बदलने या वॉलेट बंद करने पर भी वह चलता रहता है।</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>आपके शुरू करने तक माइनिंग बंद रहती है। इस नोड के सभी वॉलेट एक ही माइनर साझा करते हैं, और टैब बदलने या वॉलेट बंद करने पर भी वह चलता रहता है।</translation>
     </message>
     <message>
         <source>Mining</source>

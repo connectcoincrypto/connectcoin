@@ -5773,8 +5773,8 @@ Bersyon ng mga root certificate: %2</translation>
         <translation>Ang FAST mode ay nagbabahagi ng humigit-kumulang 2 GiB ng RandomX memory sa pagpapatunay. Mas maraming thread ang gumagamit ng mas maraming CPU at kuryente; maglaan ng kapasidad para sa node. Maaaring magtagal ang paghahanda ng dataset.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Magmina ng mga bloke ng testnet gamit ang iyong CPU at RandomX. Naka-off ang pagmimina hanggang simulan mo ito. Iisa ang miner na ginagamit ng lahat ng wallet sa node na ito, at nagpapatuloy ito kapag lumipat ka ng tab o nagsara ng wallet.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Naka-off ang pagmimina hanggang simulan mo ito. Iisa ang miner na ginagamit ng lahat ng wallet sa node na ito, at nagpapatuloy ito kapag lumipat ka ng tab o nagsara ng wallet.</translation>
     </message>
     <message>
         <source>Mining</source>

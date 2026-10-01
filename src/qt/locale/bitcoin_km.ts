@@ -5926,8 +5926,8 @@ Root certificates version: %2</source>
         <translation>របៀប FAST ចែករំលែកអង្គចងចាំ RandomX ប្រហែល 2 GiB ជាមួយការផ្ទៀងផ្ទាត់។ ខ្សែដំណើរការកាន់តែច្រើនប្រើធនធាន CPU និងថាមពលកាន់តែច្រើន; សូមទុកសមត្ថភាពឱ្យថ្នាំង។ ការរៀបចំសំណុំទិន្នន័យអាចចំណាយពេលបន្តិច។</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>ជីកយកប្លុកបណ្តាញសាកល្បងដោយ CPU របស់អ្នក ដោយប្រើ RandomX។ ការជីកយករ៉ែត្រូវបានបិទរហូតដល់អ្នកចាប់ផ្តើមវា។ កាបូបទាំងអស់ក្នុងថ្នាំងនេះប្រើកម្មវិធីជីករួមគ្នា ហើយវាបន្តនៅពេលអ្នកប្តូរផ្ទាំង ឬបិទកាបូប។</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>ការជីកយករ៉ែត្រូវបានបិទរហូតដល់អ្នកចាប់ផ្តើមវា។ កាបូបទាំងអស់ក្នុងថ្នាំងនេះប្រើកម្មវិធីជីករួមគ្នា ហើយវាបន្តនៅពេលអ្នកប្តូរផ្ទាំង ឬបិទកាបូប។</translation>
     </message>
     <message>
         <source>Mining</source>

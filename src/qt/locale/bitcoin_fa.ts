@@ -5598,8 +5598,8 @@ Root certificates version: %2</source>
         <translation>حالت FAST حدود 2 GiB حافظهٔ RandomX را با اعتبارسنجی به اشتراک می‌گذارد. رشته‌های بیشتر، منابع CPU و برق بیشتری مصرف می‌کنند؛ برای گره ظرفیت باقی بگذارید. آماده‌سازی مجموعه‌داده ممکن است مدتی طول بکشد.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>با CPU خود و با استفاده از RandomX بلوک‌های شبکهٔ آزمایشی را استخراج کنید. استخراج تا زمانی که آن را شروع نکنید خاموش است. استخراج‌کننده میان همهٔ کیف پول‌های این گره مشترک است و با تغییر زبانه یا بستن کیف پول به کار ادامه می‌دهد.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>استخراج تا زمانی که آن را شروع نکنید خاموش است. استخراج‌کننده میان همهٔ کیف پول‌های این گره مشترک است و با تغییر زبانه یا بستن کیف پول به کار ادامه می‌دهد.</translation>
     </message>
     <message>
         <source>Mining</source>

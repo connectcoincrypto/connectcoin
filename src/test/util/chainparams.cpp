@@ -27,9 +27,11 @@ public:
     explicit MainNetTestParams(const CChainParams& params) : CChainParams{params}
     {
         assert(GetChainType() == ChainType::MAIN);
-        assert(!HasGenesisBlock());
+        assert(HasGenesisBlock());
+        assert(consensus.hashGenesisBlock != uint256{"8b6373205ad2b6314f2937cebacfc143af9eb6183162c24fb19cdf382ff576c5"});
         // Quarantine the retired development genesis here to preserve existing
-        // consensus/storage vectors. This is NOT a mainnet launch commitment.
+        // consensus/storage vectors. It replaces the launch genesis ONLY in
+        // tests; no production factory or daemon option selects this block.
         constexpr std::string_view timestamp{"teste testado"};
         CMutableTransaction coinbase;
         coinbase.version = 1;

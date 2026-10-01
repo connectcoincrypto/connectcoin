@@ -651,17 +651,25 @@ BOOST_AUTO_TEST_CASE(cck_chainman_tests)
     Logger logger{std::make_unique<TestLog>()};
     auto test_directory{TestDirectory{"chainman_test_connectcoin_kernel"}};
 
-    { // The Kernel's default mainnet has no launch genesis.
+    { // The Kernel's default context initializes the launched mainnet.
+        auto main_directory{TestDirectory{"default_mainnet_connectcoin_kernel"}};
         Context context{};
-        ChainstateManagerOptions chainman_opts{context, PathToString(test_directory.m_directory), PathToString(test_directory.m_directory / "blocks")};
-        BOOST_CHECK_THROW(ChainMan(context, chainman_opts), std::runtime_error);
+        ChainstateManagerOptions chainman_opts{context, PathToString(main_directory.m_directory), PathToString(main_directory.m_directory / "blocks")};
+        ChainMan chainman{context, chainman_opts};
+        BOOST_CHECK_EQUAL(chainman.GetChain().Height(), 0);
+        const auto genesis{chainman.ReadBlock(chainman.GetBestEntry())};
+        BOOST_REQUIRE(genesis);
+        BOOST_CHECK_EQUAL(genesis->CountTransactions(), 1U);
+        BOOST_CHECK_EQUAL(genesis->GetTransaction(0).CountOutputs(), 2U);
     }
 
-    { // Default context options must reject the unlaunched chain too.
+    { // Explicit default context options select the same launch network.
+        auto main_directory{TestDirectory{"default_options_mainnet_connectcoin_kernel"}};
         ContextOptions options{};
         Context context{options};
-        ChainstateManagerOptions chainman_opts{context, PathToString(test_directory.m_directory), PathToString(test_directory.m_directory / "blocks")};
-        BOOST_CHECK_THROW(ChainMan(context, chainman_opts), std::runtime_error);
+        ChainstateManagerOptions chainman_opts{context, PathToString(main_directory.m_directory), PathToString(main_directory.m_directory / "blocks")};
+        ChainMan chainman{context, chainman_opts};
+        BOOST_CHECK_EQUAL(chainman.GetChain().Height(), 0);
     }
     { // null or empty data_directory or blocks_directory are not allowed
         Context context{};

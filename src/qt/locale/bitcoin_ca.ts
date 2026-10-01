@@ -5957,8 +5957,8 @@ Versió dels certificats arrel: %2</translation>
         <translation>El mode FAST comparteix aproximadament 2 GiB de memòria RandomX amb la validació. Més fils consumeixen més CPU i energia; deixeu capacitat per al node. Inicialitzar el conjunt de dades pot trigar.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Mineu blocs de la xarxa de proves amb la CPU mitjançant RandomX. La mineria està desactivada fins que l’inicieu. Tots els moneders d’aquest node comparteixen el miner, que continua quan canvieu de pestanya o tanqueu un moneder.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>La mineria està desactivada fins que l’inicieu. Tots els moneders d’aquest node comparteixen el miner, que continua quan canvieu de pestanya o tanqueu un moneder.</translation>
     </message>
     <message>
         <source>Mining</source>

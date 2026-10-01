@@ -5787,8 +5787,8 @@ Juursertifikaatide versioon: %2</translation>
         <translation>FAST-režiim jagab valideerimisega ligikaudu 2 GiB RandomX-mälu. Rohkem lõimi kasutab rohkem CPU ressursse ja elektrit; jätke sõlmele vaba võimsust. Andmestiku algväärtustamine võib aega võtta.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Kaevandage testvõrgu plokke oma CPU-ga, kasutades RandomX-i. Kaevandamine on väljas, kuni selle käivitate. Kaevandajat jagavad kõik selle sõlme rahakotid ning see jätkab tööd vahelehe vahetamisel või rahakoti sulgemisel.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Kaevandamine on väljas, kuni selle käivitate. Kaevandajat jagavad kõik selle sõlme rahakotid ning see jätkab tööd vahelehe vahetamisel või rahakoti sulgemisel.</translation>
     </message>
     <message>
         <source>Mining</source>

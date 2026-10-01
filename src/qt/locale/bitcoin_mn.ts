@@ -5547,8 +5547,8 @@ Root certificates version: %2</source>
         <translation>FAST горим нь баталгаажуулалттай ойролцоогоор 2 GiB RandomX санах ойг хамтран ашиглана. Олон урсгал нь CPU болон эрчим хүчийг илүү их ашиглана; зангилаанд хүчин чадал үлдээгээрэй. Өгөгдлийн багцыг бэлтгэхэд хэсэг хугацаа шаардагдаж болно.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX ашиглан CPU-ээрээ туршилтын сүлжээний блок олборлоорой. Таныг эхлүүлэх хүртэл олборлолт унтраалттай байна. Энэ зангилааны бүх түрийвч олборлогчийг хамтран ашиглах бөгөөд таб солих эсвэл түрийвч хаахад ажиллагаа үргэлжилнэ.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Таныг эхлүүлэх хүртэл олборлолт унтраалттай байна. Энэ зангилааны бүх түрийвч олборлогчийг хамтран ашиглах бөгөөд таб солих эсвэл түрийвч хаахад ажиллагаа үргэлжилнэ.</translation>
     </message>
     <message>
         <source>Mining</source>

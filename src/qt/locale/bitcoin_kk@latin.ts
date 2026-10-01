@@ -5360,8 +5360,8 @@ Tübırlık sertifikattar nūsqasy: %2</translation>
         <translation>FAST rejimı tekserumen şamamen 2 GiB RandomX jadyn ortaq paidalanady. Ağyndar köbeigen saiyn CPU resurstary men elektr quaty köbırek jumsalady; tüiınge bos quat qaldyryñyz. Derekter jiynyn bastapqy daiyndau bıraz uaqyt aluy mümkın.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX arqyly CPU kömegımen synaq jelısınıñ bloktaryn öndırıñız. Maining ony ıske qosqanğa deiın öşırulı bolady. Osy tüiınnıñ barlyq ämiany bır mainerdı ortaq paidalanady, ol qoiyndyny auystyrğanda nemese ämiandy japqanda jumysyn jalğastyrady.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Maining ony ıske qosqanğa deiın öşırulı bolady. Osy tüiınnıñ barlyq ämiany bır mainerdı ortaq paidalanady, ol qoiyndyny auystyrğanda nemese ämiandy japqanda jumysyn jalğastyrady.</translation>
     </message>
     <message>
         <source>Mining</source>

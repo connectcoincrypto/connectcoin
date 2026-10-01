@@ -6010,8 +6010,8 @@ Verzia koreňových certifikátov: %2</translation>
         <translation>Režim FAST zdieľa približne 2 GiB pamäte RandomX s overovaním. Viac vlákien využíva viac CPU a energie; ponechajte kapacitu pre uzol. Inicializácia súboru údajov môže chvíľu trvať.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Ťažte bloky testovacej siete pomocou CPU a RandomX. Ťažba je vypnutá, kým ju nespustíte. Ťažiar je spoločný pre všetky peňaženky v tomto uzle a pokračuje pri prepnutí karty alebo zatvorení peňaženky.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Ťažba je vypnutá, kým ju nespustíte. Ťažiar je spoločný pre všetky peňaženky v tomto uzle a pokračuje pri prepnutí karty alebo zatvorení peňaženky.</translation>
     </message>
     <message>
         <source>Mining</source>

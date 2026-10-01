@@ -5981,8 +5981,8 @@ Root certificates version: %2</source>
         <translation>FASTモードは約2 GiBのRandomXメモリを検証処理と共有します。スレッド数を増やすとCPUと電力の使用量が増えるため、ノード用の余力を残してください。データセットの初期化には時間がかかることがあります。</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomXを使用してCPUでテストネットのブロックを採掘します。採掘は開始するまで無効です。このノードのすべてのウォレットが採掘処理を共有し、タブを切り替えたりウォレットを閉じたりしても採掘は続きます。</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>採掘は開始するまで無効です。このノードのすべてのウォレットが採掘処理を共有し、タブを切り替えたりウォレットを閉じたりしても採掘は続きます。</translation>
     </message>
     <message>
         <source>Mining</source>

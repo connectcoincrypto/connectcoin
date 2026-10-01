@@ -1392,8 +1392,8 @@ The migration process will create a backup of the wallet before migrating. This 
         <translation>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</translation>
     </message>
     <message>
         <source>Mining</source>

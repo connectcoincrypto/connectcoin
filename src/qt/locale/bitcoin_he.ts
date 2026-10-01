@@ -5912,8 +5912,8 @@ Root certificates version: %2</source>
         <translation>מצב FAST משתף כ־2 GiB של זיכרון RandomX עם האימות. יותר תהליכונים צורכים יותר משאבי CPU וחשמל; יש להשאיר קיבולת לצומת. אתחול מערך הנתונים עשוי להימשך זמן מה.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>כריית בלוקים ברשת הבדיקה באמצעות CPU ו־RandomX. הכרייה כבויה עד להפעלתה. הכורה משותף לכל הארנקים בצומת זה וממשיך לפעול בעת מעבר בין לשוניות או סגירת ארנק.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>הכרייה כבויה עד להפעלתה. הכורה משותף לכל הארנקים בצומת זה וממשיך לפעול בעת מעבר בין לשוניות או סגירת ארנק.</translation>
     </message>
     <message>
         <source>Mining</source>

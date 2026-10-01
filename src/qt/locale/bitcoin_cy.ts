@@ -5828,8 +5828,8 @@ Fersiwn y tystysgrifau gwraidd: %2</translation>
         <translation>Mae modd FAST yn rhannu tua 2 GiB o gof RandomX â’r dilysu. Mae mwy o edefynnau’n defnyddio mwy o adnoddau CPU a thrydan; gadewch gapasiti i’r nod. Gall cychwyn y set ddata gymryd peth amser.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Cloddiwch flociau’r rhwydwaith prawf gyda’ch CPU gan ddefnyddio RandomX. Mae cloddio wedi’i ddiffodd nes i chi ei gychwyn. Mae pob waled yn y nod hwn yn rhannu’r cloddiwr, ac mae’n parhau pan fyddwch yn newid tabiau neu’n cau waled.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Mae cloddio wedi’i ddiffodd nes i chi ei gychwyn. Mae pob waled yn y nod hwn yn rhannu’r cloddiwr, ac mae’n parhau pan fyddwch yn newid tabiau neu’n cau waled.</translation>
     </message>
     <message>
         <source>Mining</source>

@@ -4139,8 +4139,8 @@ Root certificates version: %2</source>
         <translation>FAST ಮೋಡ್ ಸುಮಾರು 2 GiB RandomX ಮೆಮೊರಿಯನ್ನು ಮೌಲ್ಯೀಕರಣದೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳುತ್ತದೆ. ಹೆಚ್ಚು ಥ್ರೆಡ್‌ಗಳು ಹೆಚ್ಚು CPU ಸಂಪನ್ಮೂಲ ಮತ್ತು ವಿದ್ಯುತ್ ಬಳಸುತ್ತವೆ; ನೋಡ್‌ಗಾಗಿ ಸಾಮರ್ಥ್ಯವನ್ನು ಉಳಿಸಿ. ಡೇಟಾಸೆಟ್ ಸಿದ್ಧಗೊಳಿಸಲು ಸ್ವಲ್ಪ ಸಮಯ ಬೇಕಾಗಬಹುದು.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX ಬಳಸಿ ನಿಮ್ಮ CPU ಮೂಲಕ ಟೆಸ್ಟ್‌ನೆಟ್ ಬ್ಲಾಕ್‌ಗಳನ್ನು ಮೈನಿಂಗ್ ಮಾಡಿ. ನೀವು ಪ್ರಾರಂಭಿಸುವವರೆಗೆ ಮೈನಿಂಗ್ ಆಫ್ ಆಗಿರುತ್ತದೆ. ಈ ನೋಡ್‌ನ ಎಲ್ಲಾ ವಾಲೆಟ್‌ಗಳು ಒಂದೇ ಮೈನರ್ ಅನ್ನು ಹಂಚಿಕೊಳ್ಳುತ್ತವೆ; ಟ್ಯಾಬ್ ಬದಲಿಸಿದಾಗ ಅಥವಾ ವಾಲೆಟ್ ಮುಚ್ಚಿದಾಗಲೂ ಅದು ಮುಂದುವರಿಯುತ್ತದೆ.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>ನೀವು ಪ್ರಾರಂಭಿಸುವವರೆಗೆ ಮೈನಿಂಗ್ ಆಫ್ ಆಗಿರುತ್ತದೆ. ಈ ನೋಡ್‌ನ ಎಲ್ಲಾ ವಾಲೆಟ್‌ಗಳು ಒಂದೇ ಮೈನರ್ ಅನ್ನು ಹಂಚಿಕೊಳ್ಳುತ್ತವೆ; ಟ್ಯಾಬ್ ಬದಲಿಸಿದಾಗ ಅಥವಾ ವಾಲೆಟ್ ಮುಚ್ಚಿದಾಗಲೂ ಅದು ಮುಂದುವರಿಯುತ್ತದೆ.</translation>
     </message>
     <message>
         <source>Mining</source>

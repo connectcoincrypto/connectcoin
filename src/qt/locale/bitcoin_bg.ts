@@ -5876,8 +5876,8 @@ Root certificates version: %2</source>
         <translation>Режимът FAST споделя около 2 GiB RandomX памет с проверката. Повече нишки използват повече CPU ресурси и електроенергия; оставете капацитет за възела. Инициализирането на набора от данни може да отнеме време.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Копайте блокове в тестовата мрежа с CPU чрез RandomX. Копаенето е изключено, докато не го стартирате. Всички портфейли в този възел споделят копача и той продължава работа при смяна на раздела или затваряне на портфейл.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Копаенето е изключено, докато не го стартирате. Всички портфейли в този възел споделят копача и той продължава работа при смяна на раздела или затваряне на портфейл.</translation>
     </message>
     <message>
         <source>Mining</source>

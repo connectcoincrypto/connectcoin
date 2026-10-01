@@ -41,31 +41,44 @@ std::vector<std::byte> ScriptBytes(const CScript& script)
 
 } // namespace
 
-BOOST_AUTO_TEST_CASE(kernel_rejects_unlaunched_mainnet)
+BOOST_AUTO_TEST_CASE(kernel_initializes_mainnet_launch_allocations)
 {
-    // Both implicit defaults and an explicitly selected mainnet must fail
-    // before creating any chainstate database, also when wiping is requested.
+    // Implicit defaults and explicit mainnet select the same two-output
+    // launch genesis. These paths contain only this test's fresh databases.
     const fs::path path{fs::path{fs::temp_directory_path()} / fs::PathFromString(
-        "connectcoin-unlaunched-kernel-" + util::ToString(std::chrono::steady_clock::now().time_since_epoch().count()))};
-    BOOST_REQUIRE(!fs::exists(path));
+        "connectcoin-mainnet-launch-kernel-" + util::ToString(std::chrono::steady_clock::now().time_since_epoch().count()))};
+    BOOST_REQUIRE(fs::create_directory(path));
     for (bool explicit_mainnet : {false, true}) {
+        const auto datadir{path / (explicit_mainnet ? "explicit" : "default")};
         cck::ContextOptions context_options;
         cck::ChainParams params{cck::ChainType::MAINNET};
         if (explicit_mainnet) context_options.SetChainParams(params);
         cck::Context context{context_options};
-        cck::ChainstateManagerOptions options{context, fs::PathToString(path), fs::PathToString(path / "blocks")};
+        cck::ChainstateManagerOptions options{context, fs::PathToString(datadir), fs::PathToString(datadir / "blocks")};
         options.SetWorkerThreads(0);
-        BOOST_REQUIRE(options.SetWipeDbs(true, true));
-        auto* chainman{cck_chainstate_manager_create(options.get())};
-        BOOST_CHECK(chainman == nullptr);
-        if (chainman) cck_chainstate_manager_destroy(chainman);
-        // The options constructor creates the directories even before a
-        // chainstate is requested. No block index or coin database may appear.
-        BOOST_CHECK(fs::is_empty(path / "blocks"));
-        BOOST_CHECK(!fs::exists(path / "chainstate"));
+        cck::ChainMan chainman{context, options};
+        BOOST_REQUIRE_EQUAL(chainman.GetChain().Height(), 0);
+        const auto block{chainman.ReadBlock(chainman.GetBestEntry())};
+        BOOST_REQUIRE(block);
+        BOOST_REQUIRE_EQUAL(block->CountTransactions(), 1U);
+        const auto coinbase{block->GetTransaction(0)};
+        BOOST_REQUIRE_EQUAL(coinbase.CountOutputs(), 2U);
+        BOOST_CHECK_EQUAL(coinbase.GetOutput(0).Amount(), 5'000'000 * COIN);
+        BOOST_CHECK_EQUAL(coinbase.GetOutput(1).Amount(), 5'000'000 * COIN);
     }
-    // Nonrecursive removal deliberately fails if a database was created.
-    BOOST_CHECK(fs::remove(path / "blocks"));
+    // Remove only the known, flat database directories. Unexpected nested
+    // contents fail closed instead of recursively deleting an arbitrary tree.
+    for (const auto network_dir : {"default", "explicit"}) {
+        for (const auto relative_dir : {"blocks/index", "chainstate", "blocks", ""}) {
+            const auto directory{path / network_dir / relative_dir};
+            BOOST_REQUIRE(!fs::is_symlink(directory));
+            for (const auto& entry : fs::directory_iterator{directory}) {
+                BOOST_REQUIRE(!fs::is_directory(entry.symlink_status()));
+                BOOST_CHECK(fs::remove(entry.path()));
+            }
+            BOOST_CHECK(fs::remove(directory));
+        }
+    }
     BOOST_CHECK(fs::remove(path));
 }
 

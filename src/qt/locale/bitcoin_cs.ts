@@ -5815,8 +5815,8 @@ Verze kořenových certifikátů: %2</translation>
         <translation>Režim FAST sdílí s ověřováním přibližně 2 GiB paměti RandomX. Více vláken spotřebuje více výkonu CPU a elektřiny; ponechte kapacitu pro uzel. Inicializace datové sady může chvíli trvat.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Těžte bloky testovací sítě pomocí CPU a RandomX. Těžba je vypnutá, dokud ji nespustíte. Těžař je sdílen všemi peněženkami v tomto uzlu a pokračuje při změně karty nebo zavření peněženky.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Těžba je vypnutá, dokud ji nespustíte. Těžař je sdílen všemi peněženkami v tomto uzlu a pokračuje při změně karty nebo zavření peněženky.</translation>
     </message>
     <message>
         <source>Mining</source>

@@ -17,7 +17,7 @@ $ connectcoin-cli createwallet "wallet-01"
 
 `connectcoin rpc` can also be substituted for `connectcoin-cli`.
 
-On a fresh installation using the default testnet4 beta, wallets are created in
+On a fresh installation using the default mainnet, wallets are created in
 the network's `wallets` directory, as shown below. Other selected networks use
 their own directories. Use `-datadir` to change the base data directory or
 `-walletdir` to select an existing wallet directory explicitly. If the network
@@ -26,9 +26,9 @@ directory itself is used for wallets.
 
 | Operating System | Default wallet directory                                    |
 | -----------------|:------------------------------------------------------------|
-| Linux            | `/home/<user>/.connectcoin/testnet4/wallets`                             |
-| Windows          | `C:\Users\<user>\AppData\Local\ConnectCoin\testnet4\wallets`             |
-| macOS            | `/Users/<user>/Library/Application Support/ConnectCoin/testnet4/wallets` |
+| Linux            | `/home/<user>/.connectcoin/wallets`                             |
+| Windows          | `C:\Users\<user>\AppData\Local\ConnectCoin\wallets`             |
+| macOS            | `/Users/<user>/Library/Application Support/ConnectCoin/wallets` |
 
 ### 1.2 Encrypting the Wallet
 

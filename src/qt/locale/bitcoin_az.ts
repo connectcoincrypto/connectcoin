@@ -5505,8 +5505,8 @@ Kök sertifikatların versiyası: %2</translation>
         <translation>FAST rejimi təxminən 2 GiB RandomX yaddaşını yoxlama ilə paylaşır. Daha çox axın daha çox CPU resursu və elektrik sərf edir; düyün üçün imkan saxlayın. Verilənlər dəstinin hazırlanması bir qədər vaxt apara bilər.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX istifadə edərək CPU ilə test şəbəkəsinin bloklarını çıxarın. Siz başlatmayana qədər mayninq söndürülüdür. Bu düyündəki bütün pulqabıları eyni maynerdən istifadə edir və o, vərəqi dəyişəndə və ya pulqabını bağlayanda işləməyə davam edir.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Siz başlatmayana qədər mayninq söndürülüdür. Bu düyündəki bütün pulqabıları eyni maynerdən istifadə edir və o, vərəqi dəyişəndə və ya pulqabını bağlayanda işləməyə davam edir.</translation>
     </message>
     <message>
         <source>Mining</source>

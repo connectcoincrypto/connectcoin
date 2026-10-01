@@ -5272,8 +5272,8 @@ Versión dos certificados raíz: %2</translation>
         <translation>O modo FAST comparte uns 2 GiB de memoria RandomX coa validación. Máis fíos consumen máis CPU e enerxía; deixe capacidade para o nodo. A inicialización do conxunto de datos pode tardar.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Mine bloques da rede de probas coa CPU mediante RandomX. A minaría está desactivada ata que a inicie. Todas as carteiras deste nodo comparten o mineiro, que continúa ao cambiar de lapela ou pechar unha carteira.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>A minaría está desactivada ata que a inicie. Todas as carteiras deste nodo comparten o mineiro, que continúa ao cambiar de lapela ou pechar unha carteira.</translation>
     </message>
     <message>
         <source>Mining</source>

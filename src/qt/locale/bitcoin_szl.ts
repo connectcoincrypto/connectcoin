@@ -5585,8 +5585,8 @@ Wersyjŏ głōwnych certyfikatōw: %2</translation>
         <translation>Tryb FAST dzieli z walidacyjōm kole 2 GiB pamiyńci RandomX. Wiyncyj wōntkōw używo wiyncyj CPU i sztrōmu; ôstow zapas dlo wōnzła. Przigotowanie zbioru danych może trocha potrwać.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Kop bloki testowyj siyci CPU-ym ze użyciym RandomX. Kopanie je wyłōnczōne, aż je zapniesz. Kopacz je spōlny dlo wszyjskich portfeli w tym wōnźle i robi dali, kej zmiynisz karta abo zawrzesz portfel.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Kopanie je wyłōnczōne, aż je zapniesz. Kopacz je spōlny dlo wszyjskich portfeli w tym wōnźle i robi dali, kej zmiynisz karta abo zawrzesz portfel.</translation>
     </message>
     <message>
         <source>Mining</source>

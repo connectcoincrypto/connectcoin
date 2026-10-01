@@ -6337,7 +6337,7 @@ static ChainstateManager::Options&& Flatten(ChainstateManager::Options&& opts)
     // Enforce this below the daemon/GUI layer, including Kernel API callers.
     // Reject before BlockManager can open, wipe or load an existing database.
     if (!opts.chainparams.HasGenesisBlock()) {
-        throw std::runtime_error("Cannot initialize a chain without a genesis block. Mainnet has not been launched.");
+        throw std::runtime_error("Cannot initialize a chain without a genesis block.");
     }
     if (!opts.check_block_index.has_value()) opts.check_block_index = opts.chainparams.DefaultConsistencyChecks();
     if (!opts.minimum_chain_work.has_value()) opts.minimum_chain_work = UintToArith256(opts.chainparams.GetConsensus().nMinimumChainWork);

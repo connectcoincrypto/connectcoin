@@ -5557,8 +5557,8 @@ Versioni i certifikatave rrënjë: %2</translation>
         <translation>Mënyra FAST ndan rreth 2 GiB memorie RandomX me vërtetimin. Më shumë fije përdorin më shumë CPU dhe energji; lini kapacitet për nyjën. Nisja e grupit të të dhënave mund të marrë pak kohë.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Minoni blloqe të rrjetit të provës me CPU-në tuaj duke përdorur RandomX. Minimi është i fikur derisa ta nisni. Minuesi ndahet nga të gjithë portofolet në këtë nyjë dhe vazhdon kur ndërroni skeda ose mbyllni një portofol.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Minimi është i fikur derisa ta nisni. Minuesi ndahet nga të gjithë portofolet në këtë nyjë dhe vazhdon kur ndërroni skeda ose mbyllni një portofol.</translation>
     </message>
     <message>
         <source>Mining</source>

@@ -4,6 +4,9 @@ This file inventories ConnectCoin identifiers and their review requirements.
 Values may still change during development. Registry and name-conflict checks
 below were last refreshed on 2026-08-25.
 
+Enabling the mainnet genesis and default network in the software does not resolve
+the identity, registry or release-process reviews recorded below.
+
 ## Pre-launch blockers
 
 The current brand is suitable for local development, but is **not cleared for a
@@ -105,9 +108,12 @@ The development monetary policy caps individual monetary values at
 `100,000,000 CONN`. On mainnet, testnet3, testnet4, and signet, the recurring
 block subsidy begins at `15 CONN` and halves every 3,000,000 blocks. Public-network
 blocks target a 10-second interval. The existing public test networks have a
-separate spendable genesis output of `10,000,000 CONN`. Mainnet is unlaunched and
-has no operational genesis; the planned allocation remains covered by a
-test-only fixture. With that allocation and every available subsidy
+separate spendable genesis output of `10,000,000 CONN`. The mainnet launch genesis
+contains two type-1 outputs of `5,000,000 CONN` each, assigned to the two distinct
+MuSig aggregate public keys committed in its coinbase. Each output requires one
+valid BIP340 signature under its aggregate key and obeys coinbase maturity.
+The retired development genesis remains a separate test-only fixture.
+With the launch allocation and every available subsidy
 claimed by empty blocks, integer rounding produces a maximum planned issuance of
 `99,999,984.9955000000 CONN`. One CONN is subdivided into `10,000,000,000`
 connects, so wallet and RPC amounts use up to ten decimal places. Regtest keeps
@@ -136,14 +142,15 @@ The public test networks use valid x-only P2PK development-fund keys whose
 private keys are deliberately absent from the source tree. Testnet4 has a
 separate fund key since its September 7, 2026 genesis reset. Regtest alone uses a
 deterministic key with published private material so automated tests can spend
-its genesis allocation. The public-network private key requires offline backup
-and production-grade custody before launch; changing it requires regenerating
-the affected test-network genesis blocks. Mainnet's future launch genesis must
-be defined separately; see [testnet-beta.md](testnet-beta.md).
+its genesis allocation. Fund-key custody and backups are separate from publishing
+public keys in chain parameters. Changing a genesis output changes the chain
+identity. Mainnet uses its independently defined launch genesis and aggregate
+keys; test-network allocations and the retired development fixture do not
+become mainnet funds. See [testnet-beta.md](testnet-beta.md).
 
 | Network | RPC port | P2P port | Onion bind | Message start | Genesis hash |
 | --- | ---: | ---: | ---: | --- | --- |
-| Mainnet (disabled) | 48172 | 48173 | 48174 | `d9 51 a5 e2` | Not defined |
+| Mainnet (default) | 48172 | 48173 | 48174 | `d9 51 a5 e2` | `30a3a7543f593b6343873a16aeb61005dce0fe3f4169ab34039316b2a9bb373e` |
 | Testnet3 | 48175 | 48176 | 48177 | `c7 29 1f f5` | `1025889d725c5d64c3ee38ab07d2de279ab57036a2482186c65806d6c0291787` |
 | Testnet4 | 48178 | 48179 | 48180 | `77 d6 6c bc` | `710dc5910cbef40216bd82ccfb66af2273b2b1d336b034c5794966904cb603bf` |
 | Signet | 48181 | 48182 | 48183 | `30 4c 2f 0c` (default `OP_TRUE` challenge) | `a694dccdc04a316a4f4fe496f311aff981392f25ea18e4b7f77d9f449b9089fc` |
@@ -154,6 +161,11 @@ on September 9, 2026. Public keys, ports and address encodings are unchanged.
 Signet message start is the first four bytes of SHA256d over the serialized
 string `ConnectCoin signet P2C mask v1 network` followed by the serialized challenge
 vector. See [testnet-beta.md](testnet-beta.md) before upgrading an existing node.
+
+Mainnet starts from its own launch genesis. Preserve any historical development
+data and wallets and use a fresh `-datadir` for that chain; `-reindex` is not a
+genesis migration. The shared testnet address encodings do not permit reusing
+testnet wallets or balances as mainnet allocations.
 
 Fixed seeds are intentionally absent during development, and the generated seed
 header is not included by the chain parameters. Testnet4 includes the DNS/DDNS seeds

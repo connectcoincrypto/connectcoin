@@ -38,6 +38,9 @@ class ToolUtils(BitcoinTestFramework):
         assert self.target_pointer_size in (4, 8)
         self.testcase_dir = Path(self.config["environment"]["SRCDIR"]) / "test" / "functional" / "data" / "util"
         self.bins = self.get_binaries()
+        # Historical transaction/WIF fixtures are intentionally testnet4.
+        # Default-mainnet behavior is covered independently below.
+        self.fixture_tx_argv = self.bins.tx_argv() + ["-testnet4"]
         with open(self.testcase_dir / "connectcoin-util-test.json") as f:
             input_data = json.loads(f.read())
 
@@ -46,7 +49,22 @@ class ToolUtils(BitcoinTestFramework):
             self.test_one(test_obj)
         self.log.info(f"Passed {len(input_data)} utility fixtures; checking typed-output semantics")
         self.test_typed_outputs()
+        self.test_tx_network_selection()
         self.test_invalid_grind_targets()
+
+    def test_tx_network_selection(self):
+        self.log.info("Raw transaction tool defaults to mainnet and honors explicit testnet4")
+        pubkey = compute_xonly_pubkey((1).to_bytes(32, "big"))[0].hex()
+        for network_args, hrp in (([], "cc1p"), (["-chain=main"], "cc1p"), (["-testnet4"], "tcc1p")):
+            result = subprocess.run(
+                self.bins.tx_argv() + network_args + ["-json", "-create", f"outpubkey=1:{pubkey}"],
+                capture_output=True, text=True, timeout=60,
+            )
+            assert_equal(result.returncode, 0)
+            assert_equal(result.stderr, "")
+            output = json.loads(result.stdout)["vout"][0]
+            assert_equal(output["pubkey"], pubkey)
+            assert output["scriptPubKey"]["address"].startswith(hrp)
 
     def test_invalid_grind_targets(self):
         # Zero, negative, overflowing, and above-mainnet-limit targets must
@@ -65,11 +83,11 @@ class ToolUtils(BitcoinTestFramework):
     def assert_model(self, args, tx):
         """Compare CLI output to Python serialization, not another CLI snapshot."""
         expected = tx.serialize_with_witness().hex()
-        result = subprocess.run(self.bins.tx_argv() + args, capture_output=True, text=True, timeout=60)
+        result = subprocess.run(self.fixture_tx_argv + args, capture_output=True, text=True, timeout=60)
         assert_equal(result.returncode, 0)
         assert_equal(result.stderr, "")
         assert_equal(result.stdout, expected + "\n")
-        decoded = subprocess.run(self.bins.tx_argv() + ["-json"] + args, capture_output=True, text=True, timeout=60)
+        decoded = subprocess.run(self.fixture_tx_argv + ["-json"] + args, capture_output=True, text=True, timeout=60)
         assert_equal(decoded.returncode, 0)
         assert_equal(decoded.stderr, "")
         data = json.loads(decoded.stdout, parse_float=Decimal)
@@ -135,7 +153,7 @@ class ToolUtils(BitcoinTestFramework):
         key_arg = "set=privatekeys:" + json.dumps([byte_to_base58(secret + b"\x01", 178)])
         prevout = {"txid": f"{1:064x}", "vout": 0, "scriptPubKey": p2pk.scriptPubKey.hex(), "amount": "3"}
         signing = [unwitnessed, key_arg, "set=prevtxs:" + json.dumps([prevout]), "sign=DEFAULT"]
-        signed = subprocess.run(self.bins.tx_argv() + signing, capture_output=True, text=True, timeout=60)
+        signed = subprocess.run(self.fixture_tx_argv + signing, capture_output=True, text=True, timeout=60)
         assert_equal(signed.returncode, 0)
         assert_equal(signed.stderr, "")
         self.assert_signatures(signing, signed.stdout)
@@ -143,7 +161,7 @@ class ToolUtils(BitcoinTestFramework):
         self.test_one({"exec": "./connectcoin-tx", "args": incomplete, "return_code": 1, "error_txt": "prevtxs must contain every transaction input"})
         second_prevout = dict(prevout, txid=f"{2:064x}", vout=1, amount="4")
         complete = [unwitnessed, f"in={2:064x}:1", key_arg, "set=prevtxs:" + json.dumps([prevout, second_prevout]), "sign=DEFAULT"]
-        signed_pair = subprocess.run(self.bins.tx_argv() + complete, capture_output=True, text=True, timeout=60)
+        signed_pair = subprocess.run(self.fixture_tx_argv + complete, capture_output=True, text=True, timeout=60)
         assert_equal(signed_pair.returncode, 0)
         assert_equal(signed_pair.stderr, "")
         self.assert_signatures(complete, signed_pair.stdout)
@@ -179,7 +197,7 @@ class ToolUtils(BitcoinTestFramework):
         if testObj["exec"] == "./connectcoin-util":
             execrun = self.bins.util_argv() + testObj["args"]
         elif testObj["exec"] == "./connectcoin-tx":
-            execrun = self.bins.tx_argv() + testObj["args"]
+            execrun = self.fixture_tx_argv + testObj["args"]
         else:
             raise ValueError(f"Unknown utility executable: {testObj['exec']}")
 

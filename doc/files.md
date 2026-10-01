@@ -38,14 +38,17 @@ Windows  | `%LOCALAPPDATA%\ConnectCoin\` <sup>[\[1\]](#note1)</sup>
 
 Chain option                     | Data directory path
 ---------------------------------|------------------------------
-`-chain=main` (unavailable)     | *path_to_datadir*`/` (reserved mainnet location)
+`-chain=main` (default)        | *path_to_datadir*`/`
 `-chain=test` or `-testnet`      | *path_to_datadir*`/testnet3/`
-`-chain=testnet4` or `-testnet4` (beta default) | *path_to_datadir*`/testnet4/`
+`-chain=testnet4` or `-testnet4` | *path_to_datadir*`/testnet4/`
 `-chain=signet` or `-signet`     | *path_to_datadir*`/signet/`
 `-chain=regtest` or `-regtest`   | *path_to_datadir*`/regtest/`
 
-Mainnet startup is rejected. The reserved location is listed to identify old
-mainnet data; the beta does not load or move those files.
+Keep selecting `-testnet4` to continue using an existing beta chain. If the
+mainnet location contains historical development data, preserve that directory
+and its wallets and start the launch chain with a fresh `-datadir`. A normal
+startup rejects an indexed chain with a different genesis. `-reindex` rebuilds
+databases and must not be used to migrate historical data to the launch chain.
 
 ## Data directory layout
 

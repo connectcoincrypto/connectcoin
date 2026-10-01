@@ -5998,8 +5998,8 @@ Version des certificats racines : %2</translation>
         <translation>Le mode FAST partage environ 2 GiB de mémoire RandomX avec la validation. Davantage de fils d’exécution consomment davantage de CPU et d’énergie ; gardez de la capacité pour le nœud. L’initialisation du jeu de données peut prendre du temps.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Minez des blocs du réseau de test avec votre CPU et RandomX. Le minage est désactivé jusqu’à son démarrage. Le mineur est partagé par tous les portefeuilles de ce nœud et continue lorsque vous changez d’onglet ou fermez un portefeuille.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Le minage est désactivé jusqu’à son démarrage. Le mineur est partagé par tous les portefeuilles de ce nœud et continue lorsque vous changez d’onglet ou fermez un portefeuille.</translation>
     </message>
     <message>
         <source>Mining</source>

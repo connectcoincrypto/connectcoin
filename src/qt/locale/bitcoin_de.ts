@@ -5991,8 +5991,8 @@ Version der Stammzertifikate: %2</translation>
         <translation>Der FAST-Modus teilt etwa 2 GiB RandomX-Speicher mit der Validierung. Mehr Threads beanspruchen mehr CPU-Leistung und Strom; lassen Sie Kapazität für den Knoten frei. Das Initialisieren des Datensatzes kann eine Weile dauern.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Minen Sie mit Ihrer CPU und RandomX Testnetzblöcke. Das Mining bleibt ausgeschaltet, bis Sie es starten. Alle Wallets dieses Knotens teilen sich den Miner; er läuft beim Wechseln der Registerkarte oder Schließen einer Wallet weiter.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Das Mining bleibt ausgeschaltet, bis Sie es starten. Alle Wallets dieses Knotens teilen sich den Miner; er läuft beim Wechseln der Registerkarte oder Schließen einer Wallet weiter.</translation>
     </message>
     <message>
         <source>Mining</source>

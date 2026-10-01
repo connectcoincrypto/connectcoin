@@ -2,7 +2,9 @@
 
 `connectcoin-util-test.json` exercises both utilities without launching a node.
 The transaction fixtures use ConnectCoin's typed serialization, 10 decimal
-places per CONN, and testnet4 addresses (the tool's default network).
+places per CONN, and testnet4 addresses. The fixture runner selects `-testnet4`
+explicitly for these historical transaction vectors; separate checks cover
+the tools' mainnet default and explicit network overrides.
 
 - `typed-edit-input.hex` preserves the 21 input outpoints, sequences, and two
   output values from the old edit test. Inputs are unsigned; the two outputs

@@ -33,15 +33,15 @@
     "exec": "./connectcoin-util",
     "args": ["getchainparams"],
     "return_code": 0,
-    "output_cmp": "getchainparams-testnet4.json",
-    "description": "getchainparams defaults to testnet4 info"
+    "output_cmp": "getchainparams-mainnet.json",
+    "description": "getchainparams defaults to launched mainnet info"
   },
   {
     "exec": "./connectcoin-util",
     "args": ["-chain=main", "getchainparams"],
     "return_code": 0,
     "output_cmp": "getchainparams-mainnet.json",
-    "description": "getchainparams returns explicit unlaunched mainnet info"
+    "description": "getchainparams returns explicit launched mainnet info"
   },
   {
     "exec": "./connectcoin-util",

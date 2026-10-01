@@ -5791,8 +5791,8 @@ Root certificates version: %2</source>
         <translation>FAST režimas bendrina maždaug 2 GiB RandomX atminties su tikrinimu. Daugiau gijų naudoja daugiau CPU išteklių ir elektros; palikite pajėgumo mazgui. Duomenų rinkinio inicijavimas gali užtrukti.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Kaskite bandomojo tinklo blokus su CPU naudodami RandomX. Kasimas išjungtas, kol jo nepaleidžiate. Visos šio mazgo piniginės naudojasi ta pačia kasimo programa, kuri veikia toliau pakeitus kortelę arba uždarius piniginę.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Kasimas išjungtas, kol jo nepaleidžiate. Visos šio mazgo piniginės naudojasi ta pačia kasimo programa, kuri veikia toliau pakeitus kortelę arba uždarius piniginę.</translation>
     </message>
     <message>
         <source>Mining</source>

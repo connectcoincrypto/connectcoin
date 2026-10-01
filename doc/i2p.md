@@ -82,7 +82,8 @@ The first time ConnectCoin Core connects to the I2P router, it automatically
 generates a persistent I2P address and its corresponding private key by default,
 unless `-i2pacceptincoming=0` is set.  The private key is saved in a file named
 `i2p_private_key` in the network-specific data directory (for example,
-`~/.connectcoin/testnet4/i2p_private_key` on Linux with the default beta network).
+`~/.connectcoin/i2p_private_key` on Linux with the default mainnet, or
+`~/.connectcoin/testnet4/i2p_private_key` with explicit `-testnet4`).
 The persistent I2P address is used for making outbound connections and accepting inbound
 connections.
 

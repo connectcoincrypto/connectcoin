@@ -5973,8 +5973,8 @@ Juurivarmenteiden versio: %2</translation>
         <translation>FAST-tila jakaa noin 2 GiB RandomX-muistia validoinnin kanssa. Useammat säikeet kuluttavat enemmän CPU-tehoa ja sähköä; jätä kapasiteettia solmulle. Tietoaineiston alustaminen voi kestää jonkin aikaa.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Louhi testiverkon lohkoja CPU:lla käyttäen RandomX:ää. Louhinta on pois käytöstä, kunnes käynnistät sen. Tämän solmun kaikki lompakot jakavat louhijan, ja louhinta jatkuu välilehteä vaihdettaessa tai lompakko suljettaessa.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Louhinta on pois käytöstä, kunnes käynnistät sen. Tämän solmun kaikki lompakot jakavat louhijan, ja louhinta jatkuu välilehteä vaihdettaessa tai lompakko suljettaessa.</translation>
     </message>
     <message>
         <source>Mining</source>

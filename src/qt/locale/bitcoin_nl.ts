@@ -5797,8 +5797,8 @@ Versie basiscertificaten: %2</translation>
         <translation>De FAST-modus deelt ongeveer 2 GiB RandomX-geheugen met de validatie. Meer threads gebruiken meer CPU en stroom; houd capaciteit over voor de node. Het initialiseren van de dataset kan even duren.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Mine testnetblokken met uw CPU via RandomX. Mining staat uit totdat u deze start. De miner wordt gedeeld door alle portemonnees in deze node en blijft werken als u van tabblad wisselt of een portemonnee sluit.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Mining staat uit totdat u deze start. De miner wordt gedeeld door alle portemonnees in deze node en blijft werken als u van tabblad wisselt of een portemonnee sluit.</translation>
     </message>
     <message>
         <source>Mining</source>

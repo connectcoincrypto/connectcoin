@@ -35,7 +35,7 @@ MAX_MONEY = 100_000_000 * 10**10
 # Snapshot counts/vouts use ReadCompactSize with its default range check.
 MAX_COMPACT_SIZE = 0x04000000
 NET_MAGIC_BYTES = {
-    b"\xd9\x51\xa5\xe2": "ConnectCoin Mainnet (not launched)",
+    b"\xd9\x51\xa5\xe2": "ConnectCoin Mainnet",
     b"\x30\x4c\x2f\x0c": "ConnectCoin Signet (P2C mask v1)",
     b"\xc7\x29\x1f\xf5": "ConnectCoin Testnet3 (P2C mask v1)",
     b"\x77\xd6\x6c\xbc": "ConnectCoin Testnet4 (P2C mask v1)",

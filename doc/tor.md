@@ -189,20 +189,20 @@ details).
 ## 3. Manually create a ConnectCoin Core onion service
 
 You can also manually configure your node to be reachable from the Tor network.
-For the default testnet4 beta, add these lines to your `/etc/tor/torrc` (or
+For the default mainnet, add these lines to your `/etc/tor/torrc` (or
 equivalent config file):
 
     HiddenServiceDir /var/lib/tor/connectcoin-service/
-    HiddenServicePort 48179 127.0.0.1:48180
+    HiddenServicePort 48173 127.0.0.1:48174
     # If `tor --list-modules` shows "pow: yes", then enable PoW protection.
     # It is available in tor-0.4.8.1-alpha and newer when configured with
     # `./configure --enable-gpl`.
     HiddenServicePoWDefensesEnabled 1
 
 The directory can be different of course, but virtual port numbers should be equal to
-your connectcoind's P2P listen port (48179 on testnet4), and target addresses and ports
-should be equal to binding address and port for inbound Tor connections (127.0.0.1:48180 by default on testnet4).
-When selecting another test network, update both ports to match that network.
+your connectcoind's P2P listen port (48173 on mainnet), and target addresses and ports
+should be equal to binding address and port for inbound Tor connections (127.0.0.1:48174 by default on mainnet).
+When selecting a test network, update both ports to match that network.
 
     -externalip=X   You can tell ConnectCoin about its publicly reachable addresses using
                     this option, and this can be an onion address. Given the above

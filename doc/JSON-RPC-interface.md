@@ -33,16 +33,16 @@ requests when multiple wallets are in use.
 
 ### Examples
 
-These examples use testnet4's default RPC port, `48178`, with a configured
+These examples use mainnet's default RPC port, `48172`, with a configured
 RPC user named `alice`. The wallet example also requires `desc-wallet` to be
 loaded. The HTTP wallet path selects the wallet; `-rpcwallet` is a client option.
 
 ```sh
 # Get block count from the / endpoint
-$ curl --user alice --data-binary '{"jsonrpc": "2.0", "id": "0", "method": "getblockcount", "params": []}' -H 'content-type: application/json' localhost:48178/
+$ curl --user alice --data-binary '{"jsonrpc": "2.0", "id": "0", "method": "getblockcount", "params": []}' -H 'content-type: application/json' localhost:48172/
 
 # Get balance from the /wallet/desc-wallet endpoint
-$ curl --user alice --data-binary '{"jsonrpc": "2.0", "id": "0", "method": "getbalance", "params": []}' -H 'content-type: application/json' localhost:48178/wallet/desc-wallet
+$ curl --user alice --data-binary '{"jsonrpc": "2.0", "id": "0", "method": "getbalance", "params": []}' -H 'content-type: application/json' localhost:48172/wallet/desc-wallet
 
 ```
 

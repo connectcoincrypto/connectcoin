@@ -8,7 +8,7 @@ This feature allows for message capture on a per-peer basis.  It answers the sim
 
 * Run `connectcoind` with the `-capturemessages` option.
 * Look in the `message_capture` folder in your network-specific datadir.
-  * On Linux with the default beta network, this will be `~/.connectcoin/testnet4/message_capture`. Adjust the path for a different network or custom datadir.
+  * On Linux with the default mainnet, this will be `~/.connectcoin/message_capture`. With explicit `-testnet4`, use `~/.connectcoin/testnet4/message_capture`. Adjust the path for a different network or custom datadir.
   * See that there are many folders inside, one for each peer names with its IP address and port.
   * Inside each peer's folder there are two `.dat` files: one is for received messages (`msgs_recv.dat`) and the other is for sent messages (`msgs_sent.dat`).
 * Run `contrib/message-capture/message-capture-parser.py` with the proper arguments.

@@ -4587,8 +4587,8 @@ Root certificates version: %2</source>
         <translation>FAST حالت د تایید له بهیر سره نږدې 2 GiB د RandomX حافظه شریکوي. ډېر تارونه ډېر CPU او برېښنا کاروي؛ د نوډ لپاره هم ظرفیت پرېږدئ. د معلوماتو ټولګې چمتو کول لږ وخت نیولی شي.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>د RandomX په کارولو له خپل CPU سره د ازمایښتي شبکې بلاکونه وکېندئ. کان‌کېندنه تر هغه بنده وي چې تاسو یې پیل کړئ. په دې نوډ کې ټولې بټوې یو کان‌کېندونکی شریکوي او د ټب بدلولو یا د بټوې تړلو پر مهال هم کار ته دوام ورکوي.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>کان‌کېندنه تر هغه بنده وي چې تاسو یې پیل کړئ. په دې نوډ کې ټولې بټوې یو کان‌کېندونکی شریکوي او د ټب بدلولو یا د بټوې تړلو پر مهال هم کار ته دوام ورکوي.</translation>
     </message>
     <message>
         <source>Mining</source>

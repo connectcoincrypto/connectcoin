@@ -5801,8 +5801,8 @@ Kök şahadatnamalaryň wersiýasy: %2</translation>
         <translation>FAST tertibi tassyklama bilen takmynan 2 GiB RandomX ýadyny paýlaşýar. Köp akym has köp CPU çeşmesini we elektrik energiýasyny ulanýar; düwün üçin hem kuwwat galdyryň. Maglumat toplumyny taýýarlamak biraz wagt alyp biler.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX ulanyp, CPU bilen synag torunyň bloklaryny gazyň. Magdançylyk siz başlaýançaňyz öçürilen bolýar. Bu düwündäki ähli gapjyklar bir magdançyny paýlaşýarlar we goýma çalşylanda ýa-da gapjyk ýapylanda hem ol işlemegini dowam etdirýär.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Magdançylyk siz başlaýançaňyz öçürilen bolýar. Bu düwündäki ähli gapjyklar bir magdançyny paýlaşýarlar we goýma çalşylanda ýa-da gapjyk ýapylanda hem ol işlemegini dowam etdirýär.</translation>
     </message>
     <message>
         <source>Mining</source>

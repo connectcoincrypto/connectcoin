@@ -4,8 +4,9 @@
 
 This upstream Bitcoin fixture is incompatible with ConnectCoin's typed
 transactions and RandomX proof of work. The `mining_mainnet.py` test skips
-unconditionally, and ConnectCoin mainnet is not available. Replacing the
-genesis hash alone would not make this fixture usable.
+unconditionally. The launched ConnectCoin mainnet is covered separately by
+`feature_mainnet_launch.py`; replacing this old fixture's genesis hash alone
+would not make its Bitcoin transactions or proof of work usable.
 
 The following records the historical **Bitcoin** generation procedure for
 provenance. It is not a ConnectCoin mining tutorial; the commands, addresses,

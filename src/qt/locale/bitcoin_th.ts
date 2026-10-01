@@ -5664,8 +5664,8 @@ Root certificates version: %2</source>
         <translation>โหมด FAST ใช้หน่วยความจำ RandomX ประมาณ 2 GiB ร่วมกับการตรวจสอบความถูกต้อง จำนวนเธรดที่มากขึ้นใช้ CPU และพลังงานมากขึ้น ควรเหลือทรัพยากรให้โหนดด้วย การเตรียมชุดข้อมูลอาจใช้เวลาสักครู่</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>ขุดบล็อกบนเครือข่ายทดสอบด้วย CPU ของคุณโดยใช้ RandomX การขุดจะปิดอยู่จนกว่าคุณจะเริ่ม ตัวขุดใช้ร่วมกันโดยกระเป๋าเงินทั้งหมดในโหนดนี้ และยังทำงานต่อเมื่อคุณเปลี่ยนแท็บหรือปิดกระเป๋าเงิน</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>การขุดจะปิดอยู่จนกว่าคุณจะเริ่ม ตัวขุดใช้ร่วมกันโดยกระเป๋าเงินทั้งหมดในโหนดนี้ และยังทำงานต่อเมื่อคุณเปลี่ยนแท็บหรือปิดกระเป๋าเงิน</translation>
     </message>
     <message>
         <source>Mining</source>

@@ -11,7 +11,7 @@ proofs use a separate workflow described in [p2c-wallet.md](p2c-wallet.md).
 > [!NOTE]
 > This tutorial explicitly selects ConnectCoin signet on both hosts. Keep the
 > same network selection in every command. Omitting `-signet` selects the
-> default Testnet4 beta, not mainnet. Mainnet startup is unavailable.
+> default mainnet, which is separate from the tutorial's signet wallets and funds.
 
 ## Overview
 In this tutorial we have two hosts, both running the same current ConnectCoin Core build.

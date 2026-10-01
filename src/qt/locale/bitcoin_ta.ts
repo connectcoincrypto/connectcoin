@@ -5919,8 +5919,8 @@ Root certificates version: %2</source>
         <translation>FAST பயன்முறை சுமார் 2 GiB RandomX நினைவகத்தைச் சரிபார்ப்புடன் பகிர்கிறது. அதிக இழைகள் அதிக CPU திறனையும் மின்சாரத்தையும் பயன்படுத்துகின்றன; முனையத்திற்கும் திறனை ஒதுக்கி வைக்கவும். தரவுத்தொகுப்பைத் தயாரிக்கச் சிறிது நேரம் ஆகலாம்.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX மூலம் உங்கள் CPU-ஐப் பயன்படுத்திச் சோதனை வலைப்பின்னலின் தொகுதிகளை மைன் செய்யுங்கள். நீங்கள் தொடங்கும் வரை மைனிங் அணைக்கப்பட்டிருக்கும். இந்த முனையத்தின் அனைத்துப் பணப்பைகளும் ஒரே மைனரைப் பகிர்கின்றன; தாவல்களை மாற்றினாலும் பணப்பையை மூடினாலும் அது தொடரும்.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>நீங்கள் தொடங்கும் வரை மைனிங் அணைக்கப்பட்டிருக்கும். இந்த முனையத்தின் அனைத்துப் பணப்பைகளும் ஒரே மைனரைப் பகிர்கின்றன; தாவல்களை மாற்றினாலும் பணப்பையை மூடினாலும் அது தொடரும்.</translation>
     </message>
     <message>
         <source>Mining</source>

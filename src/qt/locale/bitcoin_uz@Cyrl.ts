@@ -5868,8 +5868,8 @@ Root certificates version: %2</source>
         <translation>FAST режими текшириш билан тахминан 2 GiB RandomX хотирасини баҳам кўради. Кўпроқ оқим кўпроқ CPU ресурслари ва электр сарфлайди; тугун учун ҳам қувват қолдиринг. Маълумотлар тўпламини тайёрлаш бироз вақт олиши мумкин.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX ёрдамида CPU билан синов тармоғи блокларини қазиб олинг. Сиз ишга туширгунингизча майнинг ўчирилган бўлади. Ушбу тугундаги барча ҳамёнлар битта майнердан фойдаланади ва у варақларни алмаштирганингизда ёки ҳамённи ёпганингизда ҳам ишлашда давом этади.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Сиз ишга туширгунингизча майнинг ўчирилган бўлади. Ушбу тугундаги барча ҳамёнлар битта майнердан фойдаланади ва у варақларни алмаштирганингизда ёки ҳамённи ёпганингизда ҳам ишлашда давом этади.</translation>
     </message>
     <message>
         <source>Mining</source>

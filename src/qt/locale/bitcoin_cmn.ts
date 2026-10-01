@@ -5970,8 +5970,8 @@ Root certificates version: %2</source>
         <translation>FAST 模式与验证过程共享约 2 GiB 的 RandomX 内存。更多线程会使用更多 CPU 资源和电力；请为节点预留余量。初始化数据集可能需要一些时间。</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>使用 CPU 和 RandomX 挖掘测试网区块。挖矿在您启动之前处于关闭状态。此节点的所有钱包共用矿工；切换标签页或关闭钱包时，挖矿仍会继续。</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>挖矿在您启动之前处于关闭状态。此节点的所有钱包共用矿工；切换标签页或关闭钱包时，挖矿仍会继续。</translation>
     </message>
     <message>
         <source>Mining</source>

@@ -5475,8 +5475,8 @@ Rodcertifikaternes version: %2</translation>
         <translation>FAST-tilstand deler cirka 2 GiB RandomX-hukommelse med valideringen. Flere tråde bruger mere CPU og strøm; lad der være kapacitet til noden. Initialisering af datasættet kan tage noget tid.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Min testnetblokke med din CPU ved hjælp af RandomX. Mining er slået fra, indtil du starter den. Mineren deles af alle tegnebøger på denne node og fortsætter, når du skifter fane eller lukker en tegnebog.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Mining er slået fra, indtil du starter den. Mineren deles af alle tegnebøger på denne node og fortsætter, når du skifter fane eller lukker en tegnebog.</translation>
     </message>
     <message>
         <source>Mining</source>

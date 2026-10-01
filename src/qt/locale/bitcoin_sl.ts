@@ -5998,8 +5998,8 @@ Različica korenskih potrdil: %2</translation>
         <translation>Način FAST si s preverjanjem deli približno 2 GiB pomnilnika RandomX. Več niti porabi več zmogljivosti CPU in energije; pustite dovolj zmogljivosti za vozlišče. Inicializacija podatkovne zbirke lahko traja nekaj časa.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Rudarite bloke testnega omrežja s svojim CPU z uporabo RandomX. Rudarjenje je izklopljeno, dokler ga ne zaženete. Rudar je skupen vsem denarnicam tega vozlišča in deluje tudi, ko zamenjate zavihek ali zaprete denarnico.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Rudarjenje je izklopljeno, dokler ga ne zaženete. Rudar je skupen vsem denarnicam tega vozlišča in deluje tudi, ko zamenjate zavihek ali zaprete denarnico.</translation>
     </message>
     <message>
         <source>Mining</source>

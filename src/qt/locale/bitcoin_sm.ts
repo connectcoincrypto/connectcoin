@@ -4605,8 +4605,8 @@ Lomiga o tusipasi a'a: %2</translation>
         <translation>E faasoa e le faiga FAST le tusa ma le 2 GiB o le manatua RandomX ma le faamaoniga. E faaaogā e filo e tele le tele o le CPU ma le eletise; tuu pea se malosi mo le node. E ono umi teisi le tapenaina o le seti o faamatalaga.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Eli poloka o le upega faataitai i lau CPU e faaaogā ai le RandomX. E tape le eliina seʻia e amataina. E faasoa le polokalame eli e atotupe uma i lenei node ma e faaauau pea pe a sui au tab pe tapuni se atotupe.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>E tape le eliina seʻia e amataina. E faasoa le polokalame eli e atotupe uma i lenei node ma e faaauau pea pe a sui au tab pe tapuni se atotupe.</translation>
     </message>
     <message>
         <source>Mining</source>

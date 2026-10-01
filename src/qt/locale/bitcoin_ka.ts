@@ -5892,8 +5892,8 @@ Root certificates version: %2</source>
         <translation>FAST რეჟიმი შემოწმებასთან დაახლოებით 2 GiB RandomX მეხსიერებას იყოფს. მეტი ნაკადი CPU-ის მეტ რესურსსა და ელექტროენერგიას მოიხმარს; კვანძისთვის თავისუფალი რესურსი დატოვეთ. მონაცემთა ნაკრების მომზადებას შესაძლოა დრო დასჭირდეს.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>მოიპოვეთ სატესტო ქსელის ბლოკები CPU-ით RandomX-ის გამოყენებით. მაინინგი გამორთულია, სანამ არ გაუშვებთ. ამ კვანძის ყველა საფულე ერთ მაინერს იყენებს და ის მუშაობას ჩანართის შეცვლის ან საფულის დახურვის შემდეგაც აგრძელებს.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>მაინინგი გამორთულია, სანამ არ გაუშვებთ. ამ კვანძის ყველა საფულე ერთ მაინერს იყენებს და ის მუშაობას ჩანართის შეცვლის ან საფულის დახურვის შემდეგაც აგრძელებს.</translation>
     </message>
     <message>
         <source>Mining</source>

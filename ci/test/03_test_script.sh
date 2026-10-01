@@ -41,7 +41,7 @@ df -h
 # kernel mismatch between a cached docker image and the underlying host.
 # This can happen occasionally on hosted runners if the runner image is updated.
 if [[ "$CONTAINER_NAME" == "ci_native_asan" ]]; then
-  $CI_RETRY_EXE apt-get update
+  $CI_RETRY_EXE apt-get -o APT::Update::Error-Mode=any update
   ${CI_RETRY_EXE} bash -c "apt-get install --no-install-recommends --no-upgrade -y $PACKAGES"
 fi
 

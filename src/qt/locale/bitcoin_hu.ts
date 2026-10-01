@@ -5975,8 +5975,8 @@ Gyökértanúsítványok verziója: %2</translation>
         <translation>A FAST mód körülbelül 2 GiB RandomX-memóriát oszt meg az ellenőrzéssel. Több szál több CPU-erőforrást és áramot használ; hagyjon kapacitást a csomópontnak. Az adatkészlet inicializálása eltarthat egy ideig.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Bányásszon teszthálózati blokkokat CPU-val, RandomX használatával. A bányászat az elindításáig ki van kapcsolva. A csomópont minden tárcája ugyanazt a bányászt használja, amely lapváltáskor vagy egy tárca bezárásakor is tovább működik.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>A bányászat az elindításáig ki van kapcsolva. A csomópont minden tárcája ugyanazt a bányászt használja, amely lapváltáskor vagy egy tárca bezárásakor is tovább működik.</translation>
     </message>
     <message>
         <source>Mining</source>

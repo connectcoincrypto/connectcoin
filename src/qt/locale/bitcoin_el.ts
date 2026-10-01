@@ -5772,8 +5772,8 @@ Root certificates version: %2</source>
         <translation>Η λειτουργία FAST μοιράζεται περίπου 2 GiB μνήμης RandomX με την επικύρωση. Περισσότερα νήματα χρησιμοποιούν περισσότερους πόρους CPU και ενέργεια· αφήστε χωρητικότητα για τον κόμβο. Η αρχικοποίηση του συνόλου δεδομένων μπορεί να διαρκέσει λίγο.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Εξορύξτε μπλοκ του δοκιμαστικού δικτύου με τη CPU σας μέσω RandomX. Η εξόρυξη είναι απενεργοποιημένη μέχρι να την ξεκινήσετε. Ο εξορύκτης είναι κοινός για όλα τα πορτοφόλια αυτού του κόμβου και συνεχίζει όταν αλλάζετε καρτέλα ή κλείνετε ένα πορτοφόλι.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Η εξόρυξη είναι απενεργοποιημένη μέχρι να την ξεκινήσετε. Ο εξορύκτης είναι κοινός για όλα τα πορτοφόλια αυτού του κόμβου και συνεχίζει όταν αλλάζετε καρτέλα ή κλείνετε ένα πορτοφόλι.</translation>
     </message>
     <message>
         <source>Mining</source>

@@ -5536,8 +5536,8 @@ Stumm an testenioù gwrizienn: %2</translation>
         <translation>Ar mod FAST a rann war-dro 2 GiB a vemor RandomX gant ar gwiriañ. Muioc'h a neudennoù a implij muioc'h a loazioù CPU ha tredan; lezit barregezh evit ar skoulm. Korañ ar strollad roadennoù a c'hall padout ur pennad.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Mengleuzit bloc'hoù ar rouedad amprouiñ gant ho CPU dre RandomX. Diweredekaet eo ar mengleuziañ betek ma loc'hot anezhañ. Rannet eo ar mengleuzier gant holl yalc'hoù ar skoulm-mañ ha kendelc'her a ra pa cheñchit ivinelloù pe pa serrit ur yalc'h.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Diweredekaet eo ar mengleuziañ betek ma loc'hot anezhañ. Rannet eo ar mengleuzier gant holl yalc'hoù ar skoulm-mañ ha kendelc'her a ra pa cheñchit ivinelloù pe pa serrit ur yalc'h.</translation>
     </message>
     <message>
         <source>Mining</source>

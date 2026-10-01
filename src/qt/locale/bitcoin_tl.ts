@@ -5226,8 +5226,8 @@ Bersyon ng mga root certificate: %2</translation>
         <translation>Nakikibahagi ang FAST mode ng humigit-kumulang 2 GiB ng RandomX memory sa pagpapatunay. Mas maraming thread ang gumagamit ng mas maraming CPU at kuryente; mag-iwan ng kapasidad para sa node. Maaaring magtagal ang paghahanda ng dataset.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Magmina ng mga bloke sa testnet gamit ang iyong CPU at RandomX. Naka-off ang pagmimina hangga't hindi mo ito sinisimulan. Pinagsasaluhan ng lahat ng pitaka sa node na ito ang minero at nagpapatuloy ito kapag lumipat ka ng tab o nagsara ng pitaka.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Naka-off ang pagmimina hangga't hindi mo ito sinisimulan. Pinagsasaluhan ng lahat ng pitaka sa node na ito ang minero at nagpapatuloy ito kapag lumipat ka ng tab o nagsara ng pitaka.</translation>
     </message>
     <message>
         <source>Mining</source>

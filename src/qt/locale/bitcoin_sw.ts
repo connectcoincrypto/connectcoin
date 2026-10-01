@@ -5436,8 +5436,8 @@ Toleo la vyeti vya mzizi: %2</translation>
         <translation>Hali ya FAST hushiriki takribani 2 GiB za kumbukumbu ya RandomX na uthibitishaji. Nyuzi nyingi hutumia CPU na umeme zaidi; acha uwezo kwa ajili ya nodi. Kuandaa seti ya data kunaweza kuchukua muda.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Chimba bloku za mtandao wa majaribio kwa CPU yako ukitumia RandomX. Uchimbaji umezimwa hadi uuanzishe. Mchimbaji hutumiwa kwa pamoja na pochi zote kwenye nodi hii na huendelea unapobadilisha vichupo au kufunga pochi.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Uchimbaji umezimwa hadi uuanzishe. Mchimbaji hutumiwa kwa pamoja na pochi zote kwenye nodi hii na huendelea unapobadilisha vichupo au kufunga pochi.</translation>
     </message>
     <message>
         <source>Mining</source>

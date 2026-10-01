@@ -5462,8 +5462,8 @@ Root certificates version: %2</source>
         <translation>دۆخی FAST نزیکەی 2 GiB لە بیرگەی RandomX لەگەڵ پشتڕاستکردنەوە هاوبەش دەکات. ڕیشاڵی زیاتر سەرچاوەی CPU و کارەبای زیاتر بەکاردەهێنێت؛ توانایەک بۆ گرێکە بهێڵەرەوە. ئامادەکردنی کۆمەڵەدراوەکە لەوانەیە کات بخایەنێت.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>بە CPU و RandomX کانەکەنی بلۆکەکانی تۆڕی تاقیکردنەوە بکە. کانەکەنی ناچالاکە تا دەستی پێ دەکەیت. هەموو جزدانەکانی ئەم گرێیە هەمان کانەکەن بەکاردەهێنن و لە گۆڕینی تاب یان داخستنی جزدانیشدا بەردەوام دەبێت.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>کانەکەنی ناچالاکە تا دەستی پێ دەکەیت. هەموو جزدانەکانی ئەم گرێیە هەمان کانەکەن بەکاردەهێنن و لە گۆڕینی تاب یان داخستنی جزدانیشدا بەردەوام دەبێت.</translation>
     </message>
     <message>
         <source>Mining</source>

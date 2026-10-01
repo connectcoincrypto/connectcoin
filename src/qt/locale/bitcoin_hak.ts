@@ -5957,8 +5957,8 @@ Root certificates version: %2</source>
         <translation>FAST 模式同驗證共用大約 2 GiB 个 RandomX 記憶體。執行緒愈多，CPU 資源同電力就用愈多；請留兜容量分節點。初始化資料集可能愛一息時間。</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>用你个 CPU 搭配 RandomX 挖測試網路个區塊。挖礦在你啟動以前係關忒个。這隻節點个所有錢包共用一隻礦工；切換分頁抑係關忒錢包个時節，挖礦還會繼續。</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>挖礦在你啟動以前係關忒个。這隻節點个所有錢包共用一隻礦工；切換分頁抑係關忒錢包个時節，挖礦還會繼續。</translation>
     </message>
     <message>
         <source>Mining</source>

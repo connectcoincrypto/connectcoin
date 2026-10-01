@@ -5923,8 +5923,8 @@ Kök sertifika sürümü: %2</translation>
         <translation>FAST modu, doğrulamayla yaklaşık 2 GiB RandomX belleğini paylaşır. Daha fazla iş parçacığı daha fazla CPU ve güç tüketir; düğüm için kapasite bırakın. Veri kümesinin hazırlanması biraz zaman alabilir.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX kullanarak CPU'nuzla test ağı blokları kazın. Madencilik siz başlatana kadar kapalıdır. Madenci bu düğümdeki tüm cüzdanlar tarafından paylaşılır ve sekme değiştirdiğinizde veya bir cüzdanı kapattığınızda çalışmayı sürdürür.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Madencilik siz başlatana kadar kapalıdır. Madenci bu düğümdeki tüm cüzdanlar tarafından paylaşılır ve sekme değiştirdiğinizde veya bir cüzdanı kapattığınızda çalışmayı sürdürür.</translation>
     </message>
     <message>
         <source>Mining</source>

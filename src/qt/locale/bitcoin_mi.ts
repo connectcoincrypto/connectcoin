@@ -3768,8 +3768,8 @@ Putanga tiwhikete pūtake: %2</translation>
         <translation>Ka tiritiri te aratau FAST i te 2 GiB pea o te pūmahara RandomX ki te manatoko. Ka nui ake te whakamahinga CPU me te hiko ina nui ake ngā miro; waiho he kaha mō te kōpuku. Tērā pea ka roa te whakarite i te huinga raraunga.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Keria ngā poraka whatunga whakamātautau mā tō CPU me RandomX. Ka weto te keri kia tīmata rā anō koe. Ka tiritiria te pūkeri e ngā pūkoro katoa o tēnei kōpuku, ā, ka haere tonu ina huri ripa koe, ina kati rānei i tētahi pūkoro.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Ka weto te keri kia tīmata rā anō koe. Ka tiritiria te pūkeri e ngā pūkoro katoa o tēnei kōpuku, ā, ka haere tonu ina huri ripa koe, ina kati rānei i tētahi pūkoro.</translation>
     </message>
     <message>
         <source>Mining</source>

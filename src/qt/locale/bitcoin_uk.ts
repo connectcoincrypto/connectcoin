@@ -6016,8 +6016,8 @@ Root certificates version: %2</source>
         <translation>Режим FAST спільно з перевіркою використовує приблизно 2 GiB пам’яті RandomX. Більше потоків споживає більше ресурсів CPU та електроенергії; залиште запас для вузла. Ініціалізація набору даних може тривати певний час.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Видобувайте блоки тестової мережі на CPU за допомогою RandomX. Майнінг вимкнено, доки ви його не запустите. Майнінгова програма спільна для всіх гаманців цього вузла й продовжує роботу, коли ви змінюєте вкладку або закриваєте гаманець.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Майнінг вимкнено, доки ви його не запустите. Майнінгова програма спільна для всіх гаманців цього вузла й продовжує роботу, коли ви змінюєте вкладку або закриваєте гаманець.</translation>
     </message>
     <message>
         <source>Mining</source>

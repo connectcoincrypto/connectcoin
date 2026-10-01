@@ -5830,8 +5830,8 @@ Verzija korijenskih certifikata: %2</translation>
         <translation>Način FAST dijeli približno 2 GiB RandomX memorije s provjerom valjanosti. Više dretvi troši više CPU resursa i električne energije; ostavite kapacitet za čvor. Inicijalizacija skupa podataka može potrajati.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Rudarite blokove testne mreže CPU-om koristeći RandomX. Rudarenje je isključeno dok ga ne pokrenete. Rudar dijele svi novčanici ovog čvora i nastavlja raditi pri promjeni kartice ili zatvaranju novčanika.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Rudarenje je isključeno dok ga ne pokrenete. Rudar dijele svi novčanici ovog čvora i nastavlja raditi pri promjeni kartice ili zatvaranju novčanika.</translation>
     </message>
     <message>
         <source>Mining</source>

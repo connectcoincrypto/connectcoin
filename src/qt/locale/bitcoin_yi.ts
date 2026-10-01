@@ -4258,8 +4258,8 @@ Root certificates version: %2</source>
         <translation>דער FAST־מאָדוס טיילט בערך 2 GiB RandomX־זכּרון מיט דער באַשטעטיקונג. מער פֿעדעם נוצן מער CPU און עלעקטריע; לאָזט קאַפּאַציטעט פֿאַרן קנופּ. דאָס צוגרייטן דעם דאַטן־זאַמלונג קען געדויערן אַ ווײַלע.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>מיינט בלאָקן אין דער פּרוביר־נעץ מיט אײַער CPU דורך RandomX. מיינינג איז אויסגעלאָשן ביז איר הייבט עס אָן. אַלע בײַטלעך אין דעם קנופּ טיילן דעם מיינער, און ער אַרבעט ווײַטער ווען איר בײַט טאַבס אָדער פֿאַרמאַכט אַ בייַטל.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>מיינינג איז אויסגעלאָשן ביז איר הייבט עס אָן. אַלע בײַטלעך אין דעם קנופּ טיילן דעם מיינער, און ער אַרבעט ווײַטער ווען איר בײַט טאַבס אָדער פֿאַרמאַכט אַ בייַטל.</translation>
     </message>
     <message>
         <source>Mining</source>

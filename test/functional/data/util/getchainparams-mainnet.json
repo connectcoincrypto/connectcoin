@@ -1,7 +1,7 @@
 {
   "chain": "main",
   "test_chain": false,
-  "genesis": "0000000000000000000000000000000000000000000000000000000000000000",
+  "genesis": "30a3a7543f593b6343873a16aeb61005dce0fe3f4169ab34039316b2a9bb373e",
   "subsidy_halving_interval": 3000000,
   "pow": {
     "algorithm": "randomx-v2",

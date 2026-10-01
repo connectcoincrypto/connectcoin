@@ -5826,8 +5826,8 @@ Verżjoni taċ-ċertifikati għerq: %2</translation>
         <translation>Il-modalità FAST taqsam madwar 2 GiB ta’ memorja RandomX mal-validazzjoni. Aktar threads jużaw aktar CPU u elettriku; ħalli kapaċità għan-nodu. It-tħejjija tas-sett tad-data tista’ tieħu ftit ħin.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Ħaffer blokki tan-netwerk tat-test bis-CPU tiegħek billi tuża RandomX. It-tħaffir ikun mitfi sakemm tibdieh. Il-programm tat-tħaffir jinqasam bejn il-kartieri kollha f’dan in-nodu u jkompli meta tibdel it-tabs jew tagħlaq kartiera.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>It-tħaffir ikun mitfi sakemm tibdieh. Il-programm tat-tħaffir jinqasam bejn il-kartieri kollha f’dan in-nodu u jkompli meta tibdel it-tabs jew tagħlaq kartiera.</translation>
     </message>
     <message>
         <source>Mining</source>

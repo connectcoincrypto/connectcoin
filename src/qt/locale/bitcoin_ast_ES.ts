@@ -3938,8 +3938,8 @@ Versión de los certificaos raíz: %2</translation>
         <translation>El mou FAST comparte unos 2 GiB de memoria RandomX cola validación. Más filos consumen más CPU y enerxía; dexa capacidá pal nodu. Aniciar el conxuntu de datos pue tardar.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Mina bloques de la rede de pruebes cola CPU usando RandomX. La minería ta desactivada hasta que l’anicies. Toles carteres d’esti nodu comparten el mineru, que sigue al cambiar de llingüeta o zarrar una cartera.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>La minería ta desactivada hasta que l’anicies. Toles carteres d’esti nodu comparten el mineru, que sigue al cambiar de llingüeta o zarrar una cartera.</translation>
     </message>
     <message>
         <source>Mining</source>

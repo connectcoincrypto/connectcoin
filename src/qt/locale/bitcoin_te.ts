@@ -5808,8 +5808,8 @@ Root certificates version: %2</source>
         <translation>FAST మోడ్ సుమారు 2 GiB RandomX మెమరీని ధృవీకరణతో పంచుకుంటుంది. ఎక్కువ థ్రెడ్‌లు ఎక్కువ CPU సామర్థ్యాన్ని, విద్యుత్తును ఉపయోగిస్తాయి; నోడ్ కోసం కొంత సామర్థ్యాన్ని మిగల్చండి. డేటాసెట్‌ను సిద్ధం చేయడానికి కొంత సమయం పట్టవచ్చు.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX ఉపయోగించి మీ CPUతో టెస్ట్‌నెట్ బ్లాక్‌లను మైన్ చేయండి. మీరు ప్రారంభించే వరకు మైనింగ్ ఆఫ్‌లో ఉంటుంది. ఈ నోడ్‌లోని అన్ని వాలెట్లు మైనర్‌ను పంచుకుంటాయి; ట్యాబ్‌లు మార్చినా లేదా వాలెట్‌ను మూసినా అది కొనసాగుతుంది.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>మీరు ప్రారంభించే వరకు మైనింగ్ ఆఫ్‌లో ఉంటుంది. ఈ నోడ్‌లోని అన్ని వాలెట్లు మైనర్‌ను పంచుకుంటాయి; ట్యాబ్‌లు మార్చినా లేదా వాలెట్‌ను మూసినా అది కొనసాగుతుంది.</translation>
     </message>
     <message>
         <source>Mining</source>

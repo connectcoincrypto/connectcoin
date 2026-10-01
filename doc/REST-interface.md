@@ -3,9 +3,9 @@ Unauthenticated REST Interface
 
 The REST API can be enabled with the `-rest` option.
 
-The interface runs on the same port as the JSON-RPC interface: 48178 for the
-default testnet4 beta, 48175 for testnet3, 48181 for signet, and 48184 for
-regtest. Mainnet is unavailable; its reserved RPC port is 48172.
+The interface runs on the same port as the JSON-RPC interface: 48172 for the
+default mainnet, 48175 for testnet3, 48178 for testnet4, 48181 for signet, and
+48184 for regtest.
 
 REST Interface consistency guarantees
 -------------------------------------

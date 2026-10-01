@@ -183,7 +183,7 @@ BASE_SCRIPTS = [
     'p2p_feefilter.py',
     'p2p_sendheaders.py',
     'feature_config_args.py',
-    'feature_mainnet_disabled.py',
+    'feature_mainnet_launch.py',
     'wallet_listtransactions.py',
     # vv Tests less than 30s vv
     'wallet_deprecated_rbf.py',
@@ -317,6 +317,7 @@ BASE_SCRIPTS = [
     'rpc_generate.py',
     'rpc_cpu_mining.py',
     'rpc_cpu_mining.py --testnet4',
+    'rpc_cpu_mining.py --mainnet',
     'wallet_balance.py',
     'p2p_initial_headers_sync.py',
     'p2p_addr_selfannouncement.py',

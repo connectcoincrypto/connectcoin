@@ -5290,8 +5290,8 @@ Versi sijil akar: %2</translation>
         <translation>Mod FAST berkongsi kira-kira 2 GiB memori RandomX dengan pengesahan. Lebih banyak bebenang menggunakan lebih banyak CPU dan kuasa; tinggalkan kapasiti untuk nod. Penyediaan set data mungkin mengambil sedikit masa.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Lombong blok rangkaian ujian dengan CPU anda menggunakan RandomX. Perlombongan dimatikan sehingga anda memulakannya. Pelombong dikongsi oleh semua dompet dalam nod ini dan terus berjalan apabila anda menukar tab atau menutup dompet.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Perlombongan dimatikan sehingga anda memulakannya. Pelombong dikongsi oleh semua dompet dalam nod ini dan terus berjalan apabila anda menukar tab atau menutup dompet.</translation>
     </message>
     <message>
         <source>Mining</source>

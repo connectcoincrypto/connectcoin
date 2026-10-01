@@ -5999,8 +5999,8 @@ Versão dos certificados raiz: %2</translation>
         <translation>Opcional: vazio usa esta carteira</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Minere blocos de teste com sua CPU usando RandomX. A mineração fica desligada até você iniciá-la. O minerador é compartilhado por todas as carteiras deste nó e continua ao trocar de aba ou fechar uma carteira.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>A mineração fica desligada até você iniciá-la. O minerador é compartilhado por todas as carteiras deste nó e continua ao trocar de aba ou fechar uma carteira.</translation>
     </message>
     <message>
         <source>FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while.</source>

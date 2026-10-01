@@ -5891,8 +5891,8 @@ Ildiz sertifikatlar versiyasi: %2</translation>
         <translation>FAST rejimi tekshirish bilan taxminan 2 GiB RandomX xotirasini baham ko‘radi. Ko‘proq oqim ko‘proq CPU resurslari va elektr sarflaydi; tugun uchun ham quvvat qoldiring. Ma’lumotlar to‘plamini tayyorlash biroz vaqt olishi mumkin.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX yordamida CPU bilan sinov tarmog‘i bloklarini qazib oling. Siz ishga tushirguningizcha mayning o‘chirilgan bo‘ladi. Ushbu tugundagi barcha hamyonlar bitta maynerdan foydalanadi va u varaqlarni almashtirganingizda yoki hamyonni yopganingizda ham ishlashda davom etadi.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Siz ishga tushirguningizcha mayning o‘chirilgan bo‘ladi. Ushbu tugundagi barcha hamyonlar bitta maynerdan foydalanadi va u varaqlarni almashtirganingizda yoki hamyonni yopganingizda ham ishlashda davom etadi.</translation>
     </message>
     <message>
         <source>Mining</source>

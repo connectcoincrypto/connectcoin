@@ -5867,8 +5867,8 @@ Root certificates version: %2</source>
         <translation>FAST وضع توثیق کے ساتھ تقریباً 2 GiB RandomX میموری بانٹتی ہے۔ زیادہ تھریڈز زیادہ CPU اور بجلی استعمال کرتے ہیں؛ نوڈ کے لیے گنجائش چھوڑیں۔ ڈیٹا سیٹ تیار کرنے میں کچھ وقت لگ سکتا ہے۔</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX استعمال کرکے اپنے CPU سے ٹیسٹ نیٹ کے بلاکس مائن کریں۔ آپ کے شروع کرنے تک مائننگ بند رہتی ہے۔ اس نوڈ کے تمام بٹوے ایک ہی مائنر استعمال کرتے ہیں، اور ٹیب بدلنے یا بٹوہ بند کرنے پر بھی یہ جاری رہتا ہے۔</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>آپ کے شروع کرنے تک مائننگ بند رہتی ہے۔ اس نوڈ کے تمام بٹوے ایک ہی مائنر استعمال کرتے ہیں، اور ٹیب بدلنے یا بٹوہ بند کرنے پر بھی یہ جاری رہتا ہے۔</translation>
     </message>
     <message>
         <source>Mining</source>

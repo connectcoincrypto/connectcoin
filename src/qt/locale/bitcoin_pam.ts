@@ -5427,8 +5427,8 @@ Bersyun da reng root certificate: %2</translation>
         <translation>Ing FAST mode makiyabe yang malapit king 2 GiB a RandomX memory king pamagpatunay. Mas dakal a thread, mas dakal a CPU at kuryenti ing gagamitan; magtira kapasidad para king node. Malyari yang lumambat ing pamagsadia king dataset.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Magmina kareng testnet block gamit ing kekang CPU at RandomX. Makapatay ya ing pamimina anggang e me sisimulan. Ing miner makiyabe ya kareng ngan a pitaka king node a ini at magtuluy ya nung magalili kang tab o magsara kang pitaka.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Makapatay ya ing pamimina anggang e me sisimulan. Ing miner makiyabe ya kareng ngan a pitaka king node a ini at magtuluy ya nung magalili kang tab o magsara kang pitaka.</translation>
     </message>
     <message>
         <source>Mining</source>

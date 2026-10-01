@@ -5977,8 +5977,8 @@ Root certificates version: %2</source>
         <translation>FAST 모드는 약 2 GiB의 RandomX 메모리를 검증 작업과 공유합니다. 스레드가 많을수록 CPU 자원과 전력을 더 사용하므로 노드를 위한 여유 자원을 남겨 두세요. 데이터 세트 초기화에는 시간이 걸릴 수 있습니다.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX를 사용하여 CPU로 테스트넷 블록을 채굴합니다. 직접 시작하기 전까지 채굴은 꺼져 있습니다. 이 노드의 모든 지갑이 채굴기를 공유하며, 탭을 바꾸거나 지갑을 닫아도 채굴은 계속됩니다.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>직접 시작하기 전까지 채굴은 꺼져 있습니다. 이 노드의 모든 지갑이 채굴기를 공유하며, 탭을 바꾸거나 지갑을 닫아도 채굴은 계속됩니다.</translation>
     </message>
     <message>
         <source>Mining</source>

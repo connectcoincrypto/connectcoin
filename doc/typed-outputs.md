@@ -102,9 +102,11 @@ that prefix and append pool names or extra nonces after it.
 
 ## Migration boundaries
 
-- Test-network genesis blocks use the typed wire format. Mainnet has no launch
-  genesis and cannot start; its retired development genesis is test-only.
-  See [testnet-beta.md](testnet-beta.md).
+- Mainnet and test-network genesis blocks use the typed wire format. Mainnet's
+  launch coinbase has two type-1 outputs of `5,000,000 CONN` each under distinct
+  MuSig aggregate keys; its retired development genesis remains test-only.
+  Historical development chains and testnet balances do not migrate into the
+  launch chain. See [testnet-beta.md](testnet-beta.md).
 - Pre-typed transactions, blocks, undo data, and UTXO databases are invalid.
 - `assumeutxo` snapshots are disabled until fresh typed-output commitments are
   generated from finalized chains.

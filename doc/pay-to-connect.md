@@ -200,7 +200,9 @@ Testnet3, testnet4, signet and regtest have new genesis blocks and P2P message
 starts. The change is active from their genesis, not a height-based reinterpretation
 of the old chains. There is no conversion of old balances or automatic migration
 of old block databases. Preserve wallets and backups, and use a fresh chain data
-directory. All peer/seed nodes must update together. Mainnet remains unlaunched.
+directory. All peer/seed nodes on each reset network must update together.
+The separate mainnet launch chain also uses this output layout from genesis;
+the test-chain reset does not migrate balances or databases into mainnet.
 See [testnet-beta.md](testnet-beta.md) for reset identifiers and operator steps.
 
 ## RPC and command-line workflow

@@ -5955,8 +5955,8 @@ Versiunea certificatelor rădăcină: %2</translation>
         <translation>Modul FAST partajează aproximativ 2 GiB de memorie RandomX cu validarea. Mai multe fire consumă mai multe resurse CPU și energie; păstrați capacitate disponibilă pentru nod. Inițializarea setului de date poate dura un timp.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Minați blocuri în rețeaua de test cu CPU-ul folosind RandomX. Mineritul este oprit până când îl porniți. Minerul este partajat de toate portofelele din acest nod și continuă când schimbați filele sau închideți un portofel.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Mineritul este oprit până când îl porniți. Minerul este partajat de toate portofelele din acest nod și continuă când schimbați filele sau închideți un portofel.</translation>
     </message>
     <message>
         <source>Mining</source>

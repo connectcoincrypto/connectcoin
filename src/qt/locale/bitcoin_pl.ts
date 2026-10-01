@@ -6006,8 +6006,8 @@ Wersja certyfikatów głównych: %2</translation>
         <translation>Tryb FAST współdzieli z walidacją około 2 GiB pamięci RandomX. Więcej wątków zużywa więcej zasobów CPU i energii; pozostaw zapas dla węzła. Inicjalizacja zbioru danych może chwilę potrwać.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Wydobywaj bloki sieci testowej przy użyciu CPU i RandomX. Wydobywanie jest wyłączone do chwili uruchomienia. Koparka jest współdzielona przez wszystkie portfele w tym węźle i działa dalej po zmianie karty lub zamknięciu portfela.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Wydobywanie jest wyłączone do chwili uruchomienia. Koparka jest współdzielona przez wszystkie portfele w tym węźle i działa dalej po zmianie karty lub zamknięciu portfela.</translation>
     </message>
     <message>
         <source>Mining</source>

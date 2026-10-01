@@ -5377,8 +5377,8 @@ Root certificates version: %2</source>
         <translation>FAST режимі тексерумен шамамен 2 GiB RandomX жадын ортақ пайдаланады. Ағындар көбейген сайын CPU ресурстары мен электр қуаты көбірек жұмсалады; түйінге бос қуат қалдырыңыз. Деректер жиынын бастапқы дайындау біраз уақыт алуы мүмкін.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX арқылы CPU көмегімен сынақ желісінің блоктарын өндіріңіз. Майнинг оны іске қосқанға дейін өшірулі болады. Осы түйіннің барлық әмияны бір майнерді ортақ пайдаланады, ол қойындыны ауыстырғанда немесе әмиянды жапқанда жұмысын жалғастырады.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Майнинг оны іске қосқанға дейін өшірулі болады. Осы түйіннің барлық әмияны бір майнерді ортақ пайдаланады, ол қойындыны ауыстырғанда немесе әмиянды жапқанда жұмысын жалғастырады.</translation>
     </message>
     <message>
         <source>Mining</source>

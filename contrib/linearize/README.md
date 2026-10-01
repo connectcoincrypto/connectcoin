@@ -13,13 +13,14 @@ running either script.
 Required configuration file settings for linearize-hashes:
 * RPC: `datadir` (Required if `rpcuser` and `rpcpassword` are not specified).
   This must be the directory containing `.cookie`, such as
-  `~/.connectcoin/testnet4`, not the base data directory passed to `connectcoind`.
+  `~/.connectcoin` for mainnet or `~/.connectcoin/testnet4` for testnet4. For test
+  networks this differs from the base data directory passed to `connectcoind`.
 * RPC: `rpcuser`, `rpcpassword` (Required if `datadir` is not specified)
 
 Optional config file setting for linearize-hashes:
 * RPC: `host`  (Default: `127.0.0.1`)
-* RPC: `port` (Default: `48178`, the current Testnet4 beta RPC port; set it
-  explicitly for other networks.)
+* RPC: `port` (Default: `48178`, the Testnet4 RPC port; set it
+  explicitly to `48172` for mainnet or the selected network's RPC port.)
 * Blockchain: `min_height`, `max_height` (inclusive; defaults: `0`, `313000`).
   Set `max_height` to a height available on the selected node; the script does
   not automatically discover the tip. Use `min_height=0` for the two-step
@@ -31,7 +32,9 @@ standalone hash lists but safe to use with linearize-data.py, which will output
 the same data no matter which byte format is chosen.
 
 The `linearize-hashes` script requires a connection, local or remote, to a
-JSON-RPC server. Running `connectcoind` or `connectcoin-qt -server` will be sufficient.
+JSON-RPC server. Run `connectcoind` or `connectcoin-qt -server` with the same
+network and RPC port selected in the script configuration. The example config
+uses testnet4, so start that node with explicit `-testnet4`.
 
 ## Step 2: Copy local block data
 

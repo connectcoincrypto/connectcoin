@@ -760,7 +760,7 @@ and its `cs_KeyStore` lock for example).
     : Manages automatic port mappings using PCP, with NAT-PMP fallback for IPv4.
 
   - [ThreadSocketHandler (`b-net`)](https://doxygen.bitcoincore.org/class_c_connman.html#net)
-    : Sends/receives data from ConnectCoin peers on the configured P2P port (48179 by default on Testnet4).
+    : Sends/receives data from ConnectCoin peers on the configured P2P port (48173 by default on mainnet).
 
   - [ThreadOpenAddedConnections (`b-addcon`)](https://doxygen.bitcoincore.org/class_c_connman.html#addcon)
     : Opens network connections to added nodes.

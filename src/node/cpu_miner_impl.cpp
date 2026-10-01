@@ -59,8 +59,8 @@ void CpuMiner::Start(const std::string& address, int threads)
         throw std::runtime_error("Node is not available for mining");
     }
     const auto chain{m_node.chainman->GetParams().GetChainType()};
-    if (chain != ChainType::TESTNET4 && chain != ChainType::REGTEST) {
-        throw std::invalid_argument("CPU mining is supported on testnet4 and regtest only");
+    if (chain != ChainType::MAIN && chain != ChainType::TESTNET4 && chain != ChainType::REGTEST) {
+        throw std::invalid_argument("CPU mining is supported on mainnet, testnet4 and regtest only");
     }
     std::lock_guard lock{m_mutex};
     if (threads < 1 || threads > m_status.max_threads) {
@@ -118,7 +118,7 @@ void CpuMiner::Run(CScript payout, int threads)
         auto& mining{*m_node.mining};
         const auto& consensus{chainman.GetConsensus()};
         while (!m_stop && !chainman.m_interrupt) {
-            // Bootstrap testnet without peers is intentional. Never mine on a
+            // Bootstrap a fresh chain without peers is intentional. Never mine on a
             // known-behind tip while blocks are being downloaded/imported.
             bool behind{false};
             {

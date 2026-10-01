@@ -5755,8 +5755,8 @@ Root certificates version: %2</source>
         <translation>FAST മോഡ് ഏകദേശം 2 GiB RandomX മെമ്മറി സാധൂകരണവുമായി പങ്കിടുന്നു. കൂടുതൽ ത്രെഡുകൾ കൂടുതൽ CPU ശേഷിയും വൈദ്യുതിയും ഉപയോഗിക്കുന്നു; നോഡിനായി ശേഷി ബാക്കി വയ്ക്കുക. ഡാറ്റാസെറ്റ് തയ്യാറാക്കാൻ കുറച്ച് സമയമെടുക്കാം.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX ഉപയോഗിച്ച് നിങ്ങളുടെ CPU-യിൽ ടെസ്റ്റ്നെറ്റ് ബ്ലോക്കുകൾ മൈൻ ചെയ്യുക. നിങ്ങൾ ആരംഭിക്കുന്നതുവരെ മൈനിങ് ഓഫായിരിക്കും. ഈ നോഡിലെ എല്ലാ വാലറ്റുകളും ഒരേ മൈനർ പങ്കിടുന്നു; ടാബുകൾ മാറ്റുമ്പോഴോ വാലറ്റ് അടയ്ക്കുമ്പോഴോ ഇത് തുടരും.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>നിങ്ങൾ ആരംഭിക്കുന്നതുവരെ മൈനിങ് ഓഫായിരിക്കും. ഈ നോഡിലെ എല്ലാ വാലറ്റുകളും ഒരേ മൈനർ പങ്കിടുന്നു; ടാബുകൾ മാറ്റുമ്പോഴോ വാലറ്റ് അടയ്ക്കുമ്പോഴോ ഇത് തുടരും.</translation>
     </message>
     <message>
         <source>Mining</source>

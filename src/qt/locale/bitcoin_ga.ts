@@ -6012,8 +6012,8 @@ Leagan na mbunteastas: %2</translation>
         <translation>Roinneann mód FAST thart ar 2 GiB de chuimhne RandomX leis an mbailíochtú. Úsáideann níos mó snáitheanna níos mó acmhainní CPU agus leictreachais; fág acmhainn don nód. D’fhéadfadh tamall a bheith ag teastáil chun an tacar sonraí a thúsú.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Déan mianadóireacht ar bhloic an líonra tástála le do CPU ag úsáid RandomX. Tá an mhianadóireacht múchta go dtí go dtosaíonn tú í. Roinneann gach sparán sa nód seo an mianadóir céanna agus leanann sé ar aghaidh nuair a athraíonn tú cluaisíní nó a dhúnann tú sparán.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Tá an mhianadóireacht múchta go dtí go dtosaíonn tú í. Roinneann gach sparán sa nód seo an mianadóir céanna agus leanann sé ar aghaidh nuair a athraíonn tú cluaisíní nó a dhúnann tú sparán.</translation>
     </message>
     <message>
         <source>Mining</source>

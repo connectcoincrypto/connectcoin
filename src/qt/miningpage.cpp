@@ -26,7 +26,7 @@ MiningPage::MiningPage(WalletModel* wallet_model, QWidget* parent)
     : QWidget{parent}, m_wallet{wallet_model}
 {
     auto* layout = new QVBoxLayout(this);
-    auto* description = new QLabel(tr("Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet."), this);
+    auto* description = new QLabel(tr("Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet."), this);
     description->setWordWrap(true);
     layout->addWidget(description);
     auto* resources = new QLabel(tr("FAST mode shares roughly 2 GiB of RandomX memory with validation. More threads use more CPU and power; leave capacity for the node. Initializing the dataset can take a while."), this);

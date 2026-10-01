@@ -27,7 +27,7 @@ if [ -n "$DPKG_ADD_ARCH" ]; then
 fi
 
 if [ -n "${APT_LLVM_V}" ]; then
-  ${CI_RETRY_EXE} apt-get update
+  ${CI_RETRY_EXE} apt-get -o APT::Update::Error-Mode=any update
   ${CI_RETRY_EXE} apt-get install curl -y
   ${CI_RETRY_EXE} curl --fail --location --connect-timeout 20 --max-time 90 \
     --output "/etc/apt/trusted.gpg.d/apt.llvm.org.asc" "https://apt.llvm.org/llvm-snapshot.gpg.key"
@@ -46,7 +46,9 @@ elif [ "$CI_OS_NAME" != "macos" ]; then
   if [[ -n "${APPEND_APT_SOURCES_LIST}" ]]; then
     echo "${APPEND_APT_SOURCES_LIST}" >> /etc/apt/sources.list
   fi
-  ${CI_RETRY_EXE} apt-get update
+  # Partial index downloads otherwise succeed, silently falling back to an
+  # older distro compiler when the LLVM repository is temporarily unavailable.
+  ${CI_RETRY_EXE} apt-get -o APT::Update::Error-Mode=any update
   # shellcheck disable=SC2086
   ${CI_RETRY_EXE} apt-get install --no-install-recommends --no-upgrade -y $PACKAGES $CI_BASE_PACKAGES
 fi

@@ -298,9 +298,9 @@ BOOST_AUTO_TEST_CASE(GetBlockProofEquivalentTime_test)
     }
 }
 
-void sanity_check_chainparams(const ArgsManager& args, ChainType chain_type)
+void sanity_check_chainparams(const ArgsManager& args, ChainType chain_type, bool retired_test_fixture = false)
 {
-    const auto chainParams = CreateChainParamsForTest(args, chain_type);
+    const auto chainParams = retired_test_fixture ? CreateChainParamsForTest(args, chain_type) : CreateChainParams(args, chain_type);
     const auto consensus = chainParams->GetConsensus();
 
     // hash genesis is correct
@@ -363,12 +363,28 @@ void sanity_check_chainparams(const ArgsManager& args, ChainType chain_type)
 
 BOOST_AUTO_TEST_CASE(ChainParams_MAIN_sanity)
 {
-    const auto unlaunched{CreateChainParams(*m_node.args, ChainType::MAIN)};
-    BOOST_CHECK(!unlaunched->HasGenesisBlock());
-    BOOST_CHECK(unlaunched->GetConsensus().hashGenesisBlock.IsNull());
-    BOOST_CHECK_THROW(unlaunched->GenesisBlock(), std::bad_optional_access);
-    // The same mainnet rules remain exercised with the test-only block.
+    const auto launched{CreateChainParams(*m_node.args, ChainType::MAIN)};
+    BOOST_REQUIRE(launched->HasGenesisBlock());
+    BOOST_CHECK(!launched->GetConsensus().hashGenesisBlock.IsNull());
+    BOOST_CHECK_EQUAL(launched->GetConsensus().hashGenesisBlock,
+                      uint256{"30a3a7543f593b6343873a16aeb61005dce0fe3f4169ab34039316b2a9bb373e"});
+    BOOST_CHECK_EQUAL(launched->GenesisBlock().hashMerkleRoot,
+                      uint256{"2ff1604a1a6ed04110972a78c808d7b967f8f3d6ee754fcf33bded563edc2c8c"});
+    BOOST_CHECK_EQUAL(launched->GenesisBlock().nTime, 1790872995U);
+    BOOST_CHECK_EQUAL(launched->GenesisBlock().nNonce, 215364U);
+    BOOST_CHECK_EQUAL(launched->GenesisBlock().nBits, 0x1e333300U);
+    arith_uint256 original_target, launch_target;
+    original_target.SetCompact(0x1f00ffff);
+    launch_target.SetCompact(launched->GenesisBlock().nBits);
+    BOOST_CHECK(original_target / 5 == launch_target);
     sanity_check_chainparams(*m_node.args, ChainType::MAIN);
+}
+
+BOOST_AUTO_TEST_CASE(ChainParams_MAIN_retired_fixture_sanity)
+{
+    // Preserve the historical proof-of-work vector without making it a
+    // production network option or substituting it in launch-genesis tests.
+    sanity_check_chainparams(*m_node.args, ChainType::MAIN, /*retired_test_fixture=*/true);
 }
 
 BOOST_AUTO_TEST_CASE(ChainParams_REGTEST_sanity)

@@ -5991,8 +5991,8 @@ Erroko ziurtagirien bertsioa: %2</translation>
         <translation>FAST moduak 2 GiB inguruko RandomX memoria partekatzen du baliozkotzearekin. Hari gehiagok CPU baliabide eta elektrizitate gehiago erabiltzen dute; utzi ahalmena nodoarentzat. Datu-multzoa hasieratzeko denbora behar izan daiteke.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Egin proba-sareko blokeen meatzaritza CPUarekin RandomX erabiliz. Meatzaritza itzalita dago abiarazi arte. Nodo honetako diru-zorro guztiek meatzari bera partekatzen dute, eta hark lanean jarraitzen du fitxaz aldatzean edo diru-zorro bat ixtean.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Meatzaritza itzalita dago abiarazi arte. Nodo honetako diru-zorro guztiek meatzari bera partekatzen dute, eta hark lanean jarraitzen du fitxaz aldatzean edo diru-zorro bat ixtean.</translation>
     </message>
     <message>
         <source>Mining</source>

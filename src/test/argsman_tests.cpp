@@ -738,10 +738,10 @@ BOOST_AUTO_TEST_CASE(util_GetChainTypeString)
     std::string error;
 
     BOOST_CHECK(test_args.ParseParameters(0, argv_testnet4, error));
-    BOOST_CHECK_EQUAL(test_args.GetChainTypeString(), "testnet4");
+    BOOST_CHECK_EQUAL(test_args.GetChainTypeString(), "main");
 
     BOOST_CHECK(test_args.ParseParameters(0, argv_testnet4, error));
-    BOOST_CHECK_EQUAL(test_args.GetChainTypeString(), "testnet4");
+    BOOST_CHECK_EQUAL(test_args.GetChainTypeString(), "main");
 
     BOOST_CHECK(test_args.ParseParameters(2, argv_testnet4, error));
     BOOST_CHECK_EQUAL(test_args.GetChainTypeString(), "testnet4");
@@ -800,16 +800,16 @@ BOOST_AUTO_TEST_CASE(util_GetChainTypeString)
     BOOST_CHECK_THROW(test_args.GetChainTypeString(), std::runtime_error);
 }
 
-BOOST_AUTO_TEST_CASE(beta_default_network_overrides)
+BOOST_AUTO_TEST_CASE(mainnet_default_network_overrides)
 {
     const struct {
         std::vector<const char*> argv;
         const char* config;
         const char* expected;
     } cases[]{
-        {{"cmd"}, "", "testnet4"},
-        {{"cmd", "-testnet4=0"}, "", "testnet4"},
-        {{"cmd", "-notestnet4"}, "", "testnet4"},
+        {{"cmd"}, "", "main"},
+        {{"cmd", "-testnet4=0"}, "", "main"},
+        {{"cmd", "-notestnet4"}, "", "main"},
         {{"cmd", "-regtest"}, "", "regtest"},
         {{"cmd", "-signet"}, "", "signet"},
         {{"cmd", "-testnet"}, "", "test"},
@@ -819,7 +819,7 @@ BOOST_AUTO_TEST_CASE(beta_default_network_overrides)
         {{"cmd"}, "chain=main\n", "main"},
         {{"cmd"}, "regtest=1\n", "regtest"},
         {{"cmd"}, "signet=1\n", "signet"},
-        {{"cmd"}, "[testnet4]\nregtest=1\n", "testnet4"},
+        {{"cmd"}, "[testnet4]\nregtest=1\n", "main"},
         {{"cmd", "-chain=regtest"}, "chain=main\n", "regtest"},
         {{"cmd", "-regtest", "-testnet4=0"}, "testnet4=1\n", "regtest"},
         {{"cmd", "-regtest"}, "testnet4=1\n", nullptr},
@@ -1139,7 +1139,7 @@ BOOST_FIXTURE_TEST_CASE(util_ChainMerge, ChainMergeTestingSetup)
     // Results file is formatted like:
     //
     //   <input> || <output>
-    BOOST_CHECK_EQUAL(out_sha_hex, "aee05bccc003c160a7f3eeabac14403b020280d3441d843a19b39ee158706c77");
+    BOOST_CHECK_EQUAL(out_sha_hex, "c0e33aab0c74e040ddcee9edad59e8148d8e1cacb3cccd9ea1a1f485cb6bad21");
 }
 
 BOOST_AUTO_TEST_CASE(util_ReadWriteSettings)

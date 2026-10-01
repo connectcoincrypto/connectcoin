@@ -5673,8 +5673,8 @@ Versi sertifikat akar: %2</translation>
         <translation>Mode FAST berbagi sekitar 2 GiB memori RandomX dengan validasi. Lebih banyak thread memakai lebih banyak sumber daya CPU dan listrik; sisakan kapasitas untuk node. Inisialisasi kumpulan data dapat memakan waktu.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Tambang blok jaringan uji dengan CPU Anda menggunakan RandomX. Penambangan dinonaktifkan hingga Anda memulainya. Penambang digunakan bersama oleh semua dompet di node ini dan tetap berjalan saat Anda berganti tab atau menutup dompet.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Penambangan dinonaktifkan hingga Anda memulainya. Penambang digunakan bersama oleh semua dompet di node ini dan tetap berjalan saat Anda berganti tab atau menutup dompet.</translation>
     </message>
     <message>
         <source>Mining</source>

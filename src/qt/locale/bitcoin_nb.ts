@@ -5927,8 +5927,8 @@ Rotsertifikatversjon: %2</translation>
         <translation>FAST-modus deler omtrent 2 GiB RandomX-minne med valideringen. Flere tråder bruker mer CPU og strøm; la det være kapasitet igjen til noden. Det kan ta litt tid å initialisere datasettet.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Utvinn blokker på testnettet med CPU-en din ved hjelp av RandomX. Utvinning er avslått til du starter den. Utvinneren deles av alle lommebøkene i denne noden og fortsetter når du bytter fane eller lukker en lommebok.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Utvinning er avslått til du starter den. Utvinneren deles av alle lommebøkene i denne noden og fortsetter når du bytter fane eller lukker en lommebok.</translation>
     </message>
     <message>
         <source>Mining</source>

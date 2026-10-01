@@ -5925,8 +5925,8 @@ Rotcertifikatsversion: %2</translation>
         <translation>FAST-läget delar ungefär 2 GiB RandomX-minne med valideringen. Fler trådar använder mer CPU och ström; lämna kapacitet åt noden. Det kan ta en stund att initiera datamängden.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Utvinn testnätsblock med din CPU med hjälp av RandomX. Utvinningen är avstängd tills du startar den. Utvinnaren delas av alla plånböcker i den här noden och fortsätter när du byter flik eller stänger en plånbok.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Utvinningen är avstängd tills du startar den. Utvinnaren delas av alla plånböcker i den här noden och fortsätter när du byter flik eller stänger en plånbok.</translation>
     </message>
     <message>
         <source>Mining</source>

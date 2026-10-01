@@ -15,11 +15,15 @@ outputs. Type `1` is a single 32-byte x-only public key authorized by one 64-byt
 BIP340 Schnorr signature. Type `2` is PAY_TO_CONNECT for a canonical DNS domain
 and is spent with a bounded, independently verified TLS 1.3 connection proof.
 
-Mainnet has **not** been launched. The beta defaults to `testnet4` without
-requiring a configuration file or network flag. Use `-regtest` for local testing;
-explicit mainnet startup is deliberately rejected. Test coins do not become
-mainnet coins. See [doc/testnet-beta.md](doc/testnet-beta.md) for network setup
-and compatibility notes.
+The node and command-line tools default to **mainnet** without requiring a
+configuration file or network flag. Select `-testnet4` for public testing or
+`-regtest` for local testing. Existing testnet users must keep selecting
+`-testnet4`; test coins do not become mainnet coins. See
+[doc/testnet-beta.md](doc/testnet-beta.md) for test-network compatibility notes.
+
+For the launch chain, use a fresh data directory if the mainnet location already
+contains historical development data. Preserve the old directory and wallets;
+`-reindex` is not a migration between genesis blocks.
 
 The codebase retains Bitcoin Core copyright notices and upstream attribution.
 
@@ -190,7 +194,8 @@ Getting started
 
 ### First launch
 
-1. The beta defaults to **ConnectCoin testnet4**, not Bitcoin's testnet. Let the
+1. The node defaults to **ConnectCoin mainnet**. Select `-testnet4` explicitly
+   to continue using the test network. Let the
    node connect to peers and synchronize before relying on the displayed balance.
 2. A wallet is **not created automatically**. Choose **File > Create Wallet**
    or the **Create a new wallet** button. Use **File > Open Wallet** to open an
@@ -198,7 +203,7 @@ Getting started
 3. **Automatic Claims** is the default wallet page, but HTTPS claiming remains
    disabled until you start it. Choose **P2C** to fund a bounty or **Send** for a
    standard public-key payment. See the [P2C wallet guide](doc/p2c-wallet.md).
-4. **Mining** enables the optional solo CPU miner on testnet4 or regtest. Both
+4. **Mining** enables the optional solo CPU miner on mainnet, testnet4 or regtest. Both
    mining and Automatic Claims are opt-in and start disabled after a restart.
    See [CPU mining](doc/cpu-mining.md) for controls and resource requirements.
 
@@ -236,8 +241,10 @@ The daemon enables RPC by default; to use the CLI with the Qt wallet instead,
 start Qt with `-server`. Use matching network and custom `-datadir` options for
 the node and CLI.
 
-Testnet4 uses TCP **48179** for P2P and **48178** for RPC. Keep RPC private; it
-does not need to be exposed for ordinary wallet use. See the
+Mainnet uses TCP **48173** for P2P and **48172** for RPC. Testnet4 uses **48179**
+for P2P and **48178** for RPC. Keep RPC private; it does not need to be exposed
+for ordinary wallet use. Mainnet currently requires a known peer configured
+with `-addnode=<host>:48173`; its DNS and fixed seed lists are empty. See the
 [testnet networking guide](doc/testnet-beta.md#testnet4-bootstrap-dns) for peer
 discovery and public-node setup.
 
@@ -245,13 +252,17 @@ Wallet data and backups
 ----------------------
 
 The source checkout and build directory are **not your wallet data directory**.
-Unless you choose a custom location, beta data is stored here:
+Unless you choose a custom location, mainnet data is stored here:
 
-| Platform | Default testnet4 data directory |
+| Platform | Default mainnet data directory |
 | --- | --- |
-| Linux / BSD | `$HOME/.connectcoin/testnet4/` |
-| macOS | `$HOME/Library/Application Support/ConnectCoin/testnet4/` |
-| Windows | `%LOCALAPPDATA%\ConnectCoin\testnet4\` |
+| Linux / BSD | `$HOME/.connectcoin/` |
+| macOS | `$HOME/Library/Application Support/ConnectCoin/` |
+| Windows | `%LOCALAPPDATA%\ConnectCoin\` |
+
+Selecting `-testnet4` uses the `testnet4` subdirectory, preserving separation
+from mainnet. Existing configuration files can explicitly select a network;
+use the same network and data-directory options for the node and its tools.
 
 Named wallets normally live in `wallets/<wallet-name>/wallet.dat` within that
 network directory. Use **File > Backup Wallet** to create a consistent backup

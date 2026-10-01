@@ -5483,8 +5483,8 @@ Root certificates version: %2</source>
         <translation>يتشارك وضع FAST نحو 2 GiB من ذاكرة RandomX مع التحقق. تستخدم الخيوط الإضافية مزيدًا من موارد CPU والطاقة؛ اترك سعة للعقدة. قد تستغرق تهيئة مجموعة البيانات بعض الوقت.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>عدّن كتل شبكة الاختبار باستخدام CPU وRandomX. يبقى التعدين متوقفًا حتى تبدأه. تشترك جميع محافظ هذه العقدة في المُعدّن، ويستمر عند تغيير علامات التبويب أو إغلاق محفظة.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>يبقى التعدين متوقفًا حتى تبدأه. تشترك جميع محافظ هذه العقدة في المُعدّن، ويستمر عند تغيير علامات التبويب أو إغلاق محفظة.</translation>
     </message>
     <message>
         <source>Mining</source>

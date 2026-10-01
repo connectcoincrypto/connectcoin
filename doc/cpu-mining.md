@@ -1,9 +1,9 @@
-# CPU mining (testnet beta)
+# CPU mining
 
 ConnectCoin Core includes an optional continuous RandomX v2 CPU miner for
-`-testnet4` and `-regtest`. It is **off on every startup**. This is a basic solo
-miner, not a pool/Stratum client. Mainnet remains unavailable; signet mining
-requires its additional challenge and is not supported by this miner.
+mainnet, `-testnet4` and `-regtest`. It is **off on every startup**. This is a basic
+solo miner, not a pool/Stratum client. Signet mining requires its additional
+challenge and is not supported by this miner.
 
 ## Wallet
 
@@ -42,20 +42,21 @@ every machine can run that many workers.
 
 ## Daemon / RPC
 
-With a node running on testnet4, the default target is the selected wallet:
+With a node running on mainnet, the default target is the selected wallet:
 
 ```sh
-connectcoin-cli -testnet4 -rpcwallet=YOUR_WALLET startmining "" 2
-connectcoin-cli -testnet4 getcpumininginfo
-connectcoin-cli -testnet4 stopmining
+connectcoin-cli -rpcwallet=YOUR_WALLET startmining "" 2
+connectcoin-cli getcpumininginfo
+connectcoin-cli stopmining
 ```
 
 Omitting `address` also selects the wallet. With exactly one loaded wallet,
 `-rpcwallet` is optional; with several, choose one explicitly. To pay an external
-address, use `startmining "YOUR_TESTNET_P2PK_ADDRESS" 2`; this works even without
+address, use `startmining "YOUR_P2PK_ADDRESS" 2`; this works even without
 wallet support or a loaded wallet. Without a wallet an address is required.
 
-Use `-regtest` instead for a local test chain. Mining
+Use `-testnet4` for the public test network or `-regtest` for a local test chain,
+on both the node and CLI. Mining
 rewards obey the same subsidy, block-weight penalty, and coinbase maturity
 rules as blocks mined externally. Accepted block counts are not a balance:
 blocks can become stale after acceptance.
@@ -102,7 +103,9 @@ The coordinator checks the tip at most every 50 ms while hashing and renews
 the template at least every five seconds, updating time, difficulty, and
 mempool selection. One hash/initialization or template construction can take
 longer than this polling interval. Known headers ahead of the active chain
-pause mining, but a fresh isolated testnet can bootstrap without peers.
+pause mining, but a fresh chain can bootstrap without peers. Mining without
+peers can build an isolated fork; connect to the intended network before
+relying on accepted blocks as network-confirmed rewards.
 
 Do not expose the RPC interface to untrusted clients: it controls resource use
 and the reward address. No mining state changes consensus rules.

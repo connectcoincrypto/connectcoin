@@ -5454,8 +5454,8 @@ Root certificates version: %2</source>
         <translation>የFAST ሁነታ ወደ 2 GiB የሚጠጋ የRandomX ማህደረ ትውስታን ከማረጋገጥ ሂደቱ ጋር ይጋራል። ተጨማሪ ክሮች ተጨማሪ የCPU አቅምና ኤሌክትሪክ ይጠቀማሉ፤ ለኖዱ አቅም ይተዉ። የውሂብ ስብስቡን ማዘጋጀት ጊዜ ሊወስድ ይችላል።</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>RandomX በመጠቀም በCPUዎ የሙከራ አውታረ መረብ ብሎኮችን ያውጡ። እርስዎ እስኪጀምሩት ድረስ ማዕድን ማውጣት ጠፍቶ ይቆያል። በዚህ ኖድ ያሉ ሁሉም የገንዘብ ቦርሳዎች ማዕድን ማውጫውን ይጋራሉ፤ ትሮችን ሲቀይሩ ወይም የገንዘብ ቦርሳ ሲዘጉም መሥራቱን ይቀጥላል።</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>እርስዎ እስኪጀምሩት ድረስ ማዕድን ማውጣት ጠፍቶ ይቆያል። በዚህ ኖድ ያሉ ሁሉም የገንዘብ ቦርሳዎች ማዕድን ማውጫውን ይጋራሉ፤ ትሮችን ሲቀይሩ ወይም የገንዘብ ቦርሳ ሲዘጉም መሥራቱን ይቀጥላል።</translation>
     </message>
     <message>
         <source>Mining</source>

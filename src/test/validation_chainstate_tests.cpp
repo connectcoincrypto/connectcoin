@@ -6,6 +6,8 @@
 #include <chainparams.h>
 #include <coins.h>
 #include <consensus/amount.h>
+#include <consensus/consensus.h>
+#include <consensus/tx_verify.h>
 #include <consensus/validation.h>
 #include <kernel/coinstats.h>
 #include <key.h>
@@ -33,6 +35,7 @@
 #include <memory>
 #include <optional>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 class CTxMemPool;
@@ -45,14 +48,19 @@ public:
 
 BOOST_FIXTURE_TEST_SUITE(validation_chainstate_tests, ChainTestingSetup)
 
-BOOST_AUTO_TEST_CASE(unlaunched_mainnet_cannot_initialize_chainstate)
+BOOST_AUTO_TEST_CASE(mainnet_launch_is_separate_from_retired_test_fixture)
 {
     const auto params{CreateChainParams(m_args, ChainType::MAIN)};
-    BOOST_CHECK(!params->HasGenesisBlock());
-    BOOST_CHECK(params->GetConsensus().hashGenesisBlock.IsNull());
-    // Test fixtures must not mutate the production factory or enable mainnet.
+    BOOST_REQUIRE(params->HasGenesisBlock());
+    BOOST_CHECK(!params->GetConsensus().hashGenesisBlock.IsNull());
+    // Historical storage vectors remain test-only and must never overwrite
+    // the mainnet factory's independently committed launch genesis.
     BOOST_REQUIRE(Params().HasGenesisBlock());
-    const auto datadir{m_path_root / "unlaunched-mainnet"};
+    BOOST_CHECK_EQUAL(Params().GetConsensus().hashGenesisBlock,
+                      uint256{"8b6373205ad2b6314f2937cebacfc143af9eb6183162c24fb19cdf382ff576c5"});
+    BOOST_CHECK(params->GetConsensus().hashGenesisBlock != Params().GetConsensus().hashGenesisBlock);
+    const auto datadir{m_path_root / "launched-mainnet"};
+    fs::create_directories(datadir / "blocks");
     const ChainstateManager::Options options{
         .chainparams = *params,
         .datadir = datadir,
@@ -64,8 +72,59 @@ BOOST_AUTO_TEST_CASE(unlaunched_mainnet_cannot_initialize_chainstate)
         .notifications = *m_node.notifications,
         .block_tree_db_params = DBParams{.path = datadir / "blocks" / "index", .cache_bytes = 0},
     };
-    BOOST_CHECK_THROW((void)std::make_unique<ChainstateManager>(m_interrupt, options, block_options), std::runtime_error);
-    BOOST_CHECK(!fs::exists(datadir));
+    BOOST_CHECK_NO_THROW((void)std::make_unique<ChainstateManager>(m_interrupt, options, block_options));
+}
+
+BOOST_AUTO_TEST_CASE(mainnet_genesis_has_two_independent_allocations)
+{
+    const auto params{CreateChainParams(m_args, ChainType::MAIN)};
+    BOOST_REQUIRE(params->HasGenesisBlock());
+    BOOST_CHECK(params->GetConsensus().genesis_coinbase_spendable);
+    const CBlock& genesis{params->GenesisBlock()};
+    BOOST_REQUIRE_EQUAL(genesis.vtx.size(), 1U);
+    BOOST_REQUIRE_EQUAL(genesis.vtx.front()->vout.size(), 2U);
+    BOOST_CHECK_EQUAL(genesis.nBits, 0x1e333300U);
+    const std::vector<std::string> pubkeys{
+        "29a6b41260ed25e3019d18236192afecec9ea0b7312837bacf81a3c40d7b2034",
+        "2c83a568529b55cc93e2d20754f079f6072d77ac88266d9b054cb3e0e92a7845",
+    };
+    CAmount total{0};
+    for (size_t i{0}; i < pubkeys.size(); ++i) {
+        const auto& output{genesis.vtx.front()->vout[i]};
+        BOOST_CHECK_EQUAL(output.nValue, 5'000'000 * COIN);
+        BOOST_CHECK(output.GetType() == TxOutputType::P2PK);
+        BOOST_REQUIRE(output.GetP2PKPubKey());
+        BOOST_CHECK_EQUAL(HexStr(*output.GetP2PKPubKey()), pubkeys[i]);
+        BOOST_CHECK_EQUAL(output.scriptPubKey.size(), 34U);
+        total += output.nValue;
+    }
+    BOOST_CHECK_EQUAL(total, 10'000'000 * COIN);
+    BOOST_CHECK(genesis.vtx.front()->vout[0].scriptPubKey != genesis.vtx.front()->vout[1].scriptPubKey);
+}
+
+BOOST_AUTO_TEST_CASE(mainnet_genesis_allocations_require_coinbase_maturity)
+{
+    const auto params{CreateChainParams(m_args, ChainType::MAIN)};
+    const auto& genesis_tx{*params->GenesisBlock().vtx.front()};
+    CCoinsViewCache inputs{&CoinsViewEmpty::Get()};
+    AddCoins(inputs, genesis_tx, /*nHeight=*/0, /*check_for_overwrite=*/false);
+    BOOST_REQUIRE_EQUAL(genesis_tx.vout.size(), 2U);
+    for (uint32_t index{0}; index < genesis_tx.vout.size(); ++index) {
+        CMutableTransaction spend;
+        spend.vin.emplace_back(COutPoint{genesis_tx.GetHash(), index});
+        spend.vout.push_back(genesis_tx.vout[index]);
+        spend.vout.front().nValue -= 1;
+        CAmount fee{0};
+        TxValidationState premature;
+        BOOST_CHECK(!Consensus::CheckTxInputs(CTransaction{spend}, premature, inputs, COINBASE_MATURITY - 1, fee));
+        BOOST_CHECK(premature.GetResult() == TxValidationResult::TX_PREMATURE_SPEND);
+        BOOST_CHECK_EQUAL(premature.GetRejectReason(), "bad-txns-premature-spend-of-coinbase");
+        // This checks value and maturity, not authorization: signing either
+        // allocation still requires its owner's private key.
+        TxValidationState mature;
+        BOOST_CHECK(Consensus::CheckTxInputs(CTransaction{spend}, mature, inputs, COINBASE_MATURITY, fee));
+        BOOST_CHECK_EQUAL(fee, 1);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(launched_networks_have_spendable_genesis_coinbase)

@@ -5722,8 +5722,8 @@ Versio de radikaj atestiloj: %2</translation>
         <translation>La reĝimo FAST kundividas proksimume 2 GiB da RandomX-memoro kun validigo. Pli da fadenoj uzas pli da CPU kaj elektro; lasu kapaciton por la nodo. Pravalorizado de la datumaro povas daŭri iom da tempo.</translation>
     </message>
     <message>
-        <source>Mine testnet blocks with your CPU using RandomX. Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
-        <translation>Minu blokojn de la testreto per via CPU uzante RandomX. Minado estas malŝaltita ĝis vi ĝin startigas. Ĉiuj monujoj de ĉi tiu nodo kundividas la minilon, kiu daŭre funkcias kiam vi ŝanĝas langetojn aŭ fermas monujon.</translation>
+        <source>Mining is off until you start it. The miner is shared by all wallets in this node and continues when you change tabs or close a wallet.</source>
+        <translation>Minado estas malŝaltita ĝis vi ĝin startigas. Ĉiuj monujoj de ĉi tiu nodo kundividas la minilon, kiu daŭre funkcias kiam vi ŝanĝas langetojn aŭ fermas monujon.</translation>
     </message>
     <message>
         <source>Mining</source>
