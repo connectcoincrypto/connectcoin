@@ -21,6 +21,7 @@
 #include <wallet/fees.h>
 #include <wallet/p2c_claim.h>
 #include <wallet/p2c_claim_priority.h>
+#include <wallet/p2c_connection_result.h>
 #include <wallet/p2c_domain_stats.h>
 #include <wallet/p2c_tls.h>
 #include <wallet/p2c_worker_threads.h>
@@ -689,16 +690,23 @@ struct P2CClaimWorkerImpl::Impl {
             auto captured{CaptureP2CTls(endpoint, group->name, claim->challenge, claim_cancelled,
                 {.signature_algorithms_mask = claim->prepared.bounty.GetPayToDomain()->signature_algorithms_mask})};
             const double seconds{std::chrono::duration<double>(Clock::now() - started).count()};
-            if (captured || !claim_cancelled()) {
+            if (captured) {
                 std::lock_guard lock{work_mutex};
-                // Full TLS capture is a success even if its work hash misses
-                // the target. Local cancellation is not a server failure.
-                assignment->statistics->Record(bool(captured), seconds);
-                if (captured) {
-                    auto& successes{bounty_successful_connections[claim->prepared.tx->vin[0].prevout]};
-                    if (successes != std::numeric_limits<uint64_t>::max()) ++successes;
-                }
+                // This existing per-bounty budget counts captures, separately
+                // from the domain's validated-proof efficiency observation.
+                auto& successes{bounty_successful_connections[claim->prepared.tx->vin[0].prevout]};
+                if (successes != std::numeric_limits<uint64_t>::max()) ++successes;
             }
+            P2CTlsProofView view;
+            std::string error;
+            const bool valid{ObserveP2CTlsCapture(captured, claim->prepared.bounty, claim->challenge,
+                claim->validation_time.load(), claim_cancelled(), view, error, VerifyP2CCertificateProof,
+                [&](bool success) {
+                    std::lock_guard lock{work_mutex};
+                    // Keep the original TCP/TLS duration; validation time is
+                    // excluded. A valid proof counts even if its hash misses.
+                    assignment->statistics->Record(success, seconds);
+                })};
             if (!captured) {
                 if (!claim_cancelled()) {
                     Message("retrying connections", util::ErrorString(captured).original);
@@ -707,10 +715,7 @@ struct P2CClaimWorkerImpl::Impl {
                 continue;
             }
             const auto bounty{*claim->prepared.bounty.GetPayToDomain()};
-            P2CTlsProofView view;
-            std::string error;
-            if (!ParseP2CTlsProof(*captured, bounty.domain, claim->challenge, view, error) ||
-                !VerifyP2CCertificateProof(claim->prepared.bounty, view, claim->validation_time.load(), error)) {
+            if (!valid) {
                 Message("certificate rejected", error);
                 Pause(stop, std::chrono::seconds{1});
                 continue;

@@ -13,9 +13,10 @@
 #include <limits>
 
 namespace wallet {
-/** Wallet-local TCP/TLS observations, in completion order. Not consensus data.
- * Success means capture through CertificateVerify, not a winning work hash.
- * The caller serializes access and excludes locally cancelled attempts.
+/** Wallet-local TCP/TLS observations, in validation completion order. Not consensus data.
+ * Success means a parsed proof with valid certificates and signatures, regardless
+ * of whether its work hash wins. Durations include only TCP/TLS effort.
+ * The caller serializes access and excludes cancelled attempts without a known outcome.
  */
 class P2CDomainStats {
     double m_success_average{0.1};

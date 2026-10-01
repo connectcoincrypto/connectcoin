@@ -23,6 +23,7 @@
 #include <wallet/coincontrol.h>
 #include <wallet/p2c_claim.h>
 #include <wallet/p2c_claim_priority.h>
+#include <wallet/p2c_connection_result.h>
 #include <wallet/p2c_domain_stats.h>
 #include <wallet/p2c_tls.h>
 #include <wallet/p2c_tls_lifecycle.h>
@@ -47,6 +48,7 @@
 #include <limits>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <set>
 #include <span>
 #include <stdexcept>
@@ -242,6 +244,74 @@ BOOST_AUTO_TEST_CASE(tls_capture_v2_authenticates_but_does_not_hash_certificate_
     legacy.front() = 1;
     BOOST_CHECK(!ParseP2CTlsProof(legacy, "localhost", challenge, modified, error));
     BOOST_CHECK(error.find("unsupported P2C proof version") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(tls_efficiency_observes_validated_proofs_before_work_target)
+{
+    RestoreSocketFactory restore_sockets;
+    const auto endpoint{Lookup("8.8.8.8", 443, false)};
+    BOOST_REQUIRE(endpoint);
+    const auto config{std::make_shared<test::P2CTLSServer>()};
+    config->Setup();
+    CreateSock = [config](int, int, int) -> std::unique_ptr<Sock> {
+        return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+    };
+    const auto captured{CaptureP2CTls(*endpoint, "localhost", uint256::ONE, [] { return false; })};
+    BOOST_REQUIRE(captured);
+    // The zero target must miss this otherwise valid capture. Trust the public
+    // fixture CA only in this verifier; the worker always uses consensus roots.
+    const CTxOut output{COIN, PayToDomainOutput{"localhost", uint256{}, 1}};
+    const std::span<const unsigned char> roots{test::P2C_TEST_ROOTS_PEM, sizeof(test::P2C_TEST_ROOTS_PEM) - 1};
+    const auto verify = [&](const CTxOut& spent, const P2CTlsProofView& view, int64_t time, std::string& error) {
+        return VerifyP2CCertificateProofForTest(spent, view, time, roots, error);
+    };
+    const auto check = [&](const auto& proof, const auto& verifier, int64_t time, bool cancelled,
+                           std::optional<bool> expected, bool expect_verification) {
+        P2CDomainStats stats;
+        P2CTlsProofView view;
+        std::string error;
+        unsigned observations{0};
+        bool verified{false};
+        const bool valid{ObserveP2CTlsCapture(proof, output, uint256::ONE, time, cancelled, view, error,
+            [&](const auto& spent, const auto& parsed, int64_t validation_time, auto& validation_error) {
+                const bool result{verifier(spent, parsed, validation_time, validation_error)};
+                verified = true;
+                return result;
+            }, [&](bool success) {
+                BOOST_CHECK_EQUAL(verified, expect_verification); // Observe after verification finishes.
+                BOOST_REQUIRE(expected.has_value());
+                BOOST_CHECK_EQUAL(success, *expected);
+                stats.Record(success, 0.2);
+                ++observations;
+            })};
+        BOOST_CHECK_EQUAL(verified, expect_verification);
+        BOOST_CHECK_EQUAL(valid, expected.value_or(false));
+        BOOST_CHECK_EQUAL(observations, expected.has_value() ? 1U : 0U);
+        const double expected_rate{expected ? (0.999 * 0.1 + 0.001 * *expected) / (0.999 * 0.02 + 0.001 * 0.2) : 5.0};
+        BOOST_CHECK_CLOSE(stats.ConnectionRate(), expected_rate, 1e-10);
+        if (valid) {
+            BOOST_CHECK(!view.connection_work_hash.IsNull());
+            BOOST_CHECK(!P2CMeetsWorkTarget(view.connection_work_hash, output.GetPayToDomain()->connection_work_target));
+        }
+    };
+    check(captured, verify, 1800000000, false, true, true); // Valid crypto, losing work hash.
+    check(captured, verify, 1800000000, true, true, true); // Completion racing local cancellation still counts.
+    check(captured, VerifyP2CCertificateProof, 1800000000, false, false, true); // Untrusted certificate.
+    check(captured, verify, 2100000000, false, false, true); // Expired certificate.
+
+    auto bad_signature{*captured};
+    bad_signature.back() ^= 1;
+    const util::Result<std::vector<unsigned char>> invalid_signature{std::move(bad_signature)};
+    check(invalid_signature, verify, 1800000000, false, false, true);
+    check(invalid_signature, verify, 1800000000, true, false, true); // Completed invalid capture still counts.
+
+    auto malformed{*captured};
+    malformed.front() = 1;
+    const util::Result<std::vector<unsigned char>> invalid_proof{std::move(malformed)};
+    check(invalid_proof, verify, 1800000000, false, false, false);
+    const util::Result<std::vector<unsigned char>> failure{util::Error{Untranslated("capture failed")}};
+    check(failure, verify, 1800000000, false, false, false); // Ordinary transport failure.
+    check(failure, verify, 1800000000, true, std::nullopt, false); // Cancelled unfinished attempt.
 }
 
 BOOST_AUTO_TEST_CASE(tls_capture_checks_all_certificate_rsa_exponents_before_certificate_verify)
@@ -1468,6 +1538,104 @@ BOOST_FIXTURE_TEST_CASE(worker_filters_each_bounty_before_network_and_rechecks_e
     BOOST_CHECK(!wrong_domain);
 }
 
+BOOST_FIXTURE_TEST_CASE(worker_efficiency_excludes_cancellation_and_rejects_completed_invalid_certificate, TestChain100Setup)
+{
+    using namespace std::chrono_literals;
+    FakeSteadyClock clock;
+    auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
+    auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
+    wallet->SetBroadcastTransactions(true);
+    wallet->m_default_max_tx_fee = MAX_MONEY;
+    const COutPoint outpoint{Txid::FromUint256(uint256::ONE), 0};
+    const auto target{uint256::FromHex(std::string(6, '0') + "3" + std::string(57, 'f')).value()};
+    WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint,
+        Coin{CTxOut{4 * COIN, PayToDomainOutput{"invalid.example", target, 1}}, 100, false}, false));
+    CCoinControl control;
+    control.m_feerate = CFeeRate{1000};
+    const auto prepared{PrepareP2CClaim(*wallet, outpoint, control)};
+    BOOST_REQUIRE(prepared);
+    CMutableTransaction tx{*prepared->tx};
+    // Just above the floor at 5/s: a failed observation removes eligibility,
+    // whereas a quick completed capture recorded as success would retain it.
+    tx.vout[0].nValue = 1000 * (CAmount{1} << 26) / 5 + 1;
+    UniValue saved{UniValue::VOBJ}, pending{UniValue::VARR};
+    pending.push_back(EncodeHexTx(CTransaction{tx}));
+    saved.pushKV("pending", std::move(pending));
+    saved.pushKV("ready", "");
+    saved.pushKV("proof", "");
+    saved.pushKV("attempts", 0);
+    saved.pushKV("submitted", 0);
+    saved.pushKV("last_txid", "");
+    BOOST_REQUIRE(wallet->GetDatabase().MakeBatch()->Write(std::string{"p2c_claim_worker_v1"}, saved.write()));
+
+    RestoreDNSLookup restore_dns;
+    RestoreSocketFactory restore_sockets;
+    const auto address{LookupHost("8.8.8.8", false, restore_dns.original)};
+    BOOST_REQUIRE(address);
+    g_dns_lookup = [&](const std::string&, bool) { return std::vector<CNetAddr>{*address}; };
+    const auto config{std::make_shared<test::P2CTLSServer>()};
+    config->Setup();
+    std::atomic<unsigned> sockets{0};
+    std::mutex pending_mutex;
+    std::condition_variable release;
+    bool released{false};
+    auto worker{MakeP2CClaimWorker(*wallet)};
+    struct ReleaseAndStop {
+        std::mutex& mutex;
+        std::condition_variable& wake;
+        bool& released;
+        P2CClaimWorker& worker;
+        ~ReleaseAndStop() {
+            { std::lock_guard lock{mutex}; released = true; }
+            wake.notify_all();
+            worker.Stop();
+        }
+    } release_and_stop{pending_mutex, release, released, *worker};
+    CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
+        const auto attempt{++sockets};
+        if (attempt == 1) {
+            std::unique_lock lock{pending_mutex};
+            release.wait(lock, [&] { return released; });
+            return nullptr; // Locally cancelled before a capture could finish.
+        }
+        if (attempt == 2) return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+        return nullptr; // An unexpected extra assignment is detected below.
+    };
+    const auto wait_until = [](const auto& predicate) {
+        const auto deadline{std::chrono::steady_clock::now() + 15s};
+        while (!predicate()) {
+            if (std::chrono::steady_clock::now() >= deadline) return false;
+            std::this_thread::sleep_for(5ms);
+        }
+        return true;
+    };
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE(wait_until([&] { return sockets == 1; }));
+    WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(outpoint, false)));
+    const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
+    clock += 5s;
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; }));
+    { std::lock_guard lock{pending_mutex}; released = true; }
+    release.notify_all();
+    worker->Stop();
+
+    // A cancelled attempt cannot lower the prior. After unlocking and restart
+    // this same bounty must still reach TLS and certificate validation.
+    WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->UnlockCoin(outpoint)));
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE_MESSAGE(wait_until([&] { return worker->Status()["state"].get_str() == "certificate rejected"; }), worker->Status().write());
+    worker->Stop();
+    BOOST_CHECK_EQUAL(sockets.load(), 2U);
+    BOOST_CHECK_EQUAL(worker->Status()["submitted"].getInt<uint64_t>(), 0U);
+
+    // The completed but untrusted capture is an EMA failure. Restart refreshes
+    // eligibility from the retained history before assigning any more work.
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE_MESSAGE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }), worker->Status().write());
+    worker->Stop();
+    BOOST_CHECK_EQUAL(sockets.load(), 2U);
+}
+
 BOOST_FIXTURE_TEST_CASE(worker_refresh_completion_arms_next_deadline, TestChain100Setup)
 {
     using namespace std::chrono_literals;
@@ -1917,8 +2085,8 @@ BOOST_FIXTURE_TEST_CASE(worker_weights_domain_priority_by_smoothed_tls_efficienc
             std::this_thread::sleep_for(3s);
             return nullptr; // Slow TCP failure; never reached CertificateVerify.
         }
-        // Beta delivers CertificateVerify quickly. The smoothed rate must
-        // outweigh Alpha's guaranteed initial economic preference on refresh.
+        // Beta's certificate is rejected, but its failure is much faster than
+        // Alpha's. Duration alone can outweigh Alpha's economic preference.
         std::this_thread::sleep_for(100ms);
         return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
     };
@@ -1933,8 +2101,8 @@ BOOST_FIXTURE_TEST_CASE(worker_weights_domain_priority_by_smoothed_tls_efficienc
     BOOST_REQUIRE(worker->Configure(-1, 1));
     BOOST_REQUIRE_MESSAGE(wait_until([&] { std::lock_guard lock{events_mutex}; return events.size() == 4; }), worker->Status().write());
     // No quality refresh before this point: initial extra turns favor Alpha.
-    // Beta completed TLS, though its test certificate is not trusted by Core.
-    // Capturing it must improve priority WITHOUT weakening claim verification.
+    // Both domains failed validation. Beta used less TCP/TLS effort, which
+    // yields a higher smoothed rate while the initial success prior decays.
     BOOST_CHECK_EQUAL(worker->Status()["state"].get_str(), "searching");
     BOOST_CHECK_EQUAL(worker->Status()["submitted"].getInt<uint64_t>(), 0U);
     const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};

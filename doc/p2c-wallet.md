@@ -252,21 +252,24 @@ Each `(domain, signature_algorithms_mask)` pair keeps exponentially smoothed
 success and duration averages, shared across its bounties and resolved IPs with
 the same mask. An unsupported RSA-only bounty therefore cannot poison the
 measured success rate of an ECDSA-capable bounty on that domain. Rotation and DNS are still grouped by
-domain, not by mask. Each observation records whether capture completed through
-**CertificateVerify**; seconds measure elapsed TCP/TLS effort with a monotonic
-clock. TCP failures, TLS errors and timeouts count as failures. A completed
-capture counts as a success regardless of whether its
-hash meets the bounty target; certificate/claim acceptance is still verified
-separately. DNS resolution, rate-limit waits, scheduler waits, retry backoff and
-subsequent certificate verification are not part of this duration. Locally
-cancelled incomplete attempts (stop, spent bounty or duplicate proof) are excluded,
-since they do not establish whether the server could complete the handshake.
+domain, not by mask. Each observation records whether a captured proof passed
+parsing and certificate/signature validation, including the domain, trust chain,
+certificate validity and **CertificateVerify** signature. Seconds measure elapsed
+TCP/TLS effort with a monotonic clock. TCP failures, TLS errors, timeouts and
+rejected proofs/certificates count as failures. A validated proof counts as a
+success regardless of whether its hash meets the bounty target; that probability
+is already included in expected return. DNS resolution, rate-limit waits,
+scheduler waits, retry backoff and subsequent certificate verification are not
+part of this duration. Locally cancelled incomplete attempts (stop, spent bounty
+or duplicate proof) are excluded because they have no conclusive outcome.
+Completed captures are validated and observed even if cancellation races with
+their completion.
 
 Each pair starts with `a = 0.1` and `c = 0.02`. For every included observation,
-in completion order, it updates `a = 0.999 * a + 0.001 * b` and
-`c = 0.999 * c + 0.001 * d`, where `b` is 1 for a completed capture and 0 for a
+in validation completion order, it updates `a = 0.999 * a + 0.001 * b` and
+`c = 0.999 * c + 0.001 * d`, where `b` is 1 for a validated proof and 0 for a
 failure, and `d` is that attempt's elapsed seconds. The multiplier at each
-five-second refresh is `a / c`, initially **5 captures/second of effort**.
+five-second refresh is `a / c`, initially **5 validated proofs/second of effort**.
 The initial values decay along with older observations: no fixed prior is added
 back, and no observation is abruptly evicted after 100 attempts. A past
 observation's weight halves after about 693 further observations. Sustained
@@ -284,7 +287,7 @@ the observed efficiency.
 
 Automatic search ignores each bounty whose expected net return is **less than
 1000 connects per second of connection effort** (1000 exactly is eligible):
-`(reward - claim_fee) * (target + 1) / 2^256 * measured_capture_rate`.
+`(reward - claim_fee) * (target + 1) / 2^256 * measured_validated_proof_rate`.
 The threshold uses the unmodified expected return, without the local ranking
 factor, and the domain/mask pair's exponential averages or the initial 5/s rate, not
 the user-configured connection limit or aggregate concurrency. The measured
@@ -298,7 +301,8 @@ and submitted. A domain with only below-floor bounties is not probed just to
 refresh its speed estimate. This is wallet search policy, not a consensus
 restriction or a restriction on preparing/submitting a claim manually.
 
-Each bounty also has a local successful-connection budget. With
+Each bounty also has a local successful-connection budget, separate from the
+validated-proof observations above. With
 `p = (target + 1) / 2^256`, new attempts stop once its count is **strictly greater
 than `2 / p`**. Only completed TLS captures through **CertificateVerify** count,
 regardless of whether their work hash meets the target; certificate/claim
