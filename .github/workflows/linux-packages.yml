@@ -196,7 +196,7 @@ jobs:
             apt-get update
             apt-get install -y --no-install-recommends ca-certificates git python3 desktop-file-utils
           else
-            dnf install -y ca-certificates git python3 desktop-file-utils
+            dnf install -y ca-certificates git python3 desktop-file-utils tar gzip findutils
           fi
       - uses: actions/checkout@v6
         with:
