@@ -13,6 +13,24 @@ session for the GUI, and the system libraries excluded from the bundle. This
 is not a guarantee of compatibility with every Linux distribution. Alpine
 and other musl-only systems are not supported.
 
+The GUI uses the system OpenGL/EGL drivers, Fontconfig, FreeType, HarfBuzz,
+and X11/Wayland client libraries. These remain system libraries even when
+running a headless help/version check. Most desktops already include them.
+If using a minimal Ubuntu/Debian installation, install these runtime packages:
+  sudo apt-get install libfontconfig1 libfreetype6 libharfbuzz0b libgl1 libegl1 \
+    libopengl0 libwayland-client0 libx11-6 libx11-xcb1 libxcb1 libice6 libsm6
+On Fedora 43:
+  sudo dnf install fontconfig freetype harfbuzz mesa-libGL mesa-libEGL \
+    libglvnd-egl libglvnd-opengl libglvnd-glx libwayland-client \
+    libX11 libX11-xcb libxcb libICE libSM
+
+Keep your distribution's normal graphics drivers, including proprietary
+drivers if you use them. Do not copy driver libraries out of another system.
+The system must also provide its normal glibc, C++/GCC runtime, zlib, Expat,
+libcom_err, libgpg-error and libuuid libraries. Qt itself is bundled and does
+not need to be installed separately. Minimal server/container installations
+still need an X11 or Wayland desktop session to display the GUI.
+
 Run the AppImage
 ----------------
 Mark the downloaded file executable in your file manager, or use:

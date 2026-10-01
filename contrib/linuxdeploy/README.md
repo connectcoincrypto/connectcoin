@@ -54,6 +54,50 @@ does not make the bundle compatible with every distribution: graphics drivers,
 desktop integration and libraries on linuxdeploy's exclusion list still come
 from the host. musl-only distributions are unsupported.
 
+The portable GUI requires the host's OpenGL/EGL driver stack, font libraries,
+and X11/Wayland client libraries, including for `QT_QPA_PLATFORM=minimal` help
+and version checks. These are intentional linuxdeploy exclusions; copying
+graphics drivers from the build machine into the bundle can break other hosts.
+An ordinary desktop usually already supplies them. For a minimal Ubuntu/Debian
+container or installation, install the following runtime packages:
+
+```sh
+sudo apt-get install --no-install-recommends \
+  libfontconfig1 libfreetype6 libharfbuzz0b libgl1 libegl1 libopengl0 \
+  libwayland-client0 libx11-6 libx11-xcb1 libxcb1 libice6 libsm6
+```
+
+For Fedora 43:
+
+```sh
+sudo dnf install fontconfig freetype harfbuzz mesa-libGL mesa-libEGL \
+  libglvnd-egl libglvnd-opengl libglvnd-glx libwayland-client \
+  libX11 libX11-xcb libxcb libICE libSM
+```
+
+Fedora's `mesa-libEGL` supplies the Mesa vendor implementation; `libglvnd-egl`
+supplies `libEGL.so.1`. Both are listed so minimal systems receive the public
+EGL loader and a driver. The package managers install the corresponding
+dispatch libraries and graphics dependencies. Keep the normal distribution
+graphics drivers on machines using another GPU vendor.
+
+The bundle also uses base-system glibc, C++/GCC runtime, zlib, Expat,
+libcom_err, libgpg-error, and libuuid. In the test distributions these are
+already installed or pulled in by the packages above and the test harness.
+On more minimal root filesystems their package names are:
+
+| Ubuntu / Debian | Fedora 43 |
+| --- | --- |
+| `libc6`, `libstdc++6`, `libgcc-s1` | `glibc`, `libstdc++`, `libgcc` |
+| `zlib1g`, `libexpat1` | `zlib-ng-compat`, `expat` |
+| `libcom-err2`, `libgpg-error0`, `libuuid1` | `libcom_err`, `libgpg-error`, `libuuid` |
+
+These requirements come from the libraries explicitly excluded in the release
+build log. See the [upstream exclusion list](https://github.com/AppImageCommunity/pkg2appimage/blob/master/excludelist)
+and the [Fedora EGL loader package](https://packages.fedoraproject.org/pkgs/libglvnd/libglvnd-egl/fedora-43.html).
+The portable tests must install this host runtime before checking the bundle,
+without installing the system Qt packages that the bundle is meant to supply.
+
 ```sh
 bash contrib/linuxdeploy/build-portable.sh \
   --staging-prefix "$PWD/stage/usr" \

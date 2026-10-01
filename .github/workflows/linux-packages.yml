@@ -214,14 +214,31 @@ jobs:
         if: matrix.artifact == 'ubuntu22.04'
         run: |
           if command -v apt-get >/dev/null; then
-            apt-get install -y --no-install-recommends libfontconfig1 libfreetype6 libgl1
+            # These host graphics/font libraries are deliberately not bundled
+            # by linuxdeploy. Do not install system Qt before the portable test.
+            apt-get install -y --no-install-recommends \
+              libfontconfig1 libfreetype6 libharfbuzz0b libgl1 libegl1 libopengl0 \
+              libwayland-client0 libx11-6 libx11-xcb1 libxcb1 libice6 libsm6
           else
-            dnf install -y fontconfig freetype mesa-libGL
+            dnf install -y fontconfig freetype harfbuzz mesa-libGL mesa-libEGL \
+              libglvnd-egl libglvnd-opengl libglvnd-glx libwayland-client \
+              libX11 libX11-xcb libxcb libICE libSM
           fi
           mkdir portable
           tar -xzf dist/*.tar.gz -C portable
           appdir=$(find portable -maxdepth 2 -name AppRun -printf '%h\n')
           test -n "$appdir"
+          # Report every missing runtime library together, including plugins
+          # not selected by the minimal headless platform.
+          missing=0
+          while IFS= read -r -d '' binary; do
+            dependencies=$(LD_LIBRARY_PATH="$PWD/$appdir/usr/lib" ldd "$binary")
+            if [[ "$dependencies" == *'not found'* ]]; then
+              printf '%s\n%s\n' "$binary" "$dependencies"
+              missing=1
+            fi
+          done < <(find "$appdir/usr/bin" "$appdir/usr/plugins" -type f \( -name 'connectcoin*' -o -name '*.so' \) -print0)
+          test "$missing" -eq 0
           python3 contrib/linuxdeploy/smoke_test.py --portable --prefix "$appdir" --output portable-smoke.json
           xvfb-run -a env QT_QPA_PLATFORM=xcb "$appdir/connectcoin-qt" -version
           images=(dist/*.AppImage)
@@ -232,10 +249,18 @@ jobs:
         if: matrix.platform != 'fedora43-portable'
         run: |
           if command -v apt-get >/dev/null; then
-            apt-get install -y --no-install-recommends ./dist/*.deb
+            # Ubuntu container images exclude man pages and documentation.
+            # Re-include our payload to test a normal desktop installation.
+            apt-get install -y --no-install-recommends \
+              -o 'Dpkg::Options::=--path-include=/usr/share/man/*' \
+              -o 'Dpkg::Options::=--path-include=/usr/share/doc/connectcoin-core' \
+              -o 'Dpkg::Options::=--path-include=/usr/share/doc/connectcoin-core/*' \
+              ./dist/*.deb
             dpkg-query --listfiles connectcoin-core
           else
-            dnf install -y ./dist/*.rpm
+            # Fedora's container image sets tsflags=nodocs. Override it here
+            # so the test checks the actual manual payload, not only rpm -ql.
+            dnf --setopt=tsflags= install -y ./dist/*.rpm
             rpm -ql connectcoin-core
           fi
       - name: Verify installed applications
