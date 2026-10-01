@@ -56,7 +56,7 @@ jobs:
               qt6-base-dev qt6-base-dev-tools qt6-tools-dev qt6-tools-dev-tools \
               qt6-l10n-tools qt6-qpa-plugins qt6-wayland qt6-translations-l10n \
               python3 python3-zmq dpkg-dev file binutils curl patchelf \
-              desktop-file-utils xz-utils
+              desktop-file-utils xz-utils help2man
             echo 'CC=gcc-12' >> "$GITHUB_ENV"
             echo 'CXX=g++-12' >> "$GITHUB_ENV"
           else
@@ -64,11 +64,13 @@ jobs:
               ca-certificates git gcc-c++ cmake ninja-build pkgconf-pkg-config ccache \
               boost-devel sqlite-devel zeromq-devel qrencode-devel \
               qt6-qtbase-devel qt6-qttools-devel qt6-qtbase-gui \
-              python3 python3-zmq rpm-build file binutils desktop-file-utils xz
+              python3 python3-zmq rpm-build file binutils desktop-file-utils xz help2man
           fi
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
+      - name: Trust only this checkout in the build container
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Restore compiler cache
         id: compiler-cache
         uses: actions/cache/restore@v5
@@ -98,7 +100,7 @@ jobs:
         run: |
           cmake --build build-linux --target connectcoin connectcoind connectcoin-cli \
             connectcoin-qt connectcoin-tx connectcoin-util connectcoin-wallet \
-            connectcoin-test connectcoin-test-desktop-icons
+            connectcoin-test connectcoin-test-desktop-icons linux-manpages
       - name: Save compiler cache
         if: ${{ (success() || failure()) && steps.compile.outcome != 'skipped' && steps.compiler-cache.outputs.cache-hit != 'true' }}
         uses: actions/cache/save@v5

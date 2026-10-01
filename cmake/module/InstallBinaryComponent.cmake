@@ -38,7 +38,12 @@ function(install_binary_component component)
     )
   endif()
   if(INSTALL_MAN AND IC_HAS_MANPAGE)
-    install(FILES ${PROJECT_SOURCE_DIR}/doc/man/${output_name}.1
+    if(ENABLE_LINUX_PACKAGING)
+      set(manpage_dir "${PROJECT_BINARY_DIR}/linux-man")
+    else()
+      set(manpage_dir "${PROJECT_SOURCE_DIR}/doc/man")
+    endif()
+    install(FILES "${manpage_dir}/${output_name}.1"
       DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
       COMPONENT ${component}
     )

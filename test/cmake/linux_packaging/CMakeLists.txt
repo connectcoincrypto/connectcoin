@@ -62,8 +62,8 @@ include(LinuxPackaging)
 if(NOT CPACK_DEBIAN_PACKAGE_SHLIBDEPS OR NOT CPACK_RPM_PACKAGE_AUTOREQPROV)
   message(FATAL_ERROR "Native dependency scanning must be enabled.")
 endif()
-if(NOT CPACK_DEBIAN_PACKAGE_DEPENDS STREQUAL "qt6-qpa-plugins"
-    OR NOT CPACK_RPM_PACKAGE_REQUIRES STREQUAL "qt6-qtbase-gui")
+if(NOT CPACK_DEBIAN_PACKAGE_DEPENDS STREQUAL "qt6-qpa-plugins, qt6-wayland"
+    OR NOT CPACK_RPM_PACKAGE_REQUIRES STREQUAL "qt6-qtbase-gui, qt6-qtwayland")
   message(FATAL_ERROR "Native packages must declare the dynamic Qt platform plugins.")
 endif()
 if(NOT CPACK_DEBIAN_PACKAGE_RELEASE STREQUAL "1.test"

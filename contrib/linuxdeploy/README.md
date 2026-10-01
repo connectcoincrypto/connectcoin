@@ -20,8 +20,8 @@ monolithic GUI and daemon remain fully functional.
 
 ## Native package build
 
-Install the build dependencies from `doc/build-unix.md`, and `dpkg-dev` for DEB
-or `rpm-build` for RPM. Use a compiler meeting `doc/dependencies.md`.
+Install the build dependencies from `doc/build-unix.md`, `help2man`, and `dpkg-dev`
+for DEB or `rpm-build` for RPM. Use a compiler meeting `doc/dependencies.md`.
 
 ```sh
 cmake -S . -B build-linux -G Ninja \
@@ -36,6 +36,8 @@ cmake --build build-linux -j2
 For Fedora, select `-DCPACK_GENERATOR=RPM` and a revision such as
 `-DCONNECTCOIN_PACKAGE_RELEASE=1.fc43`. Native packages retain system library
 dependencies; they do not replace or bundle the system Qt installation.
+The `linux-manpages` target generates real manuals from the compiled tools;
+source-tree placeholder manuals are never shipped in these native packages.
 Install with `sudo apt install ./<filename>.deb` or
 `sudo dnf install ./<filename>.rpm` after verifying the release checksums.
 

@@ -36,6 +36,41 @@ foreach(component IN LISTS CPACK_COMPONENTS_ALL)
     message(FATAL_ERROR "Linux release packages require the ${component} target to be enabled.")
   endif()
 endforeach()
+
+if(INSTALL_MAN)
+  find_program(HELP2MAN_EXECUTABLE help2man REQUIRED)
+  if(NOT Python3_EXECUTABLE)
+    message(FATAL_ERROR "Python 3 is required to generate Linux package man pages.")
+  endif()
+  set(package_manpages)
+  foreach(component IN LISTS CPACK_COMPONENTS_ALL)
+    list(APPEND package_manpages "${PROJECT_BINARY_DIR}/linux-man/${component}.1")
+  endforeach()
+  # Generate from the release applications without replacing the tracked
+  # placeholders in doc/man. Keep GUI preferences in a private build profile.
+  add_custom_command(
+    OUTPUT ${package_manpages}
+    COMMAND "${CMAKE_COMMAND}" -E make_directory
+      "${PROJECT_BINARY_DIR}/linux-man"
+      "${PROJECT_BINARY_DIR}/linux-man-profile"
+    COMMAND "${CMAKE_COMMAND}" -E env
+      "TOPDIR=${PROJECT_SOURCE_DIR}"
+      "BUILDDIR=${PROJECT_BINARY_DIR}"
+      "MANDIR=${PROJECT_BINARY_DIR}/linux-man"
+      "HELP2MAN=${HELP2MAN_EXECUTABLE}"
+      "HOME=${PROJECT_BINARY_DIR}/linux-man-profile"
+      "XDG_CONFIG_HOME=${PROJECT_BINARY_DIR}/linux-man-profile/config"
+      "XDG_DATA_HOME=${PROJECT_BINARY_DIR}/linux-man-profile/data"
+      "XDG_CACHE_HOME=${PROJECT_BINARY_DIR}/linux-man-profile/cache"
+      QT_QPA_PLATFORM=minimal LANG=C LC_ALL=C
+      "${Python3_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/contrib/devtools/gen-manpages.py"
+    DEPENDS ${CPACK_COMPONENTS_ALL} "${PROJECT_SOURCE_DIR}/contrib/devtools/gen-manpages.py"
+    COMMENT "Generating Linux release man pages"
+    VERBATIM
+  )
+  add_custom_target(linux-manpages ALL DEPENDS ${package_manpages})
+endif()
+
 list(APPEND CPACK_COMPONENTS_ALL connectcoin-licenses)
 set(CPACK_COMPONENTS_GROUPING ALL_COMPONENTS_IN_ONE)
 set(CPACK_DEB_COMPONENT_INSTALL ON)
@@ -77,7 +112,7 @@ set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
 set(CPACK_DEBIAN_PACKAGE_SECTION utils)
 set(CPACK_DEBIAN_PACKAGE_PRIORITY optional)
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt6-qpa-plugins")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt6-qpa-plugins, qt6-wayland")
 set(CPACK_DEBIAN_COMPRESSION_TYPE xz)
 
 set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
@@ -87,7 +122,7 @@ set(CPACK_RPM_PACKAGE_URL "${CPACK_PACKAGE_HOMEPAGE_URL}")
 set(CPACK_RPM_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
 set(CPACK_RPM_PACKAGE_GROUP "Applications/Internet")
 set(CPACK_RPM_PACKAGE_AUTOREQPROV yes)
-set(CPACK_RPM_PACKAGE_REQUIRES "qt6-qtbase-gui")
+set(CPACK_RPM_PACKAGE_REQUIRES "qt6-qtbase-gui, qt6-qtwayland")
 set(CPACK_RPM_COMPRESSION_TYPE xz)
 # These shared directories belong to the distribution's filesystem/icon theme
 # packages. Only our files and private documentation directory belong to us.

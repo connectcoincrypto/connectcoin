@@ -7,6 +7,7 @@
 
 import argparse
 import configparser
+import gzip
 import json
 import os
 from pathlib import Path
@@ -19,6 +20,7 @@ import tempfile
 import time
 import unittest
 from unittest.mock import Mock, patch
+import zlib
 
 
 TARGETS = ("connectcoin", "connectcoind", "connectcoin-cli", "connectcoin-tx",
@@ -26,6 +28,7 @@ TARGETS = ("connectcoin", "connectcoind", "connectcoin-cli", "connectcoin-tx",
 DESKTOP_FILE = "share/applications/org.connectcoin.ConnectCoin.desktop"
 ICON_FILE = "share/icons/hicolor/1024x1024/apps/connectcoin.png"
 FALLBACK_ICON = "share/pixmaps/connectcoin.png"
+MAX_MANUAL_BYTES = 1024 * 1024
 STARTUP_TIMEOUT = 120
 RPC_TIMEOUT = 30
 STOP_TIMEOUT = 30
@@ -49,6 +52,29 @@ def installed_file(prefix, relative):
     return path
 
 
+def validate_manual(prefix, relative, target):
+    # RPM may compress man pages after staging. Validate every installed form
+    # so an old uncompressed placeholder cannot hide behind a valid .gz page.
+    candidates = [name for name in (relative, relative + ".gz")
+                  if (prefix / name).exists() or (prefix / name).is_symlink()]
+    require(candidates, f"Missing manual page: {relative} (or .gz)")
+    for name in candidates:
+        path = installed_file(prefix, name)
+        try:
+            opener = gzip.open if name.endswith(".gz") else open
+            with opener(path, "rb") as manual:
+                data = manual.read(MAX_MANUAL_BYTES + 1)
+            require(len(data) <= MAX_MANUAL_BYTES, f"Manual page exceeds 1 MiB: {name}")
+            text = data.decode("utf-8")
+        except (OSError, EOFError, UnicodeError, zlib.error) as error:
+            raise SmokeError(f"Unreadable manual page: {name}") from error
+        require("placeholder" not in text.casefold(), f"Placeholder manual page: {name}")
+        # help2man titles may quote the command or escape its hyphens.
+        header = re.search(r'^\.TH[ \t]+(?:"([^"]+)"|(\S+))', text.replace("\\-", "-"), re.MULTILINE | re.IGNORECASE)
+        require(header is not None and (header[1] or header[2]).casefold() == target.casefold(),
+                f"Manual page must have a .TH header for {target}: {name}")
+
+
 def validate_layout(prefix, portable=False):
     require(prefix.is_dir(), f"Not an installation prefix: {prefix}")
     binaries = {target: installed_file(prefix, target if portable else f"bin/{target}") for target in TARGETS}
@@ -66,6 +92,8 @@ def validate_layout(prefix, portable=False):
     for name in (ICON_FILE, FALLBACK_ICON):
         with installed_file(prefix, data_prefix + name).open("rb") as icon:
             require(icon.read(8) == b"\x89PNG\r\n\x1a\n", f"Not a PNG icon: {name}")
+    for target in TARGETS:
+        validate_manual(prefix, f"{data_prefix}share/man/man1/{target}.1", target)
     return binaries
 
 
@@ -275,11 +303,57 @@ class RegressionTests(unittest.TestCase):
                 icon = root / "usr" / name
                 icon.parent.mkdir(parents=True, exist_ok=True)
                 icon.write_bytes(b"\x89PNG\r\n\x1a\n")
+            manuals = root / "usr/share/man/man1"
+            manuals.mkdir(parents=True)
+            for target in TARGETS:
+                (manuals / f"{target}.1").write_text(f'.TH "{target.upper()}" "1"\n.SH NAME\n{target} - ConnectCoin Core\n', encoding="utf-8")
             with patch.object(os, "access", return_value=True):
                 binaries = validate_layout(root, portable=True)
             self.assertEqual(binaries, {target: root / target for target in TARGETS})
+            (manuals / "connectcoin-qt.1").unlink()
+            with patch.object(os, "access", return_value=True):
+                with self.assertRaisesRegex(SmokeError, "Missing manual page:.*connectcoin-qt"):
+                    validate_layout(root, portable=True)
             with self.assertRaises(FileNotFoundError):
                 validate_layout(root)
+
+    def test_manual_validation_accepts_real_gzip_and_case_insensitive_titles(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            compressed = root / "connectcoin-qt.1.gz"
+            compressed.write_bytes(gzip.compress(b'.TH "ConnectCoin\\-Qt" "1"\n.SH NAME\nconnectcoin-qt - graphical wallet\n'))
+            validate_manual(root, "connectcoin-qt.1", "connectcoin-qt")
+            (root / "connectcoind.1").write_text('.TH CONNECTCOIND "1"\n.SH NAME\nconnectcoind - full node\n', encoding="utf-8")
+            validate_manual(root, "connectcoind.1", "connectcoind")
+            with self.assertRaisesRegex(SmokeError, "Missing manual"):
+                validate_manual(root, "connectcoin-cli.1", "connectcoin-cli")
+
+    def test_manual_validation_rejects_placeholders_and_incorrect_headers(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for suffix in ("", ".gz"):
+                for content in (
+                    '.TH CONNECTCOIN "1"\nThis is a PlaceHolder file.\n',
+                    '.TH CONNECTCOIND "1"\nconnectcoin\n',
+                    'connectcoin - missing roff header\n',
+                ):
+                    with self.subTest(suffix=suffix, content=content):
+                        data = content.encode("utf-8")
+                        (root / ("connectcoin.1" + suffix)).write_bytes(gzip.compress(data) if suffix else data)
+                        with self.assertRaises(SmokeError):
+                            validate_manual(root, "connectcoin.1", "connectcoin")
+                (root / ("connectcoin.1" + suffix)).unlink()
+
+    def test_manual_validation_bounds_decompression_and_rejects_truncated_gzip(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            manual = root / "connectcoin.1.gz"
+            manual.write_bytes(gzip.compress(b'x' * (MAX_MANUAL_BYTES + 1)))
+            with self.assertRaisesRegex(SmokeError, "exceeds 1 MiB"):
+                validate_manual(root, "connectcoin.1", "connectcoin")
+            manual.write_bytes(gzip.compress(b'.TH CONNECTCOIN "1"\n')[:-4])
+            with self.assertRaisesRegex(SmokeError, "Unreadable manual"):
+                validate_manual(root, "connectcoin.1", "connectcoin")
 
     def test_validated_launcher_keeps_its_invocation_name(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -329,12 +403,13 @@ def main():
     report = {"prefix": str(prefix), "portable": options.portable, "commands": commands, "regtest": regtest,
               "desktop_file": data_prefix + DESKTOP_FILE,
               "icons": [data_prefix + ICON_FILE, data_prefix + FALLBACK_ICON],
+              "manuals_checked": list(TARGETS),
               "temporary_profile_removed": True,
               "gui_coverage": "Help/version under the minimal Qt platform; no interactive GUI launch."}
     if options.output is not None:
         options.output.parent.mkdir(parents=True, exist_ok=True)
         options.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    print(f"PASS: {len(commands)} help/version commands, desktop icons, isolated regtest wallet/address, graceful shutdown")
+    print(f"PASS: {len(commands)} help/version commands, {len(TARGETS)} manual pages, desktop icons, isolated regtest wallet/address, graceful shutdown")
     return 0
 
 
