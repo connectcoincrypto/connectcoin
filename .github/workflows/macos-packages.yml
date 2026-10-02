@@ -4,13 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches: ['codex/macos-installers']
-    paths:
-      - '.github/workflows/macos-packages.yml'
-      - 'contrib/macdeploy/**'
-      - 'test/lint/lint-macos-package.py'
-      - 'share/qt/Info.plist.in'
-      - 'CMakeLists.txt'
-      - 'depends/**'
 
 permissions:
   contents: read
@@ -50,10 +43,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Test packaging helpers
-        run: |
-          python3 contrib/macdeploy/build_dmg.py --self-test
-          python3 contrib/macdeploy/validate_dmg.py --self-test
-          python3 contrib/macdeploy/collect_sources.py --self-test
+        run: python3 test/lint/lint-macos-package.py
       - name: Verify native toolchain and install dependencies
         env:
           EXPECTED_ARCH: ${{ matrix.arch }}
@@ -69,7 +59,7 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           path: depends/built
-          key: macos-depends-15-xcode16.2-${{ matrix.arch }}-${{ hashFiles('depends/**') }}
+          key: macos-depends-15-xcode16.2-${{ matrix.arch }}-${{ env.DEPENDS_HOST }}-${{ hashFiles('depends/**') }}
       - name: Build pinned static dependencies and retain corresponding sources
         id: depends
         run: |
@@ -156,4 +146,5 @@ jobs:
             build-macos/dist/SHA256SUMS-*.txt
             build-macos/dist/*-sources.tar.gz
           if-no-files-found: error
+          compression-level: 0 # DMG and corresponding-source archives are already compressed.
           retention-days: 30

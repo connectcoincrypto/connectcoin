@@ -18,6 +18,7 @@
 #include <test/util/setup_common.h>
 #include <test/util/time.h>
 #include <univalue.h>
+#include <util/string.h>
 #include <util/translation.h>
 #include <validation.h>
 #include <wallet/coincontrol.h>
@@ -543,12 +544,20 @@ BOOST_AUTO_TEST_CASE(endpoint_priority_equal_priors_rotate_and_isolate_domains_a
     P2CEndpointPriority first_domain, other_domain;
     first_domain.Refresh(endpoints);
     other_domain.Refresh(endpoints);
+    std::array<size_t, 3> counts{};
     for (size_t i = 0; i < 9; ++i) {
         const auto selected{first_domain.Select(1)};
         BOOST_REQUIRE(selected);
-        BOOST_CHECK(selected->endpoint == endpoints[i % endpoints.size()]);
+        const auto found{std::find(endpoints.begin(), endpoints.end(), selected->endpoint)};
+        BOOST_REQUIRE(found != endpoints.end());
+        ++counts[static_cast<size_t>(std::distance(endpoints.begin(), found))];
+        const auto [minimum, maximum]{std::minmax_element(counts.begin(), counts.end())};
+        BOOST_CHECK_LE(*maximum - *minimum, 1U);
         BOOST_CHECK_EQUAL(selected->statistics->ConnectionRate(), 5.0);
     }
+    // x87 excess precision can reorder near-ties after the first cycle; equal
+    // priors must distribute attempts equally, not prescribe floating-point ties.
+    for (const auto count : counts) BOOST_CHECK_EQUAL(count, 3U);
     const auto original{first_domain.Select(1)};
     BOOST_REQUIRE(original);
     for (size_t i = 0; i < 1000; ++i) original->statistics->Record(false, 10.0);
@@ -629,12 +638,14 @@ BOOST_AUTO_TEST_CASE(endpoint_priority_extreme_rates_keep_one_percent_exploratio
     BOOST_REQUIRE_EQUAL(instant.ConnectionRate(), std::numeric_limits<double>::max());
     BOOST_REQUIRE_EQUAL(failed.ConnectionRate(), std::numeric_limits<double>::denorm_min());
     std::vector<CService> endpoints;
+    endpoints.reserve(P2CEndpointPriority::MAX_ENDPOINTS);
     for (size_t i = 0; i < P2CEndpointPriority::MAX_ENDPOINTS; ++i) {
-        endpoints.push_back(Lookup("8.8.8." + std::to_string(i + 1), 443, false).value());
+        endpoints.push_back(Lookup("8.8.8." + util::ToString(i + 1), 443, false).value());
     }
     P2CEndpointPriority priority;
     priority.Refresh(endpoints);
     std::vector<std::shared_ptr<P2CDomainStats>> statistics;
+    statistics.reserve(endpoints.size());
     for (const auto& endpoint : endpoints) {
         const auto selected{priority.Select(1)};
         BOOST_REQUIRE(selected);
@@ -736,7 +747,8 @@ BOOST_AUTO_TEST_CASE(endpoint_priority_bounds_dns_endpoints_and_ignores_duplicat
     BOOST_CHECK(priority.Empty());
     BOOST_CHECK(!priority.Select(1));
     std::vector<CService> endpoints;
-    for (size_t i = 0; i < 40; ++i) endpoints.push_back(Lookup("8.8.8." + std::to_string(i + 1), 443, false).value());
+    endpoints.reserve(40);
+    for (size_t i = 0; i < 40; ++i) endpoints.push_back(Lookup("8.8.8." + util::ToString(i + 1), 443, false).value());
     priority.Refresh(endpoints);
     BOOST_CHECK_EQUAL(priority.Size(), P2CEndpointPriority::MAX_ENDPOINTS);
     endpoints.resize(P2CEndpointPriority::MAX_ENDPOINTS);
