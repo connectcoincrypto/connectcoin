@@ -13,6 +13,7 @@
 #include <key_io.h>
 #include <netaddress.h>
 #include <univalue.h>
+#include <util/check.h>
 #include <util/strencodings.h>
 #include <util/string.h>
 #include <util/time.h>
@@ -128,7 +129,6 @@ struct P2CClaimWorkerImpl::Impl {
         std::string name;
         std::map<PriorityKey, CTxOut> bounties;
         std::array<MaskWork, PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL + 1> masks;
-        std::optional<PriorityKey> after;
         P2CEndpointPriority endpoints;
         std::optional<std::pair<double, PriorityKey>> economic_key;
         ScheduleClock::time_point resolve_after{};
@@ -569,8 +569,12 @@ struct P2CClaimWorkerImpl::Impl {
                 if (economic_order.empty()) Message("waiting for eligible bounties");
                 return std::nullopt;
             }
-            auto candidate{group->after ? group->bounties.upper_bound(*group->after) : group->bounties.begin()};
-            if (candidate == group->bounties.end()) candidate = group->bounties.begin();
+            // Both fair and economic domain turns use the same best bounty.
+            // Its mask-specific TLS efficiency already contributes to the
+            // domain score; do not spend that preference on a lower-ranked
+            // bounty just because another attempt is already in flight.
+            auto candidate{group->bounties.find(Assert(group->economic_key)->second)};
+            Assert(candidate != group->bounties.end());
             const auto key{candidate->first};
             const auto outpoint{key.outpoint};
             const auto mask{candidate->second.GetPayToDomain()->signature_algorithms_mask};
@@ -623,7 +627,6 @@ struct P2CClaimWorkerImpl::Impl {
                 group->resolving = true;
                 return Assignment{std::move(group), cached->second, true};
             }
-            group->after = key;
             if (!economic) domain_after = group->name;
             prefer_reward = !economic; // A skipped domain never buys an extra.
             if (rate > 0) next_connection = Clock::now() + std::chrono::nanoseconds{(1'000'000'000LL + rate - 1) / rate};

@@ -240,8 +240,8 @@ allocation. The economic winner uses its best eligible bounty, not the sum or
 count of its outputs. Unusable bounties do not earn extra economic assignments.
 
 Each tracked bounty receives one local, cryptographically random ranking factor
-from **1.000000 through 1.100000**, inclusive. Within a domain, bounties rotate
-through the order of `(reward - claim_fee) * (target + 1) * factor`, using exact
+from **1.000000 through 1.100000**, inclusive. Within each domain/mask pair,
+bounties are ranked by `(reward - claim_fee) * (target + 1) * factor`, using exact
 352-bit integer keys and the outpoint to break ties. The factor is not redrawn
 per connection or refresh: it survives retries and stop/start in the same loaded
 wallet, while the bounty or its live claim work remains tracked. It is not saved
@@ -251,8 +251,8 @@ fees, profitability eligibility or the successful-connection budget below.
 Each `(domain, signature_algorithms_mask)` pair keeps exponentially smoothed
 success and duration averages, shared across its bounties and resolved IPs with
 the same mask. An unsupported RSA-only bounty therefore cannot poison the
-measured success rate of an ECDSA-capable bounty on that domain. Rotation and DNS are still grouped by
-domain, not by mask. Each observation records whether a captured proof passed
+measured success rate of an ECDSA-capable bounty on that domain. Domain rotation
+and DNS are still grouped by domain, not by mask. Each observation records whether a captured proof passed
 parsing and certificate/signature validation, including the domain, trust chain,
 certificate validity and **CertificateVerify** signature. Seconds measure elapsed
 TCP/TLS effort with a monotonic clock. TCP failures, TLS errors, timeouts and
@@ -277,11 +277,12 @@ failures with positive durations keep reducing the rate toward zero.
 Only finite, nonnegative durations are accepted. At floating-point extremes,
 the rate is limited to the positive finite range representable by a double, and
 overflowing priority scores saturate at its maximum finite value.
-The score for extra assignments is the highest eligible bounty score after
+The score for extra domain assignments is the highest eligible bounty score after
 multiplying each mask's expected net return by its own rate and the bounty's local ranking
-factor. This favors reliable, fast connections while retaining guaranteed
-round-robin exploration. Timing scores use floating point; exact economic keys
-break rounded ties. Each simultaneous attempt contributes its own duration,
+factor. Both fair and extra domain assignments attempt that same best bounty.
+This favors reliable, fast connections while retaining guaranteed round-robin
+exploration between eligible domains, not between bounties. Timing scores use
+floating point; exact economic keys break rounded ties. Each simultaneous attempt contributes its own duration,
 not a shared wall-clock interval, so raising concurrency alone does not multiply
 the observed efficiency.
 
@@ -331,7 +332,9 @@ The two averages survive priority refreshes, temporary bounty ineligibility and
 stop/start in the same loaded wallet. They are in-memory only: unloading the
 wallet resets them. A domain/mask pair with no remaining matching confirmed
 bounties is forgotten once its in-flight work drains. These measurements affect local scheduling only, never
-consensus, the global connection limit or within-domain bounty ordering.
+consensus or the global connection limit. They also select the best bounty
+between different signature masks within a domain; bounties sharing a mask
+retain their exact economic ordering.
 
 There is **no per-domain connection quota or configurable per-domain limit**.
 Only the wallet-wide rate and concurrency settings limit traffic. A sole eligible
@@ -341,13 +344,20 @@ of future connections: assignments are made when a connection slot is due.
 `schedule_refreshes` counts completed catalog/priority refreshes. The displayed
 domain is the last assigned domain; other domains can be in flight simultaneously.
 
-Within a domain, bounties rotate in descending expected net return:
+Within a domain, every new connection targets the highest-scoring eligible bounty.
+The underlying expected net return per validated proof is
 `(target + 1) / 2^256 * (reward - claim_fee)`. The inclusive `+1` matches consensus's
 `hash <= target`. Exact 320-bit integer numerators avoid floating-point rounding
 and overflow at the maximum target. Existing proposals retain their actual
-payout/fee; new proposals use the full-proof fee calculation. Equal priorities
-use outpoint order. A cursor preserves progress through large groups across
-refreshes, including bounties beyond the 256-entry fixed-proposal cache.
+payout/fee; new proposals use the full-proof fee calculation. The ranking factor
+and mask-specific validated-proof rate above determine the final selection score;
+exact ranking keys and then outpoint order break ties. Concurrent attempts can
+work on the same best bounty. Lower-ranked bounties are not assigned turns while
+that leader remains best and eligible. A completed proof, an exhausted connection
+budget, or a refreshed availability/profitability change lets the next eligible
+leader take over. A newly discovered higher-scoring bounty can take over at the
+next refresh, without cancelling healthy attempts already in flight.
+This applies to groups larger than the 256-entry fixed-proposal cache as well.
 The cache never evicts an in-flight challenge or a completed proof. This is a
 memory bound on distinct proposals, not a cap on connections or visited domains.
 

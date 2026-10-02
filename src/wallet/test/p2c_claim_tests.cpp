@@ -1539,7 +1539,8 @@ BOOST_FIXTURE_TEST_CASE(worker_success_budget_ignores_failures_and_is_per_bounty
         return true;
     };
     // p=1/2: four completed captures equal 2*E, the fifth exceeds it.
-    // More than five failed attempts per bounty must not exhaust that budget.
+    // More than five failed attempts on the leading bounty must not exhaust
+    // its budget. Only after five captures may work advance to the runner-up.
     // The TLS fixture is deliberately untrusted by Core: captures count even
     // when subsequent certificate/claim validation cannot submit the reward.
     const auto wait_for_budget = [&](unsigned expected_attempts) {
@@ -2003,10 +2004,10 @@ BOOST_FIXTURE_TEST_CASE(worker_keeps_connection_history_separate_for_exact_signa
     worker->Stop();
 }
 
-BOOST_FIXTURE_TEST_CASE(worker_rotates_each_connection_and_reaches_large_domain_tail, TestChain100Setup)
+BOOST_FIXTURE_TEST_CASE(worker_keeps_best_bounty_with_concurrent_domain_rotation, TestChain100Setup)
 {
     using namespace std::chrono_literals;
-    FakeSteadyClock clock; // Never advance: rotation cannot depend on a timer.
+    FakeSteadyClock clock; // Domain fairness must not depend on a timer.
     auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
     auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
     wallet->SetBroadcastTransactions(true);
@@ -2014,8 +2015,9 @@ BOOST_FIXTURE_TEST_CASE(worker_rotates_each_connection_and_reaches_large_domain_
     for (uint32_t i = 0; i < 262; ++i) {
         WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(
             COutPoint{Txid::FromUint256(uint256::ONE), i},
-            Coin{CTxOut{i < 260 ? 100'000 * COIN + i * (COIN / 1000) : COIN,
-                PayToDomainOutput{names[i < 260 ? 0 : i - 259], uint256::FromHex("0000" + std::string(60, 'f')).value(), 1}}, 100, false}, false));
+            Coin{CTxOut{i < 260 ? 100'000 * COIN : COIN,
+                PayToDomainOutput{names[i < 260 ? 0 : i - 259],
+                    uint256::FromHex(i == 259 ? "003" + std::string(61, 'f') : "0001" + std::string(60, 'f')).value(), 1}}, 100, false}, false));
     }
     RestoreDNSLookup restore_dns;
     RestoreSocketFactory restore_sockets;
@@ -2068,30 +2070,17 @@ BOOST_FIXTURE_TEST_CASE(worker_rotates_each_connection_and_reaches_large_domain_
     };
     auto worker{MakeP2CClaimWorker(*wallet)};
     BOOST_REQUIRE(worker->Configure(-1, 32));
-    // Instrumented TLS can exceed one short deadline while rotating normally.
-    // Only a new distinct alpha output resets the stall watchdog; repeated
-    // connections cannot hide starvation. Also bound total test work.
-    const auto deadline{std::chrono::steady_clock::now() + 5min};
-    auto progress_deadline{std::chrono::steady_clock::now() + 30s};
-    size_t reached{0};
-    while (std::chrono::steady_clock::now() < deadline && std::chrono::steady_clock::now() < progress_deadline) {
-        size_t observed{0};
-        {
-            std::lock_guard lock{events_mutex};
-            observed = alpha_outputs.size();
-        }
-        if (observed > reached) {
-            reached = observed;
-            progress_deadline = std::chrono::steady_clock::now() + 30s;
-        }
-        if (reached == 260) break;
+    // All alpha bounties have equal payouts. The 10-bit bounty must keep every
+    // alpha connection despite 259 eligible 15-bit alternatives and 32 threads.
+    const auto deadline{std::chrono::steady_clock::now() + 30s};
+    while (std::chrono::steady_clock::now() < deadline) {
+        { std::lock_guard lock{events_mutex}; if (events.size() >= 96) break; }
         std::this_thread::sleep_for(10ms);
     }
     worker->Stop();
-    BOOST_REQUIRE_MESSAGE(reached == 260, "Timed out waiting for distinct alpha outputs; reached=" << reached << "; connections=" << events.size() << "; status=" << worker->Status().write());
+    BOOST_REQUIRE_MESSAGE(events.size() >= 96, "Timed out waiting for connections; connections=" << events.size() << "; status=" << worker->Status().write());
     BOOST_CHECK(!unknown_challenge);
     BOOST_CHECK_EQUAL(lookups.load(), 3U);
-    BOOST_REQUIRE(events.size() > 300);
     std::map<std::string, unsigned> counts;
     for (size_t i = 0; i < std::min<size_t>(events.size(), 64); ++i) ++counts[events[i].first];
     BOOST_CHECK(counts[names[1]] > 0); // No 30-second monopolization.
@@ -2100,14 +2089,15 @@ BOOST_FIXTURE_TEST_CASE(worker_rotates_each_connection_and_reaches_large_domain_
     for (const auto& [name, index] : events) ++counts[name];
     BOOST_CHECK(counts[names[0]] > counts[names[1]] * 2); // Reward still matters.
     BOOST_CHECK(counts[names[0]] > counts[names[2]] * 2);
-    // Bounties beyond the 256-entry proposal cache were reached.
-    BOOST_CHECK(alpha_outputs.contains(0));
+    // Ranking considers the full catalog, including beyond the proposal limit.
+    BOOST_REQUIRE_EQUAL(alpha_outputs.size(), 1U);
     BOOST_CHECK(alpha_outputs.contains(259));
 }
 
 BOOST_FIXTURE_TEST_CASE(worker_prioritizes_difficulty_and_saved_net_payout, TestChain100Setup)
 {
     using namespace std::chrono_literals;
+    FakeSteadyClock clock;
     auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
     auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
     wallet->SetBroadcastTransactions(true);
@@ -2149,22 +2139,66 @@ BOOST_FIXTURE_TEST_CASE(worker_prioritizes_difficulty_and_saved_net_payout, Test
     BOOST_REQUIRE(public_address);
     g_dns_lookup = [address = *public_address](const std::string&, bool) { return std::vector<CNetAddr>{address}; };
     std::mutex hellos_mutex;
+    std::condition_variable release;
+    size_t released_through{0};
     std::vector<std::shared_ptr<std::vector<unsigned char>>> hellos;
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
         auto sent{std::make_shared<std::vector<unsigned char>>()};
-        { std::lock_guard lock{hellos_mutex}; hellos.push_back(sent); }
-        return std::make_unique<ClientHelloSocket>(*sent, 16384);
+        return std::make_unique<ClientHelloSocket>(*sent, 16384, [&, sent] {
+            std::unique_lock lock{hellos_mutex};
+            hellos.push_back(sent);
+            const auto count{hellos.size()};
+            if (count == 3 || count == 6 || count == 9) release.wait(lock, [&] { return released_through >= count; });
+        });
     };
     auto worker{MakeP2CClaimWorker(*wallet)};
+    struct ReleaseAndStop {
+        std::mutex& mutex;
+        std::condition_variable& wake;
+        size_t& released_through;
+        P2CClaimWorker& worker;
+        ~ReleaseAndStop() {
+            { std::lock_guard lock{mutex}; released_through = std::numeric_limits<size_t>::max(); }
+            wake.notify_all();
+            worker.Stop();
+        }
+    } release_and_stop{hellos_mutex, release, released_through, *worker};
+    const auto wait_until = [](const auto& predicate) {
+        const auto deadline{std::chrono::steady_clock::now() + 30s};
+        while (!predicate()) {
+            if (std::chrono::steady_clock::now() >= deadline) return false;
+            std::this_thread::sleep_for(10ms);
+        }
+        return true;
+    };
+    const auto refresh = [&] {
+        const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
+        clock += 5s;
+        return wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; });
+    };
     BOOST_REQUIRE(worker->Configure(-1, 1));
-    const auto deadline{std::chrono::steady_clock::now() + 30s};
-    while (std::chrono::steady_clock::now() < deadline) {
-        { std::lock_guard lock{hellos_mutex}; if (hellos.size() >= 4) break; }
-        std::this_thread::sleep_for(10ms);
-    }
-    worker->Stop(); // The first three attempts have completed before #4 starts.
-    BOOST_REQUIRE(hellos.size() >= 4);
-    const std::array<size_t, 3> order{2, 1, 0}; // Net EV ratio: 12 : 8 : 5.
+    BOOST_REQUIRE(wait_until([&] { std::lock_guard lock{hellos_mutex}; return hellos.size() == 3; }));
+    // Net EV is 12 : 8 : 5. Keep retrying the leader, then switch immediately
+    // after the refresh makes its lock visible while its third TLS is in flight.
+    WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(COutPoint{Txid::FromUint256(uint256::ONE), 2}, false)));
+    BOOST_REQUIRE(refresh());
+    { std::lock_guard lock{hellos_mutex}; released_through = 3; }
+    release.notify_all();
+    BOOST_REQUIRE(wait_until([&] { std::lock_guard lock{hellos_mutex}; return hellos.size() == 6; }));
+    WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().SpendCoin(COutPoint{Txid::FromUint256(uint256::ONE), 1}));
+    BOOST_REQUIRE(refresh());
+    { std::lock_guard lock{hellos_mutex}; released_through = 6; }
+    release.notify_all();
+    BOOST_REQUIRE(wait_until([&] { std::lock_guard lock{hellos_mutex}; return hellos.size() == 9; }));
+    // A better bounty becoming available takes the next assignment even while
+    // the previous leader remains eligible and has a handshake in flight.
+    WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->UnlockCoin(COutPoint{Txid::FromUint256(uint256::ONE), 2})));
+    BOOST_REQUIRE(refresh());
+    { std::lock_guard lock{hellos_mutex}; released_through = 9; }
+    release.notify_all();
+    BOOST_REQUIRE(wait_until([&] { std::lock_guard lock{hellos_mutex}; return hellos.size() >= 12; }));
+    worker->Stop();
+    const std::array<size_t, 12> order{2, 2, 2, 1, 1, 1, 0, 0, 0, 2, 2, 2};
     for (size_t i = 0; i < order.size(); ++i) {
         BOOST_REQUIRE(hellos[i]->size() >= 43);
         BOOST_CHECK_EQUAL_COLLECTIONS(hellos[i]->begin() + 11, hellos[i]->begin() + 43,
@@ -2382,6 +2416,97 @@ BOOST_FIXTURE_TEST_CASE(worker_weights_domain_priority_by_smoothed_tls_efficienc
     worker->Stop();
     BOOST_CHECK_EQUAL(events[6], domains[0]);
     BOOST_CHECK_EQUAL(events[7], domains[1]);
+}
+
+BOOST_FIXTURE_TEST_CASE(worker_selects_same_domain_leader_by_exact_mask_efficiency, TestChain100Setup)
+{
+    using namespace std::chrono_literals;
+    FakeSteadyClock clock;
+    auto* active_chain{WITH_LOCK(cs_main, return &m_node.chainman->ActiveChain())};
+    auto wallet{CreateSyncedWallet(*m_node.chain, *active_chain, coinbaseKey)};
+    wallet->SetBroadcastTransactions(true);
+    wallet->m_default_max_tx_fee = MAX_MONEY;
+    const auto target{uint256::FromHex("0" + std::string(63, 'f')).value()};
+    const std::array<uint8_t, 2> masks{PayToDomainOutput::SIGNATURE_ALGORITHMS_RSA,
+                                      PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL};
+    std::array<uint256, 2> challenges;
+    CCoinControl control;
+    control.m_feerate = CFeeRate{1000};
+    UniValue saved{UniValue::VOBJ}, pending{UniValue::VARR};
+    for (uint32_t i = 0; i < masks.size(); ++i) {
+        const COutPoint outpoint{Txid::FromUint256(uint256::ONE), i};
+        WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(outpoint,
+            Coin{CTxOut{4 * COIN, PayToDomainOutput{"mixed.example", target, 1, masks[i]}}, 100, false}, false));
+        const auto prepared{PrepareP2CClaim(*wallet, outpoint, control)};
+        BOOST_REQUIRE(prepared);
+        CMutableTransaction tx{*prepared->tx};
+        // RSA starts ahead even with the full 10% random ranking advantage for
+        // ALL. Two slow failures reverse the measured scores, above the floor.
+        tx.vout[0].nValue = i == 0 ? 111 * COIN / 100 : COIN;
+        challenges[i] = P2CClaimChallenge(CTransaction{tx}, 0);
+        pending.push_back(EncodeHexTx(CTransaction{tx}));
+    }
+    saved.pushKV("pending", std::move(pending));
+    saved.pushKV("ready", "");
+    saved.pushKV("proof", "");
+    saved.pushKV("attempts", 0);
+    saved.pushKV("submitted", 0);
+    saved.pushKV("last_txid", "");
+    BOOST_REQUIRE(wallet->GetDatabase().MakeBatch()->Write(std::string{"p2c_claim_worker_v1"}, saved.write()));
+    RestoreDNSLookup restore_dns;
+    RestoreSocketFactory restore_sockets;
+    const auto address{LookupHost("8.8.8.8", false, restore_dns.original)};
+    BOOST_REQUIRE(address);
+    g_dns_lookup = [&](const std::string&, bool) { return std::vector<CNetAddr>{*address}; };
+    std::mutex events_mutex;
+    std::condition_variable release;
+    std::vector<uint256> events;
+    bool released{false};
+    auto worker{MakeP2CClaimWorker(*wallet)};
+    struct ReleaseAndStop {
+        std::mutex& mutex;
+        std::condition_variable& wake;
+        bool& released;
+        P2CClaimWorker& worker;
+        ~ReleaseAndStop() {
+            { std::lock_guard lock{mutex}; released = true; }
+            wake.notify_all();
+            worker.Stop();
+        }
+    } release_and_stop{events_mutex, release, released, *worker};
+    CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
+        auto sent{std::make_shared<std::vector<unsigned char>>()};
+        return std::make_unique<ClientHelloSocket>(*sent, 16384, [&, sent] {
+            if (sent->size() < 43) return;
+            uint256 challenge;
+            std::copy_n(sent->begin() + 11, challenge.size(), challenge.begin());
+            {
+                std::unique_lock lock{events_mutex};
+                events.push_back(challenge);
+                if (events.size() == 3) release.wait(lock, [&] { return released; });
+            }
+            if (challenge == challenges[0]) std::this_thread::sleep_for(3s);
+        });
+    };
+    const auto wait_until = [](const auto& predicate) {
+        const auto deadline{std::chrono::steady_clock::now() + 30s};
+        while (!predicate()) {
+            if (std::chrono::steady_clock::now() >= deadline) return false;
+            std::this_thread::sleep_for(10ms);
+        }
+        return true;
+    };
+    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE(wait_until([&] { std::lock_guard lock{events_mutex}; return events.size() == 3; }));
+    const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
+    clock += 5s;
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; }));
+    { std::lock_guard lock{events_mutex}; released = true; }
+    release.notify_all();
+    BOOST_REQUIRE(wait_until([&] { std::lock_guard lock{events_mutex}; return events.size() >= 6; }));
+    worker->Stop();
+    const std::array<size_t, 6> expected{0, 0, 0, 1, 1, 1};
+    for (size_t i = 0; i < expected.size(); ++i) BOOST_CHECK(events[i] == challenges[expected[i]]);
 }
 
 BOOST_FIXTURE_TEST_CASE(worker_batches_spent_checks_and_recovers_eligibility, TestChain100Setup)
