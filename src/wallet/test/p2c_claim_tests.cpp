@@ -24,6 +24,7 @@
 #include <wallet/coincontrol.h>
 #include <wallet/p2c_claim.h>
 #include <wallet/p2c_claim_priority.h>
+#include <wallet/p2c_connection_rate.h>
 #include <wallet/p2c_connection_result.h>
 #include <wallet/p2c_domain_stats.h>
 #include <wallet/p2c_endpoint_priority.h>
@@ -110,6 +111,95 @@ std::vector<size_t> CountP2CEndpointSelections(P2CEndpointPriority& priority, ui
 }
 
 BOOST_FIXTURE_TEST_SUITE(p2c_claim_tests, WalletTestingSetup)
+
+BOOST_AUTO_TEST_CASE(connection_rate_compensates_coarse_timer_without_per_worker_credit)
+{
+    using Clock = P2CConnectionRateLimiter::Clock;
+    const auto start{Clock::time_point{} + std::chrono::seconds{1}};
+    P2CConnectionRateLimiter limiter;
+    unsigned attempts{0};
+    unsigned maximum_batch{0};
+    // 640 Windows-style 15.625 ms ticks span ten seconds. The old now+10ms
+    // schedule permits only one attempt per tick (64/s), regardless of workers.
+    for (unsigned tick = 0; tick < 640; ++tick) {
+        const auto now{start + std::chrono::microseconds{15'625} * tick};
+        unsigned batch{0};
+        for (unsigned worker = 0; worker < 300; ++worker) {
+            if (!limiter.BlockedUntil(now)) {
+                limiter.RecordStart(100, now);
+                ++batch;
+            }
+        }
+        maximum_batch = std::max(maximum_batch, batch);
+        attempts += batch;
+    }
+    BOOST_CHECK_EQUAL(attempts, 999U);
+    BOOST_CHECK_EQUAL(maximum_batch, 2U);
+    const auto end{start + std::chrono::seconds{10}};
+    BOOST_CHECK(!limiter.BlockedUntil(end));
+    limiter.RecordStart(100, end); // The 1000th slot was due at 9.99 seconds.
+    BOOST_CHECK(!limiter.BlockedUntil(end));
+    limiter.RecordStart(100, end); // The 1001st slot is due at 10 seconds.
+    BOOST_REQUIRE(limiter.BlockedUntil(end));
+    BOOST_CHECK(*limiter.BlockedUntil(end) == end + std::chrono::milliseconds{10});
+}
+
+BOOST_AUTO_TEST_CASE(connection_rate_discards_long_stalls_and_resets_on_reconfiguration)
+{
+    using Clock = P2CConnectionRateLimiter::Clock;
+    const auto start{Clock::time_point{}};
+    P2CConnectionRateLimiter limiter;
+    BOOST_CHECK(!limiter.BlockedUntil(start));
+    limiter.RecordStart(100, start);
+    BOOST_REQUIRE(limiter.BlockedUntil(start));
+    BOOST_CHECK(*limiter.BlockedUntil(start) == start + std::chrono::milliseconds{10});
+
+    // Exactly 100 ms of lateness may catch up; longer stalls restart the phase.
+    auto boundary{limiter};
+    const auto late{start + std::chrono::milliseconds{110}};
+    unsigned caught_up{0};
+    while (!boundary.BlockedUntil(late) && caught_up < 300) {
+        boundary.RecordStart(100, late);
+        ++caught_up;
+    }
+    BOOST_CHECK_EQUAL(caught_up, 11U);
+    for (const auto delay : {std::chrono::milliseconds{111}, std::chrono::milliseconds{60'000}}) {
+        auto stalled{limiter};
+        const auto now{start + delay};
+        BOOST_CHECK(!stalled.BlockedUntil(now));
+        stalled.RecordStart(100, now);
+        BOOST_REQUIRE(stalled.BlockedUntil(now));
+        BOOST_CHECK(*stalled.BlockedUntil(now) == now + std::chrono::milliseconds{10});
+    }
+    limiter = {}; // Configure joins workers before resetting the shared limiter.
+    BOOST_CHECK(!limiter.BlockedUntil(start));
+    limiter.RecordStart(1, start);
+    BOOST_REQUIRE(limiter.BlockedUntil(start));
+    BOOST_CHECK(*limiter.BlockedUntil(start) == start + std::chrono::seconds{1});
+}
+
+BOOST_AUTO_TEST_CASE(connection_rate_rounds_up_and_keeps_passed_wait_deadline)
+{
+    using Clock = P2CConnectionRateLimiter::Clock;
+    const auto start{Clock::time_point{}};
+    for (const int rate : {1, 3, 100, 1'000'000, std::numeric_limits<int>::max()}) {
+        P2CConnectionRateLimiter limiter;
+        limiter.RecordStart(rate, start);
+        const auto retry_at{limiter.BlockedUntil(start)};
+        BOOST_REQUIRE(retry_at);
+        const auto interval{std::chrono::ceil<Clock::duration>(std::chrono::nanoseconds{(1'000'000'000LL + rate - 1) / rate})};
+        BOOST_CHECK(*retry_at == start + interval);
+        BOOST_CHECK(interval > Clock::duration::zero());
+        BOOST_CHECK(limiter.BlockedUntil(*retry_at - Clock::duration{1}));
+        BOOST_CHECK(!limiter.BlockedUntil(*retry_at));
+        // A caller delayed before wait_until still uses its captured deadline,
+        // not a new 100 ms idle wait, even when another worker consumed a slot.
+        limiter.RecordStart(rate, *retry_at);
+        BOOST_CHECK(*retry_at == start + interval);
+        BOOST_REQUIRE(limiter.BlockedUntil(*retry_at));
+        BOOST_CHECK(*limiter.BlockedUntil(*retry_at) == start + 2 * interval);
+    }
+}
 
 BOOST_AUTO_TEST_CASE(worker_thread_pool_keeps_partial_capacity)
 {

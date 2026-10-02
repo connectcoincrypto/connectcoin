@@ -22,6 +22,7 @@
 #include <wallet/fees.h>
 #include <wallet/p2c_claim.h>
 #include <wallet/p2c_claim_priority.h>
+#include <wallet/p2c_connection_rate.h>
 #include <wallet/p2c_connection_result.h>
 #include <wallet/p2c_domain_stats.h>
 #include <wallet/p2c_endpoint_priority.h>
@@ -110,7 +111,7 @@ struct P2CClaimWorkerImpl::Impl {
     std::string last_error;
     std::string capacity_error;
     std::string last_txid;
-    Clock::time_point next_connection{};
+    P2CConnectionRateLimiter connection_rate;
     std::map<COutPoint, CTransactionRef> proposals;
     struct PriorityKey {
         P2CClaimSelectionPriority priority;
@@ -540,12 +541,15 @@ struct P2CClaimWorkerImpl::Impl {
             (found->second == std::numeric_limits<uint64_t>::max() || IsP2CClaimConnectionLimitExceeded(target, found->second));
     }
 
-    std::optional<Assignment> Next(const std::atomic<bool>& stop)
+    std::optional<Assignment> Next(const std::atomic<bool>& stop, std::optional<Clock::time_point>& retry_at)
     {
         std::lock_guard work_lock{work_mutex};
         // Do not preassign hundreds of future connections at a low rate: choose
         // against the latest schedule only when a connection slot is due.
-        if (rate > 0 && Clock::now() < next_connection) return std::nullopt;
+        if (rate > 0) {
+            retry_at = connection_rate.BlockedUntil(Clock::now());
+            if (retry_at) return std::nullopt;
+        }
         const auto usable = [](const DomainWork& group) {
             return !group.bounties.empty() && !group.resolving &&
                 (!group.endpoints.Empty() || ScheduleClock::now() >= group.resolve_after);
@@ -629,7 +633,7 @@ struct P2CClaimWorkerImpl::Impl {
             }
             if (!economic) domain_after = group->name;
             prefer_reward = !economic; // A skipped domain never buys an extra.
-            if (rate > 0) next_connection = Clock::now() + std::chrono::nanoseconds{(1'000'000'000LL + rate - 1) / rate};
+            if (rate > 0) connection_rate.RecordStart(rate, Clock::now());
             {
                 std::lock_guard lock{mutex};
                 ++domain_rounds; // Compatibility field: now counts assignments.
@@ -646,13 +650,12 @@ struct P2CClaimWorkerImpl::Impl {
     {
         const auto cancelled = [&] { return stop.load() || failed.load(); };
         while (!cancelled()) {
-            auto assignment{Next(stop)};
+            std::optional<Clock::time_point> retry_at;
+            auto assignment{Next(stop, retry_at)};
             if (!assignment) {
-                auto until{Clock::now() + std::chrono::milliseconds{100}};
-                {
-                    std::lock_guard lock{work_mutex};
-                    if (rate > 0 && next_connection > Clock::now()) until = std::min(until, next_connection);
-                }
+                // Keep the deadline even if it just passed while taking the
+                // status lock. Only idle scans use the 100 ms fallback wait.
+                const auto until{retry_at.value_or(Clock::now() + std::chrono::milliseconds{100})};
                 std::unique_lock lock{mutex};
                 wake.wait_until(lock, until, cancelled);
                 continue;
@@ -869,7 +872,7 @@ util::Result<void> P2CClaimWorkerImpl::Configure(int rate, int concurrency, std:
         m_impl->domains = std::move(domains);
         m_impl->reward_address = destination ? EncodeDestination(*destination) : "";
         m_impl->payout_destination = std::move(destination);
-        m_impl->next_connection = {};
+        m_impl->connection_rate = {};
         m_impl->domain_rounds = 0;
         m_impl->schedule_refreshes = 0;
         m_impl->state = rate == 0 ? "disabled" : "starting";

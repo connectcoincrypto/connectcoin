@@ -130,6 +130,15 @@ a proposed limit: the active worker rate remains **0 (disabled)** until you
 click **Apply / start** and accept the confirmation. Cancelling leaves HTTPS
 disabled. The stop button still sets the rate to 0.
 
+The positive rate is shared by all connection workers. Pacing preserves the
+scheduled deadlines across short timer delays (including coarse Windows timer
+wakeups), allowing nearby missed slots to catch up instead of lowering the
+average rate. More than 100 milliseconds of lateness discards the missed slots
+and starts a fresh interval, so long idle periods cannot accumulate a burst.
+DNS resolution and scans with no eligible work do not consume rate slots.
+The setting is a ceiling/target, not a guarantee: occupied workers, network
+latency and proof validation may still reduce actual throughput.
+
 These defaults are not hard caps. Selecting more than 100 connections per second,
 an unlimited rate, or more than 100 simultaneous connections shows a prominent
 warning about overloading the computer or network and disconnecting the node.
