@@ -25,6 +25,7 @@
 #include <wallet/p2c_claim_priority.h>
 #include <wallet/p2c_connection_result.h>
 #include <wallet/p2c_domain_stats.h>
+#include <wallet/p2c_endpoint_priority.h>
 #include <wallet/p2c_tls.h>
 #include <wallet/p2c_tls_lifecycle.h>
 #include <wallet/p2c_worker.h>
@@ -45,6 +46,7 @@
 #include <cmath>
 #include <condition_variable>
 #include <functional>
+#include <iterator>
 #include <limits>
 #include <memory>
 #include <mutex>
@@ -90,6 +92,20 @@ public:
         return 0; // EOF, no real server/network.
     }
 };
+
+std::vector<size_t> CountP2CEndpointSelections(P2CEndpointPriority& priority, uint8_t mask,
+                                             const std::vector<CService>& endpoints, size_t attempts)
+{
+    std::vector<size_t> counts(endpoints.size());
+    for (size_t i = 0; i < attempts; ++i) {
+        const auto selected{priority.Select(mask)};
+        BOOST_REQUIRE(selected);
+        const auto found{std::find(endpoints.begin(), endpoints.end(), selected->endpoint)};
+        BOOST_REQUIRE(found != endpoints.end());
+        ++counts[static_cast<size_t>(std::distance(endpoints.begin(), found))];
+    }
+    return counts;
+}
 }
 
 BOOST_FIXTURE_TEST_SUITE(p2c_claim_tests, WalletTestingSetup)
@@ -268,6 +284,10 @@ BOOST_AUTO_TEST_CASE(tls_efficiency_observes_validated_proofs_before_work_target
     const auto check = [&](const auto& proof, const auto& verifier, int64_t time, bool cancelled,
                            std::optional<bool> expected, bool expect_verification) {
         P2CDomainStats stats;
+        P2CEndpointPriority endpoints;
+        endpoints.Refresh({*endpoint});
+        const auto selected{endpoints.Select(output.GetPayToDomain()->signature_algorithms_mask)};
+        BOOST_REQUIRE(selected);
         P2CTlsProofView view;
         std::string error;
         unsigned observations{0};
@@ -282,6 +302,7 @@ BOOST_AUTO_TEST_CASE(tls_efficiency_observes_validated_proofs_before_work_target
                 BOOST_REQUIRE(expected.has_value());
                 BOOST_CHECK_EQUAL(success, *expected);
                 stats.Record(success, 0.2);
+                selected->statistics->Record(success, 0.2);
                 ++observations;
             })};
         BOOST_CHECK_EQUAL(verified, expect_verification);
@@ -289,6 +310,7 @@ BOOST_AUTO_TEST_CASE(tls_efficiency_observes_validated_proofs_before_work_target
         BOOST_CHECK_EQUAL(observations, expected.has_value() ? 1U : 0U);
         const double expected_rate{expected ? (0.999 * 0.1 + 0.001 * *expected) / (0.999 * 0.02 + 0.001 * 0.2) : 5.0};
         BOOST_CHECK_CLOSE(stats.ConnectionRate(), expected_rate, 1e-10);
+        BOOST_CHECK_CLOSE(selected->statistics->ConnectionRate(), expected_rate, 1e-10);
         if (valid) {
             BOOST_CHECK(!view.connection_work_hash.IsNull());
             BOOST_CHECK(!P2CMeetsWorkTarget(view.connection_work_hash, output.GetPayToDomain()->connection_work_target));
@@ -511,6 +533,220 @@ BOOST_AUTO_TEST_CASE(domain_priority_rewards_success_and_low_latency)
     BOOST_CHECK_EQUAL(GetP2CDomainSelectionPriority(GetP2CClaimSelectionPriority(richer, P2C_CLAIM_FACTOR_MAX), maximum_rate), maximum_rate);
     const auto half{uint256::FromHex("7" + std::string(63, 'f')).value()};
     BOOST_CHECK_CLOSE(GetP2CDomainSelectionPriority(GetP2CClaimSelectionPriority(GetP2CClaimPriority(half, 1), P2C_CLAIM_FACTOR_SCALE), maximum_rate), maximum_rate / 2, 1e-10);
+}
+
+BOOST_AUTO_TEST_CASE(endpoint_priority_equal_priors_rotate_and_isolate_domains_and_masks)
+{
+    // Numeric Lookup with name lookup disabled never performs DNS or networking.
+    const std::vector<CService> endpoints{Lookup("8.8.8.8", 443, false).value(),
+        Lookup("1.1.1.1", 443, false).value(), Lookup("2001:4860:4860::8888", 443, false).value()};
+    P2CEndpointPriority first_domain, other_domain;
+    first_domain.Refresh(endpoints);
+    other_domain.Refresh(endpoints);
+    for (size_t i = 0; i < 9; ++i) {
+        const auto selected{first_domain.Select(1)};
+        BOOST_REQUIRE(selected);
+        BOOST_CHECK(selected->endpoint == endpoints[i % endpoints.size()]);
+        BOOST_CHECK_EQUAL(selected->statistics->ConnectionRate(), 5.0);
+    }
+    const auto original{first_domain.Select(1)};
+    BOOST_REQUIRE(original);
+    for (size_t i = 0; i < 1000; ++i) original->statistics->Record(false, 10.0);
+    BOOST_CHECK_LT(original->statistics->ConnectionRate(), 0.01);
+    for (uint8_t mask = 2; mask <= PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL; ++mask) {
+        const auto independent{first_domain.Select(mask)};
+        BOOST_REQUIRE(independent);
+        BOOST_CHECK(independent->endpoint == endpoints.front());
+        BOOST_CHECK(independent->statistics != original->statistics);
+        BOOST_CHECK_EQUAL(independent->statistics->ConnectionRate(), 5.0);
+    }
+    const auto independent_domain{other_domain.Select(1)};
+    BOOST_REQUIRE(independent_domain);
+    BOOST_CHECK(independent_domain->endpoint == endpoints.front());
+    BOOST_CHECK(independent_domain->statistics != original->statistics);
+    BOOST_CHECK_EQUAL(independent_domain->statistics->ConnectionRate(), 5.0);
+    for (const uint8_t invalid : {uint8_t{0}, uint8_t{8}, uint8_t{255}}) {
+        BOOST_CHECK(!first_domain.Select(invalid));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(endpoint_priority_prefers_lower_latency_at_equal_success)
+{
+    const std::vector<CService> endpoints{Lookup("8.8.8.8", 443, false).value(), Lookup("1.1.1.1", 443, false).value()};
+    P2CEndpointPriority priority;
+    priority.Refresh(endpoints);
+    const auto fast{priority.Select(1)}, slow{priority.Select(1)};
+    BOOST_REQUIRE(fast && slow);
+    BOOST_CHECK(fast->endpoint == endpoints[0]);
+    BOOST_CHECK(slow->endpoint == endpoints[1]);
+    for (size_t i = 0; i < 1000; ++i) {
+        const bool success{i % 5 != 0};
+        fast->statistics->Record(success, 0.02);
+        slow->statistics->Record(success, 2.0);
+    }
+    const double fast_rate{fast->statistics->ConnectionRate()}, slow_rate{slow->statistics->ConnectionRate()};
+    BOOST_CHECK_GT(fast_rate, slow_rate * 50);
+    constexpr size_t attempts{20000};
+    const auto counts{CountP2CEndpointSelections(priority, 1, endpoints, attempts)};
+    const double expected_slow{attempts * (0.01 / 2 + 0.99 * slow_rate / (fast_rate + slow_rate))};
+    BOOST_CHECK_LE(std::abs(static_cast<double>(counts[1]) - expected_slow), 2.0);
+    BOOST_CHECK_GT(counts[0], counts[1] * 20);
+    BOOST_CHECK_GT(counts[1], 0U);
+}
+
+BOOST_AUTO_TEST_CASE(endpoint_priority_prefers_valid_connections_at_equal_latency)
+{
+    const std::vector<CService> endpoints{Lookup("8.8.8.8", 443, false).value(), Lookup("1.1.1.1", 443, false).value()};
+    P2CEndpointPriority priority;
+    priority.Refresh(endpoints);
+    const auto reliable{priority.Select(1)}, unreliable{priority.Select(1)};
+    BOOST_REQUIRE(reliable && unreliable);
+    for (size_t i = 0; i < 5000; ++i) {
+        reliable->statistics->Record(true, 0.2);
+        unreliable->statistics->Record(i % 5 == 0, 0.2);
+    }
+    const double good_rate{reliable->statistics->ConnectionRate()}, bad_rate{unreliable->statistics->ConnectionRate()};
+    BOOST_CHECK_GT(good_rate, bad_rate * 4.9);
+    constexpr size_t attempts{20000};
+    const auto counts{CountP2CEndpointSelections(priority, 1, endpoints, attempts)};
+    const double expected_bad{attempts * (0.01 / 2 + 0.99 * bad_rate / (good_rate + bad_rate))};
+    BOOST_CHECK_LE(std::abs(static_cast<double>(counts[1]) - expected_bad), 2.0);
+    BOOST_CHECK_GT(counts[0], counts[1] * 4);
+    // A fast but invalid capture reduces the numerator; capture alone is not success.
+    const double before{unreliable->statistics->ConnectionRate()};
+    for (size_t i = 0; i < 10000; ++i) unreliable->statistics->Record(false, 0.001);
+    BOOST_CHECK_LT(unreliable->statistics->ConnectionRate(), before);
+}
+
+BOOST_AUTO_TEST_CASE(endpoint_priority_extreme_rates_keep_one_percent_exploration_and_recover)
+{
+    BOOST_CHECK_EQUAL(P2CEndpointPriority::EXPLORATION, 0.01);
+    P2CDomainStats instant, failed;
+    for (size_t i = 0; i < 1000000; ++i) {
+        instant.Record(true, 0.0);
+        failed.Record(false, std::numeric_limits<double>::max());
+    }
+    BOOST_REQUIRE_EQUAL(instant.ConnectionRate(), std::numeric_limits<double>::max());
+    BOOST_REQUIRE_EQUAL(failed.ConnectionRate(), std::numeric_limits<double>::denorm_min());
+    std::vector<CService> endpoints;
+    for (size_t i = 0; i < P2CEndpointPriority::MAX_ENDPOINTS; ++i) {
+        endpoints.push_back(Lookup("8.8.8." + std::to_string(i + 1), 443, false).value());
+    }
+    P2CEndpointPriority priority;
+    priority.Refresh(endpoints);
+    std::vector<std::shared_ptr<P2CDomainStats>> statistics;
+    for (const auto& endpoint : endpoints) {
+        const auto selected{priority.Select(1)};
+        BOOST_REQUIRE(selected);
+        BOOST_CHECK(selected->endpoint == endpoint);
+        statistics.push_back(selected->statistics);
+    }
+    for (auto& stats : statistics) *stats = failed;
+    *statistics.front() = instant;
+    constexpr size_t attempts{32000};
+    const auto counts{CountP2CEndpointSelections(priority, 1, endpoints, attempts)};
+    const double exploration_count{attempts * 0.01 / endpoints.size()};
+    for (size_t i = 1; i < counts.size(); ++i) {
+        BOOST_CHECK_LE(std::abs(static_cast<double>(counts[i]) - exploration_count), 2.0);
+        BOOST_CHECK_GT(counts[i], 0U);
+    }
+    BOOST_CHECK_GE(counts.front(), attempts * 99 / 100);
+    // Reverse the learned preferences without resetting credits or DNS state.
+    *statistics.front() = failed;
+    *statistics.back() = instant;
+    const auto reversed{CountP2CEndpointSelections(priority, 1, endpoints, attempts)};
+    BOOST_CHECK_GE(reversed.back(), attempts * 99 / 100);
+    for (size_t i = 0; i + 1 < reversed.size(); ++i) {
+        BOOST_CHECK_LE(std::abs(static_cast<double>(reversed[i]) - exploration_count), 2.0);
+    }
+    // The sum of 32 maximum finite rates overflows unless normalized first.
+    // Uniform service must still work without NaN credits or a stuck winner.
+    for (auto& stats : statistics) *stats = instant;
+    const auto equally_fast{CountP2CEndpointSelections(priority, 1, endpoints, 3200)};
+    for (const auto count : equally_fast) BOOST_CHECK_LE(std::abs(static_cast<double>(count) - 100.0), 2.0);
+    // Two maximum rates also overflow an unnormalized sum, but unlike the
+    // all-equal case, losing the 99% weighted share cannot hide as fair rotation.
+    for (auto& stats : statistics) *stats = failed;
+    *statistics[0] = instant;
+    *statistics[1] = instant;
+    const auto two_fast{CountP2CEndpointSelections(priority, 1, endpoints, attempts)};
+    const double expected_fast{attempts * 0.99 / 2 + exploration_count};
+    for (size_t i = 0; i < two_fast.size(); ++i) {
+        BOOST_CHECK_LE(std::abs(static_cast<double>(two_fast[i]) - (i < 2 ? expected_fast : exploration_count)), 2.0);
+    }
+    // Equally failing IPs remain selectable; no cooldown or concurrency gate.
+    for (auto& stats : statistics) *stats = failed;
+    const auto equal{CountP2CEndpointSelections(priority, 1, endpoints, 3200)};
+    for (const auto count : equal) BOOST_CHECK_LE(std::abs(static_cast<double>(count) - 100.0), 2.0);
+}
+
+BOOST_AUTO_TEST_CASE(endpoint_priority_dns_refresh_preserves_live_history_but_not_removed_ips)
+{
+    const auto first{Lookup("8.8.8.8", 443, false).value()};
+    const auto second{Lookup("1.1.1.1", 443, false).value()};
+    const auto added{Lookup("2001:4860:4860::8888", 443, false).value()};
+    P2CEndpointPriority priority;
+    priority.Refresh({first, second});
+    const auto in_flight{priority.Select(1)}, unchanged{priority.Select(1)};
+    BOOST_REQUIRE(in_flight && unchanged);
+    in_flight->statistics->Record(false, 10.0);
+    const double before{in_flight->statistics->ConnectionRate()};
+    priority.Refresh({second, added, first});
+    bool found_first{false}, found_second{false};
+    for (size_t i = 0; i < 30; ++i) {
+        const auto selected{priority.Select(1)};
+        BOOST_REQUIRE(selected);
+        if (selected->endpoint == first) {
+            found_first = true;
+            BOOST_CHECK(selected->statistics == in_flight->statistics);
+            BOOST_CHECK_EQUAL(selected->statistics->ConnectionRate(), before);
+        } else if (selected->endpoint == second) {
+            found_second = true;
+            BOOST_CHECK(selected->statistics == unchanged->statistics);
+        } else {
+            BOOST_CHECK_EQUAL(selected->statistics->ConnectionRate(), 5.0);
+        }
+    }
+    BOOST_CHECK(found_first && found_second);
+    // Verification can finish after DNS reordered the same IP: its shared object stays live.
+    in_flight->statistics->Record(true, 0.2);
+    BOOST_CHECK_NE(in_flight->statistics->ConnectionRate(), before);
+    priority.Refresh({second, added});
+    in_flight->statistics->Record(false, 10.0); // Late removed-IP result cannot reinsert it.
+    BOOST_CHECK_EQUAL(priority.Size(), 2U);
+    CountP2CEndpointSelections(priority, 1, {second, added}, 100);
+    priority.Refresh({first});
+    const auto readded{priority.Select(1)};
+    BOOST_REQUIRE(readded);
+    BOOST_CHECK(readded->statistics != in_flight->statistics);
+    BOOST_CHECK_EQUAL(readded->statistics->ConnectionRate(), 5.0);
+    in_flight->statistics->Record(true, 0.0);
+    BOOST_CHECK_EQUAL(readded->statistics->ConnectionRate(), 5.0);
+    priority.Refresh({});
+    BOOST_CHECK(priority.Empty());
+    BOOST_CHECK_EQUAL(priority.Size(), 0U);
+    BOOST_CHECK(!priority.Select(1));
+    readded->statistics->Record(true, 0.2);
+    BOOST_CHECK(priority.Empty());
+}
+
+BOOST_AUTO_TEST_CASE(endpoint_priority_bounds_dns_endpoints_and_ignores_duplicates)
+{
+    P2CEndpointPriority priority;
+    BOOST_CHECK(priority.Empty());
+    BOOST_CHECK(!priority.Select(1));
+    std::vector<CService> endpoints;
+    for (size_t i = 0; i < 40; ++i) endpoints.push_back(Lookup("8.8.8." + std::to_string(i + 1), 443, false).value());
+    priority.Refresh(endpoints);
+    BOOST_CHECK_EQUAL(priority.Size(), P2CEndpointPriority::MAX_ENDPOINTS);
+    endpoints.resize(P2CEndpointPriority::MAX_ENDPOINTS);
+    const auto counts{CountP2CEndpointSelections(priority, 1, endpoints, endpoints.size() * 3)};
+    for (const auto count : counts) BOOST_CHECK_EQUAL(count, 3U);
+    priority.Refresh({endpoints[0], endpoints[0], endpoints[1], endpoints[1]});
+    BOOST_CHECK_EQUAL(priority.Size(), 2U);
+    const auto unique{CountP2CEndpointSelections(priority, 2, {endpoints[0], endpoints[1]}, 20)};
+    BOOST_CHECK_EQUAL(unique[0], 10U);
+    BOOST_CHECK_EQUAL(unique[1], 10U);
 }
 
 BOOST_AUTO_TEST_CASE(selection_factor_preserves_full_priority_precision)

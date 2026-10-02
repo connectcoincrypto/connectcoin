@@ -23,6 +23,7 @@
 #include <wallet/p2c_claim_priority.h>
 #include <wallet/p2c_connection_result.h>
 #include <wallet/p2c_domain_stats.h>
+#include <wallet/p2c_endpoint_priority.h>
 #include <wallet/p2c_tls.h>
 #include <wallet/p2c_worker_threads.h>
 #include <wallet/wallet.h>
@@ -128,8 +129,7 @@ struct P2CClaimWorkerImpl::Impl {
         std::map<PriorityKey, CTxOut> bounties;
         std::array<MaskWork, PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL + 1> masks;
         std::optional<PriorityKey> after;
-        size_t endpoint_offset{0};
-        std::vector<CService> endpoints;
+        P2CEndpointPriority endpoints;
         std::optional<std::pair<double, PriorityKey>> economic_key;
         ScheduleClock::time_point resolve_after{};
         bool resolving{false};
@@ -154,7 +154,8 @@ struct P2CClaimWorkerImpl::Impl {
     std::map<std::string, std::shared_ptr<DomainWork>> groups;
     // Exact masks can negotiate different server certificates and performance.
     // Share exponentially smoothed observations only within a (domain, mask),
-    // while rotation and DNS stay shared. Preserve history through ineligibility.
+    // while DNS stays shared. Preserve domain history through ineligibility;
+    // endpoint history belongs to each active group's current DNS set.
     using DomainMask = std::pair<std::string, uint8_t>;
     std::map<DomainMask, std::shared_ptr<P2CDomainStats>> domain_statistics;
     std::map<COutPoint, std::shared_ptr<ClaimWork>> claim_cache;
@@ -547,7 +548,7 @@ struct P2CClaimWorkerImpl::Impl {
         if (rate > 0 && Clock::now() < next_connection) return std::nullopt;
         const auto usable = [](const DomainWork& group) {
             return !group.bounties.empty() && !group.resolving &&
-                (!group.endpoints.empty() || ScheduleClock::now() >= group.resolve_after);
+                (!group.endpoints.Empty() || ScheduleClock::now() >= group.resolve_after);
         };
         while (!stop.load() && !groups.empty()) {
             std::shared_ptr<DomainWork> group;
@@ -660,7 +661,8 @@ struct P2CClaimWorkerImpl::Impl {
                     std::lock_guard lock{work_mutex};
                     group->resolving = false;
                     group->resolve_after = ScheduleClock::now() + (endpoints ? DNS_REFRESH : std::chrono::seconds{2});
-                    group->endpoints = endpoints ? std::move(*endpoints) : std::vector<CService>{};
+                    if (endpoints) group->endpoints.Refresh(*endpoints);
+                    else group->endpoints.Refresh({});
                 }
                 wake.notify_all();
                 if (!endpoints) {
@@ -670,24 +672,23 @@ struct P2CClaimWorkerImpl::Impl {
             }
             const auto& claim{assignment->claim};
             const auto claim_cancelled = [&] { return cancelled() || claim->unavailable.load(); };
-            CService endpoint;
+            std::optional<P2CEndpointPriority::Selection> endpoint;
             {
                 std::lock_guard lock{work_mutex};
-                if (group->endpoints.empty() || claim_cancelled()) continue;
+                if (group->endpoints.Empty() || claim_cancelled()) continue;
                 const auto outpoint{claim->prepared.tx->vin[0].prevout};
                 // Check completed successes under the same lock as updates.
                 // In-flight attempts are not yet successes; they may finish
                 // and submit a proof after this cutoff, but no new work starts.
                 if (ConnectionLimitExceeded(outpoint, claim->prepared.bounty.GetPayToDomain()->connection_work_target)) continue;
+                endpoint = group->endpoints.Select(claim->prepared.bounty.GetPayToDomain()->signature_algorithms_mask);
+                if (!endpoint) continue;
                 { std::lock_guard status_lock{mutex}; ++attempts; }
-                group->endpoint_offset %= group->endpoints.size();
-                endpoint = group->endpoints[group->endpoint_offset];
-                group->endpoint_offset = group->endpoint_offset + 1 == group->endpoints.size() ? 0 : group->endpoint_offset + 1;
             }
             if (claim_cancelled()) continue;
             // No chain/database lookup in the per-connection hot path.
             const auto started{Clock::now()};
-            auto captured{CaptureP2CTls(endpoint, group->name, claim->challenge, claim_cancelled,
+            auto captured{CaptureP2CTls(endpoint->endpoint, group->name, claim->challenge, claim_cancelled,
                 {.signature_algorithms_mask = claim->prepared.bounty.GetPayToDomain()->signature_algorithms_mask})};
             const double seconds{std::chrono::duration<double>(Clock::now() - started).count()};
             if (captured) {
@@ -706,6 +707,9 @@ struct P2CClaimWorkerImpl::Impl {
                     // Keep the original TCP/TLS duration; validation time is
                     // excluded. A valid proof counts even if its hash misses.
                     assignment->statistics->Record(success, seconds);
+                    // The same validated outcome trains only the selected IP
+                    // and exact mask; raw captures never count as successes.
+                    endpoint->statistics->Record(success, seconds);
                 })};
             if (!captured) {
                 if (!claim_cancelled()) {

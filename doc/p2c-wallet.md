@@ -359,8 +359,32 @@ durably, and is automatically submitted by the coordinator. A spent/locked/reorg
 bounty cancels only its affected work at the availability refresh. Every attempt
 uses its own bounty-specific challenge; proofs are never reused for other outputs.
 
-DNS results are reused for 60 seconds, with resolved addresses rotated between
-attempts (including at concurrency 1). Resolution is outside the scheduler lock:
+DNS results are reused for 60 seconds. Within a domain, IP selection keeps
+separate success and duration averages for each resolved endpoint and exact
+signature-algorithms mask. These use the same `0.1`/`0.02` initial values and
+`0.999`/`0.001` updates as the domain averages above, and only conclusive,
+certificate/signature-validated outcomes count as successes. Thus an IP that
+returns valid proofs faster is preferred; a fast invalid capture is a failure.
+
+Smooth weighted round-robin distributes **99% of selection weight** in proportion
+to each IP's `success_average / seconds_average`, with the remaining **1% spread
+uniformly** over the resolved IPs for exploration. This is a share of connection
+attempts, not a reservation of connection time or concurrent slots. It works
+with concurrency 1, lets an IP recover when it becomes useful again, and never
+adds a per-IP/per-domain concurrency cap or new retry pause. The existing global
+rate/concurrency settings, timeout values and domain/bounty selection are
+unchanged. Rate normalization keeps selection weights finite at floating-point
+extremes.
+
+An ordinary DNS refresh preserves learned IP/mask state for endpoints still
+present, removes departed endpoints, and starts new endpoints with the initial
+averages. An in-flight attempt retains its original state object, so late
+validation cannot recreate a removed IP or overwrite a newly added IP's state.
+These IP statistics are local, in-memory scheduling state, not consensus data.
+They belong to the active domain group and are reset when that group is removed
+or the claim worker is restarted; the longer-lived domain averages above are
+separate.
+Resolution is outside the scheduler lock:
 one slow lookup does not block other connection workers on other domains.
 Failed DNS backs off for two seconds for that domain. Failed TLS or rejected
 certificates back off for one second per connection worker. These are retry
