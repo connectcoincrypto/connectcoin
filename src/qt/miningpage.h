@@ -8,6 +8,8 @@
 #include <QWidget>
 #include <QPointer>
 
+#include <string>
+
 class ClientModel;
 class WalletModel;
 class QLabel;
@@ -23,11 +25,13 @@ public:
     void setClientModel(ClientModel* model);
 
 private:
+    friend class WalletTests;
     void refresh();
     void start();
     void newAddress();
     QString walletAddress();
     void updateThreadWarning();
+    void updateDatasetStatus(const std::string& dataset);
     WalletModel* m_wallet;
     QPointer<ClientModel> m_client;
     bool m_mining_command_requested{false};
@@ -39,6 +43,8 @@ private:
     QPushButton* m_start;
     QPushButton* m_stop;
     QLabel* m_status;
+    QLabel* m_dataset_status;
+    QLabel* m_dataset_warning;
 };
 
 #endif // CONNECTCOIN_QT_MININGPAGE_H

@@ -5937,6 +5937,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>未開始</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>一般記憶體分頁</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX 資料集（最近狀態快照）：%1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>資料集用唔到 Huge Pages。挖礦會繼續用一般記憶體分頁；效能可能會低啲。系統設定唔會自動更改。</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST 資料集初始化失敗。挖礦會繼續以 LIGHT 模式運行，效能會較低。</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>可選：留空就會用呢個錢包</translation>
     </message>

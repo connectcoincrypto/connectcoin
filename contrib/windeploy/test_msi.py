@@ -26,6 +26,8 @@ from unittest.mock import patch
 REPO = Path(__file__).resolve().parents[2]
 TARGETS = {"connectcoin", "connectcoin-qt", "connectcoind", "connectcoin-cli",
            "connectcoin-tx", "connectcoin-wallet", "connectcoin-util"}
+HUGE_PAGES_HELPER = "connectcoin-huge-pages"
+HUGE_PAGES_CONDITION = 'WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 AND ACTION = "INSTALL" AND NOT Installed AND NOT REMOVE'
 UPGRADE_CODE = "{68B91A0E-90D2-4B52-B9F5-5DE859A401DB}"
 # Fail closed before administrative extraction. Standard MSI actions can write
 # registry values, move files, or change PATH without any CustomAction rows.
@@ -126,10 +128,10 @@ def validate_manifest(manifest):
                 path == "share/examples/connectcoin.conf", f"Active user config in payload: {path}")
         require(not parsed.name.lower().startswith("qt6test"), f"Qt test library in payload: {path}")
         if parsed.suffix.lower() == ".exe":
-            require(path in {f"bin/{target}.exe" for target in TARGETS},
+            require(path in {f"bin/{target}.exe" for target in TARGETS | {HUGE_PAGES_HELPER}},
                     f"Unexpected executable: {path}")
         indexed[key] = entry
-    expected = {f"bin/{target}.exe" for target in TARGETS}
+    expected = {f"bin/{target}.exe" for target in TARGETS | {HUGE_PAGES_HELPER}}
     expected.update({"bin/qt6core.dll", "bin/qt6gui.dll", "bin/qt6widgets.dll",
                      "bin/platforms/qwindows.dll", "bin/styles/qmodernwindowsstyle.dll",
                      "bin/msvcp140.dll", "bin/msvcp140_1.dll", "bin/msvcp140_2.dll",
@@ -162,9 +164,9 @@ $view.Execute()
 while ($record = $view.Fetch()) { $tables[$record.StringData(1)] = $true }
 $view.Close()
 $result = [ordered]@{}
-foreach ($name in @('Property', 'Control', 'Directory', 'Component', 'File', 'Registry',
+foreach ($name in @('Property', 'Control', 'ControlEvent', 'CheckBox', 'Directory', 'Component', 'File', 'Registry',
     'Shortcut', 'MsiShortcutProperty', 'Upgrade', 'LaunchCondition', 'CustomAction', 'RemoveFile',
-    'InstallExecuteSequence', 'AdminExecuteSequence', 'AdminUISequence',
+    'InstallExecuteSequence', 'InstallUISequence', 'AdminExecuteSequence', 'AdminUISequence',
     'ServiceInstall', 'ServiceControl', 'WixFirewallException', 'Wix4FirewallException')) {
     $rows = @()
     if ($tables.ContainsKey($name)) {
@@ -246,11 +248,47 @@ def validate_shortcut_icons(tables, properties):
     for shortcut in tables["Shortcut"]:
         require(shortcut["Icon_"] == "CoreIcon.exe" and shortcut["IconIndex"] == "0",
                 f"Invalid shortcut icon: {shortcut['Shortcut']}")
-    expected = {(row["Shortcut"], "System.AppUserModel.ID", "ConnectCoin.Core")
+    expected = {(row["Shortcut"], "System.AppUserModel.ID",
+                 "ConnectCoin.Core.HugePages" if row["Shortcut"] == "HugePagesShortcut" else "ConnectCoin.Core")
                 for row in tables["Shortcut"]}
     actual = {(row["Shortcut_"], row["PropertyKey"], row["PropVariantValue"])
               for row in tables.get("MsiShortcutProperty", [])}
     require(actual == expected, "Shortcut AppUserModelID must match the GUI")
+
+
+def validate_huge_pages_opt_in(tables, properties):
+    """No action runs during install: one unchecked Finish checkbox may open consent UI."""
+    require("WIXUI_EXITDIALOGOPTIONALCHECKBOX" not in properties,
+            "Huge Pages checkbox must not be checked by default")
+    require(properties.get("WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT") ==
+            "Configure Huge Pages for mining (optional)", "Huge Pages opt-in label missing")
+    checkboxes = [row for row in tables["Control"] if row["Dialog_"] == "ExitDialog" and
+                 row["Type"] == "CheckBox"]
+    require(len(checkboxes) == 1 and checkboxes[0]["Property"] == "WIXUI_EXITDIALOGOPTIONALCHECKBOX" and
+            checkboxes[0]["Text"] == "[WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT]",
+            "Huge Pages opt-in must be an actual Finish-page checkbox")
+    values = [row for row in tables["CheckBox"] if row["Property"] == "WIXUI_EXITDIALOGOPTIONALCHECKBOX"]
+    require(len(values) == 1 and values[0]["Value"] == "1", "Huge Pages checked value must be 1")
+    actions = tables["CustomAction"]
+    helper_actions = [row for row in actions if row["Action"] == "ConfigureHugePages"]
+    require(len(helper_actions) == 1 and helper_actions[0]["Type"] == "210" and
+            helper_actions[0]["Source"] == "HugePagesExe" and helper_actions[0]["Target"] == "configure",
+            "Huge Pages action must only asynchronously open the installed consent helper as invoker")
+    for row in actions:
+        if row["Action"] == "ConfigureHugePages":
+            continue
+        require(int(row["Type"]) in {1, 65} and row["Source"] == "WixUiCa_X64" and
+                row["Target"] in {"PrintEula", "ValidatePath"}, f"Unexpected custom action: {row}")
+    # DoAction is UI-only. Silent/administrative/repair/uninstall paths cannot
+    # run this helper even if a caller sets the checkbox property on the CLI.
+    for name in ("AdminExecuteSequence", "AdminUISequence", "InstallExecuteSequence", "InstallUISequence"):
+        require(not any(row["Action"] == "ConfigureHugePages" for row in tables[name]),
+                f"Huge Pages helper must not be scheduled in {name}")
+    triggers = [row for row in tables["ControlEvent"] if row["Argument"] == "ConfigureHugePages"]
+    require(len(triggers) == 1 and triggers[0]["Dialog_"] == "ExitDialog" and
+            triggers[0]["Control_"] == "Finish" and triggers[0]["Event"] == "DoAction" and
+            triggers[0]["Condition"] == HUGE_PAGES_CONDITION and triggers[0]["Ordering"] == "1",
+            "Huge Pages action must require the explicit new-install Finish opt-in")
 
 
 def validate_upgrade_policy(tables, version):
@@ -386,21 +424,23 @@ def validate_database(tables, manifest):
             "MSI File table sizes differ from manifest")
     gui = actual["bin/connectcoin-qt.exe"]
     shortcuts = {row["Shortcut"]: row for row in tables["Shortcut"]}
-    require(shortcuts.keys() == {"StartMenuShortcut", "DesktopShortcut"}, "Unexpected shortcuts")
+    require(shortcuts.keys() == {"StartMenuShortcut", "DesktopShortcut", "HugePagesShortcut"}, "Unexpected shortcuts")
     for key, directory in (("StartMenuShortcut", "CoreMenuFolder"), ("DesktopShortcut", "DesktopFolder")):
         shortcut = shortcuts[key]
         require(shortcut["Directory_"] == directory and shortcut["Component_"] == gui["Component_"]
                 and shortcut["Target"] == "Core" and shortcut["WkDir"] == "BINFOLDER"
                 and not shortcut["Arguments"], f"Invalid GUI shortcut: {key}")
+    helper = actual["bin/connectcoin-huge-pages.exe"]
+    require(helper["File"] == "HugePagesExe", "Wrong Huge Pages executable identity")
+    shortcut = shortcuts["HugePagesShortcut"]
+    require(shortcut["Directory_"] == "CoreMenuFolder" and shortcut["Component_"] == helper["Component_"] and
+            shortcut["Target"] == "Core" and shortcut["WkDir"] == "BINFOLDER" and
+            shortcut["Arguments"] == "configure", "Invalid Huge Pages setup shortcut")
     validate_registry(tables["Registry"])
 
     validate_upgrade_policy(tables, properties["ProductVersion"])
+    validate_huge_pages_opt_in(tables, properties)
     actions = tables["CustomAction"]
-    for row in actions:
-        require(int(row["Type"]) in {1, 65} and
-                row["Source"] == "WixUiCa_X64" and
-                row["Target"] in {"PrintEula", "ValidatePath"},
-                f"Unexpected custom action: {row}")
     custom_names = {row["Action"] for row in actions}
     require(not any(row["Action"] in custom_names for name in ("AdminExecuteSequence", "AdminUISequence")
                     for row in tables[name]), "Administrative extraction invokes custom code")
@@ -498,11 +538,71 @@ def smoke_cli(payload, work, core_version):
             if option == "--version":
                 report["version"] = validate_cli_version(text, core_version, target)
             reports.append(report)
+    # These modes are strictly read-only; never exercise configure/enable on a
+    # developer workstation. UAC/consent/grant scenarios belong in a disposable VM.
+    for option in ("--self-test", "status"):
+        result = subprocess.run([str(payload / "bin" / f"{HUGE_PAGES_HELPER}.exe"), option],
+                                cwd=profile, env=environment, capture_output=True,
+                                timeout=30, creationflags=subprocess.CREATE_NO_WINDOW)
+        text = (result.stdout + result.stderr).decode("utf-8", errors="replace")
+        (work / f"{HUGE_PAGES_HELPER}-{option.strip('-')}.txt").write_text(text, encoding="utf-8")
+        expected = "PASS:" if option == "--self-test" else "Direct SeLockMemoryPrivilege:"
+        require(result.returncode == 0 and expected in text,
+                f"Huge Pages read-only smoke failed: {option}: {text}")
+        reports.append({"executable": HUGE_PAGES_HELPER, "option": option, "exit_code": result.returncode})
     require(not list(profile.iterdir()), "Help/version unexpectedly wrote files in the isolated profile")
     return reports
 
 
 class RegressionTests(unittest.TestCase):
+    @staticmethod
+    def huge_pages_tables():
+        return {
+            "Control": [{"Dialog_": "ExitDialog", "Type": "CheckBox", "Property": "WIXUI_EXITDIALOGOPTIONALCHECKBOX",
+                         "Text": "[WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT]"}],
+            "CheckBox": [{"Property": "WIXUI_EXITDIALOGOPTIONALCHECKBOX", "Value": "1"}],
+            "CustomAction": [{"Action": "ConfigureHugePages", "Type": "210",
+                              "Source": "HugePagesExe", "Target": "configure"}],
+            "ControlEvent": [{"Dialog_": "ExitDialog", "Control_": "Finish", "Event": "DoAction",
+                              "Argument": "ConfigureHugePages", "Condition": HUGE_PAGES_CONDITION,
+                              "Ordering": "1"}],
+            "InstallExecuteSequence": [], "InstallUISequence": [],
+            "AdminExecuteSequence": [], "AdminUISequence": [],
+        }
+
+    def test_huge_pages_only_explicit_finish_opt_in(self):
+        properties = {"WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT": "Configure Huge Pages for mining (optional)"}
+        validate_huge_pages_opt_in(self.huge_pages_tables(), properties)
+        with self.assertRaisesRegex(ValueError, "default"):
+            validate_huge_pages_opt_in(self.huge_pages_tables(),
+                                      dict(properties, WIXUI_EXITDIALOGOPTIONALCHECKBOX="1"))
+        for table, field, value in (
+            ("Control", "Property", "SOMEOTHERPROPERTY"), ("CheckBox", "Value", "0"),
+            ("CustomAction", "Type", "3090"), ("CustomAction", "Target", "enable"),
+            ("CustomAction", "Source", "GuiExe"), ("ControlEvent", "Condition", "1"),
+            ("ControlEvent", "Condition", HUGE_PAGES_CONDITION.replace(' AND ACTION = "INSTALL"', "")),
+            ("ControlEvent", "Condition", HUGE_PAGES_CONDITION.replace('"INSTALL"', '"ADMIN"')),
+            ("ControlEvent", "Condition", HUGE_PAGES_CONDITION.replace('"INSTALL"', '"ADVERTISE"')),
+            ("ControlEvent", "Dialog_", "WelcomeDlg"), ("ControlEvent", "Control_", "Next"),
+            ("ControlEvent", "Event", "SpawnDialog"), ("ControlEvent", "Ordering", "0"),
+        ):
+            with self.subTest(table=table, field=field):
+                tables = self.huge_pages_tables()
+                tables[table][0][field] = value
+                with self.assertRaises(ValueError):
+                    validate_huge_pages_opt_in(tables, properties)
+        for table in ("Control", "CheckBox", "CustomAction", "ControlEvent"):
+            for duplicate in (False, True):
+                tables = self.huge_pages_tables()
+                tables[table] = tables[table] * 2 if duplicate else []
+                with self.assertRaises(ValueError):
+                    validate_huge_pages_opt_in(tables, properties)
+        for table in ("InstallExecuteSequence", "InstallUISequence", "AdminExecuteSequence", "AdminUISequence"):
+            tables = self.huge_pages_tables()
+            tables[table].append({"Action": "ConfigureHugePages"})
+            with self.assertRaisesRegex(ValueError, "scheduled"):
+                validate_huge_pages_opt_in(tables, properties)
+
     @staticmethod
     def sequence_tables():
         tables = {name: [{"Action": action, "Condition": "", "Sequence": str(index * 100)}

@@ -5578,6 +5578,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>شروع نشده</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>صفحه‌های معمولی</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>مجموعه‌داده RandomX (آخرین تصویر وضعیت): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>صفحه‌های بزرگ برای مجموعه‌داده در دسترس نیستند. استخراج با صفحه‌های معمولی ادامه می‌یابد؛ ممکن است کارایی کمتر باشد. تنظیمات سیستم به‌طور خودکار تغییر نمی‌کنند.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>راه‌اندازی مجموعه‌داده FAST ناموفق بود. استخراج در حالت LIGHT با کارایی کمتر ادامه می‌یابد.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>اختیاری: خالی باشد از این کیف پول استفاده می‌شود</translation>
     </message>

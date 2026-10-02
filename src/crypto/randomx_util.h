@@ -77,6 +77,14 @@ public:
      */
     [[nodiscard]] Hash Calculate(std::span<const std::byte> input, bool secure_jit) const;
 
+    /** Actual mode after construction; FAST contexts may be replaced by LIGHT
+     * by the caller if allocation fails. No hashing or allocation is performed. */
+    [[nodiscard]] RandomXMemoryMode MemoryMode() const;
+
+    /** Whether the FAST dataset allocation succeeded with large pages.
+     * Does not describe the cache, JIT code or per-VM scratchpads. */
+    [[nodiscard]] bool UsesLargePagesForDataset() const;
+
 private:
     struct Impl;
     std::unique_ptr<Impl> m_impl;

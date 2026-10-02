@@ -4567,6 +4567,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>نه دی پیل شوی</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>عادي پاڼې</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>د RandomX ډیټاسیټ (د حالت وروستی انځور): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>د ډیټاسیټ لپاره Huge Pages شتون نه لري. کان‌کېندنه د عادي پاڼو په کارولو دوام کوي؛ کارکردګي ښايي ټیټه وي. د سیسټم امستنې په اتومات ډول نه بدلېږي.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>د FAST ډیټاسیټ پیلول ناکام شول. کان‌کېندنه په LIGHT حالت کې د ټیټې کارکردګۍ سره دوام کوي.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>اختیاري: که تش پرېښودل شي، دا بټوه کارول کېږي</translation>
     </message>

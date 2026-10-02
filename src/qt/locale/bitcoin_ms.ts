@@ -5270,6 +5270,26 @@ Versi sijil akar: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Belum dimulakan</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Halaman biasa</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Set data RandomX (syot kilat terakhir): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages untuk set data tidak tersedia. Perlombongan diteruskan dengan halaman biasa; prestasi mungkin lebih rendah. Tetapan sistem tidak diubah secara automatik.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Pengawalan mula set data FAST gagal. Perlombongan diteruskan dalam mod LIGHT dengan prestasi yang lebih rendah.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Pilihan: jika kosong, dompet ini digunakan</translation>
     </message>

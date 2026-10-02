@@ -315,6 +315,24 @@ if(MSVC)
   )
   target_include_directories(connectcoin-msi-icon PRIVATE ${PROJECT_SOURCE_DIR}/share/pixmaps)
   target_link_options(connectcoin-msi-icon PRIVATE /NOENTRY /NODEFAULTLIB /MANIFEST:NO)
+
+  # Optional, independently elevated system configurator. Never link the wallet
+  # or launch it elevated. Built explicitly by the MSI generator, even --skip-build.
+  add_executable(connectcoin-huge-pages WIN32 EXCLUDE_FROM_ALL
+    ${PROJECT_SOURCE_DIR}/contrib/windeploy/huge_pages.cpp
+    ${PROJECT_SOURCE_DIR}/contrib/windeploy/core-icon.rc
+  )
+  set_target_properties(connectcoin-huge-pages PROPERTIES
+    AUTOMOC OFF
+    AUTOUIC OFF
+    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/msi-resources/$<CONFIG>"
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PROJECT_BINARY_DIR}/msi-resources/Release"
+  )
+  target_include_directories(connectcoin-huge-pages PRIVATE ${PROJECT_SOURCE_DIR}/share/pixmaps)
+  target_compile_options(connectcoin-huge-pages PRIVATE /W4 /WX)
+  target_link_libraries(connectcoin-huge-pages PRIVATE advapi32 shell32 user32 ole32)
+  target_link_options(connectcoin-huge-pages PRIVATE /MANIFESTUAC:level='asInvoker')
 endif()
 
 target_link_libraries(connectcoin-qt

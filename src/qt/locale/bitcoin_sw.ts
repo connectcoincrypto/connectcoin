@@ -5416,6 +5416,26 @@ Toleo la vyeti vya mzizi: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Haijaanza</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Kurasa za kawaida</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Seti ya data ya RandomX (picha ya mwisho ya hali): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages hazipatikani kwa seti ya data. Uchimbaji unaendelea kwa kurasa za kawaida; utendaji unaweza kuwa wa chini. Mipangilio ya mfumo haibadilishwi kiotomatiki.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Uanzishaji wa seti ya data ya FAST umeshindwa. Uchimbaji unaendelea katika hali ya LIGHT kwa utendaji wa chini.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Hiari: ikiachwa tupu, pochi hii itatumika</translation>
     </message>

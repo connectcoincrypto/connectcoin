@@ -5988,6 +5988,26 @@ Versão dos certificados raiz: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Não iniciado</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Páginas comuns</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Conjunto de dados RandomX (último registro do estado): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages não estão disponíveis para o conjunto de dados. A mineração continua com páginas comuns; o desempenho pode ser menor. As configurações do sistema não são alteradas automaticamente.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>A inicialização do conjunto de dados FAST falhou. A mineração continua no modo LIGHT com desempenho menor.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opcional: vazio usa esta carteira</translation>
     </message>

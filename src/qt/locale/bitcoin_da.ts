@@ -5455,6 +5455,26 @@ Rodcertifikaternes version: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Ikke startet</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Almindelige sider</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX-datasæt (seneste øjebliksbillede): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Store sider til datasættet er ikke tilgængelige. Mining fortsætter med almindelige sider; ydelsen kan være lavere. Systemindstillinger ændres ikke automatisk.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Initialisering af FAST-datasættet mislykkedes. Mining fortsætter i LIGHT-tilstand med lavere ydelse.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Valgfrit: tomt bruger denne tegnebog</translation>
     </message>

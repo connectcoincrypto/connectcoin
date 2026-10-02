@@ -5808,6 +5808,26 @@ Fersiwn y tystysgrifau gwraidd: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Heb ddechrau</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Tudalennau arferol</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Set ddata RandomX (ciplun olaf): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Nid yw tudalennau enfawr y set ddata ar gael. Mae cloddio yn parhau gyda thudalennau arferol; gall perfformiad fod yn is. Nid yw gosodiadau'r system yn cael eu newid yn awtomatig.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Methodd cychwyn set ddata FAST. Mae cloddio yn parhau yn y modd LIGHT gyda pherfformiad is.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Dewisol: mae’n defnyddio’r waled hon os yw’n wag</translation>
     </message>

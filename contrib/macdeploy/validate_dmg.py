@@ -26,6 +26,7 @@ from unittest.mock import patch
 APP_NAME = "ConnectCoin Core.app"
 EXECUTABLE = "Contents/MacOS/ConnectCoin-Qt"
 MINIMUM_OS = "15.0"
+HUGE_PAGES_RESOURCE = "Contents/Resources/HUGE-PAGES.txt"
 MACHO_MAGIC = {bytes.fromhex(value) for value in (
     "feedface", "cefaedfe", "feedfacf", "cffaedfe", "cafebabe", "bebafeca", "cafebabf", "bfbafeca",
 )}
@@ -75,6 +76,34 @@ def required_file(app, relative):
     path = inside(app / relative, app)
     require(path.is_file(), f"Required file is missing: {relative}")
     return path
+
+
+def read_huge_pages_instructions(path):
+    require(path.is_file() and not path.is_symlink(), "Missing regular HUGE-PAGES.txt")
+    with path.open("rb") as stream:
+        data = stream.read(64 * 1024 + 1)
+    require(len(data) <= 64 * 1024, "HUGE-PAGES.txt is unexpectedly large")
+    # Canonical LF keeps generated resources and their digest independent of
+    # the source checkout's line-ending policy (including Windows self-tests).
+    text = data.decode("utf-8").replace("\r\n", "\n")
+    normalized = " ".join(text.split())
+    for expected in ("HUGE PAGES ON MACOS", "does not offer a Huge Pages enable/disable option",
+                     "VM_FLAGS_SUPERPAGE_SIZE_2MB", "Intel", "Apple Silicon",
+                     "Do not run ConnectCoin Core as root", "SIP", "JIT protections",
+                     "getcpumininginfo", "randomx_dataset", "not_started", "preparing",
+                     "huge_pages", "regular_pages", "light_fallback", "disabled", "unavailable",
+                     "not a physical-page-size measurement"):
+        require(expected in normalized, f"HUGE-PAGES.txt lacks required guidance: {expected}")
+    return text
+
+
+def huge_pages_policy(instructions):
+    """Describe installer behavior, never claim a runtime allocation result."""
+    return {"installer_configuration": "none", "system_configuration_changed": False,
+            "allocation_request": "VM_FLAGS_SUPERPAGE_SIZE_2MB",
+            "diagnostic": "getcpumininginfo.randomx_dataset", "runtime_allocation_tested": False,
+            "instructions": HUGE_PAGES_RESOURCE,
+            "instructions_sha256": hashlib.sha256(instructions.encode("utf-8")).hexdigest()}
 
 
 def version_tuple(value):
@@ -223,6 +252,7 @@ def inspect_machos(app, arch, minimum_os):
 
 def validate_app(app, arch, version):
     check_symlinks(app)
+    read_huge_pages_instructions(required_file(app, HUGE_PAGES_RESOURCE))
     with required_file(app, "Contents/Info.plist").open("rb") as stream:
         info = plistlib.load(stream)
     validate_plist(info, version)
@@ -302,6 +332,8 @@ def validate_volume(volume):
     text = instructions.read_text(encoding="utf-8")
     require("ConnectCoin Core" in text and "Applications" in text and "not notarized" in text.lower(),
             "INSTALL.txt must explain installation and the non-notarized distribution in English")
+    guidance = read_huge_pages_instructions(required_file(app, HUGE_PAGES_RESOURCE))
+    require(guidance in text, "INSTALL.txt must include the bundled Huge Pages guidance")
     check_symlinks(app)
     return app
 
@@ -349,6 +381,7 @@ def validate_dmg(dmg, arch, version):
         copied.parent.mkdir()
         run(["/usr/bin/ditto", source_app, copied], timeout=120)
         machos = validate_app(copied, arch, version)
+        huge_pages = huge_pages_policy(read_huge_pages_instructions(required_file(copied, HUGE_PAGES_RESOURCE)))
         smoke = smoke_app(copied, root, version)
     with dmg.open("rb") as stream:
         digest = hashlib.sha256()
@@ -359,6 +392,7 @@ def validate_dmg(dmg, arch, version):
             "notarized": False, "gatekeeper_acceptance_tested": False, "mach_o_images": machos,
             "commands": smoke, "readonly_mount": True, "relocated_copy_tested": True,
             "temporary_profile_removed": True, "owned_volume_detached": True,
+            "huge_pages": huge_pages,
             "qt_linkage": "static", "gui_coverage": "English help/version with statically imported Cocoa; no interactive GUI or node startup."}
 
 
@@ -380,6 +414,8 @@ class RegressionTests(unittest.TestCase):
         resources = app / "Contents/Resources"
         resources.mkdir()
         (resources / "connectcoin.icns").write_bytes(b"icns" + (20).to_bytes(4, "big") + b"ic10" + (12).to_bytes(4, "big") + b"data")
+        (resources / "HUGE-PAGES.txt").write_text(
+            Path(__file__).with_name("HUGE-PAGES.txt").read_text(encoding="utf-8"), encoding="utf-8")
         (app / "Contents/Info.plist").write_bytes(plistlib.dumps(cls.sample_plist()))
 
     @staticmethod
@@ -515,19 +551,53 @@ class RegressionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             app = root / APP_NAME
-            app.mkdir()
+            self.app_fixture(app)
             (root / "Applications").touch()
             instructions = root / "INSTALL.txt"
-            instructions.write_text("Drag ConnectCoin Core to Applications. This app is not notarized.\n", encoding="utf-8")
+            guidance = read_huge_pages_instructions(app / HUGE_PAGES_RESOURCE)
+            base = "Drag ConnectCoin Core to Applications. This app is not notarized.\n"
+            instructions.write_text(base + guidance, encoding="utf-8")
             with patch.object(Path, "is_symlink", side_effect=lambda: False), self.assertRaises(ValidationError):
                 validate_volume(root)
             # Mock just the Applications link so the full layout test also runs
             # on Windows without symlink-creation privileges.
             with patch.object(Path, "is_symlink", autospec=True, side_effect=lambda path: path.name == "Applications"), patch.object(os, "readlink", return_value="/Applications"):
                 self.assertEqual(validate_volume(root), app)
+                instructions.write_text(base, encoding="utf-8")
+                with self.assertRaisesRegex(ValidationError, "Huge Pages guidance"):
+                    validate_volume(root)
                 instructions.write_text("unrelated text", encoding="utf-8")
                 with self.assertRaisesRegex(ValidationError, "INSTALL.txt"):
                     validate_volume(root)
+
+    def test_huge_pages_guidance_and_policy(self):
+        guidance = read_huge_pages_instructions(Path(__file__).with_name("HUGE-PAGES.txt"))
+        policy = huge_pages_policy(guidance)
+        self.assertEqual(policy["installer_configuration"], "none")
+        self.assertFalse(policy["system_configuration_changed"])
+        self.assertFalse(policy["runtime_allocation_tested"])
+        self.assertEqual(policy["instructions_sha256"], hashlib.sha256(guidance.encode()).hexdigest())
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "HUGE-PAGES.txt"
+            path.write_bytes(guidance.replace("\n", "\r\n").encode("utf-8"))
+            self.assertEqual(read_huge_pages_instructions(path), guidance)
+            for value in (guidance.replace("Apple Silicon", "other"), guidance.replace("randomx_dataset", "other"),
+                          guidance.replace("enable/disable option", "button"), "x" * (64 * 1024 + 1)):
+                path.write_text(value, encoding="utf-8")
+                with self.subTest(value=value[:30]), self.assertRaises(ValidationError):
+                    read_huge_pages_instructions(path)
+            path.unlink()
+            with self.assertRaisesRegex(ValidationError, "Missing regular"):
+                read_huge_pages_instructions(path)
+
+    def test_app_rejects_missing_huge_pages_guidance_before_native_tools(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            app = Path(temporary).resolve() / APP_NAME
+            self.app_fixture(app)
+            (app / HUGE_PAGES_RESOURCE).unlink()
+            with patch(__name__ + ".run") as tool, self.assertRaises(ValidationError):
+                validate_app(app, "arm64", "1.0.0")
+            tool.assert_not_called()
 
     def test_load_commands(self):
         text = """example:

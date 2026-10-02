@@ -5483,6 +5483,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>सुरु भएको छैन</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>सामान्य पृष्ठहरू</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX डेटासेट (पछिल्लो स्थितिको झलक): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>डेटासेटका लागि Huge Pages उपलब्ध छैनन्। माइनिङ सामान्य पृष्ठहरूसँग जारी रहन्छ; कार्यसम्पादन कम हुन सक्छ। प्रणालीका सेटिङहरू स्वतः परिवर्तन गरिँदैनन्।</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST डेटासेटको प्रारम्भिकीकरण असफल भयो। माइनिङ कम कार्यसम्पादनसहित LIGHT मोडमा जारी रहन्छ।</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>ऐच्छिक: खाली छोडेमा यो वालेट प्रयोग हुन्छ</translation>
     </message>

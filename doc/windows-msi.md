@@ -13,7 +13,7 @@ overriding another wallet's association. It does not modify `PATH`, start the
 application, install a service, enable mining/claims/RPC, or change the firewall.
 
 The MSI embeds a small icon-only Windows PE resource named `CoreIcon.exe` for
-advertised shortcuts and the installed-app listing. Both shortcuts use icon
+advertised shortcuts and the installed-app listing. Both GUI shortcuts use icon
 index 0 and `System.AppUserModel.ID=ConnectCoin.Core`, matching the GUI and
 payment-link registration. The GUI also sets its window icon before startup
 dialogs appear. The resource is built by the `connectcoin-msi-icon` target,
@@ -27,6 +27,40 @@ Do not choose the application installation directory as a data directory.
 Close Core normally and wait for it to finish before upgrading/uninstalling.
 The installer does not forcibly terminate a node or wallet. In-use files may
 require a reboot; automatic reboots and Restart Manager shutdowns are disabled.
+
+## Optional Huge Pages configuration
+
+The final wizard page offers an **unchecked** "Configure Huge Pages for mining"
+option. It opens the installed `connectcoin-huge-pages.exe configure` helper
+after the MSI transaction has committed. A Start Menu entry opens the same
+helper later. The helper has its own explicit, No-by-default confirmation and
+UAC request; it never starts or elevates Core. Declining leaves ordinary-page
+mining available. Silent install, repair, administrative extraction, rollback,
+and uninstall do not invoke the helper or change account permissions.
+
+It grants only `SeLockMemoryPrivilege` to the current account and preserves
+existing rights. The elevated token must have the same SID captured before UAC;
+over-the-shoulder credentials for a different administrator are refused. A
+standard user's administrator can instead assign that user's right manually.
+The permission is account-wide and persistent, not a Core-only sandbox. No RAM
+is reserved by the helper, but applications using the right can keep physical
+memory resident, reducing reclaimable memory. A new sign-in (or reboot) is
+needed after assignment. Core itself runs unelevated and reports allocation
+success/fallback; the right does not guarantee sufficient contiguous RAM.
+
+`connectcoin-huge-pages.exe status` is read-only. Uninstall deliberately leaves
+the right intact: it may have existed beforehand or be used by another program.
+An administrator can explicitly revoke the account's "Lock pages in memory"
+right in Local Security Policy. Group-policy-managed rights must be handled by
+the responsible administrator. No script execution-policy change is required.
+
+The configurator is a small static-runtime native target, built explicitly by
+the MSI packager even with `--skip-build`; it has no Python/PowerShell dependency.
+Its shortcut uses `ConnectCoin.Core.HugePages`, separate from the wallet's
+taskbar identity. Package verification checks the unchecked opt-in, exact helper
+action/arguments and UI-only scheduling, and runs only read-only helper modes.
+Test UAC cancellation, alternate administrator rejection and consent/grant in a
+disposable Windows VM before distribution; those are not proven by extraction.
 
 ## Build
 

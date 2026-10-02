@@ -5771,6 +5771,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Nepaleista</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Įprasti puslapiai</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX duomenų rinkinys (paskutinė būsena): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Dideli duomenų rinkinio puslapiai nepasiekiami. Kasimas tęsiamas naudojant įprastus puslapius; našumas gali būti mažesnis. Sistemos nustatymai automatiškai nekeičiami.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Nepavyko inicijuoti FAST duomenų rinkinio. Kasimas tęsiamas LIGHT režimu su mažesniu našumu.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Nebūtina: tuščias laukas naudoja šią piniginę</translation>
     </message>

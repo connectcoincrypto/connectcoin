@@ -116,6 +116,9 @@ fi
 install -D -m 644 "$source_dir/COPYING" "$appdir/usr/share/doc/connectcoin/COPYING"
 install -m 644 "$script_dir/PORTABLE-README.txt" "$appdir/README.txt"
 install -m 644 "$script_dir/AppImage-runtime-LICENSE.txt" "$appdir/usr/share/doc/connectcoin/AppImage-runtime-LICENSE.txt"
+install -D -m 755 "$script_dir/connectcoin-hugepages" "$appdir/usr/bin/connectcoin-hugepages"
+install -D -m 644 "$script_dir/hugepages.py" "$appdir/usr/share/connectcoin/hugepages.py"
+install -m 644 "$script_dir/HUGE-PAGES.md" "$appdir/HUGE-PAGES.md"
 desktop-file-validate "$desktop_file"
 
 export APPIMAGE_EXTRACT_AND_RUN=1 ARCH=x86_64 QMAKE="$qmake"
@@ -137,7 +140,7 @@ done
 [[ -f "$appdir/usr/plugins/platforms/libqxcb.so" && -f "$appdir/usr/plugins/platforms/libqminimal.so" ]] || die 'Qt platform plugin deployment is incomplete'
 [[ -f "$appdir/usr/lib/libQt6Core.so.6" && -f "$appdir/usr/bin/qt.conf" ]] || die 'Qt 6 library or relative qt.conf was not deployed'
 install -m 755 "$script_dir/apprun" "$appdir/AppRun"
-for binary in "${binaries[@]}"; do
+for binary in "${binaries[@]}" connectcoin-hugepages; do
     [[ ! -e "$appdir/$binary" ]] || die "Unexpected file at bundle root: $binary"
     ln -s AppRun "$appdir/$binary"
 done

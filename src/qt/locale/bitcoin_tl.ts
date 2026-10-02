@@ -5206,6 +5206,26 @@ Bersyon ng mga root certificate: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Hindi pa nagsisimula</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Karaniwang mga pahina</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Dataset ng RandomX (huling kuha ng katayuan): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Hindi magagamit ang Huge Pages para sa dataset. Nagpapatuloy ang pagmimina gamit ang karaniwang mga pahina; maaaring mas mababa ang pagganap. Hindi awtomatikong binabago ang mga setting ng sistema.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Nabigo ang pagsisimula ng FAST dataset. Nagpapatuloy ang pagmimina sa LIGHT mode na may mas mababang pagganap.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opsyonal: kung walang laman, gagamitin ang wallet na ito</translation>
     </message>

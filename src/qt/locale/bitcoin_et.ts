@@ -5767,6 +5767,26 @@ Juursertifikaatide versioon: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Pole käivitatud</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Tavalised leheküljed</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX-i andmestik (viimane hetktõmmis): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Andmestiku suured leheküljed pole saadaval. Kaevandamine jätkub tavaliste lehekülgedega; jõudlus võib olla väiksem. Süsteemi seadistusi ei muudeta automaatselt.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST-andmestiku lähtestamine nurjus. Kaevandamine jätkub LIGHT-režiimis väiksema jõudlusega.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Valikuline: tühi kasutab seda rahakotti</translation>
     </message>

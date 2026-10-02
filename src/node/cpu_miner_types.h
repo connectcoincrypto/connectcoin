@@ -22,6 +22,8 @@ struct CpuMiningStatus {
     double hashes_per_second{0};
     std::string address;
     std::string state{"stopped"};
+    // Coordinator snapshot for this session's most recently prepared key.
+    std::string randomx_dataset{"not_started"};
     std::string error;
 };
 } // namespace node

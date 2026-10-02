@@ -5907,6 +5907,26 @@ Rotsertifikatversjon: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Ikke startet</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Vanlige sider</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX-datasett (siste øyeblikksbilde): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages er ikke tilgjengelige for datasettet. Utvinning fortsetter med vanlige sider; ytelsen kan bli lavere. Systeminnstillingene endres ikke automatisk.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Initialisering av FAST-datasettet mislyktes. Utvinning fortsetter i LIGHT-modus med lavere ytelse.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Valgfritt: tomt felt bruker denne lommeboken</translation>
     </message>

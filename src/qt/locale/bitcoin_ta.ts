@@ -5899,6 +5899,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>தொடங்கவில்லை</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>சாதாரணப் பக்கங்கள்</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX தரவுத்தொகுப்பு (கடைசி நிலைப் பதிவு): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>தரவுத்தொகுப்பிற்கான Huge Pages கிடைக்கவில்லை. சாதாரணப் பக்கங்களுடன் சுரங்கப் பணி தொடர்கிறது; செயல்திறன் குறைவாக இருக்கலாம். கணினி அமைப்புகள் தானாக மாற்றப்படுவதில்லை.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST தரவுத்தொகுப்பைத் தொடங்குவது தோல்வியடைந்தது. குறைந்த செயல்திறனுடன் LIGHT பயன்முறையில் சுரங்கப் பணி தொடர்கிறது.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>விருப்பத்திற்குரியது: காலியாக இருந்தால் இந்தப் பணப்பை பயன்படுத்தப்படும்</translation>
     </message>

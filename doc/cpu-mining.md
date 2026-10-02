@@ -86,6 +86,35 @@ Long forks may therefore take longer to verify. Configuring
 Memory/JIT initialization failures are reported or follow the existing
 consensus-equivalent fallback to LIGHT.
 
+The Mining page and `getcpumininginfo.randomx_dataset` report a coordinator
+snapshot for the dataset of this mining session's most recently prepared key:
+
+- `not_started`: this session has not prepared a key (also while initially waiting for headers).
+- `preparing`: no ready FAST dataset is available yet; hashes can temporarily use LIGHT.
+- `huge_pages`: the dataset's large-page allocation path succeeded.
+- `regular_pages`: the dataset allocation fell back to regular pages.
+- `light_fallback`: FAST initialization failed and the context fell back to LIGHT.
+- `disabled`: FAST is disabled with `-randomxfast=0`.
+- `unavailable`: mock or deterministic test hashing does not use this dataset.
+
+This describes only the shared dataset, not the separate RandomX cache, VM
+scratchpads, or JIT code pages. It reports the allocation API's result, not an
+independent measurement of physical page sizes; some operating systems treat
+large-page requests as a preference. The snapshot is refreshed before workers
+start and after each mining round, not for every hash. It may lag background
+initialization, remains unchanged after stopping, and resets on the next start.
+It is separate from fatal mining errors and does not change hash validity.
+
+The GUI shows a non-modal advisory for `regular_pages` or `light_fallback`;
+mining is not blocked. Huge Pages availability depends on operating-system
+configuration, permissions and available memory. The Core node does not reserve
+system pages, grant privileges, elevate itself, or change that configuration.
+Packages provide separate, explicitly opt-in setup helpers for
+[Windows](windows-msi.md) and Linux (see the packaged Huge Pages instructions).
+Installing silently, repairing or uninstalling does not run those helpers.
+The macOS package explains the platform-specific allocation/fallback behavior;
+it does not offer an unsupported privilege or system-setting change.
+
 JIT remains enabled when supported. Validation uses Secure JIT by default.
 The CPU miner, RPC block generation and `connectcoin-util grind` request Secure
 JIT off; the backend's mandatory protection still wins on macOS ARM64, OpenBSD
@@ -109,3 +138,17 @@ relying on accepted blocks as network-confirmed rewards.
 
 Do not expose the RPC interface to untrusted clients: it controls resource use
 and the reward address. No mining state changes consensus rules.
+
+## Hashing implementation
+
+The integrated miner uses the ordinary single-hash RandomX API. Each hash
+takes a VM from the shared policy-specific pool and returns it when finished.
+There is no batching, exclusive per-worker VM retention, or manual CPU-affinity
+policy; the operating system schedules the workers.
+
+A hash request selects an already prepared FAST context when available, or
+uses LIGHT without starting or waiting for FAST construction. The target is
+validated and decoded once per template, and the 80-byte block header uses a
+fixed-size serialization buffer. These small implementation details do not
+change hashes, mining difficulty, or consensus. Huge Pages allocation and its
+status reporting remain unchanged.

@@ -5434,6 +5434,26 @@ Guhertoya sertîfîkayên rehê: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Dest pê nekiriye</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Rûpelên asayî</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Komdana RandomX (wêneya rewşa dawî): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Rûpelên mezin ji bo komdanê berdest nînin. Madenkarî bi rûpelên asayî didome; performans dibe ku kêmtir be. Mîhengên pergalê bixweber nayên guhertin.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Destpêkirina komdana FAST bi ser neket. Madenkarî di moda LIGHT de bi performansa kêmtir didome.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>ئارەزوومەندانە: ئەگەر بەتاڵ بێت، ئەم جزدانە بەکاردێت</translation>
     </message>

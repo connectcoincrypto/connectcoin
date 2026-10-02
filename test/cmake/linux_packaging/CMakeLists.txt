@@ -70,3 +70,7 @@ if(NOT CPACK_DEBIAN_PACKAGE_RELEASE STREQUAL "1.test"
     OR NOT CPACK_RPM_PACKAGE_RELEASE STREQUAL "1.test")
   message(FATAL_ERROR "Native package revision was not preserved.")
 endif()
+if(NOT CPACK_DEBIAN_PACKAGE_RECOMMENDS STREQUAL "python3"
+    OR NOT CPACK_RPM_PACKAGE_SUGGESTS STREQUAL "python3")
+  message(FATAL_ERROR "Python must remain an optional dependency for the Huge Pages helper.")
+endif()

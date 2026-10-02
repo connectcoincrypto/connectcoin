@@ -5357,6 +5357,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Іске қосылмаған</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Қалыпты беттер</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX деректер жиыны (соңғы күйі): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Деректер жиыны үшін үлкен беттер қолжетімсіз. Майнинг қалыпты беттермен жалғасады; өнімділік төмен болуы мүмкін. Жүйе параметрлері автоматты түрде өзгертілмейді.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST деректер жиынын инициализациялау сәтсіз аяқталды. Майнинг LIGHT режимінде төмен өнімділікпен жалғасады.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Міндетті емес: бос болса, осы әмиян қолданылады</translation>
     </message>

@@ -5340,6 +5340,26 @@ Tübırlık sertifikattar nūsqasy: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>İske qosylmağan</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Qalypty better</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX derekter jiyny (soñğy küiı): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Derekter jiyny üşin ülken better qoljetımsız. Maining qalypty bettermen jalğasady; önımdılık tömen boluy mümkın. Jüie parametrlerı avtomatty türde özgertılmeidı.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST derekter jiynyn initsializatsialau sätsız aiaqtaldy. Maining LIGHT rejimınde tömen önımdılıkpen jalğasady.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Mındettı emes: bos qaldyrylsa, osy ämiian qoldanylady</translation>
     </message>

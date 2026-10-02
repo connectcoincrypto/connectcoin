@@ -5795,6 +5795,26 @@ Verze kořenových certifikátů: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Nespuštěno</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Běžné stránky</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Datová sada RandomX (poslední snímek): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Velké stránky pro datovou sadu nejsou dostupné. Těžba pokračuje s běžnými stránkami; výkon může být nižší. Nastavení systému se automaticky nemění.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Inicializace datové sady FAST selhala. Těžba pokračuje v režimu LIGHT s nižším výkonem.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Volitelné: prázdné použije tuto peněženku</translation>
     </message>

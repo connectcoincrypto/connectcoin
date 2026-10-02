@@ -113,6 +113,7 @@ set(CPACK_DEBIAN_PACKAGE_SECTION utils)
 set(CPACK_DEBIAN_PACKAGE_PRIORITY optional)
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt6-qpa-plugins, qt6-wayland")
+set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "python3")
 set(CPACK_DEBIAN_COMPRESSION_TYPE xz)
 
 set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
@@ -123,6 +124,7 @@ set(CPACK_RPM_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
 set(CPACK_RPM_PACKAGE_GROUP "Applications/Internet")
 set(CPACK_RPM_PACKAGE_AUTOREQPROV yes)
 set(CPACK_RPM_PACKAGE_REQUIRES "qt6-qtbase-gui, qt6-qtwayland")
+set(CPACK_RPM_PACKAGE_SUGGESTS "python3")
 set(CPACK_RPM_COMPRESSION_TYPE xz)
 # These shared directories belong to the distribution's filesystem/icon theme
 # packages. Only our files and private documentation directory belong to us.
@@ -136,6 +138,16 @@ set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
 )
 
 set(package_docdir "${CMAKE_INSTALL_DATADIR}/doc/${CPACK_PACKAGE_NAME}")
+# Optional post-install administrator tool. Its shell launcher diagnoses a
+# missing system Python; the non-executable Python payload avoids a mandatory
+# Python interpreter requirement from RPM's executable-script scanner.
+# Attaching to an existing release component also includes it in CI staging.
+install(PROGRAMS "${PROJECT_SOURCE_DIR}/contrib/linuxdeploy/connectcoin-hugepages"
+  DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT connectcoin)
+install(FILES "${PROJECT_SOURCE_DIR}/contrib/linuxdeploy/hugepages.py"
+  DESTINATION "${CMAKE_INSTALL_DATADIR}/connectcoin" COMPONENT connectcoin)
+install(FILES "${PROJECT_SOURCE_DIR}/contrib/linuxdeploy/HUGE-PAGES.md"
+  DESTINATION "${package_docdir}" COMPONENT connectcoin)
 install(FILES "${PROJECT_SOURCE_DIR}/COPYING"
   DESTINATION "${package_docdir}" RENAME copyright COMPONENT connectcoin-licenses)
 foreach(dependency IN ITEMS randomx crc32c leveldb minisketch)

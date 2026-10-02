@@ -1371,6 +1371,7 @@ static RPCMethod getcpumininginfo()
             {RPCResult::Type::NUM, "hashespersecond", "Recent local hashrate, including initialization time"},
             {RPCResult::Type::NUM, "blocks", "New blocks accepted this session, possibly later stale"},
             {RPCResult::Type::STR, "address", "Reward address"},
+            {RPCResult::Type::STR, "randomx_dataset", "Last coordinator snapshot for this session's RandomX dataset: not_started, preparing, huge_pages (large-page allocator succeeded), regular_pages (large-page allocation fell back), light_fallback (FAST initialization failed), disabled (FAST off), or unavailable (test mode). Not a scratchpad/cache diagnostic; retained after stop and reset on start"},
             {RPCResult::Type::STR, "error", "Last error, empty when none"},
         }},
         RPCExamples{HelpExampleCli("getcpumininginfo", "")},
@@ -1387,6 +1388,7 @@ static RPCMethod getcpumininginfo()
             result.pushKV("hashespersecond", status.hashes_per_second);
             result.pushKV("blocks", status.blocks);
             result.pushKV("address", status.address);
+            result.pushKV("randomx_dataset", status.randomx_dataset);
             result.pushKV("error", status.error);
             return result;
         },

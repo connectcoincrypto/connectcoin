@@ -5527,6 +5527,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Эхлээгүй</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Энгийн хуудсууд</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX өгөгдлийн багц (сүүлийн төлөв): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Өгөгдлийн багцад Huge Pages ашиглах боломжгүй. Олборлолт энгийн хуудсаар үргэлжилнэ; гүйцэтгэл буурч болзошгүй. Системийн тохиргоог автоматаар өөрчлөхгүй.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST өгөгдлийн багцыг эхлүүлэхэд алдаа гарлаа. Олборлолт LIGHT горимд бага гүйцэтгэлтэйгээр үргэлжилнэ.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Заавал биш: хоосон орхивол энэ хэтэвчийг ашиглана</translation>
     </message>

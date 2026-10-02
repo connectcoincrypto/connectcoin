@@ -5434,6 +5434,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>አልተጀመረም</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>መደበኛ ገጾች</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>የRandomX ውሂብ ስብስብ (የመጨረሻ ሁኔታ): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>ለውሂብ ስብስቡ ትልቅ ገጾች አይገኙም። ማዕድን ማውጣት በመደበኛ ገጾች ይቀጥላል፤ አፈጻጸሙ ዝቅ ሊል ይችላል። የስርዓት ቅንብሮች በራስ-ሰር አይቀየሩም።</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>የFAST ውሂብ ስብስብ ማስጀመር አልተሳካም። ማዕድን ማውጣት በLIGHT ሁነታ በዝቅተኛ አፈጻጸም ይቀጥላል።</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>አማራጭ፦ ባዶ ከሆነ ይህን የገንዘብ ቦርሳ ይጠቀማል</translation>
     </message>

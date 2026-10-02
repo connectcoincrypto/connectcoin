@@ -66,6 +66,16 @@ MiningPage::MiningPage(WalletModel* wallet_model, QWidget* parent)
     m_status->setWordWrap(true);
     m_status->setTextInteractionFlags(Qt::TextSelectableByMouse);
     layout->addWidget(m_status);
+    m_dataset_status = new QLabel(this);
+    m_dataset_status->setObjectName("miningDatasetStatus");
+    m_dataset_status->setTextFormat(Qt::PlainText);
+    m_dataset_status->setWordWrap(true);
+    layout->addWidget(m_dataset_status);
+    m_dataset_warning = new QLabel(this);
+    m_dataset_warning->setObjectName("miningDatasetWarning");
+    m_dataset_warning->setTextFormat(Qt::PlainText);
+    m_dataset_warning->setWordWrap(true);
+    layout->addWidget(m_dataset_warning);
     layout->addStretch();
     connect(m_start, &QPushButton::clicked, this, &MiningPage::start);
     connect(m_stop, &QPushButton::clicked, this, [this] {
@@ -162,6 +172,7 @@ void MiningPage::refresh()
         m_threads->setValue(info.threads);
     }
     updateThreadWarning();
+    updateDatasetStatus(info.randomx_dataset);
     QString state{tr("Stopped")};
     if (info.state == "starting")
         state = tr("Starting");
@@ -180,4 +191,24 @@ void MiningPage::refresh()
                           .arg(info.blocks)
                           .arg(QString::fromStdString(info.address)) +
                       (info.error.empty() ? QString{} : QStringLiteral("\n") + QString::fromStdString(info.error)));
+}
+
+void MiningPage::updateDatasetStatus(const std::string& dataset)
+{
+    // FAST, LIGHT and Huge Pages are technical mode/allocator names.
+    QString status{QStringLiteral("N/A")};
+    QString warning;
+    if (dataset == "not_started") status = tr("Not started");
+    else if (dataset == "preparing") status = tr("Starting");
+    else if (dataset == "huge_pages") status = QStringLiteral("FAST (Huge Pages)");
+    else if (dataset == "regular_pages") {
+        status = tr("Regular pages");
+        warning = tr("Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.");
+    } else if (dataset == "light_fallback") {
+        status = QStringLiteral("LIGHT");
+        warning = tr("FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.");
+    } else if (dataset == "disabled") status = QStringLiteral("LIGHT (-randomxfast=0)");
+    m_dataset_status->setText(tr("RandomX dataset (last snapshot): %1").arg(status));
+    m_dataset_warning->setText(warning);
+    m_dataset_warning->setVisible(!warning.isEmpty());
 }

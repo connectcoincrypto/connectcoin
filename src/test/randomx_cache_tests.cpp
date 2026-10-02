@@ -94,9 +94,81 @@ bool WaitForFast(Cache& cache, const uint256& key)
     return false;
 }
 
+ContextPtr WaitForPrepared(Cache& cache, const uint256& key)
+{
+    const auto deadline{std::chrono::steady_clock::now() + WAIT_TIMEOUT};
+    do {
+        if (auto context{cache.PeekPrepared(key)}) return context;
+        std::this_thread::sleep_for(1ms);
+    } while (std::chrono::steady_clock::now() < deadline);
+    return {};
+}
+
 } // namespace
 
 BOOST_AUTO_TEST_SUITE(randomx_cache_tests)
+
+BOOST_AUTO_TEST_CASE(dataset_status_observation_does_not_allocate_or_refresh_lru)
+{
+    Factory factory;
+    Cache cache{[&](const uint256& key, RandomXMemoryMode mode) { return factory.Create(key, mode); }};
+    const uint256 first{1}, second{2}, third{3};
+    for (int i{0}; i < 20; ++i) BOOST_CHECK(!cache.PeekPrepared(first));
+    BOOST_CHECK_EQUAL(factory.Count(RandomXMemoryMode::LIGHT), 0U);
+    BOOST_CHECK_EQUAL(factory.Count(RandomXMemoryMode::FAST), 0U);
+    cache.Prepare(first, RandomXMemoryMode::FAST);
+    const auto original{WaitForPrepared(cache, first)};
+    BOOST_REQUIRE(original);
+    cache.Prepare(second, RandomXMemoryMode::FAST);
+    BOOST_REQUIRE(WaitForPrepared(cache, second));
+    for (int i{0}; i < 20; ++i) BOOST_CHECK(cache.PeekPrepared(first) == original);
+    cache.Prepare(third, RandomXMemoryMode::FAST);
+    BOOST_REQUIRE(WaitForPrepared(cache, third));
+    BOOST_CHECK(!cache.PeekPrepared(first));
+    BOOST_CHECK(cache.PeekPrepared(second));
+    BOOST_CHECK(original->key == first);
+    BOOST_CHECK_EQUAL(factory.Count(RandomXMemoryMode::LIGHT), 0U);
+    BOOST_CHECK_EQUAL(factory.Count(RandomXMemoryMode::FAST), 3U);
+}
+
+BOOST_AUTO_TEST_CASE(dataset_status_observation_never_waits_for_preparation)
+{
+    Gate gate;
+    Factory factory;
+    factory.before_return = [&](const uint256&, RandomXMemoryMode mode) {
+        if (mode == RandomXMemoryMode::FAST) gate.Wait();
+    };
+    Cache cache{[&](const uint256& key, RandomXMemoryMode mode) { return factory.Create(key, mode); }};
+    const uint256 key{1};
+    cache.Prepare(key, RandomXMemoryMode::FAST);
+    const bool entered{gate.entered_future.wait_for(WAIT_TIMEOUT) == std::future_status::ready};
+    if (!entered) gate.Open();
+    BOOST_REQUIRE(entered);
+    auto lookup{std::async(std::launch::async, [&] { return cache.PeekPrepared(key); })};
+    const bool ready{lookup.wait_for(WAIT_TIMEOUT) == std::future_status::ready};
+    gate.Open();
+    BOOST_REQUIRE(ready);
+    BOOST_CHECK(!lookup.get());
+    BOOST_REQUIRE(WaitForPrepared(cache, key));
+    BOOST_CHECK_EQUAL(factory.Count(RandomXMemoryMode::LIGHT), 0U);
+}
+
+BOOST_AUTO_TEST_CASE(dataset_status_observation_preserves_effective_light_fallback)
+{
+    std::atomic<unsigned> allocations{0};
+    Cache cache{[&](const uint256& key, RandomXMemoryMode) -> ContextPtr {
+        ++allocations;
+        return std::make_shared<const FakeContext>(FakeContext{key, RandomXMemoryMode::LIGHT});
+    }};
+    const uint256 key{1};
+    cache.Prepare(key, RandomXMemoryMode::FAST);
+    const auto context{WaitForPrepared(cache, key)};
+    BOOST_REQUIRE(context);
+    BOOST_CHECK(context->mode == RandomXMemoryMode::LIGHT);
+    BOOST_CHECK(cache.PeekPrepared(key) == context);
+    BOOST_CHECK(!cache.PeekPrepared(uint256{2}));
+    BOOST_CHECK_EQUAL(allocations.load(), 1U);
+}
 
 BOOST_AUTO_TEST_CASE(cold_get_only_builds_and_reuses_light)
 {

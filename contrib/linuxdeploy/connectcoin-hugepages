@@ -1,0 +1,17 @@
+#!/bin/sh
+# Copyright (c) 2026 The ConnectCoin Core developers
+# Distributed under the MIT software license, see the accompanying file COPYING.
+set -eu
+case "$0" in
+    */*) helper_dir=${0%/*} ;;
+    *) printf '%s\n' 'Invoke connectcoin-hugepages using its installed path.' >&2; exit 1 ;;
+esac
+helper_dir=$(CDPATH='' cd -- "$helper_dir" && pwd -P)
+if [ ! -x /usr/bin/python3 ]; then
+    printf '%s\n' 'Optional Huge Pages setup requires your distribution python3 package.' >&2
+    exit 1
+fi
+# Do not let a portable bundle's Qt/library or Python environment affect the
+# system interpreter used for this explicitly invoked administrative helper.
+unset LD_LIBRARY_PATH LD_PRELOAD PYTHONHOME PYTHONPATH
+exec /usr/bin/python3 -I "$helper_dir/../share/connectcoin/hugepages.py" "$@"

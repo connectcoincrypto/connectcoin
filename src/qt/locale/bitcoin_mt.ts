@@ -5806,6 +5806,26 @@ Verżjoni taċ-ċertifikati għerq: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Għadu ma bediex</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Paġni normali</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Sett tad-dejta RandomX (l-aħħar qbid tal-istat): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages mhumiex disponibbli għas-sett tad-dejta. It-tħaffir ikompli b'paġni normali; il-prestazzjoni tista' tkun aktar baxxa. Is-settings tas-sistema ma jinbidlux awtomatikament.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>L-inizjalizzazzjoni tas-sett tad-dejta FAST falliet. It-tħaffir ikompli fil-modalità LIGHT bi prestazzjoni aktar baxxa.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Mhux obbligatorju: jekk jitħalla vojt, tintuża din il-kartiera</translation>
     </message>

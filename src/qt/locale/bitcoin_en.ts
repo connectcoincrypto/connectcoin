@@ -1376,6 +1376,26 @@ The migration process will create a backup of the wallet before migrating. This 
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Not started</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Regular pages</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX dataset (last snapshot): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</translation>
+    </message>
+    <message>
         <source>CPU threads:</source>
         <translation>CPU threads:</translation>
     </message>

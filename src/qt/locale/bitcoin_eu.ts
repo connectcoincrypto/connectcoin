@@ -5971,6 +5971,26 @@ Erroko ziurtagirien bertsioa: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Ez da hasi</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Orrialde arruntak</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX datu-multzoa (azken egoera): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Datu-multzoaren orrialde handiak ez daude erabilgarri. Meatzaritzak orrialde arruntekin jarraitzen du; errendimendua txikiagoa izan daiteke. Sistemaren ezarpenak ez dira automatikoki aldatzen.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST datu-multzoa hasieratzeak huts egin du. Meatzaritzak LIGHT moduan jarraitzen du, errendimendu txikiagoarekin.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Aukerakoa: hutsik utzita diru-zorro hau erabiltzen da</translation>
     </message>

@@ -17,6 +17,7 @@
 #include <util/log.h>
 
 #include <algorithm>
+#include <array>
 #include <limits>
 #include <memory>
 
@@ -25,7 +26,15 @@ namespace {
 std::shared_ptr<const RandomXContext> MakeRandomXContext(const uint256& key, RandomXMemoryMode mode)
 {
     try {
-        return std::make_shared<const RandomXContext>(RandomXAlgorithm::V2, MakeByteSpan(key), mode);
+        auto context{std::make_shared<const RandomXContext>(RandomXAlgorithm::V2, MakeByteSpan(key), mode)};
+        if (mode == RandomXMemoryMode::FAST) {
+            if (context->UsesLargePagesForDataset()) {
+                LogInfo("RandomX FAST dataset allocated with Huge Pages.\n");
+            } else {
+                LogWarning("RandomX FAST dataset could not use Huge Pages; using regular pages. Mining performance may be lower. Check the OS large-page permissions and available memory.\n");
+            }
+        }
+        return context;
     } catch (const std::exception& e) {
         if (mode != RandomXMemoryMode::FAST) throw;
         LogWarning("Unable to initialize the RandomX FAST dataset (%s); falling back to consensus-equivalent LIGHT mode.\n", e.what());
@@ -248,12 +257,11 @@ uint256 GetRandomXKey(const CBlockIndex* pindexPrev, const Consensus::Params& pa
 
 uint256 GetPoWHash(const CBlockHeader& header, const uint256& key, const Consensus::Params& params, bool secure_jit)
 {
-    DataStream stream;
-    stream << header;
-    assert(stream.size() == 80);
+    std::array<std::byte, 80> input{};
+    SpanWriter{input} << header;
 
     const auto context{GetRandomXContextCache().Get(key, params.randomx_fast_mode)};
-    const auto hash{context->Calculate(MakeByteSpan(stream), secure_jit)};
+    const auto hash{context->Calculate(input, secure_jit)};
     return uint256{MakeUCharSpan(hash)};
 }
 
@@ -283,6 +291,16 @@ void PrepareRandomXKey(const uint256& key, const Consensus::Params& params)
 {
     if (params.randomx_mock_pow || EnableFuzzDeterminism()) return;
     GetRandomXContextCache().Prepare(key, GetRandomXMemoryMode(params));
+}
+
+std::string GetRandomXDatasetStatus(const uint256& key, const Consensus::Params& params)
+{
+    if (params.randomx_mock_pow || EnableFuzzDeterminism()) return "unavailable";
+    if (!params.randomx_fast_mode) return "disabled";
+    const auto context{GetRandomXContextCache().PeekPrepared(key)};
+    if (!context) return "preparing";
+    if (context->MemoryMode() != RandomXMemoryMode::FAST) return "light_fallback";
+    return context->UsesLargePagesForDataset() ? "huge_pages" : "regular_pages";
 }
 
 void PrepareRandomXKeys(const CBlockIndex* tip, const Consensus::Params& params)

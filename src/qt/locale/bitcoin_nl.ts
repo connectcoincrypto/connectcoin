@@ -5777,6 +5777,26 @@ Versie basiscertificaten: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Niet gestart</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Gewone pagina's</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX-gegevensverzameling (laatste momentopname): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages zijn niet beschikbaar voor de gegevensverzameling. Het minen gaat door met gewone pagina's; de prestaties kunnen lager zijn. Systeeminstellingen worden niet automatisch gewijzigd.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Initialisatie van de FAST-gegevensverzameling is mislukt. Het minen gaat door in de LIGHT-modus met lagere prestaties.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Optioneel: leeg gebruikt deze portemonnee</translation>
     </message>

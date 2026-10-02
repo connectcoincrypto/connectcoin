@@ -19,7 +19,7 @@ mkdir -p "$bundle/usr/bin" "$bundle/usr/lib" "$bundle/usr/plugins/platforms"
 cp "$script_dir/apprun" "$bundle/AppRun"
 # Copies exercise argv[0] dispatch even on Windows filesystems without symlinks.
 cp "$script_dir/apprun" "$bundle/connectcoin-cli"
-for tool in connectcoin-qt connectcoin-cli connectcoind; do
+for tool in connectcoin-qt connectcoin-cli connectcoind connectcoin-hugepages; do
     printf '%s\n' \
         '#!/bin/sh' \
         'printf "tool=%s\n" "${0##*/}"' \
@@ -42,6 +42,9 @@ result=$("$bundle/connectcoin-cli" -help)
 [[ "$result" == *'tool=connectcoin-cli'* ]] || fail 'Named launcher did not select CLI'
 result=$("$bundle/AppRun" --tool connectcoind -help)
 [[ "$result" == *'tool=connectcoind'* && "$result" == *'arg=<-help>'* ]] || fail 'Explicit tool dispatch failed'
+result=$(LD_LIBRARY_PATH=/example/inherited "$bundle/AppRun" --tool connectcoin-hugepages status)
+[[ "$result" == *'tool=connectcoin-hugepages'* && "$result" == *'arg=<status>'* ]] || fail 'Huge Pages helper dispatch failed'
+[[ "$result" == *'lib=/example/inherited'* && "$result" != *"lib=$bundle/usr/lib"* ]] || fail 'Administrative helper inherited bundled libraries'
 
 set +e
 "$bundle/AppRun" --tool ../outside > /dev/null 2>&1

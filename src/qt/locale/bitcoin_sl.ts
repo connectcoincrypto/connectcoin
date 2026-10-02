@@ -5978,6 +5978,26 @@ Različica korenskih potrdil: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Ni zagnano</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Običajne strani</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Podatkovna zbirka RandomX (zadnji posnetek stanja): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages za podatkovno zbirko niso na voljo. Rudarjenje se nadaljuje z običajnimi stranmi; zmogljivost je lahko nižja. Sistemske nastavitve se ne spreminjajo samodejno.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Inicializacija podatkovne zbirke FAST ni uspela. Rudarjenje se nadaljuje v načinu LIGHT z nižjo zmogljivostjo.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Neobvezno: prazno polje pomeni uporabo te denarnice</translation>
     </message>

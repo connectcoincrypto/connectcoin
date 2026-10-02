@@ -5992,6 +5992,26 @@ Leagan na mbunteastas: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Gan tosú</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Gnáthleathanaigh</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Tacar sonraí RandomX (an léargas is déanaí): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Níl leathanaigh mhóra ar fáil don tacar sonraí. Leanann an mhianadóireacht le gnáthleathanaigh; d’fhéadfadh an fheidhmíocht a bheith níos ísle. Ní athraítear socruithe an chórais go huathoibríoch.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Theip ar thúsú an tacair sonraí FAST. Leanann an mhianadóireacht i mód LIGHT le feidhmíocht níos ísle.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Roghnach: má tá sé folamh úsáidtear an sparán seo</translation>
     </message>

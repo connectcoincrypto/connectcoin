@@ -16,11 +16,28 @@
 #include <boost/test/unit_test.hpp>
 
 #include <cstdlib>
+#include <limits>
 #include <optional>
 #include <string>
 #include <vector>
 
 BOOST_FIXTURE_TEST_SUITE(pow_tests, BasicTestingSetup)
+
+BOOST_AUTO_TEST_CASE(randomx_dataset_status_without_initialization)
+{
+    auto consensus{CreateChainParams(*m_node.args, ChainType::REGTEST)->GetConsensus()};
+    const uint256 key{0x94};
+    consensus.randomx_mock_pow = true;
+    consensus.randomx_fast_mode = true;
+    BOOST_CHECK_EQUAL(GetRandomXDatasetStatus(key, consensus), "unavailable");
+    consensus.randomx_mock_pow = false;
+    consensus.randomx_fast_mode = false;
+    BOOST_CHECK_EQUAL(GetRandomXDatasetStatus(key, consensus), "disabled");
+    consensus.randomx_fast_mode = true;
+    for (int i{0}; i < 20; ++i) {
+        BOOST_CHECK_EQUAL(GetRandomXDatasetStatus(key, consensus), "preparing");
+    }
+}
 
 /* Test calculation of next difficulty target with no constraints applying */
 BOOST_AUTO_TEST_CASE(get_next_work)
@@ -274,6 +291,27 @@ BOOST_AUTO_TEST_CASE(randomx_unprepared_key_matches_light)
     BOOST_CHECK_EQUAL(CheckProofOfWork(header, key, 1, consensus), CheckProofOfWorkImpl(expected, header.nBits, consensus));
     consensus.randomx_fast_mode = false;
     BOOST_CHECK(GetPoWHash(header, key, consensus) == expected);
+
+    // The fixed 80-byte buffer must match the original stream serialization,
+    // including non-default fields and the inclusive final nonce.
+    for (const uint32_t nonce : {0U, std::numeric_limits<uint32_t>::max()}) {
+        CBlockHeader candidate{header};
+        candidate.nVersion = -1;
+        candidate.nTime = std::numeric_limits<uint32_t>::max();
+        candidate.hashPrevBlock = uint256{0x12};
+        candidate.hashMerkleRoot = uint256{0x56};
+        candidate.nNonce = nonce;
+        DataStream serialized;
+        serialized << candidate;
+        BOOST_REQUIRE_EQUAL(serialized.size(), 80U);
+        const uint256 reference_hash{MakeUCharSpan(reference.Calculate(MakeByteSpan(serialized)))};
+        BOOST_CHECK(GetPoWHash(candidate, key, consensus, false) == reference_hash);
+        BOOST_CHECK(GetPoWHash(candidate, key, consensus, true) == reference_hash);
+        const auto target{DeriveTarget(candidate.nBits, consensus.powLimit)};
+        BOOST_REQUIRE(target);
+        BOOST_CHECK_EQUAL(UintToArith256(reference_hash) <= *target,
+                          CheckProofOfWork(candidate, key, 1, consensus, false));
+    }
 }
 
 BOOST_AUTO_TEST_CASE(GetBlockProofEquivalentTime_test)

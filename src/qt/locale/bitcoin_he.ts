@@ -5892,6 +5892,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>טרם התחיל</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>דפים רגילים</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>מערך נתוני RandomX (תמונת המצב האחרונה): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>דפים גדולים עבור מערך הנתונים אינם זמינים. הכרייה נמשכת עם דפים רגילים; הביצועים עלולים להיות נמוכים יותר. הגדרות המערכת אינן משתנות באופן אוטומטי.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>אתחול מערך הנתונים FAST נכשל. הכרייה נמשכת במצב LIGHT עם ביצועים נמוכים יותר.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>רשות: שדה ריק משתמש בארנק זה</translation>
     </message>

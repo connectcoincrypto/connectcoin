@@ -5469,6 +5469,26 @@ Kök sertifikatların versiyası: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Başlanmayıb</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Adi səhifələr</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX verilənlər dəsti (son vəziyyət): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Verilənlər dəsti üçün böyük səhifələr əlçatan deyil. Mayninq adi səhifələrlə davam edir; məhsuldarlıq aşağı ola bilər. Sistem parametrləri avtomatik dəyişdirilmir.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST verilənlər dəstinin hazırlanması alınmadı. Mayninq LIGHT rejimində daha aşağı məhsuldarlıqla davam edir.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>İstəyə bağlı: boş olduqda bu pulqabı istifadə olunur</translation>
     </message>

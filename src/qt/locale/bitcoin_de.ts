@@ -5971,6 +5971,26 @@ Version der Stammzertifikate: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Nicht gestartet</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Normale Speicherseiten</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX-Datensatz (letzte Momentaufnahme): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Große Speicherseiten für den Datensatz sind nicht verfügbar. Das Mining wird mit normalen Speicherseiten fortgesetzt; die Leistung kann geringer sein. Systemeinstellungen werden nicht automatisch geändert.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Die Initialisierung des FAST-Datensatzes ist fehlgeschlagen. Das Mining wird im LIGHT-Modus mit geringerer Leistung fortgesetzt.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Optional: leer lassen, um diese Wallet zu verwenden</translation>
     </message>

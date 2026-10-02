@@ -5537,6 +5537,26 @@ Versioni i certifikatave rrënjë: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Nuk ka nisur</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Faqe të zakonshme</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Grupi i të dhënave RandomX (pamja e fundit e gjendjes): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages nuk janë të disponueshme për grupin e të dhënave. Nxjerrja vazhdon me faqe të zakonshme; performanca mund të jetë më e ulët. Cilësimet e sistemit nuk ndryshohen automatikisht.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Nisja e grupit të të dhënave FAST dështoi. Nxjerrja vazhdon në modalitetin LIGHT me performancë më të ulët.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opsionale: nëse lihet bosh, përdoret ky portofol</translation>
     </message>

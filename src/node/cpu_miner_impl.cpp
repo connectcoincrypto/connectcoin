@@ -6,6 +6,7 @@
 #include <node/cpu_miner.h>
 
 #include <addresstype.h>
+#include <arith_uint256.h>
 #include <chain.h>
 #include <chainparams.h>
 #include <consensus/merkle.h>
@@ -20,6 +21,7 @@
 #include <random.h>
 #include <sync.h>
 #include <util/chaintype.h>
+#include <util/check.h>
 #include <util/signalinterrupt.h>
 #include <util/string.h>
 #include <util/threadnames.h>
@@ -117,6 +119,14 @@ void CpuMiner::Run(CScript payout, int threads)
         auto& chainman{*m_node.chainman};
         auto& mining{*m_node.mining};
         const auto& consensus{chainman.GetConsensus()};
+        // Only the coordinator reads the dataset-status snapshot; never GetStatus
+        // or the GUI. Hash workers use the ordinary per-hash context lookup.
+        // The snapshot is key-specific; validation may also prepare the next epoch.
+        const auto update_dataset_status = [&](const uint256& key) {
+            const auto dataset_status{GetRandomXDatasetStatus(key, consensus)};
+            std::lock_guard lock{m_mutex};
+            m_status.randomx_dataset = dataset_status;
+        };
         while (!m_stop && !chainman.m_interrupt) {
             // Bootstrap a fresh chain without peers is intentional. Never mine on a
             // known-behind tip while blocks are being downloaded/imported.
@@ -155,7 +165,11 @@ void CpuMiner::Run(CScript payout, int threads)
                 key = GetRandomXKey(prev, consensus);
                 height = prev->nHeight + 1;
             }
+            const auto target{DeriveTarget(block.nBits, consensus.powLimit)};
+            if (!target) throw std::runtime_error("Mining template has an invalid proof-of-work target");
+            const bool mock_pow{consensus.randomx_mock_pow || EnableFuzzDeterminism()};
             PrepareRandomXKey(key, consensus);
+            update_dataset_status(key);
 
             std::atomic<bool> done{false};
             std::atomic<int> finished{0};
@@ -169,7 +183,7 @@ void CpuMiner::Run(CScript payout, int threads)
             }
             // One block/template, shared transactions, and one RandomX dataset
             // per key (the same context cache used by validation). Each worker
-            // owns only a header and leases its own VM from that context.
+            // owns only a header; each hash leases a pooled VM.
             // libc++ 17, used by a supported CI configuration, has no jthread.
             // Always cancel and join already-created threads, including if
             // creating another thread or checking the tip throws.
@@ -198,7 +212,9 @@ void CpuMiner::Run(CScript payout, int threads)
                         for (uint64_t nonce{static_cast<uint64_t>(worker)}; nonce <= std::numeric_limits<uint32_t>::max(); nonce += static_cast<uint64_t>(threads)) {
                             if (done || m_stop || chainman.m_interrupt) break;
                             header.nNonce = static_cast<uint32_t>(nonce);
-                            const bool valid{CheckProofOfWork(header, key, height, consensus, /*secure_jit=*/false)};
+                            const bool valid{mock_pow
+                                ? CheckProofOfWork(header, key, height, consensus, /*secure_jit=*/false)
+                                : UintToArith256(GetPoWHash(header, key, consensus, /*secure_jit=*/false)) <= *target};
                             m_hashes.fetch_add(1, std::memory_order_relaxed);
                             if (valid) {
                                 std::lock_guard lock{result_mutex};
@@ -223,6 +239,7 @@ void CpuMiner::Run(CScript payout, int threads)
                 m_wake.wait_for(lock, std::chrono::milliseconds{50}, [&] { return done || m_stop; });
             }
             workers.Join();
+            update_dataset_status(key);
             if (failure) std::rethrow_exception(failure);
             // Include short successful rounds as well as long nonce searches.
             const auto now{Clock::now()};

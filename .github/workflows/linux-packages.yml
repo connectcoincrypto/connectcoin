@@ -84,6 +84,7 @@ jobs:
       - name: Test packaging helpers
         run: |
           python3 contrib/linuxdeploy/smoke_test.py --self-test
+          python3 -m unittest discover -s contrib/linuxdeploy -p 'test_hugepages.py' -v
           bash contrib/linuxdeploy/test-apprun.sh
           bash contrib/linuxdeploy/test-rcc-timestamps.sh
           cmake -DREPO_SOURCE_DIR="$GITHUB_WORKSPACE" \

@@ -8,7 +8,7 @@ set -eu
 bundle_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 tool=${0##*/}
 case "$tool" in
-    connectcoin|connectcoind|connectcoin-qt|connectcoin-cli|connectcoin-wallet|connectcoin-tx|connectcoin-util) ;;
+    connectcoin|connectcoind|connectcoin-qt|connectcoin-cli|connectcoin-wallet|connectcoin-tx|connectcoin-util|connectcoin-hugepages) ;;
     *) tool=connectcoin-qt ;;
 esac
 if [ "${1-}" = --tool ]; then
@@ -17,6 +17,10 @@ if [ "${1-}" = --tool ]; then
     shift 2
 fi
 case "$tool" in
+    connectcoin-hugepages)
+        # The optional system-administration helper must not use bundled ELF
+        # libraries or Qt paths. It launches the isolated system Python itself.
+        exec "$bundle_dir/usr/bin/connectcoin-hugepages" "$@" ;;
     connectcoin|connectcoind|connectcoin-qt|connectcoin-cli|connectcoin-wallet|connectcoin-tx|connectcoin-util) ;;
     *) printf 'AppRun: unsupported tool: %s\n' "$tool" >&2; exit 2 ;;
 esac

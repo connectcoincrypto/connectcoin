@@ -5953,6 +5953,26 @@ Juurivarmenteiden versio: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Ei käynnistetty</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Tavalliset sivut</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX-tietojoukko (viimeisin tilannekuva): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Tietojoukon suuret sivut eivät ole käytettävissä. Louhinta jatkuu tavallisilla sivuilla; suorituskyky voi olla heikompi. Järjestelmäasetuksia ei muuteta automaattisesti.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST-tietojoukon alustus epäonnistui. Louhinta jatkuu LIGHT-tilassa heikommalla suorituskyvyllä.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Valinnainen: tyhjänä käytetään tätä lompakkoa</translation>
     </message>

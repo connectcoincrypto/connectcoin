@@ -5442,6 +5442,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>دەستی پێ نەکردووە</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>پەڕە ئاساییەکان</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>کۆمەڵەدراوەی RandomX (دوایین دۆخ): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>پەڕە گەورەکان بۆ کۆمەڵەدراوەکە بەردەست نین. کانەکەنی بە پەڕە ئاساییەکان بەردەوامە؛ لەوانەیە کارایی کەمتر بێت. ڕێکخستنەکانی سیستەم بە خۆکار ناگۆڕدرێن.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>دەستپێکردنی کۆمەڵەدراوەی FAST شکستی هێنا. کانەکەنی لە دۆخی LIGHT بە کارایی کەمتر بەردەوامە.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>ئارەزوومەندانە: ئەگەر بەتاڵ بێت، ئەم جزدانە بەکاردێت</translation>
     </message>

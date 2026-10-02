@@ -1,0 +1,46 @@
+HUGE PAGES ON MACOS
+
+This installer does not offer a Huge Pages enable/disable option: there is no
+supported system setup step for this RandomX allocation request on macOS.
+ConnectCoin already tries the macOS VM_FLAGS_SUPERPAGE_SIZE_2MB allocation API
+automatically when preparing its FAST dataset, then uses regular pages if that
+request fails. Installing the app does not reserve memory or change system
+settings, privileges, SIP, Gatekeeper, signing entitlements or JIT protections.
+Do not run ConnectCoin Core as root to try to obtain Huge Pages.
+
+On Intel, the kernel can support this 2 MiB superpage request, but available
+memory and allocation constraints can still cause it to fail. Success is not
+guaranteed by installing or reinstalling the application.
+On Apple Silicon, the Apple XNU implementation reviewed for macOS 15 rejects
+this particular 2 MiB request; regular_pages is therefore expected, not evidence
+that a Windows-style privilege or a Linux memory reservation is missing.
+This describes the API used by this application, not every hardware page size
+or other memory optimization the operating system might use.
+
+CHECK THE ACTUAL DATASET RESULT
+After you choose to start mining, check the Mining page's RandomX dataset
+snapshot. In the application's RPC console, getcpumininginfo reports the same
+value in randomx_dataset. This is a read-only query; it does not start mining.
+
+- not_started: no key has been prepared in this session yet.
+- preparing: the background preparation has not produced a ready context yet.
+- huge_pages: the dataset's large-page allocation call succeeded.
+- regular_pages: that allocation failed; FAST uses regular pages instead.
+- light_fallback: FAST initialization failed; mining continues in LIGHT mode.
+- disabled: FAST was disabled with -randomxfast=0.
+- unavailable: mock/test hashing does not use a real dataset.
+
+The snapshot can lag initialization, is retained after stopping, and resets on
+the next start. It describes only the dataset, not cache, scratchpads or JIT
+memory, and is not a physical-page-size measurement. Regular-page or LIGHT
+fallback does not change hash validity, although performance can be lower.
+The installer and its Cocoa help/version smoke test do not allocate a mining
+dataset or certify Huge Pages availability on your computer.
+
+IMPLEMENTATION REFERENCES
+ConnectCoin source: src/randomx/src/virtual_memory.c and
+src/crypto/randomx_util.cpp in the accompanying source archive.
+Apple XNU macOS 15 reference (superpage support is conditional on __x86_64__):
+https://github.com/apple-oss-distributions/xnu/blob/xnu-11215.1.10/osfmk/vm/vm_map.c
+Apple mmap-to-Mach flag handling:
+https://github.com/apple-oss-distributions/xnu/blob/xnu-11215.1.10/bsd/kern/kern_mman.c

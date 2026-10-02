@@ -5565,6 +5565,26 @@ Wersyjŏ głōwnych certyfikatōw: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Niy zaczynte</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Zwykłe strōny</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Zbiōr danych RandomX (ôstatni ôdczyt stanu): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages niy sōm dostympne dlo zbioru danych. Kopanie idzie dalij ze zwykłymi strōnami; wydajność może być niyszo. Nasztalowania systymu niy sōm zmiyniane autōmatycznie.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Inicjalizacyjo zbioru danych FAST sie niy podarziła. Kopanie idzie dalij we trybie LIGHT ze niyszōm wydajnościōm.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Niyôbowiōnzkowe: puste pole używo tego portmanyja</translation>
     </message>

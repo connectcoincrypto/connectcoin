@@ -60,6 +60,21 @@ executables and libraries under usr/ must stay in their relative locations.
 No root access or installation is required. This bundle does not install a
 service, change firewall rules, or automatically enable RPC or mining.
 
+Optional Huge Pages setup
+-------------------------
+The separate connectcoin-hugepages tool can inspect Linux HugeTLB settings:
+  ./connectcoin-hugepages status
+  ./AppRun --tool connectcoin-hugepages status
+The AppImage accepts --tool connectcoin-hugepages status too. The helper needs
+the distribution's python3 package; Core itself does not need Python.
+
+Configuration is opt-in only, with an explicit administrator command and
+--confirm. It does not run when installing/extracting/opening this bundle, and
+does not start mining. Read HUGE-PAGES.md before applying or restoring a
+reservation: it explains RAM budgets, shared group access, current-boot scope,
+and backups. Never run the AppImage runtime or wallet as root; use the isolated
+system Python and the extracted helper path documented there instead.
+
 Data and upgrades
 -----------------
 Portable refers to the application files. Core continues to use its normal

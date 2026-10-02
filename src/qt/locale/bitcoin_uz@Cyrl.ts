@@ -5848,6 +5848,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Бошланмаган</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Оддий саҳифалар</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX маълумотлар тўплами (ҳолатнинг охирги нусхаси): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Маълумотлар тўплами учун Huge Pages мавжуд эмас. Майнинг оддий саҳифалар билан давом этади; унумдорлик пастроқ бўлиши мумкин. Тизим созламалари автоматик равишда ўзгартирилмайди.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST маълумотлар тўпламини ишга тушириш муваффақиятсиз тугади. Майнинг LIGHT режимида пастроқ унумдорлик билан давом этади.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Ихтиёрий: бўш қолдирилса, шу ҳамён ишлатилади</translation>
     </message>

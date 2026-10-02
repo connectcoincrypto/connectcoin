@@ -5935,6 +5935,26 @@ Versiunea certificatelor rădăcină: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Nu a început</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Pagini obișnuite</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Setul de date RandomX (ultima captură de stare): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages nu sunt disponibile pentru setul de date. Minarea continuă cu pagini obișnuite; performanța poate fi mai redusă. Setările sistemului nu sunt modificate automat.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Inițializarea setului de date FAST a eșuat. Minarea continuă în modul LIGHT, cu performanță mai redusă.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opțional: dacă este gol, se folosește acest portofel</translation>
     </message>

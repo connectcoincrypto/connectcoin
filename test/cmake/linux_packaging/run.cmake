@@ -59,6 +59,9 @@ foreach(path IN ITEMS
     share/pixmaps/connectcoin.png
     share/doc/connectcoin-core/copyright
     share/doc/connectcoin-core/licenses/randomx.txt
+    bin/connectcoin-hugepages
+    share/connectcoin/hugepages.py
+    share/doc/connectcoin-core/HUGE-PAGES.md
     share/doc/connectcoin-core/licenses/mbedtls.txt
     share/doc/connectcoin-core/licenses/mbedtls-notice.txt
     share/doc/connectcoin-core/licenses/mbedtls-everest.txt

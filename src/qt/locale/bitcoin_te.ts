@@ -5788,6 +5788,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>ప్రారంభించలేదు</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>సాధారణ పేజీలు</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX డేటాసెట్ (చివరి స్థితి నమోదు): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>డేటాసెట్ కోసం Huge Pages అందుబాటులో లేవు. సాధారణ పేజీలతో మైనింగ్ కొనసాగుతుంది; పనితీరు తగ్గవచ్చు. సిస్టమ్ సెట్టింగ్‌లు స్వయంచాలకంగా మార్చబడవు.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST డేటాసెట్ ప్రారంభీకరణ విఫలమైంది. తక్కువ పనితీరుతో LIGHT మోడ్‌లో మైనింగ్ కొనసాగుతుంది.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>ఐచ్ఛికం: ఖాళీగా వదిలితే ఈ వాలెట్ ఉపయోగించబడుతుంది</translation>
     </message>

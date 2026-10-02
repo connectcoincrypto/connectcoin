@@ -5702,6 +5702,26 @@ Versio de radikaj atestiloj: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Ne komencita</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Ordinaraj paĝoj</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX-datumaro (lasta momentfoto): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Grandaj paĝoj por la datumaro ne disponeblas. Minado daŭras per ordinaraj paĝoj; la rendimento povas esti pli malalta. Sistemaj agordoj ne estas ŝanĝataj aŭtomate.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Inicialigo de la FAST-datumaro malsukcesis. Minado daŭras en LIGHT-reĝimo kun pli malalta rendimento.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Nedeviga: malplena uzas ĉi tiun monujon</translation>
     </message>

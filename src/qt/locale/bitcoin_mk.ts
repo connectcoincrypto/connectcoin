@@ -5500,6 +5500,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Не е започнато</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Обични страници</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Податочно множество RandomX (последна снимка): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages не се достапни за податочното множество. Рударењето продолжува со обични страници; перформансите може да бидат пониски. Системските поставки не се менуваат автоматски.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Иницијализацијата на податочното множество FAST не успеа. Рударењето продолжува во режим LIGHT со пониски перформанси.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Незадолжително: ако е празно, се користи овој паричник</translation>
     </message>

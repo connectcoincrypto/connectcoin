@@ -9,6 +9,7 @@
 #include <consensus/params.h>
 
 #include <cstdint>
+#include <string>
 
 class CBlockHeader;
 class CBlockIndex;
@@ -56,6 +57,11 @@ bool CheckProofOfWork(const CBlockHeader& header, const uint256& key, int block_
  * A busy preparation cache may defer the request; hashing still works in LIGHT.
  */
 void PrepareRandomXKey(const uint256& key, const Consensus::Params& params);
+
+/** Snapshot the prepared dataset for a mining key without initializing or
+ * waiting for it. Returns unavailable, disabled, preparing, light_fallback,
+ * huge_pages, or regular_pages. Does not describe per-VM memory allocations. */
+std::string GetRandomXDatasetStatus(const uint256& key, const Consensus::Params& params);
 
 /** Prepare the current and, during the lag window, next active-chain key. */
 void PrepareRandomXKeys(const CBlockIndex* tip, const Consensus::Params& params);

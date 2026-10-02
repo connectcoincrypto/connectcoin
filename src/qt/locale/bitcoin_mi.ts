@@ -3748,6 +3748,26 @@ Putanga tiwhikete pūtake: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Kāore anō kia tīmata</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Ngā whārangi noa</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Huinga raraunga RandomX (hopukanga whakamutunga): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Kāore e wātea ana ngā Huge Pages mō te huinga raraunga. Ka haere tonu te maina mā ngā whārangi noa; ka iti iho pea te mahi. Kāore ngā tautuhinga pūnaha e hurihia aunoatia.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>I rahua te tīmatanga o te huinga raraunga FAST. Ka haere tonu te maina i te aratau LIGHT, me te iti iho o te mahi.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>He kōwhiringa: ki te waiho pātea, ka whakamahia tēnei pūkoro</translation>
     </message>

@@ -5937,6 +5937,26 @@ Versió dels certificats arrel: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>No iniciat</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Pàgines normals</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Conjunt de dades RandomX (última instantània): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Les pàgines grans del conjunt de dades no estan disponibles. La mineria continua amb pàgines normals; el rendiment pot ser inferior. La configuració del sistema no es modifica automàticament.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Ha fallat la inicialització del conjunt de dades FAST. La mineria continua en mode LIGHT amb un rendiment inferior.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opcional: buit fa servir aquest moneder</translation>
     </message>

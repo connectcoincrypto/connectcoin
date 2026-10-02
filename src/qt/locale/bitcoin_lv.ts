@@ -5773,6 +5773,26 @@ Saknes sertifikātu versija: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Nav sākts</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Parastas lapas</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX datu kopa (pēdējais stāvoklis): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Datu kopai lielās lapas nav pieejamas. Ieguve turpinās ar parastām lapām; veiktspēja var būt zemāka. Sistēmas iestatījumi netiek mainīti automātiski.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Neizdevās inicializēt FAST datu kopu. Ieguve turpinās LIGHT režīmā ar zemāku veiktspēju.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Neobligāti: tukšs izmanto šo maku</translation>
     </message>

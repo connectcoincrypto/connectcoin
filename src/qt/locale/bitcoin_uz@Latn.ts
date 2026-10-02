@@ -5848,6 +5848,26 @@ Ildiz sertifikatlar versiyasi: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Boshlanmagan</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Oddiy sahifalar</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX maʼlumotlar toʻplami (holatning oxirgi nusxasi): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Maʼlumotlar toʻplami uchun Huge Pages mavjud emas. Mayning oddiy sahifalar bilan davom etadi; unumdorlik pastroq boʻlishi mumkin. Tizim sozlamalari avtomatik ravishda oʻzgartirilmaydi.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST maʼlumotlar toʻplamini ishga tushirish muvaffaqiyatsiz tugadi. Mayning LIGHT rejimida pastroq unumdorlik bilan davom etadi.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Ixtiyoriy: bo‘sh qoldirilsa, shu hamyon ishlatiladi</translation>
     </message>

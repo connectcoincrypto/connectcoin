@@ -3371,6 +3371,26 @@ Version ya ṱhanziela dza root: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>A zwi athu u thoma</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Masiaṱari o ḓoweleaho</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Tshigwada tsha data tsha RandomX (tshifanyiso tsha u fhedza tsha tshiimo): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages a dzi wanali kha tshigwada tsha data. U bwa hu bvela phanḓa nga masiaṱari o ḓoweleaho; kushumele ku nga fhungudzea. Nzudzanyo dza sisiṱeme a dzi shandulwi nga dzoṱhe.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>U thoma tshigwada tsha data tsha FAST zwo kundelwa. U bwa hu bvela phanḓa kha maitele a LIGHT nga kushumele kwo fhungudzeaho.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>A si khombe-khombe: arali hu si na tshithu, hu shumiswa itshi tshipatshi</translation>
     </message>

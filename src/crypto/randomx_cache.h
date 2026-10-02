@@ -32,6 +32,22 @@ public:
 
     explicit RandomXContextCache(Factory factory) : m_factory{std::move(factory)} {}
 
+    /** Observe an already completed trusted preparation for this exact key.
+     * Never initializes LIGHT/FAST, waits for a build, changes eviction order,
+     * or removes failed entries. A factory may have returned a LIGHT fallback.
+     * Call from a background status producer, not the GUI or for every nonce. */
+    ContextPtr PeekPrepared(const uint256& key)
+    {
+        std::lock_guard lock{m_fast_mutex};
+        const auto it{FindFast(key)};
+        if (it == m_fast.end() || !Ready(*it)) return {};
+        try {
+            return it->context.get();
+        } catch (...) {
+            return {};
+        }
+    }
+
     ContextPtr Get(const uint256& key, bool prefer_fast)
     {
         if (prefer_fast) {

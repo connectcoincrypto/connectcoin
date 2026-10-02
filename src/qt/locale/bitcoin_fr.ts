@@ -5978,6 +5978,26 @@ Version des certificats racines : %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Non démarré</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Pages ordinaires</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Jeu de données RandomX (dernier instantané) : %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Les grandes pages du jeu de données ne sont pas disponibles. Le minage continue avec des pages ordinaires ; les performances peuvent être réduites. Les paramètres du système ne sont pas modifiés automatiquement.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>L’initialisation du jeu de données FAST a échoué. Le minage continue en mode LIGHT avec des performances réduites.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Facultatif : vide utilise ce portefeuille</translation>
     </message>

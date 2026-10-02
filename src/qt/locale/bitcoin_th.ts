@@ -5644,6 +5644,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>ยังไม่ได้เริ่ม</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>เพจปกติ</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>ชุดข้อมูล RandomX (ภาพสถานะล่าสุด): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>ไม่สามารถใช้ Huge Pages กับชุดข้อมูลได้ การขุดดำเนินต่อไปโดยใช้เพจปกติ ประสิทธิภาพอาจลดลง การตั้งค่าระบบจะไม่ถูกเปลี่ยนโดยอัตโนมัติ</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>การเริ่มต้นชุดข้อมูล FAST ล้มเหลว การขุดดำเนินต่อไปในโหมด LIGHT ด้วยประสิทธิภาพที่ต่ำลง</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>ไม่บังคับ: หากเว้นว่างจะใช้กระเป๋าเงินนี้</translation>
     </message>

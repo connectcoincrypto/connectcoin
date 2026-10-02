@@ -5567,6 +5567,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Ekki hafið</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Venjulegar síður</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX-gagnasafn (síðasta stöðumynd): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Stórar síður fyrir gagnasafnið eru ekki tiltækar. Námuvinnsla heldur áfram með venjulegum síðum; afköst gætu verið minni. Kerfisstillingum er ekki breytt sjálfkrafa.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Frumstilling FAST-gagnasafnsins mistókst. Námuvinnsla heldur áfram í LIGHT-ham með minni afköstum.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Valfrjálst: autt notar þetta veski</translation>
     </message>

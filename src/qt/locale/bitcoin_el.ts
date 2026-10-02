@@ -5752,6 +5752,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Δεν έχει ξεκινήσει</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Κανονικές σελίδες</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Σύνολο δεδομένων RandomX (τελευταίο στιγμιότυπο): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Οι μεγάλες σελίδες για το σύνολο δεδομένων δεν είναι διαθέσιμες. Η εξόρυξη συνεχίζεται με κανονικές σελίδες· η απόδοση μπορεί να είναι χαμηλότερη. Οι ρυθμίσεις συστήματος δεν αλλάζουν αυτόματα.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Η αρχικοποίηση του συνόλου δεδομένων FAST απέτυχε. Η εξόρυξη συνεχίζεται σε λειτουργία LIGHT με χαμηλότερη απόδοση.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Προαιρετικό: κενό χρησιμοποιεί αυτό το πορτοφόλι</translation>
     </message>

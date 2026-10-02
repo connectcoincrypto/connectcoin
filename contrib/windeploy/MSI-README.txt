@@ -35,7 +35,35 @@ Tools (PowerShell, from the bin folder):
   .\connectcoin-util.exe -help
 The share\rpcauth\rpcauth.py helper is optional and requires Python 3.
 share\examples\connectcoin.conf is only an example; it is not enabled automatically.
-The MSI does not change any firewall ports or permissions.
+The MSI does not change any firewall ports. System permissions are unchanged
+unless you explicitly approve the separate optional Huge Pages configurator.
+
+Optional Huge Pages for CPU mining
+---------------------------------
+The final installer page offers an UNCHECKED "Configure Huge Pages for mining"
+option. It opens a separate helper, not the wallet. You can also open
+"Configure Huge Pages" from the ConnectCoin Core Start Menu folder later.
+It explains the change and asks for confirmation (No is the default), then
+requests administrator approval through UAC if needed. Cancelling does not
+affect the installation or ordinary mining. Silent installation does nothing.
+
+The helper adds only "Lock pages in memory" (SeLockMemoryPrivilege) to the
+current account; it does not remove existing permissions or reserve RAM.
+This permission applies to the account, not just ConnectCoin. Applications
+can keep memory resident, leaving less RAM reclaimable by Windows.
+If UAC uses a DIFFERENT administrator account, the helper refuses to modify
+either account; ask that administrator to configure your account's right.
+Sign out and sign in again after a new grant (or restart Windows). Then run
+Core normally, not as administrator. The Mining page reports the dataset's
+allocation result; permission alone cannot guarantee sufficient contiguous RAM.
+
+Read-only diagnostics from the bin folder:
+  .\connectcoin-huge-pages.exe status
+Nothing automatically starts mining, logs you out, reboots, or changes JIT.
+Repair and uninstall leave this account-level permission intact because other
+applications may use it. To revoke it explicitly, an administrator can remove
+your account from "Lock pages in memory" under Local Security Policy > Local
+Policies > User Rights Assignment. Do not remove other accounts or group policy.
 
 Licenses and source code
 -----------------------

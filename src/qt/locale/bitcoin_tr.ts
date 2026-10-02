@@ -5903,6 +5903,26 @@ Kök sertifika sürümü: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Başlatılmadı</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Normal sayfalar</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX veri kümesi (son durum görüntüsü): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Veri kümesi için Huge Pages kullanılamıyor. Madencilik normal sayfalarla devam ediyor; performans daha düşük olabilir. Sistem ayarları otomatik olarak değiştirilmez.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST veri kümesi başlatılamadı. Madencilik, daha düşük performansla LIGHT modunda devam ediyor.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>İsteğe bağlı: boş bırakılırsa bu cüzdan kullanılır</translation>
     </message>

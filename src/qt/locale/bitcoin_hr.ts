@@ -5810,6 +5810,26 @@ Verzija korijenskih certifikata: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Nije pokrenuto</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Obične stranice</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX skup podataka (posljednja snimka): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Velike stranice za skup podataka nisu dostupne. Rudarenje se nastavlja s običnim stranicama; performanse mogu biti slabije. Postavke sustava ne mijenjaju se automatski.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Inicijalizacija FAST skupa podataka nije uspjela. Rudarenje se nastavlja u načinu LIGHT sa slabijim performansama.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Neobavezno: prazno koristi ovaj novčanik</translation>
     </message>

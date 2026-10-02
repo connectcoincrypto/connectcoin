@@ -2088,8 +2088,14 @@ void WalletTests::miningPage()
     MiningPage page{nullptr};
     auto* threads{page.findChild<QSpinBox*>("miningThreads")};
     const auto* thread_warning{page.findChild<QLabel*>("miningThreadWarning")};
+    const auto* dataset_status{page.findChild<QLabel*>("miningDatasetStatus")};
+    const auto* dataset_warning{page.findChild<QLabel*>("miningDatasetWarning")};
     QVERIFY(threads);
     QVERIFY(thread_warning);
+    QVERIFY(dataset_status);
+    QVERIFY(dataset_warning);
+    QVERIFY(dataset_status->text().contains(MiningPage::tr("Not started")));
+    QVERIFY(dataset_warning->isHidden());
     QCOMPARE(threads->value(), 1);
     QCOMPARE(threads->minimum(), 1);
     QCOMPARE(threads->maximum(), 1024);
@@ -2123,8 +2129,28 @@ void WalletTests::miningPage()
     QCOMPARE(threads->value(), 1024);
     threads->setValue(1);
     QVERIFY(thread_warning->isHidden());
+    // Pure presentation fixtures cover both allocator outcomes without OS
+    // privileges or a multi-gigabyte allocation. Advisories are not errors.
+    for (const auto& [value, text, warning] : std::vector<std::tuple<std::string, const char*, bool>>{
+             {"not_started", "Not started", false},
+             {"preparing", "Starting", false},
+             {"huge_pages", "FAST (Huge Pages)", false},
+             {"regular_pages", "Regular pages", true},
+             {"light_fallback", "LIGHT", true},
+             {"disabled", "LIGHT (-randomxfast=0)", false},
+             {"unavailable", "N/A", false},
+             {"unexpected", "N/A", false}}) {
+        page.updateDatasetStatus(value);
+        QVERIFY(dataset_status->text().contains(MiningPage::tr(text)));
+        QCOMPARE(dataset_warning->isHidden(), !warning);
+        QCOMPARE(dataset_warning->text().isEmpty(), !warning);
+        QVERIFY(page.findChild<QPushButton*>("startMining")->isEnabled());
+        QVERIFY(page.findChildren<QMessageBox*>().isEmpty());
+    }
     page.setClientModel(nullptr);
     QVERIFY(thread_warning->isHidden());
+    QVERIFY(dataset_warning->isHidden());
+    QVERIFY(dataset_status->text().contains(MiningPage::tr("Not started")));
     QVERIFY(!page.findChild<QPushButton*>("startMining")->isEnabled());
     // Destroying a Mining page must also safely dispose of its error modal.
     auto* unloaded_page{new MiningPage{nullptr}};

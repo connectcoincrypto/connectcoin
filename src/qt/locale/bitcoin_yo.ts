@@ -3755,6 +3755,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Kò tíì bẹ̀rẹ̀</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Àwọn ojú ìwé déédéé</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Àkójọpọ̀ dátà RandomX (àwòrán ipò tó gbẹ̀yìn): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages kò sí fún àkójọpọ̀ dátà náà. Wíwakùsà ń bá a lọ pẹ̀lú àwọn ojú ìwé déédéé; ìṣiṣẹ́ lè lọ́ra sí i. A kò yí àwọn ètò ẹ̀rọ padà fúnra wọn.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Bíbẹ̀rẹ̀ àkójọpọ̀ dátà FAST kùnà. Wíwakùsà ń bá a lọ ní ipò LIGHT pẹ̀lú ìṣiṣẹ́ tó lọ́ra sí i.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Kì í ṣe dandan: bí ó bá ṣófo, àpamọ́ yìí ni a ó lò</translation>
     </message>

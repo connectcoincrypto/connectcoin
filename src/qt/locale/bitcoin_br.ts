@@ -5516,6 +5516,26 @@ Stumm an testenioù gwrizienn: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Ket kroget</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Pajennoù boutin</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Strobad roadennoù RandomX (stad diwezhañ): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>N'eus ket pajennoù bras hegerz evit ar strobad roadennoù. Kenderc'hel a ra ar mengleuziañ gant pajennoù boutin; gallout a ra bezañ izeloc'h an efedusted. Ne vez ket kemmet arventennoù ar reizhiad ent emgefre.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>C'hwitet eo deraouekaat ar strobad roadennoù FAST. Kenderc'hel a ra ar mengleuziañ er mod LIGHT gant un efedusted izeloc'h.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Diret: goullo a implij ar yalc'h-mañ</translation>
     </message>

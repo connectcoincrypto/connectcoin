@@ -122,6 +122,7 @@ struct RandomXContext::Impl {
     const bool m_require_secure_jit{HasFlag(randomx_get_flags(), RANDOMX_FLAG_SECURE)};
     CachePtr m_cache;
     DatasetPtr m_dataset;
+    bool m_dataset_large_pages{false};
     mutable std::mutex m_vm_mutex;
     mutable std::array<std::vector<VMPtr>, 2> m_vm_pools;
 
@@ -172,6 +173,7 @@ struct RandomXContext::Impl {
     void AllocateDataset()
     {
         m_dataset.reset(randomx_alloc_dataset(PreferredFlags()));
+        m_dataset_large_pages = m_dataset != nullptr && m_options.try_large_pages;
         if (!m_dataset && m_options.try_large_pages) {
             m_dataset.reset(randomx_alloc_dataset(m_base_flags));
         }
@@ -275,4 +277,14 @@ RandomXContext::Hash RandomXContext::Calculate(std::span<const std::byte> input)
 RandomXContext::Hash RandomXContext::Calculate(std::span<const std::byte> input, bool secure_jit) const
 {
     return m_impl->Calculate(input, secure_jit);
+}
+
+RandomXMemoryMode RandomXContext::MemoryMode() const
+{
+    return m_impl->m_memory_mode;
+}
+
+bool RandomXContext::UsesLargePagesForDataset() const
+{
+    return m_impl->m_dataset_large_pages;
 }

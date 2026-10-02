@@ -9,6 +9,39 @@ modify wallet/node data, or install command-line tools into a system directory.
 This DMG contains the complete graphical full node and wallet, not a separate
 set of command-line executables.
 
+### Huge Pages: automatic request, no installer configuration
+
+There is **no Huge Pages enable/disable option in the macOS installer**. The
+bundled RandomX backend already requests `VM_FLAGS_SUPERPAGE_SIZE_2MB` through
+anonymous `mmap` and falls back to regular pages when allocation fails. No
+Windows-style account privilege or Linux-style page reservation is appropriate
+for this backend on macOS.
+
+The [Apple XNU macOS 15 implementation](https://github.com/apple-oss-distributions/xnu/blob/xnu-11215.1.10/osfmk/vm/vm_map.c)
+accepts this superpage size only for `__x86_64__`; it rejects the request on
+Apple Silicon. Thus `regular_pages` is expected on that ARM64 implementation,
+not evidence of an installation error. Intel allocation can still fail due to
+memory availability or other allocation constraints. The
+[mmap implementation](https://github.com/apple-oss-distributions/xnu/blob/xnu-11215.1.10/bsd/kern/kern_mman.c)
+passes the special anonymous-map flags to Mach. These are allocation semantics,
+not settings for the installer to change.
+
+The DMG's `INSTALL.txt` includes [HUGE-PAGES.txt](HUGE-PAGES.txt), which is also
+kept at `ConnectCoin Core.app/Contents/Resources/HUGE-PAGES.txt` after the app is
+copied to Applications. It explains the Mining page snapshot and the read-only
+`getcpumininginfo` RPC's `randomx_dataset` field. After choosing to start mining,
+wait for preparation before interpreting that result. It describes the shared
+dataset's allocation path, not cache/scratchpads/JIT or a measured physical page
+size. Regular-page and LIGHT fallbacks remain valid, but may be slower.
+
+Do not run the wallet as root, disable SIP or Gatekeeper, modify JIT protections,
+or add signing entitlements to pursue Huge Pages. The DMG never performs those
+changes. Build and verification reports record this no-configuration policy
+and the instructions' SHA-256; their help/version smoke does **not** allocate
+a dataset or certify that Huge Pages will work on the destination computer.
+
+### Signing and native dependencies
+
 These artifacts are **ad-hoc signed**, not signed with a project-owned Apple
 Developer ID and not notarized by Apple. Signature verification checks bundle
 integrity; it does not establish an identified publisher or Gatekeeper approval.

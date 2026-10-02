@@ -5407,6 +5407,26 @@ Bersyun da reng root certificate: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Ali ya pa migumpisa</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Karaniwang pahina</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX a pangkat ning datos (pekabayung kuha ning kalagayan): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>E la magamit deng Huge Pages para king pangkat ning datos. Tuluy ya ing pamagmina gamit deng karaniwang pahina; malyari yang bumagal ing pamagobra. E la kusang mababayu deng ayus ning sistema.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Mibigu ing pamagumpisa king FAST a pangkat ning datos. Tuluy ya ing pamagmina king LIGHT a pamamaraan, a mas mabagal ing pamagobra.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opsiyunal: nung alang laman, gamitan ya ing pitakang ini</translation>
     </message>

@@ -5957,6 +5957,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>시작되지 않음</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>일반 페이지</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX 데이터셋 (최근 스냅샷): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>데이터셋에 대형 페이지를 사용할 수 없습니다. 채굴은 일반 페이지로 계속되지만 성능이 낮아질 수 있습니다. 시스템 설정은 자동으로 변경되지 않습니다.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST 데이터셋 초기화에 실패했습니다. 채굴은 성능이 낮은 LIGHT 모드로 계속됩니다.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>선택 사항: 비워 두면 이 지갑 사용</translation>
     </message>

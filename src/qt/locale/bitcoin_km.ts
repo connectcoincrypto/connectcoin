@@ -5906,6 +5906,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>មិនទាន់ចាប់ផ្តើម</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>ទំព័រធម្មតា</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>សំណុំទិន្នន័យ RandomX (ស្ថានភាពចុងក្រោយ): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>ទំព័រធំសម្រាប់សំណុំទិន្នន័យមិនអាចប្រើបានទេ។ ការជីកយករ៉ែបន្តដោយប្រើទំព័រធម្មតា ហើយប្រសិទ្ធភាពអាចទាបជាងមុន។ ការកំណត់ប្រព័ន្ធមិនត្រូវបានប្តូរដោយស្វ័យប្រវត្តិទេ។</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>ការចាប់ផ្តើមសំណុំទិន្នន័យ FAST បានបរាជ័យ។ ការជីកយករ៉ែបន្តក្នុងរបៀប LIGHT ជាមួយប្រសិទ្ធភាពទាបជាងមុន។</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>ស្រេចចិត្ត៖ ទុកទទេនឹងប្រើកាបូបនេះ</translation>
     </message>

@@ -5872,6 +5872,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>არ დაწყებულა</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>ჩვეულებრივი გვერდები</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX მონაცემთა ნაკრები (ბოლო მდგომარეობა): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>მონაცემთა ნაკრებისთვის დიდი გვერდები მიუწვდომელია. მაინინგი ჩვეულებრივი გვერდებით გრძელდება; წარმადობა შეიძლება შემცირდეს. სისტემის პარამეტრები ავტომატურად არ იცვლება.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>FAST მონაცემთა ნაკრების ინიციალიზაცია ვერ მოხერხდა. მაინინგი LIGHT რეჟიმში შემცირებული წარმადობით გრძელდება.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>არასავალდებულო: ცარიელი ველი ამ საფულეს იყენებს</translation>
     </message>

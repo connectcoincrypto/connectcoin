@@ -5532,6 +5532,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Не запушчана</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Звычайныя старонкі</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Набор даных RandomX (апошні здымак): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Вялікія старонкі для набору даных недаступныя. Майнінг працягваецца са звычайнымі старонкамі; прадукцыйнасць можа быць ніжэйшай. Сістэмныя налады не змяняюцца аўтаматычна.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Не ўдалося ініцыялізаваць набор даных FAST. Майнінг працягваецца ў рэжыме LIGHT з ніжэйшай прадукцыйнасцю.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Неабавязкова: пустое поле выкарыстоўвае гэты кашалёк</translation>
     </message>

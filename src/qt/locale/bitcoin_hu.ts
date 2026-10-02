@@ -5955,6 +5955,26 @@ Gyökértanúsítványok verziója: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Nincs elindítva</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Normál lapok</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX-adatkészlet (legutóbbi pillanatkép): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Az adatkészlethez nem érhetők el nagy lapok. A bányászat normál lapokkal folytatódik; a teljesítmény alacsonyabb lehet. A rendszerbeállítások nem módosulnak automatikusan.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>A FAST-adatkészlet inicializálása sikertelen. A bányászat LIGHT módban, alacsonyabb teljesítménnyel folytatódik.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opcionális: üresen ezt a tárcát használja</translation>
     </message>

@@ -6,3 +6,5 @@ src/CMakeLists.txt export-subst
 *.sh text eol=lf
 *.bash text eol=lf
 contrib/guix/guix-* text eol=lf
+contrib/linuxdeploy/apprun text eol=lf
+contrib/linuxdeploy/connectcoin-hugepages text eol=lf

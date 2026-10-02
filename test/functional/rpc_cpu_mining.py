@@ -38,6 +38,10 @@ class CpuMiningTest(BitcoinTestFramework):
         assert_equal(info["state"], "stopped")
         assert_equal(info["error"], "")
         assert_equal(info["hashespersecond"], 0)
+        assert info["randomx_dataset"] in {
+            "not_started", "preparing", "huge_pages", "regular_pages",
+            "light_fallback", "disabled", "unavailable",
+        }
         return info
 
     def run_test(self):
@@ -62,6 +66,7 @@ class CpuMiningTest(BitcoinTestFramework):
         assert_equal(info["hashes"], 0)
         assert_equal(info["threads"], 1)
         assert_equal(info["max_threads"], 1024)
+        assert_equal(info["randomx_dataset"], "not_started")
         logical_cpus = info["logical_cpus"]
         assert_greater_than(logical_cpus, 0)
         self.stop_miner()  # Idempotent while stopped.
@@ -79,6 +84,12 @@ class CpuMiningTest(BitcoinTestFramework):
         node.startmining(address, min(2, info["max_threads"]))
         assert_raises_rpc_error(-1, "already running", node.startmining, address)
         self.wait_until(lambda: node.getcpumininginfo()["blocks"] >= 2)
+        if self.options.fast:
+            # The first blocks can be mined in LIGHT while the trusted FAST
+            # dataset is still building. Observe the completed allocation too.
+            self.wait_until(lambda: node.getcpumininginfo()["randomx_dataset"] in {
+                "huge_pages", "regular_pages", "light_fallback", "unavailable",
+            })
         info = self.stop_miner()
         assert_equal(info["max_threads"], 1024)
         assert_equal(info["logical_cpus"], logical_cpus)
@@ -96,6 +107,12 @@ class CpuMiningTest(BitcoinTestFramework):
             assert coinbase["txid"] not in coinbases
             coinbases.add(coinbase["txid"])
         assert_equal(node.getcpumininginfo()["hashes"], info["hashes"])
+        # A stopped session retains its last snapshot, rather than following
+        # unrelated validation preparations or a pending background build.
+        assert_equal(node.getcpumininginfo()["randomx_dataset"], info["randomx_dataset"])
+        assert info["randomx_dataset"] != "not_started"
+        if not self.options.fast:
+            assert info["randomx_dataset"] in {"disabled", "unavailable"}
 
         self.log.info("Pause for known headers ahead, then resume on a newly received block")
         peer = self.nodes[1]
@@ -110,10 +127,12 @@ class CpuMiningTest(BitcoinTestFramework):
         assert_equal(node.getcpumininginfo()["max_threads"], 1024)
         assert_equal(node.getcpumininginfo()["logical_cpus"], logical_cpus)
         assert_equal(node.getcpumininginfo()["hashes"], 0)
+        assert_equal(node.getcpumininginfo()["randomx_dataset"], "not_started")
         self.stop_miner()
         node.startmining(address)
         self.wait_until(lambda: node.getcpumininginfo()["state"] == "waiting")
         assert_equal(node.getcpumininginfo()["hashes"], 0)
+        assert_equal(node.getcpumininginfo()["randomx_dataset"], "not_started")
         assert_equal(node.submitblock(peer.getblock(external, False)), None)
         self.wait_until(lambda: node.getcpumininginfo()["blocks"] >= 1)
         self.stop_miner()
@@ -147,6 +166,7 @@ class CpuMiningTest(BitcoinTestFramework):
         self.restart_node(0, extra_args=self.extra_args[0])
         assert_equal(node.getcpumininginfo()["running"], False)
         assert_equal(node.getcpumininginfo()["hashes"], 0)
+        assert_equal(node.getcpumininginfo()["randomx_dataset"], "not_started")
 
 
 if __name__ == "__main__":

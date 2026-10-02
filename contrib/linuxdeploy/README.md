@@ -18,6 +18,15 @@ firewall, start mining, or touch user wallets, data or configuration. Uninstalli
 removes program files only. Experimental multiprocess IPC is disabled; the
 monolithic GUI and daemon remain fully functional.
 
+Every format also includes an optional `connectcoin-hugepages` setup command.
+DEB/RPM installation has no configuration wizard or privileged post-install
+hook: opt in explicitly afterward. The command needs the distribution's Python
+3 (recommended/suggested, not required by Core), and supports read-only `status`,
+confirmed administrator `apply`, and conservative `restore`. It only changes
+runtime HugeTLB settings for the current boot; it never starts Core or mining.
+See [the Huge Pages setup guide](HUGE-PAGES.md) for sizing, group permissions,
+backup/recovery, portable usage and the offline regression tests.
+
 ## Native package build
 
 Install the build dependencies from `doc/build-unix.md`, `help2man`, and `dpkg-dev`

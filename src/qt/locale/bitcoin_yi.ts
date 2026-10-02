@@ -4238,6 +4238,26 @@ Root certificates version: %2</source>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>נאָך נישט אָנגעהויבן</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>געוויינטלעכע בלעטער</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>RandomX־דאַטן־זאַמלונג (לעצטער צושטאַנד־בילד): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Huge Pages זענען נישט בנימצא פֿאַר דער דאַטן־זאַמלונג. דאָס מיינינג גייט ווײַטער מיט געוויינטלעכע בלעטער; די גיכקייט קען זײַן נידעריקער. די סיסטעם־אײַנשטעלונגען ווערן נישט אויטאָמאַטיש געביטן.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>די איניציאַליזאַציע פֿון דער FAST־דאַטן־זאַמלונג איז דורכגעפֿאַלן. דאָס מיינינג גייט ווײַטער אין LIGHT־מאָדע מיט אַ נידעריקער גיכקייט.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>נישט מחויב: אַ ליידיק פֿעלד ניצט דעם בײַטל</translation>
     </message>

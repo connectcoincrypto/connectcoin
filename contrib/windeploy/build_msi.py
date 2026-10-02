@@ -15,6 +15,7 @@ import xml.etree.ElementTree as ET
 REPO = Path(__file__).resolve().parents[2]
 TARGETS = ("connectcoin", "connectcoin-qt", "connectcoind", "connectcoin-cli",
            "connectcoin-tx", "connectcoin-wallet", "connectcoin-util")
+HUGE_PAGES_HELPER = "connectcoin-huge-pages"
 NS = "http://wixtoolset.org/schemas/v4/wxs"
 ET.register_namespace("", NS)
 
@@ -63,7 +64,9 @@ def payload_fragment(stage, output):
         component = node(directories[parent.as_posix()], "Component",
                          Id=component_id, Guid="*", Bitness="always64")
         gui = relative == "bin/connectcoin-qt.exe"
-        element = node(component, "File", Id="GuiExe" if gui else identifier("F", relative),
+        huge_pages = relative == f"bin/{HUGE_PAGES_HELPER}.exe"
+        file_id = "GuiExe" if gui else "HugePagesExe" if huge_pages else identifier("F", relative)
+        element = node(component, "File", Id=file_id,
                        Source=str(file), KeyPath="yes")
         if gui:
             for shortcut_id, directory in (("StartMenuShortcut", "CoreMenuFolder"),
@@ -73,6 +76,12 @@ def payload_fragment(stage, output):
                                 IconIndex="0", WorkingDirectory="BINFOLDER")
                 node(shortcut, "ShortcutProperty", Key="System.AppUserModel.ID",
                      Value="ConnectCoin.Core")
+        elif huge_pages:
+            shortcut = node(element, "Shortcut", Id="HugePagesShortcut", Directory="CoreMenuFolder",
+                            Name="Configure Huge Pages", Arguments="configure", Advertise="yes",
+                            Icon="CoreIcon.exe", IconIndex="0", WorkingDirectory="BINFOLDER")
+            node(shortcut, "ShortcutProperty", Key="System.AppUserModel.ID",
+                 Value="ConnectCoin.Core.HugePages")
         node(group, "ComponentRef", Id=component_id)
         manifest.append({"path": relative, "size": file.stat().st_size,
                          "sha256": hashlib.sha256(file.read_bytes()).hexdigest()})
@@ -130,7 +139,7 @@ def main():
     # Advertised shortcut icons must be PE resources, with an .exe identifier
     # matching the target's extension. A tiny resource-only PE avoids duplicating
     # the entire GUI executable in the MSI's uncompressed Icon table.
-    run("cmake", "--build", build, "--config", "Release", "--target", "connectcoin-msi-icon",
+    run("cmake", "--build", build, "--config", "Release", "--target", "connectcoin-msi-icon", HUGE_PAGES_HELPER,
         "--parallel", options.jobs)
     shortcut_icon = build / "msi-resources/Release/connectcoin-msi-icon.exe"
     if not shortcut_icon.is_file():
@@ -139,11 +148,13 @@ def main():
         run("cmake", "--install", build, "--config", "Release", "--component", target,
             "--prefix", stage)
     binaries = stage / "bin"
+    copy_file(build / "msi-resources/Release" / f"{HUGE_PAGES_HELPER}.exe",
+              binaries / f"{HUGE_PAGES_HELPER}.exe")
     for filename in (*[f"{t}.exe" for t in TARGETS], "Qt6Core.dll", "Qt6Gui.dll", "Qt6Widgets.dll",
                      "platforms/qwindows.dll", "styles/qmodernwindowsstyle.dll"):
         if not (binaries / filename).is_file():
             raise RuntimeError(f"Required payload missing: {filename}")
-    unexpected = {p.name for p in binaries.glob("*.exe")} - {f"{t}.exe" for t in TARGETS}
+    unexpected = {p.name for p in binaries.glob("*.exe")} - {f"{t}.exe" for t in (*TARGETS, HUGE_PAGES_HELPER)}
     if unexpected or (binaries / "Qt6Test.dll").exists():
         raise RuntimeError(f"Unexpected test/development payload: {unexpected}")
 

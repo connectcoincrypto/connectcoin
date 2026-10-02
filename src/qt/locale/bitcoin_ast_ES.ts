@@ -3918,6 +3918,26 @@ Versión de los certificaos raíz: %2</translation>
 <context>
     <name>MiningPage</name>
     <message>
+        <source>Not started</source>
+        <translation>Ensin aniciar</translation>
+    </message>
+    <message>
+        <source>Regular pages</source>
+        <translation>Páxines normales</translation>
+    </message>
+    <message>
+        <source>RandomX dataset (last snapshot): %1</source>
+        <translation>Conxuntu de datos RandomX (última captura): %1</translation>
+    </message>
+    <message>
+        <source>Dataset Huge Pages are unavailable. Mining continues with regular pages; performance may be lower. System settings are not changed automatically.</source>
+        <translation>Les páxines grandes del conxuntu de datos nun tán disponibles. La minería sigue con páxines normales; el rindimientu pue ser menor. La configuración del sistema nun se camuda automáticamente.</translation>
+    </message>
+    <message>
+        <source>FAST dataset initialization failed. Mining continues in LIGHT mode with lower performance.</source>
+        <translation>Falló l'aniciu del conxuntu de datos FAST. La minería sigue en mou LIGHT con menor rindimientu.</translation>
+    </message>
+    <message>
         <source>Optional: empty uses this wallet</source>
         <translation>Opcional: balero usa esta cartera</translation>
     </message>

@@ -17,7 +17,10 @@ import sys
 import tempfile
 import unittest
 
-from validate_dmg import APP_NAME, EXECUTABLE, MINIMUM_OS, ValidationError, require, run, validate_app, validate_icon
+from validate_dmg import (
+    APP_NAME, EXECUTABLE, HUGE_PAGES_RESOURCE, MINIMUM_OS, ValidationError,
+    huge_pages_policy, read_huge_pages_instructions, require, run, validate_app, validate_icon,
+)
 
 
 def make_plist(original, version, arch, minimum):
@@ -84,7 +87,7 @@ The companion {source_name} contains corresponding source, dependency sources,
 patches, and rebuild/relink instructions. Keep it with this installer when sharing.
 License and attribution notices are also in the application's Resources/Licenses.
 This distribution includes third-party software under its respective licenses.
-"""
+""" + "\n" + read_huge_pages_instructions(Path(__file__).with_name("HUGE-PAGES.txt"))
 
 
 def build(args):
@@ -137,6 +140,8 @@ def build(args):
             shutil.copy2(translation, resources / translation.name)
         (resources / "qt.conf").write_text("[Paths]\nTranslations=Resources\n", encoding="utf-8")
         copy_regular_tree(args.licenses_dir, resources / "Licenses")
+        huge_pages_instructions = read_huge_pages_instructions(Path(__file__).with_name("HUGE-PAGES.txt"))
+        (app / HUGE_PAGES_RESOURCE).write_text(huge_pages_instructions, encoding="utf-8", newline="\n")
         install_text = installation_text(args.version, args.arch, source.name)
         (volume / "INSTALL.txt").write_text(install_text, encoding="utf-8")
         (volume / "Applications").symlink_to("/Applications", target_is_directory=True)
@@ -149,6 +154,7 @@ def build(args):
         provenance = {"version": args.version, "architecture": args.arch, "minimum_macos": args.minimum_macos,
                       "source_commit": commit, "qt": "6.8.4 (static, repository depends)",
                       "signature": "ad-hoc", "developer_id_signed": False, "notarized": False,
+                      "huge_pages": huge_pages_policy(huge_pages_instructions),
                       "xcode": run(["/usr/bin/xcodebuild", "-version"]).stdout.strip(),
                       "sdk": run(["/usr/bin/xcrun", "--show-sdk-version"]).stdout.strip(),
                       "mach_o_images": images, "dmg_sha256": sha256(dmg),
@@ -179,9 +185,12 @@ class RegressionTests(unittest.TestCase):
                 make_plist(original, version, arch, minimum)
 
     def test_english_installation_discloses_signing_and_sources(self):
-        text = installation_text("1.0.0", "arm64", "sources.tar.gz")
-        for expected in ("Applications", "not notarized", "Apple Silicon", "sources.tar.gz", "Mainnet"):
-            self.assertIn(expected, text)
+        for arch in ("arm64", "x86_64"):
+            text = installation_text("1.0.0", arch, "sources.tar.gz")
+            for expected in ("Applications", "not notarized", "sources.tar.gz", "Mainnet"):
+                self.assertIn(expected, text)
+            self.assertIn(read_huge_pages_instructions(Path(__file__).with_name("HUGE-PAGES.txt")), text)
+            self.assertIn("Apple Silicon (M-series)" if arch == "arm64" else "Intel (64-bit)", text)
 
     def test_license_copy_and_empty_rejection(self):
         with tempfile.TemporaryDirectory() as temporary:
