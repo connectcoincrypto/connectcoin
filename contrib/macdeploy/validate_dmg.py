@@ -8,6 +8,7 @@
 import argparse
 from contextlib import contextmanager
 import hashlib
+import io
 import json
 import os
 from pathlib import Path
@@ -695,20 +696,38 @@ Load command 2
             with self.assertRaisesRegex(ValidationError, "Timed out"):
                 run(["owned-test"], timeout=1)
 
+    def test_cli_requires_explicit_version_before_validation(self):
+        with patch.object(sys, "argv", ["validate_dmg.py", "--dmg", "test.dmg", "--arch", "arm64"]), \
+                patch.object(sys, "stderr", new_callable=io.StringIO) as errors, \
+                patch(__name__ + ".validate_dmg") as validate:
+            with self.assertRaises(SystemExit) as failure:
+                main()
+            self.assertEqual(failure.exception.code, 2)
+            self.assertIn("--version", errors.getvalue())
+            validate.assert_not_called()
+
+    def test_cli_passes_explicit_release_version(self):
+        report = {"dmg": "test.dmg", "mach_o_images": []}
+        with patch.object(sys, "argv", ["validate_dmg.py", "--dmg", "test.dmg", "--arch", "arm64", "--version", "1.0.1"]), \
+                patch(__name__ + ".validate_dmg", return_value=report) as validate, \
+                patch("builtins.print"):
+            self.assertEqual(main(), 0)
+            validate.assert_called_once_with(Path("test.dmg").absolute(), "arm64", "1.0.1")
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dmg", type=Path)
     parser.add_argument("--arch", choices=("arm64", "x86_64"))
-    parser.add_argument("--version", default="1.0.0")
+    parser.add_argument("--version", help="Expected Core version (required outside --self-test)")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--self-test", action="store_true")
     options = parser.parse_args()
     if options.self_test:
         suite = unittest.defaultTestLoader.loadTestsFromTestCase(RegressionTests)
         return 0 if unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful() else 1
-    if options.dmg is None or options.arch is None:
-        parser.error("Specify --dmg and --arch, or use --self-test")
+    if options.dmg is None or options.arch is None or options.version is None:
+        parser.error("Specify --dmg, --arch and --version, or use --self-test")
     version_tuple(options.version)
     if options.output is not None:
         require(not options.output.exists() and not options.output.is_symlink(), "Refusing to overwrite an existing verification report")

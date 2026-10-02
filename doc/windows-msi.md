@@ -105,6 +105,7 @@ The builder deliberately leaves compiler/ICE validation errors enabled.
 MSI uses **three version fields** (`major <= 255`, `minor <= 255`, `build <= 65535`).
 The default is the Core version. An in-place upgrade needs a larger MSI version,
 including repackaging the same Core version; use `--package-version` for this.
+Core 1.0.1 builds an MSI version 1.0.1 and can upgrade the existing 1.0.0 MSI.
 Do not add a fourth revision (Windows Installer ignores it), reuse the same MSI
 version for in-place upgrades, or change the fixed UpgradeCode.
 Lower-version installs and different packages with the same version are blocked.
@@ -124,7 +125,7 @@ The verifier also requires GNU `objdump` (for example from MinGW) on `PATH`, or
 an explicit `--objdump C:\path\to\objdump.exe` argument:
 
 ```powershell
-py -3 contrib/windeploy/test_msi.py build/msi/connectcoin-core-1.0.0-win64.msi
+py -3 contrib/windeploy/test_msi.py build/msi/connectcoin-core-1.0.1-win64.msi
 ```
 
 Also test install, repair, upgrade, cancellation/rollback, and uninstall in a

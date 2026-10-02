@@ -111,7 +111,7 @@ without installing the system Qt packages that the bundle is meant to supply.
 bash contrib/linuxdeploy/build-portable.sh \
   --staging-prefix "$PWD/stage/usr" \
   --output-dir "$PWD/dist" \
-  --version 1.0.0 \
+  --version 1.0.1 \
   --qmake /usr/bin/qmake6
 ```
 

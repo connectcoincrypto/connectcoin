@@ -79,7 +79,7 @@ the pinned dependency cache is not a substitute for corresponding source.
 
 ### Corresponding source and license notices
 
-Keep the companion `connectcoin-1.0.0-macos-<arch>-sources.tar.gz` available beside
+Keep the companion `connectcoin-1.0.1-macos-<arch>-sources.tar.gz` available beside
 each DMG. The application is not an MIT-only redistribution: its Qt, QRencode,
 ZeroMQ, and other dependencies retain their respective upstream licenses.
 Statically linked libraries must remain modifiable and relinkable; the source
@@ -96,15 +96,15 @@ gmake -C depends download-one NO_IPC=1 NO_USDT=1 XCODE_VERSION=16.2 \
   OSX_SDK_VERSION="$(xcrun --show-sdk-version)"
 python3 contrib/macdeploy/collect_sources.py \
   --repo . --build-dir build-macos --output-dir build-macos/dist \
-  --version 1.0.0 --arch "$(uname -m)"
+  --version 1.0.1 --arch "$(uname -m)"
 python3 contrib/macdeploy/build_dmg.py \
   --build-dir build-macos --output-dir build-macos/dist \
-  --version 1.0.0 --arch "$(uname -m)" --minimum-macos 15.0 \
+  --version 1.0.1 --arch "$(uname -m)" --minimum-macos 15.0 \
   --qt-translations "depends/$native_host/translations" \
   --licenses-dir "build-macos/dist/licenses-$(uname -m)"
 python3 contrib/macdeploy/validate_dmg.py \
-  --dmg "build-macos/dist/connectcoin-core-1.0.0-macos-$(uname -m).dmg" \
-  --version 1.0.0 --arch "$(uname -m)" \
+  --dmg "build-macos/dist/connectcoin-core-1.0.1-macos-$(uname -m).dmg" \
+  --version 1.0.1 --arch "$(uname -m)" \
   --output "build-macos/dist/verification-$(uname -m).json"
 ```
 

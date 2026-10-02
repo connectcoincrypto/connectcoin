@@ -7,6 +7,8 @@ on:
     paths:
       - '.github/workflows/linux-packages.yml'
       - 'contrib/linuxdeploy/**'
+      - 'contrib/devtools/package_version.py'
+      - 'contrib/devtools/test_package_version.py'
       - 'cmake/module/LinuxPackaging.cmake'
       - 'CMakeLists.txt'
       - 'src/CMakeLists.txt'
@@ -23,8 +25,28 @@ defaults:
     shell: bash
 
 jobs:
+  metadata:
+    name: Resolve package version
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Test package version metadata
+        run: python3 -m unittest discover -s contrib/devtools -p 'test_package_version.py' -v
+      - name: Read release version from CMake
+        id: version
+        run: |
+          version=$(python3 contrib/devtools/package_version.py)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
   build:
     name: Build ${{ matrix.platform }} x86_64
+    needs: metadata
     runs-on: ubuntu-24.04
     container: ${{ matrix.image }}
     timeout-minutes: 90
@@ -41,6 +63,7 @@ jobs:
             generator: RPM
             release: 1.fc43
     env:
+      PACKAGE_VERSION: ${{ needs.metadata.outputs.version }}
       DEBIAN_FRONTEND: noninteractive
       CMAKE_BUILD_PARALLEL_LEVEL: '2'
       CCACHE_DIR: /tmp/connectcoin-ccache
@@ -71,6 +94,7 @@ jobs:
           fi
       - uses: actions/checkout@v6
         with:
+          ref: ${{ github.sha }}
           persist-credentials: false
       - name: Trust only this checkout in the build container
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
@@ -141,14 +165,14 @@ jobs:
           bash contrib/linuxdeploy/build-portable.sh \
             --staging-prefix "$GITHUB_WORKSPACE/build-linux/stage/usr" \
             --output-dir "$GITHUB_WORKSPACE/dist" \
-            --version 1.0.0
+            --version "$PACKAGE_VERSION"
       - name: Record checksums and provenance
         run: |
           python3 contrib/linuxdeploy/build_manifest.py --artifacts dist --build-dir build-linux
       - name: Upload installers
         uses: actions/upload-artifact@v7
         with:
-          name: connectcoin-core-1.0.0-${{ matrix.platform }}-x86_64
+          name: connectcoin-core-${{ needs.metadata.outputs.version }}-${{ matrix.platform }}-x86_64
           path: |
             dist/*.deb
             dist/*.rpm
@@ -174,8 +198,8 @@ jobs:
 
   verify:
     name: Clean runtime ${{ matrix.platform }}
-    needs: build
-    if: ${{ always() && !cancelled() }}
+    needs: [metadata, build]
+    if: ${{ always() && !cancelled() && needs.metadata.result == 'success' }}
     runs-on: ubuntu-24.04
     container: ${{ matrix.image }}
     timeout-minutes: 20
@@ -211,10 +235,11 @@ jobs:
           fi
       - uses: actions/checkout@v6
         with:
+          ref: ${{ github.sha }}
           persist-credentials: false
       - uses: actions/download-artifact@v8
         with:
-          name: connectcoin-core-1.0.0-${{ matrix.artifact }}-x86_64
+          name: connectcoin-core-${{ needs.metadata.outputs.version }}-${{ matrix.artifact }}-x86_64
           path: dist
       - name: Verify download
         run: |

@@ -17,8 +17,28 @@ defaults:
     shell: bash
 
 jobs:
+  metadata:
+    name: Resolve package version
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Test package version metadata
+        run: python3 -m unittest discover -s contrib/devtools -p 'test_package_version.py' -v
+      - name: Read release version from CMake
+        id: version
+        run: |
+          version=$(python3 contrib/devtools/package_version.py)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
   build:
     name: Build and verify macOS ${{ matrix.arch }}
+    needs: metadata
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 150
     strategy:
@@ -30,6 +50,7 @@ jobs:
           - arch: x86_64
             runner: macos-15-intel
     env:
+      PACKAGE_VERSION: ${{ needs.metadata.outputs.version }}
       DEVELOPER_DIR: /Applications/Xcode_16.2.app/Contents/Developer
       MACOSX_DEPLOYMENT_TARGET: '15.0'
       CMAKE_BUILD_PARALLEL_LEVEL: '3'
@@ -41,6 +62,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          ref: ${{ github.sha }}
           persist-credentials: false
       - name: Test packaging helpers
         run: python3 test/lint/lint-macos-package.py
@@ -123,9 +145,9 @@ jobs:
           BUILD_ARCH: ${{ matrix.arch }}
         run: |
           python3 contrib/macdeploy/collect_sources.py --repo . --build-dir build-macos \
-            --output-dir build-macos/dist --version 1.0.0 --arch "$BUILD_ARCH"
+            --output-dir build-macos/dist --version "$PACKAGE_VERSION" --arch "$BUILD_ARCH"
           python3 contrib/macdeploy/build_dmg.py --build-dir build-macos --output-dir build-macos/dist \
-            --version 1.0.0 --arch "$BUILD_ARCH" --minimum-macos "$MACOSX_DEPLOYMENT_TARGET" \
+            --version "$PACKAGE_VERSION" --arch "$BUILD_ARCH" --minimum-macos "$MACOSX_DEPLOYMENT_TARGET" \
             --qt-translations "depends/$DEPENDS_HOST/translations" \
             --licenses-dir "build-macos/dist/licenses-$BUILD_ARCH"
       - name: Verify mounted and relocated installer
@@ -134,12 +156,12 @@ jobs:
           BUILD_ARCH: ${{ matrix.arch }}
         run: |
           python3 contrib/macdeploy/validate_dmg.py \
-            --dmg "build-macos/dist/connectcoin-core-1.0.0-macos-$BUILD_ARCH.dmg" \
-            --arch "$BUILD_ARCH" --version 1.0.0 --output "build-macos/dist/verification-$BUILD_ARCH.json"
+            --dmg "build-macos/dist/connectcoin-core-$PACKAGE_VERSION-macos-$BUILD_ARCH.dmg" \
+            --arch "$BUILD_ARCH" --version "$PACKAGE_VERSION" --output "build-macos/dist/verification-$BUILD_ARCH.json"
       - name: Upload installers and verification reports
         uses: actions/upload-artifact@v7
         with:
-          name: connectcoin-core-1.0.0-macos-${{ matrix.arch }}
+          name: connectcoin-core-${{ needs.metadata.outputs.version }}-macos-${{ matrix.arch }}
           path: |
             build-macos/dist/*.dmg
             build-macos/dist/*.json
