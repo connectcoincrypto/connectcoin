@@ -262,17 +262,8 @@ jobs:
           tar -xzf dist/*.tar.gz -C portable
           appdir=$(find portable -maxdepth 2 -name AppRun -printf '%h\n')
           test -n "$appdir"
-          # Report every missing runtime library together, including plugins
-          # not selected by the minimal headless platform.
-          missing=0
-          while IFS= read -r -d '' binary; do
-            dependencies=$(LD_LIBRARY_PATH="$PWD/$appdir/usr/lib" ldd "$binary")
-            if [[ "$dependencies" == *'not found'* ]]; then
-              printf '%s\n%s\n' "$binary" "$dependencies"
-              missing=1
-            fi
-          done < <(find "$appdir/usr/bin" "$appdir/usr/plugins" -type f \( -name 'connectcoin*' -o -name '*.so' \) -print0)
-          test "$missing" -eq 0
+          # The verifier checks ELF programs and every Qt plugin before running
+          # the bundle, without passing the Huge Pages shell helper to ldd.
           python3 contrib/linuxdeploy/smoke_test.py --portable --prefix "$appdir" --output portable-smoke.json
           xvfb-run -a env QT_QPA_PLATFORM=xcb "$appdir/connectcoin-qt" -version
           images=(dist/*.AppImage)

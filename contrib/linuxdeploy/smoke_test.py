@@ -136,6 +136,35 @@ def run(command, environment, directory, timeout=RPC_TIMEOUT):
     return result.stdout
 
 
+def validate_portable_dependencies(prefix, environment, root):
+    """Check ELF applications/plugins, not shell helpers such as Huge Pages."""
+    libraries = (prefix / "usr/lib").resolve(strict=True)
+    plugins = (prefix / "usr/plugins").resolve(strict=True)
+    for directory in (libraries, plugins):
+        require(directory.is_relative_to(prefix) and directory.is_dir(),
+                f"Portable runtime directory escapes the bundle: {directory}")
+    for plugin in ("libqxcb.so", "libqminimal.so"):
+        installed_file(prefix, f"usr/plugins/platforms/{plugin}")
+    # Enumerate the required native programs explicitly. The bin directory also
+    # contains connectcoin-hugepages (a shell script) and Qt configuration files.
+    relatives = [f"usr/bin/{target}" for target in TARGETS]
+    relatives += [path.relative_to(prefix).as_posix() for path in sorted(plugins.rglob("*.so"))]
+    loader_environment = dict(environment)
+    loader_environment["LD_LIBRARY_PATH"] = str(libraries)
+    errors = []
+    for relative in relatives:
+        try:
+            binary = installed_file(prefix, relative)
+            with binary.open("rb") as stream:
+                require(stream.read(4) == b"\x7fELF", "Expected an ELF executable or shared library")
+            output = run(["ldd", binary], loader_environment, root)
+            require("not found" not in output, f"Missing runtime library:\n{output[-2000:]}")
+        except (SmokeError, OSError) as error:
+            errors.append(f"{relative}: {error}")
+    require(not errors, "Portable dependency validation failed:\n" + "\n".join(errors))
+    return relatives
+
+
 def version_from_output(output):
     first_line = output.strip().splitlines()[0] if output.strip() else ""
     match = re.fullmatch(r"ConnectCoin Core .*?version (v\d+\.\d+\.\d+(?:-[A-Za-z0-9.-]+)?)(?:\s.*)?", first_line)
@@ -255,6 +284,92 @@ def smoke_regtest(binaries, environment, root):
 
 
 class RegressionTests(unittest.TestCase):
+    def dependency_fixture(self, root):
+        (root / "usr/bin").mkdir(parents=True)
+        (root / "usr/lib").mkdir()
+        (root / "usr/plugins/platforms").mkdir(parents=True)
+        relatives = [f"usr/bin/{target}" for target in TARGETS]
+        relatives += ["usr/plugins/platforms/libqminimal.so", "usr/plugins/platforms/libqxcb.so"]
+        for relative in relatives:
+            (root / relative).write_bytes(b"\x7fELFfixture")
+        (root / "usr/bin/connectcoin-hugepages").write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+        (root / "usr/bin/qt.conf").write_text("[Paths]\n", encoding="utf-8")
+        return relatives
+
+    def test_portable_dependencies_skip_scripts_but_check_all_native_targets(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            relatives = self.dependency_fixture(root)
+            environment = {"LC_ALL": "C", "PATH": "/usr/bin:/bin"}
+            with patch(__name__ + ".run", return_value="libc.so.6 => /lib/libc.so.6") as command:
+                self.assertEqual(validate_portable_dependencies(root, environment, root), relatives)
+            self.assertEqual(command.call_count, len(relatives))
+            for call, relative in zip(command.call_args_list, relatives):
+                self.assertEqual(call.args, (["ldd", root / relative],
+                                            {**environment, "LD_LIBRARY_PATH": str(root / "usr/lib")}, root))
+            self.assertNotIn("LD_LIBRARY_PATH", environment)
+
+    def test_portable_dependencies_report_missing_libraries_in_all_targets(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            relatives = self.dependency_fixture(root)
+            with patch(__name__ + ".run", return_value="libmissing.so => not found\n") as command:
+                with self.assertRaises(SmokeError) as failure:
+                    validate_portable_dependencies(root, {}, root)
+            self.assertEqual(command.call_count, len(relatives))
+            for relative in relatives:
+                self.assertIn(relative, str(failure.exception))
+
+    def test_portable_dependencies_reject_non_elf_applications_and_plugins(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.dependency_fixture(root)
+            for relative in ("usr/bin/connectcoin-qt", "usr/plugins/platforms/libqxcb.so"):
+                with self.subTest(relative=relative):
+                    target = root / relative
+                    target.write_bytes(b"#!/bin/sh\nexit 0\n")
+                    with patch(__name__ + ".run", return_value="libc.so.6 => /lib/libc.so.6"):
+                        with self.assertRaisesRegex(SmokeError, "Expected an ELF"):
+                            validate_portable_dependencies(root, {}, root)
+                    target.write_bytes(b"\x7fELFfixture")
+
+    def test_portable_dependencies_require_native_apps_and_platform_plugins(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.dependency_fixture(root)
+            for relative in ("usr/bin/connectcoin-cli", "usr/plugins/platforms/libqxcb.so",
+                             "usr/plugins/platforms/libqminimal.so"):
+                with self.subTest(relative=relative):
+                    target = root / relative
+                    target.unlink()
+                    with patch(__name__ + ".run", return_value="libc.so.6 => /lib/libc.so.6"):
+                        with self.assertRaises((SmokeError, OSError)):
+                            validate_portable_dependencies(root, {}, root)
+                    target.write_bytes(b"\x7fELFfixture")
+
+    def test_portable_dependencies_reject_ldd_failure_and_timeout(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.dependency_fixture(root)
+            for result in (subprocess.CompletedProcess([], 1, "", "not a dynamic executable"),
+                           subprocess.TimeoutExpired("ldd", RPC_TIMEOUT)):
+                with self.subTest(result=result):
+                    options = {"side_effect": result} if isinstance(result, Exception) else {"return_value": result}
+                    with patch.object(subprocess, "run", **options):
+                        with self.assertRaises(SmokeError):
+                            validate_portable_dependencies(root, {}, root)
+
+    def test_portable_dependencies_include_additional_plugins(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            self.dependency_fixture(root)
+            plugin = root / "usr/plugins/imageformats/libqjpeg.so"
+            plugin.parent.mkdir()
+            plugin.write_bytes(b"\x7fELFfixture")
+            with patch(__name__ + ".run", return_value="libc.so.6 => /lib/libc.so.6"):
+                checked = validate_portable_dependencies(root, {}, root)
+            self.assertIn("usr/plugins/imageformats/libqjpeg.so", checked)
+
     def test_version_validation(self):
         for title in ("", "daemon ", "RPC client "):
             self.assertEqual(version_from_output(f"ConnectCoin Core {title}version v1.0.0\nCopyright"), "v1.0.0")
@@ -397,6 +512,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix="connectcoin-linux-smoke-") as temporary:
         root = Path(temporary)
         environment = isolated_environment(root)
+        dependencies = validate_portable_dependencies(prefix, environment, root) if options.portable else []
         commands = smoke_help(binaries, environment, root)
         regtest = smoke_regtest(binaries, environment, root)
     data_prefix = "usr/" if options.portable else ""
@@ -404,6 +520,7 @@ def main():
               "desktop_file": data_prefix + DESKTOP_FILE,
               "icons": [data_prefix + ICON_FILE, data_prefix + FALLBACK_ICON],
               "manuals_checked": list(TARGETS),
+              "runtime_dependencies_checked": dependencies,
               "temporary_profile_removed": True,
               "gui_coverage": "Help/version under the minimal Qt platform; no interactive GUI launch."}
     if options.output is not None:

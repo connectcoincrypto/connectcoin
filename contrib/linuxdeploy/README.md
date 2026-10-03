@@ -154,6 +154,11 @@ or version checks. The GitHub workflow runs the real Linux build and smoke tests
 and run a temporary regtest daemon. Headless checks do not replace testing on
 a real X11/Wayland desktop.
 
+Portable smoke checks validate the ELF format and runtime dependencies of all
+seven native programs and every Qt plugin before running help/version or regtest.
+The Huge Pages shell helper is not passed to `ldd`; missing libraries, invalid
+native binaries, and dependency-inspection failures still fail verification.
+
 The packaging workflow sets `QT_RCC_SOURCE_DATE_OVERRIDE=1` to give embedded
 Qt resource metadata a stable timestamp, following the policy in
 `depends/patches/qt/rcc_hardcode_timestamp.patch`. This allows compiler-cache
