@@ -130,12 +130,17 @@ a proposed limit: the active worker rate remains **0 (disabled)** until you
 click **Apply / start** and accept the confirmation. Cancelling leaves HTTPS
 disabled. The stop button still sets the rate to 0.
 
-The positive rate is shared by all connection workers. Pacing preserves the
-scheduled deadlines across short timer delays (including coarse Windows timer
-wakeups), allowing nearby missed slots to catch up instead of lowering the
-average rate. More than 100 milliseconds of lateness discards the missed slots
-and starts a fresh interval, so long idle periods cannot accumulate a burst.
-DNS resolution and scans with no eligible work do not consume rate slots.
+The positive rate is shared by all connection workers. After each selected
+connection, the organizer advances its deadline by `1 second / configured rate`
+(rounded upward to the clock's resolution), then clamps that deadline to no
+earlier than the current time minus **one second**. Timer and scheduling delays
+can therefore catch up without discarding all missed slots, while debt older
+than one second is discarded. This is an average-rate organizer, not a separate
+strict rolling-one-second quota; catch-up starts can occur close together.
+DNS resolution and scans with no eligible work do not consume rate slots. When
+no connection work is ready, resumption rebases overdue pacing without moving a
+still-future deadline earlier. Idle time does not accumulate catch-up credit;
+occupied worker/proposal capacity is not treated as idle.
 The setting is a ceiling/target, not a guarantee: occupied workers, network
 latency and proof validation may still reduce actual throughput.
 

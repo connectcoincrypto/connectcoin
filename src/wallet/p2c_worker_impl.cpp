@@ -503,6 +503,7 @@ struct P2CClaimWorkerImpl::Impl {
             mask.connection_rate = connection_rate;
         }
         std::erase_if(groups, [](const auto& entry) { return entry.second->bounties.empty(); });
+        if (groups.empty()) connection_rate.MarkIdle();
         // Preserve statistics while a domain/mask still has confirmed bounties,
         // even if all are temporarily locked/spent in the mempool. An old
         // in-flight assignment keeps its history alive until capture returns.
@@ -570,6 +571,7 @@ struct P2CClaimWorkerImpl::Impl {
                 }
             }
             if (!group) {
+                connection_rate.MarkIdle();
                 if (economic_order.empty()) Message("waiting for eligible bounties");
                 return std::nullopt;
             }
@@ -629,6 +631,15 @@ struct P2CClaimWorkerImpl::Impl {
             }
             if (ScheduleClock::now() >= group->resolve_after) {
                 group->resolving = true;
+                // DNS is not connection demand. Preserve other domains' live
+                // cadence, but a DNS-only wait must not bank rate credit (also
+                // when this is the sole worker and nobody can perform a scan).
+                const auto now{ScheduleClock::now()};
+                if (std::none_of(groups.begin(), groups.end(), [&](const auto& entry) {
+                    const auto& pending{*entry.second};
+                    return !pending.bounties.empty() && !pending.resolving &&
+                        !pending.endpoints.Empty() && now < pending.resolve_after;
+                })) connection_rate.MarkIdle();
                 return Assignment{std::move(group), cached->second, true};
             }
             if (!economic) domain_after = group->name;
@@ -643,6 +654,7 @@ struct P2CClaimWorkerImpl::Impl {
             const auto statistics{domain_statistics.at({group->name, mask})};
             return Assignment{std::move(group), cached->second, false, statistics};
         }
+        connection_rate.MarkIdle();
         return std::nullopt;
     }
 

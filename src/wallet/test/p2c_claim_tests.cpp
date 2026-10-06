@@ -144,38 +144,109 @@ BOOST_AUTO_TEST_CASE(connection_rate_compensates_coarse_timer_without_per_worker
     BOOST_CHECK(*limiter.BlockedUntil(end) == end + std::chrono::milliseconds{10});
 }
 
-BOOST_AUTO_TEST_CASE(connection_rate_discards_long_stalls_and_resets_on_reconfiguration)
+BOOST_AUTO_TEST_CASE(connection_rate_clamps_one_second_after_advancing)
+{
+    using Clock = P2CConnectionRateLimiter::Clock;
+    const auto start{Clock::time_point{} + std::chrono::seconds{10}};
+    const auto second{std::chrono::seconds{1}};
+    // Core has no 100/s cap. Include fractional-nanosecond rates and INT_MAX.
+    for (const int rate : {1, 3, 7, 10, 50, 100, 1'000, std::numeric_limits<int>::max()}) {
+        const auto interval{std::chrono::ceil<Clock::duration>(std::chrono::nanoseconds{(1'000'000'000LL + rate - 1) / rate})};
+        for (const int offset : {-1, 0, 1}) {
+            P2CConnectionRateLimiter limiter;
+            limiter.RecordStart(rate, start);
+            const auto advanced{start + 2 * interval};
+            const auto now{advanced + second + Clock::duration{offset}};
+            limiter.RecordStart(rate, now);
+            // Query from before the deadline to inspect it even when overdue.
+            const auto next{limiter.BlockedUntil(Clock::time_point{})};
+            BOOST_REQUIRE(next);
+            BOOST_CHECK(*next == advanced + Clock::duration{std::max(offset, 0)});
+            BOOST_CHECK(*next >= now - second);
+        }
+        P2CConnectionRateLimiter modest;
+        modest.RecordStart(rate, start);
+        const auto advanced{start + 2 * interval};
+        modest.RecordStart(rate, advanced + std::chrono::milliseconds{50});
+        BOOST_REQUIRE(modest.BlockedUntil(start));
+        BOOST_CHECK(*modest.BlockedUntil(start) == advanced); // Keep all 50ms.
+
+        P2CConnectionRateLimiter stalled;
+        stalled.RecordStart(rate, start - 2 * interval); // Next increment lands at start.
+        stalled.RecordStart(rate, start + 10 * second);
+        BOOST_REQUIRE(stalled.BlockedUntil(start));
+        BOOST_CHECK(*stalled.BlockedUntil(start) == start + 9 * second); // Discard 9s, retain 1s.
+    }
+
+    P2CConnectionRateLimiter stalled;
+    stalled.RecordStart(100, start);
+    const auto now{start + std::chrono::seconds{60}};
+    unsigned caught_up{0};
+    while (!stalled.BlockedUntil(now) && caught_up < 300) {
+        stalled.RecordStart(100, now);
+        ++caught_up;
+    }
+    // Exact advance-then-clamp: one clamps to now-1s, 100 reach now, then
+    // equality permits one final start. This organizer is not a rolling quota.
+    BOOST_CHECK_EQUAL(caught_up, 102U);
+    BOOST_REQUIRE(stalled.BlockedUntil(now));
+    BOOST_CHECK(*stalled.BlockedUntil(now) == now + std::chrono::milliseconds{10});
+}
+
+BOOST_AUTO_TEST_CASE(connection_rate_idle_preserves_future_deadline_and_reconfiguration)
 {
     using Clock = P2CConnectionRateLimiter::Clock;
     const auto start{Clock::time_point{}};
     P2CConnectionRateLimiter limiter;
     BOOST_CHECK(!limiter.BlockedUntil(start));
-    limiter.RecordStart(100, start);
+    limiter.RecordStart(1, start);
+    limiter.MarkIdle();
     BOOST_REQUIRE(limiter.BlockedUntil(start));
-    BOOST_CHECK(*limiter.BlockedUntil(start) == start + std::chrono::milliseconds{10});
+    BOOST_CHECK(*limiter.BlockedUntil(start) == start + std::chrono::seconds{1});
+    // An idle scan must not reset a low-rate, still-future deadline early.
+    BOOST_CHECK(limiter.BlockedUntil(start + std::chrono::milliseconds{500}));
+    limiter.RecordStart(1, start + std::chrono::seconds{1});
+    BOOST_REQUIRE(limiter.BlockedUntil(start));
+    BOOST_CHECK(*limiter.BlockedUntil(start) == start + std::chrono::seconds{2});
 
-    // Exactly 100 ms of lateness may catch up; longer stalls restart the phase.
-    auto boundary{limiter};
-    const auto late{start + std::chrono::milliseconds{110}};
-    unsigned caught_up{0};
-    while (!boundary.BlockedUntil(late) && caught_up < 300) {
-        boundary.RecordStart(100, late);
-        ++caught_up;
-    }
-    BOOST_CHECK_EQUAL(caught_up, 11U);
-    for (const auto delay : {std::chrono::milliseconds{111}, std::chrono::milliseconds{60'000}}) {
-        auto stalled{limiter};
-        const auto now{start + delay};
-        BOOST_CHECK(!stalled.BlockedUntil(now));
-        stalled.RecordStart(100, now);
-        BOOST_REQUIRE(stalled.BlockedUntil(now));
-        BOOST_CHECK(*stalled.BlockedUntil(now) == now + std::chrono::milliseconds{10});
-    }
+    limiter.MarkIdle(); // Includes DNS-only/no-eligible-work waits.
+    const auto resumed{start + std::chrono::seconds{60}};
+    limiter.RecordStart(100, resumed);
+    BOOST_REQUIRE(limiter.BlockedUntil(resumed));
+    BOOST_CHECK(*limiter.BlockedUntil(resumed) == resumed + std::chrono::milliseconds{10});
+    limiter.MarkIdle();
+    limiter.MarkIdle(); // Repeated idle scans do not charge connections.
+    const auto later{resumed + std::chrono::seconds{60}};
+    limiter.RecordStart(100, later);
+    BOOST_REQUIRE(limiter.BlockedUntil(later));
+    BOOST_CHECK(*limiter.BlockedUntil(later) == later + std::chrono::milliseconds{10});
+
     limiter = {}; // Configure joins workers before resetting the shared limiter.
     BOOST_CHECK(!limiter.BlockedUntil(start));
     limiter.RecordStart(1, start);
     BOOST_REQUIRE(limiter.BlockedUntil(start));
     BOOST_CHECK(*limiter.BlockedUntil(start) == start + std::chrono::seconds{1});
+}
+
+BOOST_AUTO_TEST_CASE(connection_rate_recovers_coarse_timer_and_repeated_worker_stalls)
+{
+    using Clock = P2CConnectionRateLimiter::Clock;
+    const auto start{Clock::time_point{} + std::chrono::seconds{10}};
+    auto now{start};
+    P2CConnectionRateLimiter limiter;
+    constexpr int64_t TICK_NANOS{15'625'000};
+    for (int attempt = 0; attempt < 1'000; ++attempt) {
+        if (const auto retry_at{limiter.BlockedUntil(now)}) {
+            const auto elapsed{std::chrono::duration_cast<std::chrono::nanoseconds>(*retry_at - start).count()};
+            now = start + std::chrono::nanoseconds{((elapsed + TICK_NANOS - 1) / TICK_NANOS) * TICK_NANOS};
+        }
+        // Continuous demand blocked by occupied workers is not true idle.
+        if (attempt % 100 == 99) now += std::chrono::milliseconds{150};
+        BOOST_CHECK(!limiter.BlockedUntil(now));
+        limiter.RecordStart(100, now);
+    }
+    BOOST_CHECK(now - start >= std::chrono::milliseconds{9'990});
+    BOOST_CHECK(now - start < std::chrono::milliseconds{10'200});
 }
 
 BOOST_AUTO_TEST_CASE(connection_rate_rounds_up_and_keeps_passed_wait_deadline)
