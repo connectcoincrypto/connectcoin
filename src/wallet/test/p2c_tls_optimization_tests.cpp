@@ -149,15 +149,18 @@ BOOST_AUTO_TEST_CASE(owned_capture_keeps_spans_and_original_context_alive)
         BOOST_REQUIRE(captured);
         auto copy{*captured};
         auto moved{std::move(copy)};
+        // These accessors explicitly reject moved-from owners.
+        // NOLINTBEGIN(bugprone-use-after-move)
         BOOST_CHECK_THROW(copy.Bytes(), std::logic_error);
         BOOST_CHECK_THROW(copy.View(), std::logic_error);
         BOOST_CHECK(!copy.MatchesCaptureContext("localhost", uint256::ONE));
+        // NOLINTEND(bugprone-use-after-move)
         return moved;
     }()};
     BOOST_CHECK(owned.MatchesCaptureContext("localhost", uint256::ONE));
     BOOST_CHECK(!owned.MatchesCaptureContext("other.example", uint256::ONE));
     BOOST_CHECK(!owned.MatchesCaptureContext("localhost", uint256{}));
-    const auto bytes{owned.Bytes()};
+    const auto bytes{std::vector<unsigned char>{owned.Bytes()}};
     const auto& view{owned.View()};
     for (const auto message : {view.client_hello, view.server_hello, view.encrypted_extensions,
              view.certificate, view.certificate_verify_signature}) {

@@ -126,13 +126,12 @@ class P2CPerformanceCache {
     P2CPerformanceScoreList m_recent;
     int64_t m_minute{-1};
 
-    void Remove(const std::shared_ptr<P2CPerformanceScore>& score)
+    void Remove(std::shared_ptr<P2CPerformanceScore> score)
     {
-        // The argument may refer to the node being erased.
-        const auto retained{score};
-        m_recent.erase(retained->m_position);
-        retained->m_window.reset();
-        retained->m_owner = nullptr;
+        // Retain ownership: the caller may pass the node being erased.
+        m_recent.erase(score->m_position);
+        score->m_window.reset();
+        score->m_owner = nullptr;
     }
 
     int64_t Advance(double now)

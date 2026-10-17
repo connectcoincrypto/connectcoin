@@ -12,6 +12,8 @@ import importlib.util
 import itertools
 from pathlib import Path
 import re
+import subprocess
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -71,6 +73,32 @@ def dependency_graph(caller, reusable):
 
 
 class WindowsCrossWorkflowTests(unittest.TestCase):
+    def test_import_check_reports_missing_dlls_before_startup(self):
+        spec = importlib.util.spec_from_file_location("ci_windows_cross", ROOT / ".github/ci-windows-cross.py")
+        runner = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(runner)
+        with tempfile.TemporaryDirectory() as directory:
+            workspace = Path(directory)
+            (workspace / "bin").mkdir()
+            system_dir = workspace / "Windows" / "System32"
+            system_dir.mkdir(parents=True)
+            for name in ("KERNEL32.dll", "msvcrt.dll"):
+                (system_dir / name).touch()
+            (workspace / "bin" / "packaged.dll").touch()
+            for crt, runtime in (("msvcrt", "msvcrt.dll"), ("ucrt", "api-ms-win-crt-runtime-l1-1-0.dll")):
+                with self.subTest(crt=crt), patch.object(runner.Path, "cwd", return_value=workspace), \
+                     patch.dict(runner.os.environ, {"CRT": crt, "SystemRoot": str(system_dir.parent)}):
+                    imports = f"    KERNEL32.dll\n    {runtime}\n    packaged.dll\n"
+                    with patch.object(runner, "run", return_value=subprocess.CompletedProcess([], 0, stdout=imports)):
+                        runner.check_imports()
+                    with patch.object(runner, "run", return_value=subprocess.CompletedProcess([], 0, stdout=imports + "    libeverest.dll\n")):
+                        with self.assertRaisesRegex(SystemExit, "Missing imported DLLs: libeverest.dll"):
+                            runner.check_imports()
+                    wrong_runtime = "api-ms-win-crt-runtime-l1-1-0.dll" if crt == "msvcrt" else "msvcrt.dll"
+                    with patch.object(runner, "run", return_value=subprocess.CompletedProcess([], 0, stdout=imports.replace(runtime, wrong_runtime))):
+                        with self.assertRaisesRegex(SystemExit, "Imported DLLs do not match"):
+                            runner.check_imports()
+
     def test_native_runner_executes_desktop_icon_checks(self):
         spec = importlib.util.spec_from_file_location("ci_windows_cross", ROOT / ".github/ci-windows-cross.py")
         runner = importlib.util.module_from_spec(spec)
@@ -193,8 +221,9 @@ class WindowsCrossWorkflowTests(unittest.TestCase):
     def test_native_tooling_tests_extended_policy_and_annotations_preserved(self):
         native = job(REUSABLE, "windows-native-test")
         calls = re.findall(r"py -3 \.github/ci-windows-cross.py (\w+)", native)
-        self.assertEqual(calls, ["print_version", "check_imports", "check_manifests", "prepare_tests", "run_unit_tests", "run_functional_tests"])
+        self.assertEqual(calls, ["check_imports", "print_version", "check_manifests", "prepare_tests", "run_unit_tests", "run_functional_tests"])
         self.assertIn('run: py -3 .github/ci-windows.py "standard" github_import_vs_env', native)
+        self.assertLess(native.index('github_import_vs_env'), native.index('ci-windows-cross.py check_imports'))
         self.assertIn("CRT: ${{ inputs.crt }}", native)
         self.assertIn('TEST_RUNNER_EXTRA: "--timeout-factor=${{ env.TEST_RUNNER_TIMEOUT_FACTOR }} ${{ case(github.event_name == \'pull_request\', \'\', \'--extended\') }}"', native)
         self.assertIn("- &ANNOTATION_PR_NUMBER", job(REUSABLE, "windows-cross"))

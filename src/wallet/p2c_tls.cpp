@@ -508,7 +508,7 @@ util::Result<P2CCapturedProof> CaptureP2CTlsParsed(
             captured_order += strprintf(" %d:%u/%u", state, message[0], length);
         }
         if (state == MBEDTLS_SSL_CERTIFICATE_VERIFY) {
-            auto storage{std::make_shared<P2CCapturedProof::Storage>(std::move(proof), domain, challenge)};
+            auto storage{std::make_shared<P2CCapturedProof::Storage>(std::exchange(proof, {}), domain, challenge)};
             std::string error;
             if (!ParseP2CTlsProof(storage->bytes, domain, challenge, storage->view, error)) return util::Error{Untranslated(error + "; capture" + captured_order)};
             if (!P2CSignatureSchemeAllowed(options.signature_algorithms_mask, storage->view.certificate_verify_scheme)) {

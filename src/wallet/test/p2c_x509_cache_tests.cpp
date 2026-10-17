@@ -192,6 +192,7 @@ BOOST_AUTO_TEST_CASE(verification_caches_and_roots_are_worker_local)
     CapturedFixture fixture;
     std::atomic<bool> ok{true};
     std::vector<std::thread> workers;
+    workers.reserve(4);
     for (unsigned thread = 0; thread < 4; ++thread) workers.emplace_back([&] {
         ClearP2CX509CachesForTest();
         std::string error;

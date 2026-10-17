@@ -636,7 +636,7 @@ struct P2CClaimWorkerImpl::Impl {
         // receives bounded bootstrap/recovery sampling; normal work stays free.
         std::vector<decltype(recovery_candidates)::const_iterator> recovery_order;
         for (auto it = recovery_candidates.begin(); it != recovery_candidates.end(); ++it)
-            if (!healthy.contains(it->first)) recovery_order.push_back(it);
+            if (!healthy.contains(it->first)) recovery_order.emplace_back(it);
         std::sort(recovery_order.begin(), recovery_order.end(), [](const auto& a, const auto& b) {
             return a->second.first < b->second.first;
         });

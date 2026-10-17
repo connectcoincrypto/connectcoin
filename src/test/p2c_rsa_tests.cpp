@@ -15,6 +15,7 @@
 #include <util/string.h>
 
 #include <mbedtls/bignum.h>
+#include <mbedtls/ecp.h>
 #include <mbedtls/oid.h>
 #include <mbedtls/pk.h>
 #include <mbedtls/rsa.h>
@@ -28,6 +29,7 @@
 #include <array>
 #include <atomic>
 #include <barrier>
+#include <cstddef>
 #include <cstdint>
 #include <deque>
 #include <mutex>
@@ -1017,5 +1019,26 @@ BOOST_AUTO_TEST_CASE(concurrent_certificate_validation_keeps_results_isolated)
     for (auto& thread : threads) thread.join();
     BOOST_CHECK(valid.load());
 }
+
+#if defined(MBEDTLS_SELF_TEST)
+BOOST_AUTO_TEST_CASE(ecp_self_tests_keep_operation_counts_thread_local)
+{
+    // The provider's timing-resistance counters are updated by production EC
+    // arithmetic too. Concurrent checks must retain independent counts/RNGs.
+    constexpr size_t workers{4};
+    std::array<int, workers> results{};
+    std::barrier start{static_cast<std::ptrdiff_t>(workers)};
+    std::vector<std::thread> threads;
+    threads.reserve(workers);
+    for (size_t i{0}; i < workers; ++i) {
+        threads.emplace_back([&, i] {
+            start.arrive_and_wait();
+            results[i] = mbedtls_ecp_self_test(0);
+        });
+    }
+    for (auto& thread : threads) thread.join();
+    for (const auto result : results) BOOST_CHECK_EQUAL(result, 0);
+}
+#endif
 
 BOOST_AUTO_TEST_SUITE_END()

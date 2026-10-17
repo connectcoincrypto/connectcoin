@@ -796,6 +796,7 @@ BOOST_AUTO_TEST_CASE(endpoint_priority_extreme_rates_keep_one_percent_exploratio
 {
     BOOST_CHECK_EQUAL(P2CEndpointPriority::EXPLORATION, 0.01);
     std::vector<CService> endpoints;
+    endpoints.reserve(P2CEndpointPriority::MAX_ENDPOINTS);
     for (size_t i = 0; i < P2CEndpointPriority::MAX_ENDPOINTS; ++i) {
         endpoints.push_back(Lookup("8.8.8." + util::ToString(i + 1), 443, false).value());
     }
@@ -2042,6 +2043,19 @@ BOOST_FIXTURE_TEST_CASE(worker_efficiency_excludes_cancellation_and_rejects_comp
     g_dns_lookup = [&](const std::string&, bool) { return std::vector<CNetAddr>{*address}; };
     const auto config{std::make_shared<test::P2CTLSServer>()};
     config->Setup();
+    // Establish the exact validation failure for a completed fixture capture.
+    // A TCP/TLS failure must not satisfy the worker's completion checks below.
+    CreateSock = [config](int, int, int) {
+        return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+    };
+    const auto challenge{P2CClaimChallenge(CTransaction{tx}, 0)};
+    const auto captured{CaptureP2CTls(CService{*address, 443}, "invalid.example", challenge, [] { return false; })};
+    BOOST_REQUIRE_MESSAGE(captured, util::ErrorString(captured).original);
+    P2CTlsProofView view;
+    std::string expected_error;
+    BOOST_REQUIRE(ParseP2CTlsProof(*captured, "invalid.example", challenge, view, expected_error));
+    BOOST_REQUIRE(!VerifyP2CCertificateProof(prepared->bounty, view, prepared->validation_time, expected_error));
+    BOOST_REQUIRE(!expected_error.empty());
     std::atomic<unsigned> sockets{0};
     std::mutex pending_mutex;
     std::condition_variable release;
@@ -2088,12 +2102,17 @@ BOOST_FIXTURE_TEST_CASE(worker_efficiency_excludes_cancellation_and_rejects_comp
     worker->Stop();
 
     // A cancelled attempt cannot lower the prior. After unlocking and restart
-    // this same bounty must still reach TLS and certificate validation.
+    // this same bounty must permit normal work, not just one recovery probe.
+    // The pacing clock is real, even while the performance clock is frozen:
+    // a slow instrumented TLS capture can consume more than one rate interval.
+    // Wait for two starts rather than assuming Stop wins a race with the next.
     WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->UnlockCoin(outpoint)));
     BOOST_REQUIRE(worker->Configure(1, 1));
-    BOOST_REQUIRE_MESSAGE(wait_until([&] { return worker->Status()["state"].get_str() == "certificate rejected"; }), worker->Status().write());
+    const bool normal_work{wait_until([&] { return sockets >= 3 && worker->Status()["last_error"].get_str() == expected_error; })};
+    BOOST_REQUIRE_MESSAGE(normal_work, worker->Status().write());
     worker->Stop();
-    BOOST_CHECK_EQUAL(sockets.load(), 2U);
+    const auto before_probe{sockets.load()};
+    BOOST_CHECK_GE(before_probe, 3U);
     BOOST_CHECK_EQUAL(worker->Status()["submitted"].getInt<uint64_t>(), 0U);
 
     // The completed but untrusted capture is a rolling-window failure. The
@@ -2101,10 +2120,11 @@ BOOST_FIXTURE_TEST_CASE(worker_efficiency_excludes_cancellation_and_rejects_comp
     // work. Incorrectly counting the raw capture as valid would keep it above
     // the floor and start many more connections while mock time is frozen.
     BOOST_REQUIRE(worker->Configure(-1, 1));
-    BOOST_REQUIRE_MESSAGE(wait_until([&] { return sockets >= 3; }), worker->Status().write());
+    const bool recovery_probe{wait_until([&] { return sockets > before_probe && worker->Status()["last_error"].get_str() == expected_error; })};
+    BOOST_REQUIRE_MESSAGE(recovery_probe, worker->Status().write());
     std::this_thread::sleep_for(1200ms);
     worker->Stop();
-    BOOST_CHECK_EQUAL(sockets.load(), 3U);
+    BOOST_CHECK_EQUAL(sockets.load(), before_probe + 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(worker_refresh_completion_arms_next_deadline, TestChain100Setup)
@@ -2981,7 +3001,9 @@ BOOST_FIXTURE_TEST_CASE(worker_preserves_bounty_through_complete_tls_capture, Te
             std::this_thread::sleep_for(10ms);
         } while (std::chrono::steady_clock::now() < deadline);
         worker->Stop();
-        BOOST_CHECK_EQUAL(status["state"].get_str(), "certificate rejected");
+        // The next legitimate TCP start may already have changed the transient
+        // state to "searching". The retained exact validation error proves the
+        // completed capture reached certificate verification with this domain.
         BOOST_CHECK_EQUAL(status["last_error"].get_str(), expected_error);
         BOOST_CHECK_EQUAL(status["submitted"].getInt<uint64_t>(), 0U);
         WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().SpendCoin(outpoint));

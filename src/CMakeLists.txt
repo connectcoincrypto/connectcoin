@@ -58,7 +58,16 @@ FetchContent_Declare(connectcoin_mbedtls
     -P "${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSCMakePolicy.cmake"
 )
 unset(mbedtls_download_timestamp_args)
-FetchContent_MakeAvailable(connectcoin_mbedtls)
+# Mbed TLS selects its main library types with USE_*_MBEDTLS_LIBRARY, but its
+# Everest and p256-m helpers inherit BUILD_SHARED_LIBS. Keep those helpers
+# inside our binaries even when building a shared connectcoinkernel, so the
+# installed executables and macOS bundles need no extra runtime libraries.
+function(add_pinned_mbedtls)
+  set(BUILD_SHARED_LIBS OFF)
+  FetchContent_MakeAvailable(connectcoin_mbedtls)
+endfunction()
+add_pinned_mbedtls()
+FetchContent_GetProperties(connectcoin_mbedtls)
 
 # Preserve the RSA SubjectPublicKeyInfo identity and RFC 4055 restrictions,
 # and enable the corresponding TLS 1.3 rsa_pss_pss schemes in the pinned TLS
@@ -72,6 +81,7 @@ include("${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSP2CRSAPSS.cmake")
 include("${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSP2CX509.cmake")
 include("${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSReassembly.cmake")
 include("${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSX25519.cmake")
+include("${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSEcpSelfTest.cmake")
 unset(MBEDTLS_SOURCE_DIR)
 set(p2c_mbedtls_targets)
 # Enabling both upstream variants creates separate *_static targets. Every

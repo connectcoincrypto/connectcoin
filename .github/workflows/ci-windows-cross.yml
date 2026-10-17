@@ -115,9 +115,6 @@ jobs:
         with:
           name: ${{ inputs.artifact-name }}-${{ github.run_id }}
 
-      - name: Run connectcoind.exe
-        run: py -3 .github/ci-windows-cross.py print_version
-
       - name: Import Visual Studio env vars
         run: py -3 .github/ci-windows.py "standard" github_import_vs_env
 
@@ -125,6 +122,9 @@ jobs:
         env:
           CRT: ${{ inputs.crt }}
         run: py -3 .github/ci-windows-cross.py check_imports
+
+      - name: Run connectcoind.exe
+        run: py -3 .github/ci-windows-cross.py print_version
 
       - name: Check executable manifests
         run: py -3 .github/ci-windows-cross.py check_manifests

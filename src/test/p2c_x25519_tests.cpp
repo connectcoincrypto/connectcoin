@@ -375,6 +375,7 @@ void Parallel() {
     const auto before = FastCalls();
     std::array<std::exception_ptr, workers> errors{};
     std::vector<std::thread> threads;
+    threads.reserve(workers);
     for (int worker = 0; worker < workers; ++worker) threads.emplace_back([&, worker] {
         try {
             std::mt19937_64 random(0x5448524541440000ULL + static_cast<unsigned int>(worker));
@@ -399,6 +400,7 @@ void Benchmark() {
     constexpr int iterations = 256;
     std::mt19937_64 random(0x42454e43484d4152ULL);
     std::vector<Bytes> scalars;
+    scalars.reserve(iterations);
     for (int i = 0; i < iterations; ++i) scalars.push_back(Next(random));
     const auto peer = Hex("de9edb7d7b7dc1b4d35b61c2ece435373f8343c85b78674dadfc7e146f882b4f");
     unsigned int checksum = 0;

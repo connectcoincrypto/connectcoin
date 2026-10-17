@@ -35,6 +35,19 @@ def check_imports():
     dlls = re.findall(r"^\s*(\S+\.dll)\s*$", output, re.IGNORECASE | re.MULTILINE)
     print("\n".join(dlls))
 
+    # Diagnose missing packaged dependencies before CreateProcess fails with
+    # STATUS_DLL_NOT_FOUND. API-set names are resolved by the Windows loader
+    # and need not exist as files. Do not accept accidental DLLs from PATH.
+    system_dir = Path(os.environ["SystemRoot"]) / "System32"
+    missing_dlls = sorted({
+        name for name in dlls
+        if not name.lower().startswith(("api-ms-win-", "ext-ms-win-"))
+        and not (connectcoind.parent / name).is_file()
+        and not (system_dir / name).is_file()
+    })
+    if missing_dlls:
+        sys.exit("Missing imported DLLs: " + ", ".join(missing_dlls))
+
     # Ensure the executable is linked against the expected C runtime.
     dlls = {name.lower() for name in dlls}
     uses_msvcrt = "msvcrt.dll" in dlls
