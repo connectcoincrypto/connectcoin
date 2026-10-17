@@ -70,6 +70,8 @@ include("${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSP2CRSAPSS.cmake")
 # path from its trusted root towards the leaf and stops on the first bad edge.
 # Keep upstream TLS verification/callback/restartable entry points unchanged.
 include("${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSP2CX509.cmake")
+include("${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSReassembly.cmake")
+include("${PROJECT_SOURCE_DIR}/cmake/script/PatchMbedTLSX25519.cmake")
 unset(MBEDTLS_SOURCE_DIR)
 set(p2c_mbedtls_targets)
 # Enabling both upstream variants creates separate *_static targets. Every
@@ -80,14 +82,19 @@ foreach(mbedtls_component IN ITEMS mbedcrypto mbedx509 mbedtls)
     if(TARGET ${mbedtls_target})
       list(APPEND p2c_mbedtls_targets ${mbedtls_target})
       if(mbedtls_component STREQUAL "mbedcrypto")
-        target_sources(${mbedtls_target} PRIVATE crypto/mbedtls_rsa_pss.c)
+        target_sources(${mbedtls_target} PRIVATE crypto/mbedtls_rsa_pss.c crypto/mbedtls_threading.cpp)
       endif()
-      target_include_directories(${mbedtls_target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/crypto")
+      # threading_alt.h is part of the provider's public context layouts.
+      target_include_directories(${mbedtls_target} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/crypto")
+      if(TARGET Threads::Threads)
+        target_link_libraries(${mbedtls_target} PUBLIC Threads::Threads)
+      endif()
     endif()
   endforeach()
 endforeach()
 unset(mbedtls_component)
 unset(mbedtls_suffix)
+include("${PROJECT_SOURCE_DIR}/cmake/module/P2CCryptoAcceleration.cmake")
 
 # The public headers are third-party too: consumers such as the wallet must
 # not promote their documentation/redeclaration warnings to project errors.

@@ -6,6 +6,7 @@
 #define CONNECTCOIN_WALLET_TEST_P2C_TLS_FIXTURE_H
 
 #include <random.h>
+#include <crypto/mbedtls_threading.h>
 #include <test/util/net.h>
 #include <tinyformat.h>
 
@@ -54,6 +55,7 @@ struct P2CTLSServer {
 
     P2CTLSServer()
     {
+        if (!InitializeP2CTlsCrypto()) throw std::runtime_error("P2C provider initialization failed");
         mbedtls_ssl_config_init(&config);
         mbedtls_x509_crt_init(&certificate);
         mbedtls_pk_init(&key);
@@ -117,9 +119,8 @@ AwEHoUQDQgAEN8xW2XYJHlpyPsdZLf8gbu58+QaRdNCtFLX3aCJZYpJO5QDYIxH/
     }
 };
 
-/** Pump the server synchronously from the client's I/O callbacks. Handshake
- * crypto therefore runs under CaptureP2CTls's existing crypto mutex. Use one
- * connection at a time; setup/teardown also touch the library's PSA state.
+/** Pump the server synchronously from the client's I/O callbacks. Each socket
+ * owns its handshake state; process-wide PSA state uses provider mutexes.
  */
 class P2CTLSSocket final : public ZeroSock {
     P2CTLSSocket& operator=(Sock&&) override { throw std::logic_error("Move of Sock into P2CTLSSocket not allowed"); }

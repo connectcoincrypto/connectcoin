@@ -16,6 +16,12 @@ target_sources(connectcoin-test
     init_tests.cpp
     ismine_tests.cpp
     p2c_claim_tests.cpp
+  p2c_admission_tests.cpp
+  p2c_worker_admission_tests.cpp
+    p2c_performance_window_tests.cpp
+    p2c_recovery_policy_tests.cpp
+    p2c_tls_optimization_tests.cpp
+    p2c_x509_cache_tests.cpp
     scriptpubkeyman_tests.cpp
     spend_tests.cpp
     wallet_crypto_tests.cpp

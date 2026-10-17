@@ -554,7 +554,14 @@ std::unique_ptr<Sock> CreateSockOS(int domain, int type, int protocol)
 #endif
 
     // Set the non-blocking option on the socket.
-    if (!sock->SetNonBlocking()) {
+#if defined(__linux__) && defined(SOCK_NONBLOCK)
+    // P2C can request nonblocking atomically at creation. Other callers keep
+    // the existing setup, without broadening the optimization to their flags.
+    const bool already_nonblocking{(type & SOCK_NONBLOCK) != 0};
+#else
+    constexpr bool already_nonblocking{false};
+#endif
+    if (!already_nonblocking && !sock->SetNonBlocking()) {
         LogInfo("Error setting socket to non-blocking: %s\n", NetworkErrorString(WSAGetLastError()));
         return nullptr;
     }

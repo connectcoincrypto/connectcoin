@@ -8,6 +8,7 @@
 #include <consensus/p2c.h>
 #include <primitives/transaction.h>
 #include <util/result.h>
+#include <wallet/p2c_tls.h>
 
 #include <cstdint>
 #include <string>
@@ -34,8 +35,37 @@ bool ObserveP2CTlsCapture(const util::Result<std::vector<unsigned char>>& captur
         if (!cancelled) observe(false);
         return false;
     }
-    const bool valid{ParseP2CTlsProof(*captured, spent_output.GetPayToDomain()->domain, challenge, view, error) &&
+    const auto domain{spent_output.GetPayToDomain()};
+    const bool valid{domain && ParseP2CTlsProof(*captured, domain->domain, challenge, view, error) &&
         verify_certificate(spent_output, view, validation_time, error)};
+    observe(valid);
+    return valid;
+}
+
+/** Reuse only the structural parse of immutable captured bytes, never an
+ * authentication result. Domain/challenge binding is checked before accessing
+ * spans, and certificate policy, mask, roots and time are verified anew.
+ */
+template <typename VerifyCertificate, typename Observe>
+bool ObserveP2CTlsCapture(const util::Result<P2CCapturedProof>& captured,
+                         const CTxOut& spent_output, const uint256& challenge,
+                         int64_t validation_time, bool cancelled,
+                         P2CTlsProofView& view, std::string& error,
+                         const VerifyCertificate& verify_certificate, const Observe& observe)
+{
+    view = {};
+    if (!captured) {
+        if (!cancelled) observe(false);
+        return false;
+    }
+    const auto domain{spent_output.GetPayToDomain()};
+    if (!domain || !captured->MatchesCaptureContext(domain->domain, challenge)) {
+        error = "P2C capture context mismatch";
+        observe(false);
+        return false;
+    }
+    view = captured->View();
+    const bool valid{verify_certificate(spent_output, view, validation_time, error)};
     observe(valid);
     return valid;
 }

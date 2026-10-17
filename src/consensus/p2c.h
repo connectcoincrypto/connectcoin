@@ -68,6 +68,12 @@ bool ParseP2CTlsProof(std::span<const unsigned char> encoded_proof,
                       P2CTlsProofView& parsed,
                       std::string& error);
 
+/** Parse only one complete TLS Certificate handshake message, using the same
+ * envelope, entry and size checks as the full proof parser. No authentication.
+ */
+bool ParseP2CCertificateMessage(std::span<const unsigned char> message,
+                              P2CTlsProofView& parsed, std::string& error);
+
 /** Interpret both hashes as unsigned 256-bit integers and enforce hash <= target. */
 bool P2CMeetsWorkTarget(const uint256& connection_work_hash, const uint256& target);
 

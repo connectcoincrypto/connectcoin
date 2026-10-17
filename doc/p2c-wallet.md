@@ -130,8 +130,8 @@ a proposed limit: the active worker rate remains **0 (disabled)** until you
 click **Apply / start** and accept the confirmation. Cancelling leaves HTTPS
 disabled. The stop button still sets the rate to 0.
 
-The positive rate is shared by all connection workers. After each selected
-connection, the organizer advances its deadline by `1 second / configured rate`
+The positive rate is shared by all connection workers. Immediately before each
+actual TCP start, the organizer advances its deadline by `1 second / configured rate`
 (rounded upward to the clock's resolution), then clamps that deadline to no
 earlier than the current time minus **one second**. Timer and scheduling delays
 can therefore catch up without discarding all missed slots, while debt older
@@ -141,6 +141,11 @@ DNS resolution and scans with no eligible work do not consume rate slots. When
 no connection work is ready, resumption rebases overdue pacing without moving a
 still-future deadline earlier. Idle time does not accumulate catch-up credit;
 occupied worker/proposal capacity is not treated as idle.
+A FIFO admission ticket remains owned until TCP starts or preparation is
+cancelled/failed. Slow TLS setup cannot allow later workers to overtake the
+admitted worker or accumulate a queue of already charged rate slots. Socket
+creation failures and cancelled/stale pre-start work consume no attempt or
+rate slot. Connection deadlines start after admission, not during pacing.
 The setting is a ceiling/target, not a guarantee: occupied workers, network
 latency and proof validation may still reduce actual throughput.
 
@@ -262,8 +267,8 @@ wallet, while the bounty or its live claim work remains tracked. It is not saved
 to disk. This modest preference variation is not a shuffle and does not change
 fees, profitability eligibility or the successful-connection budget below.
 
-Each `(domain, signature_algorithms_mask)` pair keeps exponentially smoothed
-success and duration averages, shared across its bounties and resolved IPs with
+Each `(domain, signature_algorithms_mask)` pair keeps an hourly window of
+validated-proof counts and connection effort, shared across its bounties and resolved IPs with
 the same mask. An unsupported RSA-only bounty therefore cannot poison the
 measured success rate of an ECDSA-capable bounty on that domain. Domain rotation
 and DNS are still grouped by domain, not by mask. Each observation records whether a captured proof passed
@@ -279,15 +284,13 @@ or duplicate proof) are excluded because they have no conclusive outcome.
 Completed captures are validated and observed even if cancellation races with
 their completion.
 
-Each pair starts with `a = 0.1` and `c = 0.02`. For every included observation,
-in validation completion order, it updates `a = 0.999 * a + 0.001 * b` and
-`c = 0.999 * c + 0.001 * d`, where `b` is 1 for a validated proof and 0 for a
-failure, and `d` is that attempt's elapsed seconds. The multiplier at each
-five-second refresh is `a / c`, initially **5 validated proofs/second of effort**.
-The initial values decay along with older observations: no fixed prior is added
-back, and no observation is abruptly evicted after 100 attempts. A past
-observation's weight halves after about 693 further observations. Sustained
-failures with positive durations keep reducing the rate toward zero.
+Samples are grouped by completion time into the current minute and the previous
+59 minutes. The multiplier is `(5 + valid_proofs) / (1 + effort_seconds)`,
+initially **5 validated proofs/second of effort**. This single fixed prior is
+not added per bucket or per observation. Expired observations no longer depress
+or inflate the rate. Domain and endpoint histories share a bounded, lazy cache
+of at most 8192 histories per wallet; expiration or eviction restores the prior
+without resetting bounty budgets, endpoint identity or rotation credit.
 Only finite, nonnegative durations are accepted. At floating-point extremes,
 the rate is limited to the positive finite range representable by a double, and
 overflowing priority scores saturate at its maximum finite value.
@@ -300,20 +303,26 @@ floating point; exact economic keys break rounded ties. Each simultaneous attemp
 not a shared wall-clock interval, so raising concurrency alone does not multiply
 the observed efficiency.
 
-Automatic search ignores each bounty whose expected net return is **less than
+Ordinary automatic search excludes each bounty whose expected net return is **less than
 1000 connects per second of connection effort** (1000 exactly is eligible):
 `(reward - claim_fee) * (target + 1) / 2^256 * measured_validated_proof_rate`.
 The threshold uses the unmodified expected return, without the local ranking
-factor, and the domain/mask pair's exponential averages or the initial 5/s rate, not
+factor, and the domain/mask pair's hourly observations or the initial 5/s rate, not
 the user-configured connection limit or aggregate concurrency. The measured
 score uses the same floating-point precision as domain ranking.
 
-The filter applies before DNS, receiving-key reservation and TLS, including
-guaranteed rotation turns and saved unfinished proposals. Eligibility is
+The filter applies to normal work before DNS, receiving-key reservation and TLS,
+including guaranteed rotation turns and saved unfinished proposals. Eligibility is
 recalculated every five seconds as fees, bounties and measured efficiency
 change. In-flight handshakes may finish; completed proofs are still retained
-and submitted. A domain with only below-floor bounties is not probed just to
-refresh its speed estimate. This is wallet search policy, not a consensus
+and submitted. Below-floor policies with positive net return may receive bounded
+bootstrap/recovery probes to refresh their estimate: at most four actual starts
+per second across recovery work, up to 32 bootstrap starts per domain/mask,
+then at most one per minute per policy. Only the best bounded set of 256 policy
+representatives is retained. These probes still obey the configured global
+rate, concurrency, availability and bounty budgets. DNS and pre-TCP failures
+do not consume recovery samples. Ordinary profitable work bypasses this gate.
+This is wallet search policy, not a consensus
 restriction or a restriction on preparing/submitting a claim manually.
 
 Each bounty also has a local successful-connection budget, separate from the
@@ -329,7 +338,7 @@ Updates and start checks are serialized across workers. Connections already in
 flight may finish, so concurrent captures can exceed that count; completed
 proofs are retained and submitted even after the cutoff. The aggregate RPC
 `attempts` field still counts starts, and failed attempts still affect the
-domain/mask's exponential performance averages.
+domain/mask's performance window.
 Counters are per outpoint, not per domain or payout address, and survive
 five-second refreshes, proposal-cache eviction and stop/start while the wallet
 is loaded. They are **only in memory** and reset on wallet unload/restart.
@@ -342,19 +351,22 @@ For independent valid work candidates with small `p`, missing the target around 
 probability approximately 13.5%; this is a resource policy, not evidence that
 a domain is malicious.
 
-The two averages survive priority refreshes, temporary bounty ineligibility and
-stop/start in the same loaded wallet. They are in-memory only: unloading the
+The observations survive priority refreshes, temporary bounty ineligibility and
+stop/start in the same loaded wallet, subject to expiration and the history bound.
+They are in-memory only: unloading the
 wallet resets them. A domain/mask pair with no remaining matching confirmed
 bounties is forgotten once its in-flight work drains. These measurements affect local scheduling only, never
 consensus or the global connection limit. They also select the best bounty
 between different signature masks within a domain; bounties sharing a mask
 retain their exact economic ordering.
 
-There is **no per-domain connection quota or configurable per-domain limit**.
+For ordinary eligible work there is **no per-domain connection quota or
+configurable per-domain limit**; only below-floor recovery probes use the
+sampling gate described above.
 Only the wallet-wide rate and concurrency settings limit traffic. A sole eligible
 domain may use all that capacity. Low-rate workers do not preassign a long queue
 of future connections: assignments are made when a connection slot is due.
-`domain_rounds` counts connection assignments since configuration.
+`domain_rounds` counts actual TCP admissions since configuration.
 `schedule_refreshes` counts completed catalog/priority refreshes. The displayed
 domain is the last assigned domain; other domains can be in flight simultaneously.
 
@@ -374,6 +386,10 @@ next refresh, without cancelling healthy attempts already in flight.
 This applies to groups larger than the 256-entry fixed-proposal cache as well.
 The cache never evicts an in-flight challenge or a completed proof. This is a
 memory bound on distinct proposals, not a cap on connections or visited domains.
+If every persisted slot is live and the best candidate needs a new slot, the
+scheduler can reuse the best ready, already-prepared candidate until a slot is
+available. Indexed ordinary/prepared leaders and scheduled-ready domains avoid
+rescanning all bounties or blocked DNS entries on each connection.
 
 Priority refreshes **do not cancel or restart healthy in-flight TLS handshakes**.
 Certificate validation follows the refreshed chain median time even in searches
@@ -384,14 +400,14 @@ bounty cancels only its affected work at the availability refresh. Every attempt
 uses its own bounty-specific challenge; proofs are never reused for other outputs.
 
 DNS results are reused for 60 seconds. Within a domain, IP selection keeps
-separate success and duration averages for each resolved endpoint and exact
-signature-algorithms mask. These use the same `0.1`/`0.02` initial values and
-`0.999`/`0.001` updates as the domain averages above, and only conclusive,
+separate success and duration windows for each resolved endpoint and exact
+signature-algorithms mask. These use the same hourly buckets and `5/1` prior
+as domain statistics above, and only conclusive,
 certificate/signature-validated outcomes count as successes. Thus an IP that
 returns valid proofs faster is preferred; a fast invalid capture is a failure.
 
 Smooth weighted round-robin distributes **99% of selection weight** in proportion
-to each IP's `success_average / seconds_average`, with the remaining **1% spread
+to each IP's `(5 + valid_proofs) / (1 + effort_seconds)`, with the remaining **1% spread
 uniformly** over the resolved IPs for exploration. This is a share of connection
 attempts, not a reservation of connection time or concurrent slots. It works
 with concurrency 1, lets an IP recover when it becomes useful again, and never
@@ -402,7 +418,7 @@ extremes.
 
 An ordinary DNS refresh preserves learned IP/mask state for endpoints still
 present, removes departed endpoints, and starts new endpoints with the initial
-averages. An in-flight attempt retains its original state object, so late
+prior. An in-flight attempt retains its original state object, so late
 validation cannot recreate a removed IP or overwrite a newly added IP's state.
 These IP statistics are local, in-memory scheduling state, not consensus data.
 They belong to the active domain group and are reset when that group is removed
@@ -410,8 +426,13 @@ or the claim worker is restarted; the longer-lived domain averages above are
 separate.
 Resolution is outside the scheduler lock:
 one slow lookup does not block other connection workers on other domains.
-Failed DNS backs off for two seconds for that domain. Failed TLS or rejected
-certificates back off for one second per connection worker. These are retry
+Failed DNS backs off for two seconds for that domain. Failed transport/capture
+backs off for one second per connection worker; a completed capture rejected by
+certificate verification is observed as invalid without adding that pause.
+Definitive local routing failures temporarily exclude that destination for
+60 seconds; a locally unsupported socket family excludes only that family for
+60 seconds. Remote refusals, timeouts and resource exhaustion cannot disable a
+family. These are local retry
 backoffs, not per-domain traffic quotas. All waits are interruptible on stop,
 but an OS DNS call may delay the worker using that call until it returns.
 
@@ -448,6 +469,25 @@ The supported profile excludes HelloRetryRequest, client authentication and sess
 resumption; a server outside the profile can be skipped with a diagnostic. Neither
 the system root store nor local wall clock substitutes for Core's immutable roots
 and chain median time. Capture alone is never evidence of a valid claim.
+
+Each connection thread reuses provider allocation/configuration only after a
+full session reset, which frees ephemeral keys and clears handshake/session
+secrets and I/O buffers. A failed reset discards the context. Provider mutexes
+allow independent handshakes to run concurrently. Bounded thread-local caches
+reuse parsed certificate DER and successful static certificate-edge signature
+checks, never the result of authenticating a proof: current domain, roots,
+median time, key policy, mask and CertificateVerify remain mandatory. Immutable
+owned capture bytes retain their parsed view without a second transcript parse.
+X25519 uses the bundled HACL implementation behind the existing validated PSA
+boundary. SHA-224/256 compression uses runtime CPU-gated SHA-NI on supported
+x86-64 CPUs, with the portable implementation elsewhere. These are implementation
+optimizations, not changes to the three P2C signature algorithms or TLS profile.
+Linux P2C sockets request nonblocking and close-on-exec flags atomically at
+creation; other platforms retain their usual socket setup. TCP completion is
+waited on readiness, with short interruptible slices, rather than fixed sleeps.
+TLS send/receive callbacks also enforce cancellation and the connection deadline,
+so a continuously readable stream of ignored compatibility records cannot keep
+the provider inside a handshake step after the attempt should have stopped.
 
 `wallet_p2c_auto_claim.py` runs offline in CI. Its optional `--live-domain=example.com`
 flag explicitly enables an external TLS smoke test that creates, claims and confirms

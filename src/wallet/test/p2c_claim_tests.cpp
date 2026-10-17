@@ -95,12 +95,36 @@ public:
     }
 };
 
+/** Model network latency/failure at TCP start, not in CreateSock. The FIFO
+ * admission gate deliberately does not release its head for mere allocation.
+ * All wrapped sockets here are ZeroSock-derived in-memory fixtures. */
+class ConnectCallbackSocket final : public ZeroSock {
+    ConnectCallbackSocket& operator=(Sock&&) override { throw std::logic_error("Move into ConnectCallbackSocket not allowed"); }
+    const std::function<std::unique_ptr<Sock>()> m_connect;
+    mutable std::unique_ptr<Sock> m_inner;
+public:
+    explicit ConnectCallbackSocket(std::function<std::unique_ptr<Sock>()> connect) : m_connect{std::move(connect)} {}
+    int Connect(const sockaddr* addr, socklen_t length) const override
+    {
+        m_inner = m_connect();
+        if (m_inner) return m_inner->Connect(addr, length);
+#ifdef WIN32
+        WSASetLastError(WSAECONNREFUSED);
+#else
+        errno = ECONNREFUSED;
+#endif
+        return -1;
+    }
+    ssize_t Send(const void* data, size_t size, int flags) const override { return m_inner->Send(data, size, flags); }
+    ssize_t Recv(void* data, size_t size, int flags) const override { return m_inner->Recv(data, size, flags); }
+};
+
 std::vector<size_t> CountP2CEndpointSelections(P2CEndpointPriority& priority, uint8_t mask,
-                                             const std::vector<CService>& endpoints, size_t attempts)
+const std::vector<CService>& endpoints, size_t attempts, double now = P2CPerformanceNow())
 {
     std::vector<size_t> counts(endpoints.size());
     for (size_t i = 0; i < attempts; ++i) {
-        const auto selected{priority.Select(mask)};
+        const auto selected{priority.Select(mask, now)};
         BOOST_REQUIRE(selected);
         const auto found{std::find(endpoints.begin(), endpoints.end(), selected->endpoint)};
         BOOST_REQUIRE(found != endpoints.end());
@@ -470,7 +494,7 @@ BOOST_AUTO_TEST_CASE(tls_efficiency_observes_validated_proofs_before_work_target
         BOOST_CHECK_EQUAL(verified, expect_verification);
         BOOST_CHECK_EQUAL(valid, expected.value_or(false));
         BOOST_CHECK_EQUAL(observations, expected.has_value() ? 1U : 0U);
-        const double expected_rate{expected ? (0.999 * 0.1 + 0.001 * *expected) / (0.999 * 0.02 + 0.001 * 0.2) : 5.0};
+        const double expected_rate{expected ? (5.0 + *expected) / 1.2 : 5.0};
         BOOST_CHECK_CLOSE(stats.ConnectionRate(), expected_rate, 1e-10);
         BOOST_CHECK_CLOSE(selected->statistics->ConnectionRate(), expected_rate, 1e-10);
         if (valid) {
@@ -565,101 +589,81 @@ BOOST_AUTO_TEST_CASE(tls_capture_checks_all_certificate_rsa_exponents_before_cer
     }
 }
 
-BOOST_AUTO_TEST_CASE(domain_connection_statistics_use_exponential_averages)
+BOOST_AUTO_TEST_CASE(domain_connection_statistics_use_bounded_hourly_history)
 {
     P2CDomainStats stats;
-    BOOST_CHECK_EQUAL(stats.ConnectionRate(), 5.0);
-    stats.Record(true, 0.2);
-    stats.Record(false, 0.8);
-    BOOST_CHECK_CLOSE(stats.ConnectionRate(), (0.999 * 0.1009) / (0.999 * 0.02018 + 0.0008), 1e-10);
-
-    // An independent closed form shows failures keep reducing the rate after
-    // 100 attempts, instead of reaching the old window's fixed-prior floor.
+    BOOST_CHECK_EQUAL(stats.ConnectionRate(0), 5.0);
+    stats.Record(true, 0.2, 0);
+    stats.Record(false, 0.8, 0);
+    BOOST_CHECK_CLOSE(stats.ConnectionRate(0), 6.0 / 2.0, 1e-10);
     P2CDomainStats failing;
-    double previous{failing.ConnectionRate()};
+    double previous{failing.ConnectionRate(0)};
     for (size_t i = 1; i <= 10000; ++i) {
-        failing.Record(false, 0.2);
-        const double decay{std::pow(0.999, i)};
-        BOOST_CHECK_CLOSE(failing.ConnectionRate(), 0.1 * decay / (0.02 * decay + 0.2 * (1 - decay)), 1e-9);
-        BOOST_CHECK_GT(failing.ConnectionRate(), 0);
-        BOOST_CHECK_LT(failing.ConnectionRate(), previous);
-        previous = failing.ConnectionRate();
+        failing.Record(false, 0.2, 0);
+        BOOST_CHECK_CLOSE(failing.ConnectionRate(0), 5.0 / (1.0 + i * 0.2), 1e-8);
+        BOOST_CHECK_GT(failing.ConnectionRate(0), 0);
+        BOOST_CHECK_LT(failing.ConnectionRate(0), previous);
+        previous = failing.ConnectionRate(0);
     }
-    BOOST_CHECK_LT(failing.ConnectionRate(), 0.1 / (0.02 + 100 * 0.2));
-
-    // Reliable captures converge to the observed reciprocal duration, and
-    // a previously failing pair can recover when captures resume.
+    BOOST_CHECK_EQUAL(failing.ConnectionRate(3600), 5.0);
     P2CDomainStats reliable;
     for (size_t i = 0; i < 50000; ++i) {
-        reliable.Record(true, 0.25);
-        failing.Record(true, 0.25);
+        reliable.Record(true, 0.25, 3600);
+        failing.Record(true, 0.25, 3600);
     }
-    BOOST_CHECK_CLOSE(reliable.ConnectionRate(), 4.0, 1e-9);
-    BOOST_CHECK_CLOSE(failing.ConnectionRate(), 4.0, 1e-9);
+    BOOST_CHECK_CLOSE(reliable.ConnectionRate(3600), 50005.0 / 12501.0, 1e-9);
+    BOOST_CHECK_EQUAL(failing.ConnectionRate(3600), reliable.ConnectionRate(3600));
 }
 
-BOOST_AUTO_TEST_CASE(domain_connection_statistics_match_weighted_mixed_history)
+BOOST_AUTO_TEST_CASE(domain_connection_statistics_match_complete_mixed_history)
 {
     P2CDomainStats mixed, failed;
-    std::vector<std::pair<bool, double>> samples;
+    double successes{5}, duration{1};
     constexpr std::array<size_t, 5> checkpoints{1, 100, 101, 1001, 2048};
-    samples.reserve(checkpoints.back());
     for (size_t i = 0; i < checkpoints.back(); ++i) {
         const bool success{i % 7 == 0 || i % 11 == 4};
         const double seconds{i % 13 == 0 ? 0.0 : 0.003 * (1 + (i * 37) % 113)};
-        samples.emplace_back(success, seconds);
-        mixed.Record(success, seconds);
-        failed.Record(false, seconds); // Identical timings isolate the success bit.
-        if (std::find(checkpoints.begin(), checkpoints.end(), samples.size()) == checkpoints.end()) continue;
-
-        // Expand the complete weighted history independently of Record's
-        // recurrence, including observations older than 100 and 1000 samples.
-        const double prior_weight{std::pow(0.999, samples.size())};
-        double successes{0.1 * prior_weight}, duration{0.02 * prior_weight};
-        for (size_t index = 0; index < samples.size(); ++index) {
-            const double weight{0.001 * std::pow(0.999, samples.size() - index - 1)};
-            successes += weight * samples[index].first;
-            duration += weight * samples[index].second;
-        }
-        BOOST_CHECK_CLOSE(mixed.ConnectionRate(), successes / duration, 1e-9);
-        BOOST_CHECK_CLOSE(failed.ConnectionRate(), 0.1 * prior_weight / duration, 1e-9);
-        BOOST_CHECK_GT(mixed.ConnectionRate(), failed.ConnectionRate());
+        successes += success;
+        duration += seconds;
+        mixed.Record(success, seconds, 0);
+        failed.Record(false, seconds, 0);
+        if (std::find(checkpoints.begin(), checkpoints.end(), i + 1) == checkpoints.end()) continue;
+        BOOST_CHECK_CLOSE(mixed.ConnectionRate(0), successes / duration, 1e-9);
+        BOOST_CHECK_CLOSE(failed.ConnectionRate(0), 5.0 / duration, 1e-9);
+        BOOST_CHECK_GT(mixed.ConnectionRate(0), failed.ConnectionRate(0));
     }
 }
 
 BOOST_AUTO_TEST_CASE(domain_connection_statistics_handle_duration_boundaries)
 {
     P2CDomainStats stats;
-    stats.Record(false, 0.2);
-    const double before{stats.ConnectionRate()};
+    stats.Record(false, 0.2, 0);
+    const double before{stats.ConnectionRate(0)};
     for (const double invalid : {-1.0, -std::numeric_limits<double>::infinity(),
                                  std::numeric_limits<double>::infinity(), std::numeric_limits<double>::quiet_NaN()}) {
-        stats.Record(true, invalid);
-        BOOST_CHECK_EQUAL(stats.ConnectionRate(), before);
+        stats.Record(true, invalid, 0);
+        BOOST_CHECK_EQUAL(stats.ConnectionRate(0), before);
     }
-
     for (const double seconds : {0.0, std::numeric_limits<double>::denorm_min(), std::numeric_limits<double>::max()}) {
         P2CDomainStats boundary;
-        boundary.Record(true, seconds);
-        BOOST_CHECK(std::isfinite(boundary.ConnectionRate()));
-        BOOST_CHECK_GT(boundary.ConnectionRate(), 0);
-        BOOST_CHECK_CLOSE(boundary.ConnectionRate(), 0.1009 / (0.999 * 0.02 + 0.001 * seconds), 1e-10);
+        boundary.Record(true, seconds, 0);
+        BOOST_CHECK(std::isfinite(boundary.ConnectionRate(0)));
+        BOOST_CHECK_GT(boundary.ConnectionRate(0), 0);
+        BOOST_CHECK_CLOSE(boundary.ConnectionRate(0), 6.0 / (1.0 + seconds), 1e-10);
     }
-
-    // Long runs of valid extreme durations can overflow/underflow a/c even
-    // though both averages remain finite. Keep scheduler rates representable.
     P2CDomainStats instant, very_slow;
-    for (size_t i = 0; i < 1000000; ++i) {
-        instant.Record(true, 0.0);
-        very_slow.Record(false, std::numeric_limits<double>::max());
+    for (size_t i = 0; i < 10000; ++i) {
+        instant.Record(true, 0.0, 0);
+        very_slow.Record(false, std::numeric_limits<double>::max(), 0);
     }
-    BOOST_CHECK_EQUAL(instant.ConnectionRate(), std::numeric_limits<double>::max());
-    BOOST_CHECK_EQUAL(very_slow.ConnectionRate(), std::numeric_limits<double>::denorm_min());
-    // A fresh observation can still recover from numerical extremes.
-    instant.Record(true, 0.2);
-    very_slow.Record(true, 0.2);
-    BOOST_CHECK(std::isfinite(instant.ConnectionRate()));
-    BOOST_CHECK_GT(very_slow.ConnectionRate(), std::numeric_limits<double>::denorm_min());
+    BOOST_CHECK_EQUAL(instant.ConnectionRate(0), 10005.0);
+    BOOST_CHECK_GT(very_slow.ConnectionRate(0), 0);
+    BOOST_CHECK_LT(very_slow.ConnectionRate(0), 1e-300);
+    // Extreme history expires as a unit; fresh samples still recover.
+    instant.Record(true, 0.2, 3600);
+    very_slow.Record(true, 0.2, 3600);
+    BOOST_CHECK_EQUAL(instant.ConnectionRate(3600), 5.0);
+    BOOST_CHECK_EQUAL(very_slow.ConnectionRate(3600), 5.0);
 }
 
 BOOST_AUTO_TEST_CASE(domain_priority_rewards_success_and_low_latency)
@@ -683,7 +687,7 @@ BOOST_AUTO_TEST_CASE(domain_priority_rewards_success_and_low_latency)
     BOOST_CHECK(GetP2CDomainPriority(GetP2CClaimPriority(uint256{}, 1), slow.ConnectionRate()) > 0);
     BOOST_CHECK_EQUAL(GetP2CDomainPriority(GetP2CClaimPriority(maximum, 0), fast.ConnectionRate()), 0);
     for (size_t i = 0; i < 20000; ++i) fast.Record(true, 0.0);
-    BOOST_CHECK_GT(fast.ConnectionRate(), 5005.0); // No fixed-prior rate ceiling.
+    BOOST_CHECK_GT(fast.ConnectionRate(), 1800.0); // No fixed throughput cap.
     BOOST_CHECK(std::isfinite(GetP2CDomainPriority(GetP2CClaimPriority(maximum, MAX_MONEY), fast.ConnectionRate())));
 
     // A representable extreme rate must remain profitable even when the
@@ -791,64 +795,56 @@ BOOST_AUTO_TEST_CASE(endpoint_priority_prefers_valid_connections_at_equal_latenc
 BOOST_AUTO_TEST_CASE(endpoint_priority_extreme_rates_keep_one_percent_exploration_and_recover)
 {
     BOOST_CHECK_EQUAL(P2CEndpointPriority::EXPLORATION, 0.01);
-    P2CDomainStats instant, failed;
-    for (size_t i = 0; i < 1000000; ++i) {
-        instant.Record(true, 0.0);
-        failed.Record(false, std::numeric_limits<double>::max());
-    }
-    BOOST_REQUIRE_EQUAL(instant.ConnectionRate(), std::numeric_limits<double>::max());
-    BOOST_REQUIRE_EQUAL(failed.ConnectionRate(), std::numeric_limits<double>::denorm_min());
     std::vector<CService> endpoints;
-    endpoints.reserve(P2CEndpointPriority::MAX_ENDPOINTS);
     for (size_t i = 0; i < P2CEndpointPriority::MAX_ENDPOINTS; ++i) {
         endpoints.push_back(Lookup("8.8.8." + util::ToString(i + 1), 443, false).value());
     }
     P2CEndpointPriority priority;
     priority.Refresh(endpoints);
     std::vector<std::shared_ptr<P2CDomainStats>> statistics;
-    statistics.reserve(endpoints.size());
     for (const auto& endpoint : endpoints) {
-        const auto selected{priority.Select(1)};
+        const auto selected{priority.Select(1, 0)};
         BOOST_REQUIRE(selected);
         BOOST_CHECK(selected->endpoint == endpoint);
         statistics.push_back(selected->statistics);
     }
-    for (auto& stats : statistics) *stats = failed;
-    *statistics.front() = instant;
     constexpr size_t attempts{32000};
-    const auto counts{CountP2CEndpointSelections(priority, 1, endpoints, attempts)};
     const double exploration_count{attempts * 0.01 / endpoints.size()};
+    double now{0};
+    const auto train = [&](const std::set<size_t>& fast) {
+        for (size_t i = 0; i < statistics.size(); ++i) {
+            // Expire history without replacing identities or rotation credit.
+            BOOST_CHECK_EQUAL(statistics[i]->ConnectionRate(now), 5.0);
+            statistics[i]->Record(fast.contains(i), fast.contains(i) ? 0.0 : std::numeric_limits<double>::max(), now);
+        }
+    };
+    train({0});
+    const auto counts{CountP2CEndpointSelections(priority, 1, endpoints, attempts, now)};
     for (size_t i = 1; i < counts.size(); ++i) {
         BOOST_CHECK_LE(std::abs(static_cast<double>(counts[i]) - exploration_count), 2.0);
         BOOST_CHECK_GT(counts[i], 0U);
     }
     BOOST_CHECK_GE(counts.front(), attempts * 99 / 100);
-    // Reverse the learned preferences without resetting credits or DNS state.
-    *statistics.front() = failed;
-    *statistics.back() = instant;
-    const auto reversed{CountP2CEndpointSelections(priority, 1, endpoints, attempts)};
+    now += 3600;
+    train({endpoints.size() - 1});
+    const auto reversed{CountP2CEndpointSelections(priority, 1, endpoints, attempts, now)};
     BOOST_CHECK_GE(reversed.back(), attempts * 99 / 100);
-    for (size_t i = 0; i + 1 < reversed.size(); ++i) {
-        BOOST_CHECK_LE(std::abs(static_cast<double>(reversed[i]) - exploration_count), 2.0);
-    }
-    // The sum of 32 maximum finite rates overflows unless normalized first.
-    // Uniform service must still work without NaN credits or a stuck winner.
-    for (auto& stats : statistics) *stats = instant;
-    const auto equally_fast{CountP2CEndpointSelections(priority, 1, endpoints, 3200)};
+    now += 3600;
+    std::set<size_t> all;
+    for (size_t i = 0; i < endpoints.size(); ++i) all.insert(i);
+    train(all);
+    const auto equally_fast{CountP2CEndpointSelections(priority, 1, endpoints, 3200, now)};
     for (const auto count : equally_fast) BOOST_CHECK_LE(std::abs(static_cast<double>(count) - 100.0), 2.0);
-    // Two maximum rates also overflow an unnormalized sum, but unlike the
-    // all-equal case, losing the 99% weighted share cannot hide as fair rotation.
-    for (auto& stats : statistics) *stats = failed;
-    *statistics[0] = instant;
-    *statistics[1] = instant;
-    const auto two_fast{CountP2CEndpointSelections(priority, 1, endpoints, attempts)};
+    now += 3600;
+    train({0, 1});
+    const auto two_fast{CountP2CEndpointSelections(priority, 1, endpoints, attempts, now)};
     const double expected_fast{attempts * 0.99 / 2 + exploration_count};
     for (size_t i = 0; i < two_fast.size(); ++i) {
         BOOST_CHECK_LE(std::abs(static_cast<double>(two_fast[i]) - (i < 2 ? expected_fast : exploration_count)), 2.0);
     }
-    // Equally failing IPs remain selectable; no cooldown or concurrency gate.
-    for (auto& stats : statistics) *stats = failed;
-    const auto equal{CountP2CEndpointSelections(priority, 1, endpoints, 3200)};
+    now += 3600;
+    train({});
+    const auto equal{CountP2CEndpointSelections(priority, 1, endpoints, 3200, now)};
     for (const auto count : equal) BOOST_CHECK_LE(std::abs(static_cast<double>(count) - 100.0), 2.0);
 }
 
@@ -1489,6 +1485,9 @@ BOOST_FIXTURE_TEST_CASE(worker_retries_dns_reuses_endpoints_and_stops, TestChain
     worker->Stop();
     BOOST_CHECK_EQUAL(lookups.load(), 1U); // Not once per connection/refresh.
     BOOST_CHECK_EQUAL(worker->Status()["concurrency"].getInt<int>(), 16);
+    // Socket allocation failures did not start TCP, spend pacing/recovery
+    // credit, or increment the public connection-attempt counter.
+    BOOST_CHECK_EQUAL(worker->Status()["attempts"].getInt<uint64_t>(), 0U);
 
     // More than 64 connections may actually run at once; no real sockets.
     struct Pending {
@@ -1504,11 +1503,13 @@ BOOST_FIXTURE_TEST_CASE(worker_retries_dns_reuses_endpoints_and_stops, TestChain
         ~Release() { pending->Release(); }
     } release{pending};
     CreateSock = [pending](int, int, int) -> std::unique_ptr<Sock> {
-        std::unique_lock lock{pending->mutex};
-        ++pending->active;
-        pending->wake.wait(lock, [&] { return pending->released; });
-        --pending->active;
-        return nullptr;
+        return std::make_unique<ConnectCallbackSocket>([pending]() -> std::unique_ptr<Sock> {
+            std::unique_lock lock{pending->mutex};
+            ++pending->active;
+            pending->wake.wait(lock, [&] { return pending->released; });
+            --pending->active;
+            return nullptr;
+        });
     };
     BOOST_REQUIRE(worker->Configure(-1, 65));
     const bool reached{wait_until([&] { std::lock_guard lock{pending->mutex}; return pending->active == 65; })};
@@ -1621,10 +1622,12 @@ BOOST_FIXTURE_TEST_CASE(worker_age_window_does_not_cancel_inflight_tls, TestChai
         }
     } release_and_stop{pending_mutex, release, released, *worker};
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
-        ++sockets;
-        std::unique_lock lock{pending_mutex};
-        release.wait(lock, [&] { return released; });
-        return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+        return std::make_unique<ConnectCallbackSocket>([&]() -> std::unique_ptr<Sock> {
+            ++sockets;
+            std::unique_lock lock{pending_mutex};
+            release.wait(lock, [&] { return released; });
+            return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+        });
     };
     const auto wait_until = [](const auto& predicate) {
         const auto deadline{std::chrono::steady_clock::now() + 15s};
@@ -1683,13 +1686,15 @@ BOOST_FIXTURE_TEST_CASE(worker_success_budget_ignores_failures_and_is_per_bounty
     } stop_before_locals{worker};
     static constexpr unsigned FAILED_CONNECTIONS{12};
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
-        const auto attempt{++sockets};
-        if (attempt <= FAILED_CONNECTIONS) {
-            if (attempt % 2 == 0) return nullptr; // TCP/socket failure.
-            sent.clear();
-            return std::make_unique<ClientHelloSocket>(sent, 127); // TLS EOF before CertificateVerify.
-        }
-        return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+        return std::make_unique<ConnectCallbackSocket>([&]() -> std::unique_ptr<Sock> {
+            const auto attempt{++sockets};
+            if (attempt <= FAILED_CONNECTIONS) {
+                if (attempt % 2 == 0) return nullptr; // Actual TCP refusal.
+                sent.clear();
+                return std::make_unique<ClientHelloSocket>(sent, 127); // TLS EOF before CertificateVerify.
+            }
+            return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+        });
     };
     const auto wait_until = [](const auto& predicate) {
         const auto deadline{std::chrono::steady_clock::now() + 30s};
@@ -1705,9 +1710,8 @@ BOOST_FIXTURE_TEST_CASE(worker_success_budget_ignores_failures_and_is_per_bounty
     // The TLS fixture is deliberately untrusted by Core: captures count even
     // when subsequent certificate/claim validation cannot submit the reward.
     const auto wait_for_budget = [&](unsigned expected_attempts) {
-        // Failed connections and rejected certificates each pause for one real
-        // second. The first run needs 22 pauses plus instrumented TLS work, so
-        // a single 30-second deadline can expire while MSan is making progress.
+        // Failed connections pause for one real second; completed captures do
+        // not. Bound progress separately to accommodate instrumented TLS work.
         // Bound each expected attempt and the terminal transition separately;
         // never advance the mock schedule clock or allow an unbounded retry.
         for (unsigned next{sockets.load() + 1}; next <= expected_attempts; ++next) {
@@ -1805,10 +1809,12 @@ BOOST_FIXTURE_TEST_CASE(worker_pending_and_failed_connections_do_not_reserve_suc
         }
     } release_and_stop{pending_mutex, release, released, *worker};
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
-        ++sockets;
-        std::unique_lock lock{pending_mutex};
-        release.wait(lock, [&] { return released; });
-        return nullptr;
+        return std::make_unique<ConnectCallbackSocket>([&]() -> std::unique_ptr<Sock> {
+            ++sockets;
+            std::unique_lock lock{pending_mutex};
+            release.wait(lock, [&] { return released; });
+            return nullptr;
+        });
     };
     const auto wait_until = [](const auto& predicate) {
         const auto deadline{std::chrono::steady_clock::now() + 15s};
@@ -1841,8 +1847,8 @@ BOOST_FIXTURE_TEST_CASE(worker_filters_each_bounty_before_network_and_rechecks_e
     wallet->SetBroadcastTransactions(true);
     wallet->m_default_max_tx_fee = MAX_MONEY;
     // Probability 2^-26: 1 CONN net at the initial 5/s is below 1000 connects/s.
-    // The last payout is just above it, so two 100 ms failures lower the EMA
-    // enough to reject it. Gross rewards alone would admit both.
+    // The last payout is just above it, so measured 100 ms failures move it
+    // into bounded recovery. Gross rewards alone would admit both normally.
     const auto target{uint256::FromHex(std::string(6, '0') + "3" + std::string(57, 'f')).value()};
     const std::array<uint256, 4> targets{uint256{},
         uint256::FromHex(std::string(16, '0') + std::string(48, 'f')).value(), target, target};
@@ -1873,7 +1879,9 @@ BOOST_FIXTURE_TEST_CASE(worker_filters_each_bounty_before_network_and_rechecks_e
     saved.pushKV("submitted", 0);
     saved.pushKV("last_txid", "");
     BOOST_REQUIRE(wallet->GetDatabase().MakeBatch()->Write(std::string{"p2c_claim_worker_v1"}, saved.write()));
-    WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(outpoints[3], false)));
+    for (const auto& outpoint : outpoints) {
+        WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->LockCoin(outpoint, false)));
+    }
     const COutPoint fresh{Txid::FromUint256(uint256::ONE), 4};
     WITH_LOCK(cs_main, m_node.chainman->ActiveChainstate().CoinsTip().AddCoin(fresh,
         Coin{CTxOut{COIN, PayToDomainOutput{"mixed.example", uint256::FromHex(std::string(64, 'f')).value(), 1}}, 100, false}, false));
@@ -1892,12 +1900,25 @@ BOOST_FIXTURE_TEST_CASE(worker_filters_each_bounty_before_network_and_rechecks_e
     };
     std::mutex sent_mutex;
     std::vector<std::vector<unsigned char>> hellos;
+    std::atomic<unsigned> allocations{0};
+    std::mutex factory_mutex;
+    std::condition_variable factory_wake;
+    bool release_factory{false};
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
-        std::this_thread::sleep_for(100ms); // A measured, unsuccessful attempt.
-        auto sent{std::make_shared<std::vector<unsigned char>>()};
-        return std::make_unique<ClientHelloSocket>(*sent, 16384, [&, sent] {
-            std::lock_guard lock{sent_mutex};
-            hellos.push_back(*sent);
+        if (++allocations == 3) {
+            // Freeze a selected ordinary assignment before TCP, then refresh
+            // the same outpoint into recovery. It must be re-admitted rather
+            // than spending a stale ordinary classification without a token.
+            std::unique_lock lock{factory_mutex};
+            factory_wake.wait(lock, [&] { return release_factory; });
+        }
+        return std::make_unique<ConnectCallbackSocket>([&]() -> std::unique_ptr<Sock> {
+            std::this_thread::sleep_for(100ms); // Measured after actual TCP admission.
+            auto sent{std::make_shared<std::vector<unsigned char>>()};
+            return std::make_unique<ClientHelloSocket>(*sent, 16384, [&, sent] {
+                std::lock_guard lock{sent_mutex};
+                hellos.push_back(*sent);
+            });
         });
     };
     const auto wait_until = [](const auto& predicate) {
@@ -1909,6 +1930,17 @@ BOOST_FIXTURE_TEST_CASE(worker_filters_each_bounty_before_network_and_rechecks_e
         return true;
     };
     auto worker{MakeP2CClaimWorker(*wallet)};
+    struct ReleaseFactoryAndStop {
+        std::mutex& mutex;
+        std::condition_variable& wake;
+        bool& released;
+        P2CClaimWorker& worker;
+        ~ReleaseFactoryAndStop() {
+            { std::lock_guard lock{mutex}; released = true; }
+            wake.notify_all();
+            worker.Stop();
+        }
+    } release_factory_and_stop{factory_mutex, factory_wake, release_factory, *worker};
     const auto refresh = [&] {
         const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
         clock += 5s;
@@ -1919,12 +1951,44 @@ BOOST_FIXTURE_TEST_CASE(worker_filters_each_bounty_before_network_and_rechecks_e
     BOOST_CHECK_EQUAL(lookups.load(), 0U);
     BOOST_CHECK_EQUAL(worker->Status()["attempts"].getInt<uint64_t>(), 0U);
 
-    WITH_LOCK(wallet->cs_wallet, wallet->UnlockCoin(outpoints[3]));
+    for (size_t i{1}; i < outpoints.size(); ++i) {
+        WITH_LOCK(wallet->cs_wallet, wallet->UnlockCoin(outpoints[i]));
+    }
     BOOST_REQUIRE(refresh());
     BOOST_REQUIRE(wait_until([&] {
         std::lock_guard lock{sent_mutex};
         return hellos.size() >= 2 && worker->Status()["state"].get_str() == "retrying connections";
     }));
+    // The floor no longer causes a permanent dead end: only the best positive
+    // bounty of this domain/mask receives 32 bootstrap starts, then one per
+    // minute. A frozen scheduling clock cannot acquire extra recovery credit.
+    const auto observed = [&] { std::lock_guard lock{sent_mutex}; return hellos.size(); };
+    const auto before_recovery{observed()};
+    BOOST_REQUIRE(wait_until([&] { return allocations == 3; }));
+    BOOST_REQUIRE(refresh());
+    { std::lock_guard lock{factory_mutex}; release_factory = true; }
+    factory_wake.notify_all();
+    BOOST_REQUIRE(wait_until([&] { return observed() == before_recovery + 1 && worker->Status()["state"].get_str() == "retrying connections"; }));
+    std::this_thread::sleep_for(1200ms);
+    BOOST_REQUIRE_EQUAL(observed(), before_recovery + 1);
+    BOOST_CHECK_GE(allocations.load(), 4U); // Retired ordinary assignment never called Connect.
+    for (size_t probe{2}; probe <= 32; ++probe) {
+        clock += 250ms;
+        BOOST_REQUIRE_MESSAGE(wait_until([&] {
+            return observed() == before_recovery + probe && worker->Status()["state"].get_str() == "retrying connections";
+        }), "Bootstrap probe " << probe << ": " << worker->Status().write());
+    }
+    const auto stopped_at{worker->Status()["attempts"].getInt<uint64_t>()};
+    const auto previous{worker->Status()["schedule_refreshes"].getInt<uint64_t>()};
+    clock += 59'999ms;
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["schedule_refreshes"].getInt<uint64_t>() > previous; }));
+    std::this_thread::sleep_for(1200ms);
+    BOOST_CHECK_EQUAL(worker->Status()["attempts"].getInt<uint64_t>(), stopped_at);
+    // The double-seconds deadline is conservatively rounded up to the native
+    // clock tick. Cross it by 1ms rather than freezing on that rounded tick.
+    clock += 2ms;
+    BOOST_REQUIRE_MESSAGE(wait_until([&] { return observed() == before_recovery + 33; }),
+        "Recovery did not resume: observed=" << observed() << "; status=" << worker->Status().write());
     {
         std::lock_guard lock{sent_mutex};
         for (const auto& hello : hellos) {
@@ -1933,17 +1997,10 @@ BOOST_FIXTURE_TEST_CASE(worker_filters_each_bounty_before_network_and_rechecks_e
                                           eligible_challenge.begin(), eligible_challenge.end());
         }
     }
-    // After the observed failures the formerly eligible bounty is below the
-    // floor too; fair rotation may not keep probing it.
-    BOOST_REQUIRE(refresh());
-    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
-    const auto stopped_at{worker->Status()["attempts"].getInt<uint64_t>()};
-    std::this_thread::sleep_for(1200ms);
-    BOOST_CHECK_EQUAL(worker->Status()["attempts"].getInt<uint64_t>(), stopped_at);
-    // A more profitable bounty becoming eligible revives the same domain.
+    // A newly profitable bounty bypasses the still-future recovery deadline.
     WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->UnlockCoin(fresh)));
     BOOST_REQUIRE(refresh());
-    BOOST_REQUIRE(wait_until([&] { return worker->Status()["attempts"].getInt<uint64_t>() > stopped_at; }));
+    BOOST_REQUIRE(wait_until([&] { return worker->Status()["attempts"].getInt<uint64_t>() > stopped_at + 1; }));
     worker->Stop();
     BOOST_CHECK(!wrong_domain);
 }
@@ -2002,14 +2059,15 @@ BOOST_FIXTURE_TEST_CASE(worker_efficiency_excludes_cancellation_and_rejects_comp
         }
     } release_and_stop{pending_mutex, release, released, *worker};
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
-        const auto attempt{++sockets};
-        if (attempt == 1) {
-            std::unique_lock lock{pending_mutex};
-            release.wait(lock, [&] { return released; });
-            return nullptr; // Locally cancelled before a capture could finish.
-        }
-        if (attempt == 2) return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
-        return nullptr; // An unexpected extra assignment is detected below.
+        return std::make_unique<ConnectCallbackSocket>([&]() -> std::unique_ptr<Sock> {
+            const auto attempt{++sockets};
+            if (attempt == 1) {
+                std::unique_lock lock{pending_mutex};
+                release.wait(lock, [&] { return released; });
+                return nullptr; // Locally cancelled before a capture could finish.
+            }
+            return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+        });
     };
     const auto wait_until = [](const auto& predicate) {
         const auto deadline{std::chrono::steady_clock::now() + 15s};
@@ -2032,18 +2090,21 @@ BOOST_FIXTURE_TEST_CASE(worker_efficiency_excludes_cancellation_and_rejects_comp
     // A cancelled attempt cannot lower the prior. After unlocking and restart
     // this same bounty must still reach TLS and certificate validation.
     WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->UnlockCoin(outpoint)));
-    BOOST_REQUIRE(worker->Configure(-1, 1));
+    BOOST_REQUIRE(worker->Configure(1, 1));
     BOOST_REQUIRE_MESSAGE(wait_until([&] { return worker->Status()["state"].get_str() == "certificate rejected"; }), worker->Status().write());
     worker->Stop();
     BOOST_CHECK_EQUAL(sockets.load(), 2U);
     BOOST_CHECK_EQUAL(worker->Status()["submitted"].getInt<uint64_t>(), 0U);
 
-    // The completed but untrusted capture is an EMA failure. Restart refreshes
-    // eligibility from the retained history before assigning any more work.
+    // The completed but untrusted capture is a rolling-window failure. The
+    // retained history permits a single bootstrap probe, not unlimited normal
+    // work. Incorrectly counting the raw capture as valid would keep it above
+    // the floor and start many more connections while mock time is frozen.
     BOOST_REQUIRE(worker->Configure(-1, 1));
-    BOOST_REQUIRE_MESSAGE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }), worker->Status().write());
+    BOOST_REQUIRE_MESSAGE(wait_until([&] { return sockets >= 3; }), worker->Status().write());
+    std::this_thread::sleep_for(1200ms);
     worker->Stop();
-    BOOST_CHECK_EQUAL(sockets.load(), 2U);
+    BOOST_CHECK_EQUAL(sockets.load(), 3U);
 }
 
 BOOST_FIXTURE_TEST_CASE(worker_refresh_completion_arms_next_deadline, TestChain100Setup)
@@ -2119,14 +2180,16 @@ BOOST_FIXTURE_TEST_CASE(worker_keeps_connection_history_separate_for_exact_signa
     std::mutex events_mutex;
     std::vector<uint256> events;
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
-        std::this_thread::sleep_for(100ms);
-        auto sent{std::make_shared<std::vector<unsigned char>>()};
-        return std::make_unique<ClientHelloSocket>(*sent, 16384, [&, sent] {
-            if (sent->size() < 43) return;
-            uint256 challenge;
-            std::copy_n(sent->begin() + 11, challenge.size(), challenge.begin());
-            std::lock_guard lock{events_mutex};
-            events.push_back(challenge);
+        return std::make_unique<ConnectCallbackSocket>([&]() -> std::unique_ptr<Sock> {
+            std::this_thread::sleep_for(100ms);
+            auto sent{std::make_shared<std::vector<unsigned char>>()};
+            return std::make_unique<ClientHelloSocket>(*sent, 16384, [&, sent] {
+                if (sent->size() < 43) return;
+                uint256 challenge;
+                std::copy_n(sent->begin() + 11, challenge.size(), challenge.begin());
+                std::lock_guard lock{events_mutex};
+                events.push_back(challenge);
+            });
         });
     };
     const auto wait_until = [](const auto& predicate) {
@@ -2149,15 +2212,22 @@ BOOST_FIXTURE_TEST_CASE(worker_keeps_connection_history_separate_for_exact_signa
         return events.size() >= 2 && worker->Status()["state"].get_str() == "retrying connections";
     }));
     BOOST_REQUIRE(refresh());
-    BOOST_REQUIRE(wait_until([&] { return worker->Status()["state"].get_str() == "waiting for eligible bounties"; }));
+    // One recovery probe consumes the global bootstrap slot. Keep mock time
+    // frozen thereafter so another below-floor policy cannot use that slot.
+    BOOST_REQUIRE(wait_until([&] {
+        std::lock_guard lock{events_mutex};
+        return events.size() >= 3 && worker->Status()["state"].get_str() == "retrying connections";
+    }));
+    worker->Stop();
     {
         std::lock_guard lock{events_mutex};
         for (const auto& challenge : events) BOOST_CHECK(challenge == challenges[0]);
     }
     // The RSA-only failures must not poison the untried ALL mask at this same
-    // domain. A shared per-domain history would leave both below the floor.
+    // domain. A shared per-domain history would leave both below the floor and
+    // blocked by the future recovery deadline; ordinary ALL starts immediately.
     WITH_LOCK(wallet->cs_wallet, BOOST_REQUIRE(wallet->UnlockCoin(outpoints[1])));
-    BOOST_REQUIRE(refresh());
+    BOOST_REQUIRE(worker->Configure(-1, 1));
     BOOST_REQUIRE_MESSAGE(wait_until([&] {
         std::lock_guard lock{events_mutex};
         return std::find(events.begin(), events.end(), challenges[1]) != events.end();
@@ -2487,7 +2557,7 @@ BOOST_FIXTURE_TEST_CASE(worker_weights_domain_priority_by_smoothed_tls_efficienc
         BOOST_REQUIRE(prepared);
         CMutableTransaction tx{*prepared->tx};
         // Alpha's 11% higher net EV beats every initial random factor, while
-        // two slow failures can outweigh that advantage even with alpha=.001.
+        // two slow failures outweigh that advantage in the rolling window.
         tx.vout[0].nValue = i == 0 ? 111 * COIN / 100 : COIN;
         pending.push_back(EncodeHexTx(CTransaction{tx}));
     }
@@ -2517,21 +2587,22 @@ BOOST_FIXTURE_TEST_CASE(worker_weights_domain_priority_by_smoothed_tls_efficienc
         ~ReleaseAll() { { std::lock_guard lock{mutex}; finish = true; } wake.notify_all(); }
     } release_all{events_mutex, release, finish};
     CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
-        // A single connection worker makes the last assignment unambiguous.
-        const auto domain{worker->Status()["domain"].get_str()};
-        {
-            std::unique_lock lock{events_mutex};
-            events.push_back(domain);
-            if (events.size() == 4) release.wait(lock, [&] { return finish; });
-        }
-        if (domain == domains[0]) {
-            std::this_thread::sleep_for(3s);
-            return nullptr; // Slow TCP failure; never reached CertificateVerify.
-        }
-        // Beta's certificate is rejected, but its failure is much faster than
-        // Alpha's. Duration alone can outweigh Alpha's economic preference.
-        std::this_thread::sleep_for(100ms);
-        return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+        return std::make_unique<ConnectCallbackSocket>([&]() -> std::unique_ptr<Sock> {
+            // Status is assigned at actual TCP admission, not allocation.
+            const auto domain{worker->Status()["domain"].get_str()};
+            {
+                std::unique_lock lock{events_mutex};
+                events.push_back(domain);
+                if (events.size() == 4) release.wait(lock, [&] { return finish; });
+            }
+            if (domain == domains[0]) {
+                std::this_thread::sleep_for(3s);
+                return nullptr; // Slow TCP failure; never reached CertificateVerify.
+            }
+            // Beta's rejected certificate costs much less TCP/TLS effort.
+            std::this_thread::sleep_for(100ms);
+            return std::make_unique<test::P2CTLSSocket>(config, std::vector<std::string>{}, 127);
+        });
     };
     const auto wait_until = [](const auto& predicate) {
         const auto deadline{std::chrono::steady_clock::now() + 30s};
@@ -2686,7 +2757,9 @@ BOOST_FIXTURE_TEST_CASE(worker_batches_spent_checks_and_recovers_eligibility, Te
     BOOST_REQUIRE(address);
     g_dns_lookup = [&](const std::string&, bool) { return std::vector<CNetAddr>{*address}; };
     std::atomic<unsigned> attempts{0};
-    CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> { ++attempts; return nullptr; };
+    CreateSock = [&](int, int, int) -> std::unique_ptr<Sock> {
+        return std::make_unique<ConnectCallbackSocket>([&]() -> std::unique_ptr<Sock> { ++attempts; return nullptr; });
+    };
     const auto wait_until = [](const auto& predicate) {
         const auto deadline{std::chrono::steady_clock::now() + 10s};
         while (!predicate()) {

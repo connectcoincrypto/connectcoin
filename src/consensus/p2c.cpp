@@ -436,6 +436,18 @@ uint256 P2CClaimChallenge(const CTransaction& spending_tx, uint32_t input_index)
     return (TaggedHash("ConnectCoin/P2C/claim/v1") << spending_tx.GetHash() << input_index).GetSHA256();
 }
 
+bool ParseP2CCertificateMessage(std::span<const unsigned char> message, P2CTlsProofView& parsed, std::string& error)
+{
+    parsed = {};
+    error.clear();
+    ByteReader reader{message};
+    std::span<const unsigned char> body;
+    if (!ReadHandshake(reader, TLS_HANDSHAKE_CERTIFICATE, MAX_P2C_CERTIFICATE_MESSAGE_SIZE,
+                       parsed.certificate, body, error)) return false;
+    if (!reader.Empty()) return SetError(error, "trailing P2C Certificate message data");
+    return ParseCertificate(body, parsed, error);
+}
+
 bool ParseP2CTlsProof(std::span<const unsigned char> encoded_proof,
                       std::string_view expected_domain,
                       const uint256& expected_challenge,

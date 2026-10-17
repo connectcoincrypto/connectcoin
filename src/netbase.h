@@ -284,6 +284,7 @@ CSubNet LookupSubNet(const std::string& subnet_str);
 
 /**
  * Create a real socket from the operating system.
+ * IPv4, IPv6 and UNIX sockets are returned nonblocking and selectable.
  * @param[in] domain Communications domain, first argument to the socket(2) syscall.
  * @param[in] type Type of the socket, second argument to the socket(2) syscall.
  * @param[in] protocol The particular protocol to be used with the socket, third argument to the socket(2) syscall.

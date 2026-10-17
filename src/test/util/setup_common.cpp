@@ -13,6 +13,7 @@
 #include <consensus/amount.h>
 #include <consensus/consensus.h>
 #include <consensus/validation.h>
+#include <crypto/mbedtls_threading.h>
 #include <crypto/hex_base.h>
 #include <dbwrapper.h>
 #include <init.h>
@@ -143,6 +144,7 @@ static void ExitFailure(std::string_view str_err)
 BasicTestingSetup::BasicTestingSetup(const ChainType chainType, TestOpts opts)
     : m_args{}
 {
+    Assert(InitializeP2CCrypto());
     if (!EnableFuzzDeterminism()) {
         SeedRandomForTest(SeedRand::FIXED_SEED);
     }

@@ -238,3 +238,15 @@ endif()
 add_all_test_targets()
 
 install_binary_component(connectcoin-test INTERNAL)
+
+# Isolated provider differential tests: known vectors, native/portable paths,
+# SHA-224/256 lifecycle, X25519 PSA validation and secret cleanup.
+foreach(p2c_primitive IN ITEMS sha256 x25519)
+  add_executable(p2c-${p2c_primitive}-tests p2c_${p2c_primitive}_tests.cpp)
+  target_link_libraries(p2c-${p2c_primitive}-tests PRIVATE core_interface connectcoin_util MbedTLS::mbedcrypto)
+  add_test(NAME p2c_${p2c_primitive}_provider COMMAND p2c-${p2c_primitive}-tests)
+endforeach()
+if(NOT P2C_SHA256_ACCELERATION)
+  target_sources(p2c-sha256-tests PRIVATE ../crypto/mbedtls_sha256_portable.c)
+  target_include_directories(p2c-sha256-tests PRIVATE "${connectcoin_mbedtls_SOURCE_DIR}/library")
+endif()

@@ -6,8 +6,8 @@
 
 #include <consensus/p2c.h>
 #include <consensus/p2c_roots_v1.pem.h>
-#include <consensus/p2c_x509_mutex.h>
 #include <crypto/mbedtls_rsa_pss.h>
+#include <crypto/mbedtls_threading.h>
 #include <crypto/mbedtls_x509_root_first.h>
 #include <crypto/sha256.h>
 #include <mbedtls/asn1.h>
@@ -22,11 +22,12 @@
 #include <primitives/transaction.h>
 #include <uint256.h>
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <cstdint>
 #include <limits>
-#include <mutex>
+#include <memory>
 #include <optional>
 #include <span>
 #include <string>
@@ -81,13 +82,12 @@ const mbedtls_x509_crt* RootStoreV1()
                     CheckP2CCertificatePublicKeys(chain.value, error);
         }
     };
-    // A cancelled detached GUI probe can still be finishing crypto when static
-    // destruction begins. Keep this fixed, public-only trust cache alive for
-    // the process lifetime. The static pointer remains reachable and its local
-    // initialization retains C++'s thread-safety guarantee. Test roots stay
-    // owned by their individual validation calls and are freed normally.
-    static const RootStore* const roots{new RootStore};
-    return roots->valid ? &roots->chain.value : nullptr;
+    if (!InitializeP2CCrypto()) return nullptr;
+    // Public RSA/EC keys lazily acquire arithmetic state. Own the parsed roots
+    // per worker instead of serializing every proof on a process-wide mutex.
+    // Thread-local lifetime also covers late detached GUI probes safely.
+    thread_local const RootStore roots;
+    return roots.valid ? &roots.chain.value : nullptr;
 }
 
 bool ParseCertificateChain(const P2CTlsProofView& proof, CertificateChain& chain, std::string& error)
@@ -140,50 +140,6 @@ bool X509TimeToUnix(const mbedtls_x509_time& time, int64_t& result)
     return true;
 }
 
-bool CheckSuppliedCertificateTimes(const mbedtls_x509_crt& chain, int64_t validation_time, std::string& error)
-{
-    if (validation_time <= 0) return SetError(error, "P2C certificate validation time is unavailable");
-    for (const mbedtls_x509_crt* certificate{&chain}; certificate != nullptr; certificate = certificate->next) {
-        int64_t valid_from{0};
-        int64_t valid_to{0};
-        if (!X509TimeToUnix(certificate->valid_from, valid_from) ||
-            !X509TimeToUnix(certificate->valid_to, valid_to) ||
-            validation_time < valid_from || validation_time > valid_to) {
-            return SetError(error, "P2C certificate is not valid at block median time");
-        }
-    }
-    return true;
-}
-
-bool VerifyDomainPath(mbedtls_x509_crt& chain, std::string_view domain,
-                      const mbedtls_x509_crt& roots, std::string& error)
-{
-    std::string domain_string{domain};
-    uint32_t flags{0};
-    int result;
-    {
-        // The root DER is immutable, but Mbed TLS lazily populates RSA
-        // Montgomery and EC precomputation caches in its parsed public keys.
-        // Its classic backend has no configured threading support. Protect
-        // path validation against concurrent consensus, worker and GUI probe
-        // callers; each proof's private leaf/CV verification remains parallel.
-        // Match the process lifetime of RootStoreV1, including detached probes
-        // that finish during application shutdown. This retains no key data.
-        static auto* const root_key_cache_mutex{new consensus::p2c::RootKeyCacheMutex};
-        const std::lock_guard lock{*root_key_cache_mutex};
-        // Select the same pinned, clock-independent path, but authenticate it
-        // from the trust anchor towards the leaf. Stop at the first invalid
-        // selected edge and never verify unanchored intermediates. Generic TLS
-        // callers retain Mbed TLS's original callback/restartable semantics.
-        result = connectcoin_mbedtls_x509_crt_verify_root_first(
-            &chain, const_cast<mbedtls_x509_crt*>(&roots),
-            &mbedtls_x509_crt_profile_default, domain_string.c_str(), &flags,
-            /*observer=*/nullptr, /*observer_context=*/nullptr);
-    }
-    if (result != 0 || flags != 0) return SetError(error, "P2C certificate path or domain validation failed");
-    return true;
-}
-
 bool CheckLeafUsage(const mbedtls_x509_crt& leaf, std::string& error)
 {
     if (mbedtls_x509_crt_check_key_usage(&leaf, MBEDTLS_X509_KU_DIGITAL_SIGNATURE) != 0 ||
@@ -191,6 +147,197 @@ bool CheckLeafUsage(const mbedtls_x509_crt& leaf, std::string& error)
             &leaf, MBEDTLS_OID_SERVER_AUTH, MBEDTLS_OID_SIZE(MBEDTLS_OID_SERVER_AUTH)) != 0) {
         return SetError(error, "P2C leaf certificate is not authorized for TLS server signatures");
     }
+    return true;
+}
+
+struct CachedCertificateChain {
+    struct Validity { int64_t from{0}, to{0}; };
+    const std::unique_ptr<CertificateChain> parsed;
+    std::vector<Validity> times;
+    bool dates_valid{true}, leaf_usage_valid{false};
+
+    explicit CachedCertificateChain(std::unique_ptr<CertificateChain> chain) : parsed{std::move(chain)}
+    {
+        std::string ignored;
+        leaf_usage_valid = CheckLeafUsage(parsed->value, ignored);
+        for (const auto* certificate = &parsed->value; certificate; certificate = certificate->next) {
+            Validity bounds;
+            const bool from_ok = X509TimeToUnix(certificate->valid_from, bounds.from);
+            const bool to_ok = X509TimeToUnix(certificate->valid_to, bounds.to);
+            dates_valid = dates_valid && from_ok && to_ok;
+            times.push_back(bounds);
+        }
+    }
+};
+
+struct CertificateCache {
+    struct Entry {
+        std::shared_ptr<const CachedCertificateChain> parsed;
+        size_t bytes{0}, estimated_bytes{0};
+    };
+    static constexpr size_t MAX_ENTRIES{4}, MAX_BYTES{65536}, MAX_ESTIMATED_BYTES{262144};
+    static_assert(MBEDTLS_ECP_WINDOW_SIZE <= 7 && MBEDTLS_ECP_MAX_BITS <= 521,
+        "Review certificate cache allocation reserve when EC limits change");
+    std::array<Entry, MAX_ENTRIES> entries;
+    size_t count{0}, bytes{0}, estimated_bytes{0};
+    uint64_t hits{0}, misses{0};
+
+    std::shared_ptr<const CachedCertificateChain> Find(const P2CTlsProofView& proof)
+    {
+        for (size_t index = 0; index < count; ++index) {
+            const auto* certificate = &entries[index].parsed->parsed->value;
+            bool match{true};
+            for (const auto der : proof.certificate_chain) {
+                if (!certificate || !std::ranges::equal(der, std::span{certificate->raw.p, certificate->raw.len})) {
+                    match = false;
+                    break;
+                }
+                certificate = certificate->next;
+            }
+            // Exact ordered DER, including every supplied (even unused) entry.
+            // The parsed chain owns its own copies; input addresses are no key.
+            if (!match || certificate) continue;
+            Entry hit{std::move(entries[index])};
+            for (size_t next = index + 1; next < count; ++next) entries[next - 1] = std::move(entries[next]);
+            entries[count - 1] = std::move(hit);
+            ++hits;
+            return entries[count - 1].parsed;
+        }
+        ++misses;
+        return {};
+    }
+
+    void Remember(const std::shared_ptr<const CachedCertificateChain>& parsed)
+    {
+        size_t der_bytes{0}, structures{0};
+        const auto nodes = [](const auto* node) {
+            size_t size{0};
+            for (; node; node = node->next) size += sizeof(*node) + 64;
+            return size;
+        };
+        for (const auto* cert = &parsed->parsed->value; cert; cert = cert->next) {
+            der_bytes += cert->raw.len;
+            structures += sizeof(*cert) + 64 + nodes(&cert->issuer) + nodes(&cert->subject) +
+                nodes(&cert->subject_alt_names) + nodes(&cert->ext_key_usage) +
+                nodes(&cert->certificate_policies) + nodes(&cert->authority_key_id.authorityCertIssuer);
+            // Conservative retention charge, not allocator RSS. Covers future
+            // RSA/EC public-key arithmetic caches for the pinned provider.
+            structures += 32768 + 32 * mbedtls_pk_get_len(&cert->pk);
+        }
+        Entry candidate{parsed, der_bytes, der_bytes + structures + sizeof(Entry) +
+            sizeof(CachedCertificateChain) + sizeof(CertificateChain) + 128 +
+            parsed->times.capacity() * sizeof(CachedCertificateChain::Validity)};
+        if (candidate.bytes > MAX_BYTES || candidate.estimated_bytes > MAX_ESTIMATED_BYTES) return;
+        // Parsing, public-key checks and allocations complete before eviction.
+        while (count && (count == MAX_ENTRIES || bytes + candidate.bytes > MAX_BYTES ||
+                        estimated_bytes + candidate.estimated_bytes > MAX_ESTIMATED_BYTES)) {
+            bytes -= entries[0].bytes;
+            estimated_bytes -= entries[0].estimated_bytes;
+            for (size_t next = 1; next < count; ++next) entries[next - 1] = std::move(entries[next]);
+            entries[--count] = Entry{};
+        }
+        bytes += candidate.bytes;
+        estimated_bytes += candidate.estimated_bytes;
+        entries[count++] = std::move(candidate);
+    }
+};
+
+CertificateCache& Certificates()
+{
+    thread_local CertificateCache cache;
+    return cache;
+}
+
+std::shared_ptr<const CachedCertificateChain> CachedChain(const P2CTlsProofView& proof, std::string& error)
+{
+    if (!InitializeP2CCrypto()) {
+        SetError(error, "TLS crypto initialization failed");
+        return {};
+    }
+    auto& cache{Certificates()};
+    if (auto found = cache.Find(proof)) return found;
+    auto chain{std::make_unique<CertificateChain>()};
+    if (!ParseCertificateChain(proof, *chain, error) || !CheckP2CCertificatePublicKeys(chain->value, error)) return {};
+    auto parsed{std::make_shared<const CachedCertificateChain>(std::move(chain))};
+    cache.Remember(parsed);
+    return parsed;
+}
+
+class SignatureCache {
+    struct Entry { std::vector<unsigned char> child, parent; };
+    static constexpr size_t MAX_ENTRIES{8}, MAX_BYTES{65536};
+    std::array<Entry, MAX_ENTRIES> m_entries;
+    size_t m_count{0}, m_bytes{0};
+public:
+    uint64_t hits{0}, misses{0};
+    size_t Count() const { return m_count; }
+    size_t Bytes() const { return m_bytes; }
+    bool Contains(const mbedtls_x509_crt& child, const mbedtls_x509_crt& parent) noexcept
+    {
+        const auto end{m_entries.begin() + m_count};
+        const bool found{std::any_of(m_entries.begin(), end, [&](const Entry& entry) {
+            return std::ranges::equal(entry.child, std::span{child.raw.p, child.raw.len}) &&
+                   std::ranges::equal(entry.parent, std::span{parent.raw.p, parent.raw.len});
+        })};
+        if (found) ++hits; else ++misses;
+        return found;
+    }
+    void Remember(const mbedtls_x509_crt& child, const mbedtls_x509_crt& parent) noexcept
+    {
+        if (child.raw.len == 0 || parent.raw.len == 0 || child.raw.len > MAX_P2C_CERTIFICATE_SIZE ||
+            parent.raw.len > MAX_P2C_CERTIFICATE_SIZE || child.raw.len + parent.raw.len > MAX_BYTES) return;
+        try {
+            Entry candidate{{child.raw.p, child.raw.p + child.raw.len}, {parent.raw.p, parent.raw.p + parent.raw.len}};
+            const size_t bytes{candidate.child.capacity() + candidate.parent.capacity()};
+            if (bytes > MAX_BYTES) return;
+            while (m_count && (m_count == MAX_ENTRIES || m_bytes + bytes > MAX_BYTES)) {
+                m_bytes -= m_entries[0].child.capacity() + m_entries[0].parent.capacity();
+                for (size_t next = 1; next < m_count; ++next) m_entries[next - 1] = std::move(m_entries[next]);
+                m_entries[--m_count] = Entry{};
+            }
+            m_entries[m_count++] = std::move(candidate);
+            m_bytes += bytes;
+        } catch (...) { /* Memoization failure never changes verification. */ }
+    }
+};
+
+SignatureCache& Signatures()
+{
+    thread_local SignatureCache cache;
+    return cache;
+}
+int SignatureLookup(void*, const mbedtls_x509_crt* child, const mbedtls_x509_crt* parent) noexcept
+{
+    try { return Signatures().Contains(*child, *parent) ? 1 : 0; }
+    catch (...) { return 0; }
+}
+void SignatureRemember(void*, const mbedtls_x509_crt* child, const mbedtls_x509_crt* parent) noexcept
+{
+    try { Signatures().Remember(*child, *parent); }
+    catch (...) { /* Exceptions never cross the provider callback boundary. */ }
+}
+
+bool CheckSuppliedCertificateTimes(const CachedCertificateChain& chain, int64_t validation_time, std::string& error)
+{
+    if (validation_time <= 0) return SetError(error, "P2C certificate validation time is unavailable");
+    if (!chain.dates_valid) return SetError(error, "P2C certificate is not valid at block median time");
+    for (const auto& bounds : chain.times) {
+        if (validation_time < bounds.from || validation_time > bounds.to)
+            return SetError(error, "P2C certificate is not valid at block median time");
+    }
+    return true;
+}
+
+bool VerifyDomainPath(mbedtls_x509_crt& chain, std::string_view domain,
+                      const mbedtls_x509_crt& roots, std::string& error)
+{
+    const std::string domain_string{domain};
+    uint32_t flags{0};
+    const connectcoin_mbedtls_x509_signature_cache cache{nullptr, SignatureLookup, SignatureRemember};
+    const int result{connectcoin_mbedtls_x509_crt_verify_root_first_cached(
+        &chain, const_cast<mbedtls_x509_crt*>(&roots), &mbedtls_x509_crt_profile_default,
+        domain_string.c_str(), &flags, nullptr, nullptr, &cache)};
+    if (result != 0 || flags != 0) return SetError(error, "P2C certificate path or domain validation failed");
     return true;
 }
 
@@ -244,27 +391,24 @@ bool VerifyP2CCertificateProofImpl(const CTxOut& spent_output,
                                    std::string& error)
 {
     error.clear();
-    CertificateChain chain;
-    if (!ParseCertificateChain(proof, chain, error) ||
-        !CheckP2CCertificatePublicKeys(chain.value, error) ||
-        !CheckSuppliedCertificateTimes(chain.value, validation_time, error) ||
-        !CheckLeafUsage(chain.value, error)) {
-        return false;
-    }
+    const auto chain{CachedChain(proof, error)};
+    if (!chain || !CheckSuppliedCertificateTimes(*chain, validation_time, error)) return false;
+    if (!chain->leaf_usage_valid) return SetError(error, "P2C leaf certificate is not authorized for TLS server signatures");
 
     const auto output{spent_output.GetPayToDomain()};
     if (!output) return SetError(error, "spent output is not a canonical PAY_TO_CONNECT output");
     if (!P2CSignatureSchemeAllowed(output->signature_algorithms_mask, proof.certificate_verify_scheme)) {
         return SetError(error, "P2C CertificateVerify scheme is not allowed by the output");
     }
-    if (!VerifyDomainPath(chain.value, output->domain, roots, error)) return false;
-    return VerifyCertificateVerify(chain.value, proof, error);
+    if (!VerifyDomainPath(chain->parsed->value, output->domain, roots, error)) return false;
+    return VerifyCertificateVerify(chain->parsed->value, proof, error);
 }
 
 } // namespace
 
 bool CheckP2CCertificatePublicKeys(const mbedtls_x509_crt& chain, std::string& error)
 {
+    if (!InitializeP2CCrypto()) return SetError(error, "TLS crypto initialization failed");
     // Check ALL supplied certificates, including unused path candidates, before
     // Mbed TLS can perform any expensive signature verification. The pinned
     // adapter represents both rsaEncryption and restricted RSA-PSS keys as RSA;
@@ -291,6 +435,26 @@ bool P2CRootStoreAvailable()
     return RootStoreV1() != nullptr;
 }
 
+bool ValidateP2CCertificateMessage(std::span<const unsigned char> message, std::string& error)
+{
+    P2CTlsProofView parsed;
+    return ParseP2CCertificateMessage(message, parsed, error) && bool(CachedChain(parsed, error));
+}
+
+P2CX509CacheStats P2CX509CacheStatsForTest()
+{
+    const auto& certificates{Certificates()};
+    const auto& signatures{Signatures()};
+    return {certificates.hits, certificates.misses, certificates.count, certificates.bytes, certificates.estimated_bytes,
+            signatures.hits, signatures.misses, signatures.Count(), signatures.Bytes()};
+}
+
+void ClearP2CX509CachesForTest()
+{
+    Certificates() = CertificateCache{};
+    Signatures() = SignatureCache{};
+}
+
 bool VerifyP2CCertificateProof(const CTxOut& spent_output,
                                const P2CTlsProofView& proof,
                                int64_t validation_time,
@@ -311,6 +475,7 @@ bool VerifyP2CCertificateProofForTest(const CTxOut& spent_output,
                                       std::span<const unsigned char> trusted_roots_pem,
                                       std::string& error)
 {
+    if (!InitializeP2CCrypto()) return SetError(error, "TLS crypto initialization failed");
     CertificateChain roots;
     std::vector<unsigned char> nul_terminated{trusted_roots_pem.begin(), trusted_roots_pem.end()};
     nul_terminated.push_back(0);

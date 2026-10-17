@@ -20,12 +20,14 @@
 #include <util/translation.h>
 #include <wallet/coincontrol.h>
 #include <wallet/fees.h>
+#include <wallet/p2c_admission.h>
 #include <wallet/p2c_claim.h>
 #include <wallet/p2c_claim_priority.h>
 #include <wallet/p2c_connection_rate.h>
 #include <wallet/p2c_connection_result.h>
 #include <wallet/p2c_domain_stats.h>
 #include <wallet/p2c_endpoint_priority.h>
+#include <wallet/p2c_recovery_policy.h>
 #include <wallet/p2c_tls.h>
 #include <wallet/p2c_worker_threads.h>
 #include <wallet/wallet.h>
@@ -59,6 +61,11 @@ constexpr size_t MAX_SAVED_STATE{64 * 1024 * 1024};
 constexpr auto SCHEDULE_REFRESH{std::chrono::seconds{5}};
 constexpr auto DNS_REFRESH{std::chrono::seconds{60}};
 constexpr auto STATE_KEY{"p2c_claim_worker_v1"};
+
+double PerformanceNow()
+{
+    return std::chrono::duration<double>(ScheduleClock::now().time_since_epoch()).count();
+}
 
 std::optional<CTxDestination> RewardDestination(const std::string& address)
 {
@@ -112,6 +119,12 @@ struct P2CClaimWorkerImpl::Impl {
     std::string capacity_error;
     std::string last_txid;
     P2CConnectionRateLimiter connection_rate;
+    P2CFifoAdmission admission;
+    P2CLocalEndpointPolicy endpoint_policy;
+    P2CRecoveryPolicy recovery;
+    uint64_t admission_sequence{0};
+    bool catalog_ready{false};
+    const std::shared_ptr<P2CPerformanceCache> performance_cache{std::make_shared<P2CPerformanceCache>()};
     std::map<COutPoint, CTransactionRef> proposals;
     struct PriorityKey {
         P2CClaimSelectionPriority priority;
@@ -125,15 +138,20 @@ struct P2CClaimWorkerImpl::Impl {
     struct DomainWork {
         struct MaskWork {
             std::set<PriorityKey> bounties;
+            std::set<PriorityKey> prepared_bounties;
             double connection_rate{5};
+            bool recovery{false};
         };
         std::string name;
         std::map<PriorityKey, CTxOut> bounties;
         std::array<MaskWork, PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL + 1> masks;
         P2CEndpointPriority endpoints;
         std::optional<std::pair<double, PriorityKey>> economic_key;
+        std::optional<std::pair<double, PriorityKey>> prepared_economic_key;
         ScheduleClock::time_point resolve_after{};
+        std::optional<ScheduleClock::time_point> schedule_after;
         bool resolving{false};
+        explicit DomainWork(const std::shared_ptr<P2CPerformanceCache>& cache) : endpoints(cache) {}
     };
     struct ClaimWork {
         P2CClaimProposal prepared;
@@ -148,16 +166,21 @@ struct P2CClaimWorkerImpl::Impl {
         std::shared_ptr<ClaimWork> claim;
         bool resolve{false};
         std::shared_ptr<P2CDomainStats> statistics{};
+        bool economic{false};
+        bool recovery_probe{false};
+        uint64_t token{0};
+        bool prepared_only{false};
     };
     // No network I/O while holding this mutex. Proposals/proofs are serialized
     // here; immutable assigned work stays alive across schedule refreshes.
     std::mutex work_mutex;
     std::map<std::string, std::shared_ptr<DomainWork>> groups;
     // Exact masks can negotiate different server certificates and performance.
-    // Share exponentially smoothed observations only within a (domain, mask),
+    // Share bounded hourly observations only within a (domain, mask),
     // while DNS stays shared. Preserve domain history through ineligibility;
     // endpoint history belongs to each active group's current DNS set.
     using DomainMask = std::pair<std::string, uint8_t>;
+    std::map<COutPoint, std::pair<DomainMask, PriorityKey>> prepared_index;
     std::map<DomainMask, std::shared_ptr<P2CDomainStats>> domain_statistics;
     std::map<COutPoint, std::shared_ptr<ClaimWork>> claim_cache;
     // Completed TLS captures through CertificateVerify, independent of whether
@@ -165,12 +188,17 @@ struct P2CClaimWorkerImpl::Impl {
     // Survives proposal-cache eviction, payout changes and stop/start, but is
     // deliberately not saved to the wallet database.
     std::map<COutPoint, uint64_t> bounty_successful_connections;
+    std::map<COutPoint, P2CConnectionBudget> connection_budgets;
     // Local ranking jitter is sampled once per tracked outpoint, never per
     // connection/refresh. Preserve it through retries and stop/start as well.
     P2CClaimFactorCache ranking_factors;
     // Negative weighted score sorts best first; the exact bounty key breaks
     // floating-point ties. Store immutable snapshots, not a mutable comparator.
     std::set<std::pair<std::pair<double, PriorityKey>, std::string>> economic_order;
+    std::set<std::pair<std::pair<double, PriorityKey>, std::string>> prepared_economic_order;
+    std::set<std::string> ready_domains;
+    std::set<std::string> ready_prepared_domains;
+    std::set<std::pair<ScheduleClock::time_point, std::string>> scheduled_domains;
     std::optional<std::string> domain_after;
     bool prefer_reward{false};
     CCoinControl claim_control;
@@ -198,6 +226,7 @@ struct P2CClaimWorkerImpl::Impl {
                 stop_requested = true;
             }
             wake.notify_all();
+            { std::lock_guard lock{work_mutex}; admission.NotifyAll(); }
             thread.join();
         }
         std::lock_guard lock{mutex};
@@ -336,6 +365,7 @@ struct P2CClaimWorkerImpl::Impl {
         if (!ready) return;
         // Recognize a previously submitted/confirmed claim after a crash.
         if (WITH_LOCK(wallet.cs_wallet, return wallet.GetWalletTx(ready->GetHash()) != nullptr)) {
+            ForgetPrepared(ready->vin[0].prevout);
             claim_cache.erase(ready->vin[0].prevout);
             proposals.erase(ready->vin[0].prevout);
             ready.reset();
@@ -362,6 +392,7 @@ struct P2CClaimWorkerImpl::Impl {
             last_error.clear();
             state = wallet.chain().isInMempool((*validated)->GetHash()) ? "submitted" : "stored; check wallet history";
         }
+        ForgetPrepared(ready->vin[0].prevout);
         claim_cache.erase(ready->vin[0].prevout);
         proposals.erase(ready->vin[0].prevout);
         ready.reset();
@@ -373,17 +404,81 @@ struct P2CClaimWorkerImpl::Impl {
     void UpdateEconomicOrder(DomainWork& group)
     {
         if (group.economic_key) economic_order.erase({*group.economic_key, group.name});
+        if (group.prepared_economic_key) prepared_economic_order.erase({*group.prepared_economic_key, group.name});
+        ready_domains.erase(group.name);
+        ready_prepared_domains.erase(group.name);
+        if (group.schedule_after) scheduled_domains.erase({*group.schedule_after, group.name});
+        group.schedule_after.reset();
         group.economic_key.reset();
+        group.prepared_economic_key.reset();
+        const auto now{ScheduleClock::now()};
+        const double seconds{PerformanceNow()};
+        const auto schedule = [&](ScheduleClock::time_point due) {
+            if (!group.schedule_after || due < *group.schedule_after) group.schedule_after = due;
+        };
         // At most seven mask-specific leaders; never scan the whole domain
         // in the per-connection scheduling path.
-        for (const auto& mask : group.masks) {
+        for (size_t index = 1; index < group.masks.size(); ++index) {
+            const auto& mask{group.masks[index]};
             if (mask.bounties.empty()) continue;
+            if (mask.recovery) {
+                const double due{recovery.Due({group.name, static_cast<uint8_t>(index)}, seconds)};
+                if (due > seconds) {
+                    schedule(now + std::chrono::ceil<ScheduleClock::duration>(std::chrono::duration<double>{due - seconds}));
+                    continue;
+                }
+            }
             const auto& best{*mask.bounties.begin()};
             const auto key{std::pair{-GetP2CDomainSelectionPriority(best.priority, mask.connection_rate), best}};
             if (!group.economic_key || key < *group.economic_key) group.economic_key = key;
+            if (!mask.prepared_bounties.empty()) {
+                const auto& prepared{*mask.prepared_bounties.begin()};
+                const auto prepared_key{std::pair{-GetP2CDomainSelectionPriority(prepared.priority, mask.connection_rate), prepared}};
+                if (!group.prepared_economic_key || prepared_key < *group.prepared_economic_key) group.prepared_economic_key = prepared_key;
+            }
         }
-        if (group.economic_key) {
+        bool ready{group.economic_key.has_value() && !group.resolving && catalog_ready};
+        if (ready && group.endpoints.Empty() && now < group.resolve_after) {
+            ready = false;
+            schedule(group.resolve_after);
+        }
+        if (ready && !group.endpoints.Empty() && now < group.resolve_after &&
+            !group.endpoints.HasAvailable([&](const CService& endpoint) { return endpoint_policy.Available(endpoint, seconds); })) {
+            ready = false;
+            schedule(now + std::chrono::seconds{2});
+        }
+        if (ready) {
             economic_order.emplace(*group.economic_key, group.name);
+            ready_domains.insert(group.name);
+            if (group.prepared_economic_key) {
+                prepared_economic_order.emplace(*group.prepared_economic_key, group.name);
+                ready_prepared_domains.insert(group.name);
+            }
+        }
+        if (group.schedule_after && !group.resolving) scheduled_domains.emplace(*group.schedule_after, group.name);
+    }
+
+    void ForgetPrepared(const COutPoint& outpoint)
+    {
+        const auto indexed{prepared_index.find(outpoint)};
+        if (indexed == prepared_index.end()) return;
+        const auto& [policy, key]{indexed->second};
+        const auto group{groups.find(policy.first)};
+        if (group != groups.end()) {
+            group->second->masks[policy.second].prepared_bounties.erase(key);
+            UpdateEconomicOrder(*group->second);
+        }
+        prepared_index.erase(indexed);
+    }
+
+    void PromoteScheduled()
+    {
+        const auto now{ScheduleClock::now()};
+        while (!scheduled_domains.empty() && scheduled_domains.begin()->first <= now) {
+            const std::string name{scheduled_domains.begin()->second};
+            scheduled_domains.erase(scheduled_domains.begin());
+            const auto group{groups.find(name)};
+            if (group != groups.end()) UpdateEconomicOrder(*group->second);
         }
     }
 
@@ -408,6 +503,16 @@ struct P2CClaimWorkerImpl::Impl {
             // Failed/unavailable discovery still waits a full interval before
             // retrying; otherwise a stale deadline would rescan every 100 ms.
             refresh_after = ScheduleClock::now() + SCHEDULE_REFRESH;
+            std::lock_guard lock{work_mutex};
+            catalog_ready = false;
+            // A closed catalog gate is no assignable demand, unlike occupied
+            // workers/proposal slots. Never spend its pause as catch-up credit.
+            connection_rate.MarkIdle();
+            ready_domains.clear();
+            economic_order.clear();
+            ready_prepared_domains.clear();
+            prepared_economic_order.clear();
+            admission.NotifyHead();
             return;
         }
 
@@ -422,6 +527,8 @@ struct P2CClaimWorkerImpl::Impl {
             wallet.chain().findBlock(wallet.GetLastBlockHash(), interfaces::FoundBlock().mtpTime(validation_time).inActiveChain(active));
         }
         const bool wallet_ready{active && wallet_height >= 0 && validation_time > 0};
+        catalog_ready = wallet_ready;
+        if (!catalog_ready) connection_rate.MarkIdle();
         const auto fresh_fee{CalculateP2CClaimFee(*claim_control.m_feerate)};
         if (!fresh_fee) throw std::runtime_error(util::ErrorString(fresh_fee).original);
         // Aged-out idle work needs no repeated UTXO lookup. A live assignment
@@ -435,6 +542,10 @@ struct P2CClaimWorkerImpl::Impl {
         std::erase_if(bounty_successful_connections, [&](const auto& entry) {
             return !recent_outpoints.contains(entry.first) && !claim_cache.contains(entry.first) && !HasCompleted(entry.first);
         });
+        std::erase_if(connection_budgets, [&](const auto& entry) {
+            return !recent_outpoints.contains(entry.first) && !claim_cache.contains(entry.first) && !HasCompleted(entry.first);
+        });
+        recovery.Retain(catalog_masks);
         ranking_factors.Retain([&](const COutPoint& outpoint) {
             return recent_outpoints.contains(outpoint) || claim_cache.contains(outpoint) || HasCompleted(outpoint);
         });
@@ -461,15 +572,40 @@ struct P2CClaimWorkerImpl::Impl {
         }
         for (auto& [name, group] : groups) {
             group->bounties.clear();
-            for (auto& mask : group->masks) mask.bounties.clear();
+            for (auto& mask : group->masks) { mask.bounties.clear(); mask.prepared_bounties.clear(); mask.recovery = false; }
         }
         economic_order.clear();
+        prepared_economic_order.clear();
+        prepared_index.clear();
+        ready_domains.clear();
+        ready_prepared_domains.clear();
+        scheduled_domains.clear();
         // Compute throughput once per (domain, mask) per refresh. An untried
         // mask retains the 5/s prior even if another mask cannot connect.
         std::map<DomainMask, double> connection_rates;
         for (const auto& [key, statistics] : domain_statistics) {
-            connection_rates.emplace(key, statistics->ConnectionRate());
+            connection_rates.emplace(key, statistics->ConnectionRate(PerformanceNow()));
         }
+        std::set<DomainMask> healthy;
+        std::map<DomainMask, std::pair<PriorityKey, CTxOut>> recovery_candidates;
+        const auto insert = [&](const DomainMask& domain_mask, const PriorityKey& key, const CTxOut& output, bool probe) {
+            auto& group{groups[domain_mask.first]};
+            if (!group) {
+                group = std::make_shared<DomainWork>(performance_cache);
+                group->name = domain_mask.first;
+            }
+            auto& statistics{domain_statistics[domain_mask]};
+            if (!statistics) statistics = std::make_shared<P2CDomainStats>(performance_cache);
+            group->bounties.emplace(key, output);
+            auto& mask{group->masks[domain_mask.second]};
+            mask.bounties.insert(key);
+            if (proposals.contains(key.outpoint)) {
+                mask.prepared_bounties.insert(key);
+                prepared_index.emplace(key.outpoint, std::pair{domain_mask, key});
+            }
+            mask.connection_rate = connection_rates.at(domain_mask);
+            mask.recovery = probe;
+        };
         for (const auto& [outpoint, output] : snapshot) {
             if (stop.load()) return;
             const bool unavailable{!wallet_ready || wallet.chain().isSpentByMempool(outpoint) ||
@@ -486,22 +622,26 @@ struct P2CClaimWorkerImpl::Impl {
             const DomainMask domain_mask{bounty.domain, bounty.signature_algorithms_mask};
             const double connection_rate{connection_rates.try_emplace(domain_mask, 5.0).first->second};
             const auto priority{GetP2CClaimPriority(bounty.connection_work_target, payout)};
-            // Filter every bounty BEFORE domain rotation, DNS, key reservation
-            // or TLS. Guaranteed domain turns must not bypass this floor.
-            if (!IsP2CClaimWorthAttempting(priority, connection_rate)) continue;
-            auto& group{groups[bounty.domain]};
-            if (!group) {
-                group = std::make_shared<DomainWork>();
-                group->name = bounty.domain;
-            }
-            auto& statistics{domain_statistics[domain_mask]};
-            if (!statistics) statistics = std::make_shared<P2CDomainStats>();
             const PriorityKey key{GetP2CClaimSelectionPriority(priority, ranking_factors.Get(outpoint)), outpoint};
-            group->bounties.emplace(key, output);
-            auto& mask{group->masks[bounty.signature_algorithms_mask]};
-            mask.bounties.insert(key);
-            mask.connection_rate = connection_rate;
+            if (!IsP2CClaimWorthAttempting(priority, connection_rate)) {
+                const auto previous{recovery_candidates.find(domain_mask)};
+                if (previous == recovery_candidates.end() || key < previous->second.first)
+                    recovery_candidates.insert_or_assign(domain_mask, std::pair{key, output});
+                continue;
+            }
+            healthy.insert(domain_mask);
+            insert(domain_mask, key, output, false);
         }
+        // Only the best positive-reward representative of an excluded policy
+        // receives bounded bootstrap/recovery sampling; normal work stays free.
+        std::vector<decltype(recovery_candidates)::const_iterator> recovery_order;
+        for (auto it = recovery_candidates.begin(); it != recovery_candidates.end(); ++it)
+            if (!healthy.contains(it->first)) recovery_order.push_back(it);
+        std::sort(recovery_order.begin(), recovery_order.end(), [](const auto& a, const auto& b) {
+            return a->second.first < b->second.first;
+        });
+        if (recovery_order.size() > P2CRecoveryPolicy::MAX_POLICIES) recovery_order.resize(P2CRecoveryPolicy::MAX_POLICIES);
+        for (const auto& candidate : recovery_order) insert(candidate->first, candidate->second.first, candidate->second.second, true);
         std::erase_if(groups, [](const auto& entry) { return entry.second->bounties.empty(); });
         if (groups.empty()) connection_rate.MarkIdle();
         // Preserve statistics while a domain/mask still has confirmed bounties,
@@ -512,6 +652,7 @@ struct P2CClaimWorkerImpl::Impl {
         });
         for (auto& [name, group] : groups) {
             group->economic_key.reset();
+            group->prepared_economic_key.reset();
             UpdateEconomicOrder(*group);
         }
         {
@@ -527,6 +668,7 @@ struct P2CClaimWorkerImpl::Impl {
             ++schedule_refreshes;
         }
         wake.notify_all();
+        admission.NotifyHead();
     }
 
     bool HasCompleted(const COutPoint& outpoint) const
@@ -535,57 +677,70 @@ struct P2CClaimWorkerImpl::Impl {
         return std::any_of(completed.begin(), completed.end(), [&](const auto& item) { return item.tx->vin[0].prevout == outpoint; });
     }
 
-    bool ConnectionLimitExceeded(const COutPoint& outpoint, const uint256& target) const
+    bool ConnectionLimitExceeded(const COutPoint& outpoint, const uint256& target)
     {
         const auto found{bounty_successful_connections.find(outpoint)};
         return found != bounty_successful_connections.end() &&
-            (found->second == std::numeric_limits<uint64_t>::max() || IsP2CClaimConnectionLimitExceeded(target, found->second));
+            connection_budgets.try_emplace(outpoint, target).first->second.Exceeded(found->second);
     }
 
     std::optional<Assignment> Next(const std::atomic<bool>& stop, std::optional<Clock::time_point>& retry_at)
     {
-        std::lock_guard work_lock{work_mutex};
+        // The sole FIFO head calls this while holding work_mutex. Other
+        // workers sleep without periodic wakeups until their admission turn.
+        if (!catalog_ready) return std::nullopt;
+        PromoteScheduled();
         // Do not preassign hundreds of future connections at a low rate: choose
         // against the latest schedule only when a connection slot is due.
         if (rate > 0) {
             retry_at = connection_rate.BlockedUntil(Clock::now());
             if (retry_at) return std::nullopt;
         }
-        const auto usable = [](const DomainWork& group) {
-            return !group.bounties.empty() && !group.resolving &&
-                (!group.endpoints.Empty() || ScheduleClock::now() >= group.resolve_after);
-        };
+        bool prepared_only{false};
         while (!stop.load() && !groups.empty()) {
             std::shared_ptr<DomainWork> group;
             bool economic{false};
+            const auto& economic_candidates{prepared_only ? prepared_economic_order : economic_order};
+            const auto& fair_candidates{prepared_only ? ready_prepared_domains : ready_domains};
             if (prefer_reward) {
-                for (const auto& [key, name] : economic_order) {
-                    if (usable(*groups.at(name))) { group = groups.at(name); economic = true; break; }
-                }
+                if (!economic_candidates.empty()) { group = groups.at(economic_candidates.begin()->second); economic = true; }
             } else {
-                auto it{domain_after ? groups.upper_bound(*domain_after) : groups.begin()};
-                for (size_t checked = 0; checked < groups.size(); ++checked) {
-                    if (it == groups.end()) it = groups.begin();
-                    if (usable(*it->second)) { group = it->second; break; }
-                    ++it;
+                if (!fair_candidates.empty()) {
+                    auto it{domain_after ? fair_candidates.upper_bound(*domain_after) : fair_candidates.begin()};
+                    if (it == fair_candidates.end()) it = fair_candidates.begin();
+                    group = groups.at(*it);
                 }
             }
             if (!group) {
-                connection_rate.MarkIdle();
+                // A full live proposal cache is capacity backpressure, not
+                // idle demand. Retain the limiter's bounded catch-up phase.
+                if (!prepared_only) connection_rate.MarkIdle();
                 if (economic_order.empty()) Message("waiting for eligible bounties");
+                if (!scheduled_domains.empty()) retry_at = Clock::now() +
+                    std::chrono::duration_cast<Clock::duration>(scheduled_domains.begin()->first - ScheduleClock::now());
                 return std::nullopt;
             }
             // Both fair and economic domain turns use the same best bounty.
             // Its mask-specific TLS efficiency already contributes to the
             // domain score; do not spend that preference on a lower-ranked
             // bounty just because another attempt is already in flight.
-            auto candidate{group->bounties.find(Assert(group->economic_key)->second)};
+            auto candidate{group->bounties.find(Assert(prepared_only ? group->prepared_economic_key : group->economic_key)->second)};
             Assert(candidate != group->bounties.end());
             const auto key{candidate->first};
             const auto outpoint{key.outpoint};
             const auto mask{candidate->second.GetPayToDomain()->signature_algorithms_mask};
+            if (prepared_only && !proposals.contains(outpoint)) {
+                // Defensive against a retired saved proposal: never loop on
+                // the same stale prepared leader while capacity is occupied.
+                group->masks[mask].prepared_bounties.erase(key);
+                prepared_index.erase(outpoint);
+                UpdateEconomicOrder(*group);
+                continue;
+            }
             const auto discard = [&] {
                 group->masks[mask].bounties.erase(key);
+                group->masks[mask].prepared_bounties.erase(key);
+                prepared_index.erase(outpoint);
                 group->bounties.erase(candidate);
                 UpdateEconomicOrder(*group);
             };
@@ -607,7 +762,14 @@ struct P2CClaimWorkerImpl::Impl {
                         const auto task{claim_cache.find(entry.first)};
                         return !HasCompleted(entry.first) && (task == claim_cache.end() || task->second.use_count() == 1);
                     })};
-                    if (old == proposals.end()) return std::nullopt;
+                    if (old == proposals.end()) {
+                        // All persisted slots are live. Reuse the best ready
+                        // prepared challenge instead of stalling every worker
+                        // behind a candidate that needs a new durable slot.
+                        prepared_only = true;
+                        continue;
+                    }
+                    ForgetPrepared(old->first);
                     claim_cache.erase(old->first);
                     proposals.erase(old);
                 }
@@ -620,7 +782,7 @@ struct P2CClaimWorkerImpl::Impl {
                 }
                 // Fee policy may have changed since Refresh's quote. Check
                 // the actual fixed payout before assigning any connection.
-                if (!IsP2CClaimWorthAttempting(GetP2CClaimPriority(prepared->bounty.GetPayToDomain()->connection_work_target,
+                if (!group->masks[mask].recovery && !IsP2CClaimWorthAttempting(GetP2CClaimPriority(prepared->bounty.GetPayToDomain()->connection_work_target,
                                                                  prepared->tx->vout[0].nValue), group->masks[mask].connection_rate)) {
                     discard();
                     continue;
@@ -628,31 +790,28 @@ struct P2CClaimWorkerImpl::Impl {
                 proposals.insert_or_assign(outpoint, prepared->tx);
                 cached = claim_cache.emplace(outpoint, std::make_shared<ClaimWork>(std::move(*prepared))).first;
                 Save(); // Fixed challenge is durable before ANY TLS connection.
+                group->masks[mask].prepared_bounties.insert(key);
+                prepared_index.insert_or_assign(outpoint, std::pair{DomainMask{group->name, mask}, key});
+                UpdateEconomicOrder(*group);
             }
             if (ScheduleClock::now() >= group->resolve_after) {
                 group->resolving = true;
                 // DNS is not connection demand. Preserve other domains' live
                 // cadence, but a DNS-only wait must not bank rate credit (also
                 // when this is the sole worker and nobody can perform a scan).
-                const auto now{ScheduleClock::now()};
-                if (std::none_of(groups.begin(), groups.end(), [&](const auto& entry) {
-                    const auto& pending{*entry.second};
-                    return !pending.bounties.empty() && !pending.resolving &&
-                        !pending.endpoints.Empty() && now < pending.resolve_after;
-                })) connection_rate.MarkIdle();
+                UpdateEconomicOrder(*group);
+                if (ready_domains.empty()) connection_rate.MarkIdle();
                 return Assignment{std::move(group), cached->second, true};
             }
-            if (!economic) domain_after = group->name;
-            prefer_reward = !economic; // A skipped domain never buys an extra.
-            if (rate > 0) connection_rate.RecordStart(rate, Clock::now());
-            {
-                std::lock_guard lock{mutex};
-                ++domain_rounds; // Compatibility field: now counts assignments.
-                domain = group->name;
-                state = "searching";
+            const bool probe{group->masks[mask].recovery};
+            if (admission_sequence == std::numeric_limits<uint64_t>::max()) throw std::runtime_error("P2C admission sequence exhausted");
+            const uint64_t token{++admission_sequence};
+            if (probe && !recovery.Reserve({group->name, mask}, token, PerformanceNow())) {
+                UpdateEconomicOrder(*group);
+                continue;
             }
             const auto statistics{domain_statistics.at({group->name, mask})};
-            return Assignment{std::move(group), cached->second, false, statistics};
+            return Assignment{std::move(group), cached->second, false, statistics, economic, probe, token, prepared_only};
         }
         connection_rate.MarkIdle();
         return std::nullopt;
@@ -662,15 +821,31 @@ struct P2CClaimWorkerImpl::Impl {
     {
         const auto cancelled = [&] { return stop.load() || failed.load(); };
         while (!cancelled()) {
-            std::optional<Clock::time_point> retry_at;
-            auto assignment{Next(stop, retry_at)};
-            if (!assignment) {
-                // Keep the deadline even if it just passed while taking the
-                // status lock. Only idle scans use the 100 ms fallback wait.
-                const auto until{retry_at.value_or(Clock::now() + std::chrono::milliseconds{100})};
-                std::unique_lock lock{mutex};
-                wake.wait_until(lock, until, cancelled);
-                continue;
+            P2CFifoAdmission::Ticket ticket;
+            std::optional<Assignment> assignment;
+            struct ReleaseAdmission {
+                Impl& owner;
+                P2CFifoAdmission::Ticket& ticket;
+                std::optional<Assignment>& assignment;
+                ~ReleaseAdmission()
+                {
+                    std::lock_guard lock{owner.work_mutex};
+                    if (assignment) owner.recovery.Release(assignment->token);
+                    owner.admission.Remove(ticket);
+                }
+            } release{*this, ticket, assignment};
+            {
+                std::unique_lock lock{work_mutex};
+                admission.Enqueue(ticket);
+                while (!cancelled()) {
+                    if (!admission.IsHead(ticket)) { ticket.wake.wait(lock); continue; }
+                    std::optional<Clock::time_point> retry_at;
+                    assignment = Next(stop, retry_at);
+                    if (assignment) break;
+                    ticket.wake.wait_until(lock, retry_at.value_or(Clock::now() + std::chrono::milliseconds{100}));
+                }
+                if (!assignment) continue;
+                if (assignment->resolve) admission.Remove(ticket);
             }
             const auto& group{assignment->group};
             if (assignment->resolve) {
@@ -681,6 +856,11 @@ struct P2CClaimWorkerImpl::Impl {
                     group->resolve_after = ScheduleClock::now() + (endpoints ? DNS_REFRESH : std::chrono::seconds{2});
                     if (endpoints) group->endpoints.Refresh(*endpoints);
                     else group->endpoints.Refresh({});
+                    // A refresh may have retired this domain while DNS ran.
+                    // Never reinsert stale indices into a replacement group.
+                    const auto current{groups.find(group->name)};
+                    if (current != groups.end() && current->second == group) UpdateEconomicOrder(*group);
+                    admission.NotifyHead();
                 }
                 wake.notify_all();
                 if (!endpoints) {
@@ -699,16 +879,75 @@ struct P2CClaimWorkerImpl::Impl {
                 // In-flight attempts are not yet successes; they may finish
                 // and submit a proof after this cutoff, but no new work starts.
                 if (ConnectionLimitExceeded(outpoint, claim->prepared.bounty.GetPayToDomain()->connection_work_target)) continue;
-                endpoint = group->endpoints.Select(claim->prepared.bounty.GetPayToDomain()->signature_algorithms_mask);
+                const double now{PerformanceNow()};
+                endpoint = group->endpoints.Select(claim->prepared.bounty.GetPayToDomain()->signature_algorithms_mask, now,
+                    [&](const CService& value) { return endpoint_policy.Available(value, now); });
                 if (!endpoint) continue;
-                { std::lock_guard status_lock{mutex}; ++attempts; }
             }
             if (claim_cancelled()) continue;
             // No chain/database lookup in the per-connection hot path.
-            const auto started{Clock::now()};
-            auto captured{CaptureP2CTls(endpoint->endpoint, group->name, claim->challenge, claim_cancelled,
-                {.signature_algorithms_mask = claim->prepared.bounty.GetPayToDomain()->signature_algorithms_mask})};
-            const double seconds{std::chrono::duration<double>(Clock::now() - started).count()};
+            std::optional<Clock::time_point> started;
+            bool local_unavailable{false};
+            bool admission_rejected{false};
+            const auto eligible_to_start = [&] {
+                const auto& bounty{*claim->prepared.bounty.GetPayToDomain()};
+                const auto outpoint{claim->prepared.tx->vin[0].prevout};
+                const auto current{groups.find(group->name)};
+                const auto& leader{assignment->prepared_only ? group->prepared_economic_key : group->economic_key};
+                return catalog_ready && !claim_cancelled() && current != groups.end() && current->second == group &&
+                    leader && leader->second.outpoint == outpoint &&
+                    group->masks[bounty.signature_algorithms_mask].recovery == assignment->recovery_probe &&
+                    (!assignment->recovery_probe || recovery.ReservedFor(assignment->token)) &&
+                    endpoint_policy.Available(endpoint->endpoint, PerformanceNow()) &&
+                    !ConnectionLimitExceeded(outpoint, bounty.connection_work_target);
+            };
+            auto captured{CaptureP2CTlsParsed(endpoint->endpoint, group->name, claim->challenge, claim_cancelled,
+                {.signature_algorithms_mask = claim->prepared.bounty.GetPayToDomain()->signature_algorithms_mask,
+                 .on_local_unavailable = [&](bool family) {
+                     std::lock_guard lock{work_mutex};
+                     local_unavailable = true;
+                     endpoint_policy.Reject(endpoint->endpoint, family, PerformanceNow());
+                     // Ready sets are rebuilt on the rare local route failure,
+                     // never by scanning all domains on each TCP admission.
+                     for (auto& [name, current] : groups) UpdateEconomicOrder(*current);
+                     admission.NotifyHead();
+                 },
+                 .before_tcp_start = [&] {
+                     std::lock_guard lock{work_mutex};
+                     admission_rejected = !eligible_to_start();
+                     return !admission_rejected;
+                 },
+                 .on_tcp_started = [&] {
+                     std::lock_guard lock{work_mutex};
+                     const auto& bounty{*claim->prepared.bounty.GetPayToDomain()};
+                     if (!eligible_to_start()) { admission_rejected = true; return false; }
+                     if (assignment->recovery_probe) recovery.Started({group->name, bounty.signature_algorithms_mask}, assignment->token, PerformanceNow());
+                     if (!assignment->economic) domain_after = group->name;
+                     prefer_reward = !assignment->economic;
+                     started = Clock::now();
+                     if (rate > 0) connection_rate.RecordStart(rate, *started);
+                     {
+                         std::lock_guard status_lock{mutex};
+                         ++attempts;
+                         ++domain_rounds;
+                         domain = group->name;
+                         state = "searching";
+                     }
+                     // Starting a recovery probe advances one shared deadline;
+                     // other recovery leaders recheck it before reservation.
+                     const auto current{groups.find(group->name)};
+                     if (current != groups.end() && current->second == group) UpdateEconomicOrder(*group);
+                     admission.Remove(ticket);
+                     return true;
+                 }})};
+            // Pre-start failure also releases the head before validation/error
+            // reporting. The RAII guard handles all exceptional exits.
+            {
+                std::lock_guard lock{work_mutex};
+                recovery.Release(assignment->token);
+                admission.Remove(ticket);
+            }
+            const double seconds{started ? std::chrono::duration<double>(Clock::now() - *started).count() : 0};
             if (captured) {
                 std::lock_guard lock{work_mutex};
                 // This existing per-bounty budget counts captures, separately
@@ -719,35 +958,39 @@ struct P2CClaimWorkerImpl::Impl {
             P2CTlsProofView view;
             std::string error;
             const bool valid{ObserveP2CTlsCapture(captured, claim->prepared.bounty, claim->challenge,
-                claim->validation_time.load(), claim_cancelled(), view, error, VerifyP2CCertificateProof,
+                claim->validation_time.load(), claim_cancelled() || !started || local_unavailable, view, error, VerifyP2CCertificateProof,
                 [&](bool success) {
                     std::lock_guard lock{work_mutex};
                     // Keep the original TCP/TLS duration; validation time is
                     // excluded. A valid proof counts even if its hash misses.
-                    assignment->statistics->Record(success, seconds);
+                    const double now{PerformanceNow()};
+                    assignment->statistics->Record(success, seconds, now);
                     // The same validated outcome trains only the selected IP
                     // and exact mask; raw captures never count as successes.
-                    endpoint->statistics->Record(success, seconds);
+                    endpoint->statistics->Record(success, seconds, now);
                 })};
             if (!captured) {
                 if (!claim_cancelled()) {
                     Message("retrying connections", util::ErrorString(captured).original);
-                    Pause(stop, std::chrono::seconds{1});
+                    // Match the claimer's transport-failure retry: protect
+                    // local resource exhaustion without punishing a captured
+                    // proof merely because its certificate was invalid.
+                    if (!admission_rejected && !local_unavailable) Pause(stop, std::chrono::seconds{1});
                 }
                 continue;
             }
             const auto bounty{*claim->prepared.bounty.GetPayToDomain()};
             if (!valid) {
                 Message("certificate rejected", error);
-                Pause(stop, std::chrono::seconds{1});
                 continue;
             }
             if (!P2CMeetsWorkTarget(view.connection_work_hash, bounty.connection_work_target)) continue;
             std::lock_guard lock{work_mutex};
             if (!claim->unavailable.exchange(true)) {
-                completed.push_back({claim->prepared.tx, std::move(*captured), payout_destination});
+                completed.push_back({claim->prepared.tx, captured->Bytes(), payout_destination});
                 Save(); // Only this bounty's duplicate attempts are cancelled.
                 wake.notify_all();
+                admission.NotifyHead();
             }
         }
     }
@@ -759,6 +1002,12 @@ struct P2CClaimWorkerImpl::Impl {
             groups.clear();
             claim_cache.clear();
             economic_order.clear();
+            prepared_economic_order.clear();
+            prepared_index.clear();
+            ready_domains.clear();
+            ready_prepared_domains.clear();
+            scheduled_domains.clear();
+            catalog_ready = false;
             domain_after.reset();
             prefer_reward = false;
             SubmitReady(stop);
@@ -771,12 +1020,14 @@ struct P2CClaimWorkerImpl::Impl {
             Save();
             ScheduleClock::time_point refresh_after{};
             Refresh(stop, refresh_after);
+            auto performance_minute{std::chrono::duration_cast<std::chrono::minutes>(ScheduleClock::now().time_since_epoch()).count()};
             std::atomic<bool> failed{false};
             std::exception_ptr search_error;
             std::vector<std::thread> connections;
             P2CThreadPoolGrowth pool_growth;
             // Includes partial thread creation and coordinator exceptions.
             struct StopAndJoin {
+                Impl& owner;
                 std::atomic<bool>& stop;
                 std::condition_variable& wake;
                 std::vector<std::thread>& connections;
@@ -784,13 +1035,14 @@ struct P2CClaimWorkerImpl::Impl {
                 {
                     stop = true;
                     wake.notify_all();
+                    { std::lock_guard lock{owner.work_mutex}; owner.admission.NotifyAll(); }
                     for (auto& connection : connections) if (connection.joinable()) connection.join();
                 }
-            } stop_and_join{stop_requested, wake, connections};
+            } stop_and_join{*this, stop_requested, wake, connections};
             while (!stop.load() && !failed) {
                 // A huge configured concurrency with no eligible bounty must
                 // remain idle, not allocate OS threads speculatively.
-                const bool has_work{[&] { std::lock_guard lock{work_mutex}; return !economic_order.empty(); }()};
+                const bool has_work{[&] { std::lock_guard lock{work_mutex}; PromoteScheduled(); return !economic_order.empty(); }()};
                 if (has_work && connections.size() < static_cast<size_t>(concurrency)) {
                     const auto limited{pool_growth.Grow(connections, static_cast<size_t>(concurrency), [&] {
                         if (stop.load() || failed.load()) return false;
@@ -801,8 +1053,12 @@ struct P2CClaimWorkerImpl::Impl {
                             try {
                                 Connect(stop, failed);
                             } catch (...) {
-                                { std::lock_guard lock{work_mutex}; if (!search_error) search_error = std::current_exception(); }
-                                failed = true;
+                                {
+                                    std::lock_guard lock{work_mutex};
+                                    if (!search_error) search_error = std::current_exception();
+                                    failed = true;
+                                    admission.NotifyAll();
+                                }
                                 wake.notify_all();
                             }
                         }};
@@ -818,13 +1074,16 @@ struct P2CClaimWorkerImpl::Impl {
                     std::lock_guard lock{work_mutex};
                     SubmitReady(stop);
                 }
-                if (ScheduleClock::now() >= refresh_after) {
+                const auto current_minute{std::chrono::duration_cast<std::chrono::minutes>(ScheduleClock::now().time_since_epoch()).count()};
+                if (ScheduleClock::now() >= refresh_after || current_minute != performance_minute) {
                     Refresh(stop, refresh_after);
+                    performance_minute = current_minute;
                 }
                 Pause(stop, std::chrono::milliseconds{100});
             }
             stop_requested = true;
             wake.notify_all();
+            { std::lock_guard lock{work_mutex}; admission.NotifyAll(); }
             for (auto& connection : connections) if (connection.joinable()) connection.join();
             if (search_error) std::rethrow_exception(search_error);
             Save();

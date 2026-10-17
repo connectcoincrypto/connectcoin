@@ -7,10 +7,13 @@
 
 #include <wallet/p2c_claim.h>
 #include <wallet/p2c_claim_priority.h>
+#include <wallet/p2c_performance_window.h>
 
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <memory>
+#include <utility>
 
 namespace wallet {
 /** Wallet-local TCP/TLS observations, in validation completion order. Not consensus data.
@@ -19,27 +22,22 @@ namespace wallet {
  * The caller serializes access and excludes cancelled attempts without a known outcome.
  */
 class P2CDomainStats {
-    double m_success_average{0.1};
-    double m_seconds_average{0.02};
+    const std::shared_ptr<P2CPerformanceCache> m_cache;
+    const std::shared_ptr<P2CPerformanceScore> m_score{std::make_shared<P2CPerformanceScore>()};
 
 public:
-    void Record(bool success, double seconds)
+    explicit P2CDomainStats(std::shared_ptr<P2CPerformanceCache> cache = std::make_shared<P2CPerformanceCache>())
+        : m_cache(std::move(cache))
     {
-        // Keep NaN/negative durations out of the ordered scheduler, including
-        // if a future caller supplies observations from outside steady_clock.
-        if (!std::isfinite(seconds) || seconds < 0) return;
-        m_success_average = 0.999 * m_success_average + 0.001 * success;
-        m_seconds_average = 0.999 * m_seconds_average + 0.001 * seconds;
+        if (!m_cache) throw std::invalid_argument("P2C statistics require a performance cache");
     }
 
-    double ConnectionRate() const
+    void Record(bool success, double seconds, double now = P2CPerformanceNow())
     {
-        // The positive initial values decay with observations; they are not
-        // added back on each refresh. Clamp only an unrepresentable quotient
-        // to double's positive finite range, with no policy rate floor or cap.
-        return std::clamp(m_success_average / m_seconds_average,
-                          std::numeric_limits<double>::denorm_min(), std::numeric_limits<double>::max());
+        m_cache->Record(m_score, success, seconds, now);
     }
+
+    double ConnectionRate(double now = P2CPerformanceNow()) const { return m_cache->Rate(m_score, now); }
 };
 
 /** Expected net return per second of TCP/TLS effort. Economic numerators fit

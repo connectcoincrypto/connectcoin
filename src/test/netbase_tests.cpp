@@ -13,6 +13,7 @@
 #include <test/util/common.h>
 #include <test/util/setup_common.h>
 #include <util/strencodings.h>
+#include <util/sock.h>
 #include <util/translation.h>
 
 #include <string>
@@ -24,6 +25,26 @@ using namespace std::literals;
 using namespace util::hex_literals;
 
 BOOST_FIXTURE_TEST_SUITE(netbase_tests, BasicTestingSetup)
+
+#if defined(__linux__) && defined(SOCK_NONBLOCK) && defined(SOCK_CLOEXEC)
+BOOST_AUTO_TEST_CASE(socket_factory_preserves_atomic_nonblocking_and_cloexec)
+{
+    struct InspectSocket : Sock {
+        explicit InspectSocket(Sock&& socket) : Sock(std::move(socket)) {}
+        int Flags() const { return fcntl(m_socket, F_GETFL, 0); }
+        int DescriptorFlags() const { return fcntl(m_socket, F_GETFD, 0); }
+    };
+    auto ordinary{CreateSockOS(AF_INET, SOCK_STREAM, IPPROTO_TCP)};
+    BOOST_REQUIRE(ordinary);
+    InspectSocket plain{std::move(*ordinary)};
+    BOOST_CHECK(plain.Flags() & O_NONBLOCK);
+    auto atomic{CreateSockOS(AF_INET, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP)};
+    BOOST_REQUIRE(atomic);
+    InspectSocket optimized{std::move(*atomic)};
+    BOOST_CHECK(optimized.Flags() & O_NONBLOCK);
+    BOOST_CHECK(optimized.DescriptorFlags() & FD_CLOEXEC);
+}
+#endif
 
 static CNetAddr ResolveIP(const std::string& ip)
 {

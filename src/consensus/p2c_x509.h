@@ -5,6 +5,7 @@
 #ifndef CONNECTCOIN_CONSENSUS_P2C_X509_H
 #define CONNECTCOIN_CONSENSUS_P2C_X509_H
 
+#include <cstddef>
 #include <cstdint>
 #include <span>
 #include <string>
@@ -22,6 +23,21 @@ bool CheckP2CCertificatePublicKeys(const mbedtls_x509_crt& chain, std::string& e
 
 /** Return whether the immutable version-1 trust store parsed and passed key limits. */
 bool P2CRootStoreAvailable();
+
+/** Capture preflight: parse one Certificate message and enforce public-key
+ * limits. Reuses only immutable exact-DER data, never trust/time/CV decisions.
+ */
+bool ValidateP2CCertificateMessage(std::span<const unsigned char> message, std::string& error);
+
+/** Per-thread public-cache instrumentation for regression tests. */
+struct P2CX509CacheStats {
+    uint64_t certificate_hits, certificate_misses;
+    size_t certificate_entries, certificate_bytes, certificate_estimated_bytes;
+    uint64_t signature_hits, signature_misses;
+    size_t signature_entries, signature_bytes;
+};
+P2CX509CacheStats P2CX509CacheStatsForTest();
+void ClearP2CX509CachesForTest();
 
 /**
  * Check public-exponent limits before verifying the domain path against the

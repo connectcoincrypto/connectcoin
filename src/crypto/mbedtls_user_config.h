@@ -21,6 +21,21 @@
 #undef MBEDTLS_PSA_CRYPTO_STORAGE_C
 #undef MBEDTLS_PSA_ITS_FILE_C
 
+// Independent TLS workers share only PSA's synchronized key store/RNG, not a
+// global handshake gate. Call InitializeP2CCrypto before provider use.
+#define MBEDTLS_THREADING_C
+#define MBEDTLS_THREADING_ALT
+#undef MBEDTLS_THREADING_PTHREAD
+
+// Preserve the provider lifecycle; replace only its SHA-224/256 compression.
+#if defined(CONNECTCOIN_SHA256_ACCELERATION)
+#undef MBEDTLS_SHA256_USE_ARMV8_A_CRYPTO_IF_PRESENT
+#undef MBEDTLS_SHA256_USE_ARMV8_A_CRYPTO_ONLY
+#undef MBEDTLS_SHA256_USE_A64_CRYPTO_IF_PRESENT
+#undef MBEDTLS_SHA256_USE_A64_CRYPTO_ONLY
+#define MBEDTLS_SHA256_PROCESS_ALT
+#endif
+
 // Bare-metal consensus-library builds also lack the platform timing
 // implementation used by Mbed TLS.
 #if defined(MBEDTLS_NO_PLATFORM_ENTROPY)

@@ -12,6 +12,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <utility>
@@ -20,7 +21,7 @@
 namespace wallet {
 
 /** Wallet-local IP selection within one domain's active DNS set. Not consensus.
- * The exact signature mask has its own validated-proof EMA and smooth weighted
+ * The exact signature mask has its own validated-proof window and smooth weighted
  * round-robin credits. This only chooses an address: it adds no start-rate or
  * concurrency limit, cooldown, timeout, or domain eligibility policy.
  * The caller serializes Refresh, Select, and observations of selected statistics.
@@ -36,6 +37,7 @@ public:
     };
 
 private:
+    const std::shared_ptr<P2CPerformanceCache> m_cache;
     static constexpr size_t MASK_COUNT{PayToDomainOutput::SIGNATURE_ALGORITHMS_ALL};
     struct MaskState {
         std::shared_ptr<P2CDomainStats> statistics;
@@ -49,6 +51,12 @@ private:
     std::array<size_t, MASK_COUNT> m_next{};
 
 public:
+    explicit P2CEndpointPriority(std::shared_ptr<P2CPerformanceCache> cache = std::make_shared<P2CPerformanceCache>())
+        : m_cache(std::move(cache))
+    {
+        if (!m_cache) throw std::invalid_argument("P2C endpoint priority requires a performance cache");
+    }
+
     /** Retain the same statistics objects and credits for unchanged IPs, even
      * when a validation finishes after refresh. Removed addresses are forgotten;
      * an outstanding Selection keeps only its old statistics alive and cannot
@@ -71,35 +79,53 @@ public:
     bool Empty() const { return m_endpoints.empty(); }
     size_t Size() const { return m_endpoints.size(); }
 
-    std::optional<Selection> Select(uint8_t signature_algorithms_mask)
+    bool HasAvailable(const std::function<bool(const CService&)>& available = {}) const
+    {
+        return std::any_of(m_endpoints.begin(), m_endpoints.end(), [&](const auto& state) { return !available || available(state.endpoint); });
+    }
+
+    std::optional<Selection> Select(uint8_t signature_algorithms_mask, double now = P2CPerformanceNow(),
+                                    const std::function<bool(const CService&)>& available = {})
     {
         if (Empty() || signature_algorithms_mask == 0 || signature_algorithms_mask > MASK_COUNT) return std::nullopt;
         const size_t mask{static_cast<size_t>(signature_algorithms_mask - 1)};
         const size_t count{m_endpoints.size()};
         std::array<double, MAX_ENDPOINTS> rates{};
+        std::array<bool, MAX_ENDPOINTS> eligible{};
+        size_t eligible_count{0};
         double maximum{0};
         for (size_t index = 0; index < count; ++index) {
+            // Local route/family exclusions say nothing about remote validity.
+            // Preserve their histories and rotation credit without sampling or
+            // charging an unavailable address a share of this selection turn.
+            eligible[index] = !available || available(m_endpoints[index].endpoint);
+            if (!eligible[index]) continue;
+            ++eligible_count;
             auto& state{m_endpoints[index].masks[mask]};
-            if (!state.statistics) state.statistics = std::make_shared<P2CDomainStats>();
-            rates[index] = state.statistics->ConnectionRate();
+            if (!state.statistics) state.statistics = std::make_shared<P2CDomainStats>(m_cache);
+            rates[index] = state.statistics->ConnectionRate(now);
             maximum = std::max(maximum, rates[index]);
         }
+        if (!eligible_count) return std::nullopt;
         // Dividing by the maximum before summing avoids overflow even if every
         // measured rate is near double's largest representable finite value.
         double total{0};
         for (size_t index = 0; index < count; ++index) {
+            if (!eligible[index]) continue;
             rates[index] /= maximum;
             total += rates[index];
         }
         for (size_t index = 0; index < count; ++index) {
+            if (!eligible[index]) continue;
             m_endpoints[index].masks[mask].credit +=
-                EXPLORATION / count + (1.0 - EXPLORATION) * rates[index] / total;
+                EXPLORATION / eligible_count + (1.0 - EXPLORATION) * rates[index] / total;
         }
         const size_t cursor{m_next[mask] % count};
-        size_t selected{cursor};
-        for (size_t offset = 1; offset < count; ++offset) {
+        size_t selected{count};
+        for (size_t offset = 0; offset < count; ++offset) {
             const size_t candidate{(cursor + offset) % count};
-            if (m_endpoints[candidate].masks[mask].credit > m_endpoints[selected].masks[mask].credit) selected = candidate;
+            if (!eligible[candidate]) continue;
+            if (selected == count || m_endpoints[candidate].masks[mask].credit > m_endpoints[selected].masks[mask].credit) selected = candidate;
         }
         auto& state{m_endpoints[selected].masks[mask]};
         state.credit -= 1.0;
