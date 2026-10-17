@@ -243,10 +243,17 @@ install_binary_component(connectcoin-test INTERNAL)
 # SHA-224/256 lifecycle, X25519 PSA validation and secret cleanup.
 foreach(p2c_primitive IN ITEMS sha256 x25519)
   add_executable(p2c-${p2c_primitive}-tests p2c_${p2c_primitive}_tests.cpp)
+  add_windows_application_manifest(p2c-${p2c_primitive}-tests)
   target_link_libraries(p2c-${p2c_primitive}-tests PRIVATE core_interface connectcoin_util MbedTLS::mbedcrypto)
   add_test(NAME p2c_${p2c_primitive}_provider COMMAND p2c-${p2c_primitive}-tests)
 endforeach()
 if(NOT P2C_SHA256_ACCELERATION)
   target_sources(p2c-sha256-tests PRIVATE ../crypto/mbedtls_sha256_portable.c)
   target_include_directories(p2c-sha256-tests PRIVATE "${connectcoin_mbedtls_SOURCE_DIR}/library")
+  # This reference TU includes the unchanged vendored sha256.c. Match the
+  # provider's defined modular-arithmetic exclusions, only for this C source;
+  # the C++ test harness and all true-UB/memory checks remain instrumented.
+  set_property(SOURCE ../crypto/mbedtls_sha256_portable.c APPEND PROPERTY COMPILE_OPTIONS
+    "$<$<COMPILE_LANG_AND_ID:C,Clang,AppleClang>:-fno-sanitize=unsigned-integer-overflow,unsigned-shift-base,implicit-integer-sign-change,implicit-integer-truncation>"
+  )
 endif()

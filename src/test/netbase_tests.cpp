@@ -30,6 +30,7 @@ BOOST_FIXTURE_TEST_SUITE(netbase_tests, BasicTestingSetup)
 BOOST_AUTO_TEST_CASE(socket_factory_preserves_atomic_nonblocking_and_cloexec)
 {
     struct InspectSocket : Sock {
+        using Sock::operator=;
         explicit InspectSocket(Sock&& socket) : Sock(std::move(socket)) {}
         int Flags() const { return fcntl(m_socket, F_GETFL, 0); }
         int DescriptorFlags() const { return fcntl(m_socket, F_GETFD, 0); }
@@ -37,12 +38,18 @@ BOOST_AUTO_TEST_CASE(socket_factory_preserves_atomic_nonblocking_and_cloexec)
     auto ordinary{CreateSockOS(AF_INET, SOCK_STREAM, IPPROTO_TCP)};
     BOOST_REQUIRE(ordinary);
     InspectSocket plain{std::move(*ordinary)};
-    BOOST_CHECK(plain.Flags() & O_NONBLOCK);
+    const int plain_flags{plain.Flags()};
+    BOOST_REQUIRE_GE(plain_flags, 0);
+    BOOST_CHECK(plain_flags & O_NONBLOCK);
     auto atomic{CreateSockOS(AF_INET, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP)};
     BOOST_REQUIRE(atomic);
     InspectSocket optimized{std::move(*atomic)};
-    BOOST_CHECK(optimized.Flags() & O_NONBLOCK);
-    BOOST_CHECK(optimized.DescriptorFlags() & FD_CLOEXEC);
+    const int optimized_flags{optimized.Flags()};
+    const int descriptor_flags{optimized.DescriptorFlags()};
+    BOOST_REQUIRE_GE(optimized_flags, 0);
+    BOOST_REQUIRE_GE(descriptor_flags, 0);
+    BOOST_CHECK(optimized_flags & O_NONBLOCK);
+    BOOST_CHECK(descriptor_flags & FD_CLOEXEC);
 }
 #endif
 

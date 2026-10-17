@@ -22,6 +22,7 @@
 #include <barrier>
 #include <cstring>
 #include <memory>
+#include <stdexcept>
 #include <thread>
 #include <utility>
 
@@ -54,6 +55,7 @@ auto CaptureFixture(const P2CTlsCaptureOptions& options = {})
 }
 
 class ConnectFailureSocket final : public ZeroSock {
+    ConnectFailureSocket& operator=(Sock&&) override { throw std::logic_error("Cannot assign ConnectFailureSocket"); }
     const int m_error;
     const bool m_pending;
 public:
@@ -65,7 +67,7 @@ public:
     }
     int GetSockOpt(int, int, void* value, socklen_t* length) const override
     {
-        if (*length < sizeof(m_error)) return SOCKET_ERROR;
+        if (*length < static_cast<socklen_t>(sizeof(m_error))) return SOCKET_ERROR;
         std::memcpy(value, &m_error, sizeof(m_error));
         *length = sizeof(m_error);
         return 0;
@@ -259,7 +261,7 @@ BOOST_AUTO_TEST_CASE(certificate_envelope_matches_pinned_upstream_admission)
     fixtures.push_back({11, 0, 0, 4, 0, 0, 0, 0});
     // Duplicate/unsolicited/unknown certificate-entry extensions must retain
     // the upstream result; the abbreviated path must never parse a peer key.
-    for (const std::vector<unsigned char> extension : {
+    for (const std::vector<unsigned char>& extension : {
         std::vector<unsigned char>{0, 5, 0, 0},
         std::vector<unsigned char>{0, 18, 0, 0},
         std::vector<unsigned char>{0xff, 0xfd, 0, 0},
@@ -342,6 +344,7 @@ BOOST_AUTO_TEST_CASE(tcp_readiness_wait_obeys_cancellation_and_remaining_deadlin
     bool stop{false};
     unsigned waits{0};
     class PendingSocket final : public ZeroSock {
+        PendingSocket& operator=(Sock&&) override { throw std::logic_error("Cannot assign PendingSocket"); }
         bool& m_stop;
         unsigned& m_waits;
     public:
@@ -373,6 +376,7 @@ BOOST_AUTO_TEST_CASE(tls_bio_cancellation_interrupts_internal_record_loop)
     bool stop{false};
     size_t received{0};
     class CompatibilityCcsSocket final : public ZeroSock {
+        CompatibilityCcsSocket& operator=(Sock&&) override { throw std::logic_error("Cannot assign CompatibilityCcsSocket"); }
         bool& m_stop;
         size_t& m_received;
     public:
@@ -409,6 +413,7 @@ BOOST_AUTO_TEST_CASE(tls_bio_deadline_interrupts_internal_record_loop)
     bool waited{false};
     auto deadline{std::chrono::steady_clock::time_point::max()};
     class DeadlineCcsSocket final : public ZeroSock {
+        DeadlineCcsSocket& operator=(Sock&&) override { throw std::logic_error("Cannot assign DeadlineCcsSocket"); }
         size_t& m_received;
         bool& m_waited;
         const std::chrono::steady_clock::time_point& m_deadline;
@@ -456,6 +461,7 @@ BOOST_AUTO_TEST_CASE(tls_bio_cancellation_stops_partial_client_hello_writes)
     bool stop{false};
     size_t sends{0};
     class PartialWriteSocket final : public ZeroSock {
+        PartialWriteSocket& operator=(Sock&&) override { throw std::logic_error("Cannot assign PartialWriteSocket"); }
         bool& m_stop;
         size_t& m_sends;
     public:
@@ -485,6 +491,7 @@ BOOST_AUTO_TEST_CASE(tls_bio_does_not_unwind_cancellation_callback_through_provi
     bool throw_once{false};
     size_t callback_errors{0};
     class ThrowingCancellationSocket final : public ZeroSock {
+        ThrowingCancellationSocket& operator=(Sock&&) override { throw std::logic_error("Cannot assign ThrowingCancellationSocket"); }
         bool& m_throw_once;
     public:
         explicit ThrowingCancellationSocket(bool& throw_once) : m_throw_once{throw_once} {}
@@ -517,6 +524,7 @@ BOOST_AUTO_TEST_CASE(tcp_admission_runs_once_and_can_abort_before_connect)
     unsigned creates{0}, starts{0}, callbacks{0};
     bool admit{false};
     class AdmissionSocket final : public ZeroSock {
+        AdmissionSocket& operator=(Sock&&) override { throw std::logic_error("Cannot assign AdmissionSocket"); }
         unsigned& m_starts;
     public:
         explicit AdmissionSocket(unsigned& starts) : m_starts{starts} {}
@@ -554,6 +562,7 @@ BOOST_AUTO_TEST_CASE(tcp_admission_rechecks_cancel_and_absolute_deadline)
     unsigned starts{0}, accounted{0};
     bool stop{false};
     class CountSocket final : public ZeroSock {
+        CountSocket& operator=(Sock&&) override { throw std::logic_error("Cannot assign CountSocket"); }
         unsigned& m_starts;
     public:
         explicit CountSocket(unsigned& starts) : m_starts{starts} {}

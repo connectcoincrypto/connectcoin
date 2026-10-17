@@ -15,6 +15,7 @@
 #include <array>
 #include <chrono>
 #include <cstdint>
+#include <exception>
 #include <iostream>
 #include <random>
 #include <set>
