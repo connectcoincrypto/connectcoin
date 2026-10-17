@@ -1,6 +1,6 @@
 // Copyright (c) 2026 The ConnectCoin developers. MIT license.
-#ifndef CONNECTCOIN_MBEDTLS_X25519_H
-#define CONNECTCOIN_MBEDTLS_X25519_H
+#ifndef CONNECTCOIN_CRYPTO_MBEDTLS_X25519_H
+#define CONNECTCOIN_CRYPTO_MBEDTLS_X25519_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -32,4 +32,4 @@ uint64_t connectcoin_mbedtls_x25519_test_calls(void);
 #ifdef __cplusplus
 }
 #endif
-#endif
+#endif // CONNECTCOIN_CRYPTO_MBEDTLS_X25519_H

@@ -1,7 +1,21 @@
 // Copyright (c) 2026 The ConnectCoin developers. MIT license.
-#pragma once
+#ifndef CONNECTCOIN_CRYPTO_MBEDTLS_SHA256_H
+#define CONNECTCOIN_CRYPTO_MBEDTLS_SHA256_H
+
 #include <mbedtls/sha256.h>
+
+#ifdef __cplusplus
+#include <cstddef>
+#if defined(CONNECTCOIN_SHA256_ACCELERATION) && defined(CONNECTCOIN_SHA256_TESTING)
+#include <cstdint>
+#endif
+#else
+#include <stddef.h>
+#if defined(CONNECTCOIN_SHA256_ACCELERATION) && defined(CONNECTCOIN_SHA256_TESTING)
 #include <stdint.h>
+#endif
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -31,3 +45,4 @@ void connectcoin_sha256_test_force_portable(int);
 #ifdef __cplusplus
 }
 #endif
+#endif // CONNECTCOIN_CRYPTO_MBEDTLS_SHA256_H

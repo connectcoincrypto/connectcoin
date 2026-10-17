@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://opensource.org/license/mit/.
 
+#include <util/string.h>
 #include <wallet/p2c_recovery_policy.h>
 
 #include <boost/test/unit_test.hpp>
@@ -73,13 +74,13 @@ BOOST_AUTO_TEST_CASE(bounded_eviction_retains_pending_owner_and_global_deadline)
     const P2CRecoveryPolicy::Key first{"first.example", 6};
     BOOST_REQUIRE(policy.Reserve(first, 1, 0));
     for (size_t index = 0; index < 1000; ++index) {
-        policy.Due({std::to_string(index) + ".example", 6}, 0);
+        policy.Due({util::ToString(index) + ".example", 6}, 0);
         BOOST_CHECK_LE(policy.Size(), P2CRecoveryPolicy::MAX_POLICIES);
     }
     BOOST_CHECK(policy.ReservedFor(1));
     BOOST_CHECK_EQUAL(policy.Started(first, 1, 0), 0.25);
     for (size_t index = 1000; index < 2000; ++index) {
-        const P2CRecoveryPolicy::Key key{std::to_string(index) + ".example", 6};
+        const P2CRecoveryPolicy::Key key{util::ToString(index) + ".example", 6};
         BOOST_CHECK_EQUAL(policy.Due(key, 0), 0.25);
         BOOST_CHECK(!policy.Reserve(key, index, 0));
     }

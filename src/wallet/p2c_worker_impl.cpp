@@ -890,7 +890,7 @@ struct P2CClaimWorkerImpl::Impl {
             bool local_unavailable{false};
             bool admission_rejected{false};
             const auto eligible_to_start = [&] {
-                const auto& bounty{*claim->prepared.bounty.GetPayToDomain()};
+                const auto bounty{*claim->prepared.bounty.GetPayToDomain()};
                 const auto outpoint{claim->prepared.tx->vin[0].prevout};
                 const auto current{groups.find(group->name)};
                 const auto& leader{assignment->prepared_only ? group->prepared_economic_key : group->economic_key};
@@ -919,7 +919,7 @@ struct P2CClaimWorkerImpl::Impl {
                  },
                  .on_tcp_started = [&] {
                      std::lock_guard lock{work_mutex};
-                     const auto& bounty{*claim->prepared.bounty.GetPayToDomain()};
+                     const auto bounty{*claim->prepared.bounty.GetPayToDomain()};
                      if (!eligible_to_start()) { admission_rejected = true; return false; }
                      if (assignment->recovery_probe) recovery.Started({group->name, bounty.signature_algorithms_mask}, assignment->token, PerformanceNow());
                      if (!assignment->economic) domain_after = group->name;

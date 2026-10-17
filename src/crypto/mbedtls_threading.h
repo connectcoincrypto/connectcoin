@@ -8,4 +8,4 @@
 bool InitializeP2CCrypto() noexcept;
 /** Initialize the PSA random/key subsystem for TLS, after provider mutexes. */
 bool InitializeP2CTlsCrypto() noexcept;
-#endif
+#endif // CONNECTCOIN_CRYPTO_MBEDTLS_THREADING_H

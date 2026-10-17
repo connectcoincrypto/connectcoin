@@ -1,8 +1,12 @@
 // Copyright (c) 2026 The ConnectCoin developers. MIT license.
 #include <crypto/mbedtls_threading.h>
+
 #include <consensus/p2c_x509_mutex.h>
 #include <mbedtls/threading.h>
 #include <psa/crypto.h>
+#include <psa/crypto_values.h>
+#include <threading_alt.h>
+
 #include <new>
 
 namespace {

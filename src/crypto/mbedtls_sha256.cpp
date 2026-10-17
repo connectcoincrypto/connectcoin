@@ -2,8 +2,10 @@
 // Only the compression primitive changes. Provider init/update/finish retain
 // their original buffering, length accounting, SHA-224 support and zeroization.
 #define MBEDTLS_ALLOW_PRIVATE_ACCESS
-#include "mbedtls_sha256.h"
-#include <mbedtls/version.h>
+#include <mbedtls_sha256.h>
+#include <mbedtls/build_info.h>
+
+#include <cstdint>
 #if MBEDTLS_VERSION_NUMBER != 0x03060700
 #error "Review SHA-256 dispatch before changing pinned Mbed TLS"
 #endif
@@ -17,6 +19,7 @@ extern "C" void connectcoin_sha256_shani(uint32_t*, const unsigned char*);
 #endif
 #if defined(CONNECTCOIN_SHA256_TESTING)
 #include <atomic>
+
 static std::atomic<uint64_t> hardware_calls{}, portable_calls{};
 static thread_local bool force_portable{};
 extern "C" uint64_t connectcoin_sha256_test_hardware_calls(void) { return hardware_calls.load(std::memory_order_relaxed); }

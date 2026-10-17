@@ -5,6 +5,7 @@
 #include <arith_uint256.h>
 #include <netbase.h>
 #include <test/util/setup_common.h>
+#include <util/string.h>
 #include <wallet/p2c_admission.h>
 
 #include <boost/test/unit_test.hpp>
@@ -90,7 +91,7 @@ BOOST_AUTO_TEST_CASE(local_route_cache_has_a_fixed_memory_bound)
     P2CLocalEndpointPolicy policy;
     const auto first{Lookup("8.1.0.1", 443, false).value()};
     for (unsigned index = 0; index < 5000; ++index) {
-        const auto address{Lookup("8.1." + std::to_string(index / 250) + "." + std::to_string(index % 250 + 1), 443, false).value()};
+        const auto address{Lookup("8.1." + util::ToString(index / 250) + "." + util::ToString(index % 250 + 1), 443, false).value()};
         policy.Reject(address, false, index / 1000.0);
         BOOST_CHECK_LE(policy.EndpointCount(), 4096U);
     }

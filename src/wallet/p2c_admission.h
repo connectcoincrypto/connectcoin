@@ -90,4 +90,4 @@ public:
     size_t EndpointCount() const { return m_endpoints.size(); }
 };
 } // namespace wallet
-#endif
+#endif // CONNECTCOIN_WALLET_P2C_ADMISSION_H

@@ -129,7 +129,7 @@ void PublicApis() {
 void Threads() {
     std::atomic<bool> okay{true};
     std::vector<std::thread> threads;
-    for (int i=0; i<12; ++i) threads.emplace_back([&, i] {
+    for (int i=0; i<12; ++i) threads.emplace_back([=, &okay] {
         try {
 #if defined(CONNECTCOIN_SHA256_TESTING)
             connectcoin_sha256_test_force_portable(i & 1);
